@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, Warning
 import time, datetime
+from odoo.addons import decimal_precision as dp
 
 
 class DeliveryAuthorization(models.Model):
@@ -99,7 +100,7 @@ class DeliveryAuthorization(models.Model):
 
     """ Payment information"""
     amount_untaxed = fields.Float(string='Ordered Amount', compute='_compute_amount_untaxed',
-                                  track_visibility='onchange')
+                                  track_visibility='onchange',digits=dp.get_precision('Product Price'))
 
 
     @api.depends('line_ids.delivery_qty')
@@ -112,9 +113,9 @@ class DeliveryAuthorization(models.Model):
 
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
-    total_payment_received = fields.Float(string='Payment Received', readonly=True, track_visibility='onchange')
+    total_payment_received = fields.Float(string='Payment Received', readonly=True, track_visibility='onchange',digits=dp.get_precision('Product Price'))
     total_cheque_rcv_amount_not_honored = fields.Float(string='Cheque Received', readonly=True,
-                                                       track_visibility='onchange')
+                                                       track_visibility='onchange',digits=dp.get_precision('Product Price'))
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',

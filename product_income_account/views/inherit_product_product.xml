@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_view_income_account" model="ir.ui.view">
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <page name="sales" position="after">
+                    <page string="Product Income Account" name="income_account" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                        <group name="properties">
+                           <field name="product_income_acc">
+                               <tree string="List" editable="bottom">
+                                   <field name="so_type_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                   <field name="currency_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                   <field name="sale_local_foreign"/>
+                                   <field name="account_id"/>
+
+                               </tree>
+                           </field>
+
+
+                        </group>
+                    </page>
+                </page>
+
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

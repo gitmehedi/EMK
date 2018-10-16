@@ -1,5 +1,6 @@
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import ValidationError
+from odoo.addons import decimal_precision as dp
 
 from datetime import date
 
@@ -19,12 +20,12 @@ class SalePriceChange(models.Model):
                                          'validate2': [('readonly', True)],
                                          'validate': [('readonly', True)]}, string='Product', required=True)
 
-    list_price = fields.Float(string='Old Price', compute='compute_list_price', readonly=True, store=True)
+    list_price = fields.Float(string='Old Price', compute='compute_list_price', readonly=True, store=True,digits=dp.get_precision('Product Price'))
 
     new_price = fields.Float(string='New Price',
                              states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                      'validate2': [('readonly', True)],
-                                     'validate': [('readonly', True)]}, required=True)
+                                     'validate': [('readonly', True)]}, required=True, digits=dp.get_precision('Product Price'))
     product_package_mode = fields.Many2one('product.packaging.mode', string='Packaging Mode',
                                            states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                                    'validate2': [('readonly', True)],
@@ -80,17 +81,17 @@ class SalePriceChange(models.Model):
 
 
     #-------------------------
-    country_id = fields.Many2one('res.country', string='Country', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
-                                    'validate': [('readonly', True)]},)
-
-    terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
-                                    'validate': [('readonly', True)]})
-
-    freight_mode = fields.Selection([
-        ('fob', 'FOB'),
-        ('c&f', 'C&F')
-    ], string='Freight Mode',default='fob', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
-                                    'validate': [('readonly', True)]})
+    # country_id = fields.Many2one('res.country', string='Country', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+    #                                 'validate': [('readonly', True)]},)
+    #
+    # terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+    #                                 'validate': [('readonly', True)]})
+    #
+    # freight_mode = fields.Selection([
+    #     ('fob', 'FOB'),
+    #     ('c&f', 'C&F')
+    # ], string='Freight Mode',default='fob', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+    #                                 'validate': [('readonly', True)]})
 
 
 

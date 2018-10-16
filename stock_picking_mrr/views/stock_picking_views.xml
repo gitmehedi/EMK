@@ -64,7 +64,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree1"/>
+        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree2"/>
         <field name="domain">[('check_approve_button', '=', 'True')]</field>
         <field name="help" type="html">
             <p>
@@ -78,7 +78,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree1"/>
+        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree2"/>
         <field name="domain">[('check_mrr_button', '=', 'True')]</field>
         <field name="help" type="html">
             <p>

@@ -33,7 +33,8 @@ class PurchaseRequisition(models.Model):
                              copy=False, default='draft')
 
     indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
-    attachment_ids = fields.Many2many('ir.attachment','attachment_pr_rel','pr_id','attachment_id', string='Attachments')
+    # attachment_ids = fields.Many2many('ir.attachment','attachment_pr_rel','pr_id','attachment_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.requisition')])
 
     @api.multi
     def action_in_progress(self):
@@ -100,13 +101,14 @@ class PurchaseRequisition(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    @api.multi
     def unlink(self):
         for indent in self:
             if indent.state != 'draft':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
                 query = """ delete from ir_attachment where res_id=%s"""
-                for att in self.attachment_ids:
+                for att in indent.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseRequisition, self).unlink()
 

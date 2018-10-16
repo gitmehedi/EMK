@@ -64,14 +64,14 @@ class SaleOrder(models.Model):
     comment = fields.Char(string='Approval Causes', track_visibility='onchange')
 
     # ..............................
-    terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', readonly=True, track_visibility='onchange',
-                                    states={'to_submit': [('readonly', False)]})
-
-    freight_mode = fields.Selection([
-        ('fob', 'FOB'),
-        ('c&f', 'C&F')
-    ], string='Freight Mode', default='fob', readonly=True, track_visibility='onchange',
-                                    states={'to_submit': [('readonly', False)]})
+    # terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', readonly=True, track_visibility='onchange',
+    #                                 states={'to_submit': [('readonly', False)]})
+    #
+    # freight_mode = fields.Selection([
+    #     ('fob', 'FOB'),
+    #     ('c&f', 'C&F')
+    # ], string='Freight Mode', default='fob', readonly=True, track_visibility='onchange',
+    #                                 states={'to_submit': [('readonly', False)]})
 
 
 
@@ -716,9 +716,9 @@ class InheritedSaleOrderLine(models.Model):
                 [('product_id', '=', product.id),
                  ('currency_id', '=', self.order_id.currency_id.id),
                  ('product_package_mode', '=', self.order_id.pack_type.id),
-                 ('country_id','=', self.order_id.partner_id.country_id.id),
-                 ('terms_setup_id.days','=',self.order_id.terms_setup_id.days),
-                 ('freight_mode', '=', self.order_id.freight_mode),
+                 #('country_id','=', self.order_id.partner_id.country_id.id),
+                 #('terms_setup_id.days','=',self.order_id.terms_setup_id.days),
+                 #('freight_mode', '=', self.order_id.freight_mode),
                  ('uom_id', '=', self.product_uom.id)])
 
             if not price_change_pool:
@@ -726,9 +726,9 @@ class InheritedSaleOrderLine(models.Model):
                     [('product_id', '=', product.id),
                      ('currency_id', '=', self.order_id.currency_id.id),
                      ('product_package_mode', '=', self.order_id.pack_type.id),
-                     ('country_id', '=', self.order_id.partner_id.country_id.id),
-                     ('terms_setup_id.days', '=', self.order_id.terms_setup_id.days),
-                     ('freight_mode','=',self.order_id.freight_mode),
+                     # ('country_id', '=', self.order_id.partner_id.country_id.id),
+                     # ('terms_setup_id.days', '=', self.order_id.terms_setup_id.days),
+                     # ('freight_mode','=',self.order_id.freight_mode),
                      ('category_id', '=', self.product_uom.category_id.id)])
 
                 if price_change_pool:

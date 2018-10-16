@@ -1,9 +1,9 @@
-from openerp import fields, models, api
+from odoo import fields, models, api
 from datetime import date
 from datetime import datetime
 import math
 from datetime import timedelta
-from openerp.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, AccessError, ValidationError
 
 HOURS_PER_DAY = 8
 
@@ -48,7 +48,7 @@ class HRHolidays(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('check_hour') is False:
+        # if values.get('check_hour') is False:
             for holiday in self:
                 if (holiday.type == 'remove'):
                     start_date = holiday.date_from
@@ -66,8 +66,8 @@ class HRHolidays(models.Model):
                     duration = (d2 - d1).days + 1
                     values['number_of_days_temp'] = duration
             return super(HRHolidays, self).write(values)
-        else:
-            return super(HRHolidays, self).write(values)
+        # else:
+        #     return super(HRHolidays, self).write(values)
 
     """
        As we removed Datetime data type so we have added 1d with date difference

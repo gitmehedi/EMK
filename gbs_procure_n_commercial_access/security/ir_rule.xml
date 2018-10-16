@@ -55,5 +55,77 @@
         <field name="perm_unlink" eval="False"/>
         <field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_approve_gate_in'))]"/>
     </record>
+
+
+    <!--Start-->
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'purchase_requisition'), ('name', '=', 'purchase_requisition_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="purchase_requisition.purchase_requisition_comp_rule" model="ir.rule">
+	    <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'purchase_requisition'), ('name', '=', 'purchase_requisition_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'purchase_requisition'), ('name', '=', 'purchase_requisition_line_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="purchase_requisition.purchase_requisition_line_comp_rule" model="ir.rule">
+	    <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'purchase_requisition'), ('name', '=', 'purchase_requisition_line_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <!--<function name="write" model="ir.model.data">-->
+        <!--<function name="search" model="ir.model.data">-->
+            <!--<value eval="[('module', '=', 'purchase_order'), ('name', '=', 'ir_rule_purchase_order_allowed_operating_units')]"/>-->
+        <!--</function>-->
+        <!--<value eval="{'noupdate': False}"/>-->
+    <!--</function>-->
+
+    <!--<record id="purchase_operating_unit.ir_rule_purchase_order_allowed_operating_units" model="ir.rule">-->
+	    <!--<field name="active" eval="False"/>-->
+    <!--</record>-->
+
+    <!--<function name="write" model="ir.model.data">-->
+        <!--<function name="search" model="ir.model.data">-->
+            <!--<value eval="[('module', '=', 'purchase_order'), ('name', '=', 'ir_rule_purchase_order_allowed_operating_units')]"/>-->
+        <!--</function>-->
+        <!--<value eval="{'noupdate': True}"/>-->
+    <!--</function>-->
+
+
+     <record id="allow_operating_unit_for_supply_chain" model="ir.rule">
+        <field name="name">Allow OU for Supply Chain</field>
+        <field name="model_id" ref="operating_unit.model_operating_unit"/>
+        <field name="groups" eval="[(4,ref('commercial.group_commercial_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[(1 ,'=', 1)]</field>
+    </record>
+
+    <!--End-->
 </odoo>
 

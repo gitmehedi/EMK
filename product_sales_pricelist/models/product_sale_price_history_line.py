@@ -1,5 +1,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import decimal_precision as dp
+
 import time
 
 
@@ -10,8 +12,8 @@ class ProductSalePriceHistiryLine(models.Model):
     _order = "approve_price_date,id desc"
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain=[('sale_ok', '=', True)])
-    list_price = fields.Float(string='Old Price',required=True)
-    new_price = fields.Float(string='Approved Price', required=True)
+    list_price = fields.Float(string='Old Price',required=True,digits=dp.get_precision('Product Price'))
+    new_price = fields.Float(string='Approved Price', required=True,digits=dp.get_precision('Product Price'))
     approve_price_date = fields.Date(string='Approved Date')
     #effective_price_date = fields.Date(string='Effective Date')
     currency_id = fields.Many2one('res.currency', string="Currency",required=True)
@@ -21,9 +23,9 @@ class ProductSalePriceHistiryLine(models.Model):
     discount = fields.Float(string='Max Discount Limit')
 
     #-------------------------
-    country_id = fields.Many2one('res.country', string='Country')
-    terms_setup_id = fields.Many2one('terms.setup', string='Payment Days')
-    freight_mode = fields.Selection([('fob', 'FOB'),('c&f', 'C&F')], string='Freight Mode')
+    # country_id = fields.Many2one('res.country', string='Country')
+    # terms_setup_id = fields.Many2one('terms.setup', string='Payment Days')
+    # freight_mode = fields.Selection([('fob', 'FOB'),('c&f', 'C&F')], string='Freight Mode')
 
 
     @api.multi
@@ -43,10 +45,10 @@ class ProductSalePriceHistiryLine(models.Model):
         for price_pool in price_list_pool:
             price_history_pool = self.env['product.sale.history.line'].search([('product_id', '=', price_pool.product_id.ids),
                                                                                ('currency_id', '=', price_pool.currency_id.id),
-                                                                               ('country_id', '=',price_pool.country_id.id),
-                                                                               ('terms_setup_id','=',price_pool.terms_setup_id.id),
+                                                                               # ('country_id', '=',price_pool.country_id.id),
+                                                                               # ('terms_setup_id','=',price_pool.terms_setup_id.id),
                                                                                ('product_package_mode', '=', price_pool.product_package_mode.id),
-                                                                               ('freight_mode','=',price_pool.freight_mode),
+                                                                               #('freight_mode','=',price_pool.freight_mode),
                                                                                ('uom_id', '=', price_pool.uom_id.id)])
 
 
@@ -61,9 +63,9 @@ class ProductSalePriceHistiryLine(models.Model):
                 vals['uom_id'] = price_pool.uom_id.id
                 vals['category_id'] = price_pool.uom_id.category_id.id
                 vals['discount'] = price_pool.discount
-                vals['country_id'] = price_pool.country_id.id
-                vals['terms_setup_id'] = price_pool.terms_setup_id.id
-                vals['freight_mode'] = price_pool.freight_mode
+                # vals['country_id'] = price_pool.country_id.id
+                # vals['terms_setup_id'] = price_pool.terms_setup_id.id
+                # vals['freight_mode'] = price_pool.freight_mode
 
                 price_history_pool.create(vals)
             else:
@@ -73,9 +75,9 @@ class ProductSalePriceHistiryLine(models.Model):
                         'approve_price_date':price_pool.effective_date,
                         'new_price':price_pool.new_price,
                         'discount':price_pool.discount,
-                        'country_id': price_pool.country_id.id,
-                        'terms_setup_id':price_pool.terms_setup_id.id,
-                        'freight_mode': price_pool.freight_mode
+                        # 'country_id': price_pool.country_id.id,
+                        # 'terms_setup_id':price_pool.terms_setup_id.id,
+                        # 'freight_mode': price_pool.freight_mode
                     }
                 )
 

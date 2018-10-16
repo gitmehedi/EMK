@@ -10,7 +10,8 @@
                        attrs="{'invisible': [('receive_type', '!=', 'lc')],'required':[('receive_type', '=','lc')]}"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="replace">
-                <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')],'required':[('receive_type', 'in',['lc','loan','other'])]}"/>
+                <field name="partner_id" domain="[('supplier', '=', True),('parent_id', '=', False)]"
+                       attrs="{'invisible': [('picking_type_code', '=', 'internal')],'required':[('receive_type', 'in',['lc','loan','other'])]}"/>
             </xpath>
             <xpath expr="//field[@name='challan_bill_no']" position="replace">
                 <field name="challan_bill_no" attrs="{'required':[('receive_type', 'in',['lc','loan','other'])]}"/>
