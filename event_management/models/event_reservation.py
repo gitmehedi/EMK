@@ -20,9 +20,9 @@ class EventReservation(models.Model):
     contract_number = fields.Char(string="Contract Number", readonly=True, related='organizer_id.mobile')
     work_email = fields.Char(string="Email", readonly=True, related='organizer_id.email')
     attendee_number = fields.Integer('No. of Attendees', required=True, track_visibility='onchange',
-                                  readonly=True, states={'draft': [('readonly', False)]})
+                                     readonly=True, states={'draft': [('readonly', False)]})
     total_session = fields.Integer('No. of Sessions', required=True, track_visibility='onchange',
-                                  readonly=True, states={'draft': [('readonly', False)]})
+                                   readonly=True, states={'draft': [('readonly', False)]})
     start_date = fields.Datetime(string='Start Date', required=True, track_visibility='onchange',
                                  readonly=True, states={'draft': [('readonly', False)]})
     end_date = fields.Datetime(string='End Date', required=True, track_visibility='onchange',
@@ -33,7 +33,6 @@ class EventReservation(models.Model):
                               readonly=True, states={'draft': [('readonly', False)]})
     rules_regulation = fields.Text('Rules & regulation', track_visibility='onchange', required=True,
                                    readonly=True, states={'draft': [('readonly', False)]})
-
 
     payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type',
                                     readonly=True, states={'draft': [('readonly', False)]})
@@ -64,12 +63,12 @@ class EventReservation(models.Model):
     @api.one
     def act_on_process(self):
         if self.state == 'draft':
-            self.name = self.env['ir.sequence'].next_by_code('event.reservation')
             self.state = 'on_process'
 
     @api.one
     def act_confirm(self):
         if self.state == 'on_process':
+            self.name = self.env['ir.sequence'].next_by_code('event.reservation')
             self.state = 'confirm'
 
     @api.one
