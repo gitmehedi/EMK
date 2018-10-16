@@ -14,6 +14,9 @@ class EventEvent(models.Model):
 
     event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms')
     event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks')
+    date_begin = fields.Datetime(
+        string='Start Date', required=True,
+        track_visibility='onchange', states={'confirm': [('readonly', True)],'done': [('readonly', True)]})
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
@@ -26,7 +29,7 @@ class EventEvent(models.Model):
     def _check_date_begin(self):
         dt = fields.Date.today()
         if self.date_begin < dt:
-            raise ValidationError(_("Event Start Date cannot be past day from current date"))
+            raise ValidationError(_("Event start date cannot be past date from current date"))
 
 
 class EventRegistration(models.Model):
