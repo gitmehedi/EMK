@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -21,12 +21,12 @@ class EventEvent(models.Model):
         for record in self:
             record.total_seat_available = sum([rec.seat_no for rec in record.event_book_ids])
 
-
     @api.multi
     @api.constrains('date_begin')
     def _check_date_begin(self):
-        dt = fields.Date.today()
-        if self.date_begin < dt:
+        dt_now = fields.datetime.now()
+        date_begin = datetime.datetime.strptime(self.date_begin, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(minutes=1)
+        if date_begin < dt_now:
             raise ValidationError(_("Event start date cannot be past date from current date"))
 
 
