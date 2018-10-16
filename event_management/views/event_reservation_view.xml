@@ -16,6 +16,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="event_reservation_view" model="ir.ui.view">
             <field name="name">event.reservation.view</field>
             <field name="model">event.reservation</field>
