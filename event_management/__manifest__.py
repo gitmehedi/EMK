@@ -37,7 +37,7 @@
         'views/res_partner_views.xml',
         'data/email_template.xml',
         'report/report_event_completion_form.xml',
-        'report/event_monthly_report.xml',
+        'report/monthly_event_report_view.xml',
         'wizard/wizard_event_session_view.xml',
         'wizard/wizard_monthly_event_view.xml',
     ],
