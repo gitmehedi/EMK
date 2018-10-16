@@ -5,8 +5,8 @@
             <field name="name">event.reservation.tree.view</field>
             <field name="model">event.reservation</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="status==on_process" decoration-danger="status=='on_process"
-                      decoration-success="status=='confirm" decoration-muted="status==done">
+                <tree decoration-bf="state=='on_process'" decoration-danger="state=='on_process'"
+                      decoration-success="state=='confirm'" decoration-muted="state=='done'">
                     <field name="organizer_id"/>
                     <field name="org_type_id"/>
                     <field name="event_type_id"/>
@@ -32,7 +32,7 @@
                         <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
                         <button name="act_cancel" string="Cancel" type="object"
                                 states="draft,on_process"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="on_process,confirm,done"/>
                     </header>
                     <sheet>
                         <h1>
@@ -47,16 +47,36 @@
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="event_type_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="attendee_number"/>
-                                <field name="payment_mode"/>
                             </group>
                             <group>
+                                <field name="attendee_number"/>
+                                <field name="total_session"/>
                                 <field name="request_date"/>
-                                <field name="payment_date"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
                             </group>
                         </group>
+                        <group string="Payments Information">
+                            <group>
+                                <field name="payment_type"/>
+                                <field name="mode_of_payment"/>
+                                <field name="paid_amount"/>
+                            </group>
+                            <group>
+                                <field name="refundable_amount"/>
+                                <field name="date_of_payment"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Details &amp; Rules Regulations">
+                                <separator string="Event Description"/>
+                                <field name="description" nolabel="1"/>
+                                <separator string="Rules and Regulations"/>
+                                <field name="rules_regulation" nolabel="1"/>
+                                <separator string="Comments/Notes"/>
+                                <field name="notes" nolabel="1"/>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
