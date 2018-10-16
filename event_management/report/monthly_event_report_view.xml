@@ -2,16 +2,6 @@
 <!--Custom report. -->
 <odoo>
     <data>
-        <report
-                id="action_report_monthly_report"
-                model="event.event"
-                string="Event Monthly Report"
-                report_type="qweb-pdf"
-                name="event_management.report_event_monthly"
-                file="event_management.report_event_monthly"
-                paperformat="report_layout.paperformat_backend_landscape"
-        />
-
         <template id="report_event_monthly">
             <t t-call="report.html_container">
                 <t t-call="report_layout.gbs_internal_layout">
@@ -26,10 +16,16 @@
                                 <br/>
                                 <div class="row">
                                     <div class="col-xs-8 text-left">
-                                        <h6><b>Date From :  </b><span t-esc="date_from"/></h6>
+                                        <h6>
+                                            <b>Date From :</b>
+                                            <span t-esc="date_from"/>
+                                        </h6>
                                     </div>
                                     <div class="col-xs-4 text-right">
-                                        <h6><b>Date To :  </b><span t-esc="date_to"/></h6>
+                                        <h6>
+                                            <b>Date To :</b>
+                                            <span t-esc="date_to"/>
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
@@ -47,18 +43,32 @@
                                 </thead>
                                 <tbody>
                                     <t t-foreach="lists" t-as="l">
-                                        <td><span t-esc="l"/></td>
+                                        <td>
+                                            <span t-esc="l"/>
+                                        </td>
                                         <t t-foreach="l_value['item']" t-as="line">
                                             <!--<t t-if="line['session_name']">-->
-                                                <tr style="page-break-inside: avoid">
-                                                    <td></td>
-                                                    <td><span t-esc="line['session_name']"/></td>
-                                                    <td><span t-esc="line['start_date']"/></td>
-                                                    <td><span t-esc="line['end_date']"/></td>
-                                                    <td><span t-esc="line['total_participant']"/></td>
-                                                    <td><span t-esc="line['total_participant']"/></td>
-                                                    <td><span t-esc="line['total_participant']"/></td>
-                                                </tr>
+                                            <tr style="page-break-inside: avoid">
+                                                <td></td>
+                                                <td>
+                                                    <span t-esc="line['session_name']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['start_date']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['end_date']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['total_participant']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['total_participant']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['total_participant']"/>
+                                                </td>
+                                            </tr>
                                             <!--</t>-->
                                         </t>
                                     </t>
@@ -70,5 +80,14 @@
                 </t>
             </t>
         </template>
+        <report
+                id="action_report_monthly_report"
+                model="event.event"
+                string="Event Monthly Report"
+                report_type="qweb-pdf"
+                name="event_management.report_event_monthly"
+                file="event_management.report_event_monthly"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
     </data>
 </odoo>

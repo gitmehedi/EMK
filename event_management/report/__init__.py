@@ -1,1 +1,1 @@
-from . import event_monthly_report
+from . import monthly_event_report
