@@ -6,8 +6,10 @@ from . import event_room
 from . import event_room_book
 from . import event_task_list
 from . import event_task_type
+from . import event_organization_type
 from . import event_type
 from . import event_session
 from . import event_session_attend
 from . import event_close
-from . import event_reservation_form
+from . import event_reservation
+from . import event_reservation

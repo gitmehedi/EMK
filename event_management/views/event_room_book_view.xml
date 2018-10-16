@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record id="event_reservation_tree_view" model="ir.ui.view">
+        <record id="meeting_room_reservation_tree_view" model="ir.ui.view">
             <field name="name">event.reservation.view.tree</field>
             <field name="model">event.room.book</field>
             <field name="arch" type="xml">
@@ -26,7 +26,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_event_reservation">
+        <record model="ir.actions.act_window" id="action_meeting_room_reservation">
             <field name="name">Event Reservation</field>
             <field name="res_model">event.room.book</field>
             <field name="type">ir.actions.act_window</field>
@@ -34,7 +34,7 @@
             <field name="view_mode">tree,calendar</field>
         </record>
 
-        <menuitem name="Event Reservation" id="menu_event_reservation" action="action_event_reservation"
+        <menuitem name="Meeting Room Calender" id="menu_meeting_room_reservation" action="action_meeting_room_reservation"
                   parent="menu_event_general" sequence="83"/>
     </data>
 </odoo>

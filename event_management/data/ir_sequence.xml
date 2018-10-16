@@ -16,5 +16,12 @@
             <field name="number_increment">1</field>
             <field name="padding">4</field>
         </record>
+        <record id="sequence_event_reservation" model="ir.sequence">
+            <field name="name">Event Reservation</field>
+            <field name="code">event.reservation</field>
+            <field name="prefix">ER%(year)s%(month)s%(day)s</field>
+            <field name="number_increment">1</field>
+            <field name="padding">4</field>
+        </record>
     </data>
 </odoo>
