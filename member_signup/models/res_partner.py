@@ -187,7 +187,7 @@ class ResPartner(models.Model):
 
         acc_invoice = {
             'partner_id': self.id,
-            'date_invoice': datetime.now(),
+            'date_invoice': fields.datetime.now(),
             'user_id': self.env.user.id,
             'account_id': account_id.id,
             'state': 'draft',
