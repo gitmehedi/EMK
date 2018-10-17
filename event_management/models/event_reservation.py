@@ -18,7 +18,7 @@ class EventReservation(models.Model):
     org_type_id = fields.Many2one('event.organization.type', string="Organization Type", required=True,
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
-    facilities_id = fields.Many2one('facility.type', string="Facilities Requested", required=True,
+    facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested",
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
     contract_number = fields.Char(string="Contract Number", readonly=True, related='organizer_id.mobile')
@@ -57,7 +57,7 @@ class EventReservation(models.Model):
                         readonly=True, states={'draft': [('readonly', False)]})
     paid_attendee = fields.Selection([('Yes', 'Yes'), ('No', 'No')],string="Will you be charging your participants?")
     participating_amount = fields.Integer(String="Participate Amount")
-    space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')],string="Do you need EMK Space?")
+    space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')],required=True,string="Do you need EMK Space?")
 
 
     state = fields.Selection(
