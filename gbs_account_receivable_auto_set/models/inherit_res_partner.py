@@ -76,7 +76,7 @@ class InheritResPartner(models.Model):
             vals['property_account_receivable_id'] = receivable_id
             # vals['property_account_payable_id'] = payable_id
 
-            return super(InheritResPartner, self).create(vals)
+        return super(InheritResPartner, self).create(vals)
 
 
     @api.multi
