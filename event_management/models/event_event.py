@@ -25,6 +25,7 @@ class EventEvent(models.Model):
     rules_regulation = fields.Html(string='Rules and Regulation')
     date_of_payment = fields.Date(string="Expected Date for Payment")
     notes = fields.Html(string="Comments/Notes")
+    ref_reservation = fields.Char(string="Reservation Reference")
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
