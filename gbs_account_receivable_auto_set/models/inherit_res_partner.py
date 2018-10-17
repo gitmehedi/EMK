@@ -1,4 +1,5 @@
 from odoo import api, models
+from odoo.exceptions import UserError, ValidationError
 
 
 class InheritResPartner(models.Model):
@@ -69,9 +70,32 @@ class InheritResPartner(models.Model):
         receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
 
         #Payable Id will be set later
-        payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
+        #payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
 
         vals['property_account_receivable_id'] = receivable_id
         # vals['property_account_payable_id'] = payable_id
 
         return super(InheritResPartner, self).create(vals)
+
+
+    @api.multi
+    def unlink(self):
+        receivable_id = self.property_account_receivable_id
+
+        if receivable_id:
+
+            res = super(InheritResPartner, self).unlink()
+
+            try:
+                if res:
+                    receivable_id.unlink()
+            except:
+                raise UserError('You can not delete Receivable Account as it has reference')
+
+        return res
+
+
+
+
+
+
