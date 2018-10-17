@@ -67,15 +67,16 @@ class InheritResPartner(models.Model):
 
     @api.model
     def create(self, vals):
-        receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
+        if not vals['parent_id']:
+            receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
 
-        #Payable Id will be set later
-        #payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
+            #Payable Id will be set later
+            #payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
 
-        vals['property_account_receivable_id'] = receivable_id
-        # vals['property_account_payable_id'] = payable_id
+            vals['property_account_receivable_id'] = receivable_id
+            # vals['property_account_payable_id'] = payable_id
 
-        return super(InheritResPartner, self).create(vals)
+            return super(InheritResPartner, self).create(vals)
 
 
     @api.multi
