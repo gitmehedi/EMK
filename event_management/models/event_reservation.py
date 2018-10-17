@@ -64,10 +64,7 @@ class EventReservation(models.Model):
     paid_attendee = fields.Selection([('Yes', 'Yes'), ('No', 'No')], string="Will you be charging your participants?")
     participating_amount = fields.Integer(String="Participate Amount")
     space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')], required=True, string="Do you need EMK Space?")
-    seats_availability = fields.Selection(
-        [('limited', 'Limited'), ('unlimited', 'Unlimited')],
-        'Maximum Attendees', required=True, default='unlimited',
-    )
+
 
     state = fields.Selection(
         [('draft', 'Draft'), ('on_process', 'On Process'), ('confirm', 'Confirmed'), ('done', 'Done'),
@@ -102,8 +99,6 @@ class EventReservation(models.Model):
             vals['date_end'] = self.end_date
             vals['payment_type'] = self.payment_type
             vals['mode_of_payment'] = self.mode_of_payment
-            vals['seats_availability'] = self.seats_availability
-            vals['seats_max'] = self.attendee_number
             vals['ref_reservation'] = self.name
             event = self.env['event.event'].create(vals)
             if event:

@@ -61,7 +61,7 @@
                 <xpath expr="//group[@name='main_field_group']" position="after">
                     <group string="Seats Information">
                         <group>
-                            <field name="seats_availability"/>
+                            <field name="seats_availability" required="False"/>
                             <field name="seats_min"/>
                             <field name="seats_max"/>
                             <field name="seats_available"/>
