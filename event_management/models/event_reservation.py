@@ -92,7 +92,7 @@ class EventReservation(models.Model):
         if self.state == 'on_process':
             self.name = self.env['ir.sequence'].next_by_code('event.reservation')
             self.state = 'confirm'
-            line_obj = self.env['event.event']
+            event_obj = self.env['event.event']
             vals = {}
             vals['name']= self.event_name
             vals['organizer_id']= self.organizer_id.id
@@ -104,7 +104,7 @@ class EventReservation(models.Model):
             vals['seats_availability']= self.seats_availability
             vals['seats_max']= self.attendee_number
             vals['ref_reservation']= self.name
-            line_obj.create(vals)
+            event_obj.create(vals)
 
     @api.one
     def act_done(self):
