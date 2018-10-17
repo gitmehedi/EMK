@@ -8,6 +8,7 @@ class EventReservation(models.Model):
     _rec_name = 'organizer_id'
 
     name = fields.Char(string='Name', readonly=True, states={'draft': [('readonly', False)]})
+    event_name = fields.Char(string='Event Name',required=True, readonly=True, states={'draft': [('readonly', False)]})
 
     organizer_id = fields.Many2one('res.partner', string='Organizer Name', domain=[('organizer', '=', True)],
                                    default=False, required=True, track_visibility='onchange',
@@ -17,8 +18,12 @@ class EventReservation(models.Model):
     org_type_id = fields.Many2one('event.organization.type', string="Organization Type", required=True,
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
+    facilities_id = fields.Many2one('facility.type', string="Facilities Requested", required=True,
+                                  track_visibility='onchange',
+                                  readonly=True, states={'draft': [('readonly', False)]})
     contract_number = fields.Char(string="Contract Number", readonly=True, related='organizer_id.mobile')
     work_email = fields.Char(string="Email", readonly=True, related='organizer_id.email')
+    contact_perseon = fields.Char(string="Contact Person")
     attendee_number = fields.Integer('No. of Attendees', required=True, track_visibility='onchange',
                                      readonly=True, states={'draft': [('readonly', False)]})
     total_session = fields.Integer('No. of Sessions', required=True, track_visibility='onchange',
@@ -50,6 +55,10 @@ class EventReservation(models.Model):
 
     notes = fields.Html(string="Comments/Notes", track_visibility='onchange',
                         readonly=True, states={'draft': [('readonly', False)]})
+    paid_attendee = fields.Selection([('Yes', 'Yes'), ('No', 'No')],string="Will you be charging your participants?")
+    participating_amount = fields.Integer(String="Participate Amount")
+    space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')],string="Do you need EMK Space?")
+
 
     state = fields.Selection(
         [('draft', 'Draft'), ('on_process', 'On Process'), ('confirm', 'Confirmed'), ('done', 'Done'),
@@ -72,7 +81,13 @@ class EventReservation(models.Model):
             self.state = 'confirm'
             # line_obj = self.env['event.event']
             # vals = {}
-            # vals['name']= self.organizer_id.name
+            # vals['name']= self.name
+            # vals['organizer_id']= self.organizer_id.name
+            # vals['event_type_id']= self.event_type_id.name
+            # vals['date_bgain']= self.start_date
+            # vals['date_end']= self.end_date
+            # vals['payment_type']= self.payment_type
+            # vals['mode_of_payment']= self.mode_of_payment
             # obj.create(vals)
 
     @api.one
