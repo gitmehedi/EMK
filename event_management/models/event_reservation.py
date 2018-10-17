@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
-import datetime
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -74,7 +73,7 @@ class EventReservation(models.Model):
     @api.constrains('date_begin')
     def _check_date_begin(self):
         dt_now = fields.datetime.now()
-        date_begin = datetime.datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(minutes=1)
+        date_begin = datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') + timedelta(minutes=1)
         if date_begin < dt_now:
             raise ValidationError(_("Event start date cannot be past date from current date"))
 
@@ -131,7 +130,8 @@ class EventReservation(models.Model):
 
             acc_invoice = {
                 'partner_id': self.organizer_id.id,
-                'date_invoice': datetime.now(),
+                'date_invoice': fields.datetime.now(),
+                'date_due': datetime.strptime(self.start_date, '%Y-%m-%d') - timedelta(days=1),
                 'user_id': self.env.user.id,
                 'account_id': account_id.id,
                 'state': 'draft',
