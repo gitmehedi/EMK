@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <tree decoration-bf="state=='on_process'" decoration-danger="state=='on_process'"
                       decoration-success="state=='confirm'" decoration-muted="state=='done'">
+                    <field name="name"/>
                     <field name="organizer_id"/>
                     <field name="org_type_id"/>
                     <field name="event_type_id"/>
@@ -52,7 +53,8 @@
                                 <field name="facilities_ids" widget="many2many_tags" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                             </group>
                             <group>
-                                <field name="attendee_number"/>
+                                <field name="seats_availability"/>
+                                <field name="attendee_number" attrs="{'required':[('seats_availability','=','limited')]}"/>
                                 <field name="total_session"/>
                                 <field name="request_date"/>
                                 <field name="start_date"/>

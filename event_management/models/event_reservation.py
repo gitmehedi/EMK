@@ -1,3 +1,5 @@
+
+import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -58,11 +60,22 @@ class EventReservation(models.Model):
     paid_attendee = fields.Selection([('Yes', 'Yes'), ('No', 'No')],string="Will you be charging your participants?")
     participating_amount = fields.Integer(String="Participate Amount")
     space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')],required=True,string="Do you need EMK Space?")
-
+    seats_availability = fields.Selection(
+        [('limited', 'Limited'), ('unlimited', 'Unlimited')],
+        'Maximum Attendees', required=True, default='unlimited',
+    )
 
     state = fields.Selection(
         [('draft', 'Draft'), ('on_process', 'On Process'), ('confirm', 'Confirmed'), ('done', 'Done'),
          ('cancel', 'Cancelled')], string="State", default="draft", track_visibility='onchange')
+
+    @api.multi
+    @api.constrains('date_begin')
+    def _check_date_begin(self):
+        dt_now = fields.datetime.now()
+        date_begin = datetime.datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(minutes=1)
+        if date_begin < dt_now:
+            raise ValidationError(_("Event start date cannot be past date from current date"))
 
     @api.one
     def act_draft(self):
@@ -79,16 +92,19 @@ class EventReservation(models.Model):
         if self.state == 'on_process':
             self.name = self.env['ir.sequence'].next_by_code('event.reservation')
             self.state = 'confirm'
-            # line_obj = self.env['event.event']
-            # vals = {}
-            # vals['name']= self.name
-            # vals['organizer_id']= self.organizer_id.name
-            # vals['event_type_id']= self.event_type_id.name
-            # vals['date_bgain']= self.start_date
-            # vals['date_end']= self.end_date
-            # vals['payment_type']= self.payment_type
-            # vals['mode_of_payment']= self.mode_of_payment
-            # obj.create(vals)
+            line_obj = self.env['event.event']
+            vals = {}
+            vals['name']= self.event_name
+            vals['organizer_id']= self.organizer_id.id
+            vals['event_type_id']= self.event_type_id.id
+            vals['date_begin']= self.start_date
+            vals['date_end']= self.end_date
+            vals['payment_type']= self.payment_type
+            vals['mode_of_payment']= self.mode_of_payment
+            vals['seats_availability']= self.seats_availability
+            vals['seats_max']= self.attendee_number
+            vals['ref_reservation']= self.name
+            line_obj.create(vals)
 
     @api.one
     def act_done(self):
