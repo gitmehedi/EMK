@@ -8,6 +8,8 @@
     'version': '1.0',
     'category': 'Extra Tools',
     'depends': ['mail'],
-    'data': [],
+    'data': [
+        'data/email_template.xml',
+    ],
     'installable': True,
 }

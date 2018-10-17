@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+import base64
+from datetime import datetime
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -6,6 +10,7 @@ class EventReservation(models.Model):
     _name = 'event.reservation'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'organizer_id'
+    _order='id desc'
 
     name = fields.Char(string='Name', readonly=True, states={'draft': [('readonly', False)]})
 
@@ -63,7 +68,7 @@ class EventReservation(models.Model):
     @api.one
     def act_on_process(self):
         if self.state == 'draft':
-            self.state = 'on_process'
+            self._create_invoice()
 
     @api.one
     def act_confirm(self):
@@ -80,3 +85,73 @@ class EventReservation(models.Model):
     def act_cancel(self):
         if self.state == 'draft':
             self.state = 'cancel'
+
+    @api.model
+    def _create_invoice(self):
+        serv_name = ['Event Organization Fee', 'Event Refund Fee']
+        serivces = self.env['product.product'].search([('name', 'in', serv_name), ('active', '=', serv_name)],
+                                                      order='id desc')
+        if len(serivces) != 2:
+            raise UserError(_('Please configure your event services.'))
+
+        def create_invoice(service, vals):
+            ins_inv = self.env['account.invoice']
+            journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
+            account_id = self.env['account.account'].search(
+                [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
+
+            acc_invoice = {
+                'partner_id': self.organizer_id.id,
+                'date_invoice': datetime.now(),
+                'user_id': self.env.user.id,
+                'account_id': account_id.id,
+                'state': 'draft',
+                'invoice_line_ids': [
+                    (0, 0, {
+                        'name': service.name,
+                        'product_id': service.id,
+                        'price_unit': vals['amount'],
+                        'account_id': journal_id.default_debit_account_id.id,
+                    })]
+            }
+            inv = ins_inv.create(acc_invoice)
+            inv.action_invoice_open()
+
+            if inv:
+                self.state = 'on_process'
+                pdf = self.env['report'].sudo().get_pdf([inv.id], 'account.report_invoice')
+                attachment = self.env['ir.attachment'].create({
+                    'name': inv.number + '.pdf',
+                    'res_model': 'account.invoice',
+                    'res_id': inv.id,
+                    'datas_fname': inv.number + '.pdf',
+                    'type': 'binary',
+                    'datas': base64.b64encode(pdf),
+                    'mimetype': 'application/x-pdf'
+                })
+                vals = {
+                    'template': 'mail_send.emk_inv_email_tmpl',
+                    'email_to': self.organizer_id.email,
+                    'attachment_ids': [(6, 0, attachment.ids)],
+                    'context': {
+                        'name': self.organizer_id.name,
+                        'subject': vals['subject']
+                    },
+                }
+                self.env['mail.mail'].mailsend(vals)
+
+        for ser in serivces:
+            if ser.name == 'Event Organization Fee':
+                if self.payment_type=='paid':
+                    vals = {
+                        'amount': self.paid_amount,
+                        'subject': 'Event Fee',
+                    }
+
+            if ser.name == 'Event Refund Fee':
+                vals = {
+                    'amount': self.refundable_amount,
+                    'subject': 'Refundable Amount',
+                }
+
+            create_invoice(ser, vals)

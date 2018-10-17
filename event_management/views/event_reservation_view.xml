@@ -5,7 +5,7 @@
             <field name="name">event.reservation.tree.view</field>
             <field name="model">event.reservation</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="state=='on_process'" decoration-danger="state=='on_process'"
+                <tree decoration-bf="state in ['on_process','draft']" decoration-danger="state=='on_process'"
                       decoration-success="state=='confirm'" decoration-muted="state=='done'">
                     <field name="organizer_id"/>
                     <field name="org_type_id"/>

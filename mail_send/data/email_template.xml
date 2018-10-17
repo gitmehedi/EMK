@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="emk_inv_email_tmpl" model="mail.template">
+        <field name="name">Account Invoice Payment</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">Invoice: ${ctx['subject']}</field>
+        <field name="email_to">${object.email|safe}</field>
+        <field name="email_from">
+            <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
+        <field name="body_html"><![CDATA[
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+                <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+                    <tbody><tr>
+                        <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                            <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+            <p>Dear ${ctx['name']},</p>
+                <p>
+                    ${ctx['subject']} invoice attach with email. Please take a look and payment your fee as soon as possible.
+                </p>
+                <p>Best regards,</p>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+                ${user.signature | safe}
+                <p style="font-size: 11px; margin-top: 10px;">
+                    <strong>Sent by ${user.company_id.name}</strong>
+                </p>
+            </div>]]></field>
+        <field name="user_signature" eval="False"/>
+    </record>
+</odoo>
