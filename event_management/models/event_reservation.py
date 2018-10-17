@@ -70,6 +70,10 @@ class EventReservation(models.Model):
         if self.state == 'on_process':
             self.name = self.env['ir.sequence'].next_by_code('event.reservation')
             self.state = 'confirm'
+            # line_obj = self.env['event.event']
+            # vals = {}
+            # vals['name']= self.organizer_id.name
+            # obj.create(vals)
 
     @api.one
     def act_done(self):

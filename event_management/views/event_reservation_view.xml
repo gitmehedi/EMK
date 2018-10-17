@@ -59,12 +59,12 @@
                         <group string="Payments Information">
                             <group>
                                 <field name="payment_type"/>
-                                <field name="mode_of_payment"/>
-                                <field name="paid_amount"/>
+                                <field name="mode_of_payment" attrs="{'required':[('payment_type','=','paid')]}"/>
+                                <field name="paid_amount" attrs="{'required':[('payment_type','=','paid')]}"/>
                             </group>
                             <group>
                                 <field name="refundable_amount"/>
-                                <field name="date_of_payment"/>
+                                <field name="date_of_payment" attrs="{'required':[('payment_type','=','paid')]}"/>
                             </group>
                         </group>
                         <notebook>
