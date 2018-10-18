@@ -41,6 +41,7 @@
         'gbs_samuda_sales_approval_menu',
         'gbs_customize_accountant',
         'gbs_samuda_stock',
+        'gbs_account_receivable_auto_set',
     ],
     'data': [],
     'description': 'Install all modules which is related with sales',

@@ -229,8 +229,6 @@ class SalePriceChange(models.Model):
     @api.multi
     def action_validate(self):
         self.approver1_id = self.env.user
-        if time.strftime('%Y-%m-%d') > self.effective_date:
-            raise ValidationError('Effective date must be after first approval date')
         return self.write({'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
