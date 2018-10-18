@@ -19,6 +19,9 @@
             <xpath expr="//notebook/page[@name='registrations']" position="before">
 
             </xpath>
+            <xpath expr="//button[@name='button_open_registration']" position="after">
+                <button name="%(event_barcode.event_barcode_action_main_view)d" type="action" class="oe_stat_button" icon="fa-barcode" string="Barcode Interface"/>
+            </xpath>
             <xpath expr="//notebook/page[1]" position="before">
                 <page string="Attendees">
                     <field name="attendee_ids">
