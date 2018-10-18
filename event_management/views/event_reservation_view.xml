@@ -33,13 +33,14 @@
                         <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
                         <button name="act_cancel" string="Cancel" type="object"
                                 states="draft,on_process"/>
-                        <field name="state" widget="statusbar" statusbar_visible="on_process,confirm,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm,done"/>
                     </header>
                     <sheet>
-                        <h1>
-                            <field name="organizer_id"
-                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                        </h1>
+                        <field name="image_medium" widget='image' class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="organizer_id" string="Organizer Name"/>
+                            <h1><field name="organizer_id" placeholder="Organizer Name" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/></h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="event_name"/>

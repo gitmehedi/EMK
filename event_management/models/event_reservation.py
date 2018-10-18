@@ -62,7 +62,8 @@ class EventReservation(models.Model):
                         readonly=True, states={'draft': [('readonly', False)]})
     paid_attendee = fields.Selection([('Yes', 'Yes'), ('No', 'No')], string="Will you be charging your participants?")
     participating_amount = fields.Integer(String="Participate Amount")
-    space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')], required=True, string="Do you need EMK Space?")
+    space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')], string="Do you need EMK Space?")
+    image_medium = fields.Binary(string='Medium-sized photo', attachment=True)
 
 
     state = fields.Selection(
@@ -85,7 +86,7 @@ class EventReservation(models.Model):
     @api.one
     def act_on_process(self):
         if self.state == 'draft':
-            self.state = 'confirm'
+            self.state = 'on_process'
 
     @api.one
     def act_confirm(self):
@@ -98,11 +99,16 @@ class EventReservation(models.Model):
             vals['date_end'] = self.end_date
             vals['payment_type'] = self.payment_type
             vals['mode_of_payment'] = self.mode_of_payment
+            vals['seats_min'] = self.attendee_number
+            vals['seats_max'] = self.attendee_number
+            vals['description'] = self.description
+            vals['rules_regulation'] = self.rules_regulation
             vals['ref_reservation'] = self.name
             event = self.env['event.event'].create(vals)
             if event:
                 self.name = self.env['ir.sequence'].next_by_code('event.reservation')
                 self._create_invoice()
+            self.state = 'confirm'
 
     @api.one
     def act_done(self):
@@ -131,7 +137,7 @@ class EventReservation(models.Model):
             acc_invoice = {
                 'partner_id': self.organizer_id.id,
                 'date_invoice': fields.datetime.now(),
-                'date_due': datetime.strptime(self.start_date, '%Y-%m-%d') - timedelta(days=1),
+                'date_due': datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') - timedelta(days=1),
                 'user_id': self.env.user.id,
                 'account_id': account_id.id,
                 'state': 'draft',
