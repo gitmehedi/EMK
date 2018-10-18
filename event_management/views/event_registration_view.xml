@@ -32,11 +32,13 @@
                 <xpath expr="//field[@name='email']" position="attributes">
                     <attribute name="required">True</attribute>
                 </xpath>
+                <xpath expr="//form/sheet/group" position="before">
+                    <h2><field name="barcode"/></h2>
+                </xpath>
                 <xpath expr="//field[@name='email']" position="after">
                     <field name="date_of_birth"/>
                     <field name="gender"/>
                     <field name="profession"/>
-                    <field name="temp_seq_name" readonly="True"/>
                 </xpath>
             </field>
         </record>
