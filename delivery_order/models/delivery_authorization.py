@@ -342,39 +342,42 @@ class DeliveryAuthorization(models.Model):
                         self._create_delivery_authorization_back_order()
                         self._automatic_delivery_order_creation()
                         self.write({'state': 'close'})  # Final Approval
-                    else:
-                        for orders in ordered_qty_pool:
-                            if not orders.lc_id:
-                                if list[rec] > orders.available_qty:
-                                    res['available_qty'] = 0
-                                    orders.create(res)
-                                    # self.write({'state': 'close'})  # Final Approval
-                                else:
-                                    res['available_qty'] = orders.available_qty - list[rec]
-                                    if res['available_qty'] > 100:
-                                        res['available_qty'] = 0
-
-                                    self._create_delivery_authorization_back_order()
-                                    self._automatic_delivery_order_creation()
-                                    self.write({'state': 'close'})  # Final Approval
-                                    orders.create(res)
-
-                    if list[rec] > 100 or res['available_qty'] == 0:
+                    # else:
+                    #     avail_qty_sum = 0
+                    #
+                    #     for orders in ordered_qty_pool:
+                    #         avail_qty_sum += orders.available_qty
+                    #
+                    #     if list[rec] > avail_qty_sum:
+                    #         res['available_qty'] = 0
+                    #         self.env['ordered.qty'].create(res)
+                    #         # self.write({'state': 'close'})  # Final Approval
+                    #     else:
+                    #         res['available_qty'] = avail_qty_sum - list[rec]
+                    #         if res['available_qty'] > 100:
+                    #             res['available_qty'] = 0
+                    #
+                    #     self._create_delivery_authorization_back_order()
+                    #     self._automatic_delivery_order_creation()
+                    #     self.write({'state': 'close'})  # Final Approval
+                    #     self.env['ordered.qty'].create(res)
+                    #
+                    # if list[rec] > 100 or res['available_qty'] == 0:
                         # product_pool = self.env['product.template'].search([('id', '=', rec)])
-                        wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
-                        view_id = self.env['max.delivery.without.lc.wizard']
+                    wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
+                    view_id = self.env['max.delivery.without.lc.wizard']
 
-                        return {
-                            'name': _('Max Ordering Confirm'),
-                            'type': 'ir.actions.act_window',
-                            'res_model': 'max.delivery.without.lc.wizard',
-                            'res_id': view_id.id,
-                            'view_id': wizard_form.id,
-                            'view_type': 'form',
-                            'view_mode': 'form',
-                            'target': 'new',
-                            'context': {'delivery_order_id': self.id, 'product_name': line.product_id.display_name}
-                        }
+                    return {
+                        'name': _('Max Ordering Confirm'),
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'max.delivery.without.lc.wizard',
+                        'res_id': view_id.id,
+                        'view_id': wizard_form.id,
+                        'view_type': 'form',
+                        'view_mode': 'form',
+                        'target': 'new',
+                        'context': {'delivery_order_id': self.id, 'product_name': line.product_id.display_name}
+                    }
             else:
                 self.state = 'approve'  # second
 
