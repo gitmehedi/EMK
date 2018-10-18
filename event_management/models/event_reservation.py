@@ -137,7 +137,7 @@ class EventReservation(models.Model):
             acc_invoice = {
                 'partner_id': self.organizer_id.id,
                 'date_invoice': fields.datetime.now(),
-                'date_due': datetime.strptime(self.start_date, '%Y-%m-%d') - timedelta(days=1),
+                'date_due': datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') - timedelta(days=1),
                 'user_id': self.env.user.id,
                 'account_id': account_id.id,
                 'state': 'draft',
