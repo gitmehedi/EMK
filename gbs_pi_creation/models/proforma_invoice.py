@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import decimal_precision as dp
 
 
 class ProformaInvoice(models.Model):
@@ -244,11 +245,10 @@ class ProformaInvoiceLine(models.Model):
     uom_id = fields.Many2one('product.uom', string="Unit of Measure", store=True,related='product_id.uom_id',
                              readonly=True)
     quantity = fields.Float(string="Ordered Qty",default=1)
-    price_unit = fields.Float(string="Unit Price")
+    price_unit = fields.Float(string="Unit Price", digits=dp.get_precision('Product Price'))
     tax = fields.Many2one('account.tax', string='Taxes')
     price_tax = fields.Float(compute='_compute_amount', store=True, string='Tax')
-    price_subtotal = fields.Float(string="Sub Total", store=True,compute='_get_price_subtotal',
-                                  readonly=True)
+    price_subtotal = fields.Float(string="Sub Total", store=True,compute='_get_price_subtotal',readonly=True)
 
     """ Relational field"""
     pi_id = fields.Many2one('proforma.invoice', ondelete='cascade')

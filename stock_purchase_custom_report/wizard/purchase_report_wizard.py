@@ -1,5 +1,5 @@
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 
 
 class PurchaseReportWizard(models.TransientModel):
@@ -7,7 +7,7 @@ class PurchaseReportWizard(models.TransientModel):
 
     date_from = fields.Date("Date From",required=True)
     date_to = fields.Date("Date To",required=True)
-    partner_id = fields.Many2one('res.partner', string='Supplier',domain=[('supplier', '=', True)])
+    partner_id = fields.Many2one('res.partner', string='Supplier',domain=[('supplier', '=', True),('parent_id', '=', False)])
     operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
@@ -20,6 +20,10 @@ class PurchaseReportWizard(models.TransientModel):
     def report_print(self):
         location = self.env['stock.location'].search(
             [('operating_unit_id', '=', self.operating_unit_id.id),('name', '=', 'Stock')])
+
+        if not location:
+            raise UserError(_("There are no stock location for this unit. "
+                          "\nPlease create stock location for this unit."))
 
         data = {}
         data['date_from'] = self.date_from

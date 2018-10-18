@@ -83,6 +83,8 @@ class StockTransferDetailsReport(models.AbstractModel):
                                            AND sm.state = 'done'
                                            AND sm.location_id = %s
                                            AND sm.location_dest_id <> %s
+                                    ORDER  BY
+                                           sm.date
                                    )tbl
                                     ''' % (date_start, date_end, location_outsource, location_outsource)
 

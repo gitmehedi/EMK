@@ -1,5 +1,6 @@
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import ValidationError
+from odoo.addons import decimal_precision as dp
 
 from datetime import date
 
@@ -19,12 +20,12 @@ class SalePriceChange(models.Model):
                                          'validate2': [('readonly', True)],
                                          'validate': [('readonly', True)]}, string='Product', required=True)
 
-    list_price = fields.Float(string='Old Price', compute='compute_list_price', readonly=True, store=True)
+    list_price = fields.Float(string='Old Price', compute='compute_list_price', readonly=True, store=True,digits=dp.get_precision('Product Price'))
 
     new_price = fields.Float(string='New Price',
                              states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                      'validate2': [('readonly', True)],
-                                     'validate': [('readonly', True)]}, required=True)
+                                     'validate': [('readonly', True)]}, required=True, digits=dp.get_precision('Product Price'))
     product_package_mode = fields.Many2one('product.packaging.mode', string='Packaging Mode',
                                            states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                                    'validate2': [('readonly', True)],
@@ -77,6 +78,22 @@ class SalePriceChange(models.Model):
     discount = fields.Float(string='Max Discount Limit',
                             states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
                                     'validate': [('readonly', True)]}, )
+
+
+    #-------------------------
+    # country_id = fields.Many2one('res.country', string='Country', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+    #                                 'validate': [('readonly', True)]},)
+    #
+    # terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+    #                                 'validate': [('readonly', True)]})
+    #
+    # freight_mode = fields.Selection([
+    #     ('fob', 'FOB'),
+    #     ('c&f', 'C&F')
+    # ], string='Freight Mode',default='fob', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+    #                                 'validate': [('readonly', True)]})
+
+
 
 
     @api.constrains('discount')
@@ -198,8 +215,8 @@ class SalePriceChange(models.Model):
 
         self.approver2_id = self.env.user
 
-        if time.strftime('%Y-%m-%d') > self.effective_date:
-            raise ValidationError('Effective date must be after final approval date')
+        # if time.strftime('%Y-%m-%d') > self.effective_date:
+        #     raise ValidationError('Effective date must be after final approval date')
 
         ## Execute below function immedietly to update on Variants History
         # self.env['product.sale.history.line'].pull_automation()
@@ -212,8 +229,6 @@ class SalePriceChange(models.Model):
     @api.multi
     def action_validate(self):
         self.approver1_id = self.env.user
-        if time.strftime('%Y-%m-%d') > self.effective_date:
-            raise ValidationError('Effective date must be after first approval date')
         return self.write({'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi

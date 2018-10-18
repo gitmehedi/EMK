@@ -19,15 +19,15 @@ class GBSStockScrap(models.Model):
         return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
 
     name = fields.Char('Reference',  default=lambda self: _('New'),copy=False,
-                       readonly=True, required=True,
+                       readonly=True, required=True, track_visibility='onchange',
                        states={'draft': [('readonly', False)]})
-    reason = fields.Text('Reason',readonly=True, required=True,
+    reason = fields.Text('Reason',readonly=True, required=True, track_visibility='onchange',
                          states={'draft': [('readonly', False)]})
-    request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
+    request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True, track_visibility='onchange',
                                  default=lambda self: self.env.user)
-    requested_date = fields.Datetime('Request Date', required=True, default=fields.Datetime.now)
-    approved_date = fields.Datetime('Approved Date', readonly=True)
-    approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
+    requested_date = fields.Datetime('Request Date', required=True, default=fields.Datetime.now, track_visibility='onchange',)
+    approved_date = fields.Datetime('Approved Date', readonly=True, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', string='Authority', readonly=True, track_visibility='onchange',
                                   help="who have approve or reject.")
     location_id = fields.Many2one('stock.location', 'Location',default=_get_default_location_id,
                                   domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",required=True,

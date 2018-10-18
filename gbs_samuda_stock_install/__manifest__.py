@@ -41,6 +41,7 @@
         'stock_inventory_extend',
         'stock_picking_loan',
         'gbs_product_cost_price_history',
+        'gbs_samuda_inventory_access',
     ],
 
     'installable': True,

@@ -46,6 +46,12 @@ class PurchaseOrder(models.Model):
 
     ref_date = fields.Date('Ref.Date')
 
+    currency_id = fields.Many2one(related='partner_id.property_purchase_currency_id',required=True, store=True,
+                                  string='Currency', readonly=True)
+
+    # currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True,
+    #                               default=lambda self: self.partner_id.currency_id.id)
+
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
         if not self.requisition_id:
@@ -214,14 +220,15 @@ class PurchaseOrder(models.Model):
         return res
 
     def unlink(self):
-        for indent in self:
-            if indent.state != 'draft':
+        for obj in self:
+            if obj.state != 'cancel':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
                 query = """ delete from attachment_po_rel where po_id=%s"""
-                for att in self.attachment_ids:
+                for att in obj.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'

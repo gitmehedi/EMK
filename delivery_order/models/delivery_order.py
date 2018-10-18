@@ -153,6 +153,22 @@ class DeliveryOrder(models.Model):
         return str_address
 
 
+    # def _create_stock_picking_entry(self):
+    #     picking_obj = {}
+    #
+    #     picking_obj['partner_id'] =
+    #     picking_obj['customer_name'] =
+    #     picking_obj['shipping_address_print'] =
+    #     picking_obj['location_dest_id'] =
+    #     picking_obj['min_date'] =
+    #     picking_obj['origin'] =
+    #     picking_obj['delivery_order_id'] =
+    #     picking_obj['pack_type'] =
+    #     picking_obj['date_done'] =
+
+
+
+
     @api.multi
     def create_delivery_order(self):
 
@@ -170,24 +186,27 @@ class DeliveryOrder(models.Model):
         shipping_address = self.getAddressByPartner(self.parent_id)
 
 
-        stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
-        stock_picking_id.sudo().write({
-            'customer_name':self.parent_id.name,
-            'shipping_address_print':shipping_address,
-            'pack_type': self.delivery_order_id.sale_order_id.pack_type.id,
-                                       'operating_unit_id': self.delivery_order_id.operating_unit_id.id,
-                                       'delivery_order_id': self.id})
+        for stock_picking_id in self.delivery_order_id.sale_order_id.picking_ids:
+            stock_picking_id.sudo().write({
+                'customer_name': self.parent_id.name,
+                'shipping_address_print': shipping_address,
+                'pack_type': self.delivery_order_id.sale_order_id.pack_type.id,
+                'operating_unit_id': self.delivery_order_id.operating_unit_id.id,
+                'delivery_order_id': self.id})
 
-        # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
-        if self.delivery_order_id.so_type == 'lc_sales':
-            stock_picking_id.sudo().write({'lc_id': self.lc_id.id})
-            # self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
-            # As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
-            self.delivery_order_id.sale_order_id.sudo().write({'pi_id': self.pi_id.id})
+            if self.delivery_order_id.so_type == 'lc_sales':
+                stock_picking_id.sudo().write({'lc_id': self.lc_id.id})
+                # self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
+                # As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
+                self.delivery_order_id.sale_order_id.sudo().write({'pi_id': self.pi_id.id})
 
-        # Update Stock Move with reference of Delivery Order
-        stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
-        stock_move_id.sudo().write({'delivery_order_id': self.id})
+            # Update Stock picking ordered qty as per partial delivery order qty
+            stock_picking_id.pack_operation_product_ids.write(
+                {'product_qty': self.delivery_order_id.line_ids.delivery_qty})
+
+            # Update Stock Move with reference of Delivery Order
+            for stock_move_id in stock_picking_id.move_lines:
+                stock_move_id.sudo().write({'delivery_order_id': self.id})
 
         return True
 

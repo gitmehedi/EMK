@@ -8,10 +8,14 @@
                 <sheet>
                     <group>
                         <field name="name" />
+                        <field name="days"/>
                         <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
                     </group>
-
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>

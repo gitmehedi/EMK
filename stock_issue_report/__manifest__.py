@@ -19,7 +19,7 @@
     'depends': ['stock_indent','report_layout'],
 
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'report/stock_issue_report.xml',
         'wizard/stock_issue_wizard.xml',
 

@@ -123,20 +123,20 @@
                 groups="commercial.group_commercial_manager"/>
 
         <menuitem
-                id="gbs_purchase_requisition.submenu_commercial_customer"
-                name="Customers/Suppliers"
+                id="gbs_purchase_requisition.submenu_commercial_supplier"
+                name="Suppliers"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="1"
-                action="base.action_partner_customer_form"
+                action="base.action_partner_supplier_form"
                 groups="commercial.group_commercial_manager"/>
 
         <menuitem
-                id="gbs_purchase_requisition.submenu_commercial_products"
-                name="Products"
+                id="gbs_purchase_requisition.submenu_commercial_products_purchase"
+                name="Products Purchaseable"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="2"
-                action="product.product_template_action"
-                groups="commercial.group_commercial_manager"/>
+                action="purchase.product_normal_action_puchased"
+                groups="commercial.group_commercial_manager,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
 
         <menuitem
 				name="Question Set"

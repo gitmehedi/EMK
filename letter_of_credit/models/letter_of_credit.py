@@ -132,7 +132,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'open','last_note': Status.OPEN.value})
+        self.write({'state': 'open','last_note': "LC Open"})
         if self.tolerance > 10 :
             raise Warning('You should set "Tolerance" upto 10 !')
 
@@ -185,7 +185,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+        note = comm_utility_pool.getStrNumber(number) + ' ' + "Amendment"
 
         self.write({'state': self.state, 'last_note': note})
         return {
