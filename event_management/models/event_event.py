@@ -26,6 +26,7 @@ class EventEvent(models.Model):
     date_of_payment = fields.Date(string="Expected Date for Payment")
     notes = fields.Html(string="Comments/Notes")
     ref_reservation = fields.Char(string="Reservation Reference")
+    image_medium = fields.Binary(string='Medium-sized photo', attachment=True)
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):

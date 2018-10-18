@@ -39,6 +39,9 @@
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                     <attribute name="required">True</attribute>
                 </xpath>
+                <xpath expr="//div[2]" position="before">
+                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                </xpath>
             </field>
         </record>
         <record model="ir.ui.view" id="view_event_sale_form">
