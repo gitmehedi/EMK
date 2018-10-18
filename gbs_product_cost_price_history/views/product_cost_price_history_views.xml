@@ -60,6 +60,7 @@
         <menuitem id="menu_product_cost_price"
                   name="Product Cost Price History" sequence="3"
                   parent="stock.menu_stock_inventory_control"
+                  groups="stock.group_stock_manager"
                   action="action_product_cost_price"/>
 
 

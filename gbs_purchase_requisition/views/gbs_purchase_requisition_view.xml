@@ -21,9 +21,9 @@
                     <xpath expr="//field[@name='date_end']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
-                    <!--<xpath expr="//field[@name='ordering_date']" position="replace">-->
-                    <!--<field name="requisition_date"/>-->
-                    <!--</xpath>-->
+                    <xpath expr="//field[@name='ordering_date']" position="replace">
+                        <field name="requisition_date"/>
+                    </xpath>
                     <xpath expr="//field[@name='origin']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
@@ -169,6 +169,7 @@
                 </data>
             </field>
         </record>
+
         <record id="inherit_pr_filter_view_form" model="ir.ui.view">
             <field name="name">purchase.requisition.filter.view.form</field>
             <field name="model">purchase.requisition</field>
@@ -180,23 +181,14 @@
                 <xpath expr="//field[@name='type_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//field[@name='user_id']" position="after">
+                <xpath expr="//field[@name='user_id']" position="replace">
                     <field name="indent_ids" />
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
-                    <filter name="my_approval_in_progress" string="To Validate" domain="[('state','=','in_progress')]"/>
-                    <filter name="my_approval_wait_for_done" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
+                    <filter name="validation" string="To Validate" domain="[('state','=','in_progress')]"/>
+                    <filter name="approval" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
                 </xpath>
             </field>
         </record>
-
-        <!--<record id="inherit_pr_filter_view_form_to_approve" model="ir.ui.view">-->
-        <!--<field name="name">purchase.requisition.filter.view.form</field>-->
-        <!--<field name="model">purchase.requisition</field>-->
-        <!--<field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>-->
-        <!--<field name="arch" type="xml">-->
-        <!--<filter name="my_approval_wait_for_done" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>-->
-        <!--</field>-->
-        <!--</record>-->
 
         <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition">
             <field name="name">Purchase Requisition</field>
@@ -232,14 +224,30 @@
             <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
         </record>
 
-        <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition_to_approve">
+        <record model="ir.actions.act_window" id="action_purchase_requisition_to_validate">
             <field name="name">Purchase Requisition</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.requisition</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('purchase_from','=','ho')]</field>
             <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
+            <field name="context">{
+                'search_default_validation':1,
+                }
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_purchase_requisition_to_approve">
+            <field name="name">Purchase Requisition</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
+            <field name="context">{
+                'search_default_approval':1,
+                }
+            </field>
         </record>
 
         <menuitem
@@ -251,12 +259,20 @@
                 groups="stock.group_stock_user,gbs_purchase_requisition.group_purchase_requisition_validator"/>
 
         <menuitem
-                id="purchase_requisition.menu_purchase_requisition_pending_approval"
+                id="menu_purchase_requisition_pending_approval"
                 sequence="11"
-                name="Pending Purchase Requisition"
+                name="Pending PR (Approval)"
                 parent="purchase.menu_procurement_management"
-                action="purchase_requisition.action_purchase_requisition_to_approve"
+                action="action_purchase_requisition_to_approve"
                 groups="gbs_purchase_requisition.group_purchase_requisition_approver"/>
+
+        <menuitem
+                id="menu_purchase_requisition_pending_validate"
+                sequence="12"
+                name="Pending PR (Validation)"
+                parent="purchase.menu_procurement_management"
+                action="action_purchase_requisition_to_validate"
+                groups="gbs_purchase_requisition.group_purchase_requisition_validator"/>
 
         <!--Purchase Product Action-->
         <record id="purchase.product_normal_action_puchased" model="ir.actions.act_window">
@@ -361,6 +377,13 @@
                 parent="purchase.menu_purchase_control"
                 groups="purchase.group_purchase_manager"
                 sequence="13"/>
+
+        <menuitem
+                id="purchase_requisition.menu_purchase_requisition_type"
+                sequence="100"
+                parent="purchase.menu_purchase_config"
+                action="purchase_requisition.tender_type_action"
+                groups="base.group_system"/>
 
     </data>
 </odoo>
