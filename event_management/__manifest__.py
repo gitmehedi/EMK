@@ -9,6 +9,7 @@
     'depends': [
         'product',
         'account',
+        'event_barcode',
         'report_layout',
         'mail_send',
         'event',
@@ -16,7 +17,7 @@
         'event_user',
         'data_import',
         'event_session',
-        'website_event_filter_selector'
+        'website_event_filter_selector',
     ],
     'data': [
         'security/security.xml',
