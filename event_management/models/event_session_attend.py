@@ -29,7 +29,7 @@ class EventSessionAttend(models.Model):
     def button_reg_close(self):
         """ Close Registration """
         today = fields.Datetime.now()
-        if self.event_id.date_begin <= today:
+        if self.session_id.event_id.date_begin <= today:
             self.write({'state': 'done', 'date_closed': today})
         else:
             raise UserError(_("You must wait for the starting day of the event to do this action."))
