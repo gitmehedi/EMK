@@ -40,5 +40,22 @@
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="inherit_event_registration_view_form_inherit_barcode">
+            <field name="name">inherit.event.registration.view.form.inherit.barcode</field>
+            <field name="inherit_id" ref="event_barcode.event_registration_view_form_inherit_barcode"/>
+            <field name="model">event.registration</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='barcode']" position="replace"></xpath>
+                <xpath expr="//form/sheet/group" position="before">
+                    <div class="oe_title">
+                        <label for="barcode"/>
+                        <h1>
+                            <field name="barcode"/>
+                        </h1>
+                    </div>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
