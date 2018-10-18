@@ -21,7 +21,7 @@ class EventSessionAttend(models.Model):
         self.state = 'open'
 
         # auto-trigger after_sub (on subscribe) mail schedulers, if needed
-        onsubscribe_schedulers = self.event_id.event_mail_ids.filtered(
+        onsubscribe_schedulers = self.session_id.event_id.event_mail_ids.filtered(
             lambda s: s.interval_type == 'after_sub')
         onsubscribe_schedulers.execute()
 
