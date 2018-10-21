@@ -59,7 +59,7 @@ class StockPicking(models.Model):
                     loan_borrowing_ids = loan_borrowing_obj.search([('name', '=', picking.origin)])
                     if loan_borrowing_ids:
                         for product_line in loan_borrowing_ids[0].item_lines:
-                            moves = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                            moves = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id and o.state != 'cancel')
                             for move in moves:
                                 product_line.write({'received_qty': product_line.received_qty + move.product_qty})
                     if self.transfer_type == 'receive':

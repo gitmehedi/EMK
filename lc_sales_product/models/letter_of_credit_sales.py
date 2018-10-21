@@ -23,7 +23,7 @@ class LetterOfCredit(models.Model):
         self.currency_id = None
         self.lc_value = None
         self.operating_unit_id = None
-        self.first_party_bank = None
+        self.first_party_bank_acc = None
 
         for pi_id in self.pi_ids_temp:
             so_id = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
@@ -38,15 +38,15 @@ class LetterOfCredit(models.Model):
                 raise ValidationError('Please add Proforma Invoice whose Applicant are same.')
             elif self.currency_id and self.currency_id != pi_id.currency_id:
                 raise ValidationError('Please add Proforma Invoice whose Currency are same.')
-            elif self.first_party_bank and self.first_party_bank != pi_id.advising_bank_id:
-                raise ValidationError('Please add Proforma Invoice whose Bank are same.')
+            elif self.first_party_bank_acc and self.first_party_bank_acc != pi_id.advising_bank_acc_id:
+                raise ValidationError('Please add Proforma Invoice whose Bank Account are same.')
             else:
                 self.first_party = pi_id.beneficiary_id
                 self.second_party_applicant = pi_id.partner_id.id
                 self.currency_id = pi_id.currency_id.id
                 self.lc_value += pi_id.total
                 self.operating_unit_id = pi_id.operating_unit_id.id
-                self.first_party_bank = pi_id.advising_bank_id
+                self.first_party_bank_acc = pi_id.advising_bank_acc_id
             for obj in pi_id.line_ids:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.product_id.name,

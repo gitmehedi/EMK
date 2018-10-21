@@ -30,7 +30,7 @@ class PurchaseOrder(models.Model):
                                    help="Local: Local LC.\n""Foreign: Foreign LC.")
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
                                    string="Purchase By")
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.order')])
     check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
     disable_new_revision_button = fields.Boolean('Disable New Revision Button', default=False)
 
@@ -45,6 +45,12 @@ class PurchaseOrder(models.Model):
     contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
 
     ref_date = fields.Date('Ref.Date')
+
+    currency_id = fields.Many2one(related='partner_id.property_purchase_currency_id',required=True, store=True,
+                                  string='Currency', readonly=True)
+
+    # currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True,
+    #                               default=lambda self: self.partner_id.currency_id.id)
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -133,8 +139,18 @@ class PurchaseOrder(models.Model):
                     'name': attachment_line.name,
                     'datas_fname': attachment_line.datas_fname,
                     'db_datas': attachment_line.db_datas,
+                    'res_model': 'purchase.order',
                 }))
             self.attachment_ids = attachments_lines
+
+        # link way
+        # attachments_lines = []
+        # for attachment_line in requisition.attachment_ids:
+        #     attachments_lines.append((4,attachment_line.id))
+        # self.attachment_ids = attachments_lines
+        # (replace way)
+        # self.attachment_ids = [(6,0,requisition.attachment_ids.ids)]
+
         if requisition.region_type:
             self.region_type = requisition.region_type
         if requisition.purchase_by:
@@ -204,14 +220,15 @@ class PurchaseOrder(models.Model):
         return res
 
     def unlink(self):
-        for indent in self:
-            if indent.state != 'draft':
+        for obj in self:
+            if obj.state != 'cancel':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
-                query = """ delete from ir_attachment where res_id=%s"""
-                for att in self.attachment_ids:
+                query = """ delete from attachment_po_rel where po_id=%s"""
+                for att in obj.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'

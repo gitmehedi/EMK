@@ -17,7 +17,7 @@
     'category': 'Stock',
     'version': '10.0.0.1',
 
-    'depends': ['stock','operating_unit'],
+    'depends': ['stock_operating_unit'],
 
     'data': [
         'data/sequence.xml',

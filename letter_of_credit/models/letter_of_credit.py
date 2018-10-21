@@ -28,7 +28,8 @@ class LetterOfCredit(models.Model):
              "Foreign: Foreign LC.")
 
     first_party = fields.Many2one('res.company', string='Candidate', required=True)
-    first_party_bank = fields.Many2one('res.bank', string='Bank', required=True)
+    # first_party_bank = fields.Many2one('res.bank', string='Bank')
+    first_party_bank_acc = fields.Many2one('res.partner.bank', string='Bank Account', domain=[('is_company_account', '=', True)], required=True)
 
     second_party_applicant = fields.Many2one('res.partner', string='Applicant', domain = "[('customer', '=', True)]")
     second_party_beneficiary = fields.Many2one('res.partner', string='Candidate', domain="[('supplier', '=', True)]")
@@ -131,7 +132,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'open','last_note': Status.OPEN.value})
+        self.write({'state': 'open','last_note': "LC Open"})
         if self.tolerance > 10 :
             raise Warning('You should set "Tolerance" upto 10 !')
 
@@ -184,7 +185,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+        note = comm_utility_pool.getStrNumber(number) + ' ' + "Amendment"
 
         self.write({'state': self.state, 'last_note': note})
         return {

@@ -11,8 +11,8 @@
 				<xpath expr="//group[@name='localization']" position="after">
 					<group string="Indent">
 						<field name="can_request" />
-						<field name="manager_id"
-							attrs="{'invisible': [('can_request','=',False)], 'required': [('can_request','=',True)]}" />
+						<!--<field name="manager_id"-->
+							<!--attrs="{'invisible': [('can_request','=',False)], 'required': [('can_request','=',True)]}" />-->
 					</group>
 				</xpath>
 			</field>

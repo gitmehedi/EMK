@@ -21,7 +21,8 @@ class Picking(models.Model):
     @api.depends('receive_type','location_dest_id','check_mrr_button','state')
     def _compute_approve_button(self):
         for picking in self:
-            if picking.transfer_type == 'receive' and picking.state == 'done' and picking.location_dest_id.name == 'Stock':
+            if picking.state == 'done' and picking.location_dest_id.name == 'Stock':
+            # if picking.transfer_type == 'receive' and picking.state == 'done' and picking.location_dest_id.name == 'Stock':
                 # if picking.state == 'done':
                 #     if picking.location_dest_id.name == 'Stock':
                 origin_picking_objs = self.search([('name','=',picking.origin)])
@@ -35,6 +36,9 @@ class Picking(models.Model):
                     else:
                         picking.check_ac_approve_button = True
                         picking.check_approve_button = False
+                else:
+                    picking.check_ac_approve_button = True
+                    picking.check_approve_button = False
 
                 if picking.check_mrr_button == True:
                     picking.check_approve_button = False

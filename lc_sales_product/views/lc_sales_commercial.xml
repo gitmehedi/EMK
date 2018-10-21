@@ -25,7 +25,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="lc_sales_product.pi_comm_tree_view"/>
             <field name="search_view_id" ref="lc_sales_product.pi_comm_filter"/>
-            <field name="domain">[('state','=','confirm')]</field>
+            <field name="domain">[('region_type','=','local'),('state','=','confirm')]</field>
+            <field name="context">{'default_region_type': 'local'}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Approved list of the Proforma Invoice are show in here

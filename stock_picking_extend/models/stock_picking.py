@@ -10,7 +10,7 @@ class Picking(models.Model):
     def _get_default_picking_type(self):
         if self.env.context.get('default_transfer_type') == 'receive':
             picking_type_objs = self.env['stock.picking.type'].search(
-                    [('warehouse_id.operating_unit_id', '=', self.env.user.default_operating_unit_id.id),
+                    [('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),
                      ('code', '=', 'incoming')])
             return picking_type_objs[0].id
 
@@ -30,12 +30,12 @@ class Picking(models.Model):
     challan_bill_no = fields.Char(
         string='Challan Bill No',
         readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)],'assigned':[('readonly', False)]})
 
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):
         if self.partner_id and self.challan_bill_no:
-            filters = [['challan_bill_no', '=ilike', self.challan_bill_no], ['partner_id', '=', self.partner_id.id]]
+            filters = [['challan_bill_no', '=ilike', self.challan_bill_no],['partner_id', '=', self.partner_id.id],['backorder_id','=',False]]
             bill_no = self.search(filters)
             if len(bill_no) > 1:
                 raise UserError(_('[Unique Error] Challan Bill must be unique for %s !') % self.partner_id.name)

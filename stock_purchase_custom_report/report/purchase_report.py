@@ -12,7 +12,6 @@ class StockPurchaseReport(models.AbstractModel):
         op_unit_obj = self.env['operating.unit'].search([('id','=',op_unit_id)])
         data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
 
-
         docargs = {
             'doc_ids': self._ids,
             'docs': self,
@@ -98,17 +97,17 @@ class StockPurchaseReport(models.AbstractModel):
                                            sp.mrr_no				                AS sp_mrr,
                                            sm.date + interval'6h'                   AS move_date,
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * Coalesce((SELECT ph.cost
-                                             FROM   product_price_history ph
-                                             WHERE  ph.datetime + interval'6h' <= '%s'
+                                           sm.product_qty * Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI') 
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC,ph.id DESC
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_in_tk,
-                                           Coalesce((SELECT ph.cost
-                                             FROM   product_price_history ph
-                                             WHERE  ph.datetime + interval'6h' <= '%s'
+                                           Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC,ph.id DESC
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                              LIMIT  1), 0)          AS cost_val
                                     FROM   stock_move sm 
                                            LEFT JOIN stock_picking sp 
@@ -138,7 +137,7 @@ class StockPurchaseReport(models.AbstractModel):
                                             %s
                                    )tbl 
                                    ORDER BY m_date
-                        ''' % (date_end,date_end,location_input,location_input,date_start, date_end, location_outsource, location_outsource,_where)
+                        ''' % (location_input,location_input,date_start, date_end, location_outsource, location_outsource,_where)
 
         self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():

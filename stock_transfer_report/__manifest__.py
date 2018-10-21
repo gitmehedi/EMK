@@ -16,7 +16,10 @@
     'category': 'Stock',
     'version': '10.0.1',
 
-    'depends': ['stock_operating_unit','report_layout'],
+    'depends': [
+        'stock_operating_unit',
+        'gbs_product_cost_price_history',
+        'report_layout'],
 
     # always loaded
     'data': [

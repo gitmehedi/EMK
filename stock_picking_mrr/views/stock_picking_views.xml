@@ -12,13 +12,13 @@
                 <field name="check_ac_approve_button" invisible="1"/>
 
                 <button name="button_approve" string="Approve" attrs="{'invisible': [('check_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
 
                 <button name="button_ac_approve" string="AC Approve" attrs="{'invisible': [('check_ac_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="account.group_account_user"/>
 
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="stock.group_stock_user"/>
             </xpath>
 
             <!--<xpath expr="//field[@name='origin']" position="after">-->
@@ -47,13 +47,13 @@
                 <field name="check_ac_approve_button" invisible="1"/>
 
                 <button name="button_approve" string="Approve" attrs="{'invisible': [('check_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
 
                 <button name="button_ac_approve" string="AC Approve" attrs="{'invisible': [('check_ac_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="account.group_account_user"/>
 
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
             </xpath>
 
         </field>
@@ -64,7 +64,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree1"/>
+        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree2"/>
         <field name="domain">[('check_approve_button', '=', 'True')]</field>
         <field name="help" type="html">
             <p>
@@ -78,7 +78,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree1"/>
+        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree2"/>
         <field name="domain">[('check_mrr_button', '=', 'True')]</field>
         <field name="help" type="html">
             <p>
@@ -92,7 +92,7 @@
               parent="stock.menu_stock_warehouse_mgmt"
               sequence="5"
               action="action_stock_picking_approval"
-              groups="stock.group_stock_user"/>
+              groups="gbs_application_group.group_head_of_plant"/>
 
     <menuitem id="menu_picking_mrr"
               name="Print MRR"

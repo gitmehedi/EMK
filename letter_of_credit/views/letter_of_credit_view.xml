@@ -38,7 +38,7 @@
                                 <separator string="Beneficiary" colspan="2" attrs="{'invisible': [('type', '=', 'import')]}"/>
                                 <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'export')]}"/>
                                 <field name="first_party"/>
-                                <field name="first_party_bank"/>
+                                <field name="first_party_bank_acc"/>
                                 <field name="operating_unit_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
 
                             </group>

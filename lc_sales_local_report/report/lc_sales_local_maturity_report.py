@@ -52,7 +52,8 @@ class LCSalesMaturityReport(models.AbstractModel):
                           JOIN purchase_shipment ps on ps.id = sp.shipment_id
                           JOIN letter_credit lc on lc.id = ps.lc_id
                           LEFT JOIN res_partner rp on lc.second_party_applicant = rp.id
-                          LEFT JOIN res_bank rb on lc.first_party_bank = rb.id
+                          LEFT JOIN res_partner_bank bank_acc on lc.first_party_bank_acc = bank_acc.id
+                          LEFT JOIN res_bank rb on bank_acc.bank_id = rb.id
                           LEFT JOIN res_currency rc on lc.currency_id = rc.id
                        WHERE pt.id = %s AND lc.type ='export' AND lc.region_type = 'local' AND ps.state = 'to_maturity'
                        ORDER BY pt.id ASC

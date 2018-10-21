@@ -10,8 +10,8 @@ class BankTopSheet(models.AbstractModel):
         report_utility_pool = self.env['report.utility']
         doc_list = []
         data = {}
-        data['first_party_bank'] = shipment_obj.lc_id.first_party_bank.name
-        data['first_party_bank_add'] = report_utility_pool.getBankAddress2(shipment_obj.lc_id.first_party_bank)
+        data['first_party_branch_bank'] = shipment_obj.lc_id.first_party_bank_acc.bank_id.name
+        data['first_party_branch_add'] = report_utility_pool.getBranchAddress2(shipment_obj.lc_id.first_party_bank_acc)
         data['company'] = shipment_obj.company_id.name
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
         data['invoice_value'] = shipment_obj.invoice_value

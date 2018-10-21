@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import decimal_precision as dp
 
 
 class ProformaInvoice(models.Model):
@@ -40,8 +41,14 @@ class ProformaInvoice(models.Model):
                                  readonly=True, states={'draft': [('readonly', False)]})
     invoice_date = fields.Date('PI Date', readonly=True, required=True,
                                states={'draft': [('readonly', False)]},default=fields.Datetime.now)
-    advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True,
-                                       states={'draft': [('readonly', False)]})
+    # advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', readonly=True,
+    #                                    states={'draft': [('readonly', False)]})
+
+    advising_bank_acc_id = fields.Many2one('res.partner.bank', string='Advising Bank Acc', domain=[('is_company_account', '=', True)],
+                                           required=True, readonly=True, states={'draft': [('readonly', False)]})
+
+    region_type = fields.Selection([('local', "Local"),('foreign', "Foreign")], readonly=True,)
+
 
     beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True,
                                      default=lambda self: self.env['res.company']._company_default_get(),
@@ -238,11 +245,10 @@ class ProformaInvoiceLine(models.Model):
     uom_id = fields.Many2one('product.uom', string="Unit of Measure", store=True,related='product_id.uom_id',
                              readonly=True)
     quantity = fields.Float(string="Ordered Qty",default=1)
-    price_unit = fields.Float(string="Unit Price")
+    price_unit = fields.Float(string="Unit Price", digits=dp.get_precision('Product Price'))
     tax = fields.Many2one('account.tax', string='Taxes')
     price_tax = fields.Float(compute='_compute_amount', store=True, string='Tax')
-    price_subtotal = fields.Float(string="Sub Total", store=True,compute='_get_price_subtotal',
-                                  readonly=True)
+    price_subtotal = fields.Float(string="Sub Total", store=True,compute='_get_price_subtotal',readonly=True)
 
     """ Relational field"""
     pi_id = fields.Many2one('proforma.invoice', ondelete='cascade')

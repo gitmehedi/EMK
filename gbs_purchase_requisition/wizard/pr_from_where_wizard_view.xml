@@ -9,7 +9,7 @@
                 <form string="Please take decision purchase from where?" create="false" edit="false">
                     <group>
                         <group>
-                            <field name="purchase_from" placeholder="Please Select"/>
+                            <field name="purchase_from" placeholder="Please Select" required="1"/>
                         </group>
                     </group>
                     <footer>

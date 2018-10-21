@@ -68,7 +68,7 @@
                                             <tr class="odo-bg-gray">
                                                 <td>
                                                     <p><u><b>Freight</b></u></p>
-                                                    <!--<span t-esc="data['vehical_no']"/>-->
+                                                    <span t-esc="data['freight']"/>
                                                 </td>
                                                 <td>
                                                     <p><u><b>Truck/Lorry No.</b></u></p>
@@ -100,6 +100,7 @@
                                     <td colspan="2">
                                         <div>
                                             <p>Received the above goods in good order &amp; Conditions:</p>
+                                            <span t-esc="data['goods_condition']"/>
                                         </div>
                                     </td>
                                 </tr>

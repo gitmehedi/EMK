@@ -98,7 +98,7 @@
 
         <menuitem id="menu_lc_pi_comm"
                   parent="main_menu_lc_sales_comm"
-                  sequence="2" name="Proforma Invoice (PI)"
+                  sequence="2" name="Proforma Invoice (Local)"
                   action="lc_sales_product.action_sale_pi_comm" groups="commercial.group_commercial_user_export"/>
 
         <menuitem
