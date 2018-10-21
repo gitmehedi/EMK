@@ -99,6 +99,9 @@ class EventReservation(models.Model):
             vals['date_end'] = self.end_date
             vals['payment_type'] = self.payment_type
             vals['mode_of_payment'] = self.mode_of_payment
+            vals['paid_amount'] = self.paid_amount
+            vals['refundable_amount'] = self.refundable_amount
+            vals['date_of_payment'] = self.date_of_payment
             vals['seats_min'] = self.attendee_number
             vals['seats_max'] = self.attendee_number
             vals['description'] = self.description
