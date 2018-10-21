@@ -32,9 +32,6 @@
                 <xpath expr="//field[@name='email']" position="attributes">
                     <attribute name="required">True</attribute>
                 </xpath>
-                <xpath expr="//form/sheet/group" position="before">
-                    <h2><field name="barcode"/></h2>
-                </xpath>
                 <xpath expr="//field[@name='email']" position="after">
                     <field name="date_of_birth"/>
                     <field name="gender"/>
@@ -52,9 +49,9 @@
                 <xpath expr="//form/sheet/group" position="before">
                     <div class="oe_title">
                         <label for="barcode"/>
-                        <h1>
+                        <h2>
                             <field name="barcode"/>
-                        </h1>
+                        </h2>
                     </div>
                 </xpath>
             </field>
