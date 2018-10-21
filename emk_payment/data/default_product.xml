@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_event_participation_fee" model="product.template">
+            <field name="name">Event Participation Fee</field>
+            <field name="type">service</field>
+            <field name="sale_ok">False</field>
+            <field name="purchase_ok">False</field>
+            <field name="service_type">card</field>
+        </record>
+    </data>
+</odoo>

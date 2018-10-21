@@ -18,6 +18,7 @@
         'data/sequence.xml',
         'data/template.xml',
         'data/ir_actions_server.xml',
+        'data/default_product.xml',
         'views/menu_views.xml',
         'views/payment_session_views.xml',
         'views/invoice_payment_views.xml',

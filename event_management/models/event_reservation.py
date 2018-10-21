@@ -15,7 +15,7 @@ class EventReservation(models.Model):
     name = fields.Char(string='Name', readonly=True, states={'draft': [('readonly', False)]})
     event_name = fields.Char(string='Event Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
 
-    organizer_id = fields.Many2one('res.partner', string='Organizer Name', domain=[('organizer', '=', True)],
+    organizer_id = fields.Many2one('res.partner', string='Organizer Name', domain=[('is_organizer', '=', True)],
                                    default=False, required=True, track_visibility='onchange',
                                    readonly=True, states={'draft': [('readonly', False)]})
     event_type_id = fields.Many2one('event.type', string='Event Type', required=True, track_visibility='onchange',
@@ -26,9 +26,9 @@ class EventReservation(models.Model):
     facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested",
                                       track_visibility='onchange',
                                       readonly=True, states={'draft': [('readonly', False)]})
-    contract_number = fields.Char(string="Contract Number", readonly=True, related='organizer_id.mobile')
+    contact_number = fields.Char(string="Contact Number", readonly=True, related='organizer_id.mobile')
     work_email = fields.Char(string="Email", readonly=True, related='organizer_id.email')
-    contact_perseon = fields.Char(string="Contact Person")
+
     attendee_number = fields.Integer('No. of Attendees', required=True, track_visibility='onchange',
                                      readonly=True, states={'draft': [('readonly', False)]})
     total_session = fields.Integer('No. of Sessions', required=True, track_visibility='onchange',
@@ -52,19 +52,23 @@ class EventReservation(models.Model):
     paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange',
                                readonly=True, states={'draft': [('readonly', False)]})
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), track_visibility='onchange',
+                                     required=True,
                                      readonly=True, states={'draft': [('readonly', False)]})
     rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange',
                                    readonly=True, states={'draft': [('readonly', False)]})
     date_of_payment = fields.Date(string="Expected Date for Payment", track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
-
     notes = fields.Html(string="Comments/Notes", track_visibility='onchange',
                         readonly=True, states={'draft': [('readonly', False)]})
-    paid_attendee = fields.Selection([('Yes', 'Yes'), ('No', 'No')], string="Will you be charging your participants?")
-    participating_amount = fields.Integer(String="Participate Amount")
-    space_id = fields.Selection([('Yes', 'Yes'), ('NO', 'No')], string="Do you need EMK Space?")
-    image_medium = fields.Binary(string='Medium-sized photo', attachment=True)
-
+    paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
+                                     string="Participation Charge", readonly=True,
+                                     states={'draft': [('readonly', False)]})
+    participating_amount = fields.Integer(string="Participation Amount", readonly=True,
+                                          states={'draft': [('readonly', False)]})
+    space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Do you need EMK Space?",
+                                readonly=True, states={'draft': [('readonly', False)]})
+    image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
+                                 states={'draft': [('readonly', False)]})
 
     state = fields.Selection(
         [('draft', 'Draft'), ('on_process', 'On Process'), ('confirm', 'Confirmed'), ('done', 'Done'),
@@ -178,12 +182,16 @@ class EventReservation(models.Model):
         for ser in serivces:
             if ser.name == 'Event Organization Fee':
                 if self.payment_type == 'paid':
+                    if self.paid_amount == 0:
+                        raise ValueError(_("Paid Amount not defined properly as Event required payment."))
                     vals = {
                         'amount': self.paid_amount,
                         'subject': 'Event Fee',
                     }
 
             if ser.name == 'Event Refund Fee':
+                if self.paid_amount == 0:
+                    raise ValueError(_("Refundable Amount not defined properly as Event required payment."))
                 vals = {
                     'amount': self.refundable_amount,
                     'subject': 'Refundable Amount',
