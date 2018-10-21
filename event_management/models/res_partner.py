@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 class EventManagementType(models.Model):
     _inherit = 'res.partner'
 
-    organizer = fields.Boolean(default=False)
+    is_organizer = fields.Boolean(default=False)
     event_count = fields.Integer("Events", compute='_compute_event_count',
                                  help="Number of events the partner has participated.")
 
