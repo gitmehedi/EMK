@@ -3,13 +3,13 @@
     <template inherit_id="website.assets_frontend" id="event_assets_frontend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/assets/static/src/css/style.css"/>
-            <script type="text/javascript" src="/assets/static/src/js/bootstrap.validator.js"></script>
             <script type="text/javascript" src="/assets/static/src/js/utils.js"></script>
             <script type="text/javascript" src="/event_registration/static/src/js/event.js"></script>
         </xpath>
     </template>
-    <template id="registration_template">
-        <xpath expr="//form">
+
+    <template inherit_id="website_event.registration_template" id="inherit_registration_template">
+        <xpath expr="//form" position="replace">
             <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <table itemprop="offers" class="table table-striped" style="display: none;">
@@ -51,7 +51,7 @@
                 <button type="submit"
                         t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
                         class="btn btn-success pull-left a-submit" t-attf-id="#{event.id}">
-                    <i class="fa fa-user-plus">Register Now</i>
+                    <i class="fa fa-user-plus"> Register Now</i>
                 </button>
                 <div t-if="not event.state == 'confirm'" class="alert alert-info">
                     <t t-if="event.state == 'draft'">
@@ -155,7 +155,7 @@
                                                 <label class="radio-inline">
                                                     <input type="radio" t-attf-name="#{counter}-gender"
                                                            t-att-value="label"
-                                                           t-att-checked="'checked' if label==gender else None"/>
+                                                           t-att-checked="'checked' if label=='male' else None"/>
                                                     <t t-esc="label_value"/>
                                                 </label>
                                             </t>
