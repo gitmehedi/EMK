@@ -67,6 +67,8 @@ class EventReservation(models.Model):
                                           states={'draft': [('readonly', False)]})
     space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Do you need EMK Space?",
                                 readonly=True, states={'draft': [('readonly', False)]})
+    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
+                                          string='Available Seat',default="limited",states={'draft': [('readonly', False)]})
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
                                  states={'draft': [('readonly', False)]})
 
@@ -106,8 +108,8 @@ class EventReservation(models.Model):
             vals['paid_amount'] = self.paid_amount
             vals['refundable_amount'] = self.refundable_amount
             vals['date_of_payment'] = self.date_of_payment
-            vals['seats_min'] = self.attendee_number
             vals['seats_max'] = self.attendee_number
+            vals['seats_availability'] = self.seats_availability
             vals['description'] = self.description
             vals['rules_regulation'] = self.rules_regulation
             vals['ref_reservation'] = self.name
