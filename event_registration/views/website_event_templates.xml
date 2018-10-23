@@ -8,7 +8,70 @@
             <script type="text/javascript" src="/event_registration/static/src/js/event.js"></script>
         </xpath>
     </template>
+    <template id="registration_template">
+        <xpath expr="//form">
+            <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <table itemprop="offers" class="table table-striped" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-4 col-md-6">Ticket Type</th>
+                            <th>End of Registration</th>
+                            <th class="o_th_price">Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-if="event.state == 'confirm'">
+                            <td>Event Registration</td>
+                            <td>
+                                <t t-if="event.date_begin">
+                                    <span t-esc="event.date_begin_located[:-3]"/>
+                                </t>
+                                <t t-if="not event.date_begin">
+                                    <span>Unlimited</span>
+                                </t>
+                            </td>
+                            <td>Free</td>
+                            <td>
+                                <select t-if="event.seats_available or event.seats_availability == 'unlimited'"
+                                        name="nb_register-0" class="form-control">
+                                    <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available+1)"
+                                       t-as="nb">
+                                        <option t-esc="nb"/>
+                                    </t>
+                                </select>
+                                <span t-if="event.seats_availability == 'limited' and not event.seats_available">Sold
+                                    Out
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit"
+                        t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
+                        class="btn btn-success pull-left a-submit" t-attf-id="#{event.id}">
+                    <i class="fa fa-user-plus">Register Now</i>
+                </button>
+                <div t-if="not event.state == 'confirm'" class="alert alert-info">
+                    <t t-if="event.state == 'draft'">
+                        Event registration not yet started.
+                    </t>
+                    <t t-if="event.state != 'draft'">
+                        Event registration is closed.
+                    </t>
+                    <t t-if="uid">
+                        <i class="fa fa-plus-circle">
+                            <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+                                <em>Configure and Launch Event Registration</em>
+                            </a>
+                        </i>
+                    </t>
+                </div>
+            </form>
+        </xpath>
 
+    </template>
 
     <template inherit_id="website_event.registration_attendee_details" id="inherit_registration_attendee_details">
         <xpath expr="//form/div/div[2]" position="replace">
