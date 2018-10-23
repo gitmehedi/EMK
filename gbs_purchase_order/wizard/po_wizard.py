@@ -20,7 +20,7 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
         order._add_supplier_to_product()
         # Deal with double validation process
         requested_date = datetime.strptime(order.date_order, "%Y-%m-%d %H:%M:%S").date()
-        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.order', requested_date)
+        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.order', requested_date,order.operating_unit_id)
         if new_seq:
             order.write({'name': new_seq})
         if self.purchase_by not in ['lc']:

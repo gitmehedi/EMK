@@ -95,7 +95,7 @@ class IndentIndent(models.Model):
     @api.one
     @api.constrains('required_date')
     def _check_required_date(self):
-        if self.required_date <= self.indent_date:
+        if self.required_date+' 23:59:59' <= self.indent_date:
             raise UserError('Required Date can not be less then current date!!!')
 
     @api.multi
