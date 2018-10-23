@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+
+
+    <!-- Event session action form stat button -->
+    <record id="act_event_session_event_form" model="ir.actions.act_window">
+        <field name="res_model">event.session</field>
+        <field name="view_type">form</field>
+        <field name="name">Sessions</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+    </record>
+
+    <record id="view_event_form" model="ir.ui.view">
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(event_sessions.act_event_session_event_form)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-cubes"
+                        help="Sessions availables for this event">
+                    <field name="sessions_count" widget="statinfo" string="Sessions"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='event_mail_ids']//field[@name='template_id']"
+                   position="before">
+                <field name="session_id" domain="[('event_id','=',parent.id)]"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

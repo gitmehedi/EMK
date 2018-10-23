@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_event_session_form" model="ir.ui.view">
+        <field name="name">event.session.form</field>
+        <field name="model">event.session</field>
+        <field name="arch" type="xml">
+            <form string="Event Session">
+                <header>
+                    <button name="act_unconfirmed" string="Unconfirmed" type="object" states="confirmed"
+                            class="oe_highlight"/>
+                    <button name="act_confirmed" string="Confirmed" type="object" states="unconfirmed"
+                            class="oe_highlight" groups="event.group_event_user"/>
+                    <button name="act_done" string="Done" type="object" states="confirmed"
+                            groups="event_user.group_event_administration"/>
+                    <field name="state" widget="statusbar" statusbar_visible="unconfirmed,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="button_open_registration"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-users"
+                                help="Attendees on this session">
+                            <field name="seats_expected"
+                                   widget="statinfo" string="Attendees"/>
+                        </button>
+                        <button name="%(event_barcode.event_barcode_action_main_view)d" type="action"
+                                class="oe_stat_button"
+                                icon="fa-barcode" string="Barcode Interface"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="event_id" required="True"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="date_begin"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <group string="Seats Information">
+                        <group>
+                            <field name="seats_min"/>
+                            <field name="seats_availability"/>
+                            <field name="seats_max"
+                                   attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                            <field name="seats_reserved"/>
+                        </group>
+                        <group>
+                            <field name="seats_available"
+                                   attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                            <field name="seats_unconfirmed"/>
+                            <field name="seats_used"/>
+                            <field name="seats_available_expected"
+                                   attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="registrations" string="Registrations">
+                            <field name="registration_ids" context="{'default_event_id': event_id}">
+                                <tree decoration-bf="state=='start'" decoration-danger="state=='unconfirmed'"
+                                      decoration-success="state=='confirmed'" decoration-muted="state=='done'"
+                                      editable="bottom">
+                                    <field name="event_id" invisible="1"/>
+                                    <field name="attendee_id"/>
+                                    <field name="origin" string="Barcode"/>
+                                    <field name="date_open"/>
+                                    <field name="date_closed"/>
+                                    <field name="event_begin_date"/>
+                                    <field name="event_end_date"/>
+                                    <field name="state" string="State"/>
+                                    <field name="message_needaction" invisible="1"/>
+                                    <button name="confirm_registration" string="Confirm Registration" states="draft"
+                                            type="object" icon="fa-check text-success"/>
+                                    <button name="button_reg_close" string="Attended the Event" states="open"
+                                            type="object" icon="fa-level-down text-success"/>
+                                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open"
+                                            type="object" icon="fa-times-circle text-danger"/>
+                                </tree>
+                                <form string="Event Registration Form">
+                                    <group>
+                                        <group>
+                                            <field name="event_id" invisible="1"/>
+                                            <field name="attendee_id"/>
+                                            <field name="origin" string="Barcode"/>
+                                            <field name="event_end_date"/>
+                                        </group>
+                                        <group>
+                                            <field name="date_open"/>
+                                            <field name="date_closed"/>
+                                            <field name="event_begin_date"/>
+                                            <field name="state" string="State"/>
+                                            <field name="message_needaction" invisible="1"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Email Schedule">
+                            <field name="event_mail_ids" context="{'default_event_id': event_id}">
+                                <tree string="Email Schedule" editable="bottom">
+                                    <field name="event_id" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="template_id"/>
+                                    <field name="interval_nbr"
+                                           attrs="{'readonly':
+                                           [('interval_unit','=','now')]}"/>
+                                    <field name="interval_unit"/>
+                                    <field name="interval_type"/>
+                                    <field name="done"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_event_session_tree" model="ir.ui.view">
+        <field name="name">event.session.tree</field>
+        <field name="model">event.session</field>
+        <field name="arch" type="xml">
+            <tree string="Sessions">
+                <field name="event_id"/>
+                <field name="name"/>
+                <field name="date_begin"/>
+                <field name="date_end"/>
+                <field name="seats_availability"/>
+                <field name="seats_max" sum="Total seats" attrs="{'invisible':
+                       [('seats_availability','=','unlimited')]}"/>
+                <field name="seats_available" sum="Total available seats"
+                       attrs="{'invisible':
+                       [('seats_availability','=','unlimited')]}"/>
+                <field name="seats_available_expected"
+                       sum="Total available expected seats"
+                       attrs="{'invisible':
+                       [('seats_availability', '=', 'unlimited')]}"/>
+                <field name="seats_expected" sum="Total seats expected"/>
+                <field name="seats_reserved" sum="Total seats reserved"/>
+                <field name="seats_unconfirmed" sum="Total seats unconfirmed"/>
+                <field name="seats_available_pc" widget="progressbar"
+                       attrs="{'invisible':
+                   [('seats_availability','=','unlimited')]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_session_search" model="ir.ui.view">
+        <field name="name">event.session.search</field>
+        <field name="model">event.session</field>
+        <field name="arch" type="xml">
+            <search string="Event Sesssion">
+                <field name="name" string="Session" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="event_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Event" name="group_event" domain="[]"
+                            context="{'group_by':'event_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_event_session_calendar" model="ir.ui.view">
+        <field name="name">event.session.calendar</field>
+        <field name="model">event.session</field>
+        <field eval="3" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar color="event_id"
+                      date_start="date_begin" date_stop="date_end" string="Session">
+                <field name="name"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="act_event_session_form" model="ir.actions.act_window">
+        <field name="res_model">event.session</field>
+        <field name="view_type">form</field>
+        <field name="name">Sessions</field>
+        <field name="view_mode">tree,form,calendar</field>
+    </record>
+
+    <menuitem id="event_session_menu" name="Sessions" sequence="80"
+              parent="event_management.menu_event_general" action="act_event_session_form"
+              groups="event.group_event_user"/>
+</odoo>

@@ -1,0 +1,124 @@
+<?xml  version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_event_session_attend_tree">
+        <field name="name">event.session.attend.tree</field>
+        <field name="model">event.session.attend</field>
+        <field name="arch" type="xml">
+            <tree string="Registration" decoration-bf="message_needaction==True">
+                <field name="create_date"/>
+                <field name="origin"/>
+                <field name="event_id"/>
+                <field name="state"/>
+                <field name="message_needaction" invisible="1"/>
+                <button name="confirm_registration" string="Confirm Registration" states="draft" type="object"
+                        icon="fa-check text-success"/>
+                <button name="button_reg_close" string="Attended the Event" states="open" type="object"
+                        icon="fa-level-down text-success"/>
+                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"
+                        icon="fa-times-circle text-danger"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_session_attend_form">
+        <field name="name">event.session.attend.form</field>
+        <field name="model">event.session.attend</field>
+        <field name="arch" type="xml">
+            <form string="Event Registration">
+                <header>
+                    <button name="action_send_badge_email" string="Send by Email" type="object" states="open,done"
+                            class="oe_highlight"/>
+                    <button name="confirm_registration" string="Confirm" states="draft" type="object"
+                            class="oe_highlight"/>
+                    <button name="button_reg_close" string="Attended" states="open" type="object"
+                            class="oe_highlight"/>
+                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object"/>
+                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open"
+                            type="object"/>
+                    <field name="state" nolabel="1" colspan="2" widget="statusbar"
+                           statusbar_visible="draft,open,done"/>
+                </header>
+                <sheet string="Registration">
+                    <group>
+                        <group string="Attendee" name="attendee">
+                            <field name="attendee_id"/>
+                        </group>
+                        <group string="Event Information" name="event">
+                            <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="date_open" groups="base.group_no_one"/>
+                            <field name="date_closed" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_event_session_attend_calendar" model="ir.ui.view">
+        <field name="name">event.session.attend.calendar</field>
+        <field name="model">event.session.attend</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar color="event_id" date_start="event_begin_date" date_stop="event_end_date"
+                      string="Event Registration">
+                <field name="event_id"/>
+                <field name="origin"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_session_attend_pivot">
+        <field name="name">event.session.attend.pivot</field>
+        <field name="model">event.session.attend</field>
+        <field name="arch" type="xml">
+            <pivot string="Registration" display_quantity="True">
+                <field name="event_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_session_attend_graph">
+        <field name="name">event.session.attend.graph</field>
+        <field name="model">event.session.attend</field>
+        <field name="arch" type="xml">
+            <graph string="Registration">
+                <field name="event_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_session_attend_search">
+        <field name="name">event.session.attend.search</field>
+        <field name="model">event.session.attend</field>
+        <field name="arch" type="xml">
+            <search string="Event Registration">
+                <field name="id" string="Registration ID"/>
+                <filter string="Unread Messages" name="message_needaction"
+                        domain="[('message_needaction','=',True)]"/>
+                <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
+                <separator/>
+                <field name="event_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
+                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Registration Day" domain="[]" context="{'group_by': 'create_date:day'}"/>
+                    <filter string="Registration Month" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_session_attend">
+        <field name="name">Attendees</field>
+        <field name="res_model">event.session.attend</field>
+        <field name="view_type">form</field>
+        <field name="domain"></field>
+        <field name="view_mode">tree,form,calendar,pivot,graph</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_event_session_attend_search"/>
+    </record>
+</odoo>

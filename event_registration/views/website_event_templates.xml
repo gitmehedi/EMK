@@ -269,7 +269,7 @@
                                             <td></td>
                                             <td>
                                                 <i class="glyphicon glyphicon-th"></i>
-                                                <t t-esc="attendee.temp_seq_name"/>
+                                                <t t-esc="attendee.barcode"/>
                                             </td>
                                         </tr>
                                         <tr class="evc-head">
