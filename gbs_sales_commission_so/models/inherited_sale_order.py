@@ -25,7 +25,7 @@ class InheritedSaleOrderLine(models.Model):
 
 
     def _get_customer_commission_by_product(self):
-        self.commission_rate = 0
+        #self.commission_rate = 0
         if self.product_id and self.order_id.partner_id:
 
             if self.product_id.product_tmpl_id.commission_type == 'fixed':
@@ -38,7 +38,10 @@ class InheritedSaleOrderLine(models.Model):
                  ('product_id', '=', self.product_id.id),
                  ('status', '=', True)])
 
-            if commission:
+            if self.commission_rate:
+                self.commission_rate = self.commission_rate
+
+            elif commission:
                 for coms in commission:
                     self.commission_rate = coms.commission_rate
             else:

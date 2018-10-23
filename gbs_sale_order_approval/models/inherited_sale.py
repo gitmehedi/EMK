@@ -766,7 +766,7 @@ class InheritedSaleOrderLine(models.Model):
         #self.da_qty = self.product_uom_qty
 
         vals = {}
-        if self.product_id:
+        if self.product_id and not self.price_unit:
             vals['price_unit'] = self._get_product_sales_price(self.product_id)
             self.update(vals)
 
