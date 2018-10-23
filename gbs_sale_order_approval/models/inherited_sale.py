@@ -548,7 +548,8 @@ class SaleOrder(models.Model):
     @api.multi
     @api.onchange('pack_type')
     def pack_type_onchange(self):
-        self._get_changed_price()
+        if not self.pi_id:
+            self._get_changed_price()
 
     def _get_changed_price(self):
         for order in self:
