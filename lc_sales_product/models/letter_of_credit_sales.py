@@ -70,7 +70,9 @@ class LetterOfCredit(models.Model):
 
                     # Update 100 MT logic
                     da_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', s_order.id)])
-                    da_obj.sudo().update_lc_id_for_houndred_mt()
+
+                    for d in da_obj:
+                        d.sudo().update_lc_id_for_houndred_mt()
 
         self.write({'state': 'confirmed', 'last_note': 'Getting Confirmation'})
 
