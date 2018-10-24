@@ -33,7 +33,7 @@ class ProductGateIn(models.Model):
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
                         [('code', '=', 'incoming'),('warehouse_id.operating_unit_id', '=', self.operating_unit_id.id),
-                         ('default_location_dest_id', '=', location_dest_id.id)])
+                         ('default_location_dest_id', '=', location_dest_id.id),('default_location_src_id', '=', location_id.id),])
 
                     pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
                     res = {
