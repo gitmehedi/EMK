@@ -41,6 +41,10 @@ class EventEvent(models.Model):
         if date_begin < dt_now:
             raise ValidationError(_("Event start date cannot be past date from current date"))
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['confirm','draft'])]
+
 
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
