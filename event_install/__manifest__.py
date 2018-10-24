@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Event Installation',
+    'author': 'Genweb2 Limited',
+    'website': 'www.genweb2.com',
+    'category': 'Installation',
+    'version': '1.0',
+    'data': [],
+    'depends': [
+        'event',
+        'website_event',
+        'event_barcode',
+        'product',
+        'account',
+        'report_layout',
+        'mail_send',
+        'event_user',
+        'data_import',
+        'website_event_filter_selector',
+        'event_user',
+        'event_management',
+        'event_registration',
+        'event_sessions',
+        'emk_payment',
+    ],
+    'category': 'Installation Module',
+    'summary': 'Install Module of EMK',
+    'description': 'Install Module of EMK',
+    'installable': True,
+    'application': True,
+}
+

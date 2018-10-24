@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template inherit_id="website.assets_frontend" id="event_assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/assets/static/src/css/style.css"/>
+            <script type="text/javascript" src="/assets/static/src/js/bootstrap.validator.js"></script>
+            <script type="text/javascript" src="/assets/static/src/js/utils.js"></script>
+            <script type="text/javascript" src="/event_registration/static/src/js/event.js"></script>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_event.event_details" id="inherit_event_details">
+        <xpath expr="//div" position="replace">
+            <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
+                <div class="col-sm-8">
+                    <h1 itemprop="name" class="text-left" t-field="event.name"></h1>
+                    <div class="text-left">
+                        <small t-if="event.is_participating" class="label label-info">Participating</small>
+                    </div>
+                    <hr style="padding: 0px; border-bottom: 2px solid #dfdfdf; background: transparent;"/>
+                    <h4>
+                        <span class="text-info" itemprop="startDate"
+                              t-field="event.with_context(tz=event.date_tz).date_begin"
+                              t-options='{"format": "MMMM d, y"}'/>
+                        to
+                        <span class="text-info" itemprop="endDate"
+                              t-field="event.with_context(tz=event.date_tz).date_end"
+                              t-options='{"format": "MMMM d, y"}'/>
+                    </h4>
+                    <h4 class="text-center text-muted"
+                        t-field="event.address_id" t-options='{
+                "widget": "contact",
+                "fields": ["city"]
+                }'/>
+                    <div itemprop="description" t-field="event.description"></div>
+                    <div class="row mt32 mb32">
+                        <t t-raw="0"/>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div itemprop="offers">
+                            <div t-if="event.state == 'confirm'">
+                                <div>
+                                    <t t-if="not event.date_begin">
+                                        <span>Unlimited</span>
+                                    </t>
+                                </div>
+                                <div>
+                                    <select t-if="event.seats_available or event.seats_availability == 'unlimited'"
+                                            style="display:none;"
+                                            name="nb_register-0" class="form-control">
+                                        <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available+1)"
+                                           t-as="nb">
+                                            <option t-esc="nb"/>
+                                        </t>
+                                    </select>
+                                    <span t-if="event.seats_availability == 'limited' and not event.seats_available">
+                                        Sold Out
+                                    </span>
+                                </div>
+                                <div>
+                                    <button type="submit"
+                                            t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
+                                            class="btn btn-primary pull-right a-submit" t-attf-id="#{event.id}">
+                                        Register
+                                        Now
+                                    </button>
+                                    <div t-if="not event.state == 'confirm'" class="alert alert-info">
+                                        <t t-if="event.state == 'draft'">
+                                            Event registration not yet started.
+                                        </t>
+                                        <t t-if="event.state != 'draft'">
+                                            Event registration is closed.
+                                        </t>
+                                        <t t-if="uid">
+                                            <i class="fa fa-plus-circle">
+                                                <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+                                                    <em>Configure and Launch Event Registration</em>
+                                                </a>
+                                            </i>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_event.event_description_full" id="inherit_event_description_full">
+        <xpath expr="//div[1]" position="replace">
+            <div class="col-md-8">
+                <div t-if="event.state == 'done' or not registrable" class="alert alert-info">Registration for this
+                    event is now closed
+                </div>
+                <t t-if="event.state != 'done' and registrable" t-call="website_event.registration_template"/>
+                <div class="clearfix"/>
+                <hr/>
+
+                <div class="clearfix"/>
+                <ul class="media-list" id="comment">
+                    <li t-foreach="event.website_message_ids" t-as="comment" class="media">
+                        <div class="media-body">
+                            <t t-call="website.publish_management">
+                                <t t-set="object" t-value="comment"/>
+                                <t t-set="publish_edit" t-value="True"/>
+                            </t>
+                            <t t-raw="comment.body"/>
+                            <small class="pull-right muted text-right">
+                                <div t-field="comment.author_id"/>
+                                <div t-field="comment.date" t-options='{"hide_seconds":"True"}'/>
+                            </small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_event.registration_attendee_details" id="inherit_registration_attendee_details">
+        <xpath expr="//form/div/div[2]" position="replace">
+            <div class="modal-body">
+                <div class="container">
+                    <t t-set="counter_type" t-value="1"/>
+                    <t t-set="counter" t-value="0"/>
+                    <t t-foreach="tickets" t-as="ticket">
+                        <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter"
+                           name="attendee_loop">
+                            <t t-set="counter" t-value="counter + 1"/>
+                            <div class="row mb4">
+                                <t t-set="attendee_placeholder">Attendee #%s</t>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="name" class="control-label">Participant Name</label>
+                                        <input type="text" t-attf-name="#{counter}-name" id="name"
+                                               placeholder="Participant Name" required="required"
+                                               class="form-control input-sm reqfield" data-minlength="2"
+                                               data-maxlength="100"/>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="email" class="control-label">Email</label>
+                                        <input type="email" t-attf-name="#{counter}-email" id="email"
+                                               placeholder="Email" required="required"
+                                               class="form-control input-sm reqfield" data-minlength="2"
+                                               data-maxlength="100"/>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="tel" class="control-label">Mobile Phone</label>
+                                        <input type="tel" t-attf-name="#{counter}-phone" id="tel"
+                                               placeholder="Mobile Phone" required="required"
+                                               class="form-control input-sm number reqfield" data-minlength="11"
+                                               data-maxlength="14"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="city" class="control-label">Current City</label>
+                                        <input type="text" t-attf-name="#{counter}-city" id="city"
+                                               placeholder="City" required="required"
+                                               class="form-control input-sm reqfield" data-minlength="11"
+                                               data-maxlength="14"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-field">
+                                        <label for="birthdate" class="control-label">Date of Birth</label>
+                                        <input type="text" t-attf-name="#{counter}-date_of_birth" maxlength="10"
+                                               placeholder="1960-12-31"
+                                               minlength="10" class="form-control input-sm reqfield"
+                                               id="birthdate" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-field">
+                                        <label for="profession" class="control-label">Profession</label>
+                                        <select class="form-control input-sm reqfield"
+                                                t-attf-name="#{counter}-profession" name="profession" id="profession"
+                                                required="required">
+                                            <option value="">--Please Select--</option>
+                                            <t t-foreach="{'goverment':'Goverment','educator':'Educator'}" t-as='label'>
+                                                <option t-att-value="label">
+                                                    <t t-esc="label_value"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-field">
+                                        <label for="gender" class="control-label">Gender</label>
+                                        <div class="mar-btm">
+                                            <t t-foreach="{'male':'Male','female':'Female'}" t-as='label'>
+                                                <label class="radio-inline">
+                                                    <input type="radio" t-attf-name="#{counter}-gender"
+                                                           t-att-value="label"
+                                                           t-att-checked="'checked' if label==gender else None"/>
+                                                    <t t-esc="label_value"/>
+                                                </label>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id"
+                                       t-attf-value="#{ticket['id']}"/>
+                            </div>
+                        </t>
+                        <t t-set="counter_type" t-value="counter_type + 1"/>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_event.registration_complete" id="inherit_registration_complete">
+        <xpath expr="//div" position="replace">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" style="text-align: center;">
+                        <h1 style="font-style:italic; ">
+                            <a t-attf-href="/event/#{slug(event)}">
+                                <t t-esc="event.name"/>
+                            </a>
+                        </h1>
+                        <i class="fa fa-clock-o"/>
+                        <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"></span>
+                        <i>to</i>
+                        <span itemprop="endDate" t-esc="event.date_end_located[:-3]"></span>
+                        <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
+                            }'/>
+                    </div>
+                    <div class="col-md-12" style="margin: 20px 0 20px 0;">
+                        <div class="alert alert-success alert-dismissible fade in" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h3>
+                                <strong>Congratulation!</strong>, we are glad to confirm your registration to our event.
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <h2 style="text-align: center; font-weight: bold; forn-style: italic; margin-bottom: 20px;">
+                            Registration Details
+                        </h2>
+                        <div class="col-md-6">
+                            <table class='table table-condensed'>
+                                <tbody>
+                                    <t t-foreach="attendees" t-as="attendee">
+                                        <tr class="evc-head">
+                                            <td colspan="2">Temporary Passcode</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="glyphicon glyphicon-th"></i>
+                                                <t t-esc="attendee.barcode"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="evc-head">
+                                            <td colspan="2">Attendee Name</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="fa fa-user"></i>
+                                                <t t-if='attendee.name'>
+                                                    <t t-esc="attendee.name"/>
+                                                </t>
+                                                <t t-if='not attendee.name'>N/A</t>
+                                            </td>
+                                        </tr>
+                                        <tr class="evc-head">
+                                            <td colspan="2">Email</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="fa fa-envelope"></i>
+                                                <t t-if='attendee.email'>
+                                                    <t t-esc="attendee.email"/>
+                                                </t>
+                                                <t t-if='not attendee.email'>N/A</t>
+                                            </td>
+                                        </tr>
+                                        <tr class="evc-head">
+                                            <td colspan="2">Phone No</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="fa fa-phone"></i>
+                                                <t t-if='attendee.phone'>
+                                                    <t t-esc="attendee.phone"/>
+                                                </t>
+                                                <t t-if='not attendee.phone'>N/A</t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>
