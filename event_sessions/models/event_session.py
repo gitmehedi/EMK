@@ -16,7 +16,7 @@ class EventSession(models.Model):
     seats_max = fields.Integer(string="Maximum seats", )
     active = fields.Boolean(default=True, )
     company_id = fields.Many2one(comodel_name='res.company', related='event_id.company_id', store=True, )
-    event_id = fields.Many2one(comodel_name='event.event', string='Event', ondelete="cascade" )
+    event_id = fields.Many2one(comodel_name='event.event', string='Event', ondelete="cascade")
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], 'Maximum Attendees',
                                           required=True, default='unlimited', )
     date_tz = fields.Selection(string='Timezone', related="event_id.date_tz", )
@@ -24,7 +24,8 @@ class EventSession(models.Model):
                                  default=lambda self: self.event_id.date_begin, )
     date_end = fields.Datetime(string="Session date end", required=True, default=lambda self: self.event_id.date_end, )
 
-    registration_ids = fields.One2many(comodel_name='event.session.attend', inverse_name='session_id', string='Attendees',
+    registration_ids = fields.One2many(comodel_name='event.session.attend', inverse_name='session_id',
+                                       string='Attendees',
                                        state={'done': [('readonly', True)]}, )
     event_mail_ids = fields.One2many(comodel_name='event.mail', inverse_name='session_id', string='Mail Schedule',
                                      copy=True)
@@ -43,6 +44,9 @@ class EventSession(models.Model):
     seats_available_expected = fields.Integer(string='Available Expected Seats', readonly=True,
                                               compute='_compute_seats', store=True)
     seats_available_pc = fields.Float(string='Full %', readonly=True, compute='_compute_seats', )
+
+    event_task_ids = fields.One2many('event.task.list', 'session_id', string="Event Tasks")
+    event_book_ids = fields.One2many('event.room.book', 'session_id', string="Event Booking")
 
     state = fields.Selection([('unconfirmed', 'Unconfirmed'), ('confirmed', 'Confirmed'), ('done', 'Done')],
                              default='unconfirmed', string="State", track_visibility='onchange')
@@ -118,7 +122,9 @@ class EventSession(models.Model):
                 'open': 'seats_reserved',
                 'done': 'seats_used',
             }
-            result = self.env['event.session.attend'].read_group([('session_id', 'in', self.ids),('state', 'in', ['draft', 'open', 'done'])], ['state', 'session_id'], ['session_id', 'state'], lazy=False)
+            result = self.env['event.session.attend'].read_group(
+                [('session_id', 'in', self.ids), ('state', 'in', ['draft', 'open', 'done'])], ['state', 'session_id'],
+                ['session_id', 'state'], lazy=False)
             for res in result:
                 session = self.browse(res['session_id'][0])
                 session[state_field[res['state']]] += res['__count']
@@ -211,3 +217,15 @@ class EventSession(models.Model):
             'default_session_id': self.id,
         }
         return action
+
+
+class EventRoomBook(models.Model):
+    _inherit = 'event.room.book'
+
+    session_id = fields.Many2one('event.session', string='Session')
+
+
+class EventTaskList(models.Model):
+    _inherit = 'event.task.list'
+
+    session_id = fields.Many2one('event.session', string='Session')

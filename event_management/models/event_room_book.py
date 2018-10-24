@@ -8,7 +8,7 @@ class EventRoomBook(models.Model):
     _name = 'event.room.book'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    event_id = fields.Many2one('event.event', string='Event', required=True)
+    event_id = fields.Many2one('event.event', string='Event')
     room_id = fields.Many2one('event.room', string='Event Room', required=True)
     seat_no = fields.Integer(related='room_id.max_seat', readonly="True", string="Available Seat")
 

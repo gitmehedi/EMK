@@ -11,10 +11,10 @@ class EventTaskList(models.Model):
     _rec_name = 'task_id'
 
     task_duration = fields.Float(string='Duration', required=True, track_visibility='onchange', readonly=True,
-                                   states={'draft': [('readonly', False)]})
+                                 states={'draft': [('readonly', False)]})
     task_description = fields.Text(string='Task Description', required=True, track_visibility='onchange', readonly=True,
                                    states={'draft': [('readonly', False)]})
-    task_feedback = fields.Text(string='Task Feedback',  track_visibility='onchange', readonly=True,
+    task_feedback = fields.Text(string='Task Feedback', track_visibility='onchange', readonly=True,
                                 states={'start': [('readonly', False)]})
     assign_date = fields.Datetime(string="Assign Date", track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)]})
@@ -23,12 +23,12 @@ class EventTaskList(models.Model):
     task_stop = fields.Datetime(string='Task Stop', track_visibility='onchange', readonly=True,
                                 states={'start': [('readonly', False)]})
 
-    event_id = fields.Many2one('event.event', string='Event', readonly=True, required=True,
+    event_id = fields.Many2one('event.event', string='Event', readonly=True,
                                states={'draft': [('readonly', False)]})
     assign_emp_id = fields.Many2one('res.partner', string='Assign To', required=True, track_visibility='onchange',
                                     readonly=True, states={'draft': [('readonly', False)]})
     task_id = fields.Many2one('event.task.type', string='Task Name', required=True, track_visibility='onchange',
-                              domain=[('status','=',True)],
+                              domain=[('status', '=', True)],
                               readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('assign', 'Assigned'), ('start', 'Start'), ('finish', 'Finish')],
                              default='draft', track_visibility='onchange')

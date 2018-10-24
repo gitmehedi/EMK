@@ -124,9 +124,9 @@ class WizardEventSession(models.TransientModel):
             "seats_availability": self.event_id.seats_availability,
         }
         mail_template = (
-            self.event_mail_template_id or
-            self.env['ir.values'].get_default(
-                'event.config.settings', 'event_mail_template_id'))
+                self.event_mail_template_id or
+                self.env['ir.values'].get_default(
+                    'event.config.settings', 'event_mail_template_id'))
 
         if mail_template:
             template_values = \
@@ -194,6 +194,30 @@ class WizardEventSession(models.TransientModel):
                     'attendee_id': rec.id,
                 }
                 ses.registration_ids.create(ses_reg)
+
+            # for bec in self.event_id.event_book_ids:
+            #     ses_reg = {
+            #         'event_id': ses.event_id.id,
+            #         'room_id': ses.id,
+            #         'seat_no': ses.event_id.id,
+            #         'event_start': rec.id,
+            #         'event_stop': rec.id,
+            #     }
+            #     ses.registration_ids.create(ses_reg)
+            #
+            # for tec in self.event_id.event_task_ids:
+            #     ses_reg = {
+            #         'event_id': ses.event_id.id,
+            #         'task_duration': rec.barcode,
+            #         'task_description': ses.id,
+            #         'assign_date': ses.event_id.id,
+            #         'task_start': rec.id,
+            #         'task_stop': rec.id,
+            #         'event_id': ses.event_id.id,
+            #         'assign_emp_id': rec.id,
+            #         'task_id': rec.id,
+            #     }
+            #     ses.registration_ids.create(ses_reg)
 
 
 class WizardEventSessionHours(models.TransientModel):
