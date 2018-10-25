@@ -195,29 +195,28 @@ class WizardEventSession(models.TransientModel):
                 }
                 ses.registration_ids.create(ses_reg)
 
-            # for bec in self.event_id.event_book_ids:
-            #     ses_reg = {
-            #         'event_id': ses.event_id.id,
-            #         'room_id': ses.id,
-            #         'seat_no': ses.event_id.id,
-            #         'event_start': rec.id,
-            #         'event_stop': rec.id,
-            #     }
-            #     ses.registration_ids.create(ses_reg)
-            #
-            # for tec in self.event_id.event_task_ids:
-            #     ses_reg = {
-            #         'event_id': ses.event_id.id,
-            #         'task_duration': rec.barcode,
-            #         'task_description': ses.id,
-            #         'assign_date': ses.event_id.id,
-            #         'task_start': rec.id,
-            #         'task_stop': rec.id,
-            #         'event_id': ses.event_id.id,
-            #         'assign_emp_id': rec.id,
-            #         'task_id': rec.id,
-            #     }
-            #     ses.registration_ids.create(ses_reg)
+            for bec in self.event_id.event_book_ids:
+                bes_reg = {
+                    'session_id': ses.id,
+                    'room_id': bec.room_id.id,
+                    'seat_no': bec.room_id.max_seat,
+                    'event_start': ses.date_begin,
+                    'event_stop': ses.date_end,
+                }
+                ses.event_book_ids.create(bes_reg)
+
+            for tec in self.event_id.event_task_ids:
+                tes_reg = {
+                    'session_id': ses.id,
+                    'assign_emp_id': tec.assign_emp_id.id,
+                    'task_id': tec.task_id.id,
+                    'task_duration': tec.task_duration,
+                    'task_description': tec.task_description,
+                    'assign_date': ses.date_begin,
+                    'task_start': ses.date_begin,
+                    'task_stop': ses.date_end,
+                }
+                ses.event_task_ids.create(tes_reg)
 
 
 class WizardEventSessionHours(models.TransientModel):

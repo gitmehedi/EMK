@@ -152,7 +152,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_event_organizer" name="Organizer" parent="menu_event_general" sequence="4"
+        <menuitem id="menu_event_organizer" parent="menu_event_general" sequence="4"
                   action="action_event_organizer" groups="event_user.group_event_organizer"/>
     </data>
 </odoo>

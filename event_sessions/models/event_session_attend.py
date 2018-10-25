@@ -16,7 +16,7 @@ class EventSessionAttend(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'event_id, create_date desc'
 
-    session_id = fields.Many2one(comodel_name='event.session', string='Session', ondelete='restrict', )
+    session_id = fields.Many2one(comodel_name='event.session', string='Session', ondelete='cascade', )
     origin = fields.Char(string='Source Document', readonly=True,
                          help="Reference of the document that created the registration, for example a sale order")
     event_id = fields.Many2one('event.event', string='Event', required=True, readonly=True,
