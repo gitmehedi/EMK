@@ -20,9 +20,10 @@
             <field name="arch" type="xml">
                 <form string="Organizers">
                     <header>
-                        <button string="Create Login" name="%(create_partner_user.act_createa_user_partner)d"
-                                type="action" class="oe_highlight"  attrs="{'invisible': [('user_ids','=', True)]}"
+                        <button string="Create Login" name="create_login"
+                                type="object" class="oe_highlight" attrs="{'invisible': [('partner_user_id','>', 0)]}"
                                 groups="event.group_event_manager"/>
+                        <field name="partner_user_id" invisible="True"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
