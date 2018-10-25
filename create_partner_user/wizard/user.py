@@ -18,6 +18,7 @@ class CreateUser(models.TransientModel):
         res['user_data'] = vals
         return res
     user_data = fields.One2many('user.datas','rel_id')
+
     @api.multi
     def create_login(self):
         for data in self:
@@ -26,7 +27,8 @@ class CreateUser(models.TransientModel):
                 vals = {
                         'partner_id':da.partner_id.id,
                         'login':da.login,
-                        'groups_id':da.groups_id
+                        'groups_id':da.groups_id,
+                        'active': True,
                         }
                 self.env['res.users'].create(vals)
 
