@@ -36,6 +36,8 @@
                 'letter_of_credit_report',
                 'gbs_document_type',
                 'terms_setup',
+                'stock_operating_unit',
+                'stock',
     ],
 
 
