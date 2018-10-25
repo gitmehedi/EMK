@@ -9,6 +9,8 @@
                 <header>
                     <button string='Paymemt Register' name="act_payment_register" type='object' class="oe_highlight"
                             states="open"/>
+                    <button string='Print Invoice' name="invoice_print" type='object' class="oe_highlight"
+                            states="paid"/>
 
                     <button string='Cancel' name="act_cancel" type='object'
                             states="open"/>

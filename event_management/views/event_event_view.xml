@@ -131,7 +131,7 @@
                                 <field name="task_description"/>
                                 <field name="task_start"/>
                                 <field name="task_stop"/>
-                                <field name="state"/>
+                                <field name="state" readonly="1"/>
                             </tree>
                         </field>
                     </page>

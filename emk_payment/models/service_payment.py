@@ -77,6 +77,13 @@ class ServicePayment(models.Model):
             }
             return res
 
+    @api.multi
+    def invoice_print(self):
+        return True
+        # self.ensure_one()
+        # report = self.env['report'].get_action(self, 'member_signup.rfid_gen_tmpl')
+        # return report
+
     @api.depends('payment_type_id')
     def _compute_paid_amount(self):
         for rec in self:
