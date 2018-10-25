@@ -222,10 +222,10 @@ class EventSession(models.Model):
 class EventRoomBook(models.Model):
     _inherit = 'event.room.book'
 
-    session_id = fields.Many2one('event.session', string='Session')
+    session_id = fields.Many2one('event.session', string='Session', ondelete='cascade')
 
 
 class EventTaskList(models.Model):
     _inherit = 'event.task.list'
 
-    session_id = fields.Many2one('event.session', string='Session')
+    session_id = fields.Many2one('event.session', string='Session', ondelete='cascade')
