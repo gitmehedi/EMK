@@ -98,7 +98,7 @@ class ResPartner(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals:
+        if 'is_applicant' in vals and vals['is_applicant']:
             vals['member_sequence'] = self.env['ir.sequence'].next_by_code('res.partner.member.application')
 
         return super(ResPartner, self).create(vals)
