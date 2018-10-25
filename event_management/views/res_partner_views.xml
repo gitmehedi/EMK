@@ -1,30 +1,177 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="res_partner_organizer_view_tree" model="ir.ui.view">
-            <field name="name">view.res.partner.form.event.inherited</field>
+        <record id="view_event_organizer_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree.view</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button"
-                            type="object"
-                            icon="fa-ticket"
-                            name="action_event_view" attrs="{'invisible': [('event_count','=', 0)]}">
-                        <field string="Events" name="event_count" widget="statinfo"/>
-                    </button>
-                    <field name="is_organizer" invisible="True"/>
-                </div>
+                <tree string="Contacts">
+                    <field name="display_name" string="Name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                </tree>
             </field>
         </record>
+        <record id="view_event_organizer_form" model="ir.ui.view">
+            <field name="name">res.partner.form.view</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Organizers">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options='{"terminology": "archive"}'/>
+                            </button>
+                            <button class="oe_stat_button"
+                                    type="object"
+                                    icon="fa-ticket"
+                                    name="action_event_view" attrs="{'invisible': [('event_count','=', 0)]}">
+                                <field string="Events" name="event_count" widget="statinfo"/>
+                            </button>
+                            <field name="is_organizer" invisible="True"/>
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar"
+                               options='{"preview_image": "image_medium", "size": [90, 90]}'/>
 
-        <record id="action_partner_organizer_form" model="ir.actions.act_window">
+                        <div class="oe_title">
+                            <field name="is_company" invisible="1"/>
+                            <field name="company_type" widget="radio"
+                                   class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <h1>
+                                <field name="name" placeholder="Name" invisible="0" required="1" readonly="0"/>
+                            </h1>
+                            <div class="o_row">
+                                <field name="parent_id"
+                                       placeholder="Company"
+                                       domain="[('is_company', '=', True)]"
+                                       context="{'default_is_company': True}"
+                                       attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False)]}"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type" attrs="{'invisible': [('parent_id','=', False)]}"
+                                       groups="base.group_no_one"/>
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format">
+                                    <div class="oe_edit_only">
+                                        <button name="open_parent" type="object" string="(edit)" class="oe_link"
+                                                attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
+                                    </div>
+                                    <field name="street" placeholder="Street..." class="o_address_street"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State"
+                                           options='{"no_open": True}'
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                                           context="{'country_id': country_id, 'zip': zip}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country"
+                                           options='{"no_open": True, "no_create": True}'
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                </div>
+                                <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                                <field name="category_id" widget="many2many_tags" placeholder="Tags..."
+                                       options="{'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="function" placeholder="e.g. Sales Director"
+                                       attrs="{'invisible': [('is_company','=', True)]}"/>
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="fax"/>
+                                <field name="user_ids" invisible="1"/>
+                                <field name="email" widget="email" required="1"/>
+                                <field name="title" options='{"no_open": True}'
+                                       attrs="{'invisible': [('is_company', '=', True)]}"/>
+                                <field name="lang"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Partner Kanban View -->
+        <record model="ir.ui.view" id="res_event_organizer_kanban_view">
+            <field name="name">res.partner.kanban.view</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban class="o_res_partner_kanban">
+                    <field name="display_name"/>
+                    <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="function"/>
+                    <field name="country_id"/>
+                    <field name="city"/>
+                    <field name="mobile"/>
+                    <field name="image_small"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_res_partner_kanban">
+                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                <div class="o_kanban_image">
+                                    <t t-if="record.image_small.raw_value">
+                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="oe_partner_heading">
+                                        <field name="display_name"/>
+                                    </strong>
+                                    <ul>
+                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value">
+                                            <field name="parent_id"/>
+                                        </li>
+                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value">
+                                            <field name="function"/>
+                                        </li>
+                                        <li t-if="record.parent_id.raw_value and record.function.raw_value">
+                                            <field name="function"/>
+                                            at
+                                            <field name="parent_id"/>
+                                        </li>
+                                        <li t-if="record.city.raw_value and !record.country_id.raw_value">
+                                            <field name="city"/>
+                                        </li>
+                                        <li t-if="!record.city.raw_value and record.country_id.raw_value">
+                                            <field name="country_id"/>
+                                        </li>
+                                        <li t-if="record.city.raw_value and record.country_id.raw_value"><field
+                                                name="city"/>,
+                                            <field name="country_id"/>
+                                        </li>
+                                        <li t-if="record.email.raw_value" class="o_text_overflow">
+                                            <field name="email"/>
+                                        </li>
+                                    </ul>
+                                    <div class="oe_kanban_partner_links"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="action_event_partner_organizer_form" model="ir.actions.act_window">
             <field name="name">Organizers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('is_organizer','=',True)]</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('res_event_organizer_kanban_view')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_event_organizer_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_event_organizer_form')})]"/>
+            <field name="domain">[('is_organizer','=',True)]</field>
             <field name="context">{'default_is_organizer': 1,'default_supplier': 0,
                 'default_customer':0,'default_supplier': 0}
             </field>
@@ -41,8 +188,7 @@
             </field>
         </record>
 
-
-        <menuitem id="menu_partner_organizer" action="action_partner_organizer_form"
+        <menuitem id="menu_partner_organizer" action="action_event_partner_organizer_form"
                   groups="event_user.group_event_administration" parent="event.menu_event_configuration"/>
     </data>
 </odoo>
