@@ -118,3 +118,9 @@ class ServicePayment(models.Model):
                 payment.post()
                 if payment:
                     self.state = 'paid'
+
+    @api.multi
+    def print_receipt(self):
+        self.ensure_one()
+        report = self.env['report'].get_action(self, 'emk_payment.service_payment_receipt_tmpl')
+        return report
