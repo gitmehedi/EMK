@@ -3,7 +3,7 @@ from odoo import api, fields, models, _
 
 
 class LetterCreditReport(models.TransientModel):
-    _name = 'letter.credit.wizard'
+    _name = 'letter.credit.report.wizard'
     _description = 'Letter of Credit Report'
 
     report_type = fields.Selection([
