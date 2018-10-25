@@ -117,7 +117,12 @@
                 action="question_set.action_lc_criteria"
                 groups="commercial.group_commercial_manager"/>
 
-
+         <menuitem
+                 id="letter_of_credit.lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 groups="commercial.group_commercial_user"
+                 sequence="7"/>
 
     </data>
 </odoo>
