@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
 from datetime import datetime
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError,UserError
 import odoo.addons.decimal_precision as dp
 
 
@@ -79,7 +79,7 @@ class PurchaseOrder(models.Model):
         self.notes = requisition.description
         self.date_order = requisition.date_end or fields.Datetime.now()
         self.picking_type_id = requisition.picking_type_id.id
-        self.operating_unit_id = requisition.operating_unit_id.id
+        self.operating_unit_id = requisition.operating_unit_id
 
         if requisition.type_id.line_copy != 'copy':
             return
@@ -162,6 +162,33 @@ class PurchaseOrder(models.Model):
     def _onchange_picking_type_id(self):
         if self.picking_type_id.sudo().default_location_dest_id.usage != 'customer':
             self.dest_address_id = False
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        type_obj = self.env['stock.picking.type']
+        if self.operating_unit_id:
+            types = type_obj.search([('code', '=', 'incoming'),
+                                     ('operating_unit_id', '=',self.operating_unit_id.id)])
+            if types:
+                self.picking_type_id = types[0]
+            else:
+                raise UserError(
+                    _("No Warehouse found with the Operating Unit indicated "
+                      "in the Purchase Order")
+                )
+
+    @api.model
+    def _default_picking_type(self):
+        res = super(PurchaseOrder, self)._default_picking_type()
+        type_obj = self.env['stock.picking.type']
+        if self.operating_unit_id:
+            types = type_obj.search([('code', '=', 'incoming'),
+                                 ('operating_unit_id', '=',self.operating_unit_id.id)])
+            if types:
+                res = types[0].id
+            else:
+                res = False
+        return res
 
     @api.multi
     def button_confirm(self):

@@ -548,7 +548,8 @@ class SaleOrder(models.Model):
     @api.multi
     @api.onchange('pack_type')
     def pack_type_onchange(self):
-        self._get_changed_price()
+        if not self.pi_id:
+            self._get_changed_price()
 
     def _get_changed_price(self):
         for order in self:
@@ -765,7 +766,7 @@ class InheritedSaleOrderLine(models.Model):
         #self.da_qty = self.product_uom_qty
 
         vals = {}
-        if self.product_id:
+        if self.product_id and not self.price_unit:
             vals['price_unit'] = self._get_product_sales_price(self.product_id)
             self.update(vals)
 
