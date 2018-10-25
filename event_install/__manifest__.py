@@ -22,6 +22,7 @@
         'event_registration',
         'event_sessions',
         'emk_payment',
+        'create_partner_user',
     ],
     'category': 'Installation Module',
     'summary': 'Install Module of EMK',

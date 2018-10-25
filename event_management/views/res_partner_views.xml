@@ -19,6 +19,11 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Organizers">
+                    <header>
+                        <button string="Create Login" name="%(create_partner_user.act_createa_user_partner)d"
+                                type="action" class="oe_highlight"  attrs="{'invisible': [('user_ids','=', True)]}"
+                                groups="event.group_event_manager"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object"

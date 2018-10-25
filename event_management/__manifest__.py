@@ -16,8 +16,8 @@
         'website_event',
         'event_user',
         'data_import',
-        # 'event_sessions',
         'website_event_filter_selector',
+        'create_partner_user',
     ],
     'data': [
         'security/security.xml',
