@@ -24,7 +24,7 @@
         'views/invoice_payment_views.xml',
         'views/invoice_due.xml',
         'views/service_payment_views.xml',
-        'report/print_receipt_views.xml',
+        #'report/print_receipt_views.xml',
     ],
     'installable': True,
     'application': False,

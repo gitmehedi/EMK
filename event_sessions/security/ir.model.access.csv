@@ -1,3 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_event_session_user,event.session.user,event_sessions.model_event_session,event.group_event_user,1,0,0,0
 access_event_session_admin,event.session.admin,event_sessions.model_event_session,event.group_event_manager,1,1,1,1
+access_event_session_organizer,event.session.organizer,event_sessions.model_event_session,event_user.group_event_organizer,1,0,0,0
+access_event_session_attend_organizer,event.session.attend.organizer,event_sessions.model_event_session_attend,event_user.group_event_organizer,1,0,0,0
+access_event_session_attend_admin,event.session.attend.admin,event_sessions.model_event_session_attend,event_user.group_event_administration,1,1,1,0

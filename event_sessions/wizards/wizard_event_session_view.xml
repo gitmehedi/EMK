@@ -18,6 +18,7 @@
             <button string="Generate Sessions"
                     name="%(act_wizard_event_session)d"
                     states="draft,confirm"
+                    groups="event_user.group_event_administration"
                     type="action"/>
         </field>
     </field>
