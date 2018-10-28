@@ -25,28 +25,32 @@ class ServicePayment(models.Model):
             return journal
 
     name = fields.Char()
-    paid_amount = fields.Float(string='Payment Amount', compute='_compute_paid_amount', store=True)
-    comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
+    paid_amount = fields.Float(string='Payment Amount', compute='_compute_paid_amount', store=True,
+                               track_visibility='onchange')
+    comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]},
+                           track_visibility='onchange')
     collection_date = fields.Date(default=fields.Datetime.now, string='Date', required=True, readonly=True,
-                                  states={'open': [('readonly', False)]})
-    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
-                                    readonly=True, states={'open': [('readonly', False)]})
+                                  states={'open': [('readonly', False)]}, track_visibility='onchange')
+    membership_id = fields.Many2one('res.partner', string='Payment For',
+                                    readonly=True, states={'open': [('readonly', False)]}, track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
-                                 readonly=True, states={'open': [('readonly', False)]})
+                                 readonly=True, states={'open': [('readonly', False)]}, track_visibility='onchange')
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,
                                  required=True, default=_get_session)
-    responsible_id = fields.Many2one('res.partner', default=lambda self: self.env.user.id)
+    event_id = fields.Many2one('event.event', string='Event Name', domain=[('state', '=', 'confirm')])
+    event_participant_id = fields.Many2one('event.registration', string='Payment For')
+    responsible_id = fields.Many2one('res.partner', default=lambda self: self.env.user.id, string='Responsible',
+                                     required=True, readonly=True, track_visibility='onchange')
     payment_type_id = fields.Many2one('product.template', string='Payment Type', required=True,
+                                      track_visibility='onchange',
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
                                               ('sale_ok', '=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
     check_type = fields.Char()
-    card_replacement_id = fields.Many2one('member.card.replacement', string='Card Replacement',
-                                          domain=[('state', '=', 'approve')], readonly=True,
-                                          states={'open': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company Name', default=lambda self: self.env.user.company_id.id)
-    state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open', string='State')
+    state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open', string='State',
+                             track_visibility='onchange')
 
     def _compute_session(self):
         for rec in self:
@@ -54,34 +58,36 @@ class ServicePayment(models.Model):
 
     @api.onchange('payment_type_id')
     def _onchage_payment_type(self):
-        self.membership_id = False
+        res = {}
+        self.membership_id = None
+        self.event_id = None
         self.check_type = self.payment_type_id.service_type
-        if self.payment_type_id.service_type != 'card':
-            res = {}
-            self.card_replacement_id = False
-            partner = self.env['res.partner'].search([])
-            res['domain'] = {
-                'membership_id': [('id', 'in', partner.ids)],
-            }
-            return res
-
-    @api.onchange('card_replacement_id')
-    def _onchage_card_replacement(self):
-        if self.card_replacement_id:
-            res, ids = {}, []
-            self.membership_id = False
-            for rec in self.env['member.card.replacement'].search([('state', '=', 'approve')]):
-                if rec.membership_id:
-                    ids.append(rec.membership_id.id)
+        if self.payment_type_id.service_type == 'card':
+            member = self.env['member.card.replacement'].search([('state', '=', 'approve')])
+            ids = [rec.membership_id.id for rec in member]
             res['domain'] = {
                 'membership_id': [('id', 'in', ids)],
             }
-            return res
+        return res
 
-    @api.depends('payment_type_id')
+    @api.onchange('event_id')
+    def _onchage_event(self):
+        res = {}
+        self.event_participant_id = None
+        if self.event_id == 'card':
+            event = self.env['event.registration'].search([('event_id', '=', self.event_id.id), ('active', '=', True)])
+            res['domain'] = {
+                'event_participant_id': [('id', 'in', event.ids)],
+            }
+        return res
+
+    @api.depends('payment_type_id', 'event_id')
     def _compute_paid_amount(self):
         for rec in self:
-            rec.paid_amount = rec.payment_type_id.list_price
+            if rec.payment_type_id.service_type == 'card':
+                rec.paid_amount = rec.payment_type_id.list_price
+            if rec.payment_type_id.service_type == 'event_fee' and rec.event_id:
+                rec.paid_amount = rec.event_id.participating_amount
 
     @api.model
     def _needaction_domain_get(self):
@@ -113,7 +119,6 @@ class ServicePayment(models.Model):
                 if payment:
                     self.state = 'paid'
                     self.name = self.env['ir.sequence'].next_by_code('service.payment.seq')
-
 
     @api.multi
     def print_receipt(self):

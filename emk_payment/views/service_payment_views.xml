@@ -17,7 +17,6 @@
                 </header>
                 <sheet>
                     <h1 class="oe_title" attrs="{'invisible':[('name','=','False')]}">
-                        Payment ID:
                         <field name="name" readonly='True'/>
                     </h1>
                     <group>
@@ -25,12 +24,16 @@
                             <field name="payment_type_id"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
                             <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="card_replacement_id"
+                            <field name="membership_id"
                                    attrs="{'invisible':[('check_type','!=','card')],'required':[('check_type','=','card')]}"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
-                            <field name="membership_id"
+                            <field name="event_id"
+                                   attrs="{'invisible':[('check_type','!=','event_fee')],'required':[('check_type','=','event_fee')]}"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
-                            <field name="check_type" invisible="True"/>
+                            <field name="event_participant_id"
+                                   attrs="{'invisible':[('check_type','!=','event_fee')],'required':[('check_type','=','event_fee')]}"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="check_type"/>
                         </group>
                         <group>
                             <field name="responsible_id"

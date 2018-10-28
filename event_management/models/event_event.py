@@ -27,6 +27,8 @@ class EventEvent(models.Model):
     notes = fields.Html(string="Comments/Notes")
     ref_reservation = fields.Char(string="Reservation Reference")
     image_medium = fields.Binary(string='Medium-sized photo', attachment=True)
+    participating_amount = fields.Integer(string="Participation Amount", readonly=True,
+                                          states={'confirm': [('readonly', False)]})
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):

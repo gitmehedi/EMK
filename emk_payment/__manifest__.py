@@ -12,6 +12,7 @@
         'membership_user',
         'member_signup',
         'member_card_replacement',
+        'event_management',
     ],
     'data': [
         'security/ir.model.access.csv',

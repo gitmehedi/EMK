@@ -6,6 +6,14 @@
             <field name="type">service</field>
             <field name="sale_ok">False</field>
             <field name="purchase_ok">False</field>
+            <field name="service_type">event_fee</field>
+        </record>
+        <record id="product_card_replacement" model="product.template">
+            <field name="name">Card Replacement</field>
+            <field name="type">service</field>
+            <field name="list_price">200</field>
+            <field name="sale_ok">False</field>
+            <field name="purchase_ok">False</field>
             <field name="service_type">card</field>
         </record>
     </data>

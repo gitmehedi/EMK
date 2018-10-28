@@ -113,7 +113,7 @@
                             <div style="margin-top: 50px;">
                                 <div class="pull-left">
                                     <strong>
-                                        BDT <t t-esc="o.paid_amount"/>/=
+                                        BDT<t t-esc="o.paid_amount"/>/=
                                     </strong>
                                 </div>
                                 <div class="pull-right">
@@ -128,15 +128,6 @@
             </div>
         </t>
     </template>
-
-    <report id="service_payment_receipt_report"
-            model="service.payment"
-            string="Receipt"
-            name="emk_payment.service_payment_receipt_tmpl"
-            file="emk_payment.service_payment_receipt_tmpl"
-            report_type="qweb-pdf"
-            paperformat="emk_payment.paperformat_for_reprint"/>
-
 
     <record id="paperformat_for_reprint" model="report.paperformat">
         <field name="name">Point Of Sale Receipt</field>
@@ -153,4 +144,14 @@
         <field name="header_spacing">3</field>
         <field name="dpi">130</field>
     </record>
+
+    <report id="service_payment_receipt_report"
+            model="service.payment"
+            string="Receipt"
+            name="emk_payment.service_payment_receipt_tmpl"
+            file="emk_payment.service_payment_receipt_tmpl"
+            report_type="qweb-pdf"
+            paperformat="emk_payment.paperformat_for_reprint"/>
+
+
 </odoo>
