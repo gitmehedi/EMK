@@ -95,6 +95,7 @@
                         <group>
                             <field name="refundable_amount"/>
                             <field name="date_of_payment"/>
+                            <field name="participating_amount"/>
                         </group>
                     </group>
                 </xpath>
