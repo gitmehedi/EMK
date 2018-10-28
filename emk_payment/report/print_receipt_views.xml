@@ -79,11 +79,9 @@
                                 <tr>
                                     <td style="font-style: italic; font-size: 1.2 em;">The Sum of</td>
                                     <td style="padding-left: 40px;">
-                                        <strong>Amount in words:</strong>
-                                        <span t-esc="o.amount_to_word(o.paid_amount)"/>
-                                        <!--<strong>-->
-                                            <!--<t t-esc="o.paid_amount"/>-->
-                                        <!--</strong>-->
+                                        <strong>
+                                            <t t-esc="o.paid_amount"/>
+                                        </strong>
                                     </td>
                                 </tr>
                                 <tr>
