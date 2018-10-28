@@ -16,9 +16,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="open,paid"/>
                 </header>
                 <sheet>
-                    <h1 class="oe_title">
-                        Session:
-                        <field name="session_id" options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                    <h1 class="oe_title" attrs="{'invisible':[('name','=','False')]}">
+                        Payment ID:
+                        <field name="name" readonly='True'/>
                     </h1>
                     <group>
                         <group>
@@ -33,6 +33,8 @@
                             <field name="check_type" invisible="True"/>
                         </group>
                         <group>
+                            <field name="responsible_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
                             <field name="journal_id"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
                             <field name="collection_date"/>
@@ -40,6 +42,10 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
