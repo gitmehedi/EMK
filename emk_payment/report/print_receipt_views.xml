@@ -79,9 +79,11 @@
                                 <tr>
                                     <td style="font-style: italic; font-size: 1.2 em;">The Sum of</td>
                                     <td style="padding-left: 40px;">
-                                        <strong>
-                                            <t t-esc="o.paid_amount"/>
-                                        </strong>
+                                        <strong>Amount in words:</strong>
+                                        <span t-esc="o.amount_to_word(o.paid_amount)"/>
+                                        <!--<strong>-->
+                                            <!--<t t-esc="o.paid_amount"/>-->
+                                        <!--</strong>-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -113,7 +115,7 @@
                             <div style="margin-top: 50px;">
                                 <div class="pull-left">
                                     <strong>
-                                        BDT <t t-esc="o.paid_amount"/>/=
+                                        <span t-field="o.company_id.currency_id"/> <t t-esc="o.paid_amount"/>/=
                                     </strong>
                                 </div>
                                 <div class="pull-right">
