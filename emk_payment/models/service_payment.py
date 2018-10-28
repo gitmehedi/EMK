@@ -24,6 +24,7 @@ class ServicePayment(models.Model):
         if len(journal) > 0:
             return journal
 
+    name = fields.Char()
     paid_amount = fields.Float(string='Payment Amount', compute='_compute_paid_amount', store=True)
     comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
     collection_date = fields.Date(default=fields.Datetime.now, string='Date', required=True, readonly=True,
@@ -33,9 +34,9 @@ class ServicePayment(models.Model):
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
                                  readonly=True, states={'open': [('readonly', False)]})
-
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,
                                  required=True, default=_get_session)
+    responsible_id = fields.Many2one('res.partner', default=lambda self: self.env.user.id)
     payment_type_id = fields.Many2one('product.template', string='Payment Type', required=True,
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
                                               ('sale_ok', '=', False)],
@@ -44,8 +45,8 @@ class ServicePayment(models.Model):
     card_replacement_id = fields.Many2one('member.card.replacement', string='Card Replacement',
                                           domain=[('state', '=', 'approve')], readonly=True,
                                           states={'open': [('readonly', False)]})
-    state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open',
-                             string='State')
+    company_id = fields.Many2one('res.company', string='Company Name', default=lambda self: self.env.user.company_id.id)
+    state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open', string='State')
 
     def _compute_session(self):
         for rec in self:
@@ -76,13 +77,6 @@ class ServicePayment(models.Model):
                 'membership_id': [('id', 'in', ids)],
             }
             return res
-
-    @api.multi
-    def invoice_print(self):
-        return True
-        # self.ensure_one()
-        # report = self.env['report'].get_action(self, 'member_signup.rfid_gen_tmpl')
-        # return report
 
     @api.depends('payment_type_id')
     def _compute_paid_amount(self):
@@ -118,6 +112,8 @@ class ServicePayment(models.Model):
                 payment.post()
                 if payment:
                     self.state = 'paid'
+                    self.name = self.env['ir.sequence'].next_by_code('service.payment.seq')
+
 
     @api.multi
     def print_receipt(self):

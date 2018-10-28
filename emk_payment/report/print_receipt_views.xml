@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="service_payment_receipt_tmpl">
+        <style>
+            .page .page-sale-ticket {
+            text-align: left;
+            width: 100%;
+            background-color: white;
+            margin: 5px;
+            padding: 5px;
+            font-size: 17.5px;
+            font-family: "Inconsolata";
+            overflow: hidden;
+            line-height: normal;
+            }
+        </style>
+        <t t-call="report.html_container">
+            <div class="page">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page-sale-ticket">
+                        <div style="margin-bottom: 50px;">
+                            <div class="pull-left">
+                                No:
+                                <strong>
+                                    <t t-esc="o.paid_amount"/>
+                                </strong>
+                            </div>
+                            <div class="pull-right">
+                                Dated:
+                                <strong>
+                                    <t t-esc="o.collection_date"/>
+                                </strong>
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="page-center-align" style="text-align: center;">
+                            <strong>
+                                <t t-esc="user.company_id.name"/>
+                            </strong>
+                            <br/>
+                            <strong>Edward M. Kennedy Center</strong>
+                            <br/>
+                            <t t-esc="user.company_id.street"/>
+                            <br/>
+                            <t t-esc="user.company_id.street2"/>
+                            <br/>
+                            <t t-esc="user.company_id.city"/>
+                            <t t-esc="user.company_id.zip"/>
+                            <br/>
+                            E-Mail:
+                            <t t-esc="user.company_id.email"/>
+                            <br/>
+                        </div>
+                        <br/>
+                        <div>
+                            <div class="page-center-align" style="text-align: center;">
+                                <h3>RECEIPT</h3>
+                            </div>
+                            <div style="clear: both;"></div>
+                            <br/>
+                            <table>
+                                <tr>
+                                    <td>Received with thanks</td>
+                                    <td style="padding-left: 40px;">
+                                        <strong>
+                                            <t t-esc="o.responsible_id.name"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-style: italic; font-size: 1.2 em;">Receipt ID</td>
+                                    <td style="padding-left: 40px;">
+                                        <strong>
+                                            <t t-esc="o.name"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-style: italic; font-size: 1.2 em;">The Sum of</td>
+                                    <td style="padding-left: 40px;">
+                                        <strong>
+                                            <t t-esc="o.paid_amount"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-style: italic; font-size: 1.2 em;">By</td>
+                                    <td style="padding-left: 40px;">
+                                        <strong>
+                                            <t t-esc="o.journal_id.name"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-style: italic; font-size: 1.2 em;">Remarks</td>
+                                    <td style="padding-left: 40px;">
+                                        <strong>
+                                            Name:
+                                            <t t-esc="o.membership_id.name"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-style: italic; font-size: 1.2 em;">Payment Type</td>
+                                    <td style="padding-left: 40px;">
+                                        <strong>
+                                            <t t-esc="o.payment_type_id.name"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div style="margin-top: 50px;">
+                                <div class="pull-left">
+                                    <strong>
+                                        BDT <t t-esc="o.paid_amount"/>/=
+                                    </strong>
+                                </div>
+                                <div class="pull-right">
+                                    <strong>
+                                        Authorized Signature
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <report id="service_payment_receipt_report"
+            model="service.payment"
+            string="Receipt"
+            name="emk_payment.service_payment_receipt_tmpl"
+            file="emk_payment.service_payment_receipt_tmpl"
+            report_type="qweb-pdf"
+            paperformat="emk_payment.paperformat_for_reprint"/>
+
+
+    <record id="paperformat_for_reprint" model="report.paperformat">
+        <field name="name">Point Of Sale Receipt</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">150</field>
+        <field name="page_width">74</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">3</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">2</field>
+        <field name="margin_right">2</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">3</field>
+        <field name="dpi">130</field>
+    </record>
+</odoo>
