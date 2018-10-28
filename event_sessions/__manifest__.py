@@ -12,7 +12,7 @@
         'event_management',
     ],
     'data': [
-        # 'security/ir.model.access.csv',
+         'security/ir.model.access.csv',
         # 'security/event_session_security.xml',
         'views/event_session_view.xml',
         'views/event_session_attend_view.xml',
