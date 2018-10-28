@@ -88,6 +88,7 @@
                 name="event_management.report_event_monthly"
                 file="event_management.report_event_monthly"
                 paperformat="report_layout.paperformat_backend_landscape"
+                groups="event_user.group_event_administration"
         />
     </data>
 </odoo>

@@ -13,6 +13,10 @@ evm_ermb_adm,evm_ermb_adm,model_event_room_book,event_user.group_event_administr
 evm_et_org,evm_et_org,event.model_event_type,event_user.group_event_organizer,1,0,0,0
 evm_et_adm,evm_et_adm,event.model_event_type,event_user.group_event_administration,1,1,1,0
 
+event_organization_type_adm,event_organization_type_adm,model_event_organization_type,event_user.group_event_administration,1,1,1,0
+
+event_service_type_adm,event_service_type_adm,model_event_service_type,event_user.group_event_administration,1,1,1,0
+
 evm_ee_org,evm_ee_org,event.model_event_event,event_user.group_event_organizer,1,0,0,0
 
 evm_er_org,evm_er_org,event.model_event_registration,event_user.group_event_organizer,1,0,0,0
@@ -29,6 +33,8 @@ evm_emr_org,evm_emr_org,event.model_event_mail_registration,event_user.group_eve
 evm_etl_user,evm_etl_user,model_event_task_list,event.group_event_user,1,1,0,0
 evm_etl_org,evm_etl_org,model_event_task_list,event_user.group_event_organizer,1,0,0,0
 evm_etl_adm,evm_etl_adm,model_event_task_list,event_user.group_event_administration,1,1,1,0
+
+res_partner_adm,res_partner_adm,model_res_partner,event_user.group_event_administration,1,1,1,0
 
 
 

@@ -35,6 +35,6 @@
         </record>
 
         <menuitem name="Meeting Room Calender" id="menu_meeting_room_reservation" action="action_meeting_room_reservation"
-                  parent="menu_event_general" sequence="83"/>
+                  parent="menu_event_general"  groups="event_user.group_event_administration" sequence="83"/>
     </data>
 </odoo>
