@@ -22,4 +22,4 @@ Author
 
 Process>>>>
 1. Employee >> Employee >> Personal Information >> Fill the fields Date of Birth and Work Email
-2. If you want to email template go Setting>>Email>Template
+2. If you want to change email template then go Setting>>Email>Template

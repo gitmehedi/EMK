@@ -45,8 +45,8 @@
                                     </div>
                                 </div>
                                 <br/>
-                                <p><b>The Information you give here would be helpful to us to create a better working environment</b></p>
-                                <p><b>SECTION A: </b></p>
+                                <h5><b><u>The Information you give here would be helpful to us to create a better working environment</u></b></h5>
+                                <h4><u>SECTION A:</u></h4>
                                 <p>a) Please Indicate below the reasons for your decision by distributing 100 points over the
                                 factors given below indicating % contribution to your decision.</p>
                                 <p>b) Also cite critical incidents/example to support your rating.</p>
@@ -54,7 +54,6 @@
                                 50 each, if one major factor and one minor factor give 70 or 80 depending on their importance.</p>
 
                                 <table class="table table-report-xs table-bordered table-striped">
-
                                     <thead>
                                         <tr class="odo-bg-gray">
                                             <th>Factors</th>
@@ -72,7 +71,8 @@
                                         </t>
                                     </tbody>
                                 </table>
-                                <br/>
+                                <h4><u>SECTION B: </u></h4>
+                                <p>In your opinion: </p>
                                 <table class="table table-report-xs table-bordered table-striped" style="table-layout: fixed;">
                                     <thead>
                                         <tr class="odo-bg-gray">
@@ -89,27 +89,31 @@
                                         </t>
                                     </tbody>
                                 </table>
-                                <br/>
                                 <h4><b>Would you recommend the company to a friend as a good organization to work for?</b></h4>
                                 <t t-if="o.recommend == 'one'"><td>Most Definitely</td></t>
                                 <t t-elif="o.recommend == 'two'"><td>With Reservations</td></t>
                                 <t t-elif="o.recommend == 'three'"><td>Syllabus</td></t>
                                 <t t-else=""><td></td></t>
-                                <br/>
-                                <br/>
-                                <h4><b>Comment By Supervisor</b></h4>
+                                <h4><b>Your contract address for all further correspondence is: </b></h4>
+                                <h6><span t-esc="o.contract_add"/></h6>
+                                <h4><u>SECTION C: </u></h4>
+                                <p>To be filled by the Administration Department 7 days before the last working day.: </p>
+                                <p>(With input from the immediate supervisor of the employee)</p>
+                                <h4><b>Details of any mentionable incident during the notice period of the person.</b></h4>
                                 <h6><span t-esc="o.comment_supervisor"/></h6>
-                                <br/>
-                                <br/>
-                                <h4><b>Comment By HR</b></h4>
+                                <h4><b>Can a good character be issued to the person?</b></h4>
+                                <t t-if="o.permission == 'yes'"><td>Yes</td></t>
+                                <t t-elif="o.permission == 'no'"><td>No</td></t>
+                                <t t-else=""><td></td></t>
+                                <h4><b>Can the person be reconsidered for re-employment?</b></h4>
+                                <t t-if="o.permission == 'yes'"><td>Yes</td></t>
+                                <t t-elif="o.permission == 'no'"><td>No</td></t>
+                                <t t-else=""><td></td></t>
+                                <h4><b>Any other comments?</b></h4>
                                 <h6><span t-esc="o.comment_hr"/></h6>
                                 <br/>
                                 <br/>
-                                <h4><b>Your contract address for all further correspondence is: </b></h4>
-                                <h6><span t-esc="o.contract_add"/></h6>
-                                <br/>
-                                <br/>
-                                <p><b>Signature and Date:</b></p>
+                                <h6><b>Signature and Date:</b></h6>
                             </div>
                         </div>
                     </t>

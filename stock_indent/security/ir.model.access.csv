@@ -15,6 +15,7 @@ product.access_product_product_employee,product.product employee,product.model_p
 product.access_product_category_user,product.category.user,product.model_product_category,base.group_user,1,1,0,0
 product.access_product_template_user,product.template.user,product.model_product_template,base.group_user,1,1,0,0
 product.access_product_uom_user,product.uom.user,product.model_product_uom,base.group_user,1,1,0,0
+access_product_price_history_employee,prices.history employee,product.model_product_price_history,base.group_user,1,1,1,0
 
 access_stock_move_user,access_stock_move_user,stock.model_stock_move,base.group_user,1,0,0,0
 access_stock_quant_user,access_stock_quant_user,stock.model_stock_quant,base.group_user,1,0,0,0

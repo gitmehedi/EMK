@@ -36,6 +36,8 @@
                 'letter_of_credit_report',
                 'gbs_document_type',
                 'terms_setup',
+                'stock_operating_unit',
+                'stock',
     ],
 
 
@@ -45,5 +47,6 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu_items.xml',
+        'views/commercial_po_menu.xml',
     ],
 }

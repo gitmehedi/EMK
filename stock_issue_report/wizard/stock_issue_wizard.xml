@@ -14,6 +14,8 @@
                         <group>
                             <field name="operating_unit_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
+                            <field name="stock_location_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
                         </group>
                     </group>
                     <footer>
@@ -33,11 +35,10 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem
-                name="Stock Issue Report"
-                parent="stock.menu_warehouse_report"
-                action="action_stock_issue_wizard"
-                id="menu_stock_issue" groups="stock.group_stock_user"
-                sequence="17"/>
+        <menuitem id="menu_stock_issue"
+                  parent="stock.menu_warehouse_report"
+                  action="action_stock_issue_wizard"
+                  groups="stock.group_stock_user"
+                  sequence="17"/>
     </data>
 </odoo>

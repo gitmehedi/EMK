@@ -30,6 +30,8 @@ class LoanLending(models.Model):
                 ('default_location_src_id', '=', self.item_loan_location_id.id),
                 ('default_location_dest_id', '=', location_id),
                 ('code', '=', 'incoming')],limit=1)
+            if not picking_type_objs:
+                raise UserError(_('Please create "Incoming" picking type for Adjustment.'))
 
             res = self.env.ref('stock_picking_extend.view_stock_picking_form1')
 

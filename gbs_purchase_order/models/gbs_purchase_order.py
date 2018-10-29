@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
 from datetime import datetime
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError,UserError
 import odoo.addons.decimal_precision as dp
 
 
@@ -30,7 +30,7 @@ class PurchaseOrder(models.Model):
                                    help="Local: Local LC.\n""Foreign: Foreign LC.")
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
                                    string="Purchase By")
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.order')])
     check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
     disable_new_revision_button = fields.Boolean('Disable New Revision Button', default=False)
 
@@ -45,6 +45,12 @@ class PurchaseOrder(models.Model):
     contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
 
     ref_date = fields.Date('Ref.Date')
+
+    currency_id = fields.Many2one(related='partner_id.property_purchase_currency_id',required=True, store=True,
+                                  string='Currency', readonly=True)
+
+    # currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True,
+    #                               default=lambda self: self.partner_id.currency_id.id)
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -73,7 +79,7 @@ class PurchaseOrder(models.Model):
         self.notes = requisition.description
         self.date_order = requisition.date_end or fields.Datetime.now()
         self.picking_type_id = requisition.picking_type_id.id
-        self.operating_unit_id = requisition.operating_unit_id.id
+        self.operating_unit_id = requisition.operating_unit_id
 
         if requisition.type_id.line_copy != 'copy':
             return
@@ -133,8 +139,18 @@ class PurchaseOrder(models.Model):
                     'name': attachment_line.name,
                     'datas_fname': attachment_line.datas_fname,
                     'db_datas': attachment_line.db_datas,
+                    'res_model': 'purchase.order',
                 }))
             self.attachment_ids = attachments_lines
+
+        # link way
+        # attachments_lines = []
+        # for attachment_line in requisition.attachment_ids:
+        #     attachments_lines.append((4,attachment_line.id))
+        # self.attachment_ids = attachments_lines
+        # (replace way)
+        # self.attachment_ids = [(6,0,requisition.attachment_ids.ids)]
+
         if requisition.region_type:
             self.region_type = requisition.region_type
         if requisition.purchase_by:
@@ -146,6 +162,33 @@ class PurchaseOrder(models.Model):
     def _onchange_picking_type_id(self):
         if self.picking_type_id.sudo().default_location_dest_id.usage != 'customer':
             self.dest_address_id = False
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        type_obj = self.env['stock.picking.type']
+        if self.operating_unit_id:
+            types = type_obj.search([('code', '=', 'incoming'),
+                                     ('operating_unit_id', '=',self.operating_unit_id.id)])
+            if types:
+                self.picking_type_id = types[0]
+            else:
+                raise UserError(
+                    _("No Warehouse found with the Operating Unit indicated "
+                      "in the Purchase Order")
+                )
+
+    @api.model
+    def _default_picking_type(self):
+        res = super(PurchaseOrder, self)._default_picking_type()
+        type_obj = self.env['stock.picking.type']
+        if self.operating_unit_id:
+            types = type_obj.search([('code', '=', 'incoming'),
+                                 ('operating_unit_id', '=',self.operating_unit_id.id)])
+            if types:
+                res = types[0].id
+            else:
+                res = False
+        return res
 
     @api.multi
     def button_confirm(self):
@@ -204,14 +247,15 @@ class PurchaseOrder(models.Model):
         return res
 
     def unlink(self):
-        for indent in self:
-            if indent.state != 'draft':
+        for obj in self:
+            if obj.state != 'cancel':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
-                query = """ delete from ir_attachment where res_id=%s"""
-                for att in self.attachment_ids:
+                query = """ delete from attachment_po_rel where po_id=%s"""
+                for att in obj.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'

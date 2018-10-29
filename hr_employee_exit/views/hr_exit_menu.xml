@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <menuitem id="exit_checklist_menu" name="Exit Configurations" groups ="hr.group_hr_manager"
+        <menuitem id="exit_checklist_menu" name="Exit Configurations" groups ="gbs_application_group.group_dept_manager,hr.group_hr_manager"
                   parent="hr.menu_human_resources_configuration" sequence="30"/>
 
         <!-- Employee Checklist Menu -->

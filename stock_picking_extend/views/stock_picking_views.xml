@@ -36,7 +36,8 @@
                         </group>
                         <group>
                             <field name="min_date"/>
-                            <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')],'required':[('receive_type', 'in',['lc','other'])]}"/>
+                            <field name="partner_id" domain="[('supplier', '=', True),('parent_id', '=', False)]"
+                                   attrs="{'invisible': [('picking_type_code', '=', 'internal')],'required':[('receive_type', 'in',['lc','other'])]}"/>
                             <field name="challan_bill_no" attrs="{'required':[('receive_type', 'in',['lc','other'])]}"/>
                             <field name="date_done"/>
                             <label for="owner_id" groups="stock.group_tracking_owner"/>
@@ -219,7 +220,6 @@
             <tree string="Receive Transfers" create="false" edit="false">
                 <field name="name"/>
                 <field name="location_dest_id"/>
-                <field name="partner_id"/>
                 <field name="date" invisible="1"/>
                 <field name="min_date"/>
                 <field name="origin"/>
@@ -232,17 +232,33 @@
         </field>
     </record>
 
-    <!--<record id="view_stock_picking_filter1" model="ir.ui.view">-->
-    <!--<field name="name">view.picking.filter1</field>-->
-    <!--<field name="model">stock.picking</field>-->
-    <!--<field name="arch" type="xml">-->
-    <!--<search string="Receive">-->
-    <!--<filter name="receive_filter" string="Received" domain="[('picking_type_code', '=', 'incoming')]"/>-->
-    <!--<filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>-->
-    <!--</search>-->
-    <!--</field>-->
-    <!--</record>-->
-
+    <!--Search View-->
+    <record id="search_stock_picking1" model="ir.ui.view">
+        <field name="name">stock.picking.search1</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <search string="Receipts Picking">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="origin"/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <separator/>
+                <filter name="ready" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]"/>
+            </search>
+        </field>
+    </record>
+    <!--Search View-->
+    <record id="search_stock_picking2" model="ir.ui.view">
+        <field name="name">stock.picking.search2</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <search string="Internal Picking">
+                <field name="name"/>
+                <field name="origin"/>
+                <filter name="ready" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]"/>
+            </search>
+        </field>
+    </record>
 
     <!--Receive Goods Action -->
     <record model="ir.actions.act_window" id="action_stock_picking_receive1">
@@ -251,16 +267,22 @@
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree1"/>
-        <!--<field name="search_view_id" ref="view_stock_picking_filter1"/>-->
-        <!--<field name="context">{-->
-        <!--'search_default_receive_filter': 1,}</field>-->
-        <field name="domain">[('transfer_type', '=', 'receive')]</field>
-        <field name="context">{'default_transfer_type': 'receive'}</field>
+        <field name="search_view_id" ref="search_stock_picking1"/>
+        <field name="context">{
+            'search_default_ready':1,
+            'default_transfer_type': 'receive',
+            }
+        </field>
+        <field name="domain">[('location_dest_id.name','=','Input')]</field>
         <field name="help" type="html">
             <p>
                 Here you can see Received Goods list.
             </p>
         </field>
+        <!--<field name="context">{-->
+        <!--'search_default_receive_filter': 1,}</field>-->
+        <!--<field name="domain">[('transfer_type', '=', 'receive')]</field>-->
+        <!--<field name="context">{'default_transfer_type': 'receive'}</field>-->
     </record>
 
     <!--Accounts Approver Action -->
@@ -281,7 +303,12 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree2"/>
         <field name="domain">[('location_dest_id.name','=','Quality Control')]</field>
-        <field name="context">{'default_transfer_type': 'receive'}</field>
+        <field name="search_view_id" ref="search_stock_picking2"/>
+        <field name="context">{
+            'search_default_ready':1,
+            }
+        </field>
+        <!--<field name="context">{'default_transfer_type': 'receive'}</field>-->
     </record>
 
     <!--Sound Stock Action -->
@@ -292,7 +319,12 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree2"/>
         <field name="domain">[('location_dest_id.name','=','Stock')]</field>
-        <field name="context">{'default_transfer_type': 'receive'}</field>
+        <field name="search_view_id" ref="search_stock_picking2"/>
+        <field name="context">{
+            'search_default_ready':1,
+            }
+        </field>
+        <!--<field name="context">{'default_transfer_type': 'receive'}</field>-->
     </record>
 
     <record id="action_stock_picking_view1" model="ir.actions.act_window.view">

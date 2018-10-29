@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="final_settlement_form_view" model="ir.ui.view">
+            <field name="name">final.settlement.form.view</field>
+            <field name="model">final.settlement</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Full &amp; Final Settlement">
+                    <header>
+                        <button name="action_confirm" states="draft" type="object" string="Confirm" class="oe_highlight"/>
+                        <button string="Validate" name="action_approved"
+                                attrs="{'invisible': [('state','not in',['validate'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Approved" name="action_done"
+                                attrs="{'invisible': [('state','not in',['approved'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_reset"
+                                attrs="{'invisible': [('state', 'in', ['draft','done'])]}"
+                                type="object"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,validate,approved,done"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <separator string="Employee Details" colspan="2"/>
+                            <group>
+                                <field name="employee_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                                <field name="emp_designation"/>
+                                <field name="joining_date"/>
+                            </group>
+                            <group>
+                                <field name="employee_code"/>
+                                <field name="leaving_date"/>
+                            </group>
+                        </group>
+                        <field name="emp_payslip_ids" readonly = "1" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="total"/>
+                            </tree>
+                        </field>
+                        <notebook attrs="{'invisible': [('state','in',['draft'])]}">
+                            <page string ="Payments">
+                                <field name="payment_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string ="Deductions">
+                                <field name="deduction_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <group class="oe_subtotal_footer oe_right" name="sale_total">
+                                <field name="payment_total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="deduction_total_amount" class="oe_right" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="final_settlement_tree_view" model="ir.ui.view">
+            <field name="name">final.settlement.tree</field>
+            <field name="model">final.settlement</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Exit Interview">
+                    <field name="employee_id"/>
+                    <field name="emp_designation"/>
+                    <field name="joining_date"/>
+                    <field name="leaving_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_final_settlement" model="ir.actions.act_window">
+            <field name="name">Final Settlement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">final.settlement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+				name="Full &amp; Final Settlement" groups ="hr.group_hr_manager"
+				id="final_settlement_menu"
+                parent="menu_exit_management"
+				sequence="21"
+                action="action_final_settlement"
+        />
+    </data>
+</odoo>

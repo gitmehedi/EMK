@@ -68,8 +68,7 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
 
-                                <field name="pi_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
-                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="pi_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"/>
                                 <field name="lc_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
 
@@ -81,7 +80,8 @@
                                         <tree string="List" editable="bottom">
                                             <field name="product_id"
                                                    options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                            <field name="quantity" string="Ordered Qty"/>
+                                            <field name="quantity"/>
+                                            <field name="delivery_qty"/>
                                             <field name="uom_id" string="UoM"
                                                    options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="pack_type"/>
@@ -90,6 +90,7 @@
                                             <field name="tax_id"/>
                                             <field name="price_unit"/>
                                             <field name="price_subtotal"/>
+                                            <field name="sale_order_id" invisible="1"/>
 
                                         </tree>
                                     </field>

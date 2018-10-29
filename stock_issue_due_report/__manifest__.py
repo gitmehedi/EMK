@@ -19,9 +19,9 @@
     'depends': ['stock_indent','report_layout'],
 
     'data': [
-        'report/stock_issue_due_report.xml',
+        'security/ir.model.access.csv',
         'wizard/stock_issue_due_wizard.xml',
-
+        'report/stock_issue_due_report.xml',
     ],
 
 }

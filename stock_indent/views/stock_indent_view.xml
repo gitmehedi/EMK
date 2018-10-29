@@ -111,13 +111,13 @@
 									<group>
 										<field name="company_id" groups="base.group_multi_company"
 											   options="{'no_create': True,'no_open':True}"/>
-										<field name="move_type" />
+										<field name="move_type" invisible="1"/>
 										<field name="approver_id" invisible="1"/>
 										<field name="closer_id" invisible="1"/>
 										<field name="pr_indent_check" invisible="1"/>
 									</group>
 									<group>
-										<field name="warehouse_id" groups="stock.group_stock_user" options="{'no_create': True,'no_open':True}"/>
+										<field name="warehouse_id" readonly="1" groups="stock.group_stock_user" options="{'no_create': True,'no_open':True}"/>
 										<field name="picking_type_id" groups="stock.group_stock_user"/>
 									</group>
 								</group>
@@ -131,8 +131,18 @@
 				</form>
 			</field>
 		</record>
+		<!--Search View-->
+		<record id="search_stock_indent" model="ir.ui.view">
+            <field name="name">indent.indent.search</field>
+            <field name="model">indent.indent</field>
+            <field name="arch" type="xml">
+                <search string="Indents">
+                    <filter name="inprogress" string="In Progress" domain="[('state','=','inprogress')]"/>
+                </search>
+            </field>
+        </record>
 		<!-- Indent Window Action -->
-		<record id='action_indent_indent' model='ir.actions.act_window'>
+		<record id='action_stock_indent' model='ir.actions.act_window'>
 			<field name="name">Indents</field>
 			<field name="res_model">indent.indent</field>
 			<field name="view_type">form</field>
@@ -142,6 +152,18 @@
 					Click to create a new indent.
 				</p>
 			</field>
+		</record>
+		<!-- Indent Inventory User Window Action -->
+		<record id='action_indent_inprogress' model='ir.actions.act_window'>
+			<field name="name">Indents Inprogress</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="search_stock_indent"/>
+            <field name="context">{
+                'search_default_inprogress':1,
+                }
+            </field>
 		</record>
 		<!-- Indent Approval Window Action -->
 		<record id='action_indent_waiting_for_approval' model='ir.actions.act_window'>
@@ -160,13 +182,17 @@
 		<menuitem name="Indents" parent="stock.menu_stock_root" id="menu_indent_indent_main"
 				  sequence="3" groups="base.group_user"/>
 
-		<menuitem action="action_indent_indent" name="Indents"
+		<menuitem action="action_stock_indent" name="Indents"
 				  parent="menu_indent_indent_main" id="menu_indent_indent" sequence="1"
 				  groups="base.group_user"/>
 
 		<menuitem action="action_indent_waiting_for_approval" name="Indents Waiting For Approval"
 				  parent="menu_indent_indent_main" id="menu_indent_waiting_for_approval" sequence="2"
 				  groups="stock_indent.group_stock_indent_approver"/>
+
+		<menuitem action="action_indent_inprogress" name="Indent Inprogress"
+				  parent="menu_indent_indent_main" id="menu_indent_inprogress" sequence="3"
+				  groups="stock.group_stock_user"/>
 
 	</data>
 </odoo>
