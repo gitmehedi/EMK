@@ -227,7 +227,7 @@
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'stock_picking_type'), ('name', '=', 'ir_rule_stock_picking_type_allowed_operating_units')]"/>
+            <value eval="[('module', '=', 'stock_operating_unit'), ('name', '=', 'ir_rule_stock_picking_type_allowed_operating_units')]"/>
         </function>
         <value eval="{'noupdate': False}"/>
     </function>
@@ -242,28 +242,31 @@
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'stock_picking_type'), ('name', '=', 'ir_rule_stock_picking_type_allowed_operating_units')]"/>
+            <value eval="[('module', '=', 'stock_operating_unit'), ('name', '=', 'ir_rule_stock_picking_type_allowed_operating_units')]"/>
         </function>
         <value eval="{'noupdate': True}"/>
     </function>
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'stock_picking_type'), ('name', '=', 'stock_picking_type_rule')]"/>
+            <value eval="[('module', '=', 'stock'), ('name', '=', 'stock_picking_type_rule')]"/>
         </function>
         <value eval="{'noupdate': False}"/>
     </function>
 
     <record model="ir.rule" id="stock.stock_picking_type_rule">
         <field name="name">Stock Picking Type multi-company</field>
-        <field name="model_id" search="[('model','=','stock_picking_type')]" model="ir.model"/>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
         <field name="domain_force">['|', ('warehouse_id', '=', False), '|',('warehouse_id.company_id','=',False),('warehouse_id.company_id','child_of',[user.company_id.id])]</field>
     </record>
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'stock_picking_type'), ('name', '=', 'stock_picking_type_rule')]"/>
+            <value eval="[('module', '=', 'stock'), ('name', '=', 'stock_picking_type_rule')]"/>
         </function>
         <value eval="{'noupdate': True}"/>
     </function>
