@@ -9,6 +9,7 @@ class EventTaskType(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     name = fields.Char('Task Name', required=True, translate=True, track_visibility='onchange')
+    description = fields.Text('Description', required=True, translate=True, track_visibility='onchange')
     status = fields.Boolean(default=True)
 
     @api.constrains('name')
