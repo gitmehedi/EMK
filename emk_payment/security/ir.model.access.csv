@@ -9,6 +9,24 @@ acc_mem_payment_session_off,mem_payment_session_off,model_payment_session,member
 acc_mem_service_payment_mang,mem_service_payment_mang,model_service_payment,membership_extension.group_membership_manager,1,1,1,0
 acc_mem_service_payment_off,mem_service_payment_off,model_service_payment,membership_user.group_mem_user_officer,1,1,1,0
 
+account_journal_adm,account_journal_adm,account.model_account_journal,event_user.group_event_administration,1,1,1,0
+
+account_invoice_adm,account_invoice_adm,account.model_account_invoice,event_user.group_event_administration,1,1,1,0
+
+account_invoice_line_adm,account_invoice_line_adm,account.model_account_invoice_line,event_user.group_event_administration,1,1,1,0
+
+account_invoice_tax_adm,account_invoice_tax_adm,account.model_account_invoice_tax,event_user.group_event_administration,1,1,1,0
+
+account_move_adm,account_move_tax_adm,account.model_account_move,event_user.group_event_administration,1,1,1,0
+
+account_move_line_adm,account_move_line_adm,account.model_account_move_line,event_user.group_event_administration,1,1,1,0
+
+account_partial_reconcile_adm,account_partial_reconcile_adm,account.model_account_partial_reconcile,event_user.group_event_administration,1,1,1,0
+
+account_account_type_adm,account_account_type_adm,account.model_account_account_type,event_user.group_event_administration,1,1,1,0
+
+account_analytic_line_adm,account_analytic_line_adm,account.model_account_analytic_line,event_user.group_event_administration,1,1,1,0
+
 
 
 

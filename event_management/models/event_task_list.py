@@ -19,9 +19,9 @@ class EventTaskList(models.Model):
     assign_date = fields.Datetime(string="Assign Date", track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)],'assign': [('readonly', False)]})
     task_start = fields.Datetime(string='Task Start', track_visibility='onchange', readonly=True,
-                                 states={'assign': [('readonly', False)]})
+                                 states={'start': [('readonly', False)],'draft': [('readonly', False)]})
     task_stop = fields.Datetime(string='Task Stop', track_visibility='onchange', readonly=True,
-                                states={'start': [('readonly', False)],'assign': [('readonly', False)]})
+                                states={'start': [('readonly', False)],'draft': [('readonly', False)]})
 
     event_id = fields.Many2one('event.event', string='Event', readonly=True,
                                states={'draft': [('readonly', False)],'assign': [('readonly', False)]})

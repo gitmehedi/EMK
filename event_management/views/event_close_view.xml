@@ -144,7 +144,7 @@
         </record>
 
         <!-- Menu items -->
-        <menuitem id="event_close_menu" name="Event Close" sequence="82"
+        <menuitem id="event_close_menu" name="Event Close" sequence="82" groups="event_user.group_event_administration"
                   parent="menu_event_general" action="event_close_action"
         />
 
