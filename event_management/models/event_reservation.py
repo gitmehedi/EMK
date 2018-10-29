@@ -39,10 +39,8 @@ class EventReservation(models.Model):
                                readonly=True, states={'draft': [('readonly', False)]})
     request_date = fields.Datetime(string='Requested Date', required=True, track_visibility='onchange',
                                    readonly=True, states={'draft': [('readonly', False)]})
-    description = fields.Html('Description', track_visibility='onchange', required=True,
+    description = fields.Html('Description', track_visibility='onchange', required=True,sanitize = False,
                               readonly=True, states={'draft': [('readonly', False)]})
-    rules_regulation = fields.Text('Rules & regulation', track_visibility='onchange', required=True,
-                                   readonly=True, states={'draft': [('readonly', False)]})
 
     payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type',
                                     readonly=True, states={'draft': [('readonly', False)]})
@@ -54,11 +52,11 @@ class EventReservation(models.Model):
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), track_visibility='onchange',
                                      required=True,
                                      readonly=True, states={'draft': [('readonly', False)]})
-    rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange',
+    rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange',sanitize = True,
                                    readonly=True, states={'draft': [('readonly', False)]})
     date_of_payment = fields.Date(string="Expected Date for Payment", track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
-    notes = fields.Html(string="Comments/Notes", track_visibility='onchange',
+    notes = fields.Html(string="Comments/Notes", track_visibility='onchange',sanitize = False,
                         readonly=True, states={'draft': [('readonly', False)]})
     paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
                                      string="Participation Charge", readonly=True,
@@ -106,6 +104,7 @@ class EventReservation(models.Model):
             vals['payment_type'] = self.payment_type
             vals['mode_of_payment'] = self.mode_of_payment
             vals['paid_amount'] = self.paid_amount
+            vals['participating_amount'] = self.participating_amount
             vals['refundable_amount'] = self.refundable_amount
             vals['date_of_payment'] = self.date_of_payment
             vals['seats_max'] = self.attendee_number

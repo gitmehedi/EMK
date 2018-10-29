@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
     <menuitem name="Members Payment" id="sub_pay_daily_operations" parent="account.menu_finance"
-              groups="membership_user.group_mem_user_officer" sequence="1"/>
+              groups="membership_user.group_mem_user_officer,event_user.group_event_administration" sequence="1"/>
+
+    <menuitem name="Accounting"
+            id="account.menu_finance"
+            groups="account.group_account_user,account.group_account_manager,account.group_account_invoice,event_user.group_event_administration"
+            web_icon="account,static/description/icon.png"
+            sequence="40"/>
 </odoo>

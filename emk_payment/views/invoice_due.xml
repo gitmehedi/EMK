@@ -227,7 +227,7 @@
     </record>
 
     <menuitem id="sub_due_invoice" parent="sub_pay_daily_operations"
-              action="act_invoice_due" groups="membership_user.group_mem_user_officer"/>
+              action="act_invoice_due" groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
 
 
 </odoo>

@@ -21,7 +21,7 @@
                         <div class="oe_title">
                             <label class="oe_edit_only" for="organizer_id" string="Organizer Name"/>
                             <h1>
-                                <field name="organizer_id" placeholder="Organizer Name"
+                                <field name="organizer_id" placeholder="Organizer Name" default_focus="1" tabindex="1"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                             </h1>
                         </div>
@@ -62,7 +62,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Details &amp; Rules Regulations">
+                            <page string="Details &amp; Rules Regulations" tabindex="-1">
                                 <separator string="Event Description"/>
                                 <field name="description" nolabel="1"/>
                                 <separator string="Rules and Regulations"/>

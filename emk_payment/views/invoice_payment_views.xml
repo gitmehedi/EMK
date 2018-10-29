@@ -72,7 +72,7 @@
 
     <menuitem id="menu_membership_fee" parent="sub_pay_daily_operations"
               action="action_membership_payment" sequence="10"
-              groups="membership_user.group_mem_user_officer"/>
+              groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
 
 
 </odoo>
