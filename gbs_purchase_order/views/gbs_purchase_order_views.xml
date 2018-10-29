@@ -57,8 +57,8 @@
                                 states='to approve' groups="purchase.group_purchase_manager,commercial.group_commercial_manager"/>
                     </xpath>
                     <!--<xpath expr="//field[@name='company_id']" position="after">-->
-                        <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
-                               <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
+                    <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
+                    <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
                     <!--</xpath>-->
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="check_po_action_button" invisible="1"/>
@@ -90,6 +90,10 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
 
+                    <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+
                 </data>
             </field>
         </record>
@@ -116,6 +120,17 @@
                         </page>
                     </xpath>
                 </data>
+            </field>
+        </record>
+
+        <record id="purchase_operating_unit_form" model="ir.ui.view">
+            <field name="name">purchase_operating_unit_form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_operating_unit.purchase_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='requesting_operating_unit_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -150,14 +165,14 @@
             <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
             <field name="search_view_id" ref="inherit_request_quotation_select"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a quotation that will be converted into a purchase order.
-              </p><p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a quotation that will be converted into a purchase order.
+                </p><p>
                 Use this menu to search within your purchase orders by
                 references, vendor, products, etc. For each purchase order,
                 you can track the related discussion with the vendor, control
                 the products received and control the vendor bills.
-              </p>
+            </p>
             </field>
         </record>
 
@@ -170,22 +185,22 @@
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="inherit_request_quotation_select"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a request for quotation.
-              </p><p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a request for quotation.
+                </p><p>
                 The quotation contains the history of the discussion/negotiation
                 you had with your vendor. Once confirmed, a request for
                 quotation is converted into a purchase order.
-              </p><p>
+            </p><p>
                 Most propositions of purchase orders are created automatically
                 by Odoo based on inventory needs.
-              </p>
+            </p>
             </field>
         </record>
 
         <menuitem action="purchase.purchase_rfq" id="purchase.menu_purchase_rfq"
-            parent="purchase.menu_procurement_management"
-            sequence="4"/>
+                  parent="purchase.menu_procurement_management"
+                  sequence="4"/>
 
 
 
