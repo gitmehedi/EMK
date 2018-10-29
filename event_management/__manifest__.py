@@ -25,6 +25,8 @@
         'security/ir_rule.xml',
         'data/ir_sequence.xml',
         'data/menu_view.xml',
+        'data/data.xml',
+        'data/email_template.xml',
         'views/dashboard.xml',
         'views/event_type_view.xml',
         'views/event_room_view.xml',

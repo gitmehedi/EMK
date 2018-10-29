@@ -67,18 +67,18 @@ class EventMailScheduler(models.Model):
 class EventMailRegistration(models.Model):
     _inherit = 'event.mail.registration'
 
-    @api.multi
-    @api.depends('registration_id', 'scheduler_id.interval_unit',
-                 'scheduler_id.interval_type')
-    def _compute_scheduled_date(self):
-        super(EventMailRegistration, self)._compute_scheduled_date()
-        for event_mail_reg in self:
-            if (event_mail_reg.registration_id and
-                    event_mail_reg.registration_id.session_id):
-                date_open = event_mail_reg.registration_id.date_open
-                date_open_datetime = date_open and fields.Datetime.from_string(
-                    date_open) or fields.datetime.now()
-                event_mail_reg.scheduled_date = (
-                    date_open_datetime +
-                    _INTERVALS[event_mail_reg.scheduler_id.interval_unit](
-                        event_mail_reg.scheduler_id.interval_nbr))
+    # @api.multi
+    # @api.depends('registration_id', 'scheduler_id.interval_unit',
+    #              'scheduler_id.interval_type')
+    # def _compute_scheduled_date(self):
+    #     super(EventMailRegistration, self)._compute_scheduled_date()
+    #     for event_mail_reg in self:
+    #         if (event_mail_reg.registration_id and
+    #                 event_mail_reg.registration_id.session_id):
+    #             date_open = event_mail_reg.registration_id.date_open
+    #             date_open_datetime = date_open and fields.Datetime.from_string(
+    #                 date_open) or fields.datetime.now()
+    #             event_mail_reg.scheduled_date = (
+    #                 date_open_datetime +
+    #                 _INTERVALS[event_mail_reg.scheduler_id.interval_unit](
+    #                     event_mail_reg.scheduler_id.interval_nbr))

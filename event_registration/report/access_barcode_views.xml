@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="temporary_pass_tmpl">
+        <t t-call="report.html_container">
+            <div class="page">
+                <t t-foreach="docs" t-as="obj">
+                    <div class="col-sm-6">
+                        <table style="width:243pt; height:153pt; border: 1pt solid black; border-collapse:separate; border-radius:8pt; margin:5pt">
+                            <td style="width:33%;" valign="center">
+                                <table style="width:77pt; height:150pt">
+                                    <tr style="height:30%">
+                                        <td align="center" valign="center">
+                                            <img t-if="obj.event_id.company_id and obj.event_id.company_id.logo" t-att-src="'data:image/png;base64,%s' % (obj.event_id.company_id.logo,)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>
+                                        </td>
+                                    </tr>
+                                    <tr style="height:70%;">
+                                        <td style="padding:15px 0px 15px 0px;">
+                                            <img t-att-src="'data:image/png;base64,%s'% (get_barcode('Code128',obj.barcode))" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width:67%" valign="center">
+                                <table style="width:155pt; height:85pt">
+                                    <tr><th><div style="font-size:15pt; margin-bottom:0pt;margin-top:0pt;" align="center"><t t-esc="obj.event_id.name"/></div></th></tr>
+                                    <tr><td><div align="center" style="font-size:10pt;margin-bottom:5pt;"><t t-esc="obj.event_id.name"/></div></td></tr>
+                                    <tr>
+                                        <td>
+                                            <img t-if="obj.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', obj.barcode, 600, 120)" style="max-height:50pt;max-width:100%;" align="center"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </table>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+    <report id="access_code"
+            model="event.registration"
+            string="Temporary Pass"
+            name="event_registration.temporary_pass_tmpl"
+            file="event_registration.temporary_pass_tmpl"
+            report_type="qweb-pdf"/>
+</odoo>

@@ -19,6 +19,8 @@
     ],
     'data': [
         'views/website_event_templates.xml',
+        'data/email_template.xml',
+        'report/access_barcode_views.xml',
     ],
     'installable': True,
     'application': True,
