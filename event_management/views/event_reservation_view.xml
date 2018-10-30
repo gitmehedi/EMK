@@ -14,14 +14,14 @@
                         <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
                         <button name="act_cancel" string="Cancel" type="object"
                                 states="draft,on_process"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm"/>
                     </header>
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="organizer_id" string="Organizer Name"/>
                             <h1>
-                                <field name="organizer_id" placeholder="Organizer Name"
+                                <field name="organizer_id" placeholder="Organizer Name" default_focus="1" tabindex="1"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                             </h1>
                         </div>
@@ -62,7 +62,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Details &amp; Rules Regulations">
+                            <page string="Details &amp; Rules Regulations" tabindex="-1">
                                 <separator string="Event Description"/>
                                 <field name="description" nolabel="1"/>
                                 <separator string="Rules and Regulations"/>

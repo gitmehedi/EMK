@@ -27,6 +27,13 @@ account_account_type_adm,account_account_type_adm,account.model_account_account_
 
 account_analytic_line_adm,account_analytic_line_adm,account.model_account_analytic_line,event_user.group_event_administration,1,1,1,0
 
+invoice_payment_adm,invoice_payment_adm,model_invoice_payment,event_user.group_event_administration,1,1,1,0
+
+service_payment_adm,service_payment_adm,model_service_payment,event_user.group_event_administration,1,1,1,0
+
+payment_session_adm,payment_session_adm,model_payment_session,event_user.group_event_administration,1,1,1,0
+
+
 
 
 
