@@ -10,23 +10,41 @@
                                 <table style="width:77pt; height:150pt">
                                     <tr style="height:30%">
                                         <td align="center" valign="center">
-                                            <img t-if="obj.event_id.company_id and obj.event_id.company_id.logo" t-att-src="'data:image/png;base64,%s' % (obj.event_id.company_id.logo,)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>
+                                            <img t-if="obj.event_id.company_id and obj.event_id.company_id.logo"
+                                                 t-att-src="'data:image/png;base64,%s' % (obj.event_id.company_id.logo,)"
+                                                 style="max-height:45pt;max-width:90%" alt="Company Logo"/>
                                         </td>
                                     </tr>
                                     <tr style="height:70%;">
                                         <td style="padding:15px 0px 15px 0px;">
-                                            <img t-att-src="'data:image/png;base64,%s'% (get_barcode('Code128',obj.barcode))" />
+
                                         </td>
                                     </tr>
                                 </table>
                             </td>
                             <td style="width:67%" valign="center">
                                 <table style="width:155pt; height:85pt">
-                                    <tr><th><div style="font-size:15pt; margin-bottom:0pt;margin-top:0pt;" align="center"><t t-esc="obj.event_id.name"/></div></th></tr>
-                                    <tr><td><div align="center" style="font-size:10pt;margin-bottom:5pt;"><t t-esc="obj.event_id.name"/></div></td></tr>
+                                    <tr>
+                                        <th>
+                                            <div style="font-size:15pt; margin-bottom:0pt;margin-top:0pt;"
+                                                 align="center">
+                                                <t t-esc="obj.event_id.name"/>
+                                            </div>
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <td>
-                                            <img t-if="obj.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', obj.barcode, 600, 120)" style="max-height:50pt;max-width:100%;" align="center"/>
+                                            <div align="center" style="font-size:10pt;margin-bottom:5pt;">
+                                                <t t-esc="obj.event_id.name"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <img t-att-src="'data:image/png;base64,%s'% (get_barcode('Code128',obj.barcode))"/>
+                                            <img t-if="obj.barcode"
+                                                 t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', obj.barcode, 600, 120)"
+                                                 style="max-height:50pt;max-width:100%;" align="center"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -42,5 +60,6 @@
             string="Temporary Pass"
             name="event_registration.temporary_pass_tmpl"
             file="event_registration.temporary_pass_tmpl"
-            report_type="qweb-pdf"/>
+            report_type="qweb-pdf"
+            menu="False"/>
 </odoo>
