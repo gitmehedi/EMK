@@ -112,6 +112,13 @@ class EventReservation(models.Model):
             vals['description'] = self.description
             vals['rules_regulation'] = self.rules_regulation
             vals['ref_reservation'] = self.name
+            vals['event_mail_ids']= [
+                (0, 0, {  # right at subscription
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'template_id': self.env['ir.model.data'].xmlid_to_res_id('event_registration.event_confirmation_registration')}),
+
+            ]
             event = self.env['event.event'].create(vals)
             if event:
                 self.name = self.env['ir.sequence'].next_by_code('event.reservation')
