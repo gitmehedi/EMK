@@ -11,7 +11,8 @@ class EventClose(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name='event_id'
 
-    event_id = fields.Many2one('event.event', string='Event Name', required=True,domain=[('state','=','confirm')])
+    event_id = fields.Many2one('event.event', string='Event Name', required=True, readonly=True,
+                               domain=[('state','=','confirm')],states={'draft': [('readonly', False)]})
     event_type_id = fields.Many2one('event.type', string='Event Type', readonly=True,
                                     related='event_id.event_type_id')
     organizer_id = fields.Many2one('res.partner', string='Moderator Name', readonly=True, related='event_id.organizer_id')
