@@ -26,6 +26,8 @@ class InheritAccountPayment(models.Model):
 
     payment_transaction_id = fields.Many2one('payment.transaction', string="Payment Transaction",readonly=True,states={'draft': [('readonly', False)]})
 
+    is_entry_receivable_cleared_payments = fields.Boolean(string='Is this payments cleared receivable?')
+
 
     @api.multi
     def post(self):

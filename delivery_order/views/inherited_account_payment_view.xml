@@ -60,6 +60,12 @@
                     <field name="cheque_no" invisible="1"/>
                 </field>
 
+                <field name="journal_id" position="after">
+                    <field name="is_entry_receivable_cleared_payments" invisible="1"/>
+                </field>
+
+
+
             </field>
         </record>
 

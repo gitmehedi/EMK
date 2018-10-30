@@ -35,14 +35,14 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="unreconciled_entry_menu" parent="account.menu_finance"
-                  groups="account.account_clearing_controller"
-                  name="Reconcile Journal Entry"/>
+        <!--<menuitem id="unreconciled_entry_menu" parent="account.menu_finance"-->
+                  <!--groups="account.account_clearing_controller"-->
+                  <!--name="Reconcile Journal Entry"/>-->
 
-        <menuitem id="unreconciled_entry_sub_menu" parent="unreconciled_entry_menu"
-                  name="Reconcile Journal Entry"
-                  groups="account.account_clearing_controller"
-                  action="action_unreconciled_journal_entry"/>
+        <!--<menuitem id="unreconciled_entry_sub_menu" parent="unreconciled_entry_menu"-->
+                  <!--name="Reconcile Journal Entry"-->
+                  <!--groups="account.account_clearing_controller"-->
+                  <!--action="action_unreconciled_journal_entry"/>-->
 
     </data>
 </odoo>

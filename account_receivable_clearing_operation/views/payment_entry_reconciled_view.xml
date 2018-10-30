@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="payment_entry_reconcile_form" model="ir.ui.view">
+        <field name="name">payment.entry.reconciled.form</field>
+        <field name="model">payment.entry.reconciled</field>
+        <field name="arch" type="xml">
+            <form string="Payment Entry Reconcile">
+                <header>
+                    <button name="action_confirm"
+                            type="object" states="draft" string="Confirm" class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <field name="date"/>
+                        <field name="partner_id" options="{'no_open':True, 'no_quick_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Items to Reconcile">
+                            <field name="line_ids">
+                                <tree string="List" editable="bottom">
+                                    <field name="clear_acc_receivable"/>
+                                    <field name="partner_id" options="{'no_open':True, 'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="journal_id" options="{'no_open':True, 'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="amount"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="currency_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="cheque_received_id" invisible="1"/>
+                                    <field name="payment_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payment_entry_reconcile_list" model="ir.ui.view">
+        <field name="name">payment.entry.reconciled.list.view</field>
+        <field name="model">payment.entry.reconciled</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Entry Reconcile Tree">
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_payment_entry_reconcile">
+        <field name="name">Unreconciled Lists</field>
+        <field name="res_model">payment.entry.reconciled</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="unreconciled_entry_menu" parent="account.menu_finance"
+              groups="account.account_clearing_controller"
+              name="Reconcile Journal Entry"/>
+
+    <menuitem id="unreconciled_entry_sub_menu" parent="unreconciled_entry_menu"
+              name="Reconcile Journal Entry"
+              groups="account.account_clearing_controller"
+              action="action_payment_entry_reconcile"/>
+
+</odoo>

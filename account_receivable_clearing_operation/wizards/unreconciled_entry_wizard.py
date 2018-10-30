@@ -47,7 +47,7 @@ class UnReconciledJournalEntryWizard(models.TransientModel):
                                                               ('date_range_fm_id','=',self.date_range_fm_id.id)
                                                               ])
 
-            # Account Module - account_view.xml 
+            # Account Module - account_view.xml
 
             # < filter
             # string = "Unreconciled"

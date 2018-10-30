@@ -7,6 +7,8 @@
     'depends': [
         'account',
         'gbs_account',
+        'gbs_accounting_cheque_received',
+        'delivery_order',
     ],
 
     'data': [
@@ -14,6 +16,7 @@
         'wizards/unreconciled_entry_wizard_view.xml',
         'views/inherited_res_company_view.xml',
         'views/account_move_line.xml',
+        'views/payment_entry_reconciled_view.xml',
     ],
 
     'summary': 'Account Receivable Clearing Operation',

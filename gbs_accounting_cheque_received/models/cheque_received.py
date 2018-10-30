@@ -9,6 +9,7 @@ class ChequeReceived(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id DESC'
     _description = "Cheque Info"
+    _rec_name = 'name'
 
     state = fields.Selection([
         ('draft', 'Cheque Entry'),
@@ -76,9 +77,8 @@ class ChequeReceived(models.Model):
 
     # @todo : Update this field
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
-
     cheque_no = fields.Char(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
-
+    is_entry_receivable_cleared = fields.Boolean(string='Is this entry cleared receivable?')
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
