@@ -62,7 +62,7 @@ class EventSession(models.Model):
             date_begin = fields.Datetime.from_string(
                 session.date_begin_located)
             date_end = fields.Datetime.from_string(session.date_end_located)
-            dt_format = '%A %d/%m/%y %H:%M'
+            dt_format = '%A %m/%d/%y %H:%M'
             name = date_begin.strftime(dt_format)
             if date_begin.date() == date_end.date():
                 dt_format = '%H:%M'
