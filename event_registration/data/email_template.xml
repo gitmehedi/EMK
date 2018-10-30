@@ -9,7 +9,8 @@
         <field name="email_to">${object.partner_id.email or object.email|safe}</field>
         <field name="lang">${object.partner_id.lang}</field>
         <field name="reply_to">${object.event_id.reply_to|safe}</field>
-        <field name="subject">TEST: Your registration at ${object.event_id.name}</field>
+        <field name="report_template" ref="event.report_event_registration_badge"/>
+        <field name="subject">Your registration at ${object.event_id.name}</field>
         <field name="body_html"><![CDATA[
 <div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
@@ -87,14 +88,6 @@
                             </td>
                         </tr>
                     </table>
-                    <table style="width:100%;border-top:1px solid #e1e1e1;">
-                            <tr>
-                                <td style="padding:10px 0px 25px 0px;">
-                                    <h2 style="font-weight:300;margin:10px 0px">Questions about this event?</h2>
-                                    <div> style="text-decoration:none;color:#875A7B;">${object.barcode}</a></div>
-                                </td>
-                            </tr>
-                        </table>
                     % if object.event_id.organizer_id.email:
                         <table style="width:100%;border-top:1px solid #e1e1e1;">
                             <tr>
