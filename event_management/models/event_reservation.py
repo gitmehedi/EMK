@@ -95,30 +95,30 @@ class EventReservation(models.Model):
     @api.one
     def act_confirm(self):
         if self.state == 'on_process':
-            vals = {}
-            vals['name'] = self.event_name
-            vals['organizer_id'] = self.organizer_id.id
-            vals['event_type_id'] = self.event_type_id.id
-            vals['date_begin'] = self.start_date
-            vals['date_end'] = self.end_date
-            vals['payment_type'] = self.payment_type
-            vals['mode_of_payment'] = self.mode_of_payment
-            vals['paid_amount'] = self.paid_amount
-            vals['participating_amount'] = self.participating_amount
-            vals['refundable_amount'] = self.refundable_amount
-            vals['date_of_payment'] = self.date_of_payment
-            vals['seats_max'] = self.attendee_number
-            vals['seats_availability'] = self.seats_availability
-            vals['description'] = self.description
-            vals['rules_regulation'] = self.rules_regulation
-            vals['ref_reservation'] = self.name
-            vals['event_mail_ids']= [
-                (0, 0, {  # right at subscription
-                    'interval_unit': 'now',
-                    'interval_type': 'after_sub',
-                    'template_id': self.env['ir.model.data'].xmlid_to_res_id('event_registration.event_confirmation_registration')}),
-
-            ]
+            vals = {
+                'name' : self.event_name,
+                'organizer_id': self.organizer_id.id,
+                'event_type_id': self.event_type_id.id,
+                'date_begin': self.start_date,
+                'date_end': self.end_date,
+                'payment_type': self.payment_type,
+                'mode_of_payment': self.mode_of_payment,
+                'paid_amount': self.paid_amount,
+                'participating_amount': self.participating_amount,
+                'refundable_amount': self.refundable_amount,
+                'date_of_payment': self.date_of_payment,
+                'seats_max': self.attendee_number,
+                'seats_availability': self.seats_availability,
+                'description': self.description,
+                'rules_regulation': self.rules_regulation,
+                'ref_reservation': self.name,
+                'event_mail_ids': [
+                    (0, 0, {
+                        'interval_unit': 'now',
+                        'interval_type': 'after_sub',
+                        'template_id': self.env['ir.model.data'].xmlid_to_res_id('event_registration.event_confirmation_registration')}),
+                ]
+            }
             event = self.env['event.event'].create(vals)
             if event:
                 self.name = self.env['ir.sequence'].next_by_code('event.reservation')
