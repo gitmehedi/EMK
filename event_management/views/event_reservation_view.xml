@@ -14,7 +14,7 @@
                         <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
                         <button name="act_cancel" string="Cancel" type="object"
                                 states="draft,on_process"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm"/>
                     </header>
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar"/>

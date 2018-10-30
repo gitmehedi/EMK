@@ -65,7 +65,7 @@ class EventReservation(models.Model):
                                           states={'draft': [('readonly', False)]})
     space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Do you need EMK Space?",
                                 readonly=True, states={'draft': [('readonly', False)]})
-    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
+    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],readonly=True,
                                           string='Available Seat',default="limited",states={'draft': [('readonly', False)]})
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
                                  states={'draft': [('readonly', False)]})

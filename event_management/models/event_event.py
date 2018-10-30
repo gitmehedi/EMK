@@ -56,4 +56,4 @@ class EventRegistration(models.Model):
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], required=True,
                               default='male', string='Gender')
     profession = fields.Char(string='Profession', required=True, default=False)
-    card_number = fields.Char(string='Card Number',required=True)
+    card_number = fields.Char(string='Card Number')
