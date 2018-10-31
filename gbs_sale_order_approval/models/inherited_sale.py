@@ -311,8 +311,8 @@ class SaleOrder(models.Model):
                         else:
                             return False
 
-        for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
+        for lines in orders.order_line:
+            product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
             if lines.price_unit != product_pool.list_price:
                 return True  # Go to two level approval process
             else:

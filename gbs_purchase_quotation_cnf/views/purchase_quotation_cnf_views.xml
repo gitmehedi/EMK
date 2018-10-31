@@ -41,8 +41,8 @@
                                         <field name="product_id" string="Service" domain="[('type','=','service')]"/>
                                         <field name="name"/>
                                         <field name="date_planned" string="Service date"/>
-                                        <field name="product_qty"/>
-                                        <field name="product_uom" string="Unit"/>
+                                        <field name="product_qty" invisible="1"/>
+                                        <field name="product_uom" string="Unit" invisible="1"/>
                                         <field name="price_unit"/>
                                         <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
                                         <field name="price_subtotal" widget="monetary"/>

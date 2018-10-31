@@ -4,3 +4,4 @@ import inherit_product_template
 import product_packaging_mode
 import inherit_res_partner
 import inherited_product_product
+import inherited_ir_attachment
