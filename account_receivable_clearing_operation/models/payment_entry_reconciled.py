@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 import time, datetime
 
@@ -22,6 +23,12 @@ class PaymentEntryReconciled(models.TransientModel):
 
     def action_clear_accounts(self):
         for rec in self:
+
+            #Proper Validation msg
+            if len(rec.line_ids) == 0:
+                raise ValidationError('There is no line values to clear')
+
+
             for line in rec.line_ids:
                 if line.clear_acc_receivable is True:
                     rec.clear_receivable_accounts(line.amount, line.company_id, line.partner_id)
@@ -80,17 +87,10 @@ class PaymentEntryReconciled(models.TransientModel):
                 line_ids.append(credit_line)
                 credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
-            # # Update flag for Customer Payment Entry
-            # for line in rec.line_ids:
-            #     if line.cheque_received_id:
-            #         line.cheque_received_id.write({'is_entry_receivable_cleared': True})
-            #
-            #     if line.payment_id:
-            #         line.payment_id.write({'is_entry_receivable_cleared_payments': True})
-
         move_dict['line_ids'] = line_ids
         move = self.env['account.move'].create(move_dict)
         move.post()
+
 
     def action_search(self):
 
@@ -121,22 +121,22 @@ class PaymentEntryReconciled(models.TransientModel):
 
             for payments in payment_pool:
                 vals.append((0, 0, {'amount': payments.amount,
-                                    # 'journal_id': payments.journal_id,
                                     'currency_id': payments.currency_id.id,
                                     'partner_id': payments.partner_id.id,
                                     'company_id': payments.company_id.id,
                                     'payment_id': payments.id,
+                                    'date': payments.payment_date,
                                     }))
 
 
 
             for cheq in cheque_rcv_pool:
                 vals.append((0, 0, {'amount': cheq.cheque_amount,
-                                    # 'journal_id': cheq.journal_id,
                                     'currency_id': cheq.currency_id.id,
                                     'partner_id': cheq.partner_id.id,
                                     'company_id': cheq.company_id.id,
                                     'cheque_received_id': cheq.id,
+                                    'date':cheq.date_on_cheque,
                                     }))
 
             # show the updated list
@@ -149,12 +149,12 @@ class PaymentEntryReconciledLine(models.TransientModel):
 
     amount = fields.Float(string='Amount', readonly=True)
     clear_acc_receivable = fields.Boolean(string='r')
-    # journal_id = fields.Many2one('account.journal', string='Payment Journal', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], readonly=True)
     company_id = fields.Many2one('res.company', string='Company')
     cheque_received_id = fields.Many2one('accounting.cheque.received', string='Cheque Received ID')
     payment_id = fields.Many2one('account.payment', string='Customer Payment ID')
+    date = fields.Date(string='Date', required=True)
 
     """ Relational Fields"""
     parent_id = fields.Many2one('payment.entry.reconciled', ondelete='cascade')

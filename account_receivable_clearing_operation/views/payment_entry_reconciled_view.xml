@@ -27,11 +27,11 @@
                                     <field name="clear_acc_receivable"/>
                                     <field name="partner_id"
                                            options="{'no_open':True, 'no_quick_create':True,'no_create_edit':True}"/>
-                                    <!--<field name="journal_id" options="{'no_open':True, 'no_quick_create':True,'no_create_edit':True}"/>-->
                                     <field name="amount"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="currency_id"
                                            options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
                                     <field name="cheque_received_id" invisible="1"/>
                                     <field name="payment_id" invisible="1"/>
                                 </tree>
