@@ -157,6 +157,20 @@ class PaymentEntryReconciled(models.TransientModel):
         move = self.env['account.move'].create(move_dict)
         move.post()
 
+
+    def action_clear_search(self):
+        for i in self:
+            i.line_ids.unlink()
+            i.select_all_line_vals = False
+            i.partner_id.unlink()
+            i.date = None
+            i.line_ids_visibility = False
+
+
+
+
+
+
 class PaymentEntryReconciledLine(models.TransientModel):
     _name = 'payment.entry.reconciled.line'
 
