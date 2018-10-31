@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from odoo import models, fields, api, exceptions
+from odoo import models, fields, api, exceptions,_
 
 _logger = logging.getLogger(__name__)
 
@@ -11,17 +11,17 @@ class EventClose(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name='event_id'
 
-    event_id = fields.Many2one('event.event', string='Event Name', required=True, readonly=True,states={'draft': [('readonly', True)]},
+    event_id = fields.Many2one('event.event', string='Event Name', required=True,readonly=True,states={'draft': [('readonly', False)]},
                                domain=[('state','=','confirm')])
     event_type_id = fields.Many2one('event.type', string='Event Type', readonly=True,
                                     related='event_id.event_type_id')
     organizer_id = fields.Many2one('res.partner', string='Moderator Name', readonly=True, related='event_id.organizer_id')
     company_id = fields.Many2one('res.company', string="Organization Name", readonly=True,
                                  related='organizer_id.company_id')
-    theme_id = fields.Many2one('res.users', string='Theme',readonly=True,states={'draft': [('readonly', True)]})
-    audience_id = fields.Many2one('res.users', string='Key Audience',readonly=True,states={'draft': [('readonly', True)]})
-    space_id = fields.Many2one('res.users', string='Space Used',readonly=True,states={'draft': [('readonly', True)]})
-    event_associate_ids = fields.One2many('event.associate','event_close_id',string='Event associate',readonly=True,states={'draft': [('readonly', True)]})
+    theme_id = fields.Many2one('res.users', string='Theme',readonly=True,states={'draft': [('readonly', False)]})
+    audience_id = fields.Many2one('res.users', string='Key Audience',readonly=True,states={'draft': [('readonly', False)]})
+    space_id = fields.Many2one('res.users', string='Space Used',readonly=True,states={'draft': [('readonly', False)]})
+    event_associate_ids = fields.One2many('event.associate','event_close_id',string='Event associate',readonly=True,states={'draft': [('readonly', False)]})
     attachment_ids = fields.One2many('event.attachment', 'event_id', string="Attachment")
     contract_number = fields.Char(string="Contract Number", readonly=True,
                                related='organizer_id.mobile')
@@ -36,12 +36,17 @@ class EventClose(models.Model):
     website = fields.Char('Website')
     attach_file = fields.Char('Attach a File')
     comment = fields.Text('Comments',track_visibility='onchange',readonly=True,states={'draft': [('readonly', True)]})
-    age_group = fields.Selection([('one', 'Below 18'),('two', '18-35'),('three', 'Over 18')], 'Age Group',readonly=True,states={'draft': [('readonly', True)]})
+    age_group = fields.Selection([('one', 'Below 18'),('two', '18-35'),('three', 'Over 18')], 'Age Group',readonly=True,states={'draft': [('readonly', False)]})
     non_usg = fields.Selection([('yes', 'Yes'),('no', 'No')],readonly=True,states={'draft': [('readonly', True)]})
-    event_summary = fields.Text('Summary of event',track_visibility='onchange',readonly=True,states={'draft': [('readonly', True)]})
+    event_summary = fields.Text('Summary of event',track_visibility='onchange',readonly=True,states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('approve', 'Approved'),('close','Close'),
                               ('cancel', 'Canceled')], string="State", default="draft",track_visibility='onchange')
 
+    @api.constrains('event_id')
+    def _check_name(self):
+        name = self.search([('event_id', '=ilike', self.event_id.name)])
+        if len(name) > 1:
+            raise Exception(_('Name should not be duplicate.'))
 
     @api.onchange('event_id')
     def onchange_event_associate_ids(self):

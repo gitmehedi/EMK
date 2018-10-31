@@ -12,6 +12,16 @@ class EventSession(models.Model):
     _name = 'event.session'
     _description = 'Event session'
 
+
+    @api.model
+    def _default_date_begin(self):
+        return self.event_id.date_begin
+
+    @api.model
+    def _default_date_end(self):
+        return self.event_id.date_end
+
+
     seats_min = fields.Integer(string='Minimum seats', )
     seats_max = fields.Integer(string="Maximum seats", )
     active = fields.Boolean(default=True, )
@@ -21,8 +31,8 @@ class EventSession(models.Model):
                                           required=True, default='unlimited', )
     date_tz = fields.Selection(string='Timezone', related="event_id.date_tz", )
     date_begin = fields.Datetime(string="Session start date", required=True,
-                                 default=lambda self: self.event_id.date_begin, )
-    date_end = fields.Datetime(string="Session date end", required=True, default=lambda self: self.event_id.date_end, )
+                                 default=_default_date_begin)
+    date_end = fields.Datetime(string="Session date end", required=True, default=_default_date_end)
 
     registration_ids = fields.One2many(comodel_name='event.session.attend', inverse_name='session_id',
                                        string='Attendees',

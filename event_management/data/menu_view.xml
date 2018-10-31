@@ -16,6 +16,9 @@
 
         <menuitem id="menu_event_general" name="General" parent="event.event_main_menu"
                   groups="event_user.group_event_organizer,event.group_event_user"/>
+        <menuitem name="Attendees"
+            id="event.menu_action_registration" parent="event.event_main_menu"
+            action="event.action_registration" groups="base.group_no_one,event_user.group_event_administration"/>
 
         <record id="event.menu_event_event" model="ir.ui.menu">
             <field name="parent_id" eval="ref('menu_event_general')"/>
