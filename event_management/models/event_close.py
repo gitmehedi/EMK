@@ -11,16 +11,17 @@ class EventClose(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name='event_id'
 
-    event_id = fields.Many2one('event.event', string='Event Name', required=True,domain=[('state','=','confirm')])
+    event_id = fields.Many2one('event.event', string='Event Name', required=True, readonly=True,states={'draft': [('readonly', True)]},
+                               domain=[('state','=','confirm')])
     event_type_id = fields.Many2one('event.type', string='Event Type', readonly=True,
                                     related='event_id.event_type_id')
     organizer_id = fields.Many2one('res.partner', string='Moderator Name', readonly=True, related='event_id.organizer_id')
     company_id = fields.Many2one('res.company', string="Organization Name", readonly=True,
                                  related='organizer_id.company_id')
-    theme_id = fields.Many2one('res.users', string='Theme')
-    audience_id = fields.Many2one('res.users', string='Key Audience')
-    space_id = fields.Many2one('res.users', string='Space Used')
-    event_associate_ids = fields.One2many('event.associate','event_close_id',string='Event associate')
+    theme_id = fields.Many2one('res.users', string='Theme',readonly=True,states={'draft': [('readonly', True)]})
+    audience_id = fields.Many2one('res.users', string='Key Audience',readonly=True,states={'draft': [('readonly', True)]})
+    space_id = fields.Many2one('res.users', string='Space Used',readonly=True,states={'draft': [('readonly', True)]})
+    event_associate_ids = fields.One2many('event.associate','event_close_id',string='Event associate',readonly=True,states={'draft': [('readonly', True)]})
     attachment_ids = fields.One2many('event.attachment', 'event_id', string="Attachment")
     contract_number = fields.Char(string="Contract Number", readonly=True,
                                related='organizer_id.mobile')
@@ -34,10 +35,10 @@ class EventClose(models.Model):
     female_participants = fields.Integer('Total Female Participants',compute='compute_female_participants',readonly=True,store=True)
     website = fields.Char('Website')
     attach_file = fields.Char('Attach a File')
-    comment = fields.Text('Comments',track_visibility='onchange')
-    age_group = fields.Selection([('one', 'Below 18'),('two', '18-35'),('three', 'Over 18')], 'Age Group')
-    non_usg = fields.Selection([('yes', 'Yes'),('no', 'No')])
-    event_summary = fields.Text('Summary of event',track_visibility='onchange')
+    comment = fields.Text('Comments',track_visibility='onchange',readonly=True,states={'draft': [('readonly', True)]})
+    age_group = fields.Selection([('one', 'Below 18'),('two', '18-35'),('three', 'Over 18')], 'Age Group',readonly=True,states={'draft': [('readonly', True)]})
+    non_usg = fields.Selection([('yes', 'Yes'),('no', 'No')],readonly=True,states={'draft': [('readonly', True)]})
+    event_summary = fields.Text('Summary of event',track_visibility='onchange',readonly=True,states={'draft': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('approve', 'Approved'),('close','Close'),
                               ('cancel', 'Canceled')], string="State", default="draft",track_visibility='onchange')
 

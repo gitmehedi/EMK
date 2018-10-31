@@ -28,7 +28,7 @@ class EventSessionAttend(models.Model):
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', related='event_id.company_id',
                                  store=True, readonly=True, states={'draft': [('readonly', False)]})
-    attendee_id = fields.Many2one('event.registration', required=True, string="Attendee")
+    attendee_id = fields.Many2one('event.registration', required=True, string="Attendee",readonly=True,states={'unconfirmed': [('readonly', False)]})
     event_sessions_count = fields.Integer(related='event_id.sessions_count', readonly=True)
     state = fields.Selection([('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
                               ('open', 'Confirmed'), ('done', 'Attended')],

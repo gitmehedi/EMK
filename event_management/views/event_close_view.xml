@@ -93,13 +93,14 @@
                                 <p>
                                     <b>Age Group</b>
                                 </p>
-                                <field name="non_usg" widget="radio" nolabel="1"/>
+                                <field name="age_group" widget="radio" nolabel="1"/>
                                 <group string="One sentence summary about your company">
                                     <field name="event_summary" nolabel="1" widget="html"/>
                                 </group>
                                 <p>
                                     <b>Did you collaborate with any non-USG organization to carry out this activity?</b>
                                 </p>
+                                <field name="non_usg" widget="radio" nolabel="1"/>
                                 <group string="If yes,please mention">
                                     <field name="comment" nolabel="1" widget="html"/>
                                 </group>
