@@ -62,6 +62,7 @@
             <tree string="Service Payment" decoration-bf="state in ['open','paid']"
                   decoration-success="state == 'open'" decoration-muted="state in ['paid','cancel']">
                 <field name="session_id"/>
+                <field name="payment_type_id"/>
                 <field name="membership_id"/>
                 <field name="journal_id"/>
                 <field name="collection_date"/>
