@@ -24,7 +24,8 @@
         'gbs_stock_product',
         'web_access_rule_button_extend',
         'letter_of_credit_report',
-        'stock_gate_in'
+        'stock_gate_in',
+        'gbs_supplier',
     ],
 
     'data': [ ],
