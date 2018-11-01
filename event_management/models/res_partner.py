@@ -11,6 +11,9 @@ class EventManagementType(models.Model):
     is_organizer = fields.Boolean(default=False)
     event_count = fields.Integer("Events", compute='_compute_event_count',
                                  help="Number of events the partner has participated.")
+    firstname = fields.Char("First Name", index=True, )
+    middlename = fields.Char("Middle Name", index=True)
+    lastname = fields.Char("Last Name", index=True)
 
     def _compute_event_count(self):
         for partner in self:
