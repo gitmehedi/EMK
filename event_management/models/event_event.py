@@ -43,6 +43,20 @@ class EventEvent(models.Model):
         if date_begin < dt_now:
             raise ValidationError(_("Event start date cannot be past date from current date"))
 
+    @api.constrains('name')
+    def _check_name(self):
+        name = self.search([('name', '=ilike', self.name)])
+        if len(name) > 1:
+            raise Exception(_('Name should not be duplicate.'))
+
+    @api.multi
+    def unlink(self):
+        for event in self:
+            if event.state == 'done':
+                raise UserError(_('You cannot delete a record which is not in draft state!'))
+        return super(EventEvent, self).unlink()
+
+
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['confirm','draft'])]

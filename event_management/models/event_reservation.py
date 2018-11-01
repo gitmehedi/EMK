@@ -82,6 +82,21 @@ class EventReservation(models.Model):
         if date_begin < dt_now:
             raise ValidationError(_("Event start date cannot be past date from current date"))
 
+    @api.constrains('event_name')
+    def _check_name(self):
+        name = self.search([('event_name','=ilike',self.event_name)])
+        if len(name)>1:
+            raise Exception(_('Event Name should not be duplicate.'))
+
+    @api.multi
+    def unlink(self):
+        for reserve in self:
+            if reserve.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not in draft state!'))
+        return super(EventReservation,self).unlink()
+
+
+
     @api.one
     def act_draft(self):
         if self.state == 'on_process':

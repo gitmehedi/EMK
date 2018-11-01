@@ -2,6 +2,8 @@
 
 import logging
 from odoo import models, fields, api, exceptions,_
+from odoo.exceptions import UserError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -11,7 +13,7 @@ class EventClose(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name='event_id'
 
-    event_id = fields.Many2one('event.event', string='Event Name', required=True,readonly=True,states={'draft': [('readonly', False)]},
+    event_id = fields.Many2one('event.event', string='Event Name', required=True,
                                domain=[('state','=','confirm')])
     event_type_id = fields.Many2one('event.type', string='Event Type', readonly=True,
                                     related='event_id.event_type_id')
@@ -42,12 +44,6 @@ class EventClose(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('approve', 'Approved'),('close','Close'),
                               ('cancel', 'Canceled')], string="State", default="draft",track_visibility='onchange')
 
-    @api.constrains('event_id')
-    def _check_name(self):
-        name = self.search([('event_id', '=ilike', self.event_id.name)])
-        if len(name) > 1:
-            raise Exception(_('Name should not be duplicate.'))
-
     @api.onchange('event_id')
     def onchange_event_associate_ids(self):
         self.event_associate_ids = []
@@ -62,7 +58,6 @@ class EventClose(models.Model):
 
                 }))
             self.event_associate_ids = vals
-
 
     @api.multi
     @api.depends('start_date', 'end_date')
@@ -123,6 +118,20 @@ class EventClose(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['approve','confirm'])]
+
+    @api.constrains('event_id')
+    def _check_name(self):
+        name = self.search([('event_id', '=ilike', self.event_id.name)])
+        if len(name) > 1:
+            raise Exception(_('Name should not be duplicate.'))
+
+    @api.multi
+    def unlink(self):
+        for event in self:
+            if event.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not in draft state!'))
+        return super(EventClose, self).unlink()
+
 
 class EventAssociate(models.Model):
     _name = "event.associate"
