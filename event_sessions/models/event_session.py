@@ -12,27 +12,17 @@ class EventSession(models.Model):
     _name = 'event.session'
     _description = 'Event session'
 
-
-    @api.model
-    def _default_date_begin(self):
-        return self.event_id.date_begin
-
-    @api.model
-    def _default_date_end(self):
-        return self.event_id.date_end
-
-
-    seats_min = fields.Integer(string='Minimum seats', )
-    seats_max = fields.Integer(string="Maximum seats", )
-    active = fields.Boolean(default=True, )
+    seats_min = fields.Integer(string="Minimum seats")
+    seats_max = fields.Integer(string="Maximum seats")
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one(comodel_name='res.company', related='event_id.company_id', store=True, )
     event_id = fields.Many2one(comodel_name='event.event', string='Event', ondelete="cascade")
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], 'Maximum Attendees',
                                           required=True, default='unlimited', )
     date_tz = fields.Selection(string='Timezone', related="event_id.date_tz", )
-    date_begin = fields.Datetime(string="Session start date", required=True,
-                                 default=_default_date_begin)
-    date_end = fields.Datetime(string="Session date end", required=True, default=_default_date_end)
+    date_begin = fields.Datetime(string="Session Start Date", required=True,
+                                 default=lambda self: self.event_id.date_begin, )
+    date_end = fields.Datetime(string="Session Date End", required=True, default=lambda self: self.event_id.date_end, )
 
     registration_ids = fields.One2many(comodel_name='event.session.attend', inverse_name='session_id',
                                        string='Attendees',
