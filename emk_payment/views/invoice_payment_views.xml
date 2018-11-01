@@ -61,17 +61,17 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_membership_payment">
-        <field name="name">Invoice Payment</field>
+        <field name="name">Invoice Payments</field>
         <field name="res_model">invoice.payment</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to add a new Member's Payment
+                Click to add a new Invoice Payments
             </p>
         </field>
     </record>
 
     <menuitem id="menu_membership_fee" parent="sub_pay_daily_operations"
-              action="action_membership_payment" sequence="10"
+              action="action_membership_payment" sequence="15"
               groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
 
 

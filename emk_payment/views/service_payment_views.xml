@@ -18,6 +18,7 @@
                 <sheet>
                     <h1 class="oe_title" attrs="{'invisible':[('name','=','False')]}">
                         <field name="name" readonly='True'/>
+                        <field name="session_id" invisible="True"/>
                     </h1>
                     <group>
                         <group>
@@ -72,11 +73,11 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_service_payment">
-        <field name="name">Service Payment</field>
+        <field name="name">Service Payments</field>
         <field name="res_model">service.payment</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to add a new Service Fee
+                Click to add a new Service Payments
             </p>
         </field>
     </record>
