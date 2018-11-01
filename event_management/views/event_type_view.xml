@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="event.view_event_type_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form>
+                    <form delete="0">
                         <sheet>
                             <field name="image" widget='image' class="oe_avatar"/>
                             <!--<div style="text-align:center;padding-top:20px;">-->

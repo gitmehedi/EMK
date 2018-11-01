@@ -12,9 +12,9 @@ class EventSession(models.Model):
     _name = 'event.session'
     _description = 'Event session'
 
-    seats_min = fields.Integer(string='Minimum seats', )
-    seats_max = fields.Integer(string="Maximum seats", )
-    active = fields.Boolean(default=True, )
+    seats_min = fields.Integer(string="Minimum seats")
+    seats_max = fields.Integer(string="Maximum seats")
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one(comodel_name='res.company', related='event_id.company_id', store=True, )
     event_id = fields.Many2one(comodel_name='event.event', string='Event', ondelete="cascade")
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], 'Maximum Attendees',

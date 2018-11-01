@@ -59,3 +59,11 @@ class EventTaskList(models.Model):
         if self.state == 'start':
             self.task_stop = fields.Datetime.now()
             self.state = 'finish'
+
+
+    @api.multi
+    def unlink(self):
+        for task in self:
+            if task.state != 'assign':
+                raise UserError(_('You cannot delete a record which is not in assigned state!'))
+        return super(EventTaskList, self).unlink()
