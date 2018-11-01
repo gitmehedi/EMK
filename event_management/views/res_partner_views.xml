@@ -48,6 +48,11 @@
                             <field name="company_type" widget="radio"
                                    class="oe_edit_only"
                                    options="{'horizontal': true}"/>
+                            <group>
+                                <field name="firstname"/>
+                                <field name="middlename"/>
+                                <field name="lastname"/>
+                            </group>
                             <h1>
                                 <field name="name" placeholder="Name" invisible="0" required="1" readonly="0"/>
                             </h1>
