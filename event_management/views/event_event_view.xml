@@ -133,6 +133,8 @@
                                 <field name="task_start"/>
                                 <field name="task_stop"/>
                                 <field name="state" readonly="1"/>
+                                <button name="button_assign" string="Assign Event" type="object" states="draft"
+                                        icon="fas fa-arrow-circle-right text-success"/>
                             </tree>
                         </field>
                     </page>

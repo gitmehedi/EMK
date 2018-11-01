@@ -33,6 +33,10 @@ service_payment_adm,service_payment_adm,model_service_payment,event_user.group_e
 
 payment_session_adm,payment_session_adm,model_payment_session,event_user.group_event_administration,1,1,1,0
 
+account_payment_method_adm,account_payment_method_adm,account.model_account_payment_method,event_user.group_event_administration,1,1,1,0
+
+account_payment_adm,account_payment_adm,account.model_account_payment,event_user.group_event_administration,1,1,1,0
+
 
 
 

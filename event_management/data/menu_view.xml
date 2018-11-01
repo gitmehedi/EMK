@@ -21,6 +21,7 @@
             action="event.action_registration" groups="base.group_no_one,event_user.group_event_administration"/>
 
         <menuitem id="account.menu_finance_receivables" name="Sales" parent="account.menu_finance" sequence="2" groups="base.group_no_one"/>
+        <menuitem id="account.menu_finance_payables" name="Purchases" parent="account.menu_finance" sequence="3" groups="base.group_no_one"/>
 
 
         <record id="event.menu_event_event" model="ir.ui.menu">
