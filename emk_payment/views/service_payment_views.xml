@@ -34,7 +34,7 @@
                             <field name="event_participant_id"
                                    attrs="{'invisible':[('check_type','!=','event_fee')],'required':[('check_type','=','event_fee')]}"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
-                            <field name="check_type"/>
+                            <field name="check_type" invisible="True"/>
                         </group>
                         <group>
                             <field name="responsible_id"

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError,UserError
+from odoo.exceptions import ValidationError, UserError
 
 
 class PaymentSession(models.Model):
     _name = 'payment.session'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
+    _description = 'Payment Session'
 
     @api.model
     def get_default_user(self):
@@ -43,7 +44,7 @@ class PaymentSession(models.Model):
 
     @api.constrains('name')
     def unique_session(self):
-        vals = self.search([('open', '=', True),('user_id', '=', self.user_id.id)])
+        vals = self.search([('open', '=', True), ('user_id', '=', self.user_id.id)])
         if len(vals) > 1:
             raise UserError(_('Session already open. Please close session before open another.'))
 

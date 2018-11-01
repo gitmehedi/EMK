@@ -31,7 +31,7 @@ class EventTaskList(models.Model):
                               domain=[('status', '=', True)],
                               readonly=True, states={'draft': [('readonly', False)],'assign': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('assign', 'Assigned'), ('start', 'Start'), ('finish', 'Finish')],
-                             default='assign', track_visibility='onchange')
+                             default='draft', track_visibility='onchange')
 
     @api.model
     def _needaction_domain_get(self):
@@ -64,6 +64,6 @@ class EventTaskList(models.Model):
     @api.multi
     def unlink(self):
         for task in self:
-            if task.state != 'assign':
+            if task.state != 'draft':
                 raise UserError(_('You cannot delete a record which is not in assigned state!'))
         return super(EventTaskList, self).unlink()

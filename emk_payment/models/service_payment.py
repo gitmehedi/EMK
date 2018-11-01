@@ -9,6 +9,7 @@ class ServicePayment(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'membership_id'
     _order = 'collection_date DESC, id desc'
+    _description = 'Service Payment'
 
     @api.model
     def _get_session(self):
@@ -45,7 +46,7 @@ class ServicePayment(models.Model):
     payment_type_id = fields.Many2one('product.template', string='Payment Type', required=True,
                                       track_visibility='onchange',
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
-                                              ('sale_ok', '=', False),('service_type', '=', True)],
+                                              ('sale_ok', '=', False),('service_type', '!=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
     check_type = fields.Char()
     company_id = fields.Many2one('res.company', string='Company Name', default=lambda self: self.env.user.company_id.id)

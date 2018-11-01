@@ -212,5 +212,5 @@
 
     <menuitem id="event_session_menu" name="Sessions" sequence="80"
               parent="event_management.menu_event_general" action="act_event_session_form"
-              groups="event.group_event_user"/>
+              groups="event.group_event_manager"/>
 </odoo>

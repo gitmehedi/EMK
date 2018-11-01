@@ -9,6 +9,7 @@ class MemberPayment(models.Model):
     _name = 'invoice.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
+    _description = 'Invoice Payment'
 
     @api.model
     def _get_session(self):

@@ -20,6 +20,9 @@
             id="event.menu_action_registration" parent="event.event_main_menu"
             action="event.action_registration" groups="base.group_no_one,event_user.group_event_administration"/>
 
+        <menuitem id="account.menu_finance_receivables" name="Sales" parent="account.menu_finance" sequence="2" groups="base.group_no_one"/>
+
+
         <record id="event.menu_event_event" model="ir.ui.menu">
             <field name="parent_id" eval="ref('menu_event_general')"/>
             <field name="sequence">10</field>
