@@ -6,7 +6,7 @@
             <field name="name">indent.type.form</field>
             <field name="model">indent.type</field>
             <field name="arch" type="xml">
-                <form string="Leave Request">
+                <form string="Indent Type">
                 <sheet>
                     <group>
                         <group>
