@@ -45,7 +45,7 @@ class IndentIndent(models.Model):
                                    default="1", required=True, states={'draft': [('readonly', False)]})
     indent_type = fields.Many2one('indent.type',string='Type',readonly=True, required = True, states={'draft': [('readonly', False)]})
     product_lines = fields.One2many('indent.product.lines', 'indent_id', 'Products', readonly=True, required = True,
-                                    states={'draft': [('readonly', False)]})
+                                    states={'draft': [('readonly', False)],'waiting_approval': [('readonly', False)]})
     picking_id = fields.Many2one('stock.picking', 'Picking')
     in_picking_id = fields.Many2one('stock.picking', 'Picking')
     description = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]})
@@ -95,7 +95,7 @@ class IndentIndent(models.Model):
     @api.one
     @api.constrains('required_date')
     def _check_required_date(self):
-        if self.required_date <= self.indent_date:
+        if self.required_date+' 23:59:59' <= self.indent_date:
             raise UserError('Required Date can not be less then current date!!!')
 
     @api.multi

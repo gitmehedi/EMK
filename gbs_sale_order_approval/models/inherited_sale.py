@@ -49,6 +49,8 @@ class SaleOrder(models.Model):
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
 
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
+
     # inherited fields from sale
     partner_id = fields.Many2one('res.partner', string='Customer', required=True,
                                  change_default=True, index=True, track_visibility='always')
@@ -60,7 +62,18 @@ class SaleOrder(models.Model):
                                           help="Delivery address for current sales order.")
 
     comment = fields.Char(string='Approval Causes', track_visibility='onchange')
+
     # ..............................
+    # terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', readonly=True, track_visibility='onchange',
+    #                                 states={'to_submit': [('readonly', False)]})
+    #
+    # freight_mode = fields.Selection([
+    #     ('fob', 'FOB'),
+    #     ('c&f', 'C&F')
+    # ], string='Freight Mode', default='fob', readonly=True, track_visibility='onchange',
+    #                                 states={'to_submit': [('readonly', False)]})
+
+
 
     @api.model
     def _default_note(self):
@@ -117,7 +130,7 @@ class SaleOrder(models.Model):
         vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
         vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
 
-        #to call the Draft SO Seq
+        # to call the Draft SO Seq
         new_seq = self.env['ir.sequence'].next_by_code('sale.order') or '/'
         if new_seq:
             vals['name'] = new_seq
@@ -208,7 +221,7 @@ class SaleOrder(models.Model):
             # Check seq needs to re-generate or not
             if orders.operating_unit_id.name not in orders.name:
                 new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                                   orders.operating_unit_id) or '/'
+                                                                     orders.operating_unit_id) or '/'
 
                 if new_seq:
                     orders.name = new_seq
@@ -298,8 +311,8 @@ class SaleOrder(models.Model):
                         else:
                             return False
 
-        for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
+        for lines in orders.order_line:
+            product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
             if lines.price_unit != product_pool.list_price:
                 return True  # Go to two level approval process
             else:
@@ -415,7 +428,7 @@ class SaleOrder(models.Model):
                 'sale_order_id': self.id,
                 'deli_address': self.partner_shipping_id.name,
                 'currency_id': self.type_id.currency_id,
-                'partner_id': self.partner_id,
+                'parent_id': self.partner_id,
                 'so_type': self.credit_sales_or_lc,
                 'so_date': self.date_order,
                 # 'warehouse_id': self.warehouse_id,
@@ -438,10 +451,11 @@ class SaleOrder(models.Model):
                     'commission_rate': record.commission_rate,
                     'price_subtotal': record.price_total,
                     'tax_id': record.tax_id.id,
+                    'delivery_qty': record.product_uom_qty,
+                    'sale_order_id': self.id,
                 }
 
                 self.env['delivery.authorization.line'].create(da_line)
-
 
     def action_view_delivery_auth(self):
         form_view = self.env.ref('delivery_order.delivery_order_form')
@@ -469,6 +483,7 @@ class SaleOrder(models.Model):
             causes.append(
                 "Existing Commission rate is " + str(commission_rate) + ", but requested Commission rate is " + str(lines.commission_rate))
             is_double_validation = True
+
 
         if len(price_change_pool) == 0 and lines.price_unit:
             causes.append("There are no existing price for this product, but requested price is "+ str(lines.price_unit))
@@ -533,7 +548,8 @@ class SaleOrder(models.Model):
     @api.multi
     @api.onchange('pack_type')
     def pack_type_onchange(self):
-        self._get_changed_price()
+        if not self.pi_id:
+            self._get_changed_price()
 
     def _get_changed_price(self):
         for order in self:
@@ -579,27 +595,6 @@ class SaleOrder(models.Model):
             self.order_line = val
             self.fields_readonly = True
 
-    # @api.onchange('operating_unit_id')
-    # def onchange_operating_unit_id(self):
-    #     #Fetch OP Unit from Sales Channel
-    #     sales_channel_obj = self.env['sales.channel'].search([('id','=',self.sales_channel.id)])
-    #
-    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
-    #     warehouse = self._cr.fetchall()
-    #
-    #     if warehouse:
-    #         self.warehouse_id = warehouse[0][0]
-
-    # @api.model
-    # def _default_warehouse_id(self):
-    #     sales_channel_obj = self.env['sales.channel'].search([('id', '=', self.sales_channel.id)])
-    #
-    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
-    #     warehouse = self._cr.fetchall()
-    #
-    #     return warehouse[0][0]
 
     @api.model
     def _default_operating_unit(self):
@@ -612,8 +607,8 @@ class SaleOrder(models.Model):
     def _get_sales_channel(self):
         return self.env['sales.channel'].search([], limit=1)
 
-    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,track_visibility='onchange',
-                                    states={'to_submit': [('readonly', False)]}, required=True)
+    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True, track_visibility='onchange',
+                                    states={'to_submit': [('readonly', False)]}, required=True, default=_get_sales_channel)
 
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', track_visibility='onchange',
@@ -628,7 +623,6 @@ class SaleOrder(models.Model):
                                'draft': [('readonly', True)], 'submit_quotation': [('readonly', True)]}, )
 
     approver_user_id = fields.Many2one('res.users', string='Approver Manager', track_visibility='onchange')
-
 
     @api.onchange('sales_channel')
     def _onchange_sales_channel(self):
@@ -653,7 +647,6 @@ class SaleOrder(models.Model):
             if (rec.team_id and rec.team_id.operating_unit_id != rec.operating_unit_id):
                 continue;
 
-
     @api.model
     def _needaction_domain_get(self):
         users_obj = self.env['res.users']
@@ -676,12 +669,10 @@ class SaleOrder(models.Model):
 
         return domain
 
-
     @api.constrains('order_line')
     def _check_multiple_products_line(self):
         if len(self.order_line) > 1:
             raise ValidationError("You can't add multiple products")
-
 
     @api.multi
     def unlink(self):
@@ -707,6 +698,7 @@ class InheritedSaleOrderLine(models.Model):
 
     da_qty = fields.Float(string='DA Qty.', default=0)
 
+
     @api.one
     @api.constrains('product_uom_qty', 'commission_rate')
     def _check_order_line_inputs(self):
@@ -725,6 +717,9 @@ class InheritedSaleOrderLine(models.Model):
                 [('product_id', '=', product.id),
                  ('currency_id', '=', self.order_id.currency_id.id),
                  ('product_package_mode', '=', self.order_id.pack_type.id),
+                 #('country_id','=', self.order_id.partner_id.country_id.id),
+                 #('terms_setup_id.days','=',self.order_id.terms_setup_id.days),
+                 #('freight_mode', '=', self.order_id.freight_mode),
                  ('uom_id', '=', self.product_uom.id)])
 
             if not price_change_pool:
@@ -732,6 +727,9 @@ class InheritedSaleOrderLine(models.Model):
                     [('product_id', '=', product.id),
                      ('currency_id', '=', self.order_id.currency_id.id),
                      ('product_package_mode', '=', self.order_id.pack_type.id),
+                     # ('country_id', '=', self.order_id.partner_id.country_id.id),
+                     # ('terms_setup_id.days', '=', self.order_id.terms_setup_id.days),
+                     # ('freight_mode','=',self.order_id.freight_mode),
                      ('category_id', '=', self.product_uom.category_id.id)])
 
                 if price_change_pool:
@@ -765,22 +763,14 @@ class InheritedSaleOrderLine(models.Model):
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         res = super(InheritedSaleOrderLine, self).product_uom_change()
-        self.da_qty = self.product_uom_qty
+        #self.da_qty = self.product_uom_qty
 
         vals = {}
-        if self.product_id:
+        if self.product_id and not self.price_unit:
             vals['price_unit'] = self._get_product_sales_price(self.product_id)
             self.update(vals)
 
         return res
-
-    @api.constrains('da_qty')
-    def check_da_qty_val(self):
-        # if self.da_qty < 0.00:
-        #     raise ValidationError('DA Qty can not be negative')
-
-        if self.da_qty > self.product_uom_qty:
-            raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
 ########################

@@ -18,7 +18,7 @@
                         type="object" class="oe_highlight" groups="account.group_account_user"/>
 
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
-                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
+                        type="object" class="oe_highlight" groups="stock.group_stock_user"/>
             </xpath>
 
             <!--<xpath expr="//field[@name='origin']" position="after">-->
@@ -92,7 +92,7 @@
               parent="stock.menu_stock_warehouse_mgmt"
               sequence="5"
               action="action_stock_picking_approval"
-              groups="stock.group_stock_user"/>
+              groups="gbs_application_group.group_head_of_plant"/>
 
     <menuitem id="menu_picking_mrr"
               name="Print MRR"

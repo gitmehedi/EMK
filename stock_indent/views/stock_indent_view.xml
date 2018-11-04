@@ -111,13 +111,13 @@
 									<group>
 										<field name="company_id" groups="base.group_multi_company"
 											   options="{'no_create': True,'no_open':True}"/>
-										<field name="move_type" />
+										<field name="move_type" invisible="1"/>
 										<field name="approver_id" invisible="1"/>
 										<field name="closer_id" invisible="1"/>
 										<field name="pr_indent_check" invisible="1"/>
 									</group>
 									<group>
-										<field name="warehouse_id" groups="stock.group_stock_user" options="{'no_create': True,'no_open':True}"/>
+										<field name="warehouse_id" readonly="1" groups="stock.group_stock_user" options="{'no_create': True,'no_open':True}"/>
 										<field name="picking_type_id" groups="stock.group_stock_user"/>
 									</group>
 								</group>

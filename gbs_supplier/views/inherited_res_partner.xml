@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherited_res_partner_supplier" model="ir.ui.view">
+            <field name="name">inherited.res.partner.supplier</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="31"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='purchase']" position="inside">
+                    <field name="supplier_category_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="supplier_type"/>
+                    <field name="is_cnf"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

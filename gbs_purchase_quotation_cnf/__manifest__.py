@@ -21,7 +21,6 @@
         'ir_sequence_operating_unit',
         'com_shipment',
         'purchase_order_revision',
-        'ir_sequence_operating_unit',
     ],
 
     'data': [
@@ -29,7 +28,6 @@
         'data/cnf_sequence.xml',
         'views/purchase_quotation_cnf_views.xml',
         'views/inherited_shipment.xml',
-        'views/commercial_po_menu.xml',
     ],
 
 }

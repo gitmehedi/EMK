@@ -3,14 +3,12 @@
     <data>
         <record id="view_letter_of_credit_wizard_form" model="ir.ui.view">
             <field name="name">letter.credit.wizard.form</field>
-            <field name="model">letter.credit.wizard</field>
+            <field name="model">letter.credit.report.wizard</field>
             <field name="arch" type="xml">
                 <form string="Letter of Credit Report">
                     <group>
                         <group>
-                            <field name="report_type"
-                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
-
+                            <field name="report_type"/>
                         </group>
                     </group>
                     <footer>
@@ -24,7 +22,7 @@
         <record id="action_letter_of_credit_wizard" model="ir.actions.act_window">
             <field name="name">Letter of Credit Report</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">letter.credit.wizard</field>
+            <field name="res_model">letter.credit.report.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

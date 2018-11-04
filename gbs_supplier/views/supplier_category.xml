@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_form_supplier_category" model="ir.ui.view">
+            <field name="name">supplier.category.form</field>
+            <field name="model">supplier.category</field>
+            <field name="arch" type="xml">
+                <form string="Supplier Category">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_tree_supplier_category" model="ir.ui.view">
+            <field name="name">supplier.category.tree</field>
+            <field name="model">supplier.category</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Window Action -->
+        <record id='action_gbs_supplier_category' model='ir.actions.act_window'>
+            <field name="name">Supplier Category</field>
+            <field name="res_model">supplier.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to Create Category.
+                </p>
+            </field>
+        </record>
+        <!-- Supplier Category Menu -->
+        <menuitem
+                id="menu_gbs_supplier_category"
+                name="Supplier Category"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                action="action_gbs_supplier_category"
+                groups="commercial.group_commercial_manager"
+                sequence="99"/>
+
+        <!--<menuitem-->
+                <!--id="gbs_purchase_requisition.submenu_commercial_supplier"-->
+                <!--name="Suppliers"-->
+                <!--parent="gbs_purchase_requisition.menu_commercial_configuration"-->
+                <!--sequence="1"-->
+                <!--action="base.action_partner_supplier_form"-->
+                <!--groups="commercial.group_commercial_manager"/>-->
+    </data>
+</odoo>

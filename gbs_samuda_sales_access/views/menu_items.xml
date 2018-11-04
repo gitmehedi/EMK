@@ -50,15 +50,15 @@
 
         <menuitem
                 id="gbs_purchase_requisition.submenu_commercial_customer"
-                name="Customers/Suppliers"
+                name="Customers"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="1"
                 action="base.action_partner_customer_form"
                 groups="commercial.group_commercial_manager_export"/>
 
         <menuitem
-                id="gbs_purchase_requisition.submenu_commercial_products"
-                name="Products"
+                id="gbs_purchase_requisition.submenu_commercial_products_sell"
+                name="Products Sellable"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="2"
                 action="product.product_template_action"

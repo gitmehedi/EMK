@@ -1,35 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem
-                id="gbs_purchase_quotation_cnf.menu_commercial_pq"
-                parent="commercial.menu_commercial_root"
-                sequence="2"
-                name="Purchase Quotation"
-                groups="commercial.group_commercial_user"/>
-
-        <menuitem
-                id="gbs_purchase_quotation_cnf.submenu_commercial_pq"
-                name="Purchase Quotation"
-                parent="gbs_purchase_quotation_cnf.menu_commercial_pq"
-                sequence="1"
-                action="gbs_purchase_quotation_cnf.action_commercial_pq"
-                groups="commercial.group_commercial_user"/>
-
-        <menuitem
-                id="gbs_purchase_quotation_cnf.menu_commercial_po"
-                parent="commercial.menu_commercial_root"
-                sequence="3"
-                name="Purchase Order"
-                groups="commercial.group_commercial_user"/>
-
-        <menuitem
-                id="gbs_purchase_quotation_cnf.submenu_commercial_po"
-                name="Purchase Order"
-                parent="gbs_purchase_quotation_cnf.menu_commercial_po"
-                sequence="1"
-                action="gbs_purchase_quotation_cnf.action_commercial_po"
-                groups="commercial.group_commercial_user"/>
 
         <menuitem
                 name="Commercial"
@@ -123,20 +94,20 @@
                 groups="commercial.group_commercial_manager"/>
 
         <menuitem
-                id="gbs_purchase_requisition.submenu_commercial_customer"
-                name="Customers/Suppliers"
+                id="gbs_purchase_requisition.submenu_commercial_supplier"
+                name="Suppliers"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="1"
-                action="base.action_partner_customer_form"
+                action="base.action_partner_supplier_form"
                 groups="commercial.group_commercial_manager"/>
 
         <menuitem
-                id="gbs_purchase_requisition.submenu_commercial_products"
-                name="Products"
+                id="gbs_purchase_requisition.submenu_commercial_products_purchase"
+                name="Products Purchaseable"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="2"
-                action="product.product_template_action"
-                groups="commercial.group_commercial_manager"/>
+                action="purchase.product_normal_action_puchased"
+                groups="commercial.group_commercial_manager,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
 
         <menuitem
 				name="Question Set"
@@ -146,7 +117,12 @@
                 action="question_set.action_lc_criteria"
                 groups="commercial.group_commercial_manager"/>
 
-
+         <menuitem
+                 id="letter_of_credit.lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 groups="commercial.group_commercial_user"
+                 sequence="7"/>
 
     </data>
 </odoo>
