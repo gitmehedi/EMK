@@ -94,6 +94,11 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
 
+                    <xpath expr="//field[@name='amount_untaxed']" position="after">
+                        <field name="amount_discount"/>
+                        <field name="amount_after_discount"/>
+                        <field name="amount_vat"/>
+                    </xpath>
                 </data>
             </field>
         </record>
