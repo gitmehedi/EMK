@@ -34,7 +34,7 @@ class LetterOfCredit(models.Model):
     second_party_applicant = fields.Many2one('res.partner', string='Applicant', domain = "[('customer', '=', True)]")
     second_party_beneficiary = fields.Many2one('res.partner', string='Candidate', domain="[('supplier', '=', True)]")
 
-    second_party_bank = fields.Text(string='Bank', required=True)
+    second_party_bank = fields.Text(string='Bank', required=False)
 
     require_lien = fields.Boolean(string='Require Lien', default=False)
     lien_bank = fields.Text(string='LC Lien Bank')
