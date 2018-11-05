@@ -126,7 +126,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-field">
                                         <label for="birthdate" class="control-label">Date of Birth</label>
-                                        <input type="text" t-attf-name="#{counter}-date_of_birth" maxlength="10"
+                                        <input type="date" t-attf-name="#{counter}-date_of_birth" maxlength="10"
                                                placeholder="1960-12-31"
                                                minlength="10" class="form-control input-sm reqfield"
                                                id="birthdate" required="required"/>
