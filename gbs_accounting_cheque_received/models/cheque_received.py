@@ -9,7 +9,6 @@ class ChequeReceived(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id DESC'
     _description = "Cheque Info"
-    _rec_name = 'name'
 
     state = fields.Selection([
         ('draft', 'Cheque Entry'),

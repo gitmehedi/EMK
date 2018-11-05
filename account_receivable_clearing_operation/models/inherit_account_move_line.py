@@ -6,6 +6,7 @@ class InheritAccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     is_clearing_journal_entry = fields.Boolean(string='is clearing journal entry done', default=False)
+    sale_order_id = fields.Many2one('sale.order', string='Sales Order')
 
 
     def action_reconcile_journal_entry(self):

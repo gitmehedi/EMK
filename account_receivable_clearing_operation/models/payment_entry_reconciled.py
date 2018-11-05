@@ -43,7 +43,7 @@ class PaymentEntryReconciled(models.TransientModel):
 
             for line in rec.line_ids:
                 if line.clear_acc_receivable is True:
-                    rec.clear_receivable_accounts(line.amount, line.company_id, line.partner_id)
+                    rec.clear_receivable_accounts(line.amount, line.company_id, line.partner_id, line.cheque_received_id,line.payment_id)
 
                     # Update flag for Customer Payment Entry
                     if line.cheque_received_id:
@@ -59,7 +59,6 @@ class PaymentEntryReconciled(models.TransientModel):
         for pay_en in self:
             pay_en.line_ids.unlink()
             pay_en.select_all_line_vals = False
-
 
             if not pay_en.partner_id.id:
                 payment_pool = pay_en.env['account.payment'].search(
@@ -107,7 +106,7 @@ class PaymentEntryReconciled(models.TransientModel):
             pay_en.line_ids = vals
 
 
-    def clear_receivable_accounts(self, amt, company_id, partner_id):
+    def clear_receivable_accounts(self, amt, company_id, partner_id,cheque_id, payment_id):
         for rec in self:
 
             line_ids = []
@@ -139,6 +138,12 @@ class PaymentEntryReconciled(models.TransientModel):
                 line_ids.append(debit_line)
                 debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
+            sale_order_id = None
+            if payment_id.sale_order_id:
+                sale_order_id = payment_id.sale_order_id
+            elif cheque_id.sale_order_id:
+                sale_order_id = cheque_id.sale_order_id
+
             if credit_account_id:
                 credit_line = (0, 0, {
                     'name': credit_account_id.name,
@@ -148,6 +153,7 @@ class PaymentEntryReconciled(models.TransientModel):
                     'date': date,
                     'debit': amount < 0.0 and -amount or 0.0,
                     'credit': amount > 0.0 and amount or 0.0,
+                    'sale_order_id': sale_order_id,#only to credit line
                 })
 
                 line_ids.append(credit_line)
