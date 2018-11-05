@@ -51,7 +51,7 @@
                 <button type="submit"
                         t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
                         class="btn btn-success pull-left a-submit" t-attf-id="#{event.id}">
-                    <i class="fa fa-user-plus"> Register Now</i>
+                    <i class="fa fa-user-plus">Register Now</i>
                 </button>
                 <div t-if="not event.state == 'confirm'" class="alert alert-info">
                     <t t-if="event.state == 'draft'">
@@ -134,14 +134,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-field">
-                                        <label for="profession" class="control-label">Profession</label>
+                                        <label for="profession_id" class="control-label">Profession</label>
                                         <select class="form-control input-sm reqfield"
-                                                t-attf-name="#{counter}-profession" name="profession" id="profession"
+                                                t-attf-name="#{counter}-profession_id" name="profession_id"
+                                                id="profession_id"
                                                 required="required">
                                             <option value="">--Please Select--</option>
-                                            <t t-foreach="{'goverment':'Goverment','educator':'Educator'}" t-as='label'>
-                                                <option t-att-value="label">
-                                                    <t t-esc="label_value"/>
+                                            <t t-foreach="vals['professions']" t-as='label'>
+                                                <option t-att-value="label.id">
+                                                    <t t-esc="label.name"/>
                                                 </option>
                                             </t>
                                         </select>
@@ -151,7 +152,7 @@
                                     <div class="form-group form-field">
                                         <label for="gender" class="control-label">Gender</label>
                                         <div class="mar-btm">
-                                            <t t-foreach="{'male':'Male','female':'Female'}" t-as='label'>
+                                            <t t-foreach="vals['gender_ids']" t-as='label'>
                                                 <label class="radio-inline">
                                                     <input type="radio" t-attf-name="#{counter}-gender"
                                                            t-att-value="label"

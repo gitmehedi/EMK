@@ -38,7 +38,7 @@
                 <xpath expr="//field[@name='email']" position="after">
                     <field name="date_of_birth" attrs="{'readonly' : [('state','=','done')]}"/>
                     <field name="gender" attrs="{'readonly' : [('state','=','done')]}"/>
-                    <field name="profession" attrs="{'readonly' : [('state','=','done')]}"/>
+                    <field name="profession_id" attrs="{'readonly' : [('state','=','done')]}"/>
                     <field name="card_number" attrs="{'readonly' : [('state','=','done')]}"/>
                 </xpath>
             </field>
@@ -60,5 +60,55 @@
                 </xpath>
             </field>
         </record>
+
+
+        <record model="ir.ui.view" id="view_attendee_profession_form">
+            <field name="name">attendee.profession.form</field>
+            <field name="model">attendee.profession</field>
+            <field name="arch" type="xml">
+                <form string="Attendee Profession">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" groups="base.group_user">
+                            <button name="toggle_status" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="status" widget="boolean_button"
+                                       options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_attendee_profession_tree">
+            <field name="name">attendee.profession.tree</field>
+            <field name="model">attendee.profession</field>
+            <field name="arch" type="xml">
+                <tree string="Attendee Profession"
+                      decoration-bf="status==True" decoration-muted="status==False"
+                      decoration-success="status==True">
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_attendee_profession">
+            <field name="name">Professions</field>
+            <field name="res_model">attendee.profession</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem id="menu_attendee_profession" action="action_attendee_profession"
+                  groups="event_user.group_event_administration" parent="event.menu_event_configuration"/>
     </data>
 </odoo>

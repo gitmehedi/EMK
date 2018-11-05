@@ -182,9 +182,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-field">
-                                        <label for="profession" class="control-label">Profession</label>
+                                        <label for="profession_id" class="control-label">Profession</label>
                                         <select class="form-control input-sm reqfield"
-                                                t-attf-name="#{counter}-profession" name="profession" id="profession"
+                                                t-attf-name="#{counter}-profession_id" name="profession_id" id="profession_id"
                                                 required="required">
                                             <option value="">--Please Select--</option>
                                             <t t-foreach="{'goverment':'Goverment','educator':'Educator'}" t-as='label'>
