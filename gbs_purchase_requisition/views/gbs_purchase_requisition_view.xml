@@ -101,9 +101,9 @@
                     <!--<attribute name="attrs">{'readonly': [('state','in',('done'))]}</attribute>-->
                     <!--</xpath>-->
                     <xpath expr="//field[@name='vendor_id']" position="after">
+                        <field name="dept_location_id" options="{'no_create': True,'no_open':True}"/>
                         <field name="indent_ids" widget="many2many_tags" domain="[('operating_unit_id','=',operating_unit_id),('state','=','inprogress'),('pr_indent_check','=',True)]"
                                attrs="{'readonly': [('state','!=','draft')]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                        <field name="dept_location_id" options="{'no_create': True,'no_open':True}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="replace">
                         <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','!=','draft')]}"

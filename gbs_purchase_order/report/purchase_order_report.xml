@@ -87,11 +87,20 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="4" rowspan="2"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
+                                        <td colspan="4" rowspan="5"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
                                         <td><strong>Sub Total : </strong><span t-esc="total_amount" /></td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Grand Total : </strong><span t-esc="total_amount" /></td>
+                                        <td><strong>Discount </strong><span t-esc="data['amount_discount']"/>% :<span t-esc="data['total_discount']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>After Discount : </strong><span t-esc="data['amount_after_discount']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Vat </strong><span t-esc="data['amount_vat']" />% :<span t-esc="data['total_vat']" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Grand Total : </strong><span t-esc="data['amount_total']" /></td>
                                     </tr>
                                 </tbody>
                             </table>
