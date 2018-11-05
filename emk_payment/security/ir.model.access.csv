@@ -37,6 +37,8 @@ account_payment_method_adm,account_payment_method_adm,account.model_account_paym
 
 account_payment_adm,account_payment_adm,account.model_account_payment,event_user.group_event_administration,1,1,1,0
 
+account_full_reconcile_adm,account_full_reconcile_adm,account.model_account_full_reconcile,event_user.group_event_administration,1,1,1,0
+
 
 
 

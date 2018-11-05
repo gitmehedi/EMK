@@ -82,6 +82,23 @@ class ServicePayment(models.Model):
             }
         return res
 
+    @api.onchange('event_id')
+    @api.depends('payment_type_id')
+    def _onchage_event(self):
+        res = {}
+        self.event_participant_id = None
+        if self.event_id == 'card':
+            event = self.env['event.registration'].search([('event_id', '=', self.event_id.id), ('active', '=', True)])
+            res['domain'] = {
+                'event_participant_id': [('id', 'in', event.ids)],
+            }
+        elif self.payment_type_id.name == 'Event Participation Fee':
+            event = self.env['event.registration'].search([('event_id', '=', self.event_id.id)])
+            res['domain'] = {
+                'event_participant_id': [('id', 'in', event.ids)],
+            }
+        return res
+
     @api.depends('payment_type_id', 'event_id')
     def _compute_paid_amount(self):
         for rec in self:
