@@ -98,6 +98,7 @@
                         <field name="amount_discount"/>
                         <field name="amount_after_discount"/>
                         <field name="amount_vat"/>
+                        <field name="amount_after_vat" invisible="1"/>
                     </xpath>
                 </data>
             </field>

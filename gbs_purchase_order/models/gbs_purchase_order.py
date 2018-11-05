@@ -23,7 +23,7 @@ class PurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
-    @api.depends('order_line.price_total')
+    @api.depends('order_line.price_total','amount_discount','amount_vat')
     def _amount_all(self):
         for order in self:
             amount_untaxed = amount_tax = 0.0
@@ -36,10 +36,16 @@ class PurchaseOrder(models.Model):
                     amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
                 else:
                     amount_tax += line.price_tax
+
+            amount_discount = amount_untaxed * (order.amount_discount / 100)
+            amount_after_discount = amount_untaxed - amount_discount
+            amount_vat = amount_after_discount * (order.amount_vat / 100)
             order.update({
                 'amount_untaxed': order.currency_id.round(amount_untaxed),
                 'amount_tax': order.currency_id.round(amount_tax),
-                'amount_total': amount_untaxed + amount_tax
+                'amount_after_vat': amount_after_discount + amount_vat,
+                'amount_after_discount': amount_after_discount,
+                'amount_total': amount_untaxed + amount_tax + amount_vat - amount_discount
             })
 
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
@@ -77,24 +83,24 @@ class PurchaseOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
     amount_vat = fields.Float(string='Vat(%)')
     amount_discount = fields.Float(string='Discount(%)')
-    amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True)
-    amount_after_vat = fields.Monetary(string='After Discount', store=True, readonly=True)
+    amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
+    amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
 
-    @api.onchange('amount_discount')
-    def _onchange_amount_discount(self):
-        for order in self:
-            if order.amount_discount and self.amount_untaxed:
-                amount_discount = order.amount_untaxed * (order.amount_discount / 100)
-                order.amount_after_discount = order.amount_untaxed - amount_discount
-                order.amount_total = order.amount_after_discount + order.amount_tax
-
-    @api.onchange('amount_vat')
-    def _onchange_amount_vat(self):
-        for order in self:
-            if order.amount_vat and self.amount_after_discount:
-                amount_vat = order.amount_after_discount * (order.amount_vat / 100)
-                order.amount_after_vat = order.amount_after_discount + amount_vat
-                order.amount_total = order.amount_after_vat + order.amount_tax
+    # @api.onchange('amount_discount')
+    # def _onchange_amount_discount(self):
+    #     for order in self:
+    #         if order.amount_discount and self.amount_untaxed:
+    #             amount_discount = order.amount_untaxed * (order.amount_discount / 100)
+    #             order.amount_after_discount = order.amount_untaxed - amount_discount
+    #             order.amount_total = order.amount_after_discount + order.amount_tax
+    #
+    # @api.onchange('amount_vat')
+    # def _onchange_amount_vat(self):
+    #     for order in self:
+    #         if order.amount_vat and self.amount_after_discount:
+    #             amount_vat = order.amount_after_discount * (order.amount_vat / 100)
+    #             order.amount_after_vat = order.amount_after_discount + amount_vat
+    #             order.amount_total = order.amount_after_vat + order.amount_tax
 
 
 
