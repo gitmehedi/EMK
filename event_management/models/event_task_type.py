@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 class EventTaskType(models.Model):
     _name = 'event.task.type'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Event Task Type'
 
     name = fields.Char('Task Name', required=True, translate=True, track_visibility='onchange')
     description = fields.Text('Description', required=True, translate=True, track_visibility='onchange')
@@ -28,6 +29,7 @@ class EventTaskType(models.Model):
 class EventServiceType(models.Model):
     _name = 'event.service.type'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Event Service'
 
     name = fields.Char('Service Name', required=True, translate=True, track_visibility='onchange')
     status = fields.Boolean(default=True)

@@ -9,6 +9,7 @@ class EventTaskList(models.Model):
     _name = 'event.task.list'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'task_id'
+    _description = "Event Task"
 
     task_duration = fields.Float(string='Duration', required=True, track_visibility='onchange', readonly=True,
                                  states={'draft': [('readonly', False)]})

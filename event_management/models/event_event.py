@@ -83,6 +83,8 @@ class AttendeeProfession(models.Model):
     _name = 'attendee.profession'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
+    _description = 'Attendee Profession'
+
 
     name = fields.Char(string='Profession', required=True)
     status = fields.Boolean(default=True)

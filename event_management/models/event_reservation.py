@@ -11,6 +11,7 @@ class EventReservation(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'organizer_id'
     _order = 'id desc'
+    _description = 'Event Reservation'
 
     name = fields.Char(string='Name', readonly=True, states={'draft': [('readonly', False)]})
     event_name = fields.Char(string='Event Name', required=True, readonly=True, states={'draft': [('readonly', False)]})

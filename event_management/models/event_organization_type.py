@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 class EventOrganizationType(models.Model):
     _name = 'event.organization.type'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Event Organization Type'
 
     name = fields.Char('Name', required=True, translate=True, track_visibility='onchange')
     status = fields.Boolean(default=True, track_visibility='onchange')

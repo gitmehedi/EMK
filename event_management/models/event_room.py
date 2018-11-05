@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 class EventRoom(models.Model):
     _name = 'event.room'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Event Room'
 
     name = fields.Char('Room Name', required=True, translate=True, track_visibility='onchange')
     max_seat = fields.Integer(string='Max Seat', required=True, track_visibility='onchange')

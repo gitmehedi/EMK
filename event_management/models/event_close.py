@@ -12,6 +12,7 @@ class EventClose(models.Model):
     _name = 'event.close'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name='event_id'
+    _description = 'Event Close'
 
     event_id = fields.Many2one('event.event', string='Event Name', required=True,
                                domain=[('state','=','confirm')])

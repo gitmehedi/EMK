@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 class EventManagementType(models.Model):
     _name = 'event.type'
     _inherit = ['event.type', 'mail.thread', 'ir.needaction_mixin']
+    _description = "Event Type"
 
     name = fields.Char('Event Type', required=True, translate=True, track_visibility='onchange')
     image = fields.Binary("Image", attachment=True, track_visibility='onchange',
