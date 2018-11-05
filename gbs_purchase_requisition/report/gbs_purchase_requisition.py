@@ -14,7 +14,7 @@ class GbsPurchaseRequisition(models.AbstractModel):
         data['name'] = pr_obj.name
         data['requisition_date'] = pr_obj.requisition_date
         requisition_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['requisition_date']))
-        data['department_id'] = ""
+        data['department_id'] = pr_obj.dept_location_id.name or False
         #@Todo Need to get Location ID
         data['address'] = report_utility_pool.getAddressByUnit(pr_obj.operating_unit_id)
         if pr_obj.line_ids:

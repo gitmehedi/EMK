@@ -36,6 +36,18 @@ class PurchaseRequisition(models.Model):
     # attachment_ids = fields.Many2many('ir.attachment','attachment_pr_rel','pr_id','attachment_id', string='Attachments')
     attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.requisition')])
 
+    dept_location_id = fields.Many2one('stock.location', string='Department', readonly=True,
+                                       states={'draft': [('readonly', False)]},
+                                       help="Default User Departmental Location.",
+                                       default=lambda self: self.env.user.default_location_id)
+
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        if self.user_id:
+            return {'domain': {
+                'dept_location_id': [('id', 'in', self.user_id.location_ids.ids), ('can_request', '=', True)]}}
+
+
     @api.multi
     def action_in_progress(self):
         if not all(obj.line_ids for obj in self):
@@ -87,6 +99,10 @@ class PurchaseRequisition(models.Model):
         vals = []
         # self.required_date = self.indent_ids.required_date
         for indent_id in self.indent_ids:
+            if not self.dept_location_id:
+                self.dept_location_id = indent_id.stock_location_id.id
+            elif self.dept_location_id.id != indent_id.stock_location_id.id:
+                raise UserError(_('Indent department and PR department must be same.'))
             indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
             for indent_product_line in indent_product_line_obj:
                 vals.append((0, 0, {'product_id': indent_product_line.product_id,
