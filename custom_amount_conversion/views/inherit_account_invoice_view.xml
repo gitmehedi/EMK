@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@groups='base.group_multi_currency']" position="after">
-                    <field name="converstion_rate" groups="base.group_multi_currency"/>
+                    <field name="converstion_rate" groups="base.group_multi_currency" invisible="1"/>
                 </xpath>
             </field>
         </record>
