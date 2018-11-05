@@ -23,6 +23,31 @@ class PurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
+    @api.depends('order_line.price_total','amount_discount','amount_vat')
+    def _amount_all(self):
+        for order in self:
+            amount_untaxed = amount_tax = 0.0
+            for line in order.order_line:
+                amount_untaxed += line.price_subtotal
+                # FORWARDPORT UP TO 10.0
+                if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                    taxes = line.taxes_id.compute_all(line.price_unit, line.order_id.currency_id, line.product_qty,
+                                                      product=line.product_id, partner=line.order_id.partner_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
+
+            amount_discount = amount_untaxed * (order.amount_discount / 100)
+            amount_after_discount = amount_untaxed - amount_discount
+            amount_vat = amount_after_discount * (order.amount_vat / 100)
+            order.update({
+                'amount_untaxed': order.currency_id.round(amount_untaxed),
+                'amount_tax': order.currency_id.round(amount_tax),
+                'amount_after_vat': amount_after_discount + amount_vat,
+                'amount_after_discount': amount_after_discount,
+                'amount_total': amount_untaxed + amount_tax + amount_vat - amount_discount
+            })
+
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
@@ -51,6 +76,33 @@ class PurchaseOrder(models.Model):
 
     # currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True,
     #                               default=lambda self: self.partner_id.currency_id.id)
+
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all',
+                                     track_visibility='always')
+    amount_tax = fields.Monetary(string='Product Taxes', store=True, readonly=True, compute='_amount_all')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
+    amount_vat = fields.Float(string='Vat(%)')
+    amount_discount = fields.Float(string='Discount(%)')
+    amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
+    amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
+
+    # @api.onchange('amount_discount')
+    # def _onchange_amount_discount(self):
+    #     for order in self:
+    #         if order.amount_discount and self.amount_untaxed:
+    #             amount_discount = order.amount_untaxed * (order.amount_discount / 100)
+    #             order.amount_after_discount = order.amount_untaxed - amount_discount
+    #             order.amount_total = order.amount_after_discount + order.amount_tax
+    #
+    # @api.onchange('amount_vat')
+    # def _onchange_amount_vat(self):
+    #     for order in self:
+    #         if order.amount_vat and self.amount_after_discount:
+    #             amount_vat = order.amount_after_discount * (order.amount_vat / 100)
+    #             order.amount_after_vat = order.amount_after_discount + amount_vat
+    #             order.amount_total = order.amount_after_vat + order.amount_tax
+
+
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
