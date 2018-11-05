@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="product_event_participation_fee" model="product.template">
             <field name="name">Event Participation Fee</field>
             <field name="type">service</field>
@@ -15,6 +15,16 @@
             <field name="sale_ok">False</field>
             <field name="purchase_ok">False</field>
             <field name="service_type">card</field>
+        </record>
+        <record id="event_participation" model="res.partner">
+            <field name="firstname">Event</field>
+            <field name="middlename">Participant</field>
+            <field name="lastname">Payment</field>
+            <field name="is_company">0</field>
+            <field name="street">EMK</field>
+            <field name="zip">EMK Center</field>
+            <field name="city">Dhaka</field>
+            <field name="country_id" ref="base.uk"/>
         </record>
     </data>
 </odoo>

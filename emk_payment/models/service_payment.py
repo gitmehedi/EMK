@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError, UserError
 class ServicePayment(models.Model):
     _name = 'service.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _rec_name = 'membership_id'
+    _rec_name = 'payment_type_id'
     _order = 'collection_date DESC, id desc'
     _description = 'Service Payment'
 
@@ -46,7 +46,7 @@ class ServicePayment(models.Model):
     payment_type_id = fields.Many2one('product.template', string='Payment Type', required=True,
                                       track_visibility='onchange',
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
-                                              ('sale_ok', '=', False),('service_type', '!=', False)],
+                                              ('sale_ok', '=', False), ('service_type', '!=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
     check_type = fields.Char()
     company_id = fields.Many2one('res.company', string='Company Name', default=lambda self: self.env.user.company_id.id)
@@ -106,11 +106,20 @@ class ServicePayment(models.Model):
             if self.state == 'open':
                 payment_method_id = self.env['account.payment.method'].search(
                     [('code', '=', 'manual'), ('payment_type', '=', 'inbound')])
+
                 record = {}
                 record['payment_type'] = 'inbound'
                 record['payment_method_id'] = payment_method_id.id
                 record['partner_type'] = 'customer'
-                record['partner_id'] = self.membership_id.id
+                if self.payment_type_id.name == 'Event Participation Fee':
+                    participant = self.env['res.partner'].search([('name', '=', 'Event Participant Payment')],
+                                                                 limit=1) or 0
+                    if not participant:
+                        raise UserError(_('Please Configure Event Participant User.'))
+
+                    record['partner_id'] = participant.id
+                else:
+                    record['partner_id'] = self.membership_id.id
                 record['amount'] = self.paid_amount
                 record['journal_id'] = self.journal_id.id
                 record['payment_date'] = self.collection_date
