@@ -19,6 +19,10 @@
         'gbs_purchase_requisition',
         'stock_operating_unit_extend',
         'amount_to_word_bd',
+        'terms_setup_foreign',
+        'terms_setup_local',
+        'gbs_procure_n_commercial_access',
+
     ],
     'data': [
         'security/ir.model.access.csv',

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="terms_setup_local_form_view" model="ir.ui.view">
+        <field name="name">terms.setup.local.form.view</field>
+        <field name="model">terms.setup.local</field>
+        <field name="arch" type="xml">
+            <form string="Terms Setup">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="days"/>
+                        <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="terms_setup_local_tree_view" model="ir.ui.view">
+        <field name="name">terms.setup.local.tree.view</field>
+        <field name="model">terms.setup.local</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Terms Setup">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="terms_setup_local_action" model="ir.actions.act_window">
+        <field name="name">Terms Setup Local</field>
+        <field name="res_model">terms.setup.local</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="terms_setup_local_com_menu"
+                  parent="gbs_purchase_requisition.menu_commercial_configuration"
+                  action="terms_setup_local_action"
+                  groups="commercial.group_commercial_manager_export"
+                  sequence="26"/>
+
+</odoo>
