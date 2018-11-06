@@ -17,7 +17,6 @@
         'views/inherited_res_company_view.xml',
         'views/account_move_line.xml',
         'views/payment_entry_reconciled_view.xml',
-        'views/ir_cron.xml',
     ],
 
     'summary': 'Account Receivable Clearing Operation',
