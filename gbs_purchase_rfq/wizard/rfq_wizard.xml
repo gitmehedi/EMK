@@ -9,7 +9,7 @@
                 <form string="Please Select Products For RFQ" create="false" edit="false">
                     <group>
                         <group>
-                            <field name="pr_ids" widget="many2many_tags"/>
+                            <field name="pr_ids" widget="many2many_tags" options="{'no_create': True,'no_open':True}"/>
                         </group>
                     </group>
                     <field name="product_lines" widget="one2many">
@@ -21,7 +21,8 @@
                         </tree>
                     </field>
                     <footer>
-                        <button string="Confirm" name="send_mail" type="object" class="oe_highlight"  />
+                        <button string="Confirm" name="confirm_for_mail" type="object" class="oe_highlight"/>
+                        <button string="Print" name="print_rfq" type="object" class="oe_highlight"/>
                         <button string="Cancel" special="cancel" type="object"/>
                     </footer>
                 </form>

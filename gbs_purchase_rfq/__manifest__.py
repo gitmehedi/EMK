@@ -8,13 +8,15 @@
         'gbs_purchase_order',
     ],
     'data': [
-        # 'data/pr_sequence.xml',
         # 'security/security.xml',
         # 'security/ir_rule.xml',
         # 'security/ir.model.access.csv',
         'wizard/rfq_wizard.xml',
+        'wizard/rfq_email_template.xml',
+        'report/rfq_report.xml',
+        'report/rfq_send_report.xml',
+        'data/mail_template_data.xml',
         'views/pr_view.xml',
-        # 'report/gbs_rfq_report.xml',
     ],
 
     'description': 

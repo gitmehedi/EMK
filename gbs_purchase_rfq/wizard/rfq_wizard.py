@@ -11,8 +11,7 @@ class RFQWizard(models.TransientModel):
                                   default=lambda self: self.env.context.get('active_ids'))
 
     @api.onchange('pr_ids')
-    def _compute_product_lines(self):
-        # self.product_lines = []
+    def _onchange_pr_ids(self):
         if self.pr_ids:
             vals = []
             # form_ids = self.env.context.get('active_ids')
@@ -28,10 +27,51 @@ class RFQWizard(models.TransientModel):
                                     'price_unit': obj.price_unit,
                                     }))
             self.product_lines = vals
+        else:
+            self.product_lines = []
+
+    @api.multi
+    def confirm_for_mail(self):
+        res = self.env.ref('gbs_purchase_rfq.rfq_email_template_wizard')
+
+        vals = []
+        for obj in self.product_lines:
+            vals.append(({'product_id': obj.product_id.name,
+                          'product_qty': obj.product_qty,
+                          'product_uom_id': obj.product_uom_id.name,
+                          }))
+
+        result = {
+            'name': _('Send RFQ'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'rfq.email.template.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {
+                        'vals': vals,
+                        },
+        }
+
+        return result
+
+    @api.multi
+    def print_rfq(self):
+        data = {}
+        vals = []
+        for obj in self.product_lines:
+            vals.append(({  'product_id': obj.product_id.name,
+                            'product_qty': obj.product_qty,
+                            'product_uom_id': obj.product_uom_id.name,
+                        }))
+        data['vals'] = vals
+
+        return self.env['report'].get_action(self, 'gbs_purchase_rfq.rfq_report', data=data)
 
 
-
-class ShipmentProductLineWizard(models.TransientModel):
+class RFQProductLineWizard(models.TransientModel):
     _name = 'rfq.product.line.wizard'
 
     rfq_id = fields.Many2one('rfq.wizard', string='RFQ', ondelete='cascade')

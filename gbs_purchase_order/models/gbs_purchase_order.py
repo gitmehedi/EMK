@@ -41,8 +41,8 @@ class PurchaseOrder(models.Model):
             amount_after_discount = amount_untaxed - amount_discount
             amount_vat = amount_after_discount * (order.amount_vat / 100)
             order.update({
-                'amount_untaxed': order.currency_id.round(amount_untaxed),
-                'amount_tax': order.currency_id.round(amount_tax),
+                'amount_untaxed': amount_untaxed,
+                'amount_tax': amount_tax,
                 'amount_after_vat': amount_after_discount + amount_vat,
                 'amount_after_discount': amount_after_discount,
                 'amount_total': amount_untaxed + amount_tax + amount_vat - amount_discount
@@ -85,23 +85,6 @@ class PurchaseOrder(models.Model):
     amount_discount = fields.Float(string='Discount(%)')
     amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
     amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
-
-    # @api.onchange('amount_discount')
-    # def _onchange_amount_discount(self):
-    #     for order in self:
-    #         if order.amount_discount and self.amount_untaxed:
-    #             amount_discount = order.amount_untaxed * (order.amount_discount / 100)
-    #             order.amount_after_discount = order.amount_untaxed - amount_discount
-    #             order.amount_total = order.amount_after_discount + order.amount_tax
-    #
-    # @api.onchange('amount_vat')
-    # def _onchange_amount_vat(self):
-    #     for order in self:
-    #         if order.amount_vat and self.amount_after_discount:
-    #             amount_vat = order.amount_after_discount * (order.amount_vat / 100)
-    #             order.amount_after_vat = order.amount_after_discount + amount_vat
-    #             order.amount_total = order.amount_after_vat + order.amount_tax
-
 
 
     @api.onchange('requisition_id')
@@ -194,14 +177,6 @@ class PurchaseOrder(models.Model):
                     'res_model': 'purchase.order',
                 }))
             self.attachment_ids = attachments_lines
-
-        # link way
-        # attachments_lines = []
-        # for attachment_line in requisition.attachment_ids:
-        #     attachments_lines.append((4,attachment_line.id))
-        # self.attachment_ids = attachments_lines
-        # (replace way)
-        # self.attachment_ids = [(6,0,requisition.attachment_ids.ids)]
 
         if requisition.region_type:
             self.region_type = requisition.region_type

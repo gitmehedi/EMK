@@ -4,10 +4,10 @@ class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
     def action_send_rfq(self):
-        res = self.env.ref('gbs_purchase_requisition.rfq_wizard_form')
+        res = self.env.ref('gbs_purchase_rfq.rfq_wizard_form')
 
         result = {
-            'name': _('Send RFQ'),
+            'name': _('RFQ'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res and res.id or False,

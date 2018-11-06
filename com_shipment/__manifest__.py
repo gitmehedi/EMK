@@ -8,7 +8,7 @@
         'mail',
         'commercial',
         'letter_of_credit',
-
+        'gbs_supplier',
     ],
 
     'data': [
