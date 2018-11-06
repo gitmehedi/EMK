@@ -15,9 +15,6 @@ class PurchaseRequisition(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            # 'context': {
-            #             'active_ids': [],
-            #             },
         }
 
         return result
