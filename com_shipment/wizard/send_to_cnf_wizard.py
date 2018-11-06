@@ -6,7 +6,7 @@ class SendCnfWizard(models.TransientModel):
 
     cnf_received_date = fields.Date("C&F Received Date", required=True)
     cnf_id = fields.Many2one('res.partner', "Supplier", required=True,
-                             domain="[('supplier', '=', True),('parent_id', '=', False)]")
+                             domain="[('is_cnf','=',True),('parent_id', '=', False)]")
 
     @api.multi
     def save_send_to_cnf(self):

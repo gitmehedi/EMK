@@ -24,7 +24,7 @@
                                 <field name="shipment_id" attrs="{'required':[('cnf_quotation','=',True)]}"
                                        options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                 <field name="lc_id" attrs="{'required':[('cnf_quotation','=',True)]}"/>
-                                <field name="partner_id" string="C&amp;F Vendor" domain="[('supplier','=',True),('parent_id', '=', False)]"/>
+                                <field name="partner_id" string="C&amp;F Vendor" domain="[('is_cnf','=',True),('parent_id', '=', False)]"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                             </group>
                             <group>
@@ -50,7 +50,7 @@
                                 </field>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" string="Service Taxes" options="{'currency_field': 'currency_id'}"/>
                                     <div class="oe_subtotal_footer_separator oe_inline">
                                         <label for="amount_total"/>
                                     </div>

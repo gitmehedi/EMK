@@ -98,20 +98,23 @@ class PurchaseRequisition(models.Model):
     def indent_product_line(self):
         vals = []
         # self.required_date = self.indent_ids.required_date
-        for indent_id in self.indent_ids:
-            if not self.dept_location_id:
-                self.dept_location_id = indent_id.stock_location_id.id
-            elif self.dept_location_id.id != indent_id.stock_location_id.id:
-                raise UserError(_('Indent department and PR department must be same.'))
-            indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
-            for indent_product_line in indent_product_line_obj:
-                vals.append((0, 0, {'product_id': indent_product_line.product_id,
-                                'name': indent_product_line.name,
-                                'product_uom_id': indent_product_line.product_uom,
-                                'product_ordered_qty': indent_product_line.product_uom_qty,
-                                'product_qty': indent_product_line.qty_available,
-                          }))
-                self.line_ids = vals
+        if self.indent_ids:
+            for indent_id in self.indent_ids:
+                if not self.dept_location_id:
+                    self.dept_location_id = indent_id.stock_location_id.id
+                elif self.dept_location_id.id != indent_id.stock_location_id.id:
+                    raise UserError(_('Indent department and PR department must be same.'))
+                indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
+                for indent_product_line in indent_product_line_obj:
+                    vals.append((0, 0, {'product_id': indent_product_line.product_id,
+                                    'name': indent_product_line.name,
+                                    'product_uom_id': indent_product_line.product_uom,
+                                    'product_ordered_qty': indent_product_line.product_uom_qty,
+                                    'product_qty': indent_product_line.qty_available,
+                              }))
+                    self.line_ids = vals
+        else:
+            self.line_ids = []
 
     ####################################################
     # ORM Overrides methods
