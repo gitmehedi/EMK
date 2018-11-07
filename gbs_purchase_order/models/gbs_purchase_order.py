@@ -67,6 +67,10 @@ class PurchaseOrder(models.Model):
                                                       related_sudo=True,
                                                       help="Technical field used to display the Drop Ship Address",
                                                       readonly=True)
+    terms_local_id = fields.Many2one('terms.setup.local', string='Terms', store=True, readonly=True,
+                               states={'draft': [('readonly', False)]})
+    terms_foreign_id = fields.Many2one('terms.setup.foreign', string='Terms', store=True, readonly=True,
+                               states={'draft': [('readonly', False)]})
     contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
 
     ref_date = fields.Date('Ref.Date')
@@ -85,7 +89,16 @@ class PurchaseOrder(models.Model):
     amount_discount = fields.Float(string='Discount(%)')
     amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
     amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
+    terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]})
 
+
+    @api.onchange('terms_local_id','terms_foreign_id')
+    def onchange_terms_id(self):
+        if self.terms_local_id:
+            self.terms_condition = self.terms_local_id.terms_condition
+        elif self.terms_foreign_id:
+            self.terms_condition = self.terms_foreign_id.terms_condition
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
