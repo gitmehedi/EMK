@@ -26,6 +26,8 @@
         'letter_of_credit_report',
         'stock_gate_in',
         'gbs_supplier',
+        'terms_setup_foreign',
+        'terms_setup_local',
     ],
 
     'data': [ ],

@@ -78,10 +78,6 @@
                         <field name="ref_date"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="terms_local_id" string="Payment term" groups="gbs_procure_n_commercial_access.group_local_purchase"
-                               options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
-                        <field name="terms_foreign_id" string="Payment term" groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign"
-                               options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                         <field name="contact_person" widget="many2many_tags"/>
                     </xpath>
                     <xpath expr="//field[@name='notes']" position="replace">

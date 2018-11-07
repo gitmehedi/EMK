@@ -58,37 +58,34 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <t t-if="data['region_type'] == 'foreign'">
-                                        <p><b>Suplier : </b><br/><span t-esc="data['partner_id']"/></p>
-                                        <p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> <br/>
-                                            <b>Contract Parson : </b><span t-esc="data['sup_con']"/><br/>
-                                            <b>Order Ref No : </b><span t-esc="data['partner_ref']"/><br/>
-                                            <b>Date : </b><span t-esc="data['requisition_date']"></span> </p>
+                                        <p><b>Suplier : </b><span t-esc="data['partner_id']"/></p>
                                     </t>
-                                    <t t-if="data['region_type'] == 'local'">
-                                        <p><b>Order To : </b><br/><span t-esc="data['partner_id']"/></p>
-                                        <p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> <br/>
-                                            <b>Contract Parson : </b><span t-esc="data['sup_con']"/><br/>
-                                            <b>Order Ref No : </b><span t-esc="data['partner_ref']"/><br/>
-                                            <b>Date : </b><span t-esc="data['requisition_date']"></span> </p>
+                                    <t t-elif="data['region_type'] == 'local'">
+                                        <p><b>Order To : </b><span t-esc="data['partner_id']"/></p>
                                     </t>
+                                    <t t-elif="data['region_type'] != 'local' or data['region_type'] == 'foreign'">
+                                        <p><b>Suplier / Order To : </b><span t-esc="data['partner_id']"/></p>
+                                    </t>
+                                    <p><b>Address: </b><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p>
+                                    <p><b>Contract Parson : </b><span t-esc="data['sup_con']"/></p><br/>
+                                    <p><b>Order Ref No : </b><span t-esc="data['partner_ref']"/></p><br/>
+                                    <p><b>Date : </b><span t-esc="data['requisition_date']"></span></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <t t-if="data['region_type'] == 'foreign'">
-                                        <p><b>Consignee : </b><br/><span t-esc="data['company']"/></p>
-                                        <p><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> <br/></p>
-                                        <b>Contract Parson : </b>
-                                        <t t-foreach="data['contact_person']" t-as="con_per">
-                                            <td><span t-esc="con_per.name"/></td><br/>
-                                        </t>
+                                        <p><b>Consignee : </b><span t-esc="data['company']"/></p>
                                     </t>
-                                    <t t-if="data['region_type'] == 'local'">
-                                        <p><b>Bill To : </b><br/><span t-esc="data['company']"/></p>
-                                        <p><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> <br/></p>
-                                        <b>Contract Parson : </b>
-                                        <t t-foreach="data['contact_person']" t-as="con_per">
-                                            <td><span t-esc="con_per.name"/></td><br/>
-                                        </t>
+                                    <t t-elif="data['region_type'] == 'local'">
+                                        <p><b>Bill To : </b><span t-esc="data['company']"/></p>
                                     </t>
+                                    <t t-elif="data['region_type'] != 'local' or data['region_type'] == 'foreign'">
+                                        <p><b>Consignee / Bill To : </b><span t-esc="data['company']"/></p>
+                                    </t>
+                                    <p><b>Address: </b><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p>
+                                    <p><b>Contract Parson : </b>
+                                    <t t-foreach="data['contact_person']" t-as="con_per">
+                                        <td><span t-esc="con_per.name"/></td><br/>
+                                    </t></p>
                                 </div>
                             </div>
                             <hr class="hr-xs"/>

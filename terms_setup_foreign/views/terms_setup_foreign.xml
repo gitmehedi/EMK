@@ -40,9 +40,20 @@
     <menuitem id="terms_setup_com_menu"
                   parent="gbs_purchase_requisition.menu_commercial_configuration"
                   action="terms_setup_foreign_action"
-                  groups="commercial.group_commercial_manager_export"
                   sequence="25"/>
 
-    <!--<menuitem id="terms_setup_foregin_menu" parent="sales_team.menu_sale_config"-->
-              <!--action="terms_setup_foregin_action" sequence="25"/>-->
+    <record id="inherit_purchase_order_form_view" model="ir.ui.view">
+        <field name="name">inherit.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field string="Payment term" name="terms_foreign_id"
+                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
 </odoo>

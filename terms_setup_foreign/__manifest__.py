@@ -14,7 +14,9 @@
     'version': '10.0.1',
 
     'depends': [
-        'base','gbs_purchase_requisition',
+        'base',
+        'gbs_purchase_requisition',
+        'gbs_purchase_order',
         ],
     'data': [
         'views/terms_setup_foreign.xml',
