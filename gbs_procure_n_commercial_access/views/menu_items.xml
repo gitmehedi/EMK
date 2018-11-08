@@ -130,11 +130,10 @@
                   groups="group_imoprt_lc_foreign"
                   sequence="25"/>
 
-       <menuitem id="terms_setup_local.terms_setup_local_com_menu"
+        <menuitem id="terms_setup_local.terms_setup_local_com_menu"
                   parent="gbs_purchase_requisition.menu_commercial_configuration"
                   action="terms_setup_local.terms_setup_local_action"
                   groups="group_local_purchase"
                   sequence="26"/>
-
     </data>
 </odoo>
