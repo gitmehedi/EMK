@@ -51,6 +51,6 @@
         'views/menu_items.xml',
         'views/field_items.xml',
         'views/commercial_po_menu.xml',
-        'views/commercial_cnf_agent_menu.xml',
+        'views/commercial_supplier_menus.xml',
     ],
 }
