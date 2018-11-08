@@ -52,6 +52,11 @@ class PaymentEntryReconciled(models.TransientModel):
                     if line.payment_id:
                         line.payment_id.write({'is_entry_receivable_cleared_payments': True})
 
+                    line.unlink()
+            # return {
+            #     'type': 'ir.actions.client',
+            #     'tag': 'reload',
+            # }
 
 
     def action_search(self):
