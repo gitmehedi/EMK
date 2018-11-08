@@ -138,12 +138,6 @@ class PaymentEntryReconciled(models.TransientModel):
                 line_ids.append(debit_line)
                 debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
-            sale_order_id = None
-            if payment_id.sale_order_id:
-                sale_order_id = payment_id.sale_order_id
-            elif cheque_id.sale_order_id:
-                sale_order_id = cheque_id.sale_order_id
-
             if credit_account_id:
                 credit_line = (0, 0, {
                     'name': credit_account_id.name,
@@ -153,7 +147,7 @@ class PaymentEntryReconciled(models.TransientModel):
                     'date': date,
                     'debit': amount < 0.0 and -amount or 0.0,
                     'credit': amount > 0.0 and amount or 0.0,
-                    'sale_order_id': sale_order_id,#only to credit line
+
                 })
 
                 line_ids.append(credit_line)
