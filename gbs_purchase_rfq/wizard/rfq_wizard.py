@@ -20,9 +20,7 @@ class RFQWizard(models.TransientModel):
                 # product_qty = obj.product_qty - obj.product_received_qty
                 # if product_qty > 0:
                 vals.append((0, 0, {'product_id': obj.product_id,
-                                    # 'pr_line_id': obj.id,
-                                    # 'name': obj.name,
-                                    'product_qty': obj.product_qty,
+                                    'product_qty': obj.product_ordered_qty,
                                     'product_uom_id': obj.product_uom_id.id,
                                     'price_unit': obj.price_unit,
                                     }))

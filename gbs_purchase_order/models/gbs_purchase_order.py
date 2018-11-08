@@ -67,10 +67,7 @@ class PurchaseOrder(models.Model):
                                                       related_sudo=True,
                                                       help="Technical field used to display the Drop Ship Address",
                                                       readonly=True)
-    terms_local_id = fields.Many2one('terms.setup.local', string='Terms', store=True, readonly=True,
-                               states={'draft': [('readonly', False)]})
-    terms_foreign_id = fields.Many2one('terms.setup.foreign', string='Terms', store=True, readonly=True,
-                               states={'draft': [('readonly', False)]})
+
     contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
 
     ref_date = fields.Date('Ref.Date')

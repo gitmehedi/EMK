@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_order_form_view_foreign" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="terms_setup_foreign.inherit_purchase_order_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <attribute name="groups">group_imoprt_lc_foreign</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="purchase_order_form_view_local" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="terms_setup_foreign.inherit_purchase_order_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <attribute name="groups">group_local_purchase</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+
