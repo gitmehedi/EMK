@@ -10,7 +10,7 @@ class PaymentEntryReconciled(models.TransientModel):
     _rec_name = 'name'
 
     name = fields.Char(string='name', default='Payment Entry Reconciled')
-    date = fields.Date(string='Date', required=True)
+    date = fields.Date(string='Date', required=False)
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)])
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], default='draft')
 
@@ -168,7 +168,7 @@ class PaymentEntryReconciled(models.TransientModel):
             i.line_ids.unlink()
             i.select_all_line_vals = False
             i.partner_id.unlink()
-            i.date = None
+            i.date = ""
             i.line_ids_visibility = False
 
 
