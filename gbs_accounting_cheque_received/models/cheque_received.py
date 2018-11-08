@@ -204,7 +204,7 @@ class ChequeReceived(models.Model):
 
                 debit_line = (0, 0, {
                     'name': debit_account_id.name,
-                    'partner_id': cr.partner_id.id,
+                   # 'partner_id': cr.partner_id.id,
                     'account_id': debit_account_id.id,
                     'journal_id': cr.journal_id.id,
                     'currency_id': currency_id,
@@ -212,7 +212,7 @@ class ChequeReceived(models.Model):
                     'date': date,
                     'debit': debit_amount,
                     'credit': credit_amount,
-                    'cheque_received_id': cr.id,  # update only to debit leg
+                    'cheque_received_id': cr.id,
                 })
 
                 line_ids.append(debit_line)
@@ -234,7 +234,7 @@ class ChequeReceived(models.Model):
 
                 credit_line = (0, 0, {
                     'name': credit_account_id.name,
-                    'partner_id': cr.partner_id.id,
+                    #'partner_id': cr.partner_id.id,
                     'account_id': credit_account_id.id,
                     'journal_id': cr.journal_id.id,
                     'currency_id': currency_id,
