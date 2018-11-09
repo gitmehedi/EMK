@@ -75,15 +75,22 @@
                 parent="com_shipment.lc_shipment_creation_menu"
                 sequence="2"
                 action="com_shipment.shipment_creation_action"
-                groups="commercial.group_commercial_user"/>
+                groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
 
+        <menuitem id="gbs_purchase_quotation_cnf.menu_cnf_quatation" parent="commercial.menu_commercial_root"
+                  sequence="6" name="C&amp;F Quotation"
+                  groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
+
+        <menuitem id="gbs_purchase_quotation_cnf.submenu_cnf_quatation" name="C&amp;F Quotation" parent="gbs_purchase_quotation_cnf.menu_cnf_quatation"
+                  sequence="1" action="gbs_purchase_quotation_cnf.action_cnf_quotation"
+                  groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
 
         <menuitem
                 id="letter_of_credit_report.lc_report_menu"
                 name="Letter of Credit Report"
                 parent="letter_of_credit.lc_report_menu_root"
                 action="letter_of_credit_report.action_letter_of_credit_wizard"
-                groups="commercial.group_commercial_user"/>
+                groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
 
 
         <menuitem
@@ -115,7 +122,7 @@
                 sequence="3"
 				id="question_set.hr_criteria_main_me"
                 action="question_set.action_lc_criteria"
-                groups="commercial.group_commercial_manager"/>
+                groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
 
          <menuitem
                  id="letter_of_credit.lc_report_menu_root"
