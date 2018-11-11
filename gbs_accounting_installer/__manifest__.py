@@ -24,7 +24,7 @@
                 'cheque_printing',
                 'account_invoice_merge',
                 'account_invoice_merge_operating_unit',
-                'account_receivable_clearing_operation',
+                #'account_receivable_clearing_operation',
                 'gbs_account',
                 ],
 
