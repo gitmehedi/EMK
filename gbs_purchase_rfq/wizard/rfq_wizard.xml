@@ -9,7 +9,7 @@
                 <form string="Please Select Products For RFQ" create="false" edit="false">
                     <group>
                         <group>
-                            <field name="pr_ids" widget="many2many_tags" options="{'no_create': True,'no_open':True}"/>
+                            <field name="pr_ids" domain="[('state','not in',('draft','cancel'))]" widget="many2many_tags" options="{'no_create': True,'no_open':True}"/>
                         </group>
                     </group>
                     <field name="product_lines" widget="one2many">
