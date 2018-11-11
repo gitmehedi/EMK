@@ -9,7 +9,7 @@
                 <!--<separator string="Accounts Clearing"/>-->
                 <header>
                     <button name="action_search" type="object" string="Search" class="oe_highlight"/>
-                    <button name="action_clear_search" type="object" string="Clear Search"/>
+                    <!--<button name="action_clear_search" type="object" string="Clear Search"/>-->
                     <style type="text/css">
                         #new {
                         position: absolute;
