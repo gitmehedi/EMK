@@ -6,7 +6,7 @@ import datetime
 
 class ChequeReceived(models.Model):
     _name = 'accounting.cheque.received'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id DESC'
     _description = "Cheque Info"
 
@@ -29,6 +29,15 @@ class ChequeReceived(models.Model):
             n.name = 'Customer Payments'
 
     name = fields.Char(string='Name', compute='_get_name')
+
+    partner_id = fields.Many2one('res.partner', domain=[('active', '=', True), ('customer', '=', True)], string="Customer", required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    bank_name = fields.Many2one('res.bank', string='Bank', required=True,states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    branch_name = fields.Char(string='Branch Name', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    date_on_cheque = fields.Date('Date On Cheque', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    cheque_amount = fields.Float(string='Amount', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    sale_order_id = fields.Many2many('sale.order', string='Sale Order',
+                                     states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]}) #domain=[('partner_id', '=', partner_id.id),('is_this_so_payment_check','=',False),('state', '=', 'done')]
+
     partner_id = fields.Many2one('res.partner',
                                  domain=[('parent_id', '=', False), ('active', '=', True), ('customer', '=', True)],
                                  string="Customer", required=True,
@@ -51,10 +60,8 @@ class ChequeReceived(models.Model):
                                  states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
                                          'honoured': [('readonly', True)], 'received': [('readonly', True)],
                                          'deposited': [('readonly', True)]})
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order',
-                                    states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
-                                            'honoured': [('readonly', True)], 'received': [('readonly', True)],
-                                            'deposited': [('readonly', True)]})
+
+
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
                                  default=lambda self: self.env.user.company_id, readonly='True',
@@ -69,10 +76,22 @@ class ChequeReceived(models.Model):
 
     # @todo : Update this field
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
-    cheque_no = fields.Char(string='Cheque No',
-                            states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
-                                    'honoured': [('readonly', True)], 'received': [('readonly', True)],
-                                    'deposited': [('readonly', True)]})
+    cheque_no = fields.Char(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    is_entry_receivable_cleared = fields.Boolean(string='Is this entry cleared receivable?')
+
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        for ds in self:
+            so_id_list = []
+            if ds.partner_id:
+                so_objs = self.env['sale.order'].sudo().search([('is_this_so_payment_check','=',False),('partner_id', '=', ds.partner_id.id),
+                                                                ('state', '=', 'done')])
+                if so_objs:
+                    for so_obj in so_objs:
+                        so_id_list.append(so_obj.id)
+
+                return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
+
 
     @api.multi
     def _get_payment_method(self):
@@ -143,7 +162,12 @@ class ChequeReceived(models.Model):
     def action_honoured(self):
         for cash in self:
             cash.action_journal_entry_bank()
-            # cash.updateCustomersCreditLimit()
+
+            for s_id in cash.sale_order_id:
+                so_objs = cash.env['sale.order'].search([('id','=',s_id.id)])
+
+                for so_id in so_objs:
+                    so_id.write({'is_this_so_payment_check':True})
 
             cash.state = 'honoured'
 
@@ -162,7 +186,7 @@ class ChequeReceived(models.Model):
             }
 
             debit_account_id = cr.partner_id.property_account_receivable_id
-            credit_account_id = cr.journal_id.default_credit_account_id
+            credit_account_id = cr.company_id.account_receive_clearing_acc
 
             if debit_account_id:
 
@@ -180,7 +204,7 @@ class ChequeReceived(models.Model):
 
                 debit_line = (0, 0, {
                     'name': debit_account_id.name,
-                    'partner_id': cr.partner_id.id,
+                   # 'partner_id': cr.partner_id.id,
                     'account_id': debit_account_id.id,
                     'journal_id': cr.journal_id.id,
                     'currency_id': currency_id,
@@ -188,7 +212,7 @@ class ChequeReceived(models.Model):
                     'date': date,
                     'debit': debit_amount,
                     'credit': credit_amount,
-                    'cheque_received_id': cr.id,  # update only to debit leg
+                    'cheque_received_id': cr.id,
                 })
 
                 line_ids.append(debit_line)
@@ -210,7 +234,7 @@ class ChequeReceived(models.Model):
 
                 credit_line = (0, 0, {
                     'name': credit_account_id.name,
-                    'partner_id': cr.partner_id.id,
+                    #'partner_id': cr.partner_id.id,
                     'account_id': credit_account_id.id,
                     'journal_id': cr.journal_id.id,
                     'currency_id': currency_id,
@@ -225,6 +249,7 @@ class ChequeReceived(models.Model):
         move_dict['line_ids'] = line_ids
         move = self.env['account.move'].create(move_dict)
         move.post()
+
 
     @api.model
     def create(self, vals):

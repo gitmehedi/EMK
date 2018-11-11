@@ -1,0 +1,4 @@
+import inherited_res_company
+import inherit_account_payment
+import inherit_account_move_line
+import payment_entry_reconciled

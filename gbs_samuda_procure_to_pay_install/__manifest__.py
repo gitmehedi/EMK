@@ -28,6 +28,8 @@
         'gbs_supplier',
         'gbs_purchase_rfq',
         'gbs_po_merge',
+        'terms_setup_foreign',
+        'terms_setup_local',
     ],
 
     'data': [ ],

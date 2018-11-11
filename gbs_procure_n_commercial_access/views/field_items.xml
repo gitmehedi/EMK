@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="purchase_order_form_view_foreign1">
+            <field name="name">purchase.order.form.foreign1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="terms_setup_foreign.inherit_purchase_order_form_view_foreign"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='terms_foreign_id']" position="attributes">
+                    <attribute name="groups">gbs_procure_n_commercial_access.group_imoprt_lc_foreign</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="purchase_order_form_view_local1">
+            <field name="name">purchase.order.form.local1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="terms_setup_local.inherit_purchase_order_form_view_local"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='terms_local_id']" position="attributes">
+                    <attribute name="groups">gbs_procure_n_commercial_access.group_local_purchase</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
