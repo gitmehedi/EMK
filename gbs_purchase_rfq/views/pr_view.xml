@@ -14,14 +14,14 @@
                 </data>
             </field>
         </record>
-    </data>
 
-     <!--Action To SET the Multi PR RFQ-->
-    <act_window name="Send RFQ"
-                res_model="rfq.wizard"
-                src_model="purchase.requisition"
-                key2="client_action_multi"
-                view_mode="form" target="new"
-                view_type="form"
-                id="act_send_rfq"/>
+        <!--Action To SET the Multi PR RFQ-->
+        <act_window name="Send RFQ"
+                    res_model="rfq.wizard"
+                    src_model="purchase.requisition"
+                    key2="client_action_multi"
+                    view_mode="form" target="new"
+                    view_type="form"
+                    id="act_send_rfq"/>
+    </data>
 </odoo>
