@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--<record id="unit_rule_purchase_order" model="ir.rule">-->
+        <!--<field name="name">Unit Rule For Purchase Order</field>-->
+        <!--<field name="model_id" ref="purchase.model_purchase_order"/>-->
+        <!--<field name="domain_force">[('operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>-->
+        <!--<field name="perm_read" eval="True" />-->
+        <!--<field name="perm_create" eval="True"/>-->
+        <!--<field name="perm_write" eval="True"/>-->
+        <!--<field name="perm_unlink" eval="True"/>-->
+    <!--</record>-->
+
+
+    <!--<delete model="ir.rule" id="purchase.purchase_order_line_comp_rule"/>-->
+
+    <!--<record model="ir.rule" id="purchase_order_line_comp_rule">-->
+    <!--<field name="name">Purchase Order Line multi-company</field>-->
+    <!--<field name="model_id" ref="purchase.model_purchase_order_line"/>-->
+    <!--<field name="global" eval="True"/>-->
+    <!--<field name="perm_read" eval="True" />-->
+    <!--<field name="perm_create" eval="False"/>-->
+    <!--<field name="perm_write" eval="False"/>-->
+    <!--<field name="perm_unlink" eval="False"/>-->
+    <!--<field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>-->
+    <!--</record>-->
+
+
+    <function name="write" model="ir.model.data">
+        <!-- First we need to find the record...-->
+        <function name="search" model="ir.model.data">
+            <value
+                    eval="[('module', '=', 'purchase'), ('name', '=', 'purchase_order_line_comp_rule')]"
+            />
+        </function>
+        <!-- ...and temporarily set the noupdate field to False-->
+        <value eval="{'noupdate': False}" />
+
+    </function>
+
+    <!-- Get our main job done, i.e. modify the domain_force field of a record -->
+
+    <record id="purchase.purchase_order_line_comp_rule" model="ir.rule">
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+
+
+</odoo>
