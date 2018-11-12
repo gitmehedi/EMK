@@ -66,8 +66,14 @@
                                     <t t-elif="data['region_type'] != 'local' or data['region_type'] == 'foreign'">
                                         <p><b>Suplier / Order To : </b><span t-esc="data['partner_id']"/></p>
                                     </t>
-                                    <p><b>Address: </b><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p>
-                                    <p><b>Contract Parson : </b><span t-esc="data['sup_con']"/></p><br/>
+                                    <p>
+                                        <b>Address: </b>
+                                        <span t-esc="data['cus_address']"/>
+                                    </p>
+                                    <p><b>Contract Parson : </b>
+                                        <t t-foreach="data['sup_con']" t-as="sup_con">
+                                        <span t-esc="sup_con.name"/>,
+                                        </t></p>
                                     <p><b>Order Ref No : </b><span t-esc="data['partner_ref']"/></p><br/>
                                     <p><b>Date : </b><span t-esc="data['requisition_date']"></span></p>
                                 </div>
@@ -81,10 +87,13 @@
                                     <t t-elif="data['region_type'] != 'local' or data['region_type'] == 'foreign'">
                                         <p><b>Consignee / Bill To : </b><span t-esc="data['company']"/></p>
                                     </t>
-                                    <p><b>Address: </b><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p>
+                                    <p>
+                                        <b>Address: </b>
+                                        <span t-esc="data['company_address']"/>
+                                    </p>
                                     <p><b>Contract Parson : </b>
                                     <t t-foreach="data['contact_person']" t-as="con_per">
-                                        <td><span t-esc="con_per.name"/></td><br/>
+                                        <span t-esc="con_per.name"/>,
                                     </t></p>
                                 </div>
                             </div>
@@ -143,7 +152,7 @@
                             </table>
                         </div>
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-12">
                                 <t t-if="data['terms_condition']">
                                     <b>Specific Terms and Conditions :</b>
                                     <p t-raw="data['terms_condition']"/>
