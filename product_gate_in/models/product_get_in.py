@@ -59,7 +59,7 @@ class ProductGateIn(models.Model):
     @api.one
     @api.constrains('date')
     def _check_date(self):
-        if self.date <= self.ship_id.shipment_date:
+        if self.date < self.ship_id.shipment_date:
             raise UserError('Gate In Date can not be less then Shipment date!!!')
 
 

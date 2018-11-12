@@ -6,7 +6,7 @@ class CnfQuotationWizard(models.TransientModel):
 
     arrival_date = fields.Date('Arrival Date', required=True)
     transport_by = fields.Char('Transport By')
-    vehical_no = fields.Char('Vehical No')
+    vehical_no = fields.Char('Number of Vehical / Lighter Vessel')
 
     @api.multi
     def save_cnf_clear(self):

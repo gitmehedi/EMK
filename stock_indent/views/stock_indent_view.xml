@@ -138,6 +138,7 @@
             <field name="arch" type="xml">
                 <search string="Indents">
                     <filter name="inprogress" string="In Progress" domain="[('state','=','inprogress')]"/>
+					<field name="name"/>
                 </search>
             </field>
         </record>

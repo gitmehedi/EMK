@@ -63,7 +63,7 @@ class LetterOfCredit(models.Model):
     payment_terms = fields.Char(string='Payment Terms', track_visibility='onchange')
     period_of_presentation = fields.Float(string='Period of Presentation', track_visibility='onchange')
     ship_mode = fields.Char(string='Ship Mode', track_visibility='onchange')
-    inco_terms = fields.Many2one('stock.incoterms',string='Inco Terms', track_visibility='onchange')
+    inco_terms = fields.Many2one('stock.incoterms',string='Incoterms', track_visibility='onchange')
     partial_shipment = fields.Boolean(string='Allow Partial Shipment', track_visibility='onchange')
     trans_shipment =  fields.Boolean(string='Allow Trans. Shipment', track_visibility='onchange')
     lc_mode = fields.Char(string='LC Mode', track_visibility='onchange')
@@ -109,6 +109,25 @@ class LetterOfCredit(models.Model):
     #         if self.operating_unit_id.id != po.operating_unit_id.id:
     #             raise ValidationError(_("Operating unit of %s is not same with operating unit of letter of credit.\n"
     #                   "Your purchase order's operating unit and letter of credit's operating unit must be same.") % (po.name))
+
+    @api.multi
+    @api.constrains('issue_date')
+    def check_date(self):
+        if self.issue_date and self.shipment_date:
+            if self.issue_date >= self.shipment_date:
+                raise ValidationError(_("Shipment Date must be grater than Issue Date !!"))
+        elif self.issue_date and self.expiry_date:
+            if self.issue_date >= self.expiry_date:
+                raise ValidationError(_("Expiry Date must be greater than Issue Date !!"))
+
+
+    @api.multi
+    @api.constrains('shipment_date')
+    def check_shipment_date(self):
+        if self.shipment_date and self.expiry_date:
+            if self.shipment_date >= self.expiry_date:
+                raise ValidationError(_("Expiry Date must be greater than Shipment Date !!"))
+
 
     @api.multi
     def action_cancel(self):
