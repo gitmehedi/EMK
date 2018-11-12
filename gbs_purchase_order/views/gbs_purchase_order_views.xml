@@ -163,6 +163,7 @@
             <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="requisition_id" string="PR Number"/>
                     <filter name="active" string="Active" domain="[('state','!=','cancel')]"/>
                 </xpath>
             </field>

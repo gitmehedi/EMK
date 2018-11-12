@@ -9,9 +9,9 @@
                 <form string="Please Select PQ For Merge" create="false" edit="false">
                     <group>
                         <field name="po_ids" widget="many2many_tags" options="{'no_create': True,'no_open':True}"/>
-                        <field name="is_new_add" />
-                        <field name="operating_unit_id" />
-                        <field name="partner_id" />
+                        <field name="is_new_add" invisible="1"/>
+                        <field name="operating_unit_id" invisible="1"/>
+                        <field name="partner_id" string="Supplier" readonly="1"/>
                         <!--invisible="1"-->
                     </group>
                     <field name="product_lines" widget="one2many">

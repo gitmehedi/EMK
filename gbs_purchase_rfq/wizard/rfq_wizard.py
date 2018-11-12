@@ -7,7 +7,7 @@ class RFQWizard(models.TransientModel):
 
     product_lines = fields.One2many('rfq.product.line.wizard', 'rfq_id', string='Product(s)')
 
-    pr_ids = fields.Many2many('purchase.requisition', string='PR',
+    pr_ids = fields.Many2many('purchase.requisition', string='Purchase Requisition',
                                   default=lambda self: self.env.context.get('active_ids'))
 
     @api.onchange('pr_ids')
