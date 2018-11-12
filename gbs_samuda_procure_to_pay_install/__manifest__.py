@@ -26,6 +26,8 @@
         'letter_of_credit_report',
         'stock_gate_in',
         'gbs_supplier',
+        'gbs_purchase_rfq',
+        'gbs_po_merge',
         'terms_setup_foreign',
         'terms_setup_local',
     ],
