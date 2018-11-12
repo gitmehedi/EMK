@@ -84,7 +84,7 @@ class ChequeReceived(models.Model):
         for ds in self:
             so_id_list = []
             if ds.partner_id:
-                so_objs = self.env['sale.order'].sudo().search([('is_this_so_payment_check','=',False),('partner_id', '=', ds.partner_id.id),
+                so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
                                                                 ('state', '=', 'done')])
                 if so_objs:
                     for so_obj in so_objs:
