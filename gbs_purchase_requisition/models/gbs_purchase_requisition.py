@@ -25,7 +25,7 @@ class PurchaseRequisition(models.Model):
     purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
                                    string="Purchase From")
 
-    requisition_date = fields.Date(string='Requisition Date',required=True,default = date.today())
+    requisition_date = fields.Date(string='Requisition Date',required=True,default=fields.Date.today())
     required_date = fields.Date(string='Required Date')
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
                               ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),

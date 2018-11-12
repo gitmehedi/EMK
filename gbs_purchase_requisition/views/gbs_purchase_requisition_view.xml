@@ -46,6 +46,9 @@
                         <button name="action_cancel" groups="gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
                                 states="review_plant_incharge,approve_head_procurement" string="Cancel" type="object"/>
                     </header>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                    </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="attributes">
                         <attribute name="string">Cancel</attribute>
                     </xpath>
