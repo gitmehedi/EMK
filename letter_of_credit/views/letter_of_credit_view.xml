@@ -60,8 +60,8 @@
                             </group>
                             <group string="LC Dateline">
                                 <field name="issue_date"/>
-                                <field name="expiry_date"/>
                                 <field name="shipment_date"/>
+                                <field name="expiry_date"/>
                             </group>
                             <group string="Others Info" colspan="4">
                                 <group>
