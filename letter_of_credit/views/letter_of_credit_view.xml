@@ -65,8 +65,8 @@
                             </group>
                             <group string="Others Info" colspan="4">
                                 <group>
-                                    <field name="hs_code"/>
-                                    <field name="lc_mode"/>
+                                    <field name="hs_code" invisible="1"/>
+                                    <field name="lc_mode" invisible="1"/>
                                     <field name="payment_terms"/>
                                     <field name="period_of_presentation"/>
                                     <field name="trans_shipment"/>

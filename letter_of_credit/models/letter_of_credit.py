@@ -63,7 +63,7 @@ class LetterOfCredit(models.Model):
     payment_terms = fields.Char(string='Payment Terms', track_visibility='onchange')
     period_of_presentation = fields.Float(string='Period of Presentation', track_visibility='onchange')
     ship_mode = fields.Char(string='Ship Mode', track_visibility='onchange')
-    inco_terms = fields.Many2one('stock.incoterms',string='Inco Terms', track_visibility='onchange')
+    inco_terms = fields.Many2one('stock.incoterms',string='Incoterms', track_visibility='onchange')
     partial_shipment = fields.Boolean(string='Allow Partial Shipment', track_visibility='onchange')
     trans_shipment =  fields.Boolean(string='Allow Trans. Shipment', track_visibility='onchange')
     lc_mode = fields.Char(string='LC Mode', track_visibility='onchange')
