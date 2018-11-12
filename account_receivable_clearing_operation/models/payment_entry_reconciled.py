@@ -43,7 +43,7 @@ class PaymentEntryReconciled(models.TransientModel):
 
             for line in rec.line_ids:
                 if line.clear_acc_receivable is True:
-                    rec.clear_receivable_accounts(line.amount, line.company_id, line.partner_id, line.cheque_received_id,line.payment_id)
+                    rec.clear_receivable_accounts(line.amount, line.company_id, line.partner_id)
 
                     # Update flag for Customer Payment Entry
                     if line.cheque_received_id:
@@ -111,7 +111,7 @@ class PaymentEntryReconciled(models.TransientModel):
             pay_en.line_ids = vals
 
 
-    def clear_receivable_accounts(self, amt, company_id, partner_id,cheque_id, payment_id):
+    def clear_receivable_accounts(self, amt, company_id, partner_id):
         for rec in self:
 
             line_ids = []
