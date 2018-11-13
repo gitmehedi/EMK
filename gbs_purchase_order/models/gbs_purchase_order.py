@@ -271,7 +271,7 @@ class PurchaseOrder(models.Model):
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             requested_date = datetime.strptime(vals['date_order'], "%Y-%m-%d %H:%M:%S").date()
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date) or '/'
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date,self.operating_unit_id or False) or '/'
         if not vals.get('requisition_id'):
             vals['check_po_action_button'] = True
         return super(PurchaseOrder, self).create(vals)
@@ -301,6 +301,11 @@ class PurchaseOrderLine(models.Model):
                                 digits=dp.get_precision('Product Unit of Measure'), store=True)
     qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty",
                                 digits=dp.get_precision('Product Unit of Measure'), store=True)
+
+    # relation between PO line and PR line----------------------------------------
+    pr_line_ids = fields.Many2many('purchase.requisition.line', 'po_pr_line_rel', 'po_line_id', 'pr_line_id',
+                                       string='Purchase Requisition Lines')
+    # ----------------------------------------------------------------------------
 
     @api.depends('order_id.state', 'move_ids.state')
     def _compute_qty_received(self):
