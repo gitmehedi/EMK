@@ -7,7 +7,7 @@ class RFQWizard(models.TransientModel):
 
     product_lines = fields.One2many('rfq.product.line.wizard', 'rfq_id', string='Product(s)')
 
-    pr_ids = fields.Many2many('purchase.requisition', string='PR',
+    pr_ids = fields.Many2many('purchase.requisition', string='Purchase Requisition',
                                   default=lambda self: self.env.context.get('active_ids'))
 
     @api.onchange('pr_ids')
@@ -75,5 +75,5 @@ class RFQProductLineWizard(models.TransientModel):
     rfq_id = fields.Many2one('rfq.wizard', string='RFQ', ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='cascade')
     product_qty = fields.Float(string='Quantity')
-    price_unit = fields.Float(string='Price Unit')
-    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
+    price_unit = fields.Float(related='product_id.standard_price',string='Price Unit')
+    product_uom_id = fields.Many2one(related='product_id.uom_id',comodel='product.uom', string='Unit of Measure')
