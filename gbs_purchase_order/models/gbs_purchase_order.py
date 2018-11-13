@@ -90,13 +90,6 @@ class PurchaseOrder(models.Model):
                                   states={'draft': [('readonly', False)]})
 
 
-    @api.onchange('terms_local_id','terms_foreign_id')
-    def onchange_terms_id(self):
-        if self.terms_local_id:
-            self.terms_condition = self.terms_local_id.terms_condition
-        elif self.terms_foreign_id:
-            self.terms_condition = self.terms_foreign_id.terms_condition
-
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
         if not self.requisition_id:
