@@ -76,12 +76,13 @@
                     </xpath>
                     <xpath expr="//field[@name='partner_ref']" position="attributes">
                         <attribute name="string">Supplier Reference</attribute>
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
                     <xpath expr="//field[@name='partner_ref']" position="after">
-                        <field name="ref_date"/>
+                        <field name="ref_date" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="contact_person" widget="many2many_tags"/>
+                        <field name="contact_person" widget="many2many_tags" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='notes']" position="replace">
                         <group style="width:70%;">
@@ -114,6 +115,7 @@
                 <data>
                     <xpath expr="//field[@name='requisition_id']" position="attributes">
                         <attribute name="string">Purchase Requisition</attribute>
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
                     <xpath expr="//page[1]" position="after">
                         <page string="Attachments">

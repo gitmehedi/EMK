@@ -25,7 +25,7 @@
                         <!--<button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>-->
                         <button string="Done" name="action_done" states="gate_in" type="object" class="oe_highlight"/>
 
-                        <button string="Cancel" name="action_cancel" states="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in,done" type="object" class="oe_read_only"/>
+                        <button string="Cancel" name="action_cancel" states="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in" type="object" class="oe_read_only"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in,done"/>
                     </header>
                     <sheet>
@@ -134,7 +134,7 @@
                     </xpath>
                 </data>
                 <xpath expr="//button[@name='action_revision']" position="after">
-                    <button string="Shipment" name="action_shipment" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}" class="oe_highlight oe_read_only"/>
+                    <button string="Shipment" name="action_shipment" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done','cancel'))]}" class="oe_highlight oe_read_only"/>
 
                 </xpath>
             </field>
