@@ -190,6 +190,8 @@
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="validation" string="To Validate" domain="[('state','=','in_progress')]"/>
                     <filter name="approval" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
+                    <filter name="active" string="Active" domain="[('state', 'not in', ('done','cancel'))]"/>
+                    <!--<filter name="active" string="Active" domain="[('state','!=','cancel')]"/>-->
                 </xpath>
             </field>
         </record>
