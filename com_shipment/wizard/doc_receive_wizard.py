@@ -21,7 +21,7 @@ class DocReceiveWizard(models.TransientModel):
 
     @api.constrains('product_lines')
     def _check_multiple_products_line(self):
-        if len(self.product_lines) < 1:
+        if not self.product_lines:
             raise ValidationError("You can't receive doc without products")
 
     @api.onchange('shipment_id')

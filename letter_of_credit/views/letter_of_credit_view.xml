@@ -94,7 +94,11 @@
                                         <group string="Insurance">
                                             <field name="insurance_company_name"/>
                                             <field name="insurance_number"/>
-                                            <field name="insurance_bill"/>
+                                            <label for="insurance_bill"/>
+                                            <div name="currency" class="o_row">
+                                                <field name="insurance_bill" style="width:50%;"/>
+                                                <label string="BDT"/>
+                                            </div>
                                         </group>
                                     </group>
 
