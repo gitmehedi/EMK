@@ -8,6 +8,7 @@ class ResPartner(models.Model):
         ('local', 'Local'),
         ('foreign', 'Foreign'),
     ], string='Supplier Type')
+
     is_cnf = fields.Boolean(string='Is C&F Agent')
 
     """ Relational Fields """

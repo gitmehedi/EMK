@@ -15,7 +15,6 @@
 
     'depends': [
         'base',
-        'gbs_purchase_requisition',
         'gbs_purchase_order',
         ],
     'data': [
