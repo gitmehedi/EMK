@@ -25,7 +25,7 @@
                         <!--<button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>-->
                         <button string="Done" name="action_done" states="gate_in" type="object" class="oe_highlight"/>
 
-                        <button string="Cancel" name="action_cancel" class="oe_read_only" type="object" states="draft,on_board"/>
+                        <button string="Cancel" name="action_cancel" states="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in,done" type="object" class="oe_read_only"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in,done"/>
                     </header>
                     <sheet>
@@ -53,7 +53,7 @@
                             </group>
                             <group string="Transport Information">
                                 <field name="transport_by" readonly="1"/>
-                                <field name="vehical_no" readonly="1"/>
+                                <field name="vehical_no" string="No. of Vehicle/Lighter Vessel" readonly="1"/>
                                 <!--<field name="employee_ids" widget="many2many_tags"/>-->
                             </group>
                             <group string="Bill Of Lading">

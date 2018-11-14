@@ -14,9 +14,11 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
     @api.multi
     def save_type(self):
         if self.region_type == 'local' and self.purchase_by == 'tt':
-            raise UserError(_("Local Region can't purchase by 'TT'" ))
+            raise UserError(_(
+                "Invalid Input" + "\nFor Foreign Purchase: Apply LC or TT. " + "\nLocal Purchase: Apply Cash, Credit or LC."))
         elif self.region_type == 'foreign' and (self.purchase_by == 'cash' or self.purchase_by == 'credit'):
-            raise UserError(_("Foreign Region can't purchase by 'Cash' and 'Credit'"))
+            raise UserError(_(
+                "Invalid Input" + "\nFor Foreign Purchase: Apply LC or TT. " + "\nLocal Purchase: Apply Cash, Credit or LC."))
 
         form_id = self.env.context.get('active_id')
         pr_form_pool = self.env['purchase.requisition'].search([('id', '=', form_id)])
