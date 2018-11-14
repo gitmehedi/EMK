@@ -10,7 +10,6 @@ class PurchaseCNFQuotation(models.Model):
     shipment_id = fields.Many2one('purchase.shipment',string='Shipment',
                                   ondelete='cascade',default=lambda self: self.env.context.get('shipment_id') or False)
     lc_id = fields.Many2one('letter.credit',string='LC Name',ondelete = 'cascade',related = 'shipment_id.lc_id')
-    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, related = 'shipment_id.cnf_id', change_default=True, track_visibility='always')
 
 
     @api.model
