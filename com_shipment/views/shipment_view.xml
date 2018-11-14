@@ -53,7 +53,7 @@
                             </group>
                             <group string="Transport Information">
                                 <field name="transport_by" readonly="1"/>
-                                <field name="vehical_no" readonly="1"/>
+                                <field name="vehical_no" string="No. of Vehicle/Lighter Vessel" readonly="1"/>
                                 <!--<field name="employee_ids" widget="many2many_tags"/>-->
                             </group>
                             <group string="Bill Of Lading">

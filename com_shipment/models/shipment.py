@@ -18,7 +18,7 @@ class Shipment(models.Model):
     cnf_id = fields.Many2one('res.partner', "Supplier", readonly=True)
     comment = fields.Text('Comment')
     transport_by = fields.Char('Transport By')
-    vehical_no = fields.Char('Vehical No')
+    vehical_no = fields.Char('Vehicle No')
 
     operating_unit_id = fields.Many2one('operating.unit', default=lambda self: self.env.context.get('operating_unit_id'))
     company_id = fields.Many2one('res.company', default=lambda self: self.env.context.get('company_id'))
