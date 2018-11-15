@@ -27,6 +27,9 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                    </xpath>
                     <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
                         <attribute name="attrs">{'invisible': [('purchase_by', 'in', ['lc'])]}</attribute>
                     </xpath>
@@ -57,8 +60,8 @@
                                 states='to approve' groups="purchase.group_purchase_manager,commercial.group_commercial_manager"/>
                     </xpath>
                     <!--<xpath expr="//field[@name='company_id']" position="after">-->
-                        <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
-                               <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
+                    <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
+                    <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
                     <!--</xpath>-->
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="check_po_action_button" invisible="1"/>
@@ -73,12 +76,25 @@
                     </xpath>
                     <xpath expr="//field[@name='partner_ref']" position="attributes">
                         <attribute name="string">Supplier Reference</attribute>
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='incoterm_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='origin']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
                     <xpath expr="//field[@name='partner_ref']" position="after">
-                        <field name="ref_date"/>
+                        <field name="ref_date" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="contact_person" widget="many2many_tags"/>
+                        <field name="contact_person" widget="many2many_tags" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='notes']" position="replace">
                         <group style="width:70%;">
@@ -90,6 +106,16 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
 
+                    <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+
+                    <xpath expr="//field[@name='amount_untaxed']" position="after">
+                        <field name="amount_discount"/>
+                        <field name="amount_after_discount"/>
+                        <field name="amount_vat"/>
+                        <field name="amount_after_vat" invisible="1"/>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -101,10 +127,11 @@
                 <data>
                     <xpath expr="//field[@name='requisition_id']" position="attributes">
                         <attribute name="string">Purchase Requisition</attribute>
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
                     <xpath expr="//page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="one2many_list" context="{'default_res_id': id, 'default_res_model': 'purchase.order'}">
+                            <field name="attachment_ids" widget="one2many_list" attrs="{'readonly': [('state','=','purchase')]}" context="{'default_res_id': id, 'default_res_model': 'purchase.order'}">
                                 <tree string="Attachments" editable="top">
                                     <field name="res_id" invisible="1"/>
                                     <field name="res_model" invisible="1"/>
@@ -114,8 +141,22 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Terms &amp; Condition">
+                            <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
+                        </page>
                     </xpath>
                 </data>
+            </field>
+        </record>
+
+        <record id="purchase_operating_unit_form" model="ir.ui.view">
+            <field name="name">purchase_operating_unit_form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_operating_unit.purchase_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='requesting_operating_unit_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -136,6 +177,7 @@
             <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="requisition_id" string="PR Number"/>
                     <filter name="active" string="Active" domain="[('state','!=','cancel')]"/>
                 </xpath>
             </field>
@@ -150,14 +192,14 @@
             <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
             <field name="search_view_id" ref="inherit_request_quotation_select"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a quotation that will be converted into a purchase order.
-              </p><p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a quotation that will be converted into a purchase order.
+                </p><p>
                 Use this menu to search within your purchase orders by
                 references, vendor, products, etc. For each purchase order,
                 you can track the related discussion with the vendor, control
                 the products received and control the vendor bills.
-              </p>
+            </p>
             </field>
         </record>
 
@@ -170,22 +212,24 @@
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="inherit_request_quotation_select"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a request for quotation.
-              </p><p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a request for quotation.
+                </p><p>
                 The quotation contains the history of the discussion/negotiation
                 you had with your vendor. Once confirmed, a request for
                 quotation is converted into a purchase order.
-              </p><p>
+            </p><p>
                 Most propositions of purchase orders are created automatically
                 by Odoo based on inventory needs.
-              </p>
+            </p>
             </field>
         </record>
 
         <menuitem action="purchase.purchase_rfq" id="purchase.menu_purchase_rfq"
-            parent="purchase.menu_procurement_management"
-            sequence="2"/>
+                  parent="purchase.menu_procurement_management"
+                  sequence="4"/>
+
+
 
     </data>
 </odoo>

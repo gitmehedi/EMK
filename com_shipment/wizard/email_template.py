@@ -26,19 +26,18 @@ class EmailTemplateWizard(models.TransientModel):
                 email_list.append((user.login).strip())
 
         template_obj = self.env['mail.mail']
-        email_server_obj = self.env['ir.mail_server'].search([], order='id DESC')
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
 
-        email_server = self.env['ir.mail_server'].search([], order='id DESC', limit=1)
-
-        for email in email_server_obj:
-            if email.smtp_user:
-                server = email.smtp_user
-                email_server_list.append(server)
+        if email_server_obj:
+            for email in email_server_obj:
+                if email.smtp_user:
+                    server = email.smtp_user
+                    email_server_list.append(server)
 
         template_data = {
             'subject': self.subject,
             'body_html': self.massage,
-            'email_from': email_server_list[0],
+            'email_from': email_server_list[0] if email_server_list else None,
             'email_to': ", ".join(email_list)
         }
         template_id = template_obj.create(template_data)

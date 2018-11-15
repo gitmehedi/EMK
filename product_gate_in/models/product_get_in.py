@@ -32,7 +32,7 @@ class ProductGateIn(models.Model):
         ('lc', "LC"),
         ('others', "Others"),
 
-    ],readonly=True,required=True,states={'draft': [('readonly', False)]})
+    ],readonly=True,required=True,states={'draft': [('readonly', False)]},track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -59,7 +59,7 @@ class ProductGateIn(models.Model):
     @api.one
     @api.constrains('date')
     def _check_date(self):
-        if self.date <= self.ship_id.shipment_date:
+        if self.date < self.ship_id.shipment_date:
             raise UserError('Gate In Date can not be less then Shipment date!!!')
 
 
@@ -75,7 +75,7 @@ class ProductGateIn(models.Model):
 
             if sale_order_obj:
                 self.lc_id = sale_order_obj.lc_id.id
-                self.partner_id = sale_order_obj.cnf_id.id
+                self.partner_id = sale_order_obj.lc_id.second_party_beneficiary
                 self.truck_no = sale_order_obj.vehical_no
 
                 for record in sale_order_obj.shipment_product_lines:

@@ -10,10 +10,30 @@ class PRFromWhereWizard(models.TransientModel):
     def save_type(self):
         form_id = self.env.context.get('active_id')
         pr_form_pool = self.env['purchase.requisition'].search([('id', '=', form_id)])
-        pr_form_pool.write(
-            {'purchase_from': self.purchase_from, 'state': 'approve_head_procurement'})
+        if self.purchase_from == 'own':
+            pr_form_pool.write(
+                {'purchase_from': self.purchase_from})
+            # pr_form_pool.action_approve()
+            res = self.env.ref('gbs_purchase_requisition.purchase_requisition_type_wizard')
+            result = {
+                'name': _('Please Select Region Type and Purchase By before approve'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': res and res.id or False,
+                'res_model': 'purchase.requisition.type.wizard',
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'new',
+                'context': {'active_id': pr_form_pool.id},
+            }
+            return result
+        else:
+            pr_form_pool.write(
+                {'purchase_from': self.purchase_from, 'state': 'approve_head_procurement'})
 
-        return {'type': 'ir.actions.act_window_close'}
+            return {'type': 'ir.actions.act_window_close'}
+
+
     #
     # @api.multi
     # def cancel_window(self):

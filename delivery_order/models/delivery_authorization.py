@@ -95,7 +95,8 @@ class DeliveryAuthorization(models.Model):
 
     @api.multi
     def _calculate_lc_id(self):
-        self.lc_id = self.sale_order_id.lc_id.id
+        for da_lc in self:
+            da_lc.lc_id = da_lc.sale_order_id.lc_id.id
 
     """ Payment information"""
     amount_untaxed = fields.Float(string='Ordered Amount', compute='_compute_amount_untaxed',

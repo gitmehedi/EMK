@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
 from datetime import datetime
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError,UserError
 import odoo.addons.decimal_precision as dp
 
 
@@ -23,6 +23,31 @@ class PurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
+    @api.depends('order_line.price_total','amount_discount','amount_vat')
+    def _amount_all(self):
+        for order in self:
+            amount_untaxed = amount_tax = 0.0
+            for line in order.order_line:
+                amount_untaxed += line.price_subtotal
+                # FORWARDPORT UP TO 10.0
+                if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                    taxes = line.taxes_id.compute_all(line.price_unit, line.order_id.currency_id, line.product_qty,
+                                                      product=line.product_id, partner=line.order_id.partner_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
+
+            amount_discount = amount_untaxed * (order.amount_discount / 100)
+            amount_after_discount = amount_untaxed - amount_discount
+            amount_vat = amount_after_discount * (order.amount_vat / 100)
+            order.update({
+                'amount_untaxed': amount_untaxed,
+                'amount_tax': amount_tax,
+                'amount_after_vat': amount_after_discount + amount_vat,
+                'amount_after_discount': amount_after_discount,
+                'amount_total': amount_untaxed + amount_tax + amount_vat - amount_discount
+            })
+
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
@@ -42,6 +67,7 @@ class PurchaseOrder(models.Model):
                                                       related_sudo=True,
                                                       help="Technical field used to display the Drop Ship Address",
                                                       readonly=True)
+
     contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
 
     ref_date = fields.Date('Ref.Date')
@@ -51,6 +77,18 @@ class PurchaseOrder(models.Model):
 
     # currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True,
     #                               default=lambda self: self.partner_id.currency_id.id)
+
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all',
+                                     track_visibility='always')
+    amount_tax = fields.Monetary(string='Product Taxes', store=True, readonly=True, compute='_amount_all')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
+    amount_vat = fields.Float(string='Vat(%)')
+    amount_discount = fields.Float(string='Discount(%)')
+    amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
+    amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
+    terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]})
+
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -79,7 +117,7 @@ class PurchaseOrder(models.Model):
         self.notes = requisition.description
         self.date_order = requisition.date_end or fields.Datetime.now()
         self.picking_type_id = requisition.picking_type_id.id
-        self.operating_unit_id = requisition.operating_unit_id.id
+        self.operating_unit_id = requisition.operating_unit_id
 
         if requisition.type_id.line_copy != 'copy':
             return
@@ -143,14 +181,6 @@ class PurchaseOrder(models.Model):
                 }))
             self.attachment_ids = attachments_lines
 
-        # link way
-        # attachments_lines = []
-        # for attachment_line in requisition.attachment_ids:
-        #     attachments_lines.append((4,attachment_line.id))
-        # self.attachment_ids = attachments_lines
-        # (replace way)
-        # self.attachment_ids = [(6,0,requisition.attachment_ids.ids)]
-
         if requisition.region_type:
             self.region_type = requisition.region_type
         if requisition.purchase_by:
@@ -162,6 +192,33 @@ class PurchaseOrder(models.Model):
     def _onchange_picking_type_id(self):
         if self.picking_type_id.sudo().default_location_dest_id.usage != 'customer':
             self.dest_address_id = False
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        type_obj = self.env['stock.picking.type']
+        if self.operating_unit_id:
+            types = type_obj.search([('code', '=', 'incoming'),
+                                     ('operating_unit_id', '=',self.operating_unit_id.id)])
+            if types:
+                self.picking_type_id = types[0]
+            else:
+                raise UserError(
+                    _("No Warehouse found with the Operating Unit indicated "
+                      "in the Purchase Order")
+                )
+
+    @api.model
+    def _default_picking_type(self):
+        res = super(PurchaseOrder, self)._default_picking_type()
+        type_obj = self.env['stock.picking.type']
+        if self.operating_unit_id:
+            types = type_obj.search([('code', '=', 'incoming'),
+                                 ('operating_unit_id', '=',self.operating_unit_id.id)])
+            if types:
+                res = types[0].id
+            else:
+                res = False
+        return res
 
     @api.multi
     def button_confirm(self):

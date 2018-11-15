@@ -43,11 +43,21 @@
                                 attrs="{'invisible': [('state', 'not in', ['approve_head_procurement','done'])]}"/>
                         <button name="action_approve" groups="gbs_purchase_requisition.group_purchase_requisition_approver"
                                 states="approve_head_procurement" string="Approve" type="object" class="btn-primary"/>
-                        <button name="action_cancel" groups="gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
-                                states="review_plant_incharge,approve_head_procurement" string="Cancel" type="object"/>
+
                     </header>
-                    <xpath expr="//button[@name='action_cancel']" position="attributes">
-                        <attribute name="string">Cancel</attribute>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='line_ids']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state','in',('done','cancel','close'))]}</attribute>
+                    </xpath>
+                    <xpath expr="//button[@name='action_cancel']" position="replace">
+                        <button name="action_cancel" groups="commercial.group_commercial_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
+                                states="approve_head_procurement,done" string="Cancel" type="object"/>
+                    </xpath>
+                    <xpath expr="//button[@name='action_in_progress']" position="before">
+                        <button name="action_close" states="done" string="Done" type="object" groups="commercial.group_commercial_user"/>
+                        <button name="action_back_to_approve" states="cancel,close" string="Reset to Approve" type="object" groups="commercial.group_commercial_manager"/>
                     </xpath>
                     <xpath expr="//button[@name='action_open']" position="replace">
                         <button name="action_open" groups="gbs_purchase_requisition.group_purchase_requisition_validator"
@@ -101,6 +111,7 @@
                     <!--<attribute name="attrs">{'readonly': [('state','in',('done'))]}</attribute>-->
                     <!--</xpath>-->
                     <xpath expr="//field[@name='vendor_id']" position="after">
+                        <field name="dept_location_id" options="{'no_create': True,'no_open':True}"/>
                         <field name="indent_ids" widget="many2many_tags" domain="[('operating_unit_id','=',operating_unit_id),('state','=','inprogress'),('pr_indent_check','=',True)]"
                                attrs="{'readonly': [('state','!=','draft')]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                     </xpath>
@@ -110,9 +121,9 @@
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="region_type" widget="selection" readonly="1"
-                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))]}"/>
+                               attrs="{'invisible': [('state','in',('draft','in_progress'))]}"/>
                         <field name="purchase_by" widget="selection" readonly="1"
-                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))]}"/>
+                               attrs="{'invisible': [('state','in',('draft','in_progress'))]}"/>
                     </xpath>
                     <xpath expr="//field[@name='product_id']" position="after" type="object">
                         <field name="name"/>
@@ -186,6 +197,8 @@
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="validation" string="To Validate" domain="[('state','=','in_progress')]"/>
                     <filter name="approval" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
+                    <filter name="active" string="Active" domain="[('state', 'not in', ('done','cancel'))]"/>
+                    <!--<filter name="active" string="Active" domain="[('state','!=','cancel')]"/>-->
                 </xpath>
             </field>
         </record>
@@ -215,6 +228,7 @@
             </p>
             </field>
         </record>
+
         <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition">
             <field name="name">Purchase Requisition</field>
             <field name="type">ir.actions.act_window</field>
@@ -260,7 +274,7 @@
 
         <menuitem
                 id="menu_purchase_requisition_pending_approval"
-                sequence="11"
+                sequence="2"
                 name="Pending PR (Approval)"
                 parent="purchase.menu_procurement_management"
                 action="action_purchase_requisition_to_approve"
@@ -268,7 +282,7 @@
 
         <menuitem
                 id="menu_purchase_requisition_pending_validate"
-                sequence="12"
+                sequence="3"
                 name="Pending PR (Validation)"
                 parent="purchase.menu_procurement_management"
                 action="action_purchase_requisition_to_validate"

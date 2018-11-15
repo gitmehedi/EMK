@@ -25,16 +25,39 @@ class PurchaseRequisition(models.Model):
     purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
                                    string="Purchase From")
 
-    requisition_date = fields.Date(string='Requisition Date',required=True,default = date.today())
+    requisition_date = fields.Date(string='Requisition Date',required=True,default=fields.Date.today())
     required_date = fields.Date(string='Required Date')
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
-                              ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),
+                              ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),('close','Done'),
                               ('cancel', 'Cancelled')],'Status', track_visibility='onchange', required=True,
                              copy=False, default='draft')
 
     indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
     # attachment_ids = fields.Many2many('ir.attachment','attachment_pr_rel','pr_id','attachment_id', string='Attachments')
     attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.requisition')])
+
+    dept_location_id = fields.Many2one('stock.location', string='Department', readonly=True,
+                                       states={'draft': [('readonly', False)]},
+                                       help="Default User Departmental Location.",
+                                       default=lambda self: self.env.user.default_location_id)
+
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        if self.user_id:
+            return {'domain': {
+                'dept_location_id': [('id', 'in', self.user_id.location_ids.ids), ('can_request', '=', True)]}}
+
+    @api.multi
+    def action_close(self):
+        self.write({'state': 'close'})
+
+    @api.multi
+    def action_draft(self):
+        self.write({'state': 'draft'})
+
+    @api.multi
+    def action_back_to_approve(self):
+        self.write({'state': 'done'})
 
     @api.multi
     def action_in_progress(self):
@@ -86,16 +109,23 @@ class PurchaseRequisition(models.Model):
     def indent_product_line(self):
         vals = []
         # self.required_date = self.indent_ids.required_date
-        for indent_id in self.indent_ids:
-            indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
-            for indent_product_line in indent_product_line_obj:
-                vals.append((0, 0, {'product_id': indent_product_line.product_id,
-                                'name': indent_product_line.name,
-                                'product_uom_id': indent_product_line.product_uom,
-                                'product_ordered_qty': indent_product_line.product_uom_qty,
-                                'product_qty': indent_product_line.qty_available,
-                          }))
-                self.line_ids = vals
+        if self.indent_ids:
+            for indent_id in self.indent_ids:
+                if not self.dept_location_id:
+                    self.dept_location_id = indent_id.stock_location_id.id
+                elif self.dept_location_id.id != indent_id.stock_location_id.id:
+                    raise UserError(_('Indent department and PR department must be same.'))
+                indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
+                for indent_product_line in indent_product_line_obj:
+                    vals.append((0, 0, {'product_id': indent_product_line.product_id,
+                                    'name': indent_product_line.name,
+                                    'product_uom_id': indent_product_line.product_uom,
+                                    'product_ordered_qty': indent_product_line.product_uom_qty,
+                                    'product_qty': indent_product_line.qty_available,
+                              }))
+                    self.line_ids = vals
+        else:
+            self.line_ids = []
 
     ####################################################
     # ORM Overrides methods

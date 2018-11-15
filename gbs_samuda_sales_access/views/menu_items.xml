@@ -64,11 +64,11 @@
                 action="product.product_template_action"
                 groups="commercial.group_commercial_manager_export"/>
 
-        <menuitem id="terms_setup_com_menu"
-                  parent="gbs_purchase_requisition.menu_commercial_configuration"
-                  action="terms_setup.terms_setup_action"
-                  groups="commercial.group_commercial_manager_export"
-                  sequence="25"/>
+        <!--<menuitem id="terms_setup_com_menu"-->
+                  <!--parent="gbs_purchase_requisition.menu_commercial_configuration"-->
+                  <!--action="terms_setup.terms_setup_action"-->
+                  <!--groups="commercial.group_commercial_manager_export"-->
+                  <!--sequence="25"/>-->
 
         <menuitem id="gbs_document_type.hr_do_type_menu"
 				name="Document Type"
@@ -99,12 +99,12 @@
                 action="letter_of_credit.lc_import_local_creation_action"
                 groups="base.group_no_one"/>
 
-        <menuitem
-                id="com_shipment.lc_shipment_creation_menu"
-                parent="commercial.menu_commercial_root"
-                sequence="5"
-                name="Shipment"
-                groups="base.group_no_one"/>
+        <!--<menuitem-->
+                <!--id="com_shipment.lc_shipment_creation_menu"-->
+                <!--parent="commercial.menu_commercial_root"-->
+                <!--sequence="5"-->
+                <!--name="Shipment"-->
+                <!--groups="base.group_no_one"/>-->
 
     </data>
 </odoo>

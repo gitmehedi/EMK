@@ -1,5 +1,5 @@
 from odoo import fields, models, api,_
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
 class HREvaluationCriteria(models.Model):
@@ -17,6 +17,8 @@ class HREvaluationCriteria(models.Model):
     ],required=True)
     is_active = fields.Boolean(string = 'Active')
 
-    # _sql_constraints = [
-    #     ('name_uniq', 'unique (name,seq)', 'The name and sequence of the criteria must be unique!')
-    # ]
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['hr.employee.criteria'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError('Unique Error] Name must be unique!')

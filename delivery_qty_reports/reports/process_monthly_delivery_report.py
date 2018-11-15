@@ -57,8 +57,8 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
             product_name_with_variant = stocks.name
             operating_unit_name = stocks.operating_unit_id.name
 
-        only_report_date_to = datetime.strptime(report_date_to, "%Y-%m-%d %H:%M:%S").date()
-        only_report_date_from = datetime.strptime(report_date_from, "%Y-%m-%d %H:%M:%S").date()
+        only_report_date_to = report_date_to
+        only_report_date_from = report_date_from
 
         docargs = \
             {

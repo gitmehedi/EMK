@@ -11,6 +11,7 @@
                 <field name="tax"/>
                 <field name="vat"/>
                 <field name="bin"/>
+                <field name="tin"/>
             </xpath>
         </field>
     </record>

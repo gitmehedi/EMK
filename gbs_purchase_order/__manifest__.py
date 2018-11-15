@@ -19,6 +19,7 @@
         'gbs_purchase_requisition',
         'stock_operating_unit_extend',
         'amount_to_word_bd',
+
     ],
     'data': [
         'security/ir.model.access.csv',

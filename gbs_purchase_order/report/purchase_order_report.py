@@ -17,13 +17,24 @@ class GbsPurchaseOrder(models.AbstractModel):
         order_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(data['date_order']))
         requisition_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(docs.requisition_id.requisition_date))
         data['partner_id'] = docs.partner_id.name
-        data['cus_address'] = docs.partner_id
+        data['cus_address'] = report_utility_pool.getCoustomerAddress(docs.partner_id)
         data['partner_ref'] = docs.partner_ref
         data['requisition_id'] = docs.requisition_id.name
         data['requisition_date'] = requisition_date
         data['company'] = docs.operating_unit_id.partner_id.name
         data['notes'] = docs.notes
-        data['company_address'] = docs.operating_unit_id.partner_id
+        data['company_address'] = report_utility_pool.getCoustomerAddress(docs.operating_unit_id.partner_id)
+        data['region_type'] = docs.region_type
+        data['amount_vat'] = docs.amount_vat
+        data['amount_discount'] = docs.amount_discount
+        data['amount_after_discount'] = docs.amount_after_discount
+        data['amount_total'] = docs.amount_total
+        data['terms_condition'] = docs.terms_condition
+        data['total_discount'] = docs.amount_untaxed * (docs.amount_discount / 100)
+        data['total_vat'] = docs.amount_after_discount * (docs.amount_vat / 100)
+        data['contact_person'] = docs.contact_person
+
+
         if docs.partner_id.child_ids:
             for con in docs.partner_id.child_ids[0]:
                 data['sup_con'] = con.name
