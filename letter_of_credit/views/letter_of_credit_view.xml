@@ -12,7 +12,7 @@
                         <button string="Open" name="action_open" states="draft" type="object" class="oe_highlight"/>
                         <button string="Confirm" name="action_confirm" states="open" type="object" class="oe_highlight"/>
                         <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only" groups="base_technical_features.group_technical_features"/>
-                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
+                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done','cancel'))]}"/>
                         <button string="Cancel" name="action_cancel" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to cancel shipment?"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,confirmed,progress,done"/>
 
@@ -110,11 +110,13 @@
                                     <field name="remarks" widget="html" options="{'style-inline': true}"/>
                                 </page>
                                 <page string="Attachments">
-                                    <field name="attachment_ids" widget="one2many" class="lc_attachment">
+                                    <field name="attachment_ids" widget="one2many_list" class="lc_attachment" context="{'default_res_id': id, 'default_res_model': 'letter.credit'}">
                                         <tree string="Attachments" editable="top">
+                                            <field name="res_id" invisible="1"/>
+                                            <field name="res_model" invisible="1"/>
                                             <field name="name" string="Title"/>
                                             <field name="datas_fname" invisible="1"/>
-                                            <field name="db_datas" filename="datas_fname"/>
+                                            <field name="db_datas" filename="datas_fname" string="File"/>
                                         </tree>
                                     </field>
                                 </page>

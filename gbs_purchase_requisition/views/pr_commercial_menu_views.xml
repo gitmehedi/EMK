@@ -4,6 +4,7 @@
         <record model="ir.actions.act_window" id="action_commercial_pr_local">
             <field name="name">Purchase Requisition</field>
             <field name="res_model">purchase.requisition</field>
+            <field name="context">{'search_default_active':1}</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('region_type','in',('local', False)),('state','=','done')]</field>
         </record>
@@ -11,6 +12,7 @@
         <record model="ir.actions.act_window" id="action_commercial_pr_foreign">
             <field name="name">Purchase Requisition</field>
             <field name="res_model">purchase.requisition</field>
+            <field name="context">{'search_default_active':1}</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('region_type','in',('foreign',False)),('state','=','done')]</field>
         </record>

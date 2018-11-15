@@ -10,7 +10,8 @@
                     <group>
                         <group>
                             <field name="cnf_received_date"/>
-                            <field name="cnf_id" string="C&amp;F Agent"/>
+                            <field name="cnf_id" string="C&amp;F Agent"
+                            options="{'no_open':True,'no_quick_edit':True,'no_create_edit':True}"/>
                         </group>
                     </group>
                     <footer>

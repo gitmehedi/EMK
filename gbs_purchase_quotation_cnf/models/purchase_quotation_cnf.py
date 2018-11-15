@@ -12,6 +12,11 @@ class PurchaseCNFQuotation(models.Model):
     lc_id = fields.Many2one('letter.credit',string='LC Name',ondelete = 'cascade',related = 'shipment_id.lc_id')
 
 
+    @api.onchange('shipment_id')
+    def onchange_shipment_id(self):
+        if self.shipment_id:
+            self.partner_id = self.shipment_id.cnf_id.id
+
     @api.model
     def create(self, vals):
         if vals.get('cnf_quotation'):
