@@ -67,11 +67,13 @@
 
                             <notebook colspan="4">
                                 <page string="Attachments">
-                                    <field name="shipment_attachment_ids" widget="one2many" class="lc_attachment">
+                                    <field name="shipment_attachment_ids" widget="one2many_list" class="lc_attachment" context="{'default_res_id': id, 'default_res_model': 'purchase.shipment'}">
                                         <tree string="Attachments" editable="top">
+                                            <field name="res_id" invisible="1"/>
+                                            <field name="res_model" invisible="1"/>
                                             <field name="name" string="Title"/>
                                             <field name="datas_fname" invisible="1"/>
-                                            <field name="db_datas" filename="datas_fname"/>
+                                            <field name="db_datas" filename="datas_fname" string="File"/>
                                         </tree>
                                     </field>
                                 </page>

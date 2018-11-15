@@ -70,7 +70,8 @@ class LetterOfCredit(models.Model):
     terms_condition = fields.Text(string='Terms of Condition')
     remarks = fields.Text(string='Remarks')
 
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    # attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments',domain=[('res_model', '=', 'letter.credit')])
 
     # For LC Revision
 
