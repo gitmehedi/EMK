@@ -135,7 +135,7 @@ class PurchaseRequisition(models.Model):
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
 
-    product_ordered_qty = fields.Float('Ordered Quantities', digits=dp.get_precision('Product UoS'),
+    product_ordered_qty = fields.Float('Ordered Qty', digits=dp.get_precision('Product UoS'),
                                        default=1)
     name = fields.Char(related='product_id.name',string='Description',store=True)
     price_unit = fields.Float(related='product_id.standard_price',string='Unit Price', digits=dp.get_precision('Product Price'),store = True)
@@ -150,6 +150,18 @@ class PurchaseRequisitionLine(models.Model):
 
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
                                compute='_get_product_quantity')
+
+    receive_qty = fields.Float(string='PO Qty')
+    due_qty = fields.Float(string='Due Qty',compute='_compute_due_qty')
+
+    @api.depends('product_ordered_qty', 'receive_qty')
+    def _compute_due_qty(self):
+        for line in self:
+            if line.product_ordered_qty and line.receive_qty:
+                diff = line.product_ordered_qty - line.receive_qty
+                line.due_qty = diff
+            else:
+                line.due_qty = line.product_ordered_qty
 
 
     @api.depends('product_id')

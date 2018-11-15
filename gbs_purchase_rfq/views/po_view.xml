@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_purchase_order_form1" model="ir.ui.view">
+            <field name="name">inherit.purchase.order.view.form1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='currency_id']" position="after">
+                        <field name="rfq_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_rfq_to_quotation">
+            <field name="name">Request for Quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('rfq_id','=',active_id)]</field>
+            <field name="context">{"default_rfq_id":active_id}</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_rfq_to_quotation_list">
+            <field name="name">Request for Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('rfq_id','=',active_id)]</field>
+            <field name="context">{"default_rfq_id":active_id}</field>
+        </record>
+    </data>
+</odoo>
+

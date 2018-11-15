@@ -10,13 +10,16 @@
     'data': [
         # 'security/security.xml',
         # 'security/ir_rule.xml',
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'wizard/rfq_wizard.xml',
         'wizard/rfq_email_template.xml',
         'report/rfq_report.xml',
         'report/rfq_send_report.xml',
+        'data/rfq_sequence.xml',
         'data/mail_template_data.xml',
         'views/pr_view.xml',
+        'views/po_view.xml',
+        'views/purchase_rfq_view.xml',
     ],
 
     'description': 

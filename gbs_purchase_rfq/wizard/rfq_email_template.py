@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class RFQEmailTemplateWizard(models.TransientModel):
@@ -44,6 +45,9 @@ class RFQEmailTemplateWizard(models.TransientModel):
                     template.write({
                         'email_to': i.email})
                     self.env['mail.template'].browse(template.id).send_mail(self.id)
+                else:
+                    raise UserError(_('Unable to send mail because %s has no email address.')%i.name)
+
 
 
 

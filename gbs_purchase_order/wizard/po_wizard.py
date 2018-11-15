@@ -23,6 +23,8 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
         new_seq = self.env['ir.sequence'].next_by_code_new('purchase.order', requested_date,order.operating_unit_id)
         if new_seq:
             order.write({'name': new_seq})
+        # insert and update receive quantity (function)
+        order.action_update()
         if self.purchase_by not in ['lc']:
             if order.company_id.po_double_validation == 'one_step'\
                     or (order.company_id.po_double_validation == 'two_step'\
