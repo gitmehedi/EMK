@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="acrion_send_rfq_report"
+                string="RFQ Send"
+                model="rfq.email.template.wizard"
+                report_type="qweb-pdf"
+                file="gbs_purchase_rfq.send_rfq_report"
+                name="gbs_purchase_rfq.send_rfq_report"
+                paperformat="report_layout.paperformat_backend_landscape"
+                menu="False"
+        />
+        <template id="send_rfq_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page" style="padding-top:95px;page-break-inside:auto">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
+                            </style>
+                            <div class="clearfix">
+                                <h3 class="report-title mt-0">RFQ</h3>
+                            </div>
+                            <div class="clearfix">
+                                <table class="table table-report table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th>Sl#</th>
+                                            <th>Items/Description</th>
+                                            <th>Req. Quantity</th>
+                                            <th>Unit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.product_lines" t-as="l">
+                                            <tr style="page-break-inside: avoid">
+                                                <td><span t-esc="l_index+1"/></td>
+                                                <td><span t-esc="l['product_id']"/></td>
+                                                <td><span t-esc="l['product_qty']"/></td>
+                                                <td><span t-esc="l['product_uom_id']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

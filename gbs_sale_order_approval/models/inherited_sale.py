@@ -7,6 +7,8 @@ import time
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    is_this_so_payment_check = fields.Boolean(string='is_this_so_payment_check',default=False)
+
     def _get_order_type(self):
         return self.env['sale.order.type'].search([], limit=1)
 
@@ -311,8 +313,8 @@ class SaleOrder(models.Model):
                         else:
                             return False
 
-        for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
+        for lines in orders.order_line:
+            product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
             if lines.price_unit != product_pool.list_price:
                 return True  # Go to two level approval process
             else:

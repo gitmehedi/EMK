@@ -8,7 +8,8 @@
         "sale",
         "product",
         "purchase",
-        "procurement"
+        "procurement",
+        'sales_team',
                 ],
     "data": [
         "security/ir.model.access.csv",

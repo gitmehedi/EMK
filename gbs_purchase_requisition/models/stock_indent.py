@@ -61,6 +61,7 @@ class StockIndent(models.Model):
             'required_date': self.required_date,
             'picking_type_id': self.picking_type_id.id,
             'company_id': self.company_id.id,
+            'dept_location_id': self.stock_location_id.id,
         }
 
         return pur_req_obj.create(values)

@@ -5,6 +5,7 @@
     'website': 'http://www.genweb2.com',
     'category': 'accounts',
     'depends': [
+        'gbs_account',
         'product',
         'account',
         'gbs_sales_commission',

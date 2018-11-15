@@ -58,7 +58,7 @@ class ProformaInvoice(models.Model):
                                states={'draft': [('readonly', False)]},default='By Truck')
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
-    terms_id = fields.Many2one('terms.setup', string='Terms', store=True, readonly=True,
+    terms_id = fields.Many2one('terms.setup', string='Payment term', store=True, readonly=True,
                                states={'draft': [('readonly', False)]})
 
     """ Shipping Address"""

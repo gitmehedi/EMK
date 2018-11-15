@@ -19,6 +19,10 @@ class DocReceiveWizard(models.TransientModel):
     shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment',
                                   default=lambda self: self.env.context.get('active_id'))
 
+    @api.constrains('product_lines')
+    def _check_multiple_products_line(self):
+        if not self.product_lines:
+            raise ValidationError("You can't receive doc without products")
 
     @api.onchange('shipment_id')
     def po_product_line(self):

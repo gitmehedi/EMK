@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="terms_setup_foreign_form_view" model="ir.ui.view">
+        <field name="name">terms.setup.foreign.form.view</field>
+        <field name="model">terms.setup.foreign</field>
+        <field name="arch" type="xml">
+            <form string="Terms Setup">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="days"/>
+                        <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="terms_setup_foreign_tree_view" model="ir.ui.view">
+        <field name="name">terms.setup.foreign.tree.view</field>
+        <field name="model">terms.setup.foreign</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Terms Setup">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="terms_setup_foreign_action" model="ir.actions.act_window">
+        <field name="name">Terms Setup Foreign</field>
+        <field name="res_model">terms.setup.foreign</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="terms_setup_com_menu"
+                  parent="gbs_purchase_requisition.menu_commercial_configuration"
+                  action="terms_setup_foreign_action"
+                  sequence="25"/>
+
+    <record id="inherit_purchase_order_form_view_foreign" model="ir.ui.view">
+        <field name="name">inherit.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field string="Payment term" name="terms_foreign_id"
+                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

@@ -36,6 +36,11 @@
                 'letter_of_credit_report',
                 'gbs_document_type',
                 'terms_setup',
+                'stock_operating_unit',
+                'stock',
+                'terms_setup_foreign',
+                'terms_setup_local',
+                'gbs_supplier',
     ],
 
 
@@ -45,6 +50,8 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu_items.xml',
+        'views/field_items.xml',
         'views/commercial_po_menu.xml',
+        'views/commercial_supplier_menus.xml',
     ],
 }
