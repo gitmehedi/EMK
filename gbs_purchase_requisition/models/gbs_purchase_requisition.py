@@ -28,7 +28,7 @@ class PurchaseRequisition(models.Model):
     requisition_date = fields.Date(string='Requisition Date',required=True,default=fields.Date.today())
     required_date = fields.Date(string='Required Date')
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
-                              ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),
+                              ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),('close','Done'),
                               ('cancel', 'Cancelled')],'Status', track_visibility='onchange', required=True,
                              copy=False, default='draft')
 
@@ -47,6 +47,17 @@ class PurchaseRequisition(models.Model):
             return {'domain': {
                 'dept_location_id': [('id', 'in', self.user_id.location_ids.ids), ('can_request', '=', True)]}}
 
+    @api.multi
+    def action_close(self):
+        self.write({'state': 'close'})
+
+    @api.multi
+    def action_draft(self):
+        self.write({'state': 'draft'})
+
+    @api.multi
+    def action_back_to_approve(self):
+        self.write({'state': 'done'})
 
     @api.multi
     def action_in_progress(self):

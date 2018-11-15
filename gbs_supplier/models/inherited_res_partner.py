@@ -9,7 +9,7 @@ class ResPartner(models.Model):
         ('foreign', 'Foreign'),
     ], string='Supplier Type')
 
-    is_cnf = fields.Boolean(string='Is C&F Agent')
+    is_cnf = fields.Boolean(string='Is a C&F Agent')
 
     """ Relational Fields """
     supplier_category_id = fields.Many2one('supplier.category',string='Supplier Category')
