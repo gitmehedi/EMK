@@ -49,5 +49,12 @@
 
         <menuitem id="submenu_commercial_po" name="Purchase Order" parent="menu_commercial_po"
                   sequence="1" action="action_commercial_po" groups="commercial.group_commercial_user"/>
+
+        <menuitem id="menu_purchase_rfq_com_local"
+                  name="RFQ"
+                  parent="menu_commercial_pq"
+                  action="gbs_purchase_rfq.action_purchase_rfq"
+                  groups="group_local_purchase"
+                  sequence="2"/>
     </data>
 </odoo>

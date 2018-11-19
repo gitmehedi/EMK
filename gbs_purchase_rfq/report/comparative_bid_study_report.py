@@ -28,13 +28,21 @@ class ComparativeBidReport(models.AbstractModel):
         lists = self.get_report_data(rfq_obj, header_data)
 
         docargs = {
-            'report_objs': lists,
+            'report_objs': lists['products'],
+            'grand_totals': lists['total'],
             'header': header,
             'address': data['address'],
         }
         return self.env['report'].render('gbs_purchase_rfq.com_bid_report_temp', docargs)
 
     def get_report_data(self, rfq_obj,header_data):
+
+        grand_total = {v.id:{
+            'title': 'TOTAL',
+            'total_price': 0,
+        }for v in header_data}
+
+
         sql = """
                 SELECT pp.id AS product_id,pr.name AS pr_name ,pt.name AS product_name ,
                        prl.product_ordered_qty AS required_qty ,pu.name AS product_unit ,
@@ -95,4 +103,7 @@ class ComparativeBidReport(models.AbstractModel):
                 if record[4] in ['purchase','done']:
                     products[record[0]]['approved_price'] = record[3]
                     products[record[0]]['approved_total'] = record[3] * products[record[0]]['product_ordered_qty']
-        return products
+
+            grand_total[record[1]]['total_price'] = grand_total[record[1]]['total_price'] + (record[3] * products[record[0]]['product_ordered_qty'])
+
+        return {'products':products,'total':grand_total}

@@ -109,6 +109,24 @@
                                     </td>
                                 </tr>
                             </t>
+                            <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <t t-foreach="grand_totals" t-as="total">
+                                    <td class="text-left">
+                                        Total
+                                    </td>
+                                    <td class="text-left">
+                                        <span t-esc="int(total_value['total_price'])"/>
+                                    </td>
+                                </t>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                     <t t-call="report_layout.report_signing"></t>
