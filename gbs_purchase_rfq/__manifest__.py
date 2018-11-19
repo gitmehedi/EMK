@@ -15,6 +15,7 @@
         'wizard/rfq_email_template.xml',
         'report/rfq_report.xml',
         'report/rfq_send_report.xml',
+        'report/comparative_bid_study_report.xml',
         'data/rfq_sequence.xml',
         'data/mail_template_data.xml',
         'views/pr_view.xml',

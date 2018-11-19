@@ -73,7 +73,8 @@ class PurchaseOrder(models.Model):
                         if total_po_qty > pr_line_obj.product_ordered_qty:
                             pr_line_obj.write({'receive_qty': pr_line_obj.receive_qty + pr_line_obj.product_ordered_qty})
                         else:
-                            pr_line_obj.write({'receive_qty': pr_line_obj.receive_qty + line.product_qty})
+                            pr_line_obj.write({'receive_qty': pr_line_obj.receive_qty + total_po_qty})
+                        total_po_qty = total_po_qty - pr_line_obj.product_ordered_qty
                         self._cr.execute('INSERT INTO po_pr_line_rel (pr_line_id,po_line_id) VALUES (%s, %s)',
                                      tuple([data, line.id]))
         return res

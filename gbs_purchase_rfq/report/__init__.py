@@ -1,1 +1,2 @@
 import rfq_report
+import comparative_bid_study_report
