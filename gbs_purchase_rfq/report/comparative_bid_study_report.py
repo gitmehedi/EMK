@@ -11,6 +11,10 @@ class ComparativeBidReport(models.AbstractModel):
         rfq_obj = rfq_obj_pool.browse(docids[0])
         data['address'] = report_utility_pool.getAddressByUnit(rfq_obj.operating_unit_id)
 
+        rfq_data = {}
+        rfq_data['name'] = rfq_obj.name
+        rfq_data['rfq_date'] = rfq_obj.rfq_date
+
         header = {}
         header['pr_no'] = 'PR No'
         header['item'] = 'Item'
@@ -32,6 +36,7 @@ class ComparativeBidReport(models.AbstractModel):
             'grand_totals': lists['total'],
             'header': header,
             'address': data['address'],
+            'data': rfq_data,
         }
         return self.env['report'].render('gbs_purchase_rfq.com_bid_report_temp', docargs)
 
