@@ -57,11 +57,14 @@
                                         <t t-esc="dynamic"/>
                                     </th>
                                 </t>
+                                <th rowspan="2" style="text-align: center;"><t t-esc="header['approved_price']"/></th>
+                                <th rowspan="2" style="text-align: center;"><t t-esc="header['total']"/></th>
+                                <th rowspan="2" style="text-align: center;"><t t-esc="header['remarks']"/></th>
                             </tr>
                             <tr class="odo-bg-gray">
                                 <t t-foreach="header['dynamic']" t-as="sub">
                                     <th style="text-align: center;">
-                                        <t t-esc="sub_value['Supplier']"/>
+                                        <t t-esc="sub_value['supplier']"/>
                                     </th>
                                     <th style="text-align: center;">
                                         Total
@@ -95,6 +98,15 @@
                                             <span t-esc="int(val_value['total'])"/>
                                         </td>
                                     </t>
+                                    <td class="text-right">
+                                        <span class="text-nowrap" t-esc="list_value['approved_price']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span class="text-nowrap" t-esc="list_value['approved_total']"/>
+                                    </td>
+                                    <td class="text-left">
+                                        <span class="text-nowrap" t-esc="list_value['remarks']"/>
+                                    </td>
                                 </tr>
                             </t>
                         </tbody>

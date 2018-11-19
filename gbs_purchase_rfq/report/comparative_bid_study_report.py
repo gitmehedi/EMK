@@ -17,10 +17,13 @@ class ComparativeBidReport(models.AbstractModel):
         header['req_qty'] = 'Required Qty'
         header['unit'] = 'Unit'
         header['last_price'] = 'Last Price'
+        header['approved_price'] = 'Approved Price'
+        header['total'] = 'Total'
+        header['remarks'] = 'Remarks'
         header_data = self.env['purchase.order'].search([('rfq_id','=',rfq_obj.id )], order='id ASC')
         header['dynamic']={}
         for val in header_data:
-            header['dynamic'][str(val.name)] = { 'Supplier' : val.partner_id.name , 'Total': 0}
+            header['dynamic'][str(val.name)] = { 'supplier' : val.partner_id.name , 'total': 0}
 
         lists = self.get_report_data(rfq_obj, header_data)
 
@@ -55,6 +58,9 @@ class ComparativeBidReport(models.AbstractModel):
             'product_ordered_qty': val[3],
             'product_unit': val[4],
             'last_price': val[5],
+            'approved_price': 0,
+            'approved_total': 0,
+            'remarks': '',
             'quotation': {v.id: {
                 'price': 0,
                 'total': 0
@@ -71,7 +77,7 @@ class ComparativeBidReport(models.AbstractModel):
             product_ids = tuple(products.keys())
 
         sql_q = """
-            SELECT pol.product_id,po.id,rp.name AS Supplier,pol.price_unit
+            SELECT pol.product_id,po.id,rp.name AS supplier,pol.price_unit,po.state
             FROM purchase_order po
             JOIN purchase_order_line pol ON po.id = pol.order_id
             LEFT JOIN res_partner rp ON po.partner_id = rp.id
@@ -86,5 +92,7 @@ class ComparativeBidReport(models.AbstractModel):
                 if i == record[1]:
                     products[record[0]]['quotation'][i]['price'] = record[3]
                     products[record[0]]['quotation'][i]['total'] = record[3] * products[record[0]]['product_ordered_qty']
-
+                if record[4] in ['purchase','done']:
+                    products[record[0]]['approved_price'] = record[3]
+                    products[record[0]]['approved_total'] = record[3] * products[record[0]]['product_ordered_qty']
         return products
