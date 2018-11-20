@@ -4,12 +4,12 @@
     <data>
         <report
                 id="action_rfq_report"
-                model="purchase.requisition"
+                model="purchase.rfq"
                 string="RFQ"
                 report_type="qweb-pdf"
                 name="gbs_purchase_rfq.rfq_report"
                 file="gbs_purchase_rfq.rfq_report"
-                menu = "False"/>
+                menu = "True"/>
 
         <record id="action_rfq_report" model="ir.actions.report.xml">
             <field name="paperformat_id" ref="report_layout.paperformat_backend_portrait"/>

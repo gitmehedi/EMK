@@ -96,7 +96,8 @@ class ComparativeBidReport(models.AbstractModel):
             LEFT JOIN res_partner rp ON po.partner_id = rp.id
             WHERE
             po.id IN %s AND
-            pol.product_id IN %s;
+            pol.product_id IN %s
+            ORDER BY pol.product_id;
         """% (po_ids,product_ids)
         self._cr.execute(sql_q)
         for record in self._cr.fetchall():

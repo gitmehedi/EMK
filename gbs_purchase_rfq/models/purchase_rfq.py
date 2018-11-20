@@ -54,6 +54,19 @@ class PurchaseRFQ(models.Model):
 
         return result
 
+    @api.multi
+    def print_rfq(self):
+        data = {}
+        vals = []
+        for obj in self.purchase_rfq_lines:
+            vals.append(({'product_id': obj.product_id.name,
+                          'product_qty': obj.product_qty,
+                          'product_uom_id': obj.product_uom_id.name,
+                          }))
+        data['vals'] = vals
+
+        return self.env['report'].get_action(self, 'gbs_purchase_rfq.rfq_report', data=data)
+
 
 
 class RFQProductLineWizard(models.Model):
