@@ -76,7 +76,19 @@ class Shipment(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.state = "cancel"
+        res = self.env.ref('com_shipment.cancel_wizard')
+        result = {
+            'name': _('Do you want to cancel this shipment?'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'cancel.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
 
     @api.multi
     def action_view_shipment(self):

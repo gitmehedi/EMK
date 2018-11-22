@@ -200,8 +200,7 @@
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="validation" string="To Validate" domain="[('state','=','in_progress')]"/>
                     <filter name="approval" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
-                    <filter name="active" string="Active" domain="[('state', 'not in', ('done','cancel'))]"/>
-                    <!--<filter name="active" string="Active" domain="[('state','!=','cancel')]"/>-->
+                    <filter name="active" string="Active" domain="[('state', 'in', ('draft','in_progress','approve_head_procurement','done'))]"/>
                 </xpath>
             </field>
         </record>
@@ -236,6 +235,7 @@
             <field name="name">Purchase Requisition</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.requisition</field>
+            <field name="context">{'search_default_active':1}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
