@@ -1,10 +1,8 @@
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError,UserError
 
 
 class ComparativeBidReport(models.AbstractModel):
     _name = 'report.gbs_purchase_rfq.com_bid_report_temp'
-
 
     @api.multi
     def render_html(self, docids, data=None):
@@ -17,11 +15,6 @@ class ComparativeBidReport(models.AbstractModel):
         rfq_data['name'] = rfq_obj.name
         rfq_data['rfq_date'] = rfq_obj.rfq_date
 
-        pq_list = self.env['purchase.order'].search([('rfq_id', '=', rfq_obj.id)], order='id ASC')
-        if not pq_list:
-            raise UserError('No Quotation created for this RFQ.\n'
-                            ' PLease create quotation to see the comparative study!!!')
-
         header = {}
         header['pr_no'] = 'PR No'
         header['item'] = 'Item'
@@ -31,18 +24,12 @@ class ComparativeBidReport(models.AbstractModel):
         header['approved_price'] = 'Approved Price'
         header['total'] = 'Total'
         header['remarks'] = 'Remarks'
-
+        header_data = self.env['purchase.order'].search([('rfq_id','=',rfq_obj.id )], order='id ASC')
         header['dynamic']={}
-        for val in pq_list:
+        for val in header_data:
             header['dynamic'][str(val.name)] = { 'supplier' : val.partner_id.name , 'total': 0}
 
-
-
-
-        #
-
-
-        lists = self.get_report_data(rfq_obj, pq_list)
+        lists = self.get_report_data(rfq_obj, header_data)
 
         docargs = {
             'report_objs': lists['products'],
@@ -53,52 +40,13 @@ class ComparativeBidReport(models.AbstractModel):
         }
         return self.env['report'].render('gbs_purchase_rfq.com_bid_report_temp', docargs)
 
-    def get_report_data(self, rfq_obj,pq_list):
+    def get_report_data(self, rfq_obj,header_data):
 
         grand_total = {v.id:{
             'title': 'TOTAL',
             'total_price': 0,
-        }for v in pq_list}
+        }for v in header_data}
 
-        product_row_list=[]
-
-        for val in self.get_purchase_data(rfq_obj):
-            product_row_list.append({
-                'product_id': val[0],
-                'pr_name': val[1],
-                'product_name': val[2],
-                'product_ordered_qty': val[3],
-                'product_unit': val[4],
-                'last_price': val[5],
-                'approved_price': 0,
-                'approved_total': 0,
-                'remarks': '',
-                # 'quotation': quotation
-                })
-
-        pq_temp_list = self.get_temp_pq(pq_list)
-
-        for product_row in product_row_list:
-            for pq in pq_temp_list:
-                if pq.product_line.get(product_row['product_id']):
-                    product_row['unit_price'] = pq.product_line.get(product_row['product_id'])
-
-        # for val in products:
-        #     for val_quotation_dic in val['quotation'].keys():
-        #         pq_line_obj = pq_line_list.filtered(lambda r: r.product_id.id == val['product_id'] and r.order_id.id== val_quotation_dic)
-        #         if pq_line_obj:
-        #             val['quotation'][val_quotation_dic]['price'] = pq_line_obj.price_unit
-        #             val['quotation'][val_quotation_dic]['total'] = pq_line_obj.price_unit * val['product_ordered_qty']
-        #             if pq_line_obj.order_id.state in ['purchase','done']:
-        #                 val['approved_price'] = pq_line_obj.price_unit
-        #                 val['approved_total'] = pq_line_obj.price_unit * val['product_ordered_qty']
-
-                # grand_total[pq_line_obj.order_id.id]['total_price'] = grand_total[pq_line_obj.order_id.id]['total_price'] + (pq_line_obj.price_unit * val['product_ordered_qty'])
-
-        return {'products':product_row_list,'total':grand_total}
-
-
-    def get_purchase_data(self,rfq_obj):
 
         sql = """
                 SELECT pp.id AS product_id,pr.name AS pr_name ,pt.name AS product_name ,
@@ -114,31 +62,53 @@ class ComparativeBidReport(models.AbstractModel):
                 LEFT JOIN product_uom pu ON pu.id = pt.uom_id
                 WHERE rfq.id = %s
                 ORDER BY pr.id;
-        """%(rfq_obj.id)
+        """% (rfq_obj.id)
 
         self.env.cr.execute(sql)
+        products = { val[0]: {
+            'pr_name': val[1],
+            'product_name': val[2],
+            'product_ordered_qty': val[3],
+            'product_unit': val[4],
+            'last_price': val[5],
+            'approved_price': 0,
+            'approved_total': 0,
+            'remarks': '',
+            'quotation': {v.id: {
+                'price': 0,
+                'total': 0
+            } for v in header_data}} for val in self._cr.fetchall()}
 
-        return self._cr.fetchall()
-
-    def get_temp_pq(self, pq_list):
-
-        quotations = []
-        for pq in pq_list:
-            product_line = {}
-            for pq_line in pq.order_line:
-                product_line[pq_line.product_id.id] = pq_line.price_unit
-            quotations.append(TempPQ(pq.id,pq.name,product_line))
-        return quotations
-
-
-class TempPQ(object):
-
-    def __init__(self, pq_id=None, name=None, product_line=None):
-        self.pq_id = pq_id
-        self.name = name
-        if product_line is None:
-            self.product_line = {}
+        if len(header_data.ids) == 1:
+            po_ids = "("+ str(header_data.ids[0])+")"
         else:
-            self.product_line = product_line
+            po_ids = tuple(header_data.ids)
 
+        if len(products.keys())==1:
+            product_ids = "(" + str(products.keys()[0]) + ")"
+        else:
+            product_ids = tuple(products.keys())
 
+        sql_q = """
+            SELECT pol.product_id,po.id,rp.name AS supplier,pol.price_unit,po.state
+            FROM purchase_order po
+            JOIN purchase_order_line pol ON po.id = pol.order_id
+            LEFT JOIN res_partner rp ON po.partner_id = rp.id
+            WHERE
+            po.id IN %s AND
+            pol.product_id IN %s;
+        """% (po_ids,product_ids)
+        self._cr.execute(sql_q)
+        for record in self._cr.fetchall():
+            rec = products[record[0]]['quotation']
+            for i in rec:
+                if i == record[1]:
+                    products[record[0]]['quotation'][i]['price'] = record[3]
+                    products[record[0]]['quotation'][i]['total'] = record[3] * products[record[0]]['product_ordered_qty']
+                if record[4] in ['purchase','done']:
+                    products[record[0]]['approved_price'] = record[3]
+                    products[record[0]]['approved_total'] = record[3] * products[record[0]]['product_ordered_qty']
+
+            grand_total[record[1]]['total_price'] = grand_total[record[1]]['total_price'] + (record[3] * products[record[0]]['product_ordered_qty'])
+
+        return {'products':products,'total':grand_total}
