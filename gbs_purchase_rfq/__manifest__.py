@@ -10,7 +10,7 @@
     'data': [
         # 'security/security.xml',
         # 'security/ir_rule.xml',
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         'wizard/rfq_wizard.xml',
         'wizard/rfq_email_template.xml',
         'report/rfq_report.xml',
