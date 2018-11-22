@@ -9,8 +9,9 @@ class PurchaseRFQ(models.Model):
     _order = 'rfq_date desc'
 
     name = fields.Char('RFQ Reference', required=True,readonly=True,index=True, copy=False, default='New')
-    pr_ids = fields.Many2many(comodel_name='purchase.requisition',string='Purchase Requisition')
-    operating_unit_id = fields.Many2one(comodel_name='operating.unit',string='Operating Unit',
+    pr_ids = fields.Many2many(comodel_name='purchase.requisition',string='Purchase Requisition',readonly=True)
+    operating_unit_id = fields.Many2one(comodel_name='operating.unit',string='Operating Unit',readonly=True,
+                                        default=lambda self: self.env.user.default_operating_unit_id,
                                         track_visibility='onchange',required=True)
     rfq_date = fields.Datetime(string='Date of Request', default = datetime.now(), readonly=True,
                                track_visibility='onchange', required=True)

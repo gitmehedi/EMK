@@ -157,7 +157,7 @@ class PurchaseRequisitionLine(models.Model):
     last_price_unit = fields.Float(string='Last Unit Price',compute = '_get_last_purchase',store = True)
     last_supplier_id = fields.Many2one(comodel_name='res.partner', string='Last Supplier', compute='_get_last_purchase',store=True)
     remark = fields.Char(string='Remarks')
-    store_code = fields.Char(related='product_id.barcode',string='Store Code',size=20,store = True)
+    store_code = fields.Char(related='product_id.default_code',readonly=True,string='Store Code',size=20,store = True)
 
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
                                compute='_get_product_quantity')

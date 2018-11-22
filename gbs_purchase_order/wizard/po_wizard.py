@@ -41,7 +41,7 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
             others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
             for other_po in others_po:
                 other_po.disable_new_revision_button = True
-            others_po.button_cancel()
+            # others_po.button_cancel()
 
             for element in po.order_line:
                 if element.product_id == po.requisition_id.procurement_id.product_id:

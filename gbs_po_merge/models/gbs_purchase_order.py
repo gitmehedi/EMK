@@ -5,7 +5,6 @@ from odoo import models, fields, api, _
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-
     def action_add_pq(self):
         res = self.env.ref('gbs_po_merge.po_merge_wizard_form')
 

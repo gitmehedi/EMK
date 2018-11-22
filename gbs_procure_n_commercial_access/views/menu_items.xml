@@ -142,5 +142,16 @@
                   action="terms_setup_local.terms_setup_local_action"
                   groups="group_local_purchase"
                   sequence="26"/>
+
+        <!--Action To SET the Multi PR RFQ-->
+        <act_window name="Send RFQ"
+                    res_model="rfq.wizard"
+                    src_model="purchase.requisition"
+                    key2="client_action_multi"
+                    view_mode="form" target="new"
+                    view_type="form"
+                    id="act_send_rfq"
+                    groups="group_local_purchase"
+        />
     </data>
 </odoo>
