@@ -135,7 +135,7 @@ class LetterOfCredit(models.Model):
         for shipment in self.shipment_ids:
             if shipment.state != 'done' and shipment.state != 'cancel':
                 raise ValidationError(_("This LC has " + str(len(self.shipment_ids)) +
-                                        " shipment(s).Before Cancel LC,Cancle or Done all Shipment(s)."))
+                                        " shipment(s).Before Cancel LC,Cancel or Done all Shipment(s)."))
         self.state = "cancel"
 
     @api.multi
