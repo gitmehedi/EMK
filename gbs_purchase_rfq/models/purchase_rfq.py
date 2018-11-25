@@ -89,7 +89,10 @@ class RFQProductLineWizard(models.Model):
         for line in self:
             if line.product_qty and line.po_receive_qty:
                 diff = line.product_qty - line.po_receive_qty
-                line.due_qty = diff
+                if diff>0:
+                    line.due_qty = diff
+                else:
+                    line.due_qty = 0.0
             else:
                 line.due_qty = line.product_qty
 
