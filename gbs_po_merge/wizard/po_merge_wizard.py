@@ -49,7 +49,11 @@ class POMergeWizard(models.TransientModel):
     def _onchange_op_partner(self):
         for wiz in self:
             if wiz.operating_unit_id and wiz.partner_id:
-                return {'domain': {'po_ids': [('operating_unit_id', '=', wiz.operating_unit_id.id),('partner_id','=',wiz.partner_id.id)]}}
+                return {'domain': {'po_ids': [('operating_unit_id', '=', wiz.operating_unit_id.id),('partner_id','=',wiz.partner_id.id),
+                                              ('state','in',('draft','sent','to approve'))]}}
+            else:
+                wiz.po_ids = []
+
 
     @api.onchange('po_ids')
     def _onchange_po_ids(self):
