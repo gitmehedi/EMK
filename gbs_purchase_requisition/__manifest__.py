@@ -12,6 +12,7 @@
         'commercial',
         'gbs_application_group',
         'report_layout',
+        'base_suspend_security'
     ],
     'data': [
         'data/pr_sequence.xml',

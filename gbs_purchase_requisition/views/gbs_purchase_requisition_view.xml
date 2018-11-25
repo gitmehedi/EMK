@@ -53,10 +53,13 @@
                     </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="replace">
                         <button name="action_cancel" groups="commercial.group_commercial_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
-                                states="approve_head_procurement,done" string="Cancel" type="object"/>
+                                confirm="Are you sure you want to cancel?" states="approve_head_procurement,done" string="Cancel" type="object"/>
+                    </xpath>
+                    <xpath expr="//button[@name='action_draft']" position="replace">
+                        <button name="action_draft" states="cancel" string="Reset to Draft" type="object" invisible="1"/>
                     </xpath>
                     <xpath expr="//button[@name='action_in_progress']" position="before">
-                        <button name="action_close" states="done" string="Done" type="object" groups="commercial.group_commercial_user"/>
+                        <button name="action_done" states="done" confirm="Are you sure you want to continue?" string="Done" type="object" groups="commercial.group_commercial_user"/>
                         <button name="action_back_to_approve" states="cancel,close" string="Reset to Approve" type="object" groups="commercial.group_commercial_manager"/>
                     </xpath>
                     <xpath expr="//button[@name='action_open']" position="replace">

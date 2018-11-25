@@ -47,9 +47,14 @@ class PurchaseRequisition(models.Model):
             return {'domain': {
                 'dept_location_id': [('id', 'in', self.user_id.location_ids.ids), ('can_request', '=', True)]}}
 
-    @api.multi
-    def action_close(self):
-        self.write({'state': 'close'})
+    @api.one
+    def action_done(self):
+        if self.sudo().env.user.has_group(
+                'commercial.group_commercial_user'):
+            self.suspend_security().write({'state': 'close'})
+        else:
+            self.write({'state': 'close'})
+
 
     @api.multi
     def action_draft(self):
@@ -57,7 +62,20 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def action_back_to_approve(self):
-        self.write({'state': 'done'})
+        if self.sudo().env.user.has_group(
+                'commercial.group_commercial_manager'):
+            self.suspend_security().write({'state': 'done'})
+        else:
+            self.write({'state': 'done'})
+
+    @api.multi
+    def action_cancel(self):
+
+        if self.sudo().env.user.has_group(
+                'commercial.group_commercial_manager'):
+            self.suspend_security().write({'state': 'cancel'})
+        else:
+            self.write({'state': 'cancel'})
 
     @api.multi
     def action_in_progress(self):
