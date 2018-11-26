@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError,UserError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    rfq_id = fields.Many2one('purchase.rfq', string='RFQ Reference',store=True)
+    rfq_id = fields.Many2one('purchase.rfq', string='RFQ Reference',store=True,states={'done': [('readonly', True)],'purchase': [('readonly', True)],'cancel': [('readonly', True)]})
 
     @api.onchange('rfq_id')
     def _onchange_rfq_id(self):
@@ -59,13 +59,13 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         if self.rfq_id:
             for line in self.order_line:
-                rfq_line_id = self.rfq_id.purchase_rfq_lines.filtered(lambda x: x.product_id.id == line.product_id.id)[0]
+                rfq_line_id = self.rfq_id.purchase_rfq_lines.filtered(lambda x: x.product_id.id == line.product_id.id)
                 if rfq_line_id:
-                    rfq_line_id.write({'po_receive_qty': rfq_line_id.po_receive_qty + line.product_qty})
+                    rfq_line_id[0].write({'po_receive_qty': rfq_line_id[0].po_receive_qty + line.product_qty})
                     # if len(pr_line_id) > 1....open wizard and choose from which pr how many product will given for PO
                     # else
                     query = """SELECT pr_line_id FROM pr_rfq_line_rel WHERE rfq_line_id = %s ORDER BY pr_line_id asc"""
-                    self._cr.execute(query, [tuple([rfq_line_id.id])])
+                    self._cr.execute(query, [tuple([rfq_line_id[0].id])])
                     datas = self._cr.fetchall()
                     total_po_qty = line.product_qty
                     for data in datas:

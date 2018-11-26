@@ -4,7 +4,6 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
 
 
-
 class RFQWizard(models.TransientModel):
     _name = 'rfq.wizard'
 
@@ -21,6 +20,15 @@ class RFQWizard(models.TransientModel):
                                   default=lambda self: self.env.context.get('active_ids'))
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
                                         default=_get_default_operating_unit)
+
+    @api.multi
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit(self):
+        for wiz in self:
+            if wiz.operating_unit_id:
+                return {'domain': {'pr_ids': [('operating_unit_id', '=', wiz.operating_unit_id.id),('state','=','done')]}}
+            else:
+                wiz.pr_ids = []
 
     @api.onchange('pr_ids')
     def _onchange_pr_ids(self):

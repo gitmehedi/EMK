@@ -188,7 +188,10 @@ class PurchaseRequisitionLine(models.Model):
         for line in self:
             if line.product_ordered_qty and line.receive_qty:
                 diff = line.product_ordered_qty - line.receive_qty
-                line.due_qty = diff
+                if diff>0:
+                    line.due_qty = diff
+                else:
+                    line.due_qty = 0.0
             else:
                 line.due_qty = line.product_ordered_qty
 

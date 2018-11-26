@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='receive_type']" position="after">
                 <field name="loan_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
-                       attrs="{'invisible': [('receive_type', '!=', 'loan')],'required':[('receive_type', '=','loan')]}"/>
+                       attrs="{'invisible': [('receive_type', '!=', 'loan')]}"/>
             </xpath>
         </field>
     </record>

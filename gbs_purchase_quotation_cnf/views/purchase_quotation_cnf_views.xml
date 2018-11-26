@@ -119,7 +119,7 @@
             <field name="name">C&amp;F Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_type">form</field>
+            <field name="view_type">tree,form</field>
             <field name="view_id" ref="view_cnf_quotation_tree"/>
             <field name="domain">[('shipment_id','=',active_id)]</field>
         </record>
