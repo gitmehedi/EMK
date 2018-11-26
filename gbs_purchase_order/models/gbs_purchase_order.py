@@ -68,7 +68,8 @@ class PurchaseOrder(models.Model):
                                                       help="Technical field used to display the Drop Ship Address",
                                                       readonly=True)
 
-    contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
+    # contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
+    contact_person_txt = fields.Char('Contact Person')
 
     ref_date = fields.Date('Ref.Date')
 

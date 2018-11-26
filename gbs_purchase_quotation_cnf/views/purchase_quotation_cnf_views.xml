@@ -21,7 +21,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="shipment_id" attrs="{'required':[('cnf_quotation','=',True)]}"
+                                <field name="shipment_id" attrs="{'required':[('cnf_quotation','=',True)],'readonly':[('state', 'in', ['purchase','done'])]}"
                                        options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                 <field name="lc_id" attrs="{'required':[('cnf_quotation','=',True)]}"/>
                                 <field name="partner_id" string="C&amp;F Vendor" domain="[('is_cnf','=',True),('parent_id', '=', False)]"/>
@@ -30,8 +30,8 @@
                             <group>
                                 <field name="date_order"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                                <field name="commodity"/>
-                                <field name="com_quantity"/>
+                                <field name="commodity" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
+                                <field name="com_quantity" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                                 <field name="cnf_quotation" invisible="1"/>
                                 <field name="is_shipped" invisible="1"/>
                             </group>
