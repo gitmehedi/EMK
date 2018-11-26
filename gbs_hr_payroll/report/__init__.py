@@ -1,1 +1,4 @@
 import payroll_report_pivotal
+import monthly_provident_found_report
+import monthly_emp_loan_deduction
+import monthly_cash_salary_report
