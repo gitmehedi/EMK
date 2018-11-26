@@ -30,6 +30,8 @@
                             <group>
                                 <field name="date_order"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                <field name="commodity"/>
+                                <field name="com_quantity"/>
                                 <field name="cnf_quotation" invisible="1"/>
                                 <field name="is_shipped" invisible="1"/>
                             </group>
@@ -38,12 +40,12 @@
                             <page string="Services">
                                 <field name="order_line" >
                                     <tree string="Services" editable="bottom">
-                                        <field name="product_id" string="Service" domain="[('type','=','service')]"/>
+                                        <field name="product_id" string="Particular" domain="[('type','=','service')]"/>
                                         <field name="name" invisible="1"/>
                                         <field name="date_planned" string="Service date" invisible="1"/>
                                         <field name="product_qty" invisible="1"/>
                                         <field name="product_uom" string="Unit" invisible="1"/>
-                                        <field name="price_unit"/>
+                                        <field name="price_unit" string="Amount"/>
                                         <field name="price_subtotal" widget="monetary" invisible="1"/>
                                     </tree>
                                 </field>
