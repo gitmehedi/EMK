@@ -9,8 +9,10 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//button[@name='action_eta']" position="before">
-                        <button string="C&amp;F Quotation" name="action_quotation" states="eta" type="object" class="oe_highlight"/>
-                        <button string="Approve" name="action_approve_quotation" states="cnf_quotation" type="object" class="oe_highlight"/>
+                        <button string="C&amp;F Quotation" name="action_quotation" states="eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in"
+                                type="object" class="oe_highlight"/>
+                        <button string="Approve" name="action_approve_quotation" states="cnf_quotation"
+                                type="object" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="//sheet/div[@name='button_box']" position="inside">
                         <button name="%(action_cnf_quotation2)d" type="action" class="oe_stat_button" icon="fa-list-alt"
