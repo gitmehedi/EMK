@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError,UserError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    rfq_id = fields.Many2one('purchase.rfq', string='RFQ Reference',store=True)
+    rfq_id = fields.Many2one('purchase.rfq', string='RFQ Reference',store=True,states={'done': [('readonly', True)],'purchase': [('readonly', True)],'cancel': [('readonly', True)]})
 
     @api.onchange('rfq_id')
     def _onchange_rfq_id(self):
