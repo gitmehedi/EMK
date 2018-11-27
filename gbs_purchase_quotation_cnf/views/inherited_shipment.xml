@@ -13,6 +13,8 @@
                                 type="object" class="oe_highlight"/>
                         <button string="Approve" name="action_approve_quotation" states="cnf_quotation"
                                 type="object" class="oe_highlight"/>
+                        <button string="Approve" name="action_to_quotation" states="eta"
+                                type="object" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="//sheet/div[@name='button_box']" position="inside">
                         <button name="%(action_cnf_quotation2)d" type="action" class="oe_stat_button" icon="fa-list-alt"

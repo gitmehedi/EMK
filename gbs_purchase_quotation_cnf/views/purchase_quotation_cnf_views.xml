@@ -96,6 +96,7 @@
                     <field name="name"/>
                     <field name="shipment_id"/>
                     <field name="lc_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
