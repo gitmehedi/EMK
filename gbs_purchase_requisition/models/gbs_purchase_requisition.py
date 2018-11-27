@@ -208,20 +208,21 @@ class PurchaseRequisitionLine(models.Model):
             quantity = sum([val.qty for val in product_quant])
             product.product_qty = quantity
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        pass
+    # @api.onchange('product_id')
+    # def _onchange_product_id(self):
+    #     self._get_last_purchase
 
     @api.depends('product_id')
     @api.one
     def _get_last_purchase(self):
         """ Get last purchase price, last purchase date and last supplier """
-        lines = self.env['purchase.order.line'].search(
-            [('order_id.operating_unit_id','=',self.requisition_id.operating_unit_id.id),('product_id', '=', self.product_id.id),
-             ('state', 'in', ['confirmed', 'purchase'])]).sorted(
-            key=lambda l: l.order_id.date_order, reverse=True)
-        self.last_purchase_date = lines[:1].order_id.date_order
-        self.last_price_unit = lines[:1].price_unit
-        self.last_supplier_id = lines[:1].order_id.partner_id.id
-        self.last_qty = lines[:1].product_qty
-        self.last_product_uom_id = lines[:1].product_uom.id
+        if self.product_id:
+            lines = self.env['purchase.order.line'].search(
+                [('order_id.operating_unit_id','=',self.requisition_id.operating_unit_id.id),('product_id', '=', self.product_id.id),
+                 ('state', 'in', ['done', 'purchase'])]).sorted(
+                key=lambda l: l.order_id.date_order, reverse=True)
+            self.last_purchase_date = lines[:1].order_id.date_order
+            self.last_price_unit = lines[:1].price_unit
+            self.last_supplier_id = lines[:1].order_id.partner_id.id
+            self.last_qty = lines[:1].product_qty
+            self.last_product_uom_id = lines[:1].product_uom.id
