@@ -29,11 +29,18 @@ class StockTransferSummaryReport(models.AbstractModel):
         date_to = data['date_to']
         date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
+        category_id = data['category_id']
+        cat_pool = self.env['product.category']
 
         grand_total = {
             'title': 'GRAND TOTAL',
             'total_out_val': 0,
         }
+
+        if category_id:
+            category_param = "(" + str(data['category_id']) + ")"
+        else:
+            category_param = str(tuple(cat_pool.search([], order='name ASC').ids))
 
         sql_out_tk = '''SELECT category,cetegory_id,
                                dest_location AS destination,
@@ -75,10 +82,11 @@ class StockTransferSummaryReport(models.AbstractModel):
                                        AND sm.state = 'done'
                                        AND sm.location_id = %s
                                        AND sm.location_dest_id <> %s
+                                       AND pc.id IN %s
                                        group by pp.id,category,dest_location,sm.product_qty,sm.date,pc.id
                                    )tbl
                                 GROUP  BY category,destination,cetegory_id
-                                ''' % (date_start, date_end, location_outsource, location_outsource)
+                                ''' % (date_start, date_end, location_outsource, location_outsource,category_param)
 
         self.env.cr.execute(sql_out_tk)
 
