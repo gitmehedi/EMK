@@ -200,17 +200,12 @@ class PurchaseRequisitionLine(models.Model):
     @api.multi
     def _get_product_quantity(self):
         for product in self:
-
             location = self.env['stock.location'].search(
                 [('operating_unit_id', '=', product.requisition_id.operating_unit_id.id), ('name', '=', 'Stock')])
             product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
                                                         ('location_id', '=', location.id)])
             quantity = sum([val.qty for val in product_quant])
             product.product_qty = quantity
-
-    # @api.onchange('product_id')
-    # def _onchange_product_id(self):
-    #     self._get_last_purchase
 
     @api.depends('product_id')
     @api.one
@@ -226,3 +221,5 @@ class PurchaseRequisitionLine(models.Model):
             self.last_supplier_id = lines[:1].order_id.partner_id.id
             self.last_qty = lines[:1].product_qty
             self.last_product_uom_id = lines[:1].product_uom.id
+
+            self._get_product_quantity()
