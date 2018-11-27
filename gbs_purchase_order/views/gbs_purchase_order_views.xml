@@ -94,7 +94,7 @@
                         <field name="ref_date" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="contact_person" widget="many2many_tags" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
+                        <field name="contact_person_txt" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='notes']" position="replace">
                         <group style="width:70%;">
