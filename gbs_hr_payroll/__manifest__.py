@@ -14,13 +14,16 @@
         'hr_employee_loan_payroll',
         'report_layout',
         'amount_to_word_bd',
-        'hr_payroll_festival_bonus'
+        'hr_payroll_festival_bonus',
+        'hr_payslip_monthly_report'
     ],
     'data': [
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
+        'wizard/provident_fund_generate_wizard.xml',
         'report/payroll_report_view.xml',
         'report/report_payrolladvice_inherit.xml',
         'report/monthly_provident_found_report.xml',
+        'report/provident_fund_template.xml',
         'report/monthly_emp_loan_deduction.xml',
         #'report/monthly_cash_salary_report.xml',
         'report/report_payslip_inherit.xml',
