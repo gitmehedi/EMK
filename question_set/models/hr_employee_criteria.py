@@ -19,6 +19,6 @@ class HREvaluationCriteria(models.Model):
 
     @api.constrains('name')
     def _check_unique_name(self):
-        name = self.env['hr.employee.criteria'].search([('name', '=', self.name)])
-        if len(name) > 1:
+        name = self.env['hr.employee.criteria'].search([('name', '=', self.name),('type','=', self.type)])
+        if len(name) > 1 :
             raise ValidationError('Unique Error] Name must be unique!')
