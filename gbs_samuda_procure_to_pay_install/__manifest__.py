@@ -32,6 +32,7 @@
         'gbs_po_merge',
         'terms_setup_foreign',
         'terms_setup_local',
+        'gbs_purchase_mrr',
     ],
 
     'data': [ ],
