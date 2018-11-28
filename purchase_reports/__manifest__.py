@@ -8,9 +8,9 @@
                 'report_layout',
                 ],
     'data': [
-        'view/menu_items.xml',
         'report/pending_purchase_templates.xml',
         'report/pending_purchase_report_wizard.xml',
+        'view/menu_items.xml',
     ],
     
     'summary': 'Purchase Reports Information',
