@@ -27,7 +27,7 @@ class HrEmployee(models.Model):
             payslip_line = name.env['hr.payslip.line'].search([('employee_id','=',name.id)])
             for rec in payslip_line:
                     if rec.code == 'EPMF':
-                        self.total_pf += rec.total
+                        self.total_pf += abs(rec.total)
 
 
 
