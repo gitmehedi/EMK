@@ -266,11 +266,11 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.requisition_id:
                 for line in order.order_line:
-                    pr_line_id = order.requisition_id.line_ids.filtered(lambda x: x.product_id.id == line.product_id.id)[0]
+                    pr_line_id = order.requisition_id.line_ids.filtered(lambda x: x.product_id.id == line.product_id.id)
                     if pr_line_id:
-                        pr_line_id.write({'receive_qty': pr_line_id.receive_qty + line.product_qty})
+                        pr_line_id[0].write({'receive_qty': pr_line_id[0].receive_qty + line.product_qty})
                         self._cr.execute('INSERT INTO po_pr_line_rel (pr_line_id,po_line_id) VALUES (%s, %s)',
-                                 tuple([pr_line_id.id, line.id]))
+                                 tuple([pr_line_id[0].id, line.id]))
 
     ####################################################
     # ORM Overrides methods
