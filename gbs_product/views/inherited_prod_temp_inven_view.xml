@@ -10,13 +10,13 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[2]" position="replace">
-                        <page string="Inventory" groups="base_technical_features.group_technical_features">
+                        <page string="Inventory">
                             <group name="inventory">
-                                <group>
+                                <group groups="base_technical_features.group_technical_features">
                                     <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
                                     <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
                                 </group>
-                                <group name="group_lots_and_weight">
+                                <group name="group_lots_and_weight" groups="base_technical_features.group_technical_features">
                                     <label for="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
                                     <div class="o_row" name="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
                                         <field name="weight"/>
@@ -27,7 +27,7 @@
                                         <field name="volume" string="Volume"/>
                                     </div>
                                 </group>
-                                <group name="stock_property" groups="base.group_no_one">
+                                <group name="stock_property" groups="base_technical_features.group_technical_features">
                                     <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
                                     <field name="property_stock_production" domain="[('usage','=','production')]"/>
                                     <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>

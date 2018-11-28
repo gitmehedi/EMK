@@ -18,3 +18,4 @@ class PurchaseRequisition(models.Model):
         }
 
         return result
+

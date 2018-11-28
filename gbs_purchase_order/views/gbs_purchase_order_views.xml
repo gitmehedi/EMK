@@ -87,6 +87,9 @@
                     <xpath expr="//field[@name='origin']" position="attributes">
                         <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
+                    <xpath expr="//field[@name='product_uom']" position="replace">
+                        <field name="product_uom" groups="product.group_uom" readonly="1" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
+                    </xpath>
                     <xpath expr="//field[@name='order_line']" position="attributes">
                         <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
@@ -94,7 +97,7 @@
                         <field name="ref_date" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="contact_person" widget="many2many_tags" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
+                        <field name="contact_person_txt" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='notes']" position="replace">
                         <group style="width:70%;">
@@ -125,6 +128,10 @@
             <field name="inherit_id" ref="purchase_requisition.purchase_order_form_inherit"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//field[@name='requisition_id']" position="replace">
+                        <field name="requisition_id"
+                            domain="[('state', 'in', ('in_progress','approve_head_procurement','done','open')), ('vendor_id', 'in', (partner_id, False))]"/>
+                    </xpath>
                     <xpath expr="//field[@name='requisition_id']" position="attributes">
                         <attribute name="string">Purchase Requisition</attribute>
                         <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>

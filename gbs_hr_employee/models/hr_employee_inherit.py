@@ -9,6 +9,7 @@ class HrEmployee(models.Model):
     tin = fields.Char(string='TIN')
 
     employee_sequence = fields.Integer("Employee Sequence")
+    total_pf = fields.Float(compute='_compute_total_pf', string='Total PF')
     
     @api.multi
     def name_get(self):
@@ -19,4 +20,14 @@ class HrEmployee(models.Model):
                 name = "%s [%s]" % (name,record.job_id.name_get()[0][1])
             result.append((record.id, name))
         return result
+
+    @api.one
+    def _compute_total_pf(self):
+        for name in self:
+            payslip_line = name.env['hr.payslip.line'].search([('employee_id','=',name.id)])
+            for rec in payslip_line:
+                    if rec.code == 'EPMF':
+                        self.total_pf += abs(rec.total)
+
+
 

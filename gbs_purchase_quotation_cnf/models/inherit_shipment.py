@@ -24,5 +24,10 @@ class ShipmentProduct(models.Model):
 
     @api.multi
     def action_approve_quotation(self):
-        cnf_pool_obj = self.env['purchase.order'].search([('shipment_id', '=', self.id)])
-        cnf_pool_obj.cnf_button_confirm()
+        self.write({'state': 'approve_cnf_quotation'})
+        # cnf_pool_obj = self.env['purchase.order'].search([('shipment_id', '=', self.id)])
+        # cnf_pool_obj.cnf_button_confirm()
+
+    @api.multi
+    def action_to_quotation(self):
+        self.write({'state': 'cnf_quotation'})

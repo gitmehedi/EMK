@@ -41,6 +41,9 @@
                 'terms_setup_foreign',
                 'terms_setup_local',
                 'gbs_supplier',
+                'gbs_purchase_rfq',
+                'gbs_po_merge',
+                'purchase_reports'
     ],
 
 

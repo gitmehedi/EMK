@@ -5,6 +5,7 @@
     'website': 'http://www.genweb2.com',
     'category': 'Sales',
     'depends': [
+        'base_suspend_security',
         'stock_indent',
         'ir_sequence_operating_unit',
         'indent_type',
@@ -31,6 +32,8 @@
         'gbs_po_merge',
         'terms_setup_foreign',
         'terms_setup_local',
+        'gbs_purchase_mrr',
+        'purchase_reports'
     ],
 
     'data': [ ],

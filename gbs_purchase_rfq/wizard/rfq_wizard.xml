@@ -9,6 +9,7 @@
                 <form string="Please Select Products For RFQ" create="false" edit="false">
                     <group>
                         <field name="pr_ids" string="Select PR" domain="[('state','not in',('draft','cancel'))]" widget="many2many_tags" options="{'no_create': True,'no_open':True}"/>
+                        <field name="operating_unit_id" invisible="1"/>
                     </group>
                     <field name="product_lines" widget="one2many">
                         <tree string="Product Lines" editable="bottom">
@@ -19,7 +20,7 @@
                         </tree>
                     </field>
                     <footer>
-                        <button string="Confirm" name="confirm_for_mail" type="object" class="oe_highlight"/>
+                        <button string="Save" name="action_save_rfq" type="object" class="oe_highlight"/>
                         <button string="Print" name="print_rfq" type="object" class="oe_highlight"/>
                         <button string="Cancel" special="cancel" type="object"/>
                     </footer>

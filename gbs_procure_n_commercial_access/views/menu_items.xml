@@ -142,5 +142,31 @@
                   action="terms_setup_local.terms_setup_local_action"
                   groups="group_local_purchase"
                   sequence="26"/>
+        <menuitem
+                id="purchase_reports.pending_purchase_report_local_menu"
+                name="Pending Purchase(Local)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_pending_purchase_local_wizard"
+                sequence="5"
+                groups = "group_local_purchase" />
+
+        <menuitem
+                id="purchase_reports.pending_purchase_report_foreign_menu"
+                name="Pending Purchase(Foreign)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_pending_purchase_foreign_wizard"
+                sequence="6"
+                groups ="group_imoprt_lc_foreign"/>
+
+        <!--Action To SET the Multi PR RFQ-->
+        <act_window name="Send RFQ"
+                    res_model="rfq.wizard"
+                    src_model="purchase.requisition"
+                    key2="client_action_multi"
+                    view_mode="form" target="new"
+                    view_type="form"
+                    id="act_send_rfq"
+                    groups="group_local_purchase"
+        />
     </data>
 </odoo>

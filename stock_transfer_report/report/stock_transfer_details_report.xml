@@ -59,34 +59,61 @@
                         </thead>
                         <tbody>
                             <t t-if="product_lines">
-                                <t t-foreach="product_lines" t-as="line">
-                                    <tr>
-                                        <td>
-                                            <!--<t t-esc="line['m_date']"/>-->
-                                            <t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['m_date'],'%Y-%m-%d %H:%M:%S'))"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="line['reference']"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="line['name']"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="line['category']"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <t t-esc="line['qty_out_tk']"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="line['uom_name']"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <t t-esc="line['rate_out']"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <t t-esc="line['val_out_tk']"/>
-                                        </td>
-                                    </tr>
+                                <t t-foreach="product_lines" t-as="data">
+                                    <t t-if="data_value['product']">
+                                        <tr style="background-color: #ebebe0; text-align:left;">
+                                            <td colspan="8" style="padding: 0px;">
+                                                <strong>
+                                                    <t t-esc="data"/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="data_value['product']" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <!--<t t-esc="line['m_date']"/>-->
+                                                <t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['m_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['reference']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['category']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['qty_out_tk']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['uom_name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['rate_out']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['val_out_tk']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data_value['product']">
+                                        <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
+                                            <td colspan="4" class="text-left">
+                                                <t t-esc="data_value['sub-total']['title']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="data_value['sub-total']['sub_total_qty']"/>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-right">
+                                                <t t-esc="data_value['sub-total']['sub_total_val']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
                                 </t>
                             </t>
                             <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">

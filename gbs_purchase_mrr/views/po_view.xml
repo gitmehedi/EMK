@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_po_view_form" model="ir.ui.view">
+            <field name="name">purchase.order.view.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_requisition.purchase_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after" type="object">
+                        <field name="pi_number"/>
+                    </xpath>
+                    <xpath expr="//field[@name='notes']" position="replace">
+                        <group string="Specific Terms and Condition">
+                            <field name="mode_of_payment"/>
+                            <field name="delivery"/>
+                            <field name="delivery_period"/>
+                            <field name="warranty"/>
+                        </group>
+                    </xpath>
+                    <xpath expr="//field[@name='price_unit']" position="after" type="object">
+                        <field name="tolerance"/>
+                    </xpath>
+
+
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

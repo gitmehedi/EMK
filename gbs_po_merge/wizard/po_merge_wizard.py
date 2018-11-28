@@ -11,6 +11,11 @@ class POMergeWizard(models.TransientModel):
         if self.env.context.get('default_is_new_add'):
             return False
         else:
+            for po_obj in self.env['purchase.order'].search([('id', 'in', self.env.context.get('active_ids'))]):
+                if po_obj.state in ['purchase','done','cancel']:
+                    raise UserError(_('Already Ordered or cancelled Quotation can not be merge.'))
+                else:
+                    pass
             return self.env.context.get('active_ids')
 
     def _get_default_operating_unit(self):
@@ -49,7 +54,11 @@ class POMergeWizard(models.TransientModel):
     def _onchange_op_partner(self):
         for wiz in self:
             if wiz.operating_unit_id and wiz.partner_id:
-                return {'domain': {'po_ids': [('operating_unit_id', '=', wiz.operating_unit_id.id),('partner_id','=',wiz.partner_id.id)]}}
+                return {'domain': {'po_ids': [('operating_unit_id', '=', wiz.operating_unit_id.id),('partner_id','=',wiz.partner_id.id),
+                                              ('state','in',('draft','sent','to approve'))]}}
+            else:
+                wiz.po_ids = []
+
 
     @api.onchange('po_ids')
     def _onchange_po_ids(self):
