@@ -6,7 +6,6 @@
     'version':'1.0',
     'depends': ['letter_of_credit',
                 'report_layout',
-                'gbs_procure_n_commercial_access'
                 ],
     'data': [
         'view/menu_items.xml',

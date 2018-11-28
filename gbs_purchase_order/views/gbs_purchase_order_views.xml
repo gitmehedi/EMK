@@ -87,6 +87,9 @@
                     <xpath expr="//field[@name='origin']" position="attributes">
                         <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
+                    <xpath expr="//field[@name='product_uom']" position="replace">
+                        <field name="product_uom" groups="product.group_uom" readonly="1" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
+                    </xpath>
                     <xpath expr="//field[@name='order_line']" position="attributes">
                         <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>

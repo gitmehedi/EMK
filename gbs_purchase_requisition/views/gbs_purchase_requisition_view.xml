@@ -174,7 +174,7 @@
                         <page string="Others">
                             <group>
                                 <group>
-                                    <field name="vendor_id" string='Supplier' attrs="{'readonly': [('state','in',('done'))]}" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                                    <field name="vendor_id" string='Supplier' attrs="{'readonly': [('state','in',('done'))]}" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True),('parent_id', '=', False)]"/>
                                     <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','!=','draft')]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly': [('state','!=','draft')]}"/>

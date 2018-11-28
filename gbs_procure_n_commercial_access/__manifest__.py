@@ -43,6 +43,7 @@
                 'gbs_supplier',
                 'gbs_purchase_rfq',
                 'gbs_po_merge',
+                'purchase_reports'
     ],
 
 

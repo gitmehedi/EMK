@@ -7,15 +7,13 @@
                 parent="letter_of_credit.lc_report_menu_root"
                 action="action_pending_purchase_local_wizard"
                 id="pending_purchase_report_local_menu"
-                sequence="5"
-                groups = "gbs_procure_n_commercial_access.group_local_purchase" />
+                sequence="5"/>
 
         <menuitem
                 name="Pending Purchase(Foreign)"
                 parent="letter_of_credit.lc_report_menu_root"
                 action="action_pending_purchase_foreign_wizard"
                 id="pending_purchase_report_foreign_menu"
-                sequence="6"
-                groups ="gbs_procure_n_commercial_access.group_imoprt_lc_foreign"/>
+                sequence="6"/>
     </data>
 </odoo>
