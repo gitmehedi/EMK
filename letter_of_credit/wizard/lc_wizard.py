@@ -5,7 +5,7 @@ from openerp.addons.commercial.models.utility import Status
 class LCNumberWizard(models.TransientModel):
     _name = 'lc.number.wizard'
 
-    name = fields.Char(string="Number",required=True)
+    name = fields.Char(string="Number", size=100, required=True)
 
     @api.multi
     def save_number(self):

@@ -281,6 +281,30 @@
         <field eval="0" name="perm_create"/>
     </record>
 
+    <!---->
+    <record id="pr_rule_lc_n_tt" model="ir.rule">
+        <field name="model_id" ref="purchase_requisition.model_purchase_requisition"/>
+        <field name="domain_force">['|',('purchase_by','=', False),('purchase_by','in', ['lc','tt'])]</field>
+        <field name="name">Allow For LC and TT</field>
+        <field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_imoprt_lc_foreign')),(4,ref('gbs_procure_n_commercial_access.group_imoprt_lc_local'))]"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <record id="pr_rule_cash_n_credit" model="ir.rule">
+        <field name="model_id" ref="purchase_requisition.model_purchase_requisition"/>
+        <field name="domain_force">['|',('purchase_by','=', False),('purchase_by','in', ['cash','credit'])]</field>
+        <field name="name">Allow For Cash and Credit</field>
+        <field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_local_purchase'))]"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+    <!---->
+
     <record id="po_rule_cash_n_credit" model="ir.rule">
         <field name="model_id" ref="gbs_purchase_order.model_purchase_order"/>
         <field name="domain_force">['|',('purchase_by','=', False),('purchase_by','in', ['cash','credit'])]</field>
