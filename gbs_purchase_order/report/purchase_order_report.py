@@ -32,7 +32,7 @@ class GbsPurchaseOrder(models.AbstractModel):
         data['terms_condition'] = docs.terms_condition
         data['total_discount'] = docs.amount_untaxed * (docs.amount_discount / 100)
         data['total_vat'] = docs.amount_after_discount * (docs.amount_vat / 100)
-        data['contact_person'] = docs.contact_person
+        data['contact_person'] = docs.contact_person_txt
 
 
         if docs.partner_id.child_ids:

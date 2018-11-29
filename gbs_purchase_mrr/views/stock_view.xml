@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="action_po_stock_picking_mrr">
+            <field name="name">Print MRR</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree2"/>
+            <field name="domain">[('check_mrr_button', '=', 'True'),('origin','=',context.get('name', False))]</field>
+            <field name="help" type="html">
+                <p>
+                    No MRR found for this Purchase Order.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+<!--<field name="context">{'origin': context.get('name', False)}</field>-->
