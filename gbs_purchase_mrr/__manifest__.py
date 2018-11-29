@@ -18,7 +18,8 @@
         'stock_picking_mrr',
     ],
     'data': [
-        # 'views/po.xml',
+        'views/stock_view.xml',
+        'views/po_view.xml',
     ],
     'installable': True,
     'application': False,
