@@ -38,20 +38,29 @@ class MrrReport(models.AbstractModel):
             challan = picking.challan_bill_no
             challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.date_done))
 
+        product_list = []
+        for product in picking.purchase_id.order_line:
+            product_obj={}
+            product_obj['product_id'] = product.product_id.id
+            product_obj['product_name'] = product.product_id.name
+            product_obj['price_unit'] = product.price_unit
+            product_list.append(product_obj)
+
+
         if new_picking.move_lines:
             for move in new_picking.move_lines:
                 pack_obj = {}
                 pack_obj['product_id'] = move.product_id.name
                 pack_obj['mrr_quantity'] = move.product_uom_qty
                 pack_obj['product_uom_id'] = move.product_uom.name
-                pack_obj['price_unit'] = self.env['product.cost.price.history'].search([('product_id','=',move.product_id.id),
-                                                                                        ('modified_datetime', '<=' ,move.date)],
-                                                                                       limit=1,order='modified_datetime desc').current_price or 0.0
-                pack_obj['amount'] = move.product_uom_qty*pack_obj['price_unit']
-                total_amount.append(pack_obj['amount'])
-                pack_list.append(pack_obj)
-
-
+                for pro_list in product_list:
+                    if move.product_id.id == pro_list['product_id']:
+                        price_unit =  pro_list['price_unit']
+                        pack_obj['price_unit'] = price_unit
+                        pack_obj['amount'] = move.product_uom_qty*price_unit
+                        total_amount.append(pack_obj['amount'])
+                        pack_list.append(pack_obj)
+                    
         total = sum(total_amount)
         amt_to_word = self.env['res.currency'].amount_to_word(float(total))
         docargs = {
@@ -66,6 +75,5 @@ class MrrReport(models.AbstractModel):
             'po_date': po_date,
             'total_amount' : total,
             'amt_to_word' : amt_to_word
-
         }
         return self.env['report'].render('stock_picking_mrr.report_mrr_doc', docargs)
