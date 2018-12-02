@@ -85,7 +85,8 @@ class PurchaseRequisition(models.Model):
             'state': 'in_progress'
         }
         requested_date = self.requisition_date
-        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.requisition',requested_date)
+        operating_unit = self.operating_unit_id
+        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.requisition',requested_date,operating_unit)
 
         if new_seq:
             res['name'] = new_seq
