@@ -69,6 +69,14 @@
                     <xpath expr="//field[@name='order_count']" position="attributes">
                         <attribute name="string">Quotations</attribute>
                     </xpath>
+                    <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                        <field name="indent_ids" invisible="True"/>
+                        <button name="action_get_indent" type="object"
+                            class="oe_stat_button" icon="fa-list-alt"
+                            attrs="{'invisible':[('indent_ids','=',[])]}">
+                            <label string="Indents"/>
+                        </button>
+                    </xpath>
                     <xpath expr="//field[@name='state']" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approve_head_procurement,done"/>
                     </xpath>

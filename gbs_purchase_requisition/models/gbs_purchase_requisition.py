@@ -109,6 +109,12 @@ class PurchaseRequisition(models.Model):
         # self.write({'state': 'approve_head_procurement'})
 
     @api.multi
+    def action_get_indent(self):
+        action = self.env.ref('stock_indent.action_stock_indent').read([])[0]
+        action['domain'] = [('id', '=', self.indent_ids.ids)]
+        return action
+
+    @api.multi
     def action_approve(self):
         res = self.env.ref('gbs_purchase_requisition.purchase_requisition_type_wizard')
         result = {
