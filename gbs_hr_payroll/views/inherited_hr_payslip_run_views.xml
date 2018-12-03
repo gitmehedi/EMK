@@ -16,6 +16,9 @@
                 <xpath expr="//label[@for='name']" position="replace">
                     <label for="name" string="Description" class="oe_edit_only"/>
                 </xpath>
+                <xpath expr="//button[@name='draft_payslip_run']" position="replace">
+                    <button string="Set to Draft" name="draft_payslip_run" type="object" invisible = '1' states="close" />
+                </xpath>
             </field>
         </record>
         <record id="email_hr_payslip_run_view" model="ir.ui.view">

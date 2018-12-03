@@ -59,9 +59,12 @@
                             </table>
                         </div>
                         <h5>
-                            <b>Bank Credit:</b>
+                            <b>Bank Credit(Total):</b>
                             <span t-esc="inword['bnet']"></span>
                             (<span t-esc="inword['bnet_word']"/>)
+                            <t t-foreach="bank_list" t-as="bank">
+                                <p style="margin-left:80px;"><b><span t-esc="bank['bank_name']"/></b>(<span t-esc="bank['bank_acc_id']"/>) : <span t-esc="bank['bysal']"/></p>
+                            </t>
                         </h5>
                         <h5>
                             <b>Cash Payment :</b>
