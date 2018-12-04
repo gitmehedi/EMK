@@ -370,7 +370,7 @@
               groups="account.group_account_user"/>
 
     <menuitem id="menu_acc_approver"
-              name="Accounts Approver"
+              name="Accounts Approver" sequence="1"
               parent="menu_receive_picking_acc_approver"
               action="action_stock_picking_receive_acc_approver" groups="account.group_account_user"/>
 
@@ -523,7 +523,5 @@
             </field>
         </field>
     </record>
-
-
 
 </odoo>
