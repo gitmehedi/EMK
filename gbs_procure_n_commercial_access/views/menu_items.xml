@@ -168,5 +168,6 @@
                     id="act_send_rfq"
                     groups="group_local_purchase"
         />
+
     </data>
 </odoo>
