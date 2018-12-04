@@ -111,7 +111,7 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def action_get_indent(self):
-        action = self.env.ref('stock_indent.action_stock_indent').read([])[0]
+        action = self.env.ref('gbs_purchase_requisition.action_pr_stock_indent').read([])[0]
         action['domain'] = [('id', '=', self.indent_ids.ids)]
         return action
 
