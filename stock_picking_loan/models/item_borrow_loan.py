@@ -68,7 +68,7 @@ class ItemBorrowing(models.Model):
                     picking_type = self.env['stock.picking.type'].search(
                         [('default_location_src_id', '=', location_id),
                          ('default_location_dest_id', '=', location_dest_id),
-                         ('code', '=', 'outgoing')], limit=1)
+                         ('code', '=', 'loan_outgoing')], limit=1)
                     if not picking_type:
                         raise UserError(_('Please create picking type for Returning.'))
                     pick_name = self.env['stock.picking.type'].browse(picking_type.id).sequence_id.next_by_id()

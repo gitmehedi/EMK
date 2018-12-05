@@ -81,7 +81,9 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//button[@name='button_print_mrr']" position="attributes">
-                        <attribute name="groups">account.group_account_user,gbs_procure_n_commercial_access.group_local_purchase,gbs_procure_n_commercial_access.group_imoprt_lc_foreign</attribute>
+                        <attribute name="groups">account.group_account_user,gbs_procure_n_commercial_access.group_local_purchase,
+                            gbs_procure_n_commercial_access.group_imoprt_lc_foreign,
+                            stock.group_stock_user,gbs_application_group.group_head_of_plant</attribute>
                     </xpath>
                 </data>
             </field>
