@@ -9,8 +9,8 @@ class Picking(models.Model):
     check_mrr_button = fields.Boolean(default=False,string='MRR Button Check')
     check_approve_button = fields.Boolean(default=False,string='Approve Button Check',compute='_compute_approve_button',store=True)
     check_ac_approve_button = fields.Boolean(default=False,string='AC Button Check',compute='_compute_approve_button',store=True)
-    mrr_no = fields.Char('MRR No')
-    mrr_date = fields.Date('MRR date')
+    mrr_no = fields.Char('MRR No',track_visibility="onchange")
+    mrr_date = fields.Date('MRR date',track_visibility="onchange")
 
     pack_operation_product_ids = fields.One2many(
         'stock.pack.operation', 'picking_id', 'Non pack',
@@ -25,7 +25,10 @@ class Picking(models.Model):
             # if picking.transfer_type == 'receive' and picking.state == 'done' and picking.location_dest_id.name == 'Stock':
                 # if picking.state == 'done':
                 #     if picking.location_dest_id.name == 'Stock':
+
+            #Search from anticipatory stock
                 origin_picking_objs = self.search([('name','=',picking.origin)])
+                # if anticipatory then conditionally search that its type
                 if origin_picking_objs:
                     if origin_picking_objs[0].receive_type in ['lc']:
                         picking.check_approve_button = True
