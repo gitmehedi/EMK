@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="payslip_report_wizard_view" model="ir.ui.view">
+			<field name="name">Payslip Report Wizard View</field>
+			<field name="model">payslip.report.wizard</field>
+			<field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<button string="Payslip Summary" name="process_payslip_summary_print" type="object" class="oe_highlight"/>
+					</group>
+					<group>
+						<button string="Top Sheet" name="process_top_sheet_print" type="object" class="oe_highlight"/>
+					</group>
+					<group>
+						<button string="Monthly Cash Salary" name="process_cash_salary_print" type="object" class="oe_highlight"/>
+					</group>
+					<group>
+						<button string="Monthly Loan Deduction" name="process_loan_deduction_print" type="object" class="oe_highlight"/>
+					</group>
+					<group>
+						<button string="Monthly Provident Fund" name="process_pf_report" type="object" class="oe_highlight"/>
+					</group>
+				</group>
+				<footer>
+					<button name ="process_print" string="Print" type="object" class="oe_highlight"  invisible="1"/>
+                    <button special="cancel" string="Cancel" />
+				</footer>
+               </form>
+			</field>
+		</record>
+
+		<record id="action_salary_wizard" model="ir.actions.act_window">
+			<field name="name">Monthly Salary Reports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">payslip.report.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+	</data>
+</odoo>

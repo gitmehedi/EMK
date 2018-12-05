@@ -13,7 +13,7 @@ class PayrollReportPivotal(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        top_sheet = self.env['hr.payslip.run'].browse(docids[0])
+        top_sheet = self.env['hr.payslip.run'].browse(data.get('active_id'))
 
         data['name'] = top_sheet.name
 

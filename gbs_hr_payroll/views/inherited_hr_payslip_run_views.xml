@@ -19,6 +19,10 @@
                 <xpath expr="//button[@name='draft_payslip_run']" position="replace">
                     <button string="Set to Draft" name="draft_payslip_run" type="object" invisible = '1' states="close" />
                 </xpath>
+                 <xpath expr="//header/button[@name='draft_payslip_run']" position="after">
+                        <button string="Print Report" type="action" context="{'available_advice':True}"
+                                name="%(action_salary_wizard)d"/>
+                    </xpath>
             </field>
         </record>
         <record id="email_hr_payslip_run_view" model="ir.ui.view">

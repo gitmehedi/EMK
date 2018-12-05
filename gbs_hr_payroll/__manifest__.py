@@ -20,6 +20,7 @@
     'data': [
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
         'wizard/provident_fund_generate_wizard.xml',
+        'wizard/salary_report_wizard.xml',
         'report/payroll_report_view.xml',
         'report/report_payrolladvice_inherit.xml',
         'report/monthly_provident_found_report.xml',
