@@ -96,6 +96,7 @@
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll.report_monthly_loan_deduction"
                 name="gbs_hr_payroll.report_monthly_loan_deduction"
+                menu = "False"
                 paperformat="report_layout.paperformat_backend_landscape"
         />
     </data>
