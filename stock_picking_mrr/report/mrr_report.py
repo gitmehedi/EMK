@@ -34,7 +34,7 @@ class MrrReport(models.AbstractModel):
             po_no = picking.purchase_id.name
             po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.purchase_id.date_order))
             customer = picking.purchase_id.partner_id.name
-            pr_no = picking.purchase_id.requisition_id.name
+            pr_no = picking.purchase_id.sudo().requisition_id.name
             challan = picking.challan_bill_no
             challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.date_done))
 
