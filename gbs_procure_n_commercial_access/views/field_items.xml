@@ -74,5 +74,19 @@
         </record>
 
 
+        <record model="ir.ui.view" id="view_picking_form_inherit_ptp">
+            <field name="name">stock.picking.inherit.ptp.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock_picking_mrr.view_picking_form_inherit_mrr"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='button_print_mrr']" position="attributes">
+                        <attribute name="groups">account.group_account_user,gbs_procure_n_commercial_access.group_local_purchase,
+                            gbs_procure_n_commercial_access.group_imoprt_lc_foreign,
+                            stock.group_stock_user,gbs_application_group.group_head_of_plant</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
     </data>
 </odoo>

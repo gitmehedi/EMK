@@ -8,5 +8,6 @@ class PickingType(models.Model):
                              ('outgoing', 'Customers'),
                              ('internal', 'Internal'),
                              ('outgoing_return', 'Customers Return'),
-                             ('incoming_return', 'Vendors Return')],
+                             ('incoming_return', 'Vendors Return'),
+                             ('loan_outgoing', 'Loan')],
                             'Type of Operation', required=True)
