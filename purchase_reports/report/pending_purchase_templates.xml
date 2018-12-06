@@ -14,7 +14,7 @@
         <template id="report_pending_purchase">
             <t t-call="report.html_container">
                  <t t-call="report_layout.gbs_internal_layout">
-                    <div class="page" style="page-break-inside:auto; padding-top:70px;">
+                    <div class="page" style="page-break-inside:auto;">
                         <div class="row">
                             <style type="text/css">
                                 .report-title { text-align:center; }
