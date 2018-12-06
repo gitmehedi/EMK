@@ -130,6 +130,7 @@
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll.report_monthly_cash_salary"
                 name="gbs_hr_payroll.report_monthly_cash_salary"
+                menu = "False"
                 paperformat="report_layout.paperformat_backend_landscape"
         />
     </data>

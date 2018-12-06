@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="view_picking_form_inherit3">
-        <field name="name">stock.picking.inherit3.form</field>
+    <record model="ir.ui.view" id="view_picking_form_inherit_mrr">
+        <field name="name">stock.picking.inherit.mrr.form</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
@@ -18,44 +18,8 @@
                         type="object" class="oe_highlight" groups="account.group_account_user"/>
 
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
-                        type="object" class="oe_highlight" groups="stock.group_stock_user"/>
+                        type="object" class="oe_highlight" groups="stock.group_stock_user,gbs_application_group.group_head_of_plant"/>
             </xpath>
-
-            <!--<xpath expr="//field[@name='origin']" position="after">-->
-                <!--<field name="check_mrr_button" />-->
-                <!--<field name="check_approve_button" />-->
-                <!--<field name="check_ac_approve_button" />-->
-            <!--</xpath>-->
-
-            <!--<xpath expr="//sheet/notebook/page/field/tree/field[@name='qty_done']" position="after">-->
-                <!--<field name="check_mrr_button" invisible="1"/>-->
-                <!--<field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button','=', False)]}"/>-->
-            <!--</xpath>-->
-
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_picking_form_inherit4">
-        <field name="name">stock.picking.inherit4.form</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_form1"/>
-        <field name="arch" type="xml">
-            <xpath expr="//header/button[@name='%(stock.act_stock_return_picking)d']" position="after">
-
-                <field name="check_mrr_button" invisible="1"/>
-                <field name="check_approve_button" invisible="1"/>
-                <field name="check_ac_approve_button" invisible="1"/>
-
-                <button name="button_approve" string="Approve" attrs="{'invisible': [('check_approve_button','=',False)]}"
-                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
-
-                <button name="button_ac_approve" string="AC Approve" attrs="{'invisible': [('check_ac_approve_button','=',False)]}"
-                        type="object" class="oe_highlight" groups="account.group_account_user"/>
-
-                <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
-                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
-            </xpath>
-
         </field>
     </record>
 

@@ -3,45 +3,60 @@ from odoo import api,models,fields
 class PurchaseReport(models.AbstractModel):
     _name = "report.purchase_reports.report_pending_purchase"
 
+    sql_str = """SELECT pr_line.id, pr_line.requisition_id, pr.name, pt.name,
+                        pr_line.product_ordered_qty, uom.name, COALESCE(pr_line.mrr_qty, 0) AS mrr_qty,
+                        pr_line.product_ordered_qty - COALESCE(pr_line.mrr_qty, 0) AS remain_qty, pr_line.last_price_unit,
+                        (SELECT SUM(po_line.product_qty) FROM po_pr_line_rel map_table
+                            LEFT JOIN purchase_order_line po_line ON po_line.id = map_table.po_line_id
+                            LEFT JOIN purchase_order po ON po.id = po_line.order_id WHERE map_table.pr_line_id = pr_line.id) AS po_qty,
+                        (SELECT array_to_string( array_agg( po.name ), ',' ) FROM po_pr_line_rel map_table
+                            LEFT JOIN purchase_order_line po_line ON po_line.id = map_table.po_line_id
+                            LEFT JOIN purchase_order po ON po.id = po_line.order_id WHERE map_table.pr_line_id = pr_line.id) AS po_no
+                FROM 
+                      purchase_requisition_line pr_line
+                      LEFT JOIN purchase_requisition pr ON pr.id = pr_line.requisition_id
+                      LEFT JOIN product_uom uom ON uom.id = pr_line.product_uom_id
+                      LEFT JOIN product_product pp ON pr_line.product_id = pp.id
+                      LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
+                WHERE pr.state = 'done' AND pr.purchase_from = 'ho' AND 
+                pr_line.product_ordered_qty - COALESCE(pr_line.mrr_qty, 0) > 0
+"""
+
     @api.multi
     def render_html(self,docids,data=None):
-        # purchase_obj = self.env['hr.employee.loan']
-        record_list = []
-        if data['purchase_name'] == 'Pending Local Purchase Report':
 
-            # for rec in purchase_obj:
-            #     if rec.line_ids:
-            #         for line in purchase_obj.line_ids:
-            list_obj = {}
-            list_obj['pr_no'] = 'PR-SCCL-DF-2018-000056'
-            list_obj['items'] = 'Motor Cooling fan-5'
-            list_obj['qty'] = '24'
-            list_obj['unit'] = 'Pcs'
-            list_obj['last_rate'] = '120'
-            list_obj['po_no'] = 'PO-SCCL-DF-2018-000049'
-            list_obj['po_qty'] = '33'
-            list_obj['mrr_qty'] = '20'
-            list_obj['remaining_qty'] = '7'
-            record_list.append(list_obj)
+        report_title = ''
+
+        record_list = []
+
+        if data['report_type'] == 'local':
+
+            self.sql_str += " AND pr.purchase_by IN ('cash','credit')"
+            report_title = 'Pending Local Purchase Report'
+
         else:
-            # for rec in purchase_obj:
-            #     if rec.line_ids:
-            #         for line in purchase_obj.line_ids:
+            self.sql_str += " AND pr.purchase_by IN ('lc','tt')"
+            report_title = 'Pending Foreign Purchase Report'
+
+        self._cr.execute(self.sql_str)
+        data_list = self._cr.fetchall()
+
+        for row in data_list:
             list_obj = {}
-            list_obj['pr_no'] = 'PR-SCCL-DF-2018-000056'
-            list_obj['items'] = 'Motor Cooling fan-5'
-            list_obj['qty'] = '24'
-            list_obj['unit'] = 'Pcs'
-            list_obj['last_rate'] = '120'
-            list_obj['po_no'] = 'PO-SCCL-DF-2018-000049'
-            list_obj['po_qty'] = '33'
-            list_obj['mrr_qty'] = '20'
-            list_obj['remaining_qty'] = '7'
+            list_obj['pr_no'] = row[2]
+            list_obj['items'] = row[3]
+            list_obj['qty'] = row[4]
+            list_obj['unit'] = row[5]
+            list_obj['mrr_qty'] = row[6]
+            list_obj['remaining_qty'] = row[7]
+            list_obj['last_rate'] = row[8]
+            list_obj['po_qty'] = row[9]
+            list_obj['po_no'] = row[10]
             record_list.append(list_obj)
 
         docargs = {
             'data': data,
-            'name':data['purchase_name'],
+            'report_title':report_title,
             'lists': record_list,
 
         }

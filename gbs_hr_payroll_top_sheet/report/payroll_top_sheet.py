@@ -8,16 +8,12 @@ from odoo.tools.misc import formatLang
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_payroll_top_sheet.report_top_sheet'
 
-    # def getKey(item):
-    #     return item[1]
-
-
     def formatDigits(self, digits):
         return formatLang(self.env, digits)
 
     @api.model
     def render_html(self, docids, data=None):
-        top_sheet = self.env['hr.payslip.run'].browse(docids[0])
+        top_sheet = self.env['hr.payslip.run'].browse(data.get('active_id'))
 
         data['name'] = top_sheet.name
 
@@ -73,6 +69,19 @@ class PayrollReportPivotal(models.AbstractModel):
             'cash': formatLang(self.env, float(net - bnet)),
         }
 
+        bank_list = []
+        payroll_advice = self.env['hr.payroll.advice'].search([('name','=', top_sheet.name)])
+        for i in payroll_advice:
+            vals = {}
+            vals['bank_name'] = i.bank_id.name
+            vals['bank_acc_id'] = i.bank_acc_id.acc_number
+            bysal = 0.0
+            for line in i.line_ids:
+                bysal = bysal+line.bysal
+            vals['bysal'] =  formatLang(self.env,(math.ceil(bysal)))
+            bank_list.append(vals)
+
+
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
@@ -82,6 +91,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'record': record,
             'total': total,
             'rules': rule_list,
+            'bank_list': bank_list,
             'inword': inword
         }
 

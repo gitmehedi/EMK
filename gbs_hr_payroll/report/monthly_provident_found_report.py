@@ -9,7 +9,7 @@ class MonthlyProvidentFund(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         payslip_run_pool = self.env['hr.payslip.run']
-        docs = payslip_run_pool.browse(docids[0])
+        docs = payslip_run_pool.browse(data.get('active_id'))
         data = {}
         data['name'] = docs.name
         data['type'] = docs.type

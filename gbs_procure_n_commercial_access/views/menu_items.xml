@@ -168,5 +168,12 @@
                     id="act_send_rfq"
                     groups="group_local_purchase"
         />
+
+        <menuitem id="menu_picking_mrr_ptp"
+              name="Show MRR"
+              parent="stock_picking_extend.menu_receive_picking_acc_approver"
+              sequence="2"
+              action="stock_picking_mrr.action_stock_picking_mrr"
+              groups="account.group_account_user"/>
     </data>
 </odoo>

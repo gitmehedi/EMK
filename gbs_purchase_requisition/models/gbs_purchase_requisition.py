@@ -85,7 +85,8 @@ class PurchaseRequisition(models.Model):
             'state': 'in_progress'
         }
         requested_date = self.requisition_date
-        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.requisition',requested_date)
+        operating_unit = self.operating_unit_id
+        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.requisition',requested_date,operating_unit)
 
         if new_seq:
             res['name'] = new_seq
@@ -107,6 +108,12 @@ class PurchaseRequisition(models.Model):
         }
         return result
         # self.write({'state': 'approve_head_procurement'})
+
+    @api.multi
+    def action_get_indent(self):
+        action = self.env.ref('gbs_purchase_requisition.action_pr_stock_indent').read([])[0]
+        action['domain'] = [('id', '=', self.indent_ids.ids)]
+        return action
 
     @api.multi
     def action_approve(self):
