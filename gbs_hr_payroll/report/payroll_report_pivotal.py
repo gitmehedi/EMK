@@ -10,8 +10,12 @@ class PayrollReportPivotal(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
+        # payslip_run_pool = self.env['hr.payslip.run']
+        # docs = payslip_run_pool.browse(docids[0])
         payslip_run_pool = self.env['hr.payslip.run']
-        docs = payslip_run_pool.browse(docids[0])
+        docs = payslip_run_pool.browse(data.get('active_id'))
+        report_type = data['report_type']
+
         data = {}
         data['name'] = docs.name
         data['type'] = docs.type
@@ -48,33 +52,64 @@ class PayrollReportPivotal(models.AbstractModel):
 
             for slip in docs.slip_ids:
                 payslip = {}
-                if d.id == slip.employee_id.department_id.id:
-                    payslip['emp_name'] = slip.employee_id.name
-                    payslip['designation'] = slip.employee_id.job_id.name
-                    payslip['doj'] = slip.employee_id.initial_employment_date
-                    payslip['emp_seq'] = slip.employee_id.employee_sequence
-                    loan_remain = slip.remaining_loan or 0.00
-                    payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
-                    payslip['sa'] = formatLang(self.env,math.ceil(slip.employee_id.contract_id.supplementary_allowance))
-                    gross = math.ceil((slip.employee_id.contract_id.wage)*2.5)
-                    payslip['gross'] = formatLang(self.env,gross)
+                if report_type == 'cash':
+                    if not slip.employee_id.bank_account_id.id:
+                        if d.id == slip.employee_id.department_id.id:
+                            payslip['emp_name'] = slip.employee_id.name
+                            payslip['designation'] = slip.employee_id.job_id.name
+                            payslip['doj'] = slip.employee_id.initial_employment_date
+                            payslip['emp_seq'] = slip.employee_id.employee_sequence
+                            loan_remain = slip.remaining_loan or 0.00
+                            payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
+                            payslip['sa'] = formatLang(self.env,
+                                                       math.ceil(slip.employee_id.contract_id.supplementary_allowance))
+                            gross = math.ceil((slip.employee_id.contract_id.wage) * 2.5)
+                            payslip['gross'] = formatLang(self.env, gross)
 
-                    for rule in rule_list:
-                        payslip[rule['code']] = 0
+                            for rule in rule_list:
+                                payslip[rule['code']] = 0
 
-                        for line in slip.line_ids:
-                            if line.code == rule['code']:
-                                total_amount = math.ceil(line.total)
-                                payslip[rule['code']] = formatLang(self.env, total_amount)
+                                for line in slip.line_ids:
+                                    if line.code == rule['code']:
+                                        total_amount = math.ceil(line.total)
+                                        payslip[rule['code']] = formatLang(self.env, total_amount)
 
-                                row_total[line.code] = row_total[line.code] + (math.ceil(total_amount))
+                                        row_total[line.code] = row_total[line.code] + (math.ceil(total_amount))
 
-                                if line.code == "NET":
-                                    total_sum.append(math.ceil(total_amount))
+                                        if line.code == "NET":
+                                            total_sum.append(math.ceil(total_amount))
 
-                                break;
+                                        break;
 
-                    dpt_payslips['val'].append(payslip)
+                            dpt_payslips['val'].append(payslip)
+                else:
+                    if d.id == slip.employee_id.department_id.id:
+                        payslip['emp_name'] = slip.employee_id.name
+                        payslip['designation'] = slip.employee_id.job_id.name
+                        payslip['doj'] = slip.employee_id.initial_employment_date
+                        payslip['emp_seq'] = slip.employee_id.employee_sequence
+                        loan_remain = slip.remaining_loan or 0.00
+                        payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
+                        payslip['sa'] = formatLang(self.env,math.ceil(slip.employee_id.contract_id.supplementary_allowance))
+                        gross = math.ceil((slip.employee_id.contract_id.wage)*2.5)
+                        payslip['gross'] = formatLang(self.env,gross)
+
+                        for rule in rule_list:
+                            payslip[rule['code']] = 0
+
+                            for line in slip.line_ids:
+                                if line.code == rule['code']:
+                                    total_amount = math.ceil(line.total)
+                                    payslip[rule['code']] = formatLang(self.env, total_amount)
+
+                                    row_total[line.code] = row_total[line.code] + (math.ceil(total_amount))
+
+                                    if line.code == "NET":
+                                        total_sum.append(math.ceil(total_amount))
+
+                                    break;
+
+                        dpt_payslips['val'].append(payslip)
 
             emp_sort_list = dpt_payslips['val']
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
@@ -134,6 +169,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'amt_to_word': amt_to_word,
             'data': data,
             'row_total': row_total,
+            'report_type': report_type
         }
 
         return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)
