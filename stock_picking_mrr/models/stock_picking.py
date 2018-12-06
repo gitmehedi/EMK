@@ -27,13 +27,13 @@ class Picking(models.Model):
                 #     if picking.location_dest_id.name == 'Stock':
 
             #Search from anticipatory stock
-                origin_picking_objs = self.search([('name','=',picking.origin)])
+                origin_picking_objs = self.search(['|',('name','=',picking.origin),('origin','=',picking.origin)], order='id ASC', limit=1)
                 # if anticipatory then conditionally search that its type
                 if origin_picking_objs:
-                    if origin_picking_objs[0].receive_type in ['lc']:
+                    if origin_picking_objs.receive_type in ['lc','credit','tt']:
                         picking.check_approve_button = True
                         picking.check_ac_approve_button = False
-                    elif origin_picking_objs[0].receive_type in ['loan']:
+                    elif origin_picking_objs.receive_type in ['loan']:
                         picking.check_approve_button = False
                         picking.check_ac_approve_button = False
                     else:

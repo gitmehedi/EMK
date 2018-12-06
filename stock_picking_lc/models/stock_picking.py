@@ -10,6 +10,8 @@ class Picking(models.Model):
     receive_type = fields.Selection([
         ('lc', 'LC'),
         ('loan', 'Loan'),
+        ('credit', 'Credit'),
+        ('tt', 'TT'),
         ('other', 'Other')],
         readonly=True, states={'draft': [('readonly', False)]})
 
