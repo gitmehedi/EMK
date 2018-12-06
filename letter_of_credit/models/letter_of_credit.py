@@ -100,7 +100,7 @@ class LetterOfCredit(models.Model):
     @api.onchange('first_party')
     def onchange_company_id(self):
         if self.first_party:
-            self.operating_unit_id = []
+            # self.operating_unit_id = []
             return {'domain': {'operating_unit_id': [('company_id', '=', self.first_party.id)]}}
 
     # @api.multi

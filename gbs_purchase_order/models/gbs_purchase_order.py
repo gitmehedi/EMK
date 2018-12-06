@@ -87,7 +87,7 @@ class PurchaseOrder(models.Model):
     amount_discount = fields.Float(string='Discount(%)')
     amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
     amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
-    terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
+    terms_condition = fields.Text(string='Terms & Conditions', readonly=True,
                                   states={'draft': [('readonly', False)]})
 
 
