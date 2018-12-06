@@ -18,7 +18,8 @@ class PurchaseReport(models.AbstractModel):
                       LEFT JOIN product_uom uom ON uom.id = pr_line.product_uom_id
                       LEFT JOIN product_product pp ON pr_line.product_id = pp.id
                       LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
-                WHERE pr.state = 'done' AND pr_line.product_ordered_qty - COALESCE(pr_line.mrr_qty, 0) > 0
+                WHERE pr.state = 'done' AND pr.purchase_from = 'ho' AND 
+                pr_line.product_ordered_qty - COALESCE(pr_line.mrr_qty, 0) > 0
 """
 
     @api.multi
