@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_po_view_form_mrr" model="ir.ui.view">
+            <field name="name">inherit.po.view.form.mrr</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <div name="button_box" position="inside">
+                        <button name="%(action_po_stock_picking_mrr)d" type="action" class="oe_stat_button" icon="fa-list-alt"
+                                attrs="{'invisible': [('state', 'not in', ('purchase','done'))]}"
+                                context="{'name': name}" string="MRR">
+                        </button>
+                    </div>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

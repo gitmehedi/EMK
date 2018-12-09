@@ -11,6 +11,8 @@
                     <xpath expr="//header/button[@name='draft_payslip_run']" position="after">
                          <button string="Print Bank Letter" type="action"
                          		name="%(action_hr_bank_selection_wizard)d"/>
+
+
                     </xpath>
                 </data>
             </field>

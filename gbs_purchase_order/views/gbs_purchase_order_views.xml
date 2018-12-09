@@ -27,6 +27,9 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                    </xpath>
                     <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
                         <attribute name="attrs">{'invisible': [('purchase_by', 'in', ['lc'])]}</attribute>
                     </xpath>
@@ -73,12 +76,28 @@
                     </xpath>
                     <xpath expr="//field[@name='partner_ref']" position="attributes">
                         <attribute name="string">Supplier Reference</attribute>
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='incoterm_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='origin']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='product_uom']" position="replace">
+                        <field name="product_uom" groups="product.group_uom" readonly="1" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
                     <xpath expr="//field[@name='partner_ref']" position="after">
-                        <field name="ref_date"/>
+                        <field name="ref_date" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="contact_person" widget="many2many_tags"/>
+                        <field name="contact_person_txt" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
                     </xpath>
                     <xpath expr="//field[@name='notes']" position="replace">
                         <group style="width:70%;">
@@ -94,6 +113,12 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
 
+                    <xpath expr="//field[@name='amount_untaxed']" position="after">
+                        <field name="amount_discount"/>
+                        <field name="amount_after_discount"/>
+                        <field name="amount_vat"/>
+                        <field name="amount_after_vat" invisible="1"/>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -103,12 +128,17 @@
             <field name="inherit_id" ref="purchase_requisition.purchase_order_form_inherit"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//field[@name='requisition_id']" position="replace">
+                        <field name="requisition_id"
+                            domain="[('state', 'in', ('in_progress','approve_head_procurement','done','open')), ('vendor_id', 'in', (partner_id, False))]"/>
+                    </xpath>
                     <xpath expr="//field[@name='requisition_id']" position="attributes">
                         <attribute name="string">Purchase Requisition</attribute>
+                        <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
                     <xpath expr="//page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="one2many_list" context="{'default_res_id': id, 'default_res_model': 'purchase.order'}">
+                            <field name="attachment_ids" widget="one2many_list" attrs="{'readonly': [('state','=','purchase')]}" context="{'default_res_id': id, 'default_res_model': 'purchase.order'}">
                                 <tree string="Attachments" editable="top">
                                     <field name="res_id" invisible="1"/>
                                     <field name="res_model" invisible="1"/>
@@ -117,6 +147,9 @@
                                     <field name="db_datas" filename="datas_fname" string="File"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page string="Terms &amp; Condition">
+                            <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
                         </page>
                     </xpath>
                 </data>
@@ -151,6 +184,7 @@
             <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="requisition_id" string="PR Number"/>
                     <filter name="active" string="Active" domain="[('state','!=','cancel')]"/>
                 </xpath>
             </field>

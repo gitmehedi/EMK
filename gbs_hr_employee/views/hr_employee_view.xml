@@ -16,6 +16,7 @@
                     </xpath>
                     <xpath expr="//field[@name='user_id']" position="after">
                         <field name="employee_sequence"/>
+                        <field name="total_pf"/>
                     </xpath>
                 </data>
             </field>

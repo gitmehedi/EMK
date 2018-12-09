@@ -17,7 +17,7 @@ class StockTransferDetailsReport(models.AbstractModel):
             'doc_ids': self._ids,
             'docs': self,
             'record': data,
-            'product_lines': get_data['product'],
+            'product_lines': get_data['category'],
             'total': get_data['total'],
             'address': data['address'],
 
@@ -30,7 +30,34 @@ class StockTransferDetailsReport(models.AbstractModel):
         date_to = data['date_to']
         date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
-        product = []
+        category_id = data['category_id']
+        cat_pool = self.env['product.category']
+
+        if category_id:
+            categories = cat_pool.get_categories(category_id)
+            category = {val.name: {
+                'product': [],
+                'sub-total': {
+                    'title': 'SUB TOTAL',
+                    'sub_total_qty': 0.0,
+                    'sub_total_val': 0.0,
+                }
+            } for val in cat_pool.search([('id', 'in', categories)])}
+
+            category_param = "(" + str(data['category_id']) + ")"
+        else:
+            cat_lists = cat_pool.search([], order='name ASC')
+            category = {val.name: {
+                'product': [],
+                'sub-total': {
+                    'title': 'SUB TOTAL',
+                    'sub_total_qty': 0.0,
+                    'sub_total_val': 0.0,
+                }
+            } for val in cat_lists}
+
+            category_param = str(tuple(cat_lists.ids))
+
         grand_total = {
             'title': 'GRAND TOTAL',
             'total_out_qty': 0,
@@ -83,16 +110,21 @@ class StockTransferDetailsReport(models.AbstractModel):
                                            AND sm.state = 'done'
                                            AND sm.location_id = %s
                                            AND sm.location_dest_id <> %s
+                                           AND pc.id IN %s
                                     ORDER  BY
                                            sm.date
                                    )tbl
-                                    ''' % (date_start, date_end, location_outsource, location_outsource)
+                                    ''' % (date_start, date_end, location_outsource, location_outsource,category_param)
 
         self.env.cr.execute(sql_out_tk)
         for vals in self.env.cr.dictfetchall():
             if vals:
-                product.append(vals)
+                category[vals['category']]['product'].append(vals)
+                total = category[vals['category']]['sub-total']
+                total['sub_total_qty'] = total['sub_total_qty'] + vals['qty_out_tk']
+                total['sub_total_val'] = total['sub_total_val'] + vals['val_out_tk']
+
                 grand_total['total_out_qty'] = grand_total['total_out_qty'] + vals['qty_out_tk']
                 grand_total['total_out_val'] = grand_total['total_out_val'] + vals['val_out_tk']
 
-        return {'product': product, 'total': grand_total}
+        return {'category': category, 'total': grand_total}

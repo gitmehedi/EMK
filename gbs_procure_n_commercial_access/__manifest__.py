@@ -38,6 +38,13 @@
                 'terms_setup',
                 'stock_operating_unit',
                 'stock',
+                'terms_setup_foreign',
+                'terms_setup_local',
+                'gbs_supplier',
+                'gbs_purchase_rfq',
+                'gbs_po_merge',
+                'purchase_reports',
+                'gbs_purchase_mrr',
     ],
 
 
@@ -47,6 +54,8 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu_items.xml',
+        'views/field_items.xml',
         'views/commercial_po_menu.xml',
+        'views/commercial_supplier_menus.xml',
     ],
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="po_merge_wizard_form" model="ir.ui.view">
+            <field name="name">po.merge.wizard.form</field>
+            <field name="model">po.merge.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Please Select PQ For Merge" create="false" edit="false">
+                    <group>
+                        <field name="po_ids" widget="many2many_tags" options="{'no_create': True,'no_open':True}"/>
+                        <field name="is_new_add" invisible="1"/>
+                        <field name="operating_unit_id" invisible="1"/>
+                        <field name="partner_id" string="Supplier" readonly="1"/>
+                    </group>
+                    <field name="product_lines" widget="one2many">
+                        <tree string="Product Lines" editable="bottom">
+                            <field name="product_id" />
+                            <field name="product_qty"/>
+                            <field name="product_uom_id" readonly='1'/>
+                            <field name="price_unit"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Confirm" name="action_confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

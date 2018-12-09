@@ -1,5 +1,6 @@
-from odoo import api, fields, models, tools, _
 import datetime
+import math
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 class InheritResPartnerBank(models.Model):
@@ -35,6 +36,7 @@ class HrPayslipEmployees(models.TransientModel):
 
 class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
+    _order = 'date_end desc'
 
     send_email = fields.Boolean('Send Email',default=False)
 
@@ -103,14 +105,14 @@ class HrPayslipRun(models.Model):
 
                     if slip.employee_id.bank_account_id and slip.employee_id.bank_account_id.bank_id and slip.employee_id.bank_account_id.acc_number:
                         if bank == slip.employee_id.bank_account_id.bank_id.id:
-                            payslip_line = self.env['hr.payslip.line'].search([('slip_id', '=', slip.id), ('code', '=', 'NET')], limit=1)
+                            payslip_line = self.env['hr.payslip.line'].search([('slip_id', '=', slip.id), ('code', '=', 'BNET')], limit=1)
                             if payslip_line:
                                 self.env['hr.payroll.advice.line'].create({
                                     'advice_id': advice.id,
                                     'name': slip.employee_id.bank_account_id.acc_number,
                                     'ifsc_code': slip.employee_id.bank_account_id.bank_bic or '',
                                     'employee_id': slip.employee_id.id,
-                                    'bysal': payslip_line.total
+                                    'bysal': math.ceil(payslip_line.total)
                                 })
 
         self.write({'available_advice': True})

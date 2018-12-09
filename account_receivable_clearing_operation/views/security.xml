@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account.account_clearing_controller" model="res.groups">
+        <field name="name">Account Clearing Controller</field>
+        <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+    </record>
+
+</odoo>

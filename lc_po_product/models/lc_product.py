@@ -15,6 +15,7 @@ class LCPO(models.Model):
         self.second_party_beneficiary = None
         self.currency_id = None
         self.lc_value = None
+        self.operating_unit_id = None
         for po_id in self.po_ids:
             self.first_party = po_id.company_id.id
             self.second_party_beneficiary = po_id.partner_id.id

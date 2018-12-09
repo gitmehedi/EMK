@@ -21,6 +21,7 @@ the loan to other company. System will handle the both case mentioned above.
 
     'depends': [
         'stock_operating_unit',
+        'gbs_samuda_stock',
         'gbs_application_group',
         'ir_sequence_operating_unit'],
 

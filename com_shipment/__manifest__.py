@@ -8,7 +8,7 @@
         'mail',
         'commercial',
         'letter_of_credit',
-
+        'gbs_supplier',
     ],
 
     'data': [
@@ -16,6 +16,7 @@
             'views/shipment_menu.xml',
             'wizard/on_board_wizard_view.xml',
             'wizard/done_wizard_view.xml',
+            'wizard/cancel_wizard.xml',
             'wizard/eta_wizard_view.xml',
             'wizard/send_to_cnf_wizard_view.xml',
             'wizard/doc_receive_wizard_view.xml',

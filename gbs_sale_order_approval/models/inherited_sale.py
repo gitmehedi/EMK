@@ -7,6 +7,8 @@ import time
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    is_this_so_payment_check = fields.Boolean(string='is_this_so_payment_check',default=False)
+
     def _get_order_type(self):
         return self.env['sale.order.type'].search([], limit=1)
 

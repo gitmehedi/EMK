@@ -12,6 +12,8 @@
         'commercial',
         'gbs_application_group',
         'report_layout',
+        'base_suspend_security',
+        'stock_indent'
     ],
     'data': [
         'data/pr_sequence.xml',

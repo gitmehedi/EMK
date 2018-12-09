@@ -52,9 +52,7 @@
                                         <th>SI No.</th>
                                         <th>Name Of Employee</th>
                                         <th>Bank Account No.</th>
-                                        <th t-if="o.neft != True">IFSC Code</th>
-                                        <th>By salary</th>
-                                        <th>C/D</th>
+                                        <th>Amount (TK.)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,26 +66,21 @@
                                         <td>
                                              <span t-esc="l['acc_no']"/>
                                         </td>
-                                        <td t-if="o.neft != True">
-                                            <span t-esc="l['ifsc_code']"/>
-                                        </td>
                                         <td>
-                                            <span t-esc="l['bysal']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
-                                        </td>
-                                         <td>
-                                            <span t-esc="l['debit_credit']"/>
+                                            <span t-esc="'{:,.2f}'.format(l['bysal'])"/>
                                         </td>
                                     </tr>
                                     <tr class="border-black" style="border-bottom: 1px solid black">
-                                        <td colspan="2"/>
+                                        <td/>
+                                        <td/>
                                         <td t-if="o.neft == True">
                                             <strong >Total :</strong>
                                         </td>
-                                        <td t-if="o.neft != True" colspan="2">
+                                        <td t-if="o.neft != True" >
                                             <strong >Total :</strong>
                                         </td>
-                                        <td colspan="2">
-                                            <strong><span t-esc="get_bysal_total()" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></strong>
+                                        <td>
+                                            <strong><span t-esc="'{:,.2f}'.format(get_bysal_total())"/></strong>
                                         </td>
                                     </tr>
                                 </tbody>

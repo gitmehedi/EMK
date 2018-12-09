@@ -23,6 +23,31 @@ class PurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
+    @api.depends('order_line.price_total','amount_discount','amount_vat')
+    def _amount_all(self):
+        for order in self:
+            amount_untaxed = amount_tax = 0.0
+            for line in order.order_line:
+                amount_untaxed += line.price_subtotal
+                # FORWARDPORT UP TO 10.0
+                if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                    taxes = line.taxes_id.compute_all(line.price_unit, line.order_id.currency_id, line.product_qty,
+                                                      product=line.product_id, partner=line.order_id.partner_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
+
+            amount_discount = amount_untaxed * (order.amount_discount / 100)
+            amount_after_discount = amount_untaxed - amount_discount
+            amount_vat = amount_after_discount * (order.amount_vat / 100)
+            order.update({
+                'amount_untaxed': amount_untaxed,
+                'amount_tax': amount_tax,
+                'amount_after_vat': amount_after_discount + amount_vat,
+                'amount_after_discount': amount_after_discount,
+                'amount_total': amount_untaxed + amount_tax + amount_vat - amount_discount
+            })
+
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
@@ -42,7 +67,9 @@ class PurchaseOrder(models.Model):
                                                       related_sudo=True,
                                                       help="Technical field used to display the Drop Ship Address",
                                                       readonly=True)
-    contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
+
+    # contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
+    contact_person_txt = fields.Char('Contact Person')
 
     ref_date = fields.Date('Ref.Date')
 
@@ -52,111 +79,119 @@ class PurchaseOrder(models.Model):
     # currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True,
     #                               default=lambda self: self.partner_id.currency_id.id)
 
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all',
+                                     track_visibility='always')
+    amount_tax = fields.Monetary(string='Product Taxes', store=True, readonly=True, compute='_amount_all')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
+    amount_vat = fields.Float(string='Vat(%)')
+    amount_discount = fields.Float(string='Discount(%)')
+    amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
+    amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
+    terms_condition = fields.Text(string='Terms & Conditions', readonly=True,
+                                  states={'draft': [('readonly', False)]})
+
+
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
         if not self.requisition_id:
             return
 
-        requisition = self.requisition_id
-        if self.partner_id:
-            partner = self.partner_id
+        due_products = self.requisition_id.line_ids.filtered(lambda x: x.product_ordered_qty - x.receive_qty > 0)
+        if not due_products:
+            raise UserError('No due so no quotation required!!!')
         else:
-            partner = requisition.vendor_id
-        payment_term = partner.property_supplier_payment_term_id
-        currency = partner.property_purchase_currency_id or requisition.company_id.currency_id
-
-        FiscalPosition = self.env['account.fiscal.position']
-        fpos = FiscalPosition.get_fiscal_position(partner.id)
-        fpos = FiscalPosition.browse(fpos)
-
-        self.partner_id = partner.id
-        self.fiscal_position_id = fpos.id
-        self.payment_term_id = payment_term.id,
-        self.company_id = requisition.company_id.id
-        self.currency_id = currency.id
-        self.origin = requisition.name
-        self.partner_ref = requisition.name  # to control vendor bill based on agreement reference
-        self.notes = requisition.description
-        self.date_order = requisition.date_end or fields.Datetime.now()
-        self.picking_type_id = requisition.picking_type_id.id
-        self.operating_unit_id = requisition.operating_unit_id
-
-        if requisition.type_id.line_copy != 'copy':
-            return
-
-        # Create PO lines if necessary
-        order_lines = []
-        for line in requisition.line_ids:
-            # Compute name
-            product_lang = line.product_id.with_context({
-                'lang': partner.lang,
-                'partner_id': partner.id,
-            })
-            name = product_lang.display_name
-            if product_lang.description_purchase:
-                name += '\n' + product_lang.description_purchase
-
-            # Compute taxes
-            if fpos:
-                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(
-                    lambda tax: tax.company_id == requisition.company_id)).ids
+            requisition = self.requisition_id
+            if self.partner_id:
+                partner = self.partner_id
             else:
-                taxes_ids = line.product_id.supplier_taxes_id.filtered(
-                    lambda tax: tax.company_id == requisition.company_id).ids
+                partner = requisition.vendor_id
+            payment_term = partner.property_supplier_payment_term_id
+            currency = partner.property_purchase_currency_id or requisition.company_id.currency_id
 
-            # Compute quantity and price_unit
-            if line.product_uom_id != line.product_id.uom_po_id:
-                product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
-                price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
-            else:
-                product_qty = line.product_qty
-                price_unit = line.price_unit
+            FiscalPosition = self.env['account.fiscal.position']
+            fpos = FiscalPosition.get_fiscal_position(partner.id)
+            fpos = FiscalPosition.browse(fpos)
 
-            if requisition.type_id.quantity_copy != 'copy':
-                product_qty = 0
+            self.partner_id = partner.id
+            self.fiscal_position_id = fpos.id
+            self.payment_term_id = payment_term.id,
+            self.company_id = requisition.company_id.id
+            self.currency_id = currency.id
+            self.origin = requisition.name
+            self.partner_ref = requisition.name  # to control vendor bill based on agreement reference
+            self.notes = requisition.description
+            self.date_order = requisition.date_end or fields.Datetime.now()
+            self.picking_type_id = requisition.picking_type_id.id
+            self.operating_unit_id = requisition.operating_unit_id
 
-            # Compute price_unit in appropriate currency
-            if requisition.company_id.currency_id != currency:
-                price_unit = requisition.company_id.currency_id.compute(price_unit, currency)
+            if requisition.type_id.line_copy != 'copy':
+                return
 
-            # Create PO line
-            order_lines.append((0, 0, {
-                'name': line.name,
-                'product_id': line.product_id.id,
-                'product_uom': line.product_id.uom_po_id.id,
-                'product_qty': line.product_ordered_qty,
-                'price_unit': price_unit,
-                'taxes_id': '',
-                'date_planned': requisition.schedule_date or fields.Date.today(),
-                'procurement_ids': [(6, 0, [requisition.procurement_id.id])] if requisition.procurement_id else False,
-                'account_analytic_id': line.account_analytic_id.id,
-            }))
-        self.order_line = order_lines
-        if requisition.attachment_ids:
-            attachments_lines = []
-            for attachment_line in requisition.attachment_ids:
-                attachments_lines.append((0, 0, {
-                    'name': attachment_line.name,
-                    'datas_fname': attachment_line.datas_fname,
-                    'db_datas': attachment_line.db_datas,
-                    'res_model': 'purchase.order',
+            # Create PO lines if necessary
+            order_lines = []
+            for line in due_products:
+                # Compute name
+                product_lang = line.product_id.with_context({
+                    'lang': partner.lang,
+                    'partner_id': partner.id,
+                })
+                name = product_lang.display_name
+                if product_lang.description_purchase:
+                    name += '\n' + product_lang.description_purchase
+
+                # Compute taxes
+                if fpos:
+                    taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(
+                        lambda tax: tax.company_id == requisition.company_id)).ids
+                else:
+                    taxes_ids = line.product_id.supplier_taxes_id.filtered(
+                        lambda tax: tax.company_id == requisition.company_id).ids
+
+                # Compute quantity and price_unit
+                if line.product_uom_id != line.product_id.uom_po_id:
+                    product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
+                    price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
+                else:
+                    product_qty = line.product_qty
+                    price_unit = line.price_unit
+
+                if requisition.type_id.quantity_copy != 'copy':
+                    product_qty = 0
+
+                # Compute price_unit in appropriate currency
+                if requisition.company_id.currency_id != currency:
+                    price_unit = requisition.company_id.currency_id.compute(price_unit, currency)
+
+                # Create PO line
+                order_lines.append((0, 0, {
+                    'name': line.name,
+                    'product_id': line.product_id.id,
+                    'product_uom': line.product_id.uom_po_id.id,
+                    'product_qty': line.product_ordered_qty - line.receive_qty,
+                    'price_unit': price_unit,
+                    'taxes_id': '',
+                    'date_planned': requisition.schedule_date or fields.Date.today(),
+                    'procurement_ids': [(6, 0, [requisition.procurement_id.id])] if requisition.procurement_id else False,
+                    'account_analytic_id': line.account_analytic_id.id,
                 }))
-            self.attachment_ids = attachments_lines
+            self.order_line = order_lines
+            if requisition.attachment_ids:
+                attachments_lines = []
+                for attachment_line in requisition.attachment_ids:
+                    attachments_lines.append((0, 0, {
+                        'name': attachment_line.name,
+                        'datas_fname': attachment_line.datas_fname,
+                        'db_datas': attachment_line.db_datas,
+                        'res_model': 'purchase.order',
+                    }))
+                self.attachment_ids = attachments_lines
 
-        # link way
-        # attachments_lines = []
-        # for attachment_line in requisition.attachment_ids:
-        #     attachments_lines.append((4,attachment_line.id))
-        # self.attachment_ids = attachments_lines
-        # (replace way)
-        # self.attachment_ids = [(6,0,requisition.attachment_ids.ids)]
-
-        if requisition.region_type:
-            self.region_type = requisition.region_type
-        if requisition.purchase_by:
-            self.purchase_by = requisition.purchase_by
-        if requisition.state == 'done':
-            self.check_po_action_button = True
+            if requisition.region_type:
+                self.region_type = requisition.region_type
+            if requisition.purchase_by:
+                self.purchase_by = requisition.purchase_by
+            if requisition.state == 'done':
+                self.check_po_action_button = True
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type_id(self):
@@ -226,6 +261,17 @@ class PurchaseOrder(models.Model):
             self.check_po_action_button = False
         return res
 
+    @api.multi
+    def action_update(self):
+        for order in self:
+            if order.requisition_id:
+                for line in order.order_line:
+                    pr_line_id = order.requisition_id.line_ids.filtered(lambda x: x.product_id.id == line.product_id.id)
+                    if pr_line_id:
+                        pr_line_id[0].write({'receive_qty': pr_line_id[0].receive_qty + line.product_qty})
+                        self._cr.execute('INSERT INTO po_pr_line_rel (pr_line_id,po_line_id) VALUES (%s, %s)',
+                                 tuple([pr_line_id[0].id, line.id]))
+
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -234,7 +280,7 @@ class PurchaseOrder(models.Model):
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             requested_date = datetime.strptime(vals['date_order'], "%Y-%m-%d %H:%M:%S").date()
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date) or '/'
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date,self.operating_unit_id or None) or '/'
         if not vals.get('requisition_id'):
             vals['check_po_action_button'] = True
         return super(PurchaseOrder, self).create(vals)
@@ -264,6 +310,11 @@ class PurchaseOrderLine(models.Model):
                                 digits=dp.get_precision('Product Unit of Measure'), store=True)
     qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty",
                                 digits=dp.get_precision('Product Unit of Measure'), store=True)
+
+    # relation between PO line and PR line----------------------------------------
+    pr_line_ids = fields.Many2many('purchase.requisition.line', 'po_pr_line_rel', 'po_line_id', 'pr_line_id',
+                                       string='Purchase Requisition Lines')
+    # ----------------------------------------------------------------------------
 
     @api.depends('order_id.state', 'move_ids.state')
     def _compute_qty_received(self):

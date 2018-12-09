@@ -42,12 +42,19 @@
                   sequence="2" name="Purchase Quotation" groups="commercial.group_commercial_user"/>
 
         <menuitem id="submenu_commercial_pq" name="Purchase Quotation" parent="menu_commercial_pq"
-                  sequence="1" action="action_commercial_pq" groups="commercial.group_commercial_user"/>
+                  sequence="2" action="action_commercial_pq" groups="commercial.group_commercial_user"/>
 
         <menuitem id="menu_commercial_po" parent="commercial.menu_commercial_root"
                   sequence="3" name="Purchase Order" groups="commercial.group_commercial_user"/>
 
         <menuitem id="submenu_commercial_po" name="Purchase Order" parent="menu_commercial_po"
                   sequence="1" action="action_commercial_po" groups="commercial.group_commercial_user"/>
+
+        <menuitem id="menu_purchase_rfq_com_local"
+                  name="RFQ"
+                  parent="menu_commercial_pq"
+                  action="gbs_purchase_rfq.action_purchase_rfq"
+                  groups="group_local_purchase"
+                  sequence="1"/>
     </data>
 </odoo>

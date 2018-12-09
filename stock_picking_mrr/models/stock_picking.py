@@ -9,13 +9,8 @@ class Picking(models.Model):
     check_mrr_button = fields.Boolean(default=False,string='MRR Button Check')
     check_approve_button = fields.Boolean(default=False,string='Approve Button Check',compute='_compute_approve_button',store=True)
     check_ac_approve_button = fields.Boolean(default=False,string='AC Button Check',compute='_compute_approve_button',store=True)
-    mrr_no = fields.Char('MRR No')
-    mrr_date = fields.Date('MRR date')
-
-    pack_operation_product_ids = fields.One2many(
-        'stock.pack.operation', 'picking_id', 'Non pack',
-        domain=[('product_id', '!=', False)],
-        states={'cancel': [('readonly', True)]})
+    mrr_no = fields.Char('MRR No',track_visibility="onchange")
+    mrr_date = fields.Date('MRR date',track_visibility="onchange")
 
     @api.multi
     @api.depends('receive_type','location_dest_id','check_mrr_button','state')
@@ -25,12 +20,15 @@ class Picking(models.Model):
             # if picking.transfer_type == 'receive' and picking.state == 'done' and picking.location_dest_id.name == 'Stock':
                 # if picking.state == 'done':
                 #     if picking.location_dest_id.name == 'Stock':
-                origin_picking_objs = self.search([('name','=',picking.origin)])
+
+            #Search from anticipatory stock
+                origin_picking_objs = self.search(['|',('name','=',picking.origin),('origin','=',picking.origin)], order='id ASC', limit=1)
+                # if anticipatory then conditionally search that its type
                 if origin_picking_objs:
-                    if origin_picking_objs[0].receive_type in ['lc']:
+                    if origin_picking_objs.receive_type in ['lc','credit','tt']:
                         picking.check_approve_button = True
                         picking.check_ac_approve_button = False
-                    elif origin_picking_objs[0].receive_type in ['loan']:
+                    elif origin_picking_objs.receive_type in ['loan']:
                         picking.check_approve_button = False
                         picking.check_ac_approve_button = False
                     else:

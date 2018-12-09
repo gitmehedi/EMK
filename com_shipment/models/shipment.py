@@ -18,7 +18,7 @@ class Shipment(models.Model):
     cnf_id = fields.Many2one('res.partner', "Supplier", readonly=True)
     comment = fields.Text('Comment')
     transport_by = fields.Char('Transport By')
-    vehical_no = fields.Char('Vehical No')
+    vehical_no = fields.Char('Vehicle No')
 
     operating_unit_id = fields.Many2one('operating.unit', default=lambda self: self.env.context.get('operating_unit_id'))
     company_id = fields.Many2one('res.company', default=lambda self: self.env.context.get('company_id'))
@@ -38,7 +38,7 @@ class Shipment(models.Model):
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade',readonly=True,
                             default=lambda self: self.env.context.get('lc_id'))
-    shipment_attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Shipment Attachments')
+    shipment_attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Shipment Attachments', domain=[('res_model', '=', 'purchase.shipment')])
 
     # Bill Of Lading
     bill_of_lading_number = fields.Char(string='BoL Number', index=True, help="Bill Of Lading Number")
@@ -76,7 +76,19 @@ class Shipment(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.state = "cancel"
+        res = self.env.ref('com_shipment.cancel_wizard')
+        result = {
+            'name': _('Do you want to cancel this shipment?'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'cancel.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
 
     @api.multi
     def action_view_shipment(self):

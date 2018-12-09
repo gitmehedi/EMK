@@ -28,16 +28,16 @@
                             }
                         </style>
                         <div class="row">
-                            <h4 class="text-center">Material Requisition Report</h4>
+                            <h4 class="text-center">Material Receiving Report</h4>
                             <hr class="hr-sm mb-0"/>
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-8">
                                     <h6><b>MRR No : </b><span t-esc="mrr_no"/></h6>
                                     <h6><b>Purchase Order No : </b><span t-esc="po_no"/></h6>
                                     <h6><b>Supplier : </b><span t-esc="customer"/></h6>
                                     <h6><b>Challan No : </b><span t-esc="challan"/></h6>
                                 </div>
-                                <div class="col-xs-3 text-left" style="padding-left:58px;">
+                                <div class="col-xs-4 text-left" style="padding-left:58px;">
                                     <h6><b>MRR Date : </b><span t-esc="mrr_date"/></h6>
                                     <h6><b>PO Date : </b><span t-esc="po_date"/></h6>
                                     <h6><b>Challan Date : </b><span t-esc="challan_date"/></h6>
@@ -51,9 +51,7 @@
                                     <tr class="odo-bg-gray">
                                         <th>Sl#</th>
                                         <th>Code &amp; Item Description</th>
-                                        <t t-if="pr_no">
-                                            <th>PR No</th>
-                                        </t>
+                                        <th>PR No</th>
                                         <th>Quantity</th>
                                         <th>Unit</th>
                                         <th>Rate</th>
@@ -66,9 +64,7 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
-                                            <t t-if="pr_no">
-                                                <td><span t-esc="pr_no"/></td>
-                                            </t>
+                                            <td><span t-esc="l['pr_no']"/></td>
                                             <td><span t-esc="l['mrr_quantity']"/></td>
                                             <td><span t-esc="l['product_uom_id']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
@@ -78,16 +74,9 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <t t-if="pr_no">
-                                            <td colspan="7"><strong>Amount in words : </strong> <span t-esc="amt_to_word"/></td>
-                                            <!--<td class="text-right"><strong>Total</strong></td>-->
-                                            <td><strong>Total : </strong><span t-esc="total_amount"/></td>
-                                        </t>
-                                        <t t-else="">
-                                            <td colspan="6"><strong>Amount in words <label> : </label></strong> <span t-esc="amt_to_word"/></td>
-                                            <!--<td class="text-right"><strong>Total</strong></td>-->
-                                            <td><strong>Total : </strong><span t-esc="total_amount"/></td>
-                                        </t>
+                                        <td colspan="7"><strong>Amount in words : </strong> <span t-esc="amt_to_word"/></td>
+                                        <!--<td class="text-right"><strong>Total</strong></td>-->
+                                        <td><strong>Total : </strong><span t-esc="total_amount"/></td>
                                     </tr>
                                 </tbody>
                             </table>

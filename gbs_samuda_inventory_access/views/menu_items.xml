@@ -18,7 +18,7 @@
                 action="stock.action_orderpoint_form"
                 groups="stock.group_stock_manager"
                 name="Reordering Rules"
-                parent="base.group_system" sequence="10"/>
+                parent="stock.menu_stock_inventory_control" sequence="10"/>
 
         <menuitem
                 action="stock.action_inventory_form"

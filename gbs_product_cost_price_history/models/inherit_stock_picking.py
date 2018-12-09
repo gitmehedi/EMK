@@ -16,10 +16,10 @@ class InheritStockPicking(models.Model):
     @api.multi
     def _set_cost_price(self,record):
         cost_price_history = self.env['product.cost.price.history']
-        if record.price_unit > 0:
-            current_price = record.price_unit
-        else:
+        if record.product_id.standard_price > 0:
             current_price = record.product_id.standard_price
+        else:
+            current_price = record.price_unit
         cost_price_history.create({
             'product_id': record.product_id.id,
             'product_tmpl_id': record.product_id.product_tmpl_id.id,

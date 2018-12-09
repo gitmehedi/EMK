@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <data>
+        <record id="rfq_email_template_wizard" model="ir.ui.view">
+            <field name="name">rfq.email.template.wizard</field>
+            <field name="model">rfq.email.template.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form create="false" edit="false">
+                    <group>
+                           <field name="supplier_ids" widget="many2many_tags" nolabel="1" placeholder="Recipients" />
+                    </group>
+                    <field name="subject" placeholder="Subject"/>
+                    <field name="massage" nolabel="1" widget="html"/>
+                    <footer>
+                        <button string="Send" name="send_mail" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
