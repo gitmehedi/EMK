@@ -158,6 +158,36 @@
                 sequence="6"
                 groups ="group_imoprt_lc_foreign"/>
 
+        <menuitem
+                name="Purchase Report(Local)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_material_req_local_wizard"
+                id="purchase_reports.purchase_material_req_local_menu"
+                sequence="7"
+                groups = "group_local_purchase"/>
+
+        <menuitem
+                name="Purchase Report(Foreign)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_material_req_foreign_wizard"
+                id="purchase_reports.purchase_material_req_foreign_menu"
+                sequence="8"
+                groups ="group_imoprt_lc_foreign"/>
+        <menuitem
+                name="Purchase Summary(Local)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_summary_local_wizard"
+                id="purchase_reports.purchase_summary_local_menu"
+                sequence="9"
+                groups = "group_local_purchase"/>
+        <menuitem
+                name="Purchase Summary(Foreign)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_summary_foreign_wizard"
+                id="purchase_reports.purchase_summary_foreign_menu"
+                sequence="10"
+                groups ="group_imoprt_lc_foreign"/>
+
         <!--Action To SET the Multi PR RFQ-->
         <act_window name="Send RFQ"
                     res_model="rfq.wizard"

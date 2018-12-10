@@ -10,7 +10,7 @@ class PurchaseSummaryReport(models.AbstractModel):
         report_title = ''
 
         record_list = []
-        data['dept_location_id'] = data['dept_location_id']
+        data['operating_unit_id'] = data['operating_unit_id']
         data['date_from'] = data['date_from']
         data['date_to'] = data['date_to']
 
@@ -27,6 +27,7 @@ class PurchaseSummaryReport(models.AbstractModel):
         list_obj['month'] = ['Jan','Feb','Mar','April','May','Jun']
         list_obj['value'] = ['25000','3600','25896','87965','25689','78954']
         list_obj['remarks'] = 'This is a Lab Product'
+        list_obj['department'] = 'Production'
         record_list.append(list_obj)
 
         docargs = {
