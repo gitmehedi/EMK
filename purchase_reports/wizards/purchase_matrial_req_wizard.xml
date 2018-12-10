@@ -35,7 +35,7 @@
 			<field name="target">new</field>
 		</record>
         <record id="action_purchase_material_req_foreign_wizard" model="ir.actions.act_window">
-			<field name="name">Purchase Material Requisition(foreign)</field>
+			<field name="name">Purchase Material Requisition(Foreign)</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">purchase.material.requisition.wizard</field>
 			<field name="view_type">form</field>

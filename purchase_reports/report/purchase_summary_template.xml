@@ -84,7 +84,7 @@
     <report
                 id="action_purchase_summary_template"
                 model="hr.employee"
-                string="Purchase report"
+                string="Purchase Summary"
                 report_type="qweb-pdf"
                 menu="False"
                 name="purchase_reports.purchase_summary_template"

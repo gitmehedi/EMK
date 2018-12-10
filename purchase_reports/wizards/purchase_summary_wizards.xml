@@ -34,7 +34,7 @@
 			<field name="target">new</field>
 		</record>
         <record id="action_purchase_summary_foreign_wizard" model="ir.actions.act_window">
-			<field name="name">Purchase Summary(foreign)</field>
+			<field name="name">Purchase Summary(Foreign)</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">purchase.summary.wizard</field>
 			<field name="view_type">form</field>
