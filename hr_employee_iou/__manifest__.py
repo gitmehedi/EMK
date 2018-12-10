@@ -6,6 +6,7 @@
     'version': '10.0.1.0.0',
     'depends': [
         'hr',
+        'gbs_hr_security'
     ],
 
     'data': [
