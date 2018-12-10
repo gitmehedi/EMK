@@ -35,7 +35,10 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
             else:
                 order.write({'region_type': self.region_type, 'purchase_by': self.purchase_by, 'state': 'to approve'})
         else:
-            order.write({'region_type': self.region_type, 'purchase_by': self.purchase_by, 'state': 'purchase'})
+            if order.company_id.po_double_validation == 'one_step':
+                order.write({'region_type': self.region_type, 'purchase_by': self.purchase_by, 'state': 'done'})
+            else:
+                order.write({'region_type': self.region_type, 'purchase_by': self.purchase_by, 'state': 'purchase'})
         for po in order:
             # if po.requisition_id.type_id.exclusive == 'exclusive':
             others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)

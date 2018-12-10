@@ -9,7 +9,11 @@
                 ],
     'data': [
         'report/pending_purchase_templates.xml',
-        'report/pending_purchase_report_wizard.xml',
+        'report/purchase_matrial_req_template.xml',
+        'report/purchase_summary_template.xml',
+        'wizards/pending_purchase_report_wizard.xml',
+        'wizards/purchase_matrial_req_wizard.xml',
+        'wizards/purchase_summary_wizards.xml',
         'view/menu_items.xml',
     ],
     
