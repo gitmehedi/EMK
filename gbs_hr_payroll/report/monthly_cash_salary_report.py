@@ -6,7 +6,6 @@ from odoo.tools.misc import formatLang
 class MonthlyCashSalaryReport(models.AbstractModel):
     _name = 'report.gbs_hr_payroll.report_monthly_cash_salary'
 
-
     @api.model
     def render_html(self, docids, data=None):
         payslip_run_pool = self.env['hr.payslip.run']
