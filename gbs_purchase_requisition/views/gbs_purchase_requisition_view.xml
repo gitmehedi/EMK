@@ -211,6 +211,7 @@
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="validation" string="To Validate" domain="[('state','=','in_progress')]"/>
                     <filter name="approval" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
+                    <filter name="approval_local_foreign" string="To Approve" domain="[('state','=','done')]"/>
                     <filter name="active" string="Active" domain="[('state', 'in', ('draft','in_progress','approve_head_procurement','done'))]"/>
                 </xpath>
             </field>

@@ -5,14 +5,23 @@
             <field name="name">Purchase Requisition</field>
             <field name="res_model">purchase.requisition</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('purchase_by','in',('cash','credit', False)),('state','=','done')]</field>
+            <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
+            <field name="context">{
+                'search_default_approval_local_foreign':1,
+                }
+            </field>
+            <field name="domain">[('purchase_by','in',('cash','credit', False)),('state','in',('done','close','cancel'))]</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_commercial_pr_foreign">
             <field name="name">Purchase Requisition</field>
             <field name="res_model">purchase.requisition</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('purchase_by','in',('lc','tt',False)),('state','=','done')]</field>
+            <field name="context">{
+                'search_default_approval_local_foreign':1,
+                }
+            </field>
+            <field name="domain">[('purchase_by','in',('lc','tt',False)),('state','in',('done','close','cancel'))]</field>
         </record>
 
         <menuitem id="menu_pr_commercial" parent="commercial.menu_commercial_root"
