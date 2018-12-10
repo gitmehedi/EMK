@@ -12,11 +12,6 @@ class Picking(models.Model):
     mrr_no = fields.Char('MRR No',track_visibility="onchange")
     mrr_date = fields.Date('MRR date',track_visibility="onchange")
 
-    pack_operation_product_ids = fields.One2many(
-        'stock.pack.operation', 'picking_id', 'Non pack',
-        domain=[('product_id', '!=', False)],
-        states={'cancel': [('readonly', True)]})
-
     @api.multi
     @api.depends('receive_type','location_dest_id','check_mrr_button','state')
     def _compute_approve_button(self):

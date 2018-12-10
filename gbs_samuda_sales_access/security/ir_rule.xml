@@ -247,7 +247,6 @@
         <value eval="{'noupdate': True}"/>
     </function>
 
-    <!---->
     <record id="rule_for_commercial_stock_location" model="ir.rule">
         <field name="name">Stock Location(All Access)</field>
         <field name="model_id" ref="stock.model_stock_location"/>
@@ -258,6 +257,27 @@
         <field name="perm_unlink" eval="False"/>
         <field name="groups" eval="[(4,ref('commercial.group_commercial_user_export'))]"/>
     </record>
-    <!---->
+
+    <record id="shipment_local_sales" model="ir.rule">
+        <field name="model_id" ref="com_shipment.model_purchase_shipment"/>
+        <field name="domain_force">['&amp;',('lc_id.type','=','export'),('lc_id.region_type','=','local')]</field>
+        <field name="name">Sales Commercial User (Local)</field>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_export_local_lc'))]"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <record id="shipment_foreign_sales" model="ir.rule">
+        <field name="model_id" ref="com_shipment.model_purchase_shipment"/>
+        <field name="domain_force">['&amp;',('lc_id.type','=','export'),('lc_id.region_type','=','foreign')]</field>
+        <field name="name">Sales Commercial User (Foreign)</field>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_export_foreign_lc'))]"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="0" name="perm_create"/>
+    </record>
 
 </odoo>

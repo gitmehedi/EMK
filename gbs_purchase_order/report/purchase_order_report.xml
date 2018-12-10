@@ -71,9 +71,7 @@
                                         <span t-esc="data['cus_address']"/>
                                     </p>
                                     <p><b>Contract Parson : </b>
-                                        <t t-foreach="data['sup_con']" t-as="sup_con">
-                                        <span t-esc="sup_con.name"/>,
-                                        </t></p>
+                                        <span t-esc="data['sup_con']"/></p>
                                     <p><b>Order Ref No : </b><span t-esc="data['partner_ref']"/></p><br/>
                                     <p><b>Date : </b><span t-esc="data['requisition_date']"></span></p>
                                 </div>
@@ -91,10 +89,10 @@
                                         <b>Address: </b>
                                         <span t-esc="data['company_address']"/>
                                     </p>
-                                    <p><b>Contract Parson : </b>
-                                    <t t-foreach="data['contact_person']" t-as="con_per">
-                                        <span t-esc="con_per.name"/>,
-                                    </t></p>
+                                    <p>
+                                        <b>Contract Parson : </b>
+                                        <span t-esc="data['contact_person']"/>
+                                    </p>
                                 </div>
                             </div>
                             <hr class="hr-xs"/>
