@@ -4,7 +4,7 @@
     'website': 'www.genweb2.com',
     'category': 'HR Other Allowance',
     'version': '10.0.1.0.0',
-    'depends': ['hr'],
+    'depends': ['hr','gbs_hr_security'],
     'data': [
         'security/ir.model.access.csv',
         'views/hr_other_allowance.xml',

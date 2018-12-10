@@ -59,8 +59,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_other_allowance_menu" name="Other Allowance" parent="hr.menu_hr_root" groups="hr.group_hr_user" sequence="97"/>
-        <menuitem id="hr_other_allowance_submenu" name="Other Allowance" parent="hr_other_allowance_menu" groups="hr.group_hr_user"
+        <menuitem id="hr_other_allowance_menu" name="Other Allowance" parent="hr.menu_hr_root" groups="gbs_hr_security.group_payroll_user" sequence="97"/>
+        <menuitem id="hr_other_allowance_submenu" name="Other Allowance" parent="hr_other_allowance_menu" groups="gbs_hr_security.group_payroll_user"
                   action="hr_other_allowance_action"/>
     </data>
 </odoo>
