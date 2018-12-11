@@ -13,7 +13,8 @@
                         <attribute name="groups">base.group_system</attribute>
                     </xpath>
                     <xpath expr="//button[@name='button_cancel']" position="after">
-                        <button name="action_reset_quotation" type="object" string="Reset to Quotation" states="purchase,done"/>
+                        <button name="action_reset_quotation" type="object" string="Reset to Quotation"
+                                states="purchase,done" groups="commercial.group_commercial_manager"/>
                     </xpath>
                 </data>
             </field>

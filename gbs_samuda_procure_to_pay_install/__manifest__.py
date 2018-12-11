@@ -33,7 +33,8 @@
         'terms_setup_foreign',
         'terms_setup_local',
         'gbs_purchase_mrr',
-        'purchase_reports'
+        'purchase_reports',
+        'gbs_purchase_order_reverse',
     ],
 
     'data': [ ],
