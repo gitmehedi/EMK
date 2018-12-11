@@ -3,10 +3,9 @@ from odoo import models, fields, api
 class PurchaseMaterialWizard(models.TransientModel):
     _name = "purchase.material.requisition.wizard"
 
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',
-                                        related = 'dept_location_id.operating_unit_id')
-    dept_location_id = fields.Many2one('stock.location', string='Department',
-                                       domain=[('usage','=','departmental')])
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',required=True)
+    dept_location_id = fields.Many2one('stock.location', string='Department', required=True,
+                                       domain="[('operating_unit_id','=',operating_unit_id),('usage','=','departmental')]")
     date_from = fields.Date("Date From", required=True)
     date_to = fields.Date("Date To", required=True)
 

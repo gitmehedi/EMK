@@ -6,8 +6,10 @@
     'version':'1.0',
     'depends': ['letter_of_credit',
                 'report_layout',
+                'date_range'
                 ],
     'data': [
+        'view/inherit_date_range_view.xml',
         'report/pending_purchase_templates.xml',
         'report/purchase_matrial_req_template.xml',
         'report/purchase_summary_template.xml',

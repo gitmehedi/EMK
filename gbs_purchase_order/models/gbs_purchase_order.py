@@ -48,7 +48,7 @@ class PurchaseOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax + amount_vat - amount_discount
             })
 
-    name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
+    name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New', track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
     region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="Region Type",

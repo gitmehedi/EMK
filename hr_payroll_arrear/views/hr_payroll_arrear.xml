@@ -59,8 +59,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_arrear_menu" name="Arrear" parent="hr.menu_hr_root" groups="hr.group_hr_user" sequence="96"/>
-        <menuitem id="hr_arrear_submenu" name="Arrear" parent="hr_arrear_menu" groups="hr.group_hr_user"
+        <menuitem id="hr_arrear_menu" name="Arrear" parent="hr.menu_hr_root" groups="gbs_hr_security.group_payroll_user" sequence="96"/>
+        <menuitem id="hr_arrear_submenu" name="Arrear" parent="hr_arrear_menu" groups="gbs_hr_security.group_payroll_user"
                   action="hr_arrear_action"/>
     </data>
 </odoo>

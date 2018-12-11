@@ -59,8 +59,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_other_deduction_menu" name="Other Deduction" parent="hr.menu_hr_root" groups="hr.group_hr_user" sequence="98"/>
-        <menuitem id="hr_other_deduction_submenu" name="Other Deduction" parent="hr_other_deduction_menu" groups="hr.group_hr_user"
+        <menuitem id="hr_other_deduction_menu" name="Other Deduction" parent="hr.menu_hr_root" groups="gbs_hr_security.group_payroll_user" sequence="98"/>
+        <menuitem id="hr_other_deduction_submenu" name="Other Deduction" parent="hr_other_deduction_menu" groups="gbs_hr_security.group_payroll_user"
                   action="hr_other_deduction_action"/>
     </data>
 </odoo>

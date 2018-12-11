@@ -6,7 +6,8 @@
     'version': '10.0.1.0.0',
     'depends': ['hr',
                 'hr_payroll',
-                'l10n_in_hr_payroll'],
+                'l10n_in_hr_payroll',
+                'gbs_hr_security'],
     'data': [
         'security/ir.model.access.csv',
         'views/hr_other_deduction.xml',

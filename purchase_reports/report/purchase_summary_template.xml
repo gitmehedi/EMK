@@ -12,14 +12,19 @@
                         </style>
                         <div class="clearfix">
                             <h4 class="report-title">Summary of Purchase Statement</h4>
-                            <div class="row" style="padding-top:10px;">
-                                <div class="col-xs-8 text-left">
-                                    <strong>Period From : </strong>
-                                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+                            <div class="row" style="padding-top:40px; padding-bottom:5px;">
+                                <div class="col-xs-6 text-left">
+                                    <strong>Month : </strong>
+                                    <t t-foreach="data['pur_month']" t-as="month">
+                                        <t t-esc="month"/>
+                                    </t>
                                 </div>
-                                <div class="col-xs-4 text-right">
-                                    <strong style="padding-left:10px;">To : </strong>
-                                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                <div class="col-xs-6 text-right">
+                                    <strong>Operating Unit : </strong>
+                                    <t t-if="not data['operating_unit_id']">All</t>
+                                    <t t-foreach="data['operating_unit_id']" t-as="unit">
+                                        <t t-esc="unit"/>
+                                    </t>
                                 </div>
                             </div>
                         </div>
@@ -49,24 +54,22 @@
                                                     </strong>
                                                 </td>
                                             </tr>
-                                            <!--<t t-foreach="data['value']" t-as="value">-->
-                                                <tr>
+                                            <tr>
+                                                <td>
+                                                    <span t-esc="data_index+1"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="data['department']"/>
+                                                </td>
+                                                <t t-foreach="data['value']" t-as="value">
                                                     <td>
-                                                        <span t-esc="data_index+1"/>
+                                                        <t t-esc="value"/>
                                                     </td>
-                                                    <td>
-                                                        <span t-esc="data['department']"/>
-                                                    </td>
-                                                    <t t-foreach="data['value']" t-as="value">
-                                                        <td>
-                                                            <t t-esc="value"/>
-                                                        </td>
-                                                    </t>
-                                                    <td>
-                                                        <t t-esc="data['remarks']"/>
-                                                    </td>
-                                                </tr>
-                                            <!--</t>-->
+                                                </t>
+                                                <td>
+                                                    <t t-esc="data['remarks']"/>
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td colspan="9">Total</td>
                                             </tr>
