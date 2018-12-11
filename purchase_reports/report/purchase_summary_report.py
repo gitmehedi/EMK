@@ -10,8 +10,8 @@ class PurchaseSummaryReport(models.AbstractModel):
         report_title = ''
 
         record_list = []
-        data['operating_unit_id'] = ',' .join(data['operating_unit_id'])
-        data['pur_month'] = ', '.join(data['pur_month'])
+        data['operating_unit_id'] = data['operating_unit_id']
+        data['pur_month'] = data['pur_month']
 
         if data['report_type'] == 'local':
 

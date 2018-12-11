@@ -148,7 +148,7 @@
                 parent="letter_of_credit.lc_report_menu_root"
                 action="purchase_reports.action_pending_purchase_local_wizard"
                 sequence="5"
-                groups = "group_local_purchase" />
+                groups = "base.group_system" />
 
         <menuitem
                 id="purchase_reports.pending_purchase_report_foreign_menu"
@@ -156,7 +156,7 @@
                 parent="letter_of_credit.lc_report_menu_root"
                 action="purchase_reports.action_pending_purchase_foreign_wizard"
                 sequence="6"
-                groups ="group_imoprt_lc_foreign"/>
+                groups ="base.group_system"/>
 
         <menuitem
                 name="Purchase Report(Local)"
@@ -164,7 +164,7 @@
                 action="purchase_reports.action_purchase_material_req_local_wizard"
                 id="purchase_reports.purchase_material_req_local_menu"
                 sequence="7"
-                groups = "group_local_purchase"/>
+                groups = "base.group_system"/>
 
         <menuitem
                 name="Purchase Report(Foreign)"
@@ -172,21 +172,21 @@
                 action="purchase_reports.action_purchase_material_req_foreign_wizard"
                 id="purchase_reports.purchase_material_req_foreign_menu"
                 sequence="8"
-                groups ="group_imoprt_lc_foreign"/>
+                groups ="base.group_system"/>
         <menuitem
                 name="Purchase Summary(Local)"
                 parent="letter_of_credit.lc_report_menu_root"
                 action="purchase_reports.action_purchase_summary_local_wizard"
                 id="purchase_reports.purchase_summary_local_menu"
                 sequence="9"
-                groups = "group_local_purchase"/>
+                groups = "base.group_system"/>
         <menuitem
                 name="Purchase Summary(Foreign)"
                 parent="letter_of_credit.lc_report_menu_root"
                 action="purchase_reports.action_purchase_summary_foreign_wizard"
                 id="purchase_reports.purchase_summary_foreign_menu"
                 sequence="10"
-                groups ="group_imoprt_lc_foreign"/>
+                groups ="base.group_system"/>
 
         <!--Action To SET the Multi PR RFQ-->
         <act_window name="Send RFQ"

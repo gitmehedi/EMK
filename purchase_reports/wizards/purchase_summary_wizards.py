@@ -29,10 +29,10 @@ class PurchaseSummaryWizard(models.TransientModel):
         operating_unit = []
         data['report_type'] = self.env.context.get('type')
         for ou in self.operating_unit_ids:
-            operating_unit.append(ou.name)
+            operating_unit.append(ou.id)
         data['operating_unit_id']=operating_unit
         for month in self.pur_month_ids:
-            months.append(month.name)
+            months.append(month.id)
         data['pur_month'] = months
 
         return self.env['report'].get_action(self, 'purchase_reports.purchase_summary_template', data=data)
