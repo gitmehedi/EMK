@@ -79,6 +79,7 @@ class SalePriceChange(models.Model):
                             states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
                                     'validate': [('readonly', True)]}, )
 
+    is_process = fields.Integer(string='Is Process', default=0)
 
     #-------------------------
     # country_id = fields.Many2one('res.country', string='Country', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
