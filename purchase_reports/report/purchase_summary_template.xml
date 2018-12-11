@@ -12,14 +12,19 @@
                         </style>
                         <div class="clearfix">
                             <h4 class="report-title">Summary of Purchase Statement</h4>
-                            <div class="row" style="padding-top:10px;">
-                                <div class="col-xs-8 text-left">
-                                    <strong>Period From : </strong>
-                                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+                            <div class="row" style="padding-top:40px; padding-bottom:5px;">
+                                <div class="col-xs-6 text-left">
+                                    <strong>Month : </strong>
+                                    <t t-foreach="data['pur_month']" t-as="month">
+                                        <t t-esc="month"/>
+                                    </t>
                                 </div>
-                                <div class="col-xs-4 text-right">
-                                    <strong style="padding-left:10px;">To : </strong>
-                                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                <div class="col-xs-6 text-right">
+                                    <strong>Operating Unit : </strong>
+                                    <t t-if="not data['operating_unit_id']">All</t>
+                                    <t t-foreach="data['operating_unit_id']" t-as="unit">
+                                        <t t-esc="unit"/>
+                                    </t>
                                 </div>
                             </div>
                         </div>

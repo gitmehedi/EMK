@@ -177,10 +177,14 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def action_draft(self):
-        res = {
-            'state': 'draft',
-        }
-        self.write(res)
+        so_obj = self.env['sale.order'].search([('pi_id','=',self.id)])
+        if not so_obj:
+            res = {
+                'state': 'draft',
+            }
+            self.write(res)
+        else:
+            raise ValidationError("You can't reset this PI!! \n PI is associate with sale order (" +so_obj.name+ ") reference.")
 
     @api.onchange('terms_id')
     def onchange_terms_id(self):

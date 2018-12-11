@@ -10,9 +10,8 @@ class PurchaseSummaryReport(models.AbstractModel):
         report_title = ''
 
         record_list = []
-        data['operating_unit_id'] = data['operating_unit_id']
-        data['date_from'] = data['date_from']
-        data['date_to'] = data['date_to']
+        data['operating_unit_id'] = ',' .join(data['operating_unit_id'])
+        data['pur_month'] = ', '.join(data['pur_month'])
 
         if data['report_type'] == 'local':
 
@@ -24,8 +23,8 @@ class PurchaseSummaryReport(models.AbstractModel):
 
         list_obj = {}
         list_obj['ou'] = ['SCCL-Dhaka','SCCL-CTG','SPPL-CTG']
-        list_obj['month'] = ['Jan','Feb','Mar','April','May','Jun']
-        list_obj['value'] = ['25000','3600','25896','87965','25689','78954']
+        list_obj['month'] = ['January','February','March','April']
+        list_obj['value'] = ['25000','3600','25896','87965',]
         list_obj['remarks'] = 'This is a Lab Product'
         list_obj['department'] = 'Production'
         record_list.append(list_obj)
