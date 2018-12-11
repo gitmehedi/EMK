@@ -40,7 +40,8 @@ class ProductSalePriceHistiryLine(models.Model):
         vals = {}
 
         price_list_pool = self.env['product.sales.pricelist'].search(
-            [('state', '=', 'validate'), ('effective_date', '=', current_date)])
+            [('state', '=', 'validate'), ('effective_date', '<=', current_date), ('is_process', '=',0)], order='effective_date ASC',)
+
 
         for price_pool in price_list_pool:
             price_history_pool = self.env['product.sale.history.line'].search([('product_id', '=', price_pool.product_id.ids),
@@ -87,3 +88,5 @@ class ProductSalePriceHistiryLine(models.Model):
             product_pool.write({'list_price': price_pool.new_price, 'fix_price':price_pool.new_price})
 
             product_pool.write({'discount': price_pool.discount})
+
+            price_pool.write({'is_process': 1})

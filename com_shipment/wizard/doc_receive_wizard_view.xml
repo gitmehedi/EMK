@@ -17,7 +17,7 @@
                         <group string="Packing List">
                             <field name="gross_weight" />
                             <field name="net_weight" />
-                            <field name="invoice_value" />
+                            <field name="invoice_value" readonly="0"/>
                         </group>
                     </group>
                     <field name="product_lines" widget="one2many">

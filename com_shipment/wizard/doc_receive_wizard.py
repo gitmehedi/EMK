@@ -9,7 +9,7 @@ class DocReceiveWizard(models.TransientModel):
     shipment_date = fields.Date('Ship on Board', required=True)
 
     invoice_number = fields.Char(string='Invoice Number',required=True)
-    invoice_value = fields.Float(string='Invoice Value',required=True)
+    invoice_value = fields.Float(string='Invoice Value' ,compute='_compute_invoice_value',required=True,store=True)
 
     # Packing List
     gross_weight = fields.Float('Gross Weight', required=True)
@@ -23,6 +23,11 @@ class DocReceiveWizard(models.TransientModel):
     def _check_multiple_products_line(self):
         if not self.product_lines:
             raise ValidationError("You can't receive doc without products")
+
+    @api.depends('product_lines.product_qty')
+    def _compute_invoice_value(self):
+        for record in self:
+            record.invoice_value = sum([s.product_qty for s in record.product_lines])
 
     @api.onchange('shipment_id')
     def po_product_line(self):
@@ -53,6 +58,7 @@ class DocReceiveWizard(models.TransientModel):
                             'shipment_date': self.shipment_date,
                             'gross_weight': self.gross_weight,
                             'net_weight': self.net_weight,
+                            'invoice_value': self.invoice_value,
                             'state': 'receive_doc'})
         vals = []
         for pro_line in self.product_lines:
