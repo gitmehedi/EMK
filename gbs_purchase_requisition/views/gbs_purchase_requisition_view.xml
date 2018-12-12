@@ -414,5 +414,15 @@
                 action="purchase_requisition.tender_type_action"
                 groups="base.group_system"/>
 
+
+        <act_window
+            domain="[('requisition_id', '=', active_id)]"
+            context="{'default_requisition_id': active_id}"
+            id="purchase_requisition.act_res_partner_2_purchase_order"
+            name="Purchase orders"
+            res_model="purchase.order"
+            src_model="purchase.requisition"
+            groups="base.group_system"/>
+
     </data>
 </odoo>
