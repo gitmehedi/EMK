@@ -280,9 +280,13 @@ class PurchaseOrder(models.Model):
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             requested_date = datetime.strptime(vals['date_order'], "%Y-%m-%d %H:%M:%S").date()
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date,self.operating_unit_id or None) or '/'
+            op_unit_obj = self.env['operating.unit'].search([('id', '=', vals['operating_unit_id'])])
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date,op_unit_obj) or '/'
         if not vals.get('requisition_id'):
             vals['check_po_action_button'] = True
+        partner_currency_id = self.env['res.partner'].search([('id', '=', vals['partner_id'])]).property_purchase_currency_id
+        if not partner_currency_id:
+            raise UserError(_('Currency not set for this Supplier. Please at first set the currency'))
         return super(PurchaseOrder, self).create(vals)
 
     @api.multi
