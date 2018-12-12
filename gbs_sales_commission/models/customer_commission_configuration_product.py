@@ -58,16 +58,18 @@ class CustomerCommissionConfigurationProduct(models.Model):
     @api.onchange('new_value')
     def _onchange_new_value(self):
         for coms in self:
-            if coms.new_value > 100:
-                raise UserError("[Error] 'New Value' must be between 0 to 100 !")
+            if coms.product_id.commission_type == 'percentage':
+                if coms.new_value > 100:
+                    raise UserError("[Error] 'New Value' must be between 0 to 100 !")
 
     #show a warning when click save burtton
     @api.multi
     @api.constrains('new_value')
     def _check_value(self):
         for coms in self:
-            if coms.new_value > 100:
-                raise Warning("[Error] 'New Value' must be between 0 to 100 !")
+            if coms.product_id.commission_type == 'percentage':
+                if coms.new_value > 100:
+                    raise Warning("[Error] 'New Value' must be between 0 to 100 !")
 
     # Show a msg for minus value
     @api.multi
