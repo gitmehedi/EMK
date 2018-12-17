@@ -11,5 +11,14 @@
                 </button>
             </field>
         </record>
+
+        <!--<menuitem name="Accounting"-->
+              <!--id="account.menu_finance"-->
+              <!--groups="gbs_hr_security.group_acc_creator"-->
+              <!--web_icon="account,static/description/icon.png"-->
+              <!--sequence="40"/>-->
+        <!--<menuitem id="account.menu_finance_configuration" name="Configuration" parent="account.menu_finance" sequence="15" groups="gbs_hr_security.group_acc_creator"/>-->
+        <!--<menuitem id="account.account_account_menu" name="Accounting" parent="account.menu_finance_configuration" sequence="2" groups="gbs_hr_security.group_acc_creator"/>-->
+        <menuitem action="base.action_res_partner_bank_account_form" id="menu_action_res_partner_bank1" parent="hr.menu_hr_root" name="Bank Accounts" groups="gbs_hr_security.group_acc_creator" sequence="5"/>
     </data>
 </odoo>

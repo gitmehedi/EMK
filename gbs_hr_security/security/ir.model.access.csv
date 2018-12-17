@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_contract_payroll_user,access_hr_contract_payroll_user,hr_contract.model_hr_contract,gbs_hr_security.group_payroll_user,1,1,1,1
 hr_contract.access_hr_contract_manager,hr_contract.hr.contract.manager,hr_contract.model_hr_contract,hr.group_hr_manager,0,0,0,0
 hr_contract.access_hr_contract_user,hr_contract.hr.contract.user,hr_contract.model_hr_contract,hr.group_hr_user,0,0,0,0
+res_partner_bank_user,res_partner_bank_user,base.model_res_partner_bank,gbs_hr_security.group_acc_creator,1,1,1,1
