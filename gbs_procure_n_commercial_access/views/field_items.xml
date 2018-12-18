@@ -63,7 +63,7 @@
         <record id="inherit_purchase_order_form2" model="ir.ui.view">
             <field name="name">inherit.purchase.order.view.form2</field>
             <field name="model">purchase.order</field>
-            <field name="inherit_id" ref="gbs_purchase_rfq.inherit_purchase_order_form1"/>
+            <field name="inherit_id" ref="gbs_purchase_rfq.inherit_rfq_purchase_order_form"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='rfq_id']" position="attributes">
