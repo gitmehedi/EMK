@@ -11,7 +11,7 @@
                                 string="Draft" class=""/>
                         <button name="action_approve" type="object" states="submit"
                                 string="Approve" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="submit,approve,transfer,receive,reject"/>
                     </header>
                     <sheet>
                         <h1>
