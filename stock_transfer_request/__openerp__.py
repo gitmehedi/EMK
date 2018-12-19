@@ -10,6 +10,7 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu.xml',
+        'wizards/generate_sales_order_views.xml',
         'views/stock_view.xml',
         'views/stock_transfer_request_views.xml',
         'views/stock_transfer_receive_views.xml',

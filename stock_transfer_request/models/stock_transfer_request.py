@@ -46,6 +46,7 @@ class StockTransferRequest(models.Model):
                                        readonly=True, states={'draft': [('readonly', False)]})
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
+    is_sold = fields.Boolean(default=False)
     company_id = fields.Many2one('res.company', string='Company', default=_company_default_get)
 
     """ Approval Process User """
@@ -56,7 +57,7 @@ class StockTransferRequest(models.Model):
 
     """ States Fields """
     state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approved"),
-                              ('transfer', "Transfer"), ('receive', "Received"), ('reject', "Rejected")],
+                              ('transfer', "Transfer"), ('receive', "Received"), ('sold', "Sold"),('reject', "Rejected")],
                              default='draft')
 
     @api.onchange('barcode')

@@ -9,7 +9,10 @@
                     <header>
                         <button name="action_receive" type="object" states="transfer"
                                 string="Receive" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>
+                        <button class="oe_highlight" states="receive"
+                                name="%(action_generate_sales_order)d" groups="stock.group_stock_manager"
+                                type="action" string="Generate Sales Order"/>
+                        <field name="state" widget="statusbar" statusbar_visible="submit,approve,transfer,receive,sold,reject"/>
                     </header>
                     <sheet>
                         <h1>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_generate_sales_order" model="ir.ui.view">
+            <field name="name">Generate Sales Order Form</field>
+            <field name="model">generate.sales.order.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Choose your date">
+                    <group>
+                        <group>
+                            <field name="append_sale"/>
+                            <field name="sales_order_id"
+                                   options='{"no_open": True,"no_create": True, "no_create_edit": True}'
+                                   attrs="{'invisible':[('append_sale', '=','new')],'required':[('append_sale', '=','old')]}"/>
+                        </group>
+                        <group>
+                            <field name="customer_id"
+                                   options='{"no_open": True,"no_create": True, "no_create_edit": True}'/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="generate_sales_order" string="Generate" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_generate_sales_order" model="ir.actions.act_window">
+            <field name="name">Generate Sales Order</field>
+            <field name="res_model">generate.sales.order.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_generate_sales_order"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>
