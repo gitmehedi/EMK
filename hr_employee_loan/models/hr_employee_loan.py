@@ -9,6 +9,8 @@ class HrEmployeeLoanRequest(models.Model):
     _name = 'hr.employee.loan'
     _inherit = ['mail.thread']
     _order = 'name desc'
+    _description = 'Employee Loan'
+
 
     name = fields.Char(size=100, string='Loan Name', default="/")
     emp_code_id = fields.Char(string='Code')
@@ -45,6 +47,7 @@ class HrEmployeeLoanRequest(models.Model):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Employee Loan Installment Schedule",
+                               compute='_compute_loan_amount_with_payslip',
                                states={'draft': [('invisible', False)], 'applied': [('readonly', True)],
                                        'approved': [('readonly', True)], 'disbursed': [('readonly', True)]})
 

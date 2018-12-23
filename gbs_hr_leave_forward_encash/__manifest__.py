@@ -1,5 +1,5 @@
 {
-    'name': 'HR Leave Carry Forward',
+    'name': 'HR Leave Carry Forward and Encashment For Samuda',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'HR Leave Carry Forward',
@@ -22,7 +22,7 @@
         'hr_employee_seniority',
         'hr_holiday_year',
         ],
-    'summary': 'Leave carry forward process is calculated ',
+    'summary': 'Leave carry forward and encashment process is calculated ',
     'description': 
     """This module gives opportunity to decide user either he wants to carry forward his/her leaves
             leave ot not'""",        
