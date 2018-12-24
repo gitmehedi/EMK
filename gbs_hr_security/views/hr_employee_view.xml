@@ -7,8 +7,25 @@
             <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
             <field name="arch" type="xml">
                 <button name="%(hr_contract.act_hr_employee_2_hr_contract)d" position="attributes">
-                    <attribute name="groups">base.group_user</attribute>
+                    <attribute name="groups">gbs_hr_security.group_payroll_user</attribute>
                 </button>
+            </field>
+        </record>
+
+        <record id="payroll_hr_employee_view_form1" model="ir.ui.view">
+            <field name="name">payroll.hr.employee.view.form1</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_payroll.payroll_hr_employee_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(hr_payroll.act_hr_employee_payslip_list)d']" position="replace">
+                    <button name="%(hr_payroll.act_hr_employee_payslip_list)d"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        type="action"
+                        groups="gbs_hr_security.group_payroll_user">
+                        <field name="payslip_count" widget="statinfo" string="Payslips"/>
+                    </button>
+                </xpath>
             </field>
         </record>
 
