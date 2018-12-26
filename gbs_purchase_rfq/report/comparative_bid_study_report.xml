@@ -85,7 +85,7 @@
                                         <span class="text-nowrap" t-esc="list_value['product_unit']"/>
                                     </td>
                                     <td class="text-right">
-                                        <span class="text-nowrap" t-esc="list_value['last_price']"/>
+                                        <span class="text-nowrap" t-esc="'{:,.2f}'.format(list_value['last_price'])"/>
                                     </td>
                                     <t t-foreach="list_value['quotation']" t-as="val">
                                         <td class="text-left">
@@ -117,7 +117,7 @@
                                         Total
                                     </td>
                                     <td class="text-left">
-                                        <span t-esc="int(total_value['total_price'])"/>
+                                        <span t-esc="'{:,.2f}'.format(int(total_value['total_price']))"/>
                                     </td>
                                 </t>
                                 <td></td>

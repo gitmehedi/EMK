@@ -1,5 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError,UserError
+from odoo.tools.misc import formatLang
+
 
 
 class ComparativeBidReport(models.AbstractModel):
@@ -62,11 +64,11 @@ class ComparativeBidReport(models.AbstractModel):
         for product_row in product_row_list:
             for pq in pq_temp_list:
                 if pq.product_line.get(product_row['product_id']):
-                    product_row['quotation'][pq.pq_id]['price'] = pq.product_line.get(product_row['product_id'])
-                    product_row['quotation'][pq.pq_id]['total'] = pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']
+                    product_row['quotation'][pq.pq_id]['price'] = formatLang(self.env,pq.product_line.get(product_row['product_id']))
+                    product_row['quotation'][pq.pq_id]['total'] = formatLang(self.env,pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty'])
                     if pq.state in ['purchase','done']:
-                        product_row['approved_price'] = pq.product_line.get(product_row['product_id'])
-                        product_row['approved_total'] = pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']
+                        product_row['approved_price'] = formatLang(self.env,pq.product_line.get(product_row['product_id']))
+                        product_row['approved_total'] = formatLang(self.env,pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty'])
 
                     grand_total[pq.pq_id]['total_price'] = grand_total[pq.pq_id]['total_price'] + (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
 
