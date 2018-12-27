@@ -1,4 +1,5 @@
 from odoo import api, models
+from odoo.tools.misc import formatLang
 
 
 class StockInventoryReport(models.AbstractModel):
@@ -473,4 +474,9 @@ class StockInventoryReport(models.AbstractModel):
                 grand_total['total_ck_qty'] = grand_total['total_ck_qty'] + vals['qty_ck']
                 grand_total['total_ck_val'] = grand_total['total_ck_val'] + vals['val_ck']
 
+
+        grand_total['total_dk_val'] = formatLang(self.env,grand_total['total_dk_val'])
+        grand_total['total_in_val'] = formatLang(self.env,grand_total['total_in_val'])
+        grand_total['total_out_val'] = formatLang(self.env,grand_total['total_out_val'])
+        grand_total['total_ck_val'] = formatLang(self.env,grand_total['total_ck_val'])
         return {'category': category, 'total': grand_total}

@@ -1,4 +1,5 @@
 from odoo import api, models
+from odoo.tools.misc import formatLang
 
 class StockPurchaseReport(models.AbstractModel):
     _name = 'report.stock_purchase_custom_report.purchase_report_template'
@@ -153,5 +154,5 @@ class StockPurchaseReport(models.AbstractModel):
                 grand_total['total_in_qty'] = grand_total['total_in_qty'] + vals['qty_in_tk']
                 grand_total['total_in_val'] = grand_total['total_in_val'] + vals['val_in_tk']
 
-
+        grand_total['total_in_val'] = formatLang(self.env,grand_total['total_in_val'])
         return {'supplier': supplier, 'total': grand_total}

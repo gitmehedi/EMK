@@ -35,6 +35,7 @@
         'gbs_purchase_mrr',
         'purchase_reports',
         'gbs_purchase_order_reverse',
+        # 'gbs_purchase_account_invoice',
     ],
 
     'data': [ ],

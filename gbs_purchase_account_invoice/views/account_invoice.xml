@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_view_invoice_supplier_purchase" model="ir.ui.view">
+            <field name="name">inherit.account.invoice.supplier</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="purchase.view_invoice_supplier_purchase_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='purchase_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="purchase_id" class="oe_edit_only" attrs="{'readonly': [('state','not in',['draft'])], 'invisible': ['|',('state', 'in', ('purchase','done')),('type', '=', 'in_refund')]}"
+                           options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

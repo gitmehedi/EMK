@@ -70,10 +70,22 @@ class Shipment(models.Model):
                                                                       ('product_id', '=', obj.product_id.id)])
 
                 if len(lc_product_line) > 1:
-                    raise ValidationError(("Unable to update due to multiple same product."))
-                    break
-
-                lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
+                    # raise ValidationError(("Unable to update due to multiple same product."))
+                    # break
+                    res_wizard_view = self.env.ref('lc_sales_product.reset_lc_wizard_view')
+                    res = {
+                        'name': _('Please Select LC Product to return document qty for reset'),
+                        'view_type': 'form',
+                        'view_mode': 'form',
+                        'view_id': res_wizard_view and res_wizard_view.id or False,
+                        'res_model': 'reset.lc.wizard',
+                        'type': 'ir.actions.act_window',
+                        'nodestroy': True,
+                        'target': 'new',
+                    }
+                    return res
+                else:
+                    lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
 
             self.shipment_product_lines.unlink()
 

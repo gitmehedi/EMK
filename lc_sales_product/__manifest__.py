@@ -43,6 +43,7 @@
         'wizard/maturity_export_wizard_view.xml',
         'wizard/lc_amendment_wizard_view.xml',
         'wizard/sales_invoice_export_wizard_view.xml',
+        'wizard/reset_lc_line_wizard_view.xml',
         'views/lc_sales_comm_acc.xml',
         'views/lc_sales_menu.xml',
     ],
