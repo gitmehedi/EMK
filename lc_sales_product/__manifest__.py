@@ -30,6 +30,8 @@
         'reports/commercial_invoice_report_view.xml',
         'reports/beneficiary_certificate.xml',
         'reports/packing_list_report_view.xml',
+        'reports/measurement_list_report.xml',
+        'reports/party_receiving_sheet.xml',
         'reports/certificate_of_origin.xml',
         'reports/inspection_certificate.xml',
         'reports/delivery_challan_report.xml',
