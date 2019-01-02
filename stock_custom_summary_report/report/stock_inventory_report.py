@@ -456,14 +456,39 @@ class StockInventoryReport(models.AbstractModel):
                 total = category[vals['category']]['sub-total']
                 total['name'] = vals['category']
 
+                if total['total_in_val']:
+                    total_in_val = float(total['total_in_val'].replace(',',''))
+                else:
+                    total_in_val = 0.0
+
+                if total['total_dk_val']:
+                    total_dk_val = float(total['total_dk_val'].replace(',',''))
+                else:
+                    total_dk_val = 0.0
+
+                if total['total_out_val']:
+                    total_out_val = float(total['total_out_val'].replace(',',''))
+                else:
+                    total_out_val = 0.0
+
+                if total['total_ck_val']:
+                    total_ck_val = float(total['total_ck_val'].replace(',',''))
+                else:
+                    total_ck_val = 0.0
+
                 total['total_dk_qty'] = total['total_dk_qty'] + vals['qty_dk']
-                total['total_dk_val'] = total['total_dk_val'] + vals['val_dk']
+                total_dk_val = total_dk_val + vals['val_dk']
                 total['total_in_qty'] = total['total_in_qty'] + vals['qty_in_tk']
-                total['total_in_val'] = total['total_in_val'] + vals['val_in_tk']
+                total_in_val = total_in_val + vals['val_in_tk']
                 total['total_out_qty'] = total['total_out_qty'] + vals['qty_out_tk']
-                total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
+                total_out_val = total_out_val + vals['val_out_tk']
                 total['total_ck_qty'] = total['total_ck_qty'] + vals['qty_ck']
-                total['total_ck_val'] = total['total_ck_val'] + vals['val_ck']
+                total_ck_val = total_ck_val + vals['val_ck']
+
+                total['total_dk_val'] = formatLang(self.env, float(total_dk_val))
+                total['total_in_val'] = formatLang(self.env, float(total_in_val))
+                total['total_out_val'] = formatLang(self.env, float(total_out_val))
+                total['total_ck_val'] = formatLang(self.env, float(total_ck_val))
 
                 grand_total['total_dk_qty'] = grand_total['total_dk_qty'] + vals['qty_dk']
                 grand_total['total_dk_val'] = grand_total['total_dk_val'] + vals['val_dk']

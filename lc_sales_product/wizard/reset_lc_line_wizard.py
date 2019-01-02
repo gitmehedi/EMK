@@ -14,18 +14,18 @@ class ResetLCWizard(models.TransientModel):
         vals = []
         pro_lc_line_pool = self.env['lc.product.line'].search([('lc_id', '=', self.shipment_id.lc_id.id)])
         for obj in pro_lc_line_pool:
-            product_qty = obj.product_qty - obj.product_received_qty
-            if product_qty > 0:
-                vals.append((0, 0, {'product_id': obj.product_id,
-                                    'lc_pro_line_id': obj.id,
-                                    'name': obj.name,
-                                    'product_qty': product_qty,
-                                    'currency_id': obj.currency_id,
-                                    'date_planned': obj.date_planned,
-                                    'product_uom': obj.product_uom,
-                                    'price_unit': obj.price_unit,
-                                    'product_received_qty': obj.product_received_qty,
-                                    }))
+            # product_qty = obj.product_qty - obj.product_received_qty
+            # if product_qty > 0:
+            vals.append((0, 0, {'product_id': obj.product_id,
+                                'lc_pro_line_id': obj.id,
+                                'name': obj.name,
+                                'product_qty': obj.product_qty,
+                                'currency_id': obj.currency_id,
+                                'date_planned': obj.date_planned,
+                                'product_uom': obj.product_uom,
+                                'price_unit': obj.price_unit,
+                                'product_received_qty': obj.product_received_qty,
+                                }))
         self.product_lines = vals
 
 

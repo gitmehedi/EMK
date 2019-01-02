@@ -93,7 +93,7 @@ class IndentIndent(models.Model):
     def _compute_days_of_backdating(self):
         for rec in self:
             for line in rec.product_lines:
-                if line.product_id.categ_id.is_consumable:
+                if line.product_id.categ_id.is_backdateable:
                     query = """select days_of_backdating_indent from stock_indent_config_settings order by id desc limit 1"""
                     self.env.cr.execute(query)
                     days_value = self.env.cr.fetchone()

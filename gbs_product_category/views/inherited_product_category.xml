@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='type']" position="after">
-                    <field name="is_consumable" groups="stock.group_stock_manager"/>
+                    <field name="is_backdateable" groups="stock.group_stock_manager"/>
                 </xpath>
             </field>
         </record>
