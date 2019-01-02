@@ -49,6 +49,8 @@ class StockIssueDueReport(models.AbstractModel):
         sql = '''SELECT ipl.product_id,
                         pc.name             AS category,
                         pt.name             AS pt_name,
+                        pp.default_code     AS code,
+                        pu.name             AS uom_name,
                         (SELECT array_to_string(array_agg(pv.name), ',')
                             FROM product_attribute_value_product_product_rel pr
 		                    LEFT JOIN product_attribute_value pv
@@ -64,15 +66,17 @@ class StockIssueDueReport(models.AbstractModel):
                       ON ipl.product_id = pp.id
                  LEFT JOIN product_template pt
                       ON pp.product_tmpl_id = pt.id
-				          LEFT JOIN product_category pc
+				 LEFT JOIN product_category pc
                       ON pt.categ_id = pc.id
+                 LEFT JOIN product_uom pu 
+                      ON pu.id = pt.uom_id
                  WHERE
                     (COALESCE((ipl.product_uom_qty),0) - COALESCE((ipl.received_qty), 0)) > 0
                  AND
                     ii.stock_location_id ='%s'
                  AND
                     Date_trunc('day', ii.indent_date + interval'6h') BETWEEN DATE '%s' and DATE '%s'
-                 GROUP BY category,ipl.product_id,pt_name,variant_name
+                 GROUP BY category,ipl.product_id,pt_name,pu.name,pp.default_code,variant_name
                   ''' % (stock_location_id, date_start, date_end)
 
         self.env.cr.execute(sql)

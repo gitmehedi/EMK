@@ -32,7 +32,7 @@ class ResetLCWizard(models.TransientModel):
     def save_lc_line(self):
         for pro_line in self.product_lines:
             pro_lc_line_pool = self.env['lc.product.line'].search([('id', '=', pro_line.lc_pro_line_id)])
-            pro_lc_line_pool.write({'product_received_qty':pro_lc_line_pool.product_received_qty-pro_line.product_received_qty})
+            pro_lc_line_pool.write({'product_received_qty':pro_line.product_received_qty})
 
         self.shipment_id.shipment_product_lines.unlink()
         self.shipment_id.write({'state': 'draft'})
