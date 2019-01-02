@@ -499,6 +499,16 @@ class StockInventoryReport(models.AbstractModel):
                 grand_total['total_ck_qty'] = grand_total['total_ck_qty'] + vals['qty_ck']
                 grand_total['total_ck_val'] = grand_total['total_ck_val'] + vals['val_ck']
 
+                vals['val_dk'] = formatLang(self.env, vals['val_dk'])
+                vals['val_in_tk'] = formatLang(self.env, vals['val_in_tk'])
+                vals['val_out_tk'] = formatLang(self.env, vals['val_out_tk'])
+                vals['val_ck'] = formatLang(self.env, vals['val_ck'])
+
+                vals['rate_dk'] = formatLang(self.env, vals['rate_dk'])
+                vals['rate_in'] = formatLang(self.env, vals['rate_in'])
+                vals['rate_out'] = formatLang(self.env, vals['rate_out'])
+                vals['rate_ck'] = formatLang(self.env, vals['rate_ck'])
+
 
         grand_total['total_dk_val'] = formatLang(self.env,grand_total['total_dk_val'])
         grand_total['total_in_val'] = formatLang(self.env,grand_total['total_in_val'])

@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
 
 
 class StockTransferDetailsReport(models.AbstractModel):
@@ -121,10 +122,21 @@ class StockTransferDetailsReport(models.AbstractModel):
             if vals:
                 category[vals['category']]['product'].append(vals)
                 total = category[vals['category']]['sub-total']
+
+                if total['sub_total_val']:
+                    sub_total_val = float(total['sub_total_val'].replace(',',''))
+                else:
+                    sub_total_val = 0.0
+
                 total['sub_total_qty'] = total['sub_total_qty'] + vals['qty_out_tk']
-                total['sub_total_val'] = total['sub_total_val'] + vals['val_out_tk']
+                sub_total_val = sub_total_val + vals['val_out_tk']
+
+                total['sub_total_val'] = formatLang(self.env, float(sub_total_val))
 
                 grand_total['total_out_qty'] = grand_total['total_out_qty'] + vals['qty_out_tk']
                 grand_total['total_out_val'] = grand_total['total_out_val'] + vals['val_out_tk']
 
+                vals['val_out_tk'] = formatLang(self.env, vals['val_out_tk'])
+
+        grand_total['total_out_val'] = formatLang(self.env, grand_total['total_out_val'])
         return {'category': category, 'total': grand_total}

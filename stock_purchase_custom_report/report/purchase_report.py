@@ -148,11 +148,22 @@ class StockPurchaseReport(models.AbstractModel):
                 total = supplier[vals['supplier']]['sub-total']
                 total['name'] = vals['supplier']
 
+                if total['total_in_val']:
+                    total_in_val = float(total['total_in_val'].replace(',',''))
+                else:
+                    total_in_val = 0.0
+
                 total['total_in_qty'] = total['total_in_qty'] + vals['qty_in_tk']
-                total['total_in_val'] = total['total_in_val'] + vals['val_in_tk']
+                total_in_val = total_in_val + vals['val_in_tk']
+
+                total['total_in_val'] = formatLang(self.env, float(total_in_val))
 
                 grand_total['total_in_qty'] = grand_total['total_in_qty'] + vals['qty_in_tk']
                 grand_total['total_in_val'] = grand_total['total_in_val'] + vals['val_in_tk']
+
+                vals['val_in_tk'] = formatLang(self.env, vals['val_in_tk'])
+
+                vals['rate_in'] = formatLang(self.env, vals['rate_in'])
 
         grand_total['total_in_val'] = formatLang(self.env,grand_total['total_in_val'])
         return {'supplier': supplier, 'total': grand_total}
