@@ -59,6 +59,13 @@ class MonthlyLoanDeduction(models.AbstractModel):
                 sn += 1
             dpt_payslips['val'] = emp_sort_list
             dpt_payslips_list.append(dpt_payslips)
+        loan_val = []
+        for rec in dpt_payslips_list:
+            if rec['val']:
+                for value in rec['val']:
+                    if value['LOAN'] != 0:
+                        loan_val.append(value)
+
         for rule in rule_list:
             row_total[rule['code']] = formatLang(self.env, row_total[rule['code']])
 
@@ -66,6 +73,7 @@ class MonthlyLoanDeduction(models.AbstractModel):
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
+            'loan_list': loan_val,
             'docs_len': len(rule_list) + 8,
             'rules': rule_list,
             'data': data,
