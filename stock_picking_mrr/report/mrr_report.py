@@ -10,8 +10,6 @@ class MrrReport(models.AbstractModel):
         new_picking = self.env['stock.picking'].search([('id', '=', data['self_picking_id'])])
         mrr_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['mrr_date']))
         data['address'] = report_utility_pool.getAddressByUnit(picking.operating_unit_id)
-
-
         pack_list = []
         total_amount = []
         customer =False
