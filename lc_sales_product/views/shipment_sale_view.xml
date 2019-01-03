@@ -25,7 +25,7 @@
                     </style>
                     <header>
 
-                        <button string="To Draft B" name="action_draft_local_sales" type="object" attrs="{'invisible': [('state', 'in', ('draft'))]}" groups="base_technical_features.group_technical_features"/>
+                        <button string="To Draft" name="action_draft_local_sales" type="object" attrs="{'invisible': [('state', 'in', ('draft'))]}" groups="base_technical_features.group_technical_features"/>
                         <button string="To Email" name="action_email_temp" type="object" class="oe_read_only"/>
                         <button string="Delivery" name="action_doc_receive_export" states="draft" type="object" class="oe_highlight"/>
                         <button string="Add Invoice" name="action_add_invoice_export" states="receive_doc" type="object" class="oe_highlight"/>
