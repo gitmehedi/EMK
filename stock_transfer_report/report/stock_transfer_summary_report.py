@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
 
 class StockTransferSummaryReport(models.AbstractModel):
     _name = 'report.stock_transfer_report.sts_report_temp'
@@ -106,8 +107,18 @@ class StockTransferSummaryReport(models.AbstractModel):
 
                 total = dest_location[vals['destination']]['sub-total']
                 # total['name'] = vals['destination']
+                if total['total_out_val']:
+                    total_out_val = float(total['sub_total_val'].replace(',',''))
+                else:
+                    total_out_val = 0.0
 
-                total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
+                total_out_val = total_out_val + vals['val_out_tk']
+
+                total['total_out_val'] = formatLang(self.env, float(total_out_val))
+
                 grand_total['total_out_val'] = grand_total['total_out_val'] + vals['val_out_tk']
 
+                vals['val_out_tk'] = formatLang(self.env, vals['val_out_tk'])
+
+        grand_total['total_out_val'] = formatLang(self.env, grand_total['total_out_val'])
         return {'dest_location': dest_location, 'total': grand_total}

@@ -70,7 +70,14 @@ class ComparativeBidReport(models.AbstractModel):
                         product_row['approved_price'] = formatLang(self.env,pq.product_line.get(product_row['product_id']))
                         product_row['approved_total'] = formatLang(self.env,pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty'])
 
-                    grand_total[pq.pq_id]['total_price'] = grand_total[pq.pq_id]['total_price'] + (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
+                    if grand_total[pq.pq_id]['total_price']:
+                        grand_total[pq.pq_id]['total_price'] = float(grand_total[pq.pq_id]['total_price'].replace(',', '')) + \
+                                                               (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
+                    else:
+                        grand_total[pq.pq_id]['total_price'] = grand_total[pq.pq_id]['total_price'] + \
+                                                               (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
+
+                    grand_total[pq.pq_id]['total_price'] = formatLang(self.env, grand_total[pq.pq_id]['total_price'])
 
         return {'products':product_row_list,'total':grand_total}
 

@@ -279,7 +279,7 @@ class DeliveryAuthorization(models.Model):
                     'price_subtotal': recs.price_subtotal,
                     'tax_id': recs.tax_id.id,
                     'delivery_qty': self.sale_order_id.order_line.product_uom_qty - sum_delivery_qty,
-                    'sale_order_id': self.id,
+                    'sale_order_id': self.sale_order_id.id,
                 }
 
                 self.env['delivery.authorization.line'].create(da_line2)

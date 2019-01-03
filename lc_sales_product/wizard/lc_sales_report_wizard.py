@@ -24,6 +24,12 @@ class LcSalesReportWizard(models.TransientModel):
         return self.env['report'].get_action(self, 'lc_sales_product.report_packing_list', data)
 
     @api.multi
+    def process_measurement_list(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_measurement_list', data)
+
+    @api.multi
     def process_bill_exchange(self):
         data = {}
         data['shipment_id'] = self.env.context.get('active_id')
@@ -64,3 +70,9 @@ class LcSalesReportWizard(models.TransientModel):
         data = {}
         data['shipment_id'] = self.env.context.get('active_id')
         return self.env['report'].get_action(self, 'lc_sales_product.report_truck_receipt', data)
+
+    @api.multi
+    def process_party_receiving(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_party_receiving', data)
