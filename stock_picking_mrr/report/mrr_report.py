@@ -9,6 +9,9 @@ class MrrReport(models.AbstractModel):
         picking = self.env['stock.picking'].search(['|',('name', '=', data['origin']),('origin','=',data['origin'])],limit=1 ,order='id asc')
         new_picking = self.env['stock.picking'].search([('id', '=', data['self_picking_id'])])
         mrr_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['mrr_date']))
+        data['address'] = report_utility_pool.getAddressByUnit(picking.operating_unit_id)
+
+
         pack_list = []
         total_amount = []
         customer =False
@@ -52,7 +55,8 @@ class MrrReport(models.AbstractModel):
             'po_no' : ','.join(po_no),
             'po_date': po_date,
             'total_amount' : total,
-            'amt_to_word' : amt_to_word
+            'amt_to_word' : amt_to_word,
+            'address': data['address']
         }
         return self.env['report'].render('stock_picking_mrr.report_mrr_doc', docargs)
 
