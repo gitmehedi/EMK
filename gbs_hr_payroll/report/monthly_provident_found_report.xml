@@ -14,8 +14,6 @@
                                     <span t-esc="data['name']"/>
                                 </h4>
                             </div>
-
-
                             <table class="table table-bordered table-report-xs table-striped"
                                    style="margin-bottom: 10px;">
                                 <thead>
@@ -35,39 +33,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="docs" t-as="k">
-                                        <t t-if="k['val']">
-                                            <td class="odo-bg-info" t-att-colspan="docs_len" style="padding-left:15px">
-                                                <strong t-esc="k['name']"></strong>
+                                    <t t-foreach="pf_list" t-as="o">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="o_index+1"></span>
                                             </td>
-
-                                            <t t-foreach="k['val']" t-as="o">
-                                                <tr>
-                                                    <td>
-                                                        <span t-esc="o['sn']"></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-nowrap" t-esc="o['emp_name']"></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-nowrap" t-esc="o['designation']"></span>
-                                                    </td>
-                                                    <td>
-                                                        <span t-esc="o['doj']"></span>
-                                                    </td>
-                                                    <td>
-                                                        <span t-esc="o['device_employee_acc']"></span>
-                                                    </td>
-                                                    <t t-foreach="rules" t-as="r">
-                                                        <t t-if="r['code']== 'EPMF'">
-                                                            <td class="text-right">
-                                                                <span t-esc="o[r['code']]"></span>
-                                                            </td>
-                                                        </t>
-                                                    </t>
-                                                </tr>
-                                            </t>
-                                        </t>
+                                            <td>
+                                                <span class="text-nowrap" t-esc="o['emp_name']"></span>
+                                            </td>
+                                            <td>
+                                                <span class="text-nowrap" t-esc="o['designation']"></span>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o['doj']"></span>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o['device_employee_acc']"></span>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o['EPMF']"></span>
+                                            </td>
+                                        </tr>
                                     </t>
                                     <tr style="page-break-inside: avoid">
                                         <t t-if="data['type'] != '1'">
