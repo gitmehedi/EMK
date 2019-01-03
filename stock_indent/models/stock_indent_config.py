@@ -22,8 +22,8 @@ class StockIndentConfigSettings(models.Model):
             if rec.days_of_backdating_indent<0:
                 raise ValidationError(_("You can't set negative value."))
 
-
-    @api.model
-    def create(self, vals):
-        config_id = super(StockIndentConfigSettings, self).create(vals)
-        return config_id
+    #
+    # @api.model
+    # def create(self, vals):
+    #     config_id = super(StockIndentConfigSettings, self).create(vals)
+    #     return config_id
