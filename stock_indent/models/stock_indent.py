@@ -112,7 +112,7 @@ class IndentIndent(models.Model):
         days_delay = datetime.strftime((datetime.today() - timedelta(days=self.days_of_backdating_indent)).date(),
                                        DEFAULT_SERVER_DATETIME_FORMAT)
         if self.indent_date < days_delay:
-            raise UserError('Indent Date is not valid. Please contract your administrator.')
+            raise ValidationError(_("As per Indent configuration back date entry can't be less then %s days.") % self.days_of_backdating_indent)
 
 
     @api.onchange('warehouse_id')
