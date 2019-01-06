@@ -1,4 +1,6 @@
 from odoo import api, exceptions, fields, models
+from odoo.tools.misc import formatLang
+
 
 class GbsProformaInvoice(models.AbstractModel):
     _name = 'report.gbs_pi_creation.report_proforma_invoice'
@@ -42,7 +44,8 @@ class GbsProformaInvoice(models.AbstractModel):
                 list_obj['quantity']= line.quantity
                 list_obj['hs_code']= line.product_id.hs_code_id.display_name
                 list_obj['uom']= line.uom_id.name
-                list_obj['price_unit']= line.price_unit
+                list_obj['price_unit']= formatLang(self.env,line.price_unit)
+                list_obj['price_subtotal_price']= formatLang(self.env,line.price_subtotal)
                 list_obj['price_subtotal']= line.price_subtotal
                 total_amount.append(list_obj['price_subtotal'])
                 line_list.append(list_obj)
@@ -54,7 +57,7 @@ class GbsProformaInvoice(models.AbstractModel):
         docargs = {
             'data': data,
             'line_list':line_list,
-            'total_amount': total,
+            'total_amount': formatLang(self.env,total),
             'amt_to_word': amt_to_word,
         }
 

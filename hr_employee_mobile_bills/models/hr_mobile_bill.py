@@ -7,6 +7,8 @@ class HrMobileBill(models.Model):
     _name = 'hr.mobile.bill'
     _inherit = ['mail.thread']
     _order = 'name desc'
+    _description = 'Employee Mobile Bill'
+    _rec_name = 'name'
 
     name = fields.Char(size=100, string="Name", required=True,states={'draft': [('invisible', False)],
             'applied': [('readonly', True)], 'approved':[('readonly', True)]})

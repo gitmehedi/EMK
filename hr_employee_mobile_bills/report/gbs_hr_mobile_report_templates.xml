@@ -28,8 +28,8 @@
                                         <tr>
                                             <td><span t-esc="l.employee_id.name"/></td>
                                             <td><span t-esc="l.emp_mobile_phone"/></td>
-                                            <td><span t-esc="l.bill_amount"/></td>
-                                            <td><span t-esc="l.amount"/></td>
+                                            <td><span t-esc="'{:,.2f}'.format(l.bill_amount)"/></td>
+                                            <td><span t-esc="'{:,.2f}'.format(l.amount)"/></td>
                                         </tr>
                 	                 </t>
 
