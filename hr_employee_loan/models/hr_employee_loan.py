@@ -39,6 +39,7 @@ class HrEmployeeLoanRequest(models.Model):
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), readonly=True,
+                                         compute='_compute_loan_amount_with_payslip',
                                          states={'draft': [('invisible', True)], 'applied': [('invisible', True)],
                                                  'approved': [('invisible', True)], 'disbursed': [('invisible', False)]})
 
@@ -47,7 +48,6 @@ class HrEmployeeLoanRequest(models.Model):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Employee Loan Installment Schedule",
-                               compute='_compute_loan_amount_with_payslip',
                                states={'draft': [('invisible', False)], 'applied': [('readonly', True)],
                                        'approved': [('readonly', True)], 'disbursed': [('readonly', True)]})
 
