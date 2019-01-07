@@ -47,7 +47,7 @@
                                                     <span t-esc="l.partner_id.name"/>
                                                 </td>
                                                 <td class="text-right">
-                                                    <span t-esc="'%.2f'%(l.value)"/>
+                                                    <span t-esc="'{:,.2f}'.format(l.value)"/>
                                                 </td>
                                                 <td class="text-right">
                                                     <span t-esc="l.day_num"/>
