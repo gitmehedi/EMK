@@ -69,6 +69,8 @@ class IndentIndent(models.Model):
 
     pr_indent_check = fields.Boolean(string = 'Indent List Check',default = True)
 
+    days_of_backdating_indent = fields.Integer(size=4, compute='_compute_days_of_backdating')
+
     product_id = fields.Many2one(
         'product.product', 'Products',
         readonly="1", related='product_lines.product_id',
@@ -78,13 +80,39 @@ class IndentIndent(models.Model):
         ('draft', 'Draft'),
         ('waiting_approval', 'Waiting for Approval'),
         ('inprogress', 'In Progress'),
-        ('received', 'Received'),
+        ('received', 'Issued'),
         ('reject', 'Rejected'),
     ], string='State', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
     ####################################################
     # Business methods
     ####################################################
+
+    @api.multi
+    @api.depends('product_lines.product_id')
+    def _compute_days_of_backdating(self):
+        for rec in self:
+            for line in rec.product_lines:
+                if line.product_id.categ_id.is_backdateable:
+                    query = """select days_of_backdating_indent from stock_indent_config_settings order by id desc limit 1"""
+                    self.env.cr.execute(query)
+                    days_value = self.env.cr.fetchone()
+                    if days_value:
+                        rec.days_of_backdating_indent = days_value[0]
+                        break
+                    else:
+                        rec.days_of_backdating_indent = 0
+                        break
+                else:
+                    rec.days_of_backdating_indent = 0
+
+    @api.one
+    @api.constrains('indent_date')
+    def _check_indent_date(self):
+        days_delay = datetime.strftime((datetime.today() - timedelta(days=self.days_of_backdating_indent)).date(),
+                                       DEFAULT_SERVER_DATETIME_FORMAT)
+        if self.indent_date < days_delay:
+            raise ValidationError(_("As per Indent configuration back date entry can't be less then %s days.") % self.days_of_backdating_indent)
 
 
     @api.onchange('warehouse_id')

@@ -1,4 +1,6 @@
 from odoo import api,models,fields
+from odoo.tools.misc import formatLang
+
 
 class PurchaseReport(models.AbstractModel):
     _name = "report.purchase_reports.report_purchase_material_requisition"
@@ -32,9 +34,9 @@ class PurchaseReport(models.AbstractModel):
         list_obj['particulars'] = '39.033.002-Air Condition Splite Type-02(220 V,2400 BTU): For Lab'
         list_obj['qty'] = '10,000'
         list_obj['unit'] = 'Pair'
-        list_obj['rate'] = '66000'
+        list_obj['rate'] = formatLang(self.env,'66000')
         list_obj['discount'] = '5'
-        list_obj['amount'] = '66000'
+        list_obj['amount'] = formatLang(self.env,'66000')
         list_obj['remarks'] = 'This is a Lab Product'
         record_list.append(list_obj)
 

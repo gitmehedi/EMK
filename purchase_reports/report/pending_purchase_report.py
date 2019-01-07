@@ -1,4 +1,5 @@
 from odoo import api,models,fields
+from odoo.tools.misc import formatLang
 
 class PurchaseReport(models.AbstractModel):
     _name = "report.purchase_reports.report_pending_purchase"
@@ -49,7 +50,7 @@ class PurchaseReport(models.AbstractModel):
             list_obj['unit'] = row[5]
             list_obj['mrr_qty'] = row[6]
             list_obj['remaining_qty'] = row[7]
-            list_obj['last_rate'] = row[8]
+            list_obj['last_rate'] = formatLang(self.env,row[8])
             list_obj['po_qty'] = row[9]
             list_obj['po_no'] = row[10]
             record_list.append(list_obj)

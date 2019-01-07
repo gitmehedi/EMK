@@ -310,22 +310,22 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty",
-                                digits=dp.get_precision('Product Unit of Measure'), store=True)
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty",
-                                digits=dp.get_precision('Product Unit of Measure'), store=True)
-
     # relation between PO line and PR line----------------------------------------
     pr_line_ids = fields.Many2many('purchase.requisition.line', 'po_pr_line_rel', 'po_line_id', 'pr_line_id',
                                        string='Purchase Requisition Lines')
     # ----------------------------------------------------------------------------
 
-    @api.depends('order_id.state', 'move_ids.state')
-    def _compute_qty_received(self):
-        for line in self:
-            line.qty_received = 0.0
+    # qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty",
+    #                             digits=dp.get_precision('Product Unit of Measure'), store=True)
+    # qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty",
+    #                             digits=dp.get_precision('Product Unit of Measure'), store=True)
 
-    @api.depends('invoice_lines.invoice_id.state')
-    def _compute_qty_invoiced(self):
-        for line in self:
-            line.qty_invoiced = 0.0
+    # @api.depends('order_id.state', 'move_ids.state')
+    # def _compute_qty_received(self):
+    #     for line in self:
+    #         line.qty_received = 0.0
+
+    # @api.depends('invoice_lines.invoice_id.state')
+    # def _compute_qty_invoiced(self):
+    #     for line in self:
+    #         line.qty_invoiced = 0.0

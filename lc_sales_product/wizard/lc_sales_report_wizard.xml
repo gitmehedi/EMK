@@ -19,6 +19,9 @@
                             <button string="Packing List" name="process_packing_list" type="object" class="oe_highlight"/>
                         </group>
                         <group>
+                            <button string="Measurement List" name="process_measurement_list" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
                             <button string="Bill of Exchange(First)" name="process_bill_exchange" type="object" class="oe_highlight"/>
                         </group>
                         <group>
@@ -38,6 +41,9 @@
                         </group>
                         <group>
                             <button string="Truck Receipt / Delivery Challan" name="process_truck" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Party Receiving" name="process_party_receiving" type="object" class="oe_highlight"/>
                         </group>
                     </group>
                     <footer>

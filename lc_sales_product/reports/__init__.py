@@ -8,3 +8,5 @@ import certificate_of_origin
 import inspection_certificate
 import delivery_challan_report
 import truck_receipt_report
+import measurement_list_report
+import party_receiving_sheet

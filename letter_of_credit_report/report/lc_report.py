@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
 
 
 class HrEmpLeaveReport(models.AbstractModel):
@@ -31,7 +32,7 @@ class HrEmpLeaveReport(models.AbstractModel):
         for row in data_list:
             lc_obj = {}
             lc_obj['lc_number'] = row[1]
-            lc_obj['amount'] = row[2]
+            lc_obj['amount'] = formatLang(self.env,row[2])
             lc_obj['lc_date'] = row[3]
             lc_obj['exp_date'] = row[4]
             lc_obj['ship_date'] = row[5]

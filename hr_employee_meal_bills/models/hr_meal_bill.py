@@ -6,10 +6,13 @@ class HrEmployeeMealBill(models.Model):
     _name = 'hr.meal.bill'
     _inherit = ['mail.thread']
     _order = 'name desc'
+    _description = 'Employee Meal Bill'
+    _rec_name = 'name'
 
-    name = fields.Char(size=100, string="Description", required=True, readonly=True,
+
+    name = fields.Char(size=100, string="Description", required=True, readonly=True,track_visibility='onchange',
                        states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', string='Company', index=True,
+    company_id = fields.Many2one('res.company', string='Company', index=True, track_visibility='onchange',
                                  default=lambda self: self.env.user.company_id)
 
     """ All relations fields """
@@ -54,12 +57,4 @@ class HrEmployeeMealBill(models.Model):
             bill.line_ids.unlink()
         return super(HrEmployeeMealBill, self).unlink()
 
-    # @api.constrains('name')
-    # def _check_unique_constraint(self):
-    #     if self.name:
-    #         filters = [['name', '=ilike', self.name]]
-    #         name = self.search(filters)
-    #         if len(name) > 1:
-    #             raise Warning('[Unique Error] Name must be unique!')
-        
 

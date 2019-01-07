@@ -4,7 +4,7 @@
         <report
                 id="action_purchase_material_requisition"
                 model="hr.employee"
-                string="Purchase report"
+                string="Purchase Material Requisition report"
                 report_type="qweb-pdf"
                 menu="False"
                 name="purchase_reports.report_purchase_material_requisition"

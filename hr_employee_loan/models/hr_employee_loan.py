@@ -9,6 +9,8 @@ class HrEmployeeLoanRequest(models.Model):
     _name = 'hr.employee.loan'
     _inherit = ['mail.thread']
     _order = 'name desc'
+    _description = 'Employee Loan'
+
 
     name = fields.Char(size=100, string='Loan Name', default="/")
     emp_code_id = fields.Char(string='Code')
@@ -37,6 +39,7 @@ class HrEmployeeLoanRequest(models.Model):
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), readonly=True,
+                                         compute='_compute_loan_amount_with_payslip',
                                          states={'draft': [('invisible', True)], 'applied': [('invisible', True)],
                                                  'approved': [('invisible', True)], 'disbursed': [('invisible', False)]})
 

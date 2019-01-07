@@ -45,7 +45,7 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
             for other_po in others_po:
                 other_po.disable_new_revision_button = True
             # others_po.button_cancel()
-
+            po.write({'invoice_status':'to invoice'})
             for element in po.order_line:
                 if element.product_id == po.requisition_id.procurement_id.product_id:
                     element.move_ids.write({

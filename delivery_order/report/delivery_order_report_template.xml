@@ -83,7 +83,7 @@
                                                 <tr style="page-break-inside: avoid">
                                                     <td class="text-center"><span t-esc="l_index+1"/></td>
                                                     <td><span t-esc="l.account_payment_id.name"/></td>
-                                                    <td class="text-right"><span t-esc="l.amount"/></td>
+                                                    <td class="text-right"><span t-esc="'{:,.2f}'.format(l.amount)"/></td>
                                                     <td><span t-esc="l.dep_bank"/></td>
                                                     <td><span t-esc="l.branch"/></td>
                                                     <td><span t-esc="l.validity"/></td>

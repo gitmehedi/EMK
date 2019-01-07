@@ -122,10 +122,10 @@
                                                         <span t-esc="p.product_id.name"/>
                                                     </td>
                                                     <td class="text-right">
-                                                        <span t-esc="p.old_value"/>
+                                                        <span t-esc="'{:,.2f}'.format(p.old_value)"/>
                                                     </td>
                                                     <td class="text-right">
-                                                        <span t-esc="p.new_value"/>
+                                                        <span t-esc="'{:,.2f}'.format(p.new_value)"/>
                                                     </td>
                                                     <td class="text-right">
                                                         <span t-esc="p.currency_id.name"/>

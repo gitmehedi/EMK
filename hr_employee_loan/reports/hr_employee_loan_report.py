@@ -1,4 +1,6 @@
 from odoo import api,models,fields
+from odoo.tools.misc import formatLang
+
 
 class LoanReport(models.AbstractModel):
     _name = "report.hr_employee_loan.report_hr_employee_loan"
@@ -12,15 +14,15 @@ class LoanReport(models.AbstractModel):
         data['employee_name'] = loan_obj.employee_id.name
         data['department_name'] = loan_obj.department_id.name
         data['loan_type'] = loan_obj.loan_type_id.name
-        data['principal_amount'] = loan_obj.principal_amount
+        data['principal_amount'] = formatLang(self.env,loan_obj.principal_amount)
         data['interst_mode'] = loan_obj.interst_mode_id
         data['rate'] = loan_obj.req_rate
         data['applied_date'] = loan_obj.applied_date
         data['approved_date'] = loan_obj.approved_date
         data['disbursement_date'] = loan_obj.disbursement_date
         data['repayment_date'] = loan_obj.repayment_date
-        data['amount_receive'] = (loan_obj.principal_amount)-(loan_obj.remaining_loan_amount)
-        data['amount_due'] = loan_obj.remaining_loan_amount
+        data['amount_receive'] = formatLang(self.env,(loan_obj.principal_amount)-(loan_obj.remaining_loan_amount))
+        data['amount_due'] = formatLang(self.env,loan_obj.remaining_loan_amount)
 
         installment_list= []
         policies_list = []
@@ -29,7 +31,7 @@ class LoanReport(models.AbstractModel):
                 list_obj = {}
                 list_obj['num_installment'] = line.num_installment
                 list_obj['schedule_date'] = line.schedule_date
-                list_obj['installment'] = line.installment
+                list_obj['installment'] = formatLang(self.env,line.installment)
                 list_obj['state'] = line.state
                 installment_list.append(list_obj)
 

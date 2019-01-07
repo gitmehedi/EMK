@@ -1,4 +1,6 @@
 from odoo import api, models
+from odoo.tools.misc import formatLang
+
 
 class PurchaseSummaryReport(models.AbstractModel):
     _name = 'report.purchase_reports.purchase_summary_template'
@@ -24,7 +26,7 @@ class PurchaseSummaryReport(models.AbstractModel):
         list_obj = {}
         list_obj['ou'] = ['SCCL-Dhaka','SCCL-CTG','SPPL-CTG']
         list_obj['month'] = ['January','February','March','April']
-        list_obj['value'] = ['25000','3600','25896','87965',]
+        list_obj['value'] = formatLang(self.env,['25000','3600','25896','87965',])
         list_obj['remarks'] = 'This is a Lab Product'
         list_obj['department'] = 'Production'
         record_list.append(list_obj)

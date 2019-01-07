@@ -1,4 +1,6 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
+
 
 
 class CommercialInvoice(models.AbstractModel):
@@ -42,7 +44,8 @@ class CommercialInvoice(models.AbstractModel):
                 prod['hs_code'] = prod_line.product_id.hs_code_id.display_name
                 prod['quantity'] = prod_line.product_qty
                 prod['product_uom'] = prod_line.product_uom.name
-                prod['unit_price'] = prod_line.price_unit
+                prod['unit_price'] = formatLang(self.env,prod_line.price_unit)
+                prod['sub_total_price'] = formatLang(self.env,prod_line.product_qty * prod_line.price_unit)
                 prod['total_price'] = prod_line.product_qty * prod_line.price_unit
 
                 prod_list.append(prod)
@@ -59,8 +62,8 @@ class CommercialInvoice(models.AbstractModel):
             'data': data,
             'lists': prod_list,
             'amt_to_word': amt_to_word,
-            'total_qty': total_qty,
-            'total_price': total_price,
+            'total_qty': formatLang(self.env,total_qty),
+            'total_price': formatLang(self.env,total_price),
             'pi_id_list': pi_id_list,
             'lc_revision_list': lc_revision_list
         }

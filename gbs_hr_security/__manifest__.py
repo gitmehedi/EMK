@@ -32,6 +32,7 @@
         'base',
         'hr',
         'hr_contract',
+        'hr_payroll',
     ],
     "data": [
         'security/hr_security.xml',

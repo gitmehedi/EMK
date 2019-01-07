@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <record id="view_users_form_inherited1" model="ir.ui.view">
+            <field name="name">res.users.form.view1</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='name']" position="after">-->
+                    <!--<field name="message_follower_ids" widget="mail_followers"/>-->
+                    <!--<field name="message_ids" widget="mail_thread"/>-->
+                <!--</xpath>-->
+                <xpath expr="//form/sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_res_users_role_form1" model="ir.ui.view">
+            <field name="name">res.users.role.form.view1</field>
+            <field name="model">res.users.role</field>
+            <field name="inherit_id" ref="base_user_role.view_res_users_role_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='group_id']" position="after">
+                    <field name="seq"/>
+                    <field name="internal_user_group" groups="base_technical_features.group_technical_features"/>
+                </xpath>
+                <xpath expr="//form/sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record model="ir.actions.act_window" id="base_user_role.action_res_users_role_tree">-->
+            <!--<field name="name">Roles</field>-->
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">res.users.role</field>-->
+            <!--<field name="view_type">form</field>-->
+            <!--<field name="view_id" ref="base_user_role.view_res_users_role_tree"/>-->
+            <!--<field name="domain">[('internal_user_group','=', False)]</field>-->
+        <!--</record>-->
+    </data>
+</odoo>

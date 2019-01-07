@@ -1,5 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError,UserError
+from odoo.tools.misc import formatLang
+
 
 
 class ComparativeBidReport(models.AbstractModel):
@@ -39,10 +41,8 @@ class ComparativeBidReport(models.AbstractModel):
 
         product_row_list=[]
         for val in self.get_purchase_data(rfq_obj):
-            quotation = {v.id: {
-                'price': None,
-                'total': None
-            } for v in pq_list}
+
+            quotations = []
 
             product_row_list.append({
                 'product_id': val[0],
@@ -54,7 +54,7 @@ class ComparativeBidReport(models.AbstractModel):
                 'approved_price': None,
                 'approved_total': None,
                 'remarks': '',
-                'quotation': quotation
+                'quotations': quotations
                 })
 
         pq_temp_list = self.get_temp_pq(pq_list)
@@ -62,13 +62,22 @@ class ComparativeBidReport(models.AbstractModel):
         for product_row in product_row_list:
             for pq in pq_temp_list:
                 if pq.product_line.get(product_row['product_id']):
-                    product_row['quotation'][pq.pq_id]['price'] = pq.product_line.get(product_row['product_id'])
-                    product_row['quotation'][pq.pq_id]['total'] = pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']
-                    if pq.state in ['purchase','done']:
-                        product_row['approved_price'] = pq.product_line.get(product_row['product_id'])
-                        product_row['approved_total'] = pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']
+                    price_pq = formatLang(self.env,pq.product_line.get(product_row['product_id']))
+                    total_pq = formatLang(self.env,pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty'])
+                    product_row['quotations'].append({'price': price_pq, 'total': total_pq})
 
-                    grand_total[pq.pq_id]['total_price'] = grand_total[pq.pq_id]['total_price'] + (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
+                    if pq.state in ['purchase','done']:
+                        product_row['approved_price'] = formatLang(self.env,pq.product_line.get(product_row['product_id']))
+                        product_row['approved_total'] = formatLang(self.env,pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty'])
+
+                    if grand_total[pq.pq_id]['total_price']:
+                        grand_total[pq.pq_id]['total_price'] = float(grand_total[pq.pq_id]['total_price'].replace(',', '')) + \
+                                                               (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
+                    else:
+                        grand_total[pq.pq_id]['total_price'] = grand_total[pq.pq_id]['total_price'] + \
+                                                               (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
+
+                    grand_total[pq.pq_id]['total_price'] = formatLang(self.env, grand_total[pq.pq_id]['total_price'])
 
         return {'products':product_row_list,'total':grand_total}
 

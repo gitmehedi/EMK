@@ -121,7 +121,7 @@
                                             <td><span t-esc="l['product_id']"/></td>
                                             <td><span t-esc="l['product_qty']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
-                                            <td><span t-esc="l['price_subtotal']"/></td>
+                                            <td><span t-esc="l['price_subtotal_price']"/></td>
                                         </tr>
                                     </t>
                                     <tr>

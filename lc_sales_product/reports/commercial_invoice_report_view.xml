@@ -138,17 +138,17 @@
                                                 <span t-esc="l['hs_code']"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="'%.2f'% l['quantity']"/>
+                                                <span t-esc="l['quantity']"/>
                                             </td>
                                             <td>
                                                 <span t-esc="l['product_uom']"/>
                                             </td>
 
                                             <td class="text-right">
-                                                <span t-esc="'%.2f'% l['unit_price']"/>
+                                                <span t-esc="l['unit_price']"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="'%.2f'% l['total_price']"/>
+                                                <span t-esc="l['sub_total_price']"/>
                                             </td>
                                         </tr>
                                     </t>
@@ -161,7 +161,7 @@
                                         <td colspan="2" class="text-right"></td>
                                         <!--<td></td>-->
                                         <td class="text-right">
-                                            <strong t-esc="'%.2f'% total_price"/>
+                                            <strong t-esc=" total_price"/>
                                         </td>
                                     </tr>
                                 </tbody>

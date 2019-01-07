@@ -81,13 +81,13 @@
                                             <td><span t-esc="l['hs_code']"/></td>
                                             <td class="text-right"><span t-esc="l['quantity']"/></td>
                                             <td><span t-esc="l['uom']"/></td>
-                                            <td class="text-right"><span t-esc="'%.2f'% l['price_unit']"/></td>
-                                            <td class="text-right"><span t-esc="'%.2f'% l['price_subtotal']"/></td>
+                                            <td class="text-right"><span t-esc="l['price_unit']"/></td>
+                                            <td class="text-right"><span t-esc="l['price_subtotal_price']"/></td>
                                         </tr>
                                     </t>
                                     <tr>
                                         <td colspan="6" rowspan="2"><strong>Amount in words : </strong> <span t-esc="data['currency']"/> <span t-esc="amt_to_word"/> only</td>
-                                        <td class="text-right"><strong>Total : </strong><span t-esc="'%.2f'% total_amount"/></td>
+                                        <td class="text-right"><strong>Total : </strong><span t-esc="total_amount"/></td>
                                     </tr>
                                 </tbody>
                             </table>
