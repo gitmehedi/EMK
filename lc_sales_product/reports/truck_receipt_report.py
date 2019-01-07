@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
 
 
 class TruckReceipt(models.AbstractModel):
@@ -27,7 +28,7 @@ class TruckReceipt(models.AbstractModel):
         data['lc_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
         data['gross_weight'] = shipment_obj.gross_weight
-        data['net_weight'] = shipment_obj.net_weight
+        data['net_weight'] = formatLang(self.env,shipment_obj.net_weight)
         data['vehical_no'] = shipment_obj.vehical_no
         data['weight_uom'] = shipment_obj.weight_uom.name
         data['count_qty'] = shipment_obj.count_qty

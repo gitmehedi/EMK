@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
 
 class BankTopSheet(models.AbstractModel):
     _name = 'report.lc_sales_product.report_top_sheet'
@@ -14,7 +15,7 @@ class BankTopSheet(models.AbstractModel):
         data['first_party_branch_add'] = report_utility_pool.getBranchAddress2(shipment_obj.lc_id.first_party_bank_acc)
         data['company'] = shipment_obj.company_id.name
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
-        data['invoice_value'] = shipment_obj.invoice_value
+        data['invoice_value'] = formatLang(self.env,shipment_obj.invoice_value)
         data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
         data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
         if shipment_obj.lc_id.lc_document_line:

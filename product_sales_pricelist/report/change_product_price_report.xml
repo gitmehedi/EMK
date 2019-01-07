@@ -54,10 +54,10 @@
                                                 <span t-field="doc.currency_id"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-field="doc.list_price"/>
+                                                <span t-field="'{:,.2f}'.format(doc.list_price)"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-field="doc.new_price"/>
+                                                <span t-field="'{:,.2f}'.format(doc.new_price)"/>
                                             </td>
                                         </tr>
                                     </tbody>

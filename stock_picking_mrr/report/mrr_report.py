@@ -1,4 +1,6 @@
 from odoo import api, exceptions, fields, models
+from odoo.tools.misc import formatLang
+
 
 class MrrReport(models.AbstractModel):
     _name = 'report.stock_picking_mrr.report_mrr_doc'
@@ -65,7 +67,7 @@ class MrrReport(models.AbstractModel):
             'challan_date' : challan_date,
             'po_no' : po_no_str,
             'po_date': po_date,
-            'total_amount' : total,
+            'total_amount' : formatLang(self.env, total),
             'amt_to_word' : amt_to_word,
             'address': data['address']
         }
@@ -91,7 +93,8 @@ class MrrReport(models.AbstractModel):
                         pack_obj['pr_no'] = po.origin
                         pack_obj['mrr_quantity'] = move.product_uom_qty
                         pack_obj['product_uom_id'] = move.product_uom.name
-                        pack_obj['price_unit'] = po_line_objs[0].price_unit
+                        pack_obj['price_unit'] = formatLang(self.env, po_line_objs[0].price_unit)
+                        pack_obj['sub_amount'] = formatLang(self.env, move.product_uom_qty * po_line_objs[0].price_unit)
                         pack_obj['amount'] = move.product_uom_qty * po_line_objs[0].price_unit
                         total_amount.append(pack_obj['amount'])
                         pack_list.append(pack_obj)
@@ -106,7 +109,8 @@ class MrrReport(models.AbstractModel):
                 pack_obj['pr_no'] = new_picking.origin
                 pack_obj['mrr_quantity'] = move.product_uom_qty
                 pack_obj['product_uom_id'] = move.product_uom.name
-                pack_obj['price_unit'] = move.product_id.standard_price
+                pack_obj['price_unit'] = formatLang(self.env, move.product_id.standard_price)
+                pack_obj['sub_amount'] = formatLang(self.env, move.product_uom_qty * move.product_id.standard_price)
                 pack_obj['amount'] = move.product_uom_qty * move.product_id.standard_price
                 total_amount.append(pack_obj['amount'])
                 pack_list.append(pack_obj)
@@ -118,5 +122,5 @@ class MrrReport(models.AbstractModel):
             'customer':customer,
             'challan':challan,
             'challan_date':challan_date,
-            'total_amount':total_amount
+            'total_amount': total_amount
         }

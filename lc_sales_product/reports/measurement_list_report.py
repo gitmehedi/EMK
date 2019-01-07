@@ -1,4 +1,6 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
+
 
 
 class PackingList(models.AbstractModel):
@@ -26,10 +28,10 @@ class PackingList(models.AbstractModel):
         data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
         data['lc_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
-        data['gross_weight'] = shipment_obj.gross_weight
-        data['net_weight'] = shipment_obj.net_weight
+        data['gross_weight'] = formatLang(self.env,shipment_obj.gross_weight)
+        data['net_weight'] = formatLang(self.env,shipment_obj.net_weight)
         data['weight_uom'] = shipment_obj.weight_uom.name
-        data['count_qty'] = shipment_obj.count_qty
+        data['count_qty'] = formatLang(self.env,shipment_obj.count_qty)
         data['count_uom'] = shipment_obj.count_uom.name
 
         for pi_id in shipment_obj.lc_id.pi_ids:

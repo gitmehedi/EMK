@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.tools.misc import formatLang
 
 class BillExchangeFirst(models.AbstractModel):
     _name = 'report.lc_sales_product.report_bill_exchange_second'
@@ -23,7 +24,7 @@ class BillExchangeFirst(models.AbstractModel):
         data['first_party_bank_add'] = report_utility_pool.getBranchAddress(shipment_obj.lc_id.first_party_bank_acc)
         data['company'] = shipment_obj.company_id.name
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
-        data['invoice_value'] = shipment_obj.invoice_value
+        data['invoice_value'] = formatLang(self.env,shipment_obj.invoice_value)
         data['invoice_id'] = "" if shipment_obj.invoice_id.id == False else shipment_obj.invoice_id.display_name
         data['invoice_date'] = "" if shipment_obj.invoice_id.id == False else report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
@@ -39,7 +40,7 @@ class BillExchangeFirst(models.AbstractModel):
                 list_obj['name'] = line.product_id.name_get()[0][1]
                 list_obj['quantity'] = line.product_qty
                 list_obj['uom'] = line.product_uom.name
-                list_obj['price_unit'] = line.price_unit
+                list_obj['price_unit'] = formatLang(self.env,line.price_unit)
                 price.append(list_obj['quantity'])
                 uom.append(list_obj['uom'])
                 line_list.append(list_obj)
