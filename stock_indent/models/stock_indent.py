@@ -87,7 +87,6 @@ class IndentIndent(models.Model):
     ####################################################
     # Business methods
     ####################################################
-
     @api.multi
     @api.depends('product_lines.product_id')
     def _compute_days_of_backdating(self):
@@ -372,6 +371,12 @@ class IndentProductLines(models.Model):
     ####################################################
     # Business methods
     ####################################################
+    @api.constrains('product_id')
+    def check_product_id(self):
+        for rec in self:
+            duplicate_products = rec.indent_id.product_lines.filtered(lambda r: r.product_id.id == rec.product_id.id)
+            if len(duplicate_products)>1:
+                raise ValidationError('You can not select same product')
 
     @api.one
     @api.constrains('product_uom_qty')
