@@ -34,10 +34,9 @@ class ComparativeBidReport(models.AbstractModel):
 
     def get_report_data(self, rfq_obj,pq_list):
 
-        grand_total = {v.id:{
-            'title': 'TOTAL',
-            'total_price': 0,
-        }for v in pq_list}
+        grand_total = []
+        for v in pq_list:
+            grand_total.append({'pq_id':v.id,'title': 'TOTAL','total_price': 0})
 
         product_row_list=[]
         for val in self.get_purchase_data(rfq_obj):
@@ -58,7 +57,6 @@ class ComparativeBidReport(models.AbstractModel):
                 })
 
         pq_temp_list = self.get_temp_pq(pq_list)
-
         for product_row in product_row_list:
             for pq in pq_temp_list:
                 if pq.product_line.get(product_row['product_id']):
@@ -70,14 +68,14 @@ class ComparativeBidReport(models.AbstractModel):
                         product_row['approved_price'] = formatLang(self.env,pq.product_line.get(product_row['product_id']))
                         product_row['approved_total'] = formatLang(self.env,pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty'])
 
-                    if grand_total[pq.pq_id]['total_price']:
-                        grand_total[pq.pq_id]['total_price'] = float(grand_total[pq.pq_id]['total_price'].replace(',', '')) + \
-                                                               (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
-                    else:
-                        grand_total[pq.pq_id]['total_price'] = grand_total[pq.pq_id]['total_price'] + \
-                                                               (pq.product_line.get(product_row['product_id']) * product_row['product_ordered_qty']) or 0
+                    for i in grand_total:
+                        if pq.pq_id == i['pq_id']:
+                            if i['total_price']:
+                                i['total_price'] = float(i['total_price'].replace(',', '')) + float(total_pq.replace(',', ''))
+                            else:
+                                i['total_price'] = i['total_price'] + float(total_pq.replace(',', ''))
 
-                    grand_total[pq.pq_id]['total_price'] = formatLang(self.env, grand_total[pq.pq_id]['total_price'])
+                            i['total_price'] = formatLang(self.env, i['total_price'])
 
         return {'products':product_row_list,'total':grand_total}
 
