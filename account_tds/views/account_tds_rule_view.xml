@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_tds_rule_form" model="ir.ui.view">
+            <field name="name">tds.rule.form</field>
+            <field name="model">tds.rule</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="TDS Rule">
+                    <sheet>
+                        <h1 class="oe_title">
+                            Name:
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="current_version"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Products">
+                                <field name="version_ids">
+                                    <tree string="List" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="effective_date"/>
+                                        <field name="type_rate"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_tds_rule_tree" model="ir.ui.view">
+            <field name="name">tds.rule.tree</field>
+            <field name="model">tds.rule</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="TDS Rule">
+                    <field name="name"/>
+                    <field name="current_version"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_tds_rule">
+            <field name="name">TDS Rule</field>
+            <field name="res_model">tds.rule</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new TDS Rule
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="perent_menu_tds_rule" name="Account TDS" parent="account.account_account_menu"
+                  sequence="11"/>
+        <menuitem
+                action="action_tds_rule"
+                id="menu_tds_rule"
+                parent="perent_menu_tds_rule"
+                sequence="1"
+                name="TDS Rule"
+        />
+    </data>
+</odoo>
