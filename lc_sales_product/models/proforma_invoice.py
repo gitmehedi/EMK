@@ -5,6 +5,6 @@ from odoo.exceptions import UserError, ValidationError
 class ProformaInvoice(models.Model):
     _inherit = 'proforma.invoice'
 
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True)
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', track_visibility='onchange', readonly=True)
 
 

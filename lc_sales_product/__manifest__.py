@@ -1,5 +1,5 @@
 {
-    'name': 'Sale By LC',
+    'name': 'Sale By LC (Local)',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Commercial',
