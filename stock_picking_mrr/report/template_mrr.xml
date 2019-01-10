@@ -81,8 +81,7 @@
                                             <td><span t-esc="l['product_uom_id']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
                                             <td></td>
-                                            <td><span t-esc="l['amount']"/></td>
-
+                                            <td><span t-esc="l['sub_amount']"/></td>
                                         </tr>
                                     </t>
                                     <tr>

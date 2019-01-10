@@ -87,7 +87,7 @@
                                     <td class="text-right">
                                         <span class="text-nowrap" t-esc="list_value['last_price']"/>
                                     </td>
-                                    <t t-foreach="list_value['quotation']" t-as="val">
+                                    <t t-foreach="list_value['quotations']" t-as="val">
                                         <td class="text-left">
                                             <span t-esc="val_value['price']"/>
                                         </td>
