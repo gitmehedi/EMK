@@ -117,13 +117,5 @@
                 </form>
             </field>
         </record>
-        <!--&lt;!&ndash; Sequence Records &ndash;&gt;-->
-        <!--<record id="seq_loan_request" model="ir.sequence">-->
-            <!--<field name="name">Version</field>-->
-            <!--<field name="code">emp_code_id</field>-->
-            <!--<field name="prefix">V00</field>-->
-            <!--<field name="padding">10</field>-->
-        <!--</record>-->
-
     </data>
 </odoo>

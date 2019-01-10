@@ -22,7 +22,6 @@ class TDSRules(models.Model):
             if rec.effective_from <= date and rec.effective_end >= date:
                 self.current_version = rec.name
 
-# loan.name = self.env['ir.sequence'].get('emp_code_id')
 
 class TDSRuleVersion(models.Model):
     _name = 'tds.rule.version'
@@ -42,12 +41,6 @@ class TDSRuleVersion(models.Model):
     flat_rate = fields.Float(string='Rate')
     rule_line_ids = fields.One2many('tds.rule.line','tds_version_id',string='Rule Details')
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code(
-                'tds.rule.version') or '/'
-        return super(TDSRuleVersion, self).create(vals)
 
 
 class TDSRuleLine(models.Model):
