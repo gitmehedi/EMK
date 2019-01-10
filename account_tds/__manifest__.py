@@ -17,11 +17,13 @@
     'depends': [
         'account',
         'date_range',
+        'product'
     ],
     'data': [
         'views/account_tds_rule_view.xml',
         'views/inherit_date_range_view.xml',
         'views/account_invoice_view.xml',
+        'views/inherit_product_template.xml',
     ],
     'installable': True,
     'application': True,
