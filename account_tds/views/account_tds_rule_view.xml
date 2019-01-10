@@ -58,6 +58,19 @@
                                 </field>
                             </page>
                         </notebook>
+                        <!--<notebook colspan="4" >-->
+                            <!--<page string="Version Details" attrs="{'invisible': [('state', 'in', ('draft'))]}">-->
+                                <!--<field name="version_ids" ref= "view_tds_rule_version_form">-->
+                                    <!--<tree string="List">-->
+                                        <!--<field name="name"/>-->
+                                        <!--<field name="effective_from"/>-->
+                                        <!--<field name="effective_end"/>-->
+                                        <!--<field name="type_rate"/>-->
+                                        <!--<field name="flat_rate"/>-->
+                                    <!--</tree>-->
+                                <!--</field>-->
+                            <!--</page>-->
+                        <!--</notebook>-->
                     </sheet>
                     <!--<div class="oe_chatter">-->
 						<!--<field name="message_follower_ids" widget="mail_followers"/>-->
@@ -116,7 +129,7 @@
                         </group>
                         <notebook colspan="4" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
                             <page string="Slab Details">
-                                <field name="rule_line_ids">
+                                <field name="version_line_ids">
                                     <tree string="List" editable="bottom">
                                         <field name="range_from"/>
                                         <field name="range_to"/>
