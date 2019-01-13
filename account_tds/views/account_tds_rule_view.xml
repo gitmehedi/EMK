@@ -11,7 +11,9 @@
                         <button name="action_confirm" type="object"
                                 string="Confirm" states="draft"
                                 class="oe_highlight"/>
-                        <button string="Amendment" name="action_confirm" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+                        <button string="Amendment" name="%(tds_rule_wizard_action_view)d" type="action" class="oe_read_only"
+                                context="{'effective_from': effective_from,'name':name,'account_id':account_id,'effective_end':effective_end,'type_rate':type_rate,'flat_rate':flat_rate,'line_ids':line_ids}"
+                                attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -36,7 +38,8 @@
                                 <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                             </group>
                         </group>
-                        <notebook colspan="4" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
+                        <!--<notebook colspan="4" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">-->
+                        <notebook colspan="4">
                             <page string="Slab Details">
                                 <field name="line_ids">
                                     <tree string="List" editable="bottom">
@@ -53,24 +56,11 @@
                                         <field name="effective_from"/>
                                         <field name="effective_end"/>
                                         <field name="type_rate"/>
-                                        <field name="flat_rate"/>
+                                        <!--<field name="flat_rate" attrs="{'invisible':[('type_rate', '=', 'slab')]}"/>-->
                                     </tree>
                                 </field>
                             </page>
                         </notebook>
-                        <!--<notebook colspan="4" >-->
-                            <!--<page string="Version Details" attrs="{'invisible': [('state', 'in', ('draft'))]}">-->
-                                <!--<field name="version_ids" ref= "view_tds_rule_version_form">-->
-                                    <!--<tree string="List">-->
-                                        <!--<field name="name"/>-->
-                                        <!--<field name="effective_from"/>-->
-                                        <!--<field name="effective_end"/>-->
-                                        <!--<field name="type_rate"/>-->
-                                        <!--<field name="flat_rate"/>-->
-                                    <!--</tree>-->
-                                <!--</field>-->
-                            <!--</page>-->
-                        <!--</notebook>-->
                     </sheet>
                     <!--<div class="oe_chatter">-->
 						<!--<field name="message_follower_ids" widget="mail_followers"/>-->
@@ -146,5 +136,13 @@
                 </form>
             </field>
         </record>
+         <!-- Sequence Records -->
+        <record id="seq_version" model="ir.sequence">
+            <field name="name">Version Sequence</field>
+            <field name="code">name</field>
+            <field name="prefix">Version</field>
+            <field name="padding">4</field>
+        </record>
+
     </data>
 </odoo>
