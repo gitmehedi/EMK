@@ -36,6 +36,7 @@
 
     # always loaded
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu_items.xml',

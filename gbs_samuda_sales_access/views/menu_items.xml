@@ -99,6 +99,14 @@
                 action="letter_of_credit.lc_import_local_creation_action"
                 groups="base.group_no_one"/>
 
+        <menuitem id="gbs_pi_creation.pi_creation_submenu" name="Proforma Invoice (Local)"
+                  parent="sales_team.menu_sales" groups="group_sales_local"
+                  action="gbs_pi_creation.pi_creation_action"/>
+
+        <menuitem id="gbs_pi_creation.pi_creation_submenu_foreign" name="Proforma Invoice (Foreign)"
+                  parent="sales_team.menu_sales" groups="group_sales_foreign"
+                  action="gbs_pi_creation.pi_creation_action_foreign"/>
+
         <!--<menuitem-->
                 <!--id="com_shipment.lc_shipment_creation_menu"-->
                 <!--parent="commercial.menu_commercial_root"-->
