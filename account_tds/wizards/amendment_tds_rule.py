@@ -66,8 +66,8 @@ class TDSRules(models.Model):
 
     @api.multi
     def generate_rule(self):
-        rule_pool = self.env['tds.rule']
-        rule_list = rule_pool.browse([self._context['active_id']])
+        #rule_pool = self.env['tds.rule']
+        rule_list = self.env['tds.rule'].browse([self._context['active_id']])
         rule_list.line_ids.unlink()
         rule_list.name = self.name
         rule_list.effective_from = self.effective_from
@@ -77,35 +77,36 @@ class TDSRules(models.Model):
         if rule_list.flat_rate:
             rule_list.flat_rate = self.flat_rate
 
-        list = []
-        for wl in self.line_ids:
+        #update Slab details
+        slab_list = []
+        for rec in self.line_ids:
             vals = {}
-            vals['range_from'] = wl.range_from
-            vals['range_to'] = wl.range_to
-            vals['rate'] = wl.rate
-            vals['tds_rule_wiz_id'] = wl.id
-            list.append(vals)
-        rule_list.line_ids = list
+            vals['range_from'] = rec.range_from
+            vals['range_to'] = rec.range_to
+            vals['rate'] = rec.rate
+            vals['tds_rule_wiz_id'] = rec.id
+            slab_list.append(vals)
+        rule_list.line_ids = slab_list
 
-        for r in self:
-            rule_obj = {
-                'name': rule_list.env['ir.sequence'].get('name'),
-                'effective_from': r.effective_from,
-                'effective_end': r.effective_end,
-                'type_rate': r.type_rate,
-                'flat_rate': r.flat_rate,
-                'rel_id': r.id,
-            }
-            rule_list.version_ids += self.env['tds.rule.version'].create(rule_obj)
-            if self.type_rate == 'slab':
-                for rule in self.line_ids:
-                    line_res = {
-                        'range_from': rule.range_from,
-                        'range_to': rule.range_to,
-                        'rate': rule.rate,
-                        'rel_id': rule.id
-                    }
-                rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
+        # Create Version
+        rule_obj = {
+            'name': rule_list.env['ir.sequence'].get('name'),
+            'effective_from': self.effective_from,
+            'effective_end': self.effective_end,
+            'type_rate': self.type_rate,
+            'flat_rate': self.flat_rate,
+            'rel_id': self.id,
+        }
+        rule_list.version_ids += self.env['tds.rule.version'].create(rule_obj)
+        if self.type_rate == 'slab':
+            for rule in self.line_ids:
+                line_res = {
+                    'range_from': rule.range_from,
+                    'range_to': rule.range_to,
+                    'rate': rule.rate,
+                    'rel_id': rule.id
+                }
+            rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
 
 class TDSRuleWizardLine(models.Model):
     _name = 'tds.rule.wizard.line'
