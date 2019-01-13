@@ -11,6 +11,8 @@
                         <button name="action_confirm" type="object"
                                 string="Confirm" states="draft"
                                 class="oe_highlight"/>
+                        <!--<button string="Amendment" name="%(tds_rule_wizard_action_view)d" type="action" class="oe_read_only"-->
+                                <!--attrs="{'invisible': [('state', 'in', ('draft'))]}"/>-->
                         <button string="Amendment" name="%(tds_rule_wizard_action_view)d" type="action" class="oe_read_only"
                                 context="{'effective_from': effective_from,'name':name,'account_id':account_id,'effective_end':effective_end,'type_rate':type_rate,'flat_rate':flat_rate,'line_ids':line_ids}"
                                 attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
