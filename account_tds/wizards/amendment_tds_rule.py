@@ -49,7 +49,6 @@ class TDSRules(models.Model):
     flat_rate = fields.Float(string='Rate',size=50,default=_get_flat_rate)
 
 
-
     # @api.multi
     # def process_slab(self):
     #     rule_list = self.env['tds.rule'].browse([self._context['active_id']])

@@ -9,7 +9,7 @@ class TDSRules(models.Model):
 
     name = fields.Char(string='Name',required=True,size=50)
     active = fields.Boolean(string='Active',default = True)
-    current_version = fields.Char('Current Version',readonly=True)
+    current_version = fields.Char('Current Version',readonly=True,compute = '_compute_version')
     account_id = fields.Many2one('account.account',string = "TDS Account")
     version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id',string="Versions Details")
     line_ids = fields.One2many('tds.rule.line','tds_rule_id',string='Rule Details')
@@ -25,6 +25,18 @@ class TDSRules(models.Model):
         ('draft', "Draft"),
         ('confirm', "Confirm"),
     ], default='draft')
+
+
+    @api.multi
+    def _compute_version(self):
+        date = self._context.get('date') or fields.Date.today()
+        for record in self:
+            for rec in record.version_ids:
+                if rec.effective_from <= date and rec.effective_end >= date:
+                    record.current_version = rec.name
+                else:
+                    pass
+
 
     @api.multi
     def action_confirm(self):
@@ -69,7 +81,6 @@ class TDSRuleVersion(models.Model):
     ], string='Tds Type',required=True)
     flat_rate = fields.Float(string='Rate',size=50)
     version_line_ids = fields.One2many('tds.rule.version.line','tds_version_id',string='Rule Details')
-
 
 
 class TDSRuleLine(models.Model):
