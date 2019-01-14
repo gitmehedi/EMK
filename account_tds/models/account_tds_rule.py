@@ -62,6 +62,7 @@ class TDSRules(models.Model):
     @api.onchange('type_rate')
     def _check_type_rate(self):
         self.flat_rate = 0
+        self.line_ids = []
 
     @api.multi
     def _compute_version(self):
