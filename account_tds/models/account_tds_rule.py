@@ -8,24 +8,31 @@ class TDSRules(models.Model):
     _order = 'name desc'
     _description = 'TDS Rule'
 
-    name = fields.Char(string='Name',required=True,size=50, states={'confirm':[('readonly', True)]})
-    active = fields.Boolean(string='Active',default = True,states={'confirm':[('readonly', True)]})
-    current_version = fields.Char('Current Version',readonly=True,compute = '_compute_version',states={'confirm':[('readonly', True)]})
-    account_id = fields.Many2one('account.account',string = "TDS Account",states={'confirm':[('readonly', True)]})
+    name = fields.Char(string='Name',required=True,size=50,
+                       track_visibility='onchange', states={'confirm':[('readonly', True)]})
+    active = fields.Boolean(string='Active',default = True,
+                            track_visibility='onchange',states={'confirm':[('readonly', True)]})
+    current_version = fields.Char('Current Version',readonly=True,compute = '_compute_version',
+                                  track_visibility='onchange',states={'confirm':[('readonly', True)]})
+    account_id = fields.Many2one('account.account',string = "TDS Account",
+                                 track_visibility='onchange',states={'confirm':[('readonly', True)]})
     version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id',string="Versions Details",states={'confirm':[('readonly', True)]})
     line_ids = fields.One2many('tds.rule.line','tds_rule_id',string='Rule Details',states={'confirm':[('readonly', True)]})
-    effective_from = fields.Date(string='Effective From Date', required=True,states={'confirm':[('readonly', True)]})
-    effective_end = fields.Date(string='Effective To Date', required=True,states={'confirm':[('readonly', True)]})
+    effective_from = fields.Date(string='Effective From Date', required=True,
+                                 track_visibility='onchange',states={'confirm':[('readonly', True)]})
+    effective_end = fields.Date(string='Effective To Date', required=True,
+                                track_visibility='onchange',states={'confirm':[('readonly', True)]})
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
-    ], string='TDS Type', required=True,states={'confirm':[('readonly', True)]})
-    flat_rate = fields.Float(string='Rate',size=50,states={'confirm':[('readonly', True)]})
+    ], string='TDS Type', required=True,track_visibility='onchange',states={'confirm':[('readonly', True)]})
+    flat_rate = fields.Float(string='Rate',size=50,
+                             track_visibility='onchange',states={'confirm':[('readonly', True)]})
 
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
-    ], default='draft')
+    ], default='draft',track_visibility='onchange')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
