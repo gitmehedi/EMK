@@ -6,15 +6,15 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <field name="reference" position="after" >
-                <field name="is_applicable"/>
-                <field name="inapplicable_type" attrs="{'invisible':[('is_applicable','=',True)]}"/>
+                <field name="is_tds_applicable"/>
+                <field name="inapplicable_type" attrs="{'invisible':[('is_tds_applicable','=',True)]}"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
                 <field name="tds_amount"/>
             </xpath>
             <xpath expr="//field[@name='residual']" position="after">
                 <field name="total_tds_amount" class="oe_subtotal_footer_separator"
-                       attrs="{'invisible': [('is_applicable', '=', False)]}"/>
+                       attrs="{'invisible': [('is_tds_applicable', '=', False)]}"/>
             </xpath>
         </field>
     </record>

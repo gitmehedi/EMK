@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_tds_rule_form_wizard" model="ir.ui.view">
+            <field name="name">tds.rule.wizard.form</field>
+            <field name="model">tds.rule.wizard</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="TDS Rule">
+                    <sheet>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Name"/>
+                            <h1><field name="name" placeholder="Name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="effective_from"/>
+                                <field name="effective_end"/>
+                                <field name="type_rate"/>
+                                <label for="flat_rate" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                <div attrs="{'invisible':[('type_rate', '!=', 'flat')]}">
+                                    <field name="flat_rate" class="oe_inline" attrs="{'required':[('type_rate', '=','flat')]}"/>
+                                    <label string="%" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group>
+                                <!--<field name="active"/>-->
+                                <!--<field name="current_version"/>-->
+                                <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            </group>
+                        </group>
+                        <notebook colspan="4" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
+                            <page string="Slab Details">
+                                <field name="line_ids">
+                                    <tree string="List" editable="bottom">
+                                        <field name="range_from"/>
+                                        <field name="range_to"/>
+                                        <field name="rate"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+						 <button icon="fa-cogs" string="Create Version" name="generate_rule" type="object" class="oe_highlight"  />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="tds_rule_wizard_action_view" model="ir.actions.act_window">
+			<field name="name">TDS Rule</field>
+			<field name="res_model">tds.rule.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
