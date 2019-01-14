@@ -1,4 +1,6 @@
 from odoo import models, fields, api,_
+from odoo.exceptions import UserError, ValidationError
+
 
 class TDSRules(models.Model):
     _name = 'tds.rule.wizard'
@@ -62,6 +64,28 @@ class TDSRules(models.Model):
                     'rel_id': rule.id
                 }
             rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
+
+    @api.constrains('flat_rate', 'line_ids', 'effective_from', 'effective_end')
+    def _check_flat_rate(self):
+        for rec in self:
+            if rec.effective_from > rec.effective_end:
+                raise ValidationError(
+                    "Please Check Your Effective Date!! \n 'Effective From Date' Never Be Greater Than 'Effective To Date'")
+            if rec.type_rate == 'flat':
+                if rec.flat_rate <= 0:
+                    raise ValidationError("Please Check Your Tds Rate!! \n Rate never take zero or negative value!")
+            elif rec.type_rate == 'slab':
+                if len(rec.line_ids) <= 0:
+                    raise ValidationError("Please, Add Slab Details ")
+                elif len(rec.line_ids) > 0:
+                    for line in rec.line_ids:
+                        if line.range_from > line.range_to:
+                            raise ValidationError(
+                                "Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than 'Range To'")
+                        elif line.rate <= 0:
+                            raise ValidationError(
+                                "Please Check Your Slab's Tds Rate!! \n Rate never take zero or negative value!")
+
 
 class TDSRuleWizardLine(models.Model):
     _name = 'tds.rule.wizard.line'

@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api,_
+from odoo.exceptions import UserError, ValidationError
+
 
 class TDSRules(models.Model):
     _name = 'tds.rule'
@@ -14,8 +14,8 @@ class TDSRules(models.Model):
     account_id = fields.Many2one('account.account',string = "TDS Account",states={'confirm':[('readonly', True)]})
     version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id',string="Versions Details",states={'confirm':[('readonly', True)]})
     line_ids = fields.One2many('tds.rule.line','tds_rule_id',string='Rule Details',states={'confirm':[('readonly', True)]})
-    effective_from = fields.Date(string='Effective Date', required=True,states={'confirm':[('readonly', True)]})
-    effective_end = fields.Date(string='Effective End Date', required=True,states={'confirm':[('readonly', True)]})
+    effective_from = fields.Date(string='Effective From Date', required=True,states={'confirm':[('readonly', True)]})
+    effective_end = fields.Date(string='Effective To Date', required=True,states={'confirm':[('readonly', True)]})
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
@@ -26,6 +26,35 @@ class TDSRules(models.Model):
         ('draft', "Draft"),
         ('confirm', "Confirm"),
     ], default='draft')
+
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'This Name is already in use'),
+    ]
+
+    @api.constrains('flat_rate','line_ids','effective_from','effective_end')
+    def _check_flat_rate(self):
+        for rec in self:
+            if rec.state == 'draft':
+                if rec.effective_from > rec.effective_end:
+                    raise ValidationError(
+                        "Please Check Your Effective Date!! \n 'Effective From Date' Never Be Greater Than 'Effective To Date'")
+                if rec.type_rate == 'flat':
+                    if rec.flat_rate <= 0:
+                        raise ValidationError("Please Check Your Tds Rate!! \n Rate never take zero or negative value!")
+                elif rec.type_rate == 'slab':
+                    if len(rec.line_ids) <= 0:
+                        raise ValidationError("Please, Add Slab Details ")
+                    elif len(rec.line_ids) > 0:
+                        for line in rec.line_ids:
+                            if line.range_from > line.range_to:
+                                raise ValidationError("Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than 'Range To'")
+                            elif line.rate <=0:
+                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate never take zero or negative value!")
+
+
+    @api.onchange('type_rate')
+    def _check_type_rate(self):
+        self.flat_rate = 0
 
     @api.multi
     def _compute_version(self):
@@ -69,9 +98,7 @@ class TDSRules(models.Model):
             vals['range_from'] = rec.range_from
             vals['range_to'] = rec.range_to
             vals['rate'] = rec.rate
-            vals['tds_rule_wiz_id'] = rec.id
             slab_list.append(vals)
-        self.line_ids = slab_list
         res = self.env.ref('account_tds.view_tds_rule_form_wizard')
         result = {
             'name': _('TDS Rule'),
