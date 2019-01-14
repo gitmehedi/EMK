@@ -7,7 +7,9 @@
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
     "category": "Generic",
-    "depends": ["operating_unit"],
+    "depends": [
+        "operating_unit",
+    ],
     "data": [
         'security/ir.model.access.csv',
         'view/sub_operating_unit_view.xml',
