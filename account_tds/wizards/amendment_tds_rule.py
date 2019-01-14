@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api,_
 
 class TDSRules(models.Model):
@@ -7,65 +5,23 @@ class TDSRules(models.Model):
     _order = 'name desc'
     _description = 'TDS Rule'
 
-    @api.multi
-    def _get_effective_from(self):
-        return self._context['effective_from']
 
-    @api.multi
-    def _get_effective_end(self):
-        return self._context['effective_end']
-
-    @api.multi
-    def _get_account_id(self):
-        return self._context['account_id']
-
-    @api.multi
-    def _get_type_rate(self):
-        return self._context['type_rate']
-
-    @api.multi
-    def _get_flat_rate(self):
-        return self._context['flat_rate']
-
-    @api.multi
-    def _get_line_ids(self):
-        return self._context.get('line_ids')
-
-    @api.multi
-    def _get_name(self):
-        return self._context['name']
-
-    name = fields.Char(string='Name',size=50,readonly=True, default = _get_name)
-    active = fields.Boolean(string='Active',default = True)
+    name = fields.Char(string='Name',size=50,readonly=True,default=lambda self: self.env.context.get('name'))
+    active = fields.Boolean(string='Active',default=lambda self: self.env.context.get('active'))
     current_version = fields.Char('Current Version',readonly=True)
-    account_id = fields.Many2one('account.account',string = "Tds Account",default=_get_account_id)
-    line_ids = fields.One2many('tds.rule.wizard.line','tds_rule_wiz_id',string='Rule Details')
-    effective_from = fields.Date(string='Effective Date', required=True,default=_get_effective_from)
-    effective_end = fields.Date(string='Effective End Date', required=True,default=_get_effective_end)
+    account_id = fields.Many2one('account.account',string="Tds Account",default=lambda  self: self.env.context.get('account_id'))
+    line_ids = fields.One2many('tds.rule.wizard.line','tds_rule_wiz_id',string='Rule Details',default=lambda self: self.env.context.get('line_ids'))
+    effective_from = fields.Date(string='Effective Date', required=True,default=lambda self: self.env.context.get('effective_from'))
+    effective_end = fields.Date(string='Effective End Date', required=True,default=lambda self: self.env.context.get('effective_end'))
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
-    ], string='Tds Type', required=True,default=_get_type_rate)
-    flat_rate = fields.Float(string='Rate',size=50,default=_get_flat_rate)
+    ], string='Tds Type', required=True,default=lambda self: self.env.context.get('type_rate'))
+    flat_rate = fields.Float(string='Rate',size=50,default=lambda  self: self.env.context.get('flat_rate'))
 
-
-    # @api.multi
-    # def process_slab(self):
-    #     rule_list = self.env['tds.rule'].browse([self._context['active_id']])
-    #     vals = []
-    #     self.line_ids = []
-    #     for i in rule_list.line_ids:
-    #         self.name = i.name
-    #         vals.append((0, 0, {'range_from': i.range_from,
-    #                             'range_to': i.range_to,
-    #                             'rate': i.rate,
-    #                             'tds_rule_wiz_id': i.id
-    #                             }))
-    #     self.line_ids = vals
 
     @api.multi
     def generate_rule(self):
-        #rule_pool = self.env['tds.rule']
         rule_list = self.env['tds.rule'].browse([self._context['active_id']])
         rule_list.line_ids.unlink()
         rule_list.name = self.name
