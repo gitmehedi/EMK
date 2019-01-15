@@ -25,6 +25,8 @@
         'views/inherit_date_range_view.xml',
         'views/account_invoice_view.xml',
         'views/inherit_product_template.xml',
+        'data/tds_version_scheduler.xml',
+
     ],
     'installable': True,
     'application': True,

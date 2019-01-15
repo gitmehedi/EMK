@@ -1,4 +1,5 @@
 from odoo import models, fields, api,_
+from datetime import datetime
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -37,6 +38,37 @@ class TDSRules(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
     ]
+
+    @api.multi
+    def _compute_version(self):
+        date = self._context.get('date') or fields.Date.today()
+        for record in self:
+            for rec in record.version_ids:
+                if rec.effective_from <= date and rec.effective_end >= date:
+                    record.current_version = rec.name
+                else:
+                    pass
+
+    @api.model
+    def ver_scheduler(self):
+        vals =[]
+        today = datetime.now()
+        for rec in self.version_ids:
+            date = datetime.strptime(rec.effective_from, "%Y-%m-%d")
+            if today.day == date.day and today.month == date.month:
+                self.effective_from = rec.effective_from
+                self.effective_end = rec.effective_end
+                self.type_rate = rec.type_rate
+                self.account_id = rec.account_id.id
+                if self.flat_rate:
+                    self.flat_rate = rec.flat_rate
+                if rec.version_line_ids:
+                    for obj in rec.version_line_ids:
+                        vals.append((0, 0, {'range_from': obj.range_from,
+                                            'range_to': obj.range_to,
+                                            'rate': obj.rate,
+                                            }))
+                    self.line_ids = vals
 
     @api.constrains('flat_rate','line_ids')
     def _check_flat_rate(self):
@@ -83,7 +115,7 @@ class TDSRules(models.Model):
                 'name': seq,
                 'active': rec.active,
                 'effective_from': rec.effective_from,
-                #'effective_end': rec.effective_end,
+                'account_id': self.account_id.id,
                 'type_rate': rec.type_rate,
                 'flat_rate': rec.flat_rate,
                 'rel_id': rec.id,
@@ -142,6 +174,7 @@ class TDSRuleVersion(models.Model):
     name = fields.Char(string='Name', required=True,size=50)
     active = fields.Boolean(string='Active',default=True)
     tds_version_rule_id = fields.Many2one('tds.rule')
+    account_id = fields.Many2one('account.account',string="Tds Account",required=True)
     effective_from = fields.Date(string='Effective Date', required=True)
     effective_end = fields.Date(string='Effective End Date', required=False)
     type_rate = fields.Selection([

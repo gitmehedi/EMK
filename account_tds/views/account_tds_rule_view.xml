@@ -11,6 +11,9 @@
                         <button name="action_confirm" type="object"
                                 string="Confirm" states="draft"
                                 class="oe_highlight"/>
+                        <button string="Reschedule" name="_compute_version" type="object" class="oe_read_only"
+                                attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+
                         <button string="Amendment" name="action_amendment" type="object" class="oe_read_only"
                                 attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
                         <field name="state" widget="statusbar"/>
@@ -47,28 +50,16 @@
                             <page string="Accounting">
                                  <group>
                                      <group>
-                                        <!--<field name="effective_end"/>-->
                                          <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     </group>
                                  </group>
                             </page>
-                            <!--<page string="Slab Details" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">-->
-                                <!--<field name="line_ids" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">-->
-                                    <!--<tree string="List" editable="bottom">-->
-                                        <!--<field name="range_from"/>-->
-                                        <!--<field name="range_to"/>-->
-                                        <!--<field name="rate"/>-->
-                                    <!--</tree>-->
-                                <!--</field>-->
-                            <!--</page>-->
                             <page string="Version Details" attrs="{'invisible': [('state', 'in', ('draft'))]}">
                                 <field name="version_ids" ref= "view_tds_rule_version_form">
                                     <tree string="List">
                                         <field name="name"/>
                                         <field name="effective_from"/>
-                                        <!--<field name="effective_end"/>-->
                                         <field name="type_rate"/>
-                                        <!--<field name="flat_rate" attrs="{'invisible':[('type_rate', '=', 'slab')]}"/>-->
                                     </tree>
                                 </field>
                             </page>
@@ -126,7 +117,7 @@
                                 attrs="{'invisible':[('type_rate', '!=', 'flat')],'required':[('type_rate', '=','flat')]}"/>
                             </group>
                             <group>
-                                <!--<field name="effective_end"/>-->
+                                <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="active"/>
                             </group>
                         </group>
@@ -142,20 +133,8 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <!--<div class="oe_chatter">-->
-						<!--<field name="message_follower_ids" widget="mail_followers"/>-->
-	                    <!--<field name="message_ids" widget="mail_thread"/>-->
-	                <!--</div>-->
                 </form>
             </field>
         </record>
-         <!-- Sequence Records -->
-        <record id="seq_version" model="ir.sequence">
-            <field name="name">Version Sequence</field>
-            <field name="code">name</field>
-            <field name="prefix">Version</field>
-            <field name="padding">4</field>
-        </record>
-
     </data>
 </odoo>
