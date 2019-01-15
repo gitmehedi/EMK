@@ -9,8 +9,8 @@
             <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d 00:00:00')" />
             <field name="doall" eval="False"/>
             <field name="model" eval="'tds.rule.version'"/>
-            <field name="function">scheduler</field>
-            <!--<field name="function" eval="'scheduler'"/>-->
+            <!--<field name="function">compute_version</field>-->
+            <field name="function" eval="'compute_version'"/>
             <field name="args" eval="'()'" />
         </record>
     </data>

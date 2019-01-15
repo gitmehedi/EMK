@@ -13,7 +13,7 @@ class TDSRules(models.Model):
                        track_visibility='onchange', states={'confirm':[('readonly', True)]})
     active = fields.Boolean(string='Active',default = True,
                             track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    current_version = fields.Char('Current Version',readonly=True,
+    current_version = fields.Char('Current Version',readonly=True,compute='_compute_current_version',
                                   track_visibility='onchange',states={'confirm':[('readonly', True)]})
     account_id = fields.Many2one('account.account',string = "TDS Account",required=True,
                                  track_visibility='onchange',states={'confirm':[('readonly', True)]})
@@ -40,43 +40,46 @@ class TDSRules(models.Model):
     ]
 
     @api.multi
-    def _compute_version(self):
+    def _compute_current_version(self):
         date = self._context.get('date') or fields.Date.today()
         for record in self:
             for rec in record.version_ids:
-                if rec.effective_from <= date and rec.effective_end >= date:
+                if rec.effective_from == date:
                     record.current_version = rec.name
                 else:
                     pass
 
-    @api.model
-    def ver_scheduler(self):
-        vals =[]
+
+    @api.multi
+    def compute_version(self):
+        vals = []
         today = datetime.now()
-        for rec in self.version_ids:
-            date = datetime.strptime(rec.effective_from, "%Y-%m-%d")
-            if today.day == date.day and today.month == date.month:
-                self.effective_from = rec.effective_from
-                self.effective_end = rec.effective_end
-                self.type_rate = rec.type_rate
-                self.account_id = rec.account_id.id
-                if self.flat_rate:
-                    self.flat_rate = rec.flat_rate
-                if rec.version_line_ids:
-                    for obj in rec.version_line_ids:
-                        vals.append((0, 0, {'range_from': obj.range_from,
-                                            'range_to': obj.range_to,
-                                            'rate': obj.rate,
-                                            }))
-                    self.line_ids = vals
+        for record in self:
+            for rec in record.version_ids:
+                date = datetime.strptime(rec.effective_from, "%Y-%m-%d")
+                if today.day == date.day and today.month == date.month:
+                    if self.active == True:
+                        record.effective_from = rec.effective_from
+                        record.effective_end = rec.effective_end
+                        record.type_rate = rec.type_rate
+                        record.account_id = rec.account_id.id
+                        if record.flat_rate:
+                            record.flat_rate = rec.flat_rate
+                        if rec.version_line_ids:
+                            for obj in rec.version_line_ids:
+                                vals.append((0, 0, {'range_from': obj.range_from,
+                                                    'range_to': obj.range_to,
+                                                    'rate': obj.rate,
+                                                    }))
+
+                            record.line_ids.unlink()
+                            record.line_ids = vals
+
 
     @api.constrains('flat_rate','line_ids')
     def _check_flat_rate(self):
         for rec in self:
             if rec.state == 'draft':
-                # if rec.effective_from > rec.effective_end:
-                #     raise ValidationError(
-                #         "Please Check Your Effective Date!! \n 'Effective From Date' Never Be Greater Than 'Effective To Date'")
                 if rec.type_rate == 'flat':
                     if rec.flat_rate < 0:
                         raise ValidationError("Please Check Your Tds Rate!! \n Rate Never Take Negative Value!")

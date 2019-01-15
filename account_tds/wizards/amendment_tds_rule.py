@@ -21,9 +21,6 @@ class TDSRules(models.Model):
     ], string='Tds Type', required=True,default=lambda self: self.env.context.get('type_rate'))
     flat_rate = fields.Float(string='Rate',size=50,default=lambda  self: self.env.context.get('flat_rate'))
 
-    @api.onchange('type_rate')
-    def _check_type_rate(self):
-        self.line_ids = []
 
     @api.multi
     def generate_rule(self):

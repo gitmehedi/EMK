@@ -11,7 +11,7 @@
                         <button name="action_confirm" type="object"
                                 string="Confirm" states="draft"
                                 class="oe_highlight"/>
-                        <button string="Reschedule" name="_compute_version" type="object" class="oe_read_only"
+                        <button string="Reschedule" name="compute_version" type="object" class="oe_read_only"
                                 attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
 
                         <button string="Amendment" name="action_amendment" type="object" class="oe_read_only"
