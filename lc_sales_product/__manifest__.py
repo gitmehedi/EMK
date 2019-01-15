@@ -1,5 +1,5 @@
 {
-    'name': 'Sale By LC',
+    'name': 'Sale By LC (Local)',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Commercial',
@@ -16,6 +16,7 @@
         'product_harmonized_system',
         'account',
         'gbs_sale_order_approval',
+        'gbs_application_group',
     ],
 
     'data': [

@@ -61,7 +61,8 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_confirm_export(self):
         for pi in self.pi_ids_temp:
-            pi.sudo().write({'lc_id': self.id})
+
+            pi.suspend_security().write({'lc_id': self.id})
 
             sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
             if sale_obj:
@@ -76,6 +77,36 @@ class LetterOfCredit(models.Model):
 
         self.write({'state': 'confirmed', 'last_note': 'Getting Confirmation'})
 
+    @api.multi
+    def action_cancel_export(self):
+
+        # Precondition
+        # Condition - 1
+        for shipment in self.shipment_ids:
+            if shipment.state != 'done' and shipment.state != 'cancel':
+                raise ValidationError(_("This LC has " + str(len(self.shipment_ids)) +
+                                        " shipment(s).Before Cancel this LC, need to Cancel or Done all Shipment(s)."))
+        # Condition - 2
+        for pi in self.pi_ids:
+
+            sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
+            if sale_obj:
+                for s_order in sale_obj:
+                    da_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', s_order.id)])
+                    if da_obj.state == 'close':
+                        raise ValidationError(_("This LC contain Approve DA. At this time you can not Cancel this LC."))
+
+        for pi in self.pi_ids:
+
+            pi.suspend_security().write({'lc_id': None})
+
+            sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
+            if sale_obj:
+                for s_order in sale_obj:
+                    s_order.write({'lc_id':None})
+
+        self.state = "cancel"
+        self.last_note = "LC Cancel"
 
     @api.multi
     def action_revision_export(self,amendment_date=None):

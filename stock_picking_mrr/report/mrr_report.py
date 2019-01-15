@@ -85,17 +85,17 @@ class MrrReport(models.AbstractModel):
                 customer = po.partner_id.name
                 challan = picking.challan_bill_no
                 challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.date_done))
-                for move in new_picking.move_lines:
+                for move in new_picking.pack_operation_ids:
                     po_line_objs = po.order_line.filtered(lambda r: r.product_id.id == move.product_id.id)
                     if po_line_objs:
                         pack_obj = {}
                         pack_obj['product_id'] = move.product_id.name
                         pack_obj['pr_no'] = po.origin
-                        pack_obj['mrr_quantity'] = move.product_uom_qty
-                        pack_obj['product_uom_id'] = move.product_uom.name
+                        pack_obj['mrr_quantity'] = move.qty_done
+                        pack_obj['product_uom_id'] = move.product_uom_id.name
                         pack_obj['price_unit'] = formatLang(self.env, po_line_objs[0].price_unit)
-                        pack_obj['sub_amount'] = formatLang(self.env, move.product_uom_qty * po_line_objs[0].price_unit)
-                        pack_obj['amount'] = move.product_uom_qty * po_line_objs[0].price_unit
+                        pack_obj['sub_amount'] = formatLang(self.env, move.qty_done * po_line_objs[0].price_unit)
+                        pack_obj['amount'] = move.qty_done * po_line_objs[0].price_unit
                         total_amount.append(pack_obj['amount'])
                         pack_list.append(pack_obj)
         else:
@@ -103,15 +103,15 @@ class MrrReport(models.AbstractModel):
             challan = picking.challan_bill_no
             challan_date = report_utility_pool.getERPDateFormat(
                 report_utility_pool.getDateTimeFromStr(picking.date_done))
-            for move in new_picking.move_lines:
+            for move in new_picking.pack_operation_ids:
                 pack_obj = {}
                 pack_obj['product_id'] = move.product_id.name
                 pack_obj['pr_no'] = new_picking.origin
-                pack_obj['mrr_quantity'] = move.product_uom_qty
-                pack_obj['product_uom_id'] = move.product_uom.name
+                pack_obj['mrr_quantity'] = move.qty_done
+                pack_obj['product_uom_id'] = move.product_uom_id.name
                 pack_obj['price_unit'] = formatLang(self.env, move.product_id.standard_price)
-                pack_obj['sub_amount'] = formatLang(self.env, move.product_uom_qty * move.product_id.standard_price)
-                pack_obj['amount'] = move.product_uom_qty * move.product_id.standard_price
+                pack_obj['sub_amount'] = formatLang(self.env, move.qty_done * move.product_id.standard_price)
+                pack_obj['amount'] = move.qty_done * move.product_id.standard_price
                 total_amount.append(pack_obj['amount'])
                 pack_list.append(pack_obj)
 

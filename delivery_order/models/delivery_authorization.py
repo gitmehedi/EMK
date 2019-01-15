@@ -602,6 +602,7 @@ class DeliveryAuthorization(models.Model):
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
 
+
 class OrderedQty(models.Model):
     _name = 'ordered.qty'
     _description = 'Store Product wise ordered qty to track max qty value'
