@@ -10,9 +10,12 @@
                     <header>
                         <button name="action_confirm" type="object"
                                 string="Confirm" states="draft"
-                                class="oe_highlight"/>
-                        <button string="Amendment" name="action_amendment" type="object" class="oe_read_only"
+                                class="oe_highlight" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+                        <button string="Reschedule" name="compute_version" type="object" class="oe_read_only"
                                 attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+
+                        <button string="Amendment" name="action_amendment" type="object" class="oe_read_only"
+                                attrs="{'invisible': [('state', 'in', ('draft'))]}" groups="account_tds.group_tds_manager"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -22,6 +25,7 @@
                         </div>
                         <group>
                             <group>
+                                <field name="effective_from"/>
                                 <field name="type_rate"/>
                                 <label for="flat_rate" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
                                 <div attrs="{'invisible':[('type_rate', '!=', 'flat')]}">
@@ -33,36 +37,29 @@
                                 <field name="active"/>
                                 <field name="current_version" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
                             </group>
+                            <separator string="Slab Details" attrs="{'invisible':[('type_rate', '!=', 'slab')]}"/>
+                            <field name="line_ids" nolabel="1" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
+                                <tree string="List" editable="bottom">
+                                    <field name="range_from"/>
+                                    <field name="range_to"/>
+                                    <field name="rate" string="Rate(%)"/>
+                                </tree>
+                            </field>
                         </group>
                         <notebook colspan="4">
-                            <page string="General Information">
+                            <page string="Accounting">
                                  <group>
-                                    <group>
-                                        <field name="effective_from"/>
-                                    </group>
                                      <group>
-                                        <field name="effective_end"/>
                                          <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     </group>
                                  </group>
-                            </page>
-                            <page string="Slab Details" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
-                                <field name="line_ids">
-                                    <tree string="List" editable="bottom">
-                                        <field name="range_from"/>
-                                        <field name="range_to"/>
-                                        <field name="rate"/>
-                                    </tree>
-                                </field>
                             </page>
                             <page string="Version Details" attrs="{'invisible': [('state', 'in', ('draft'))]}">
                                 <field name="version_ids" ref= "view_tds_rule_version_form">
                                     <tree string="List">
                                         <field name="name"/>
                                         <field name="effective_from"/>
-                                        <field name="effective_end"/>
                                         <field name="type_rate"/>
-                                        <!--<field name="flat_rate" attrs="{'invisible':[('type_rate', '=', 'slab')]}"/>-->
                                     </tree>
                                 </field>
                             </page>
@@ -96,9 +93,9 @@
         </record>
 
 
-		<menuitem id="perent_menu_tds_rule" name="Account TDS" parent="account.account_account_menu"/>
+		<!--<menuitem id="perent_menu_tds_rule" name="Account TDS" parent="account.account_account_menu"/>-->
 
-        <menuitem id="menu_tds_rule_item" name="TDS Rule" parent="perent_menu_tds_rule" action="tds_rule_action"/>
+        <menuitem id="menu_tds_rule_item" name="TDS Rule" parent="account.account_account_menu" action="tds_rule_action" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
 
         <record id="view_tds_rule_version_form" model="ir.ui.view">
@@ -120,7 +117,7 @@
                                 attrs="{'invisible':[('type_rate', '!=', 'flat')],'required':[('type_rate', '=','flat')]}"/>
                             </group>
                             <group>
-                                <field name="effective_end"/>
+                                <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="active"/>
                             </group>
                         </group>
@@ -136,20 +133,8 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <!--<div class="oe_chatter">-->
-						<!--<field name="message_follower_ids" widget="mail_followers"/>-->
-	                    <!--<field name="message_ids" widget="mail_thread"/>-->
-	                <!--</div>-->
                 </form>
             </field>
         </record>
-         <!-- Sequence Records -->
-        <record id="seq_version" model="ir.sequence">
-            <field name="name">Version Sequence</field>
-            <field name="code">name</field>
-            <field name="prefix">Version</field>
-            <field name="padding">4</field>
-        </record>
-
     </data>
 </odoo>

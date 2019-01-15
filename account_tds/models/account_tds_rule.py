@@ -1,4 +1,6 @@
 from odoo import models, fields, api,_
+from datetime import datetime
+import datetime
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -12,15 +14,15 @@ class TDSRules(models.Model):
                        track_visibility='onchange', states={'confirm':[('readonly', True)]})
     active = fields.Boolean(string='Active',default = True,
                             track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    current_version = fields.Char('Current Version',readonly=True,compute = '_compute_version',
+    current_version = fields.Char('Current Version',readonly=True,compute='_compute_current_version',
                                   track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    account_id = fields.Many2one('account.account',string = "TDS Account",
+    account_id = fields.Many2one('account.account',string = "TDS Account",required=True,
                                  track_visibility='onchange',states={'confirm':[('readonly', True)]})
     version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id',string="Versions Details",states={'confirm':[('readonly', True)]})
     line_ids = fields.One2many('tds.rule.line','tds_rule_id',string='Rule Details',states={'confirm':[('readonly', True)]})
-    effective_from = fields.Date(string='Effective From Date', required=True,
+    effective_from = fields.Date(string='Effective Date', required=True,
                                  track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    effective_end = fields.Date(string='Effective To Date', required=True,
+    effective_end = fields.Date(string='Effective To Date', required=False,
                                 track_visibility='onchange',states={'confirm':[('readonly', True)]})
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
@@ -38,25 +40,63 @@ class TDSRules(models.Model):
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
     ]
 
-    @api.constrains('flat_rate','line_ids','effective_from','effective_end')
+    @api.multi
+    def _compute_current_version(self):
+        date = self._context.get('date') or fields.Date.today()
+        for record in self:
+            for rec in record.version_ids:
+                if rec.effective_from == date:
+                    record.current_version = rec.name
+                else:
+                    pass
+
+
+    @api.multi
+    def compute_version(self):
+        vals = []
+        today = datetime.now()
+        for record in self:
+            for rec in record.version_ids:
+                date = datetime.strptime(rec.effective_from, "%Y-%m-%d")
+                if today.day == date.day and today.month == date.month:
+                    if self.active == True:
+                        record.effective_from = rec.effective_from
+                        record.effective_end = rec.effective_end
+                        record.type_rate = rec.type_rate
+                        record.account_id = rec.account_id.id
+                        if record.flat_rate:
+                            record.flat_rate = rec.flat_rate
+                        if rec.version_line_ids:
+                            for obj in rec.version_line_ids:
+                                vals.append((0, 0, {'range_from': obj.range_from,
+                                                    'range_to': obj.range_to,
+                                                    'rate': obj.rate,
+                                                    }))
+
+                            record.line_ids.unlink()
+                            record.line_ids = vals
+
+
+    @api.constrains('flat_rate','line_ids')
     def _check_flat_rate(self):
         for rec in self:
             if rec.state == 'draft':
-                if rec.effective_from > rec.effective_end:
-                    raise ValidationError(
-                        "Please Check Your Effective Date!! \n 'Effective From Date' Never Be Greater Than 'Effective To Date'")
                 if rec.type_rate == 'flat':
-                    if rec.flat_rate <= 0:
-                        raise ValidationError("Please Check Your Tds Rate!! \n Rate never take zero or negative value!")
+                    if rec.flat_rate < 0:
+                        raise ValidationError("Please Check Your Tds Rate!! \n Rate Never Take Negative Value!")
                 elif rec.type_rate == 'slab':
                     if len(rec.line_ids) <= 0:
                         raise ValidationError("Please, Add Slab Details ")
                     elif len(rec.line_ids) > 0:
                         for line in rec.line_ids:
-                            if line.range_from > line.range_to:
-                                raise ValidationError("Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than 'Range To'")
-                            elif line.rate <=0:
-                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate never take zero or negative value!")
+                            if line.range_from >= line.range_to:
+                                raise ValidationError("Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
+                            elif line.rate <0:
+                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                            elif line.range_from <0:
+                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                            elif line.range_to <0:
+                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
 
 
     @api.onchange('type_rate')
@@ -64,24 +104,17 @@ class TDSRules(models.Model):
         self.flat_rate = 0
         self.line_ids = []
 
-    @api.multi
-    def _compute_version(self):
-        date = self._context.get('date') or fields.Date.today()
-        for record in self:
-            for rec in record.version_ids:
-                if rec.effective_from <= date and rec.effective_end >= date:
-                    record.current_version = rec.name
-                else:
-                    pass
 
     @api.multi
     def action_confirm(self):
         for rec in self:
+            num = 1
+            seq = self.name + ' / 000' + str(num)
             res = {
-                'name': rec.env['ir.sequence'].get('name'),
+                'name': seq,
                 'active': rec.active,
                 'effective_from': rec.effective_from,
-                'effective_end': rec.effective_end,
+                'account_id': self.account_id.id,
                 'type_rate': rec.type_rate,
                 'flat_rate': rec.flat_rate,
                 'rel_id': rec.id,
@@ -119,7 +152,7 @@ class TDSRules(models.Model):
             'target': 'new',
             'context': {'name': self.name or False,
                         'effective_from': self.effective_from or False,
-                        'effective_end': self.effective_end or False,
+                        #'effective_end': self.effective_end or False,
                         'type_rate': self.type_rate or False,
                         'active': self.active or False,
                         'account_id': self.account_id.id or False,
@@ -140,8 +173,9 @@ class TDSRuleVersion(models.Model):
     name = fields.Char(string='Name', required=True,size=50)
     active = fields.Boolean(string='Active',default=True)
     tds_version_rule_id = fields.Many2one('tds.rule')
+    account_id = fields.Many2one('account.account',string="Tds Account",required=True)
     effective_from = fields.Date(string='Effective Date', required=True)
-    effective_end = fields.Date(string='Effective End Date', required=True)
+    effective_end = fields.Date(string='Effective End Date', required=False)
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
@@ -155,19 +189,35 @@ class TDSRuleLine(models.Model):
     _name = 'tds.rule.line'
 
     tds_rule_id = fields.Many2one('tds.rule')
-    range_from = fields.Float(string='From Range',required=True)
-    range_to = fields.Float(string='To Range',required=True)
+    range_from = fields.Integer(string='From Range',required=True)
+    range_to = fields.Integer(string='To Range',required=True)
     rate = fields.Float(string='Rate',required=True,size=50)
 
-
+    @api.constrains('range_from', 'range_to')
+    def _check_time(self):
+        for rec in self:
+            domain = [
+                ('range_from', '<', rec.range_to),
+                ('range_to', '>', rec.range_from),
+                ('id', '!=', rec.id),
+                ('tds_rule_id', '=', rec.tds_rule_id.id)
+            ]
+            check_domain = self.search_count(domain)
+            if check_domain:
+                date_time_range_from = str(rec.range_from)
+                date_time_range_to = str(rec.range_to)
+                raise ValidationError(_(
+                    " The duration of the period  (%s)  and  (%s)  are overlapping with existing Slab ." % (
+                        date_time_range_from, date_time_range_to)
+                ))
 
 
 class TDSRuleVersionLine(models.Model):
     _name = 'tds.rule.version.line'
 
     tds_version_id = fields.Many2one('tds.rule.version')
-    range_from = fields.Float(string='From Range',required=True)
-    range_to = fields.Float(string='To Range',required=True)
+    range_from = fields.Integer(string='From Range',required=True)
+    range_to = fields.Integer(string='To Range',required=True)
     rate = fields.Float(string='Rate',required=True,size=50)
 
 

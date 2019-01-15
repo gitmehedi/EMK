@@ -21,11 +21,14 @@
         'product'
     ],
     'data': [
+        'security/ir_security.xml',
         'wizards/amendment_tds_rule.xml',
         'views/account_tds_rule_view.xml',
         'views/inherit_date_range_view.xml',
         'views/account_invoice_view.xml',
         'views/inherit_product_template.xml',
+        'data/tds_version_scheduler.xml',
+
     ],
     'installable': True,
     'application': True,
