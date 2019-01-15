@@ -1,5 +1,6 @@
 from odoo import models, fields, api,_
 from datetime import datetime
+import datetime
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -88,9 +89,13 @@ class TDSRules(models.Model):
                         raise ValidationError("Please, Add Slab Details ")
                     elif len(rec.line_ids) > 0:
                         for line in rec.line_ids:
-                            if line.range_from > line.range_to:
-                                raise ValidationError("Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than 'Range To'")
+                            if line.range_from >= line.range_to:
+                                raise ValidationError("Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
                             elif line.rate <0:
+                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                            elif line.range_from <0:
+                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                            elif line.range_to <0:
                                 raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
 
 
@@ -99,15 +104,6 @@ class TDSRules(models.Model):
         self.flat_rate = 0
         self.line_ids = []
 
-    # @api.multi
-    # def _compute_version(self):
-    #     date = self._context.get('date') or fields.Date.today()
-    #     for record in self:
-    #         for rec in record.version_ids:
-    #             if rec.effective_from <= date and rec.effective_end >= date:
-    #                 record.current_version = rec.name
-    #             else:
-    #                 pass
 
     @api.multi
     def action_confirm(self):
@@ -197,7 +193,23 @@ class TDSRuleLine(models.Model):
     range_to = fields.Integer(string='To Range',required=True)
     rate = fields.Float(string='Rate',required=True,size=50)
 
-
+    @api.constrains('range_from', 'range_to')
+    def _check_time(self):
+        for rec in self:
+            domain = [
+                ('range_from', '<', rec.range_to),
+                ('range_to', '>', rec.range_from),
+                ('id', '!=', rec.id),
+                ('tds_rule_id', '=', rec.tds_rule_id.id)
+            ]
+            check_domain = self.search_count(domain)
+            if check_domain:
+                date_time_range_from = str(rec.range_from)
+                date_time_range_to = str(rec.range_to)
+                raise ValidationError(_(
+                    " The duration of the period  (%s)  and  (%s)  are overlapping with existing Slab ." % (
+                        date_time_range_from, date_time_range_to)
+                ))
 
 
 class TDSRuleVersionLine(models.Model):

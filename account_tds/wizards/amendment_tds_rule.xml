@@ -42,7 +42,7 @@
                         </notebook>
                     </sheet>
                     <footer>
-						 <button icon="fa-cogs" string="Save" name="generate_rule" type="object" class="oe_highlight"  />
+						 <button string="Save" name="generate_rule" type="object" class="oe_highlight"  />
                     </footer>
                 </form>
             </field>

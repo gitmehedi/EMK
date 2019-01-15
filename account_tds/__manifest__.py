@@ -20,6 +20,7 @@
         'product'
     ],
     'data': [
+        'security/ir_security.xml',
         'wizards/amendment_tds_rule.xml',
         'views/account_tds_rule_view.xml',
         'views/inherit_date_range_view.xml',
