@@ -7,8 +7,9 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d 00:00:00')" />
+            <!--<field name="nextcall" >2018-01-15 22:19:59</field>-->
             <field name="doall" eval="False"/>
-            <field name="model" eval="'tds.rule.version'"/>
+            <field name="model" eval="'tds.rule'"/>
             <!--<field name="function">compute_version</field>-->
             <field name="function" eval="'compute_version'"/>
             <field name="args" eval="'()'" />
