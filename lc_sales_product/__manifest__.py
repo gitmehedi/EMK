@@ -16,6 +16,7 @@
         'product_harmonized_system',
         'account',
         'gbs_sale_order_approval',
+        'gbs_application_group',
     ],
 
     'data': [
