@@ -22,6 +22,7 @@
                         </div>
                         <group>
                             <group>
+                                <field name="effective_from"/>
                                 <field name="type_rate"/>
                                 <label for="flat_rate" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
                                 <div attrs="{'invisible':[('type_rate', '!=', 'flat')]}">
@@ -33,34 +34,39 @@
                                 <field name="active"/>
                                 <field name="current_version" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
                             </group>
+                            <separator string="Slab Details" attrs="{'invisible':[('type_rate', '!=', 'slab')]}"/>
+                            <field name="line_ids" nolabel="1" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
+                                <tree string="List" editable="bottom">
+                                    <field name="range_from"/>
+                                    <field name="range_to"/>
+                                    <field name="rate" string="Rate(%)"/>
+                                </tree>
+                            </field>
                         </group>
                         <notebook colspan="4">
-                            <page string="General Information">
+                            <page string="Accounting">
                                  <group>
-                                    <group>
-                                        <field name="effective_from"/>
-                                    </group>
                                      <group>
-                                        <field name="effective_end"/>
+                                        <!--<field name="effective_end"/>-->
                                          <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     </group>
                                  </group>
                             </page>
-                            <page string="Slab Details" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
-                                <field name="line_ids">
-                                    <tree string="List" editable="bottom">
-                                        <field name="range_from"/>
-                                        <field name="range_to"/>
-                                        <field name="rate"/>
-                                    </tree>
-                                </field>
-                            </page>
+                            <!--<page string="Slab Details" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">-->
+                                <!--<field name="line_ids" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">-->
+                                    <!--<tree string="List" editable="bottom">-->
+                                        <!--<field name="range_from"/>-->
+                                        <!--<field name="range_to"/>-->
+                                        <!--<field name="rate"/>-->
+                                    <!--</tree>-->
+                                <!--</field>-->
+                            <!--</page>-->
                             <page string="Version Details" attrs="{'invisible': [('state', 'in', ('draft'))]}">
                                 <field name="version_ids" ref= "view_tds_rule_version_form">
                                     <tree string="List">
                                         <field name="name"/>
                                         <field name="effective_from"/>
-                                        <field name="effective_end"/>
+                                        <!--<field name="effective_end"/>-->
                                         <field name="type_rate"/>
                                         <!--<field name="flat_rate" attrs="{'invisible':[('type_rate', '=', 'slab')]}"/>-->
                                     </tree>
@@ -120,7 +126,7 @@
                                 attrs="{'invisible':[('type_rate', '!=', 'flat')],'required':[('type_rate', '=','flat')]}"/>
                             </group>
                             <group>
-                                <field name="effective_end"/>
+                                <!--<field name="effective_end"/>-->
                                 <field name="active"/>
                             </group>
                         </group>
