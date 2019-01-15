@@ -111,6 +111,8 @@ class SaleOrder(models.Model):
                                  states={'to_submit': [('readonly', False)]},
                                  help="The analytic account related to a sales order.", copy=False)
 
+    region_type = fields.Selection([('local', "Local"), ('foreign', "Foreign")], readonly=True, required=True)
+
     """ PI and LC """
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
                             readonly=True, states={'to_submit': [('readonly', False)]})
@@ -219,6 +221,9 @@ class SaleOrder(models.Model):
     @api.multi
     def action_to_submit(self):
         for orders in self:
+
+            if orders.region_type == False:
+                raise UserError('You Cannot Submit this SO due to Region Type is missing.')
 
             # Check seq needs to re-generate or not
             if orders.operating_unit_id.name not in orders.name:

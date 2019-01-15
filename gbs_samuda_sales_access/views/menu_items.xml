@@ -100,19 +100,41 @@
                 groups="base.group_no_one"/>
 
         <menuitem id="gbs_pi_creation.pi_creation_submenu" name="Proforma Invoice (Local)"
-                  parent="sales_team.menu_sales" groups="group_sales_local"
+                  parent="sales_team.menu_sales" groups="group_sales_local,gbs_application_group.group_cxo"
                   action="gbs_pi_creation.pi_creation_action"/>
 
         <menuitem id="gbs_pi_creation.pi_creation_submenu_foreign" name="Proforma Invoice (Foreign)"
-                  parent="sales_team.menu_sales" groups="group_sales_foreign"
+                  parent="sales_team.menu_sales" groups="group_sales_foreign,gbs_application_group.group_cxo"
                   action="gbs_pi_creation.pi_creation_action_foreign"/>
 
-        <!--<menuitem-->
-                <!--id="com_shipment.lc_shipment_creation_menu"-->
-                <!--parent="commercial.menu_commercial_root"-->
-                <!--sequence="5"-->
-                <!--name="Shipment"-->
-                <!--groups="base.group_no_one"/>-->
+        <menuitem action="sale.action_orders"
+                  id="sale.menu_sale_order"
+                  name="Sales Orders (Local)"
+                  groups="group_sales_local,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="1" />
+
+        <menuitem action="gbs_sale_order_approval.action_orders_foreign"
+                  id="gbs_sale_order_approval.menu_sale_order_foreign"
+                  name="Sales Orders (Foreign)"
+                  groups="group_sales_foreign,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="2" />
+
+        <menuitem action="sale.action_quotations"
+                  id="sale.menu_sale_quotations"
+                  name="Quotations (Local)"
+                  groups="group_sales_local,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="3" />
+
+        <menuitem action="gbs_sale_order_approval.action_quotations_foreign"
+                  id="gbs_sale_order_approval.menu_sale_quotations_foreign"
+                  name="Quotations (Foreign)"
+                  groups="group_sales_foreign,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="4" />
+
 
     </data>
 </odoo>
