@@ -24,58 +24,70 @@ class AccountInvoice(models.Model):
     total_tds_amount = fields.Float('Total TDS', compute='_compute_total_tds',
         store=True, readonly=True, track_visibility='always')
 
+    @api.multi
+    def action_invoice_open(self):
+        res = super(AccountInvoice, self).action_invoice_open()
+        if res:
+#         do tds calculation
+            if self.is_tds_applicable:
+                date_range_objs = self.env['date.range'].search([('date_start','<=',self.date),('date_end','>=',self.date),('type_id.tds_year','=',True)],
+                                                                order='id DESC', limit=1)
+                if date_range_objs:
+                    invoice_objs = self.search([('id','!=',self.id),('partner_id','=',self.partner_id.id),('date','>=',date_range_objs.date_start),('date','<=',date_range_objs.date_end)])
+                    for line in self.invoice_line_ids:
+                        if invoice_objs:
+                            line._calculate_tds_value(invoice_objs)
+                        else:
+                            line._calculate_tds_value()
+                else:
+                    pass
+        return res
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    tds_amount = fields.Float('Tds value', compute='_compute_tds_value', readonly=True,store=True)
-    account_tds_id = fields.Many2one(related='product_id.account_tds_id', string='TDS Rule',
+    tds_amount = fields.Float('Tds value',readonly=True,store=True)
+    account_tds_id = fields.Many2one('tds.rule',related='product_id.account_tds_id', string='TDS Rule',
                                      store=True)
 
+
     @api.multi
-    @api.depends('quantity', 'price_unit')
-    def _compute_tds_value(self):
-        for line in self:
-            if line.invoice_id.is_tds_applicable and line.product_id:
-                pro_base_val = line.quantity * line.price_unit
-                if line.account_tds_id.type_rate == 'flat':
-                    # calculate previous vendor bill
-                    line.tds_amount = pro_base_val * line.account_tds_id.flat_rate/100
-                    remaining_pre_tds = self.previous_tds_value(line)
-                    if remaining_pre_tds:
-                        line.tds_amount = line.tds_amount + remaining_pre_tds
-                else:
-                    for tds_slab_rule_obj in line.account_tds_id.line_ids:
-                        if pro_base_val>=tds_slab_rule_obj.range_from and pro_base_val<=tds_slab_rule_obj.range_to:
-                            line.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
-                            self.previous_tds_value(line)
-                            break
-                        else:
-                            line.tds_amount = 0.0
+    def _calculate_tds_value(self,invoice_objs=None):
+        # for line in self:
+        if self.invoice_id.is_tds_applicable and self.product_id:
+            pro_base_val = self.quantity * self.price_unit
+            if self.account_tds_id.type_rate == 'flat':
+                # calculate previous vendor bill
+                self.tds_amount = pro_base_val * self.account_tds_id.flat_rate/100
+                if invoice_objs:
+                    remaining_pre_tds = self.previous_tds_value(invoice_objs)
+                    self.tds_amount = self.tds_amount + remaining_pre_tds
+            else:
+                for tds_slab_rule_obj in self.account_tds_id.line_ids:
+                    if pro_base_val>=tds_slab_rule_obj.range_from and pro_base_val<=tds_slab_rule_obj.range_to:
+                        self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
+                        self.previous_tds_value()
+                        break
+                    else:
+                        self.tds_amount = 0.0
 
 
-    def previous_tds_value(self,product_line):
-        pre_invoice_line_objs = self.search([('product_id','=',product_line.product_id.id),
-                                             ('invoice_id.partner_id','=',product_line.invoice_id.partner_id.id),
-                                             ('account_tds_id','=',product_line.account_tds_id.id),
-                                             ('invoice_id.is_tds_applicable','=',True),
-                                             ('invoice_id.state','=','paid')])
+    def previous_tds_value(self,invoice_objs):
+        pre_invoice_line_list = []
+        for invoice_obj in invoice_objs:
+            for invoice_line_obj in invoice_obj.invoice_line_ids:
+                if invoice_line_obj.product_id.id == self.product_id.id and invoice_line_obj.account_tds_id.id == self.account_tds_id.id:
+                    pre_invoice_line_list.append(invoice_line_obj)
 
-        pre_total_tds = pre_total_qty = pre_total_price = count= 0.0
-        for pre_invoice_line_obj in pre_invoice_line_objs:
+        remain_tds_amount = pre_total_tds = pre_total_base_amount= 0.0
+        for pre_invoice_line_obj in pre_invoice_line_list:
             pre_total_tds += pre_invoice_line_obj.tds_amount
-            pre_total_qty += pre_invoice_line_obj.quantity
-            pre_total_price += pre_invoice_line_obj.price_unit
-            count += 1
-        # pre_total_qty = 900
-        # pre_total_tds = 3040.65
-        # pre_total_price = 135.14
-        # count = 2
-        # remain_tds_amount = 0
+            pre_total_base_amount += (pre_invoice_line_obj.price_unit * pre_invoice_line_obj.quantity)
 
-        pre_rate = (pre_total_tds * 100*count)/(pre_total_qty * pre_total_price)
-        if product_line.account_tds_id.flat_rate > pre_rate:
-            remain_tds_amount = ((pre_total_price * pre_total_qty * product_line.account_tds_id.flat_rate)/(100*count)) - pre_total_tds
+        pre_rate = (pre_total_tds * 100)/pre_total_base_amount
+        current_rate = self.account_tds_id.flat_rate
+        if current_rate > pre_rate:
+            remain_tds_amount = ((pre_total_base_amount *current_rate)/100) - pre_total_tds
 
         return remain_tds_amount
 
