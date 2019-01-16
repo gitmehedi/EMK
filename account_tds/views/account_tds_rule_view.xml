@@ -93,7 +93,7 @@
         </record>
 
 
-		<!--<menuitem id="perent_menu_tds_rule" name="Account TDS" parent="account.account_account_menu"/>-->
+		<menuitem id="perent_menu_tds_rule" name="Account TDS" parent="account.account_account_menu"/>
 
         <menuitem id="menu_tds_rule_item" name="TDS Rule" parent="account.account_account_menu" action="tds_rule_action" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
