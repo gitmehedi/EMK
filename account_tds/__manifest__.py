@@ -16,7 +16,6 @@
     'category': 'Account',
     'depends': [
         'account',
-        'purchase',
         'date_range',
         'product'
     ],
