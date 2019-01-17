@@ -93,13 +93,13 @@
 
         <menuitem id="menu_lc_sales_comm"
                   parent="main_menu_lc_sales_comm"
-                  sequence="1" name="Sale Order"
-                  action="lc_sales_product.action_sale_order_comm" groups="commercial.group_commercial_user_export"/>
+                  sequence="1" name="Sales Orders (Local)"
+                  action="lc_sales_product.action_sale_order_comm" groups="gbs_application_group.group_export_local_lc"/>
 
         <menuitem id="menu_lc_pi_comm"
                   parent="main_menu_lc_sales_comm"
                   sequence="2" name="Proforma Invoice (Local)"
-                  action="lc_sales_product.action_sale_pi_comm" groups="commercial.group_commercial_user_export"/>
+                  action="lc_sales_product.action_sale_pi_comm" groups="gbs_application_group.group_export_local_lc"/>
 
         <menuitem
                 action="action_comm_invoice"
