@@ -6,3 +6,9 @@ class InheritedProductTemplate(models.Model):
 
     account_tds_id = fields.Many2one('tds.rule', string="TDS Rule", required=True,
                                      domain="[('active', '=', True),('state', '=','confirm' )]")
+
+class InheritedProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    account_tds_id = fields.Many2one('tds.rule', string="TDS Rule", required=True,
+                                     domain="[('active', '=', True),('state', '=','confirm' )]")

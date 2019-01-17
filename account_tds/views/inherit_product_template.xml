@@ -8,7 +8,16 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="account_tds_id" options='{"no_open": True,"no_create": 1,"no_create_edit":1}'/>
-                    <!--<field name="account_tds_id"/>-->
+                </xpath>
+            </field>
+        </record>
+        <record id="inherited_product_normal_form_view1" model="ir.ui.view">
+            <field name="name">inherited_product_normal_form_view</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="account_tds_id" options='{"no_open": True,"no_create": 1,"no_create_edit":1}'/>
                 </xpath>
             </field>
         </record>
