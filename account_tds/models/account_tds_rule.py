@@ -22,8 +22,8 @@ class TDSRules(models.Model):
     line_ids = fields.One2many('tds.rule.line','tds_rule_id',string='Rule Details',states={'confirm':[('readonly', True)]})
     effective_from = fields.Date(string='Effective Date', required=True,
                                  track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    effective_end = fields.Date(string='Effective To Date', required=False,
-                                track_visibility='onchange',states={'confirm':[('readonly', True)]})
+    # effective_end = fields.Date(string='Effective To Date', required=False,
+    #                             track_visibility='onchange',states={'confirm':[('readonly', True)]})
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
@@ -61,7 +61,6 @@ class TDSRules(models.Model):
                 if today.day == date.day and today.month == date.month and today.year == date.year:
                     if rec.active == True:
                         record.effective_from = rec.effective_from
-                        record.effective_end = rec.effective_end
                         record.type_rate = rec.type_rate
                         record.account_id = rec.account_id.id
                         if record.flat_rate:
@@ -76,6 +75,7 @@ class TDSRules(models.Model):
                             record.line_ids.unlink()
                             record.line_ids = vals
         return
+
 
 
 
@@ -154,7 +154,6 @@ class TDSRules(models.Model):
             'target': 'new',
             'context': {'name': self.name or False,
                         'effective_from': self.effective_from or False,
-                        #'effective_end': self.effective_end or False,
                         'type_rate': self.type_rate or False,
                         'active': self.active or False,
                         'account_id': self.account_id.id or False,
@@ -177,7 +176,7 @@ class TDSRuleVersion(models.Model):
     tds_version_rule_id = fields.Many2one('tds.rule')
     account_id = fields.Many2one('account.account',string="Tds Account",required=True)
     effective_from = fields.Date(string='Effective Date', required=True)
-    effective_end = fields.Date(string='Effective End Date', required=False)
+    #effective_end = fields.Date(string='Effective End Date', required=False)
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
@@ -209,7 +208,7 @@ class TDSRuleLine(models.Model):
                 date_time_range_from = str(rec.range_from)
                 date_time_range_to = str(rec.range_to)
                 raise ValidationError(_(
-                    " The duration of the period  (%s)  and  (%s)  are overlapping with existing Slab ." % (
+                    " The Range (%s)  and  (%s)  are overlapping with existing Slab ." % (
                         date_time_range_from, date_time_range_to)
                 ))
 
