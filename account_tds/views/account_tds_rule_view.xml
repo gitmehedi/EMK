@@ -11,9 +11,6 @@
                         <button name="action_confirm" type="object"
                                 string="Confirm" states="draft"
                                 class="oe_highlight" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
-                        <button string="Reschedule" name="compute_version" type="object" class="oe_read_only"
-                                attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
-
                         <button string="Amendment" name="action_amendment" type="object" class="oe_read_only"
                                 attrs="{'invisible': [('state', 'in', ('draft'))]}" groups="account_tds.group_tds_manager"/>
                         <field name="state" widget="statusbar"/>

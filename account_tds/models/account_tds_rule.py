@@ -1,6 +1,6 @@
 from odoo import models, fields, api,_
 from datetime import datetime
-import datetime
+
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -50,16 +50,16 @@ class TDSRules(models.Model):
                 else:
                     pass
 
-
-    @api.multi
+    @api.model
     def compute_version(self):
         vals = []
         today = datetime.now()
-        for record in self:
+        rule = self.env['tds.rule'].search([])
+        for record in rule:
             for rec in record.version_ids:
                 date = datetime.strptime(rec.effective_from, "%Y-%m-%d")
-                if today.day == date.day and today.month == date.month:
-                    if self.active == True:
+                if today.day == date.day and today.month == date.month and today.year == date.year:
+                    if rec.active == True:
                         record.effective_from = rec.effective_from
                         record.effective_end = rec.effective_end
                         record.type_rate = rec.type_rate
@@ -75,6 +75,8 @@ class TDSRules(models.Model):
 
                             record.line_ids.unlink()
                             record.line_ids = vals
+        return
+
 
 
     @api.constrains('flat_rate','line_ids')
