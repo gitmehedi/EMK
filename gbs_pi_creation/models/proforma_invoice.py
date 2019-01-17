@@ -108,7 +108,7 @@ class ProformaInvoice(models.Model):
                                 readonly=True, track_visibility='onchange',
                                 states={'draft': [('readonly', False)]}
                                 , required=True)
-    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', domain=[('sale_order_type', '=', 'lc_sales')], readonly=True,
+    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', domain=[('sale_order_type', 'in', ['lc_sales', 'tt_sales', 'contract_sales'])], readonly=True,
                               required=True,track_visibility='onchange',states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one(comodel_name='res.currency',related='type_id.currency_id', store=True,
                                   string='Currency',readonly=True,track_visibility='onchange')
@@ -116,6 +116,8 @@ class ProformaInvoice(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True,related='type_id.sale_order_type')
 
     @api.multi
