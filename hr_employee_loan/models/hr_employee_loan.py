@@ -137,7 +137,7 @@ class HrEmployeeLoanRequest(models.Model):
     @api.depends('line_ids','principal_amount')
     def _compute_loan_amount_with_payslip(self):
         for loan in self:
-            self.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
+            loan.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
 
             # Show a msg for minus value
     @api.constrains('installment_amount','principal_amount','req_rate')
@@ -145,14 +145,7 @@ class HrEmployeeLoanRequest(models.Model):
         if self.installment_amount < 0 or self.principal_amount < 0 or self.req_rate < 0:
             raise Warning('Principal Amount or installment_amount or Rate never take negative value!')
 
-    # Show a msg for if principal_amount greater then wage
-    #@api.constrains('principal_amount')
-    #def _check_amount(self):
-    #    emp = self.env['hr.contract'].search([('employee_id','=', self.employee_id.id),('wage','<', self.principal_amount)])
-    #    if emp:
-    #        raise Warning('Principal Amount cannot be greater then wage !')
 
-    # Show a msg for applied & approved state should not be delete
     @api.multi
     def unlink(self):
         for loan in self:
