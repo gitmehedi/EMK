@@ -8,11 +8,13 @@
     'category': 'Extra Tools',
     'depends': [
         'base',
+        'operating_unit',
         'account_asset',
         'account',
     ],
     'data': [
         'views/menu_view.xml',
+        'views/account_asset_views.xml',
         'views/account_asset_type_view.xml',
         'views/product_template_views.xml',
         'views/account_invoice_line.xml',

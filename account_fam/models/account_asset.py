@@ -30,3 +30,25 @@ class AccountAssetCategory(models.Model):
             name = self.search([('name', '=ilike', self.name), ('parent_type_id', '=', parent_type)])
             if len(name) > 1:
                 raise ValidationError(_(msg))
+
+
+class AccountAssetAsset(models.Model):
+    _inherit = 'account.asset.asset'
+    _order = 'id desc'
+
+    receive_date = fields.Date(string='Receive Date')
+    asset_usage_date = fields.Date(string='Allocation Date', help='Asset Allocation/Usage Date')
+    asset_type_id = fields.Many2one('account.asset.category', string='Asset Type', required=True, change_default=True,
+                                    readonly=True, states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
+    invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date')
+
+    @api.onchange('category_id')
+    def onchange_asset_category(self):
+        if self.category_id:
+            self.asset_type_id = None
+            category_ids = self.env['account.asset.category'].search(
+                [('parent_type_id', '=', self.category_id.id)])
+            return {
+                'domain': {'asset_type_id': [('id', 'in', category_ids.ids)]}
+            }
