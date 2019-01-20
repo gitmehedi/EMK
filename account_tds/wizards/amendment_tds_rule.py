@@ -14,7 +14,7 @@ class TDSRules(models.Model):
     account_id = fields.Many2one('account.account',string="Tds Account",required=True,default=lambda  self: self.env.context.get('account_id'))
     line_ids = fields.One2many('tds.rule.wizard.line','tds_rule_wiz_id',string='Rule Details',default=lambda self: self.env.context.get('line_ids'))
     effective_from = fields.Date(string='Effective Date', required=True,default=lambda self: self.env.context.get('effective_from'))
-    effective_end = fields.Date(string='Effective End Date', required=False)
+    #effective_end = fields.Date(string='Effective End Date', required=False)
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
@@ -95,7 +95,7 @@ class TDSRuleWizardLine(models.Model):
                 date_time_range_from = str(rec.range_from)
                 date_time_range_to = str(rec.range_to)
                 raise ValidationError(_(
-                    " The duration of the period  (%s)  and  (%s)  are overlapping with existing Slab ." % (
+                    " The Range (%s)  and  (%s)  are overlapping with existing Slab ." % (
                         date_time_range_from, date_time_range_to)
                 ))
 
