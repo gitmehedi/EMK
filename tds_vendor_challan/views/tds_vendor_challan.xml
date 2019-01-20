@@ -21,20 +21,13 @@
             <field name="arch" type="xml">
                  <form string="TDS Vendor Challan">
                     <header>
-                        <!--<button name="action_confirm" type="object"-->
-                                <!--string="Confirm" states="draft"-->
-                                <!--class="oe_highlight"/>-->
-                        <button string="Deposit" name="action_confirm" type="object" class="oe_read_only"
-                                attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
-                        <button string="Distribute" name="action_confirm" type="object" class="oe_read_only"
-                                attrs="{'invisible': [('state', 'in', ('draft,deposited'))]}"/>
+                        <button string="Deposit" name="action_deposited" type="object"
+                                states="draft" class="oe_read_only"/>
+                        <button string="Distribute" name="action_distributed" type="object" class="oe_read_only"
+                                states="deposited"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <!--<div class="oe_title">-->
-                            <!--<label class="oe_edit_only" for="name" string="Name"/>-->
-                            <!--<h1><field name="name" placeholder="Name"/></h1>-->
-                            <!--</div>-->
                         <group>
                             <group>
                                 <field name="supplier_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
@@ -53,6 +46,7 @@
                                             <field name="provider_id"/>
                                             <field name="total_bill"/>
                                             <field name="undistributed_bill"/>
+                                            <field name="state" invisible="1"/>
                                         </tree>
                                     </field>
                                 </group>

@@ -20,9 +20,16 @@ class TdsVendorChallan(models.Model):
         ('distributed', "Distributed"),
     ], default='draft', track_visibility='onchange')
 
-    @api.model
-    def action_confirm(self):
-        print "-----"
+    @api.one
+    def action_deposited(self):
+        self.state = 'deposited'
+        self.line_ids.write({'state':'deposited'})
+
+    @api.one
+    def action_distributed(self):
+        self.state = 'distributed'
+        self.line_ids.write({'state':'distributed'})
+
 
 class TdsVendorChallanLine(models.Model):
     _name = 'tds.vendor.challan.line'
@@ -32,6 +39,12 @@ class TdsVendorChallanLine(models.Model):
     total_bill = fields.Float(String='Total Bill')
     undistributed_bill = fields.Float(String='Undistributed Bill')
     parent_id = fields.Many2one('tds.vendor.challan')
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('deposited', "Deposited"),
+        ('distributed', "Distributed"),
+    ], default='draft', track_visibility='onchange')
 
 
 
