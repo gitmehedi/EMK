@@ -1,7 +1,7 @@
 from odoo import models, fields, api,_
 
 
-class TDSRules(models.Model):
+class TDSRules(models.TransientModel):
     _name = 'tds.challan.selection.wizard'
     _description = 'TDS Challan Wizard'
 
