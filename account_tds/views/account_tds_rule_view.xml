@@ -43,18 +43,14 @@
                                             <label string="%" class="oe_inline"/>
                                         </div>
                                     </group>
-                                    <group>
-                                        <!--<separator string="Slab Details"-->
-                                                   <!--attrs="{'invisible':[('type_rate', '!=', 'slab')]}"/>-->
-                                        <field name="line_ids" nolabel="1"
-                                               attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
-                                            <tree string="List" editable="bottom">
-                                                <field name="range_from"/>
-                                                <field name="range_to"/>
-                                                <field name="rate" string="Rate(%)"/>
-                                            </tree>
-                                        </field>
-                                    </group>
+                                    <field name="line_ids" nolabel="1"
+                                           attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
+                                        <tree string="List" editable="bottom">
+                                            <field name="range_from"/>
+                                            <field name="range_to"/>
+                                            <field name="rate" string="Rate(%)"/>
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
                             <page string="Accounting">
