@@ -38,7 +38,7 @@
 
         <menuitem
                 name="TDS Vendor Challan"
-                parent="account.account_account_menu"
+                parent="account.menu_finance_payables"
                 action="tds_challan_selection_wizard_action_view"
                 id="tds_challan_selection_wizard_menu"
                 sequence="10" />

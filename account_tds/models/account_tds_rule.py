@@ -130,7 +130,7 @@ class TDSRules(models.Model):
                     'rate' : rule.rate,
                     'rel_id': rule.id
                 }
-            self.version_ids.version_line_ids += self.env['tds.rule.version.line'].create(line_res)
+                self.version_ids.version_line_ids += self.env['tds.rule.version.line'].create(line_res)
         self.state = 'confirm'
 
     @api.multi

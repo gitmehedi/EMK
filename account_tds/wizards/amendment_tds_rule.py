@@ -2,7 +2,7 @@ from odoo import models, fields, api,_
 from odoo.exceptions import UserError, ValidationError
 
 
-class TDSRules(models.Model):
+class TDSRules(models.TransientModel):
     _name = 'tds.rule.wizard'
     _order = 'name desc'
     _description = 'TDS Rule'
@@ -73,7 +73,7 @@ class TDSRules(models.Model):
                                 "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
 
 
-class TDSRuleWizardLine(models.Model):
+class TDSRuleWizardLine(models.TransientModel):
     _name = 'tds.rule.wizard.line'
 
     tds_rule_wiz_id = fields.Many2one('tds.rule.wizard')

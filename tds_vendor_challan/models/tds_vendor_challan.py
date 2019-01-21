@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api
+
 
 class TdsVendorChallan(models.Model):
     _name = 'tds.vendor.challan'
