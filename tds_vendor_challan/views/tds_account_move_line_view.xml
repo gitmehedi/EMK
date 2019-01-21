@@ -41,5 +41,7 @@
             view_mode="form" target="new" view_type="form"
             />
 
+
+
     </data>
 </odoo>
