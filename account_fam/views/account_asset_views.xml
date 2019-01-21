@@ -27,6 +27,12 @@
             <xpath expr="//form/sheet/group/group/field[@name='invoice_id']" position="after">
                 <field name="invoice_date"/>
             </xpath>
+            <xpath expr="//field[@name='method_number']" position="before">
+                <field name="depreciation_year"/>
+            </xpath>
+            <xpath expr="//field[@name='method_period']" position="replace">
+                <field name="method_period" invisible="True"/>
+            </xpath>
         </field>
     </record>
 </odoo>
