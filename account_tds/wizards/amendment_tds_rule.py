@@ -2,7 +2,7 @@ from odoo import models, fields, api,_
 from odoo.exceptions import UserError, ValidationError
 
 
-class TDSRules(models.TransientModel):
+class TDSRulesWizard(models.TransientModel):
     _name = 'tds.rule.wizard'
     _order = 'name desc'
     _description = 'TDS Rule'
