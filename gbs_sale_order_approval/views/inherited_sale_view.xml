@@ -391,12 +391,12 @@
 
                     <xpath expr="//field[@name='pack_type']" position="after">
                         <field name="pi_id"
-                               attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')],'required':[('credit_sales_or_lc', '=','lc_sales')]}"
-                               options="{'no_quick_create':True,'no_create_edit':True}"/>
+                           attrs="{'invisible':[('credit_sales_or_lc', 'not in', ['lc_sales','tt_sales','contract_sales'])],'required':[('credit_sales_or_lc', 'in', ['lc_sales','tt_sales','contract_sales'])]}"
+                           options="{'no_quick_create':True,'no_create_edit':True}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='pi_id']" position="after">
-                        <field name="lc_id" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}"
+                        <field name="lc_id" attrs="{'invisible':[('credit_sales_or_lc', 'not in', ['lc_sales','tt_sales','contract_sales'])]}"
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
@@ -611,6 +611,9 @@
                   <!--id="sale.menu_sale_order" parent="sales_team.menu_sales"-->
                   <!--sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>-->
 
+        <menuitem action="sale.action_orders"
+            id="sale.menu_sale_order" parent="sales_team.menu_sales"
+            sequence="12" groups="-sales_team.group_sale_salesman,-sales_team.group_sale_manager"/>
 
         <record id="sale.menu_sale_order" model="ir.ui.menu">
             <field name="groups_id"

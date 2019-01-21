@@ -516,11 +516,11 @@ class AttendanceUtility(models.TransientModel):
         return holidaysMap
 
     def getHolidaysByUnitDateRange(self, unitId, from_date, to_date):
-        holidays_query = """select t1.id,t1.date from hr_holidays_public_line as t1
-                            join hr_holidays_public as t2 on t2.id=t1.public_type_id
-                            join public_holiday_operating_unit_rel as t3 on t3.public_holiday_id=t2.id
-                            join date_range as t4 on t4.id=t2.year_id
-                            where t3.operating_unit_id=%s and %s >= t4.date_start and %s <= t4.date_end"""
+        holidays_query = """SELECT t1.id,t1.date FROM hr_holidays_public_line AS t1
+                            JOIN hr_holidays_public AS t2 ON t2.id=t1.public_type_id
+                            JOIN public_holiday_operating_unit_rel AS t3 ON t3.public_holiday_id=t2.id
+                            WHERE t3.operating_unit_id=%s AND t1.date BETWEEN
+                                  DATE(%s) and DATE(%s)"""
 
         self._cr.execute(holidays_query, (unitId, from_date, to_date))
         holidaysLines = self._cr.fetchall()

@@ -30,7 +30,7 @@ class InvoiceExportWizard(models.TransientModel):
         domain_id = self.env['account.invoice'].search(['&', '&', '&', '|', ('partner_id', '=', self.shipment_id.lc_id.second_party_applicant.id),
                                          ('partner_id', 'in', self.shipment_id.lc_id.second_party_applicant.child_ids.ids),
                                          ('id', 'not in', [i.invoice_id.id for i in self.env['purchase.shipment'].search([])]),
-                                         ('sale_type_id.sale_order_type', '=', 'lc_sales'),
+                                         ('sale_type_id.sale_order_type', 'in', ['lc_sales','tt_sales','contract_sales']),
                                          ('state', 'in', ['open', 'paid'])]).ids
 
         return {'domain': {'invoice_id': [('id', 'in', domain_id)]}}
