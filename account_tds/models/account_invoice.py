@@ -49,7 +49,22 @@ class AccountInvoice(models.Model):
         if self.is_tds_applicable:
             self._update_tds()
             self._update_tax_line_vals()
-        return super(AccountInvoice, self).action_invoice_open()
+        res = super(AccountInvoice, self).action_invoice_open()
+        self._update_acc_move_line_taxtype()
+        return res
+
+    def _update_acc_move_line_taxtype(self):
+        for tax_line in self.tax_line_ids:
+            for move_line in self.move_id.line_ids:
+                if tax_line.name == move_line.name:
+                    if tax_line.tds_id:
+                        move_line.write({'tax_type': 'tds'})
+                    else:
+                        move_line.write({'tax_type': 'vat'})
+
+
+
+
 
     def _update_tds(self):
         if not self.date:
