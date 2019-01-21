@@ -21,7 +21,6 @@ class creditlimit_partners(models.TransientModel):
         active_id = self.env.context.get('active_id')
         if active_id:
             run_data = run_pool.browse(active_id)
-            print run_data
         limit_data = run_data.credit_limit or 0
         day_data = run_data.days or 0
         assign_id = run_data.id or False

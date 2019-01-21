@@ -22,7 +22,6 @@ class ReportAbsenceLists(models.AbstractModel):
             'form': data['form'],
             'other':data['other']
         }
-        print docargs
         return report_obj.render('hr_absence_summary.report_absence_view_qweb', docargs)
 
 
