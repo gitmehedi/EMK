@@ -30,11 +30,6 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem
-                name="TDS Vendor Challan2"
-                parent="account.menu_finance_payables"
-                action="tds_challan_ou_selection_wizard_action_view"
-                id="tds_challan_ou_selection_wizard_menu"
-                sequence="12" />
+
     </data>
 </odoo>
