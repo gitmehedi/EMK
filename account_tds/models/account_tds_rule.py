@@ -6,7 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class TDSRules(models.Model):
     _name = 'tds.rule'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = 'name desc'
     _description = 'TDS Rule'
 
@@ -15,7 +15,7 @@ class TDSRules(models.Model):
     active = fields.Boolean(string='Active',default = True,
                             track_visibility='onchange',states={'confirm':[('readonly', True)]})
     current_version = fields.Char('Current Version',readonly=True,compute='_compute_current_version',
-                                  track_visibility='onchange',states={'confirm':[('readonly', True)]})
+                                  states={'confirm':[('readonly', True)]})
     account_id = fields.Many2one('account.account',string = "TDS Account",required=True,
                                  track_visibility='onchange',states={'confirm':[('readonly', True)]})
     version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id',string="Versions Details",states={'confirm':[('readonly', True)]})
@@ -34,7 +34,7 @@ class TDSRules(models.Model):
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
-    ], default='draft',track_visibility='onchange')
+    ], default='draft')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),

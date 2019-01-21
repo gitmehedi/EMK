@@ -1,2 +1,12 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_account_tds_account_tds,account_tds.account_tds,model_account_tds_account_tds,,1,0,0,0
+access_tds_rule,account_tds_rule,account_tds.model_tds_rule,account_tds.group_tds_manager,1,1,1,1
+access_tds_rule,account_tds_rule,account_tds.model_tds_rule,account_tds.group_tds_user,1,1,1,0
+
+access_tds_rule_line,account_tds_rule_line,account_tds.model_tds_rule_line,account_tds.group_tds_manager,1,1,1,1
+access_tds_rule_line,account_tds_rule_line,account_tds.model_tds_rule_line,account_tds.group_tds_user,1,1,1,0
+
+access_tds_rule_version,account_tds_rule_version,account_tds.model_tds_rule_version,account_tds.group_tds_manager,1,1,1,1
+access_tds_rule_version,account_tds_rule_version,account_tds.model_tds_rule_version,account_tds.group_tds_user,1,1,1,0
+
+access_tds_rule_version_line,account_tds_rule_version_line,account_tds.model_tds_rule_version_line,account_tds.group_tds_manager,1,1,1,1
+access_tds_rule_version_line,account_tds_rule_version_line,account_tds.model_tds_rule_version_line,account_tds.group_tds_user,1,1,1,0
