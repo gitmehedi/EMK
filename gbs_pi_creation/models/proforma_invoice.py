@@ -61,6 +61,9 @@ class ProformaInvoice(models.Model):
     terms_id = fields.Many2one('terms.setup', string='Payment term', store=True, readonly=True,track_visibility='onchange',
                                states={'draft': [('readonly', False)]})
 
+    terms_of_delivery = fields.Char(string='Terms of Delivery', readonly=True, track_visibility='onchange',
+                               states={'draft': [('readonly', False)]}, default='')
+
     """ Shipping Address"""
     ship_freight_type = fields.Char(string='Freight Type', readonly=True, states={'draft': [('readonly', False)]})
     ship_exp_date = fields.Date(string='Exp. Shipping Date', readonly=True, states={'draft': [('readonly', False)]})
