@@ -6,18 +6,20 @@
         --Selection wizard
     
         """,
-    'author': "genweb2",
+    'author': "Genweb2",
     'website': "http://www.genweb2.com",
+    'category': 'Account',
+    'version': '10.0.0.1',
     'category': 'Vendor',
     'version': '0.1',
-    'depends': ['base',
+    'depends': ['mail',
+                'account_tds',
                 'sub_operating_unit',
-                'mail'
                 ],
-
     'data': [
         # 'security/ir.model.access.csv',
         'wizards/tds_challan_selection_wizard.xml',
+        'views/tds_account_move_line_view.xml',
         'views/tds_vendor_challan.xml',
     ],
     'installable': True,
