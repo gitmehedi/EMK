@@ -49,7 +49,23 @@ class AccountInvoice(models.Model):
         if self.is_tds_applicable:
             self._update_tds()
             self._update_tax_line_vals()
-        return super(AccountInvoice, self).action_invoice_open()
+        res = super(AccountInvoice, self).action_invoice_open()
+        self._update_acc_move_line_taxtype()
+        return res
+
+    def _update_acc_move_line_taxtype(self):
+        if self.move_id:
+            for tax_line in self.tax_line_ids:
+                for move_line in self.move_id[0].line_ids:
+                    if tax_line.name == move_line.name:
+                        if tax_line.tds_id:
+                            move_line.write({'tax_type': 'tds'})
+                        else:
+                            move_line.write({'tax_type': 'vat'})
+
+
+
+
 
     def _update_tds(self):
         if not self.date:
@@ -76,19 +92,20 @@ class AccountInvoice(models.Model):
 
     def _update_tax_line_vals(self):
         for line in self.invoice_line_ids:
-            vals = {
-                'invoice_id': self.id,
-                'name': line.account_tds_id.name,
-                'tds_id': line.account_tds_id.id,
-                'amount': line.tds_amount,
-                'manual': False,
-                'sequence': 0,
-                'account_id': self.type in ('out_invoice', 'in_invoice') and (line.account_tds_id.account_id.id)
-                # 'base': tax['base'],
-                # 'tax_id': line.account_tds_id.id,
-                # 'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
-            }
-            self.env['account.invoice.tax'].create(vals)
+            if line.account_tds_id:
+                vals = {
+                    'invoice_id': self.id,
+                    'name': line.account_tds_id.name,
+                    'tds_id': line.account_tds_id.id,
+                    'amount': line.tds_amount,
+                    'manual': False,
+                    'sequence': 0,
+                    'account_id': self.type in ('out_invoice', 'in_invoice') and (line.account_tds_id.account_id.id)
+                    # 'base': tax['base'],
+                    # 'tax_id': line.account_tds_id.id,
+                    # 'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
+                }
+                self.env['account.invoice.tax'].create(vals)
 
         return True
 
