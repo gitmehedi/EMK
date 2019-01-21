@@ -21,15 +21,16 @@
                         </group>
                     </sheet>
                     <footer>
-						 <button string="Generate" name="generate_action" type="object" class="oe_highlight"  />
+                        <button icon="fa-cogs" string="Generate" name="generate_action" type="object" class="oe_highlight"  />
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
 
         <record id="tds_challan_selection_wizard_action_view" model="ir.actions.act_window">
-			<field name="name">TDS Vendor Challan</field>
-			<field name="res_model">tds.challan.selection.wizard</field>
+            <field name="name">TDS Vendor Challan</field>
+            <field name="res_model">tds.challan.selection.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
