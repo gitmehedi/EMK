@@ -7,15 +7,13 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="TDS Vendor Challan">
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="sub_operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' placeholder="All"/>
-                            </group>
+                            <field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' placeholder="All"/>
                         </group>
-                    </sheet>
+                    </group>
                     <footer>
-                        <button icon="fa-cogs" string="Generate" name="generate_action" type="object" class="oe_highlight"  />
+                        <button icon="fa-cogs" string="Generate" name="generate_challan" type="object" class="oe_highlight"  />
                         <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>

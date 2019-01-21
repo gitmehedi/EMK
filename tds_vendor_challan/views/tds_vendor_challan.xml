@@ -5,11 +5,9 @@
             <field name="name">tds_vendor_challan_list</field>
             <field name="model">tds.vendor.challan</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree delete="false" create="false" edit="false">
                     <field name="supplier_id"/>
-                    <field name="sub_operating_unit_id"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
+                    <field name="operating_unit_id"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -19,7 +17,7 @@
             <field name="name">tds_vendor_challan_from_view</field>
             <field name="model">tds.vendor.challan</field>
             <field name="arch" type="xml">
-                 <form string="TDS Vendor Challan">
+                 <form string="TDS Vendor Challan" delete="false" create="false" edit="false">
                     <header>
                         <button string="Deposit" name="action_deposited" type="object"
                                 states="draft" class="oe_read_only"/>
@@ -30,21 +28,22 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="supplier_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="date_from"/>
+                                <field name="supplier_id" readonly="1"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                             </group>
                             <group>
-                                <field name="sub_operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="date_to"/>
+                                <field name="operating_unit_id" readonly="1"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                             </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Details">
                                 <group>
-                                    <field name="line_ids" nolabel="1">
-                                        <tree string="List" editable="bottom">
-                                            <field name="provider_id"/>
+                                    <field name="line_ids" nolabel="1" readonly="1">
+                                        <tree string="List" editable="false" create="false" delete="false">
+                                            <field name="supplier_id"/>
                                             <field name="total_bill"/>
+                                            <field name="challan_provided"/>
                                             <field name="undistributed_bill"/>
                                             <field name="state" invisible="1"/>
                                         </tree>
