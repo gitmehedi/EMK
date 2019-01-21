@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <record id="view_tds_acc_move_line_tree" model="ir.ui.view">
+            <field name="name">tds.account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Items" create="false">
+                    <field name="date"/>
+                    <field name="move_id" required="0"/>
+                    <field name="journal_id" options='{"no_open":True}'/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="partner_id"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="reconciled" invisible="1"/>
+                    <field name="full_reconcile_id"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="amount_currency" readonly="True" groups="base.group_multi_currency"/>
+                    <field name="currency_id" readonly="True" invisible="1" />
+                    <field name="date_maturity"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tds_account_moves" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_tds_acc_move_line_tree"/>
+            <field name="view_mode">tree</field>
+        </record>
+
+         <act_window id="action_account_invoice_confirm1"
+            multi="True"
+            key2="client_action_multi" name="Generate"
+            res_model="tds.challan.ou.selection.wizard" src_model="account.move.line"
+            view_mode="form" target="new" view_type="form"
+            />
+
+
+
+    </data>
+</odoo>

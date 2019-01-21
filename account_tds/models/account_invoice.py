@@ -49,7 +49,23 @@ class AccountInvoice(models.Model):
         if self.is_tds_applicable:
             self._update_tds()
             self._update_tax_line_vals()
-        return super(AccountInvoice, self).action_invoice_open()
+        res = super(AccountInvoice, self).action_invoice_open()
+        self._update_acc_move_line_taxtype()
+        return res
+
+    def _update_acc_move_line_taxtype(self):
+        if self.move_id:
+            for tax_line in self.tax_line_ids:
+                for move_line in self.move_id[0].line_ids:
+                    if tax_line.name == move_line.name:
+                        if tax_line.tds_id:
+                            move_line.write({'tax_type': 'tds'})
+                        else:
+                            move_line.write({'tax_type': 'vat'})
+
+
+
+
 
     def _update_tds(self):
         if not self.date:
@@ -76,19 +92,20 @@ class AccountInvoice(models.Model):
 
     def _update_tax_line_vals(self):
         for line in self.invoice_line_ids:
-            vals = {
-                'invoice_id': self.id,
-                'name': line.account_tds_id.name,
-                'tds_id': line.account_tds_id.id,
-                'amount': line.tds_amount,
-                'manual': False,
-                'sequence': 0,
-                'account_id': self.type in ('out_invoice', 'in_invoice') and (line.account_tds_id.account_id.id)
-                # 'base': tax['base'],
-                # 'tax_id': line.account_tds_id.id,
-                # 'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
-            }
-            self.env['account.invoice.tax'].create(vals)
+            if line.account_tds_id:
+                vals = {
+                    'invoice_id': self.id,
+                    'name': line.account_tds_id.name,
+                    'tds_id': line.account_tds_id.id,
+                    'amount': line.tds_amount,
+                    'manual': False,
+                    'sequence': 0,
+                    'account_id': self.type in ('out_invoice', 'in_invoice') and (line.account_tds_id.account_id.id)
+                    # 'base': tax['base'],
+                    # 'tax_id': line.account_tds_id.id,
+                    # 'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
+                }
+                self.env['account.invoice.tax'].create(vals)
 
         return True
 
@@ -105,10 +122,8 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_id.is_tds_applicable and self.product_id:
             pro_base_val = self.quantity * self.price_unit
             if self.account_tds_id.type_rate == 'flat':
-                # calculate previous vendor bill
                 self.tds_amount = pro_base_val * self.account_tds_id.flat_rate/100
                 if pre_invoice_line_list:
-                    # to do pass parameter current_rate in previous_tds_value
                     remaining_pre_tds = self.previous_tds_value(self.account_tds_id.flat_rate,pre_invoice_line_list)
                     self.tds_amount = self.tds_amount + remaining_pre_tds
             else:
@@ -116,7 +131,6 @@ class AccountInvoiceLine(models.Model):
                     if pro_base_val>=tds_slab_rule_obj.range_from and pro_base_val<=tds_slab_rule_obj.range_to:
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
                         if pre_invoice_line_list:
-                            # to do pass parameter current_rate in previous_tds_value
                             remaining_pre_tds = self.previous_tds_value(tds_slab_rule_obj.rate,pre_invoice_line_list)
                             self.tds_amount = self.tds_amount + remaining_pre_tds
                         break
@@ -126,7 +140,7 @@ class AccountInvoiceLine(models.Model):
     def previous_tds_value(self,current_rate,pre_invoice_line_list):
         remain_tds_amount = 0.0
         if pre_invoice_line_list:
-            pre_total_tds = pre_total_base_amount= 0.0
+            pre_total_tds = pre_total_base_amount = 0.0
             for pre_invoice_line_obj in pre_invoice_line_list:
                 pre_total_tds += pre_invoice_line_obj.tds_amount
                 pre_total_base_amount += (pre_invoice_line_obj.price_unit * pre_invoice_line_obj.quantity)
@@ -137,7 +151,14 @@ class AccountInvoiceLine(models.Model):
 
         return remain_tds_amount
 
+
 class AccountInvoiceTax(models.Model):
     _inherit = "account.invoice.tax"
 
     tds_id = fields.Many2one('tds.rule', string='TDS')
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    tax_type = fields.Selection([('vat', 'VAT'),('tds', 'TDS')], string='TDS Type')
+    is_deposit = fields.Boolean('Deposit',default=False)

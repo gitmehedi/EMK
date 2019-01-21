@@ -22,6 +22,7 @@
     'data': [
         'data/tds_version_scheduler.xml',
         'security/ir_security.xml',
+        'security/ir.model.access.csv',
         'wizards/amendment_tds_rule.xml',
         'views/account_tds_rule_view.xml',
         'views/inherit_date_range_view.xml',

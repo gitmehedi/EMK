@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_tds_challan_ou_selection_wizard" model="ir.ui.view">
+            <field name="name">tds.challan.ou.selection.wizard.form</field>
+            <field name="model">tds.challan.ou.selection.wizard</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="TDS Vendor Challan">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sub_operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' placeholder="All"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button icon="fa-cogs" string="Generate" name="generate_action" type="object" class="oe_highlight"  />
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="tds_challan_ou_selection_wizard_action_view" model="ir.actions.act_window">
+            <field name="name">TDS Vendor Challan</field>
+            <field name="res_model">tds.challan.ou.selection.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</odoo>

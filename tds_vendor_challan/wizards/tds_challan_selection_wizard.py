@@ -1,9 +1,8 @@
 from odoo import models, fields, api,_
 
 
-class TDSRules(models.Model):
+class TDSChallaSelectionWizard(models.TransientModel):
     _name = 'tds.challan.selection.wizard'
-    _order = 'name desc'
     _description = 'TDS Challan Wizard'
 
 
@@ -19,4 +18,32 @@ class TDSRules(models.Model):
 
     @api.multi
     def generate_action(self):
-        print "---------"
+        res_view = self.env.ref('tds_vendor_challan.view_tds_acc_move_line_tree')
+
+        selection_type = []
+        if self.type == 'both':
+            selection_type = ['vat','tds']
+        else:
+            selection_type.append(self.type)
+
+        vals = [('tax_type', 'in', selection_type),('is_deposit','=',False),
+                 ('date', '<=', self.date_to),('date', '>=', self.date_from)]
+
+        if self.supplier_id:
+            vals.append(('partner_id','=',self.supplier_id.id))
+
+        if self.sub_operating_unit_id:
+            vals.append('operating_unit','=',self.sub_operating_unit_id.id)
+
+        result = {
+            'name': _('List'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'view_id': res_view and res_view.id or False,
+            'res_model': 'account.move.line',
+            'type': 'ir.actions.act_window',
+            # 'nodestroy': True,
+            'target': 'current',
+            'domain': vals,
+        }
+        return result

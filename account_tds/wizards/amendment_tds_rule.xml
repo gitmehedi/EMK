@@ -39,7 +39,7 @@
                         </notebook>
                     </sheet>
                     <footer>
-						 <button string="Save" name="generate_rule" type="object" class="oe_highlight"  />
+						 <button string="Save" name="generate_rule" type="object" confirm="Are you sure you want to create a version?" class="oe_highlight"  />
                     </footer>
                 </form>
             </field>
