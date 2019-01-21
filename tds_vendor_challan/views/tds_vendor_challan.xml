@@ -69,8 +69,8 @@
 
 
         <menuitem
-                name="Challan"
-                parent="account.account_account_menu"
+                name="TDS Challan Summary"
+                parent="account.menu_finance_payables"
                 action="tds_vendor_challan_action"
                 id="tds_challan_menu"
                 sequence="11" />
