@@ -13,7 +13,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
         ('vat', 'VAT'),
         ('tds', 'TDS'),
     ], string='Type', required=True,default= 'both')
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Operating Unit')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
     supplier_id = fields.Many2one('res.partner', string="Supplier")
 
     @api.multi
@@ -32,8 +32,8 @@ class TDSChallaSelectionWizard(models.TransientModel):
         if self.supplier_id:
             vals.append(('partner_id','=',self.supplier_id.id))
 
-        if self.sub_operating_unit_id:
-            vals.append('operating_unit','=',self.sub_operating_unit_id.id)
+        if self.operating_unit_id:
+            vals.append(('operating_unit_id','=',self.operating_unit_id.id))
 
         result = {
             'name': _('List'),

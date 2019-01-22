@@ -5,11 +5,10 @@
             <field name="name">tds_vendor_challan_list</field>
             <field name="model">tds.vendor.challan</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree delete="false" create="false" edit="false">
+                    <field name="date"/>
                     <field name="supplier_id"/>
-                    <field name="sub_operating_unit_id"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
+                    <field name="operating_unit_id"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -19,32 +18,40 @@
             <field name="name">tds_vendor_challan_from_view</field>
             <field name="model">tds.vendor.challan</field>
             <field name="arch" type="xml">
-                 <form string="TDS Vendor Challan">
+                 <form string="TDS Vendor Challan" create="false" edit="false">
                     <header>
                         <button string="Deposit" name="action_deposited" type="object"
-                                states="draft" class="oe_read_only"/>
-                        <button string="Distribute" name="action_distributed" type="object" class="oe_read_only"
-                                states="deposited"/>
-                        <field name="state" widget="statusbar"/>
+                                states="draft" class="oe_highlight"/>
+                        <button string="Distribute" name="action_distributed" type="object"
+                                states="deposited" class="oe_highlight"/>
+                        <button string="Cancel" name="action_distributed" type="object"
+                                states="draft,deposited" class="btn-default"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,deposited,distributed"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
-                                <field name="supplier_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="date_from"/>
+                                <field name="supplier_id" readonly="1"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="operating_unit_id" readonly="1"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="deposit_approver" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="distribute_approver" attrs="{'invisible': [('state', 'in', ('draft','deposited'))]}"/>
                             </group>
                             <group>
-                                <field name="sub_operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="date_to"/>
+                                <field name="date"/>
+                                <field name="deposit_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="distribute_date" attrs="{'invisible': [('state', 'in', ('draft','deposited'))]}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Details">
                                 <group>
-                                    <field name="line_ids" nolabel="1">
-                                        <tree string="List" editable="bottom">
-                                            <field name="provider_id"/>
+                                    <field name="line_ids" nolabel="1" readonly="1">
+                                        <tree string="List" editable="false" create="false" delete="false">
+                                            <field name="supplier_id"/>
                                             <field name="total_bill"/>
+                                            <field name="challan_provided"/>
                                             <field name="undistributed_bill"/>
                                             <field name="state" invisible="1"/>
                                         </tree>
@@ -69,7 +76,7 @@
 
 
         <menuitem
-                name="TDS Challan Summary"
+                name="TDS Challan"
                 parent="account.menu_finance_payables"
                 action="tds_vendor_challan_action"
                 id="tds_challan_menu"

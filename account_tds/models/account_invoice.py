@@ -63,10 +63,6 @@ class AccountInvoice(models.Model):
                         else:
                             move_line.write({'tax_type': 'vat'})
 
-
-
-
-
     def _update_tds(self):
         if not self.date:
             self.date = fields.Date.context_today(self)
