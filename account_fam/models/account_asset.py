@@ -63,8 +63,8 @@ class AccountAssetAsset(models.Model):
             category_ids = self.env['account.asset.category'].search(
                 [('parent_type_id', '=', self.category_id.id)])
             return {
-                       'domain': {'asset_type_id': [('id', 'in', category_ids.ids)]}
-                   }
+                'domain': {'asset_type_id': [('id', 'in', category_ids.ids)]}
+            }
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
@@ -125,22 +125,40 @@ class AccountAssetAsset(models.Model):
             total_days = (year % 4) and 365 or 366
 
             undone_dotation_number = self._compute_board_undone_dotation_nb(depreciation_date, total_days)
-
+            year_date = depreciation_date.year
+            year_amount = 0
+            remaining_amount = residual_amount
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
+
                 sequence = x + 1
                 amount = self._compute_board_amount(sequence, residual_amount, amount_to_depr, undone_dotation_number,
                                                     posted_depreciation_line_ids, total_days, depreciation_date)
                 amount = self.currency_id.round(amount)
+
                 if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
                     continue
-                residual_amount -= amount
+
+                if self.method == 'linear':
+                    residual_amount -= amount
+                    remaining_amount = residual_amount
+                elif self.method == 'degressive':
+                    next_year = depreciation_date + relativedelta(days=1)
+                    remaining_amount = remaining_amount - amount
+                    year_amount = year_amount + amount
+                    if year_date != next_year.year:
+                        year_date = next_year.year
+                        residual_amount -= year_amount
+                        year_amount = 0
+                    else:
+                        residual_amount = residual_amount
+
                 vals = {
                     'amount': amount,
                     'asset_id': self.id,
                     'sequence': sequence,
                     'name': (self.code or '') + '/' + str(sequence),
-                    'remaining_value': residual_amount,
-                    'depreciated_value': self.value - (self.salvage_value + residual_amount),
+                    'remaining_value': remaining_amount,
+                    'depreciated_value': self.value - (self.salvage_value + remaining_amount),
                     'depreciation_date': depreciation_date.strftime(DF),
                 }
                 commands.append((0, False, vals))
@@ -154,3 +172,42 @@ class AccountAssetAsset(models.Model):
         self.write({'depreciation_line_ids': commands})
 
         return True
+
+    def _compute_board_amount(self, sequence, residual_amount, amount_to_depr, undone_dotation_number,
+                              posted_depreciation_line_ids, total_days, depreciation_date):
+        amount = 0
+        if self.method == 'linear':
+            no_of_day = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
+            res_of_date = no_of_day - int(self.date[len(self.date) - 2:]) + 1
+            amount = (amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids)) /
+                      no_of_day) * res_of_date
+
+            if self.prorata:
+                amount = amount_to_depr / self.method_number
+                if sequence == 1:
+                    if self.method_period % 12 != 0:
+                        date = datetime.strptime(self.date, '%Y-%m-%d')
+                        month_days = calendar.monthrange(date.year, date.month)[1]
+                        days = month_days - date.day + 1
+                        amount = (amount_to_depr / self.method_number) / month_days * days
+                    else:
+                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)[
+                                    'date_to'] - depreciation_date).days + 1
+                        amount = (amount_to_depr / self.method_number) / total_days * days
+        elif self.method == 'degressive':
+            if self.prorata:
+                if sequence == 1:
+                    if self.method_period % 12 != 0:
+                        date = datetime.strptime(self.date, '%Y-%m-%d')
+                        month_days = calendar.monthrange(date.year, date.month)[1]
+                        days = month_days - date.day
+                        amount = (residual_amount * self.method_progress_factor) / total_days * days
+                    else:
+                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)[
+                                    'date_to'] - depreciation_date).days + 1
+                        amount = (residual_amount * self.method_progress_factor) / total_days * days
+                else:
+                    month_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
+                    amount = (residual_amount * self.method_progress_factor) / total_days * month_days
+
+        return amount

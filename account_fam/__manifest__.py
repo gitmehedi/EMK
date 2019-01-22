@@ -19,6 +19,7 @@
         'views/product_template_views.xml',
         'views/account_invoice_line.xml',
         'views/account_move_view.xml',
+        'wizard/asset_modify_views.xml',
     ],
     'installable': True,
     'application': True,
