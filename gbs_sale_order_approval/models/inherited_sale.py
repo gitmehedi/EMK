@@ -45,6 +45,8 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True, related='type_id.sale_order_type')
 
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
@@ -247,13 +249,17 @@ class SaleOrder(models.Model):
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
 
-            if self.type_id.sale_order_type != 'lc_sales':
+            if self.type_id.sale_order_type != 'lc_sales' and \
+                            self.type_id.sale_order_type != 'tt_sales' and \
+                            self.type_id.sale_order_type != 'contract_sales':
                 self.pi_id = None
 
-            if self.type_id.sale_order_type == 'lc_sales':
+            if self.type_id.sale_order_type == 'lc_sales' or \
+                            self.type_id.sale_order_type == 'tt_sales' or \
+                            self.type_id.sale_order_type == 'contract_sales':
                 existing_lc = self.search([('type_id', '=', self.type_id.id)])
                 return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
-                                             ('credit_sales_or_lc', '=', 'lc_sales'),
+                                             ('credit_sales_or_lc', '=', self.type_id.sale_order_type),
                                              ('state', '=', 'confirm')]}}
             else:
                 self.fields_readonly = False
@@ -273,7 +279,7 @@ class SaleOrder(models.Model):
 
                 discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
-                if orders.credit_sales_or_lc == 'lc_sales':
+                if orders.credit_sales_or_lc == 'lc_sales' or orders.credit_sales_or_lc == 'tt_sales' or orders.credit_sales_or_lc == 'contract_sales':
 
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         return False  # Single Validation

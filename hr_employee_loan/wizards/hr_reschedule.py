@@ -32,7 +32,6 @@ class HrLoanRescheduleWizard(models.TransientModel):
         loan.installment_amount=installament_amt
         i = 1
         while loan_amt > 0:
-            print i
             vals = {}
             vals['employee_id'] = loan.employee_id.id
             vals['schedule_date'] = repayment_date

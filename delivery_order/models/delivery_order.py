@@ -50,6 +50,8 @@ class DeliveryOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     state = fields.Selection([
@@ -194,7 +196,7 @@ class DeliveryOrder(models.Model):
                 'operating_unit_id': self.delivery_order_id.operating_unit_id.id,
                 'delivery_order_id': self.id})
 
-            if self.delivery_order_id.so_type == 'lc_sales':
+            if self.delivery_order_id.so_type == 'lc_sales' or self.so_type == 'tt_sales' or self.so_type == 'contract_sales':
                 stock_picking_id.sudo().write({'lc_id': self.lc_id.id})
                 # self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
                 # As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi

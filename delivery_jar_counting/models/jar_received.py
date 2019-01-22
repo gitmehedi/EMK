@@ -76,7 +76,6 @@ class JarReceived(models.Model):
 
                 #self.challan_id = delivery_jar_count_obj.challan_id
 
-                # print 'partner: ', self.partner_id.id, '\n--total jar: ', total_jar_count
 
                 self.due_jar = total_jar_count
 

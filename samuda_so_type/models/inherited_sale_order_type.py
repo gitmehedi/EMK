@@ -10,6 +10,8 @@ class InheritedSaleOrderType(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sale Order Type', required=True,track_visibility='onchange')
 
     currency_id = fields.Many2one('res.currency', string="Currency", required=True,track_visibility='onchange')
