@@ -35,7 +35,7 @@
         </record>
 
         <menuitem
-                name="TDS Vendor Challan"
+                name="TDS Challan Wizard"
                 parent="account.menu_finance_payables"
                 action="tds_challan_selection_wizard_action_view"
                 id="tds_challan_selection_wizard_menu"

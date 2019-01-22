@@ -17,7 +17,7 @@
                 'sub_operating_unit',
                 ],
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'wizards/tds_challan_selection_wizard.xml',
         'wizards/challan_ou_selection_wizard.xml',
         'views/tds_account_move_line_view.xml',

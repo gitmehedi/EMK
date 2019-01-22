@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_tds_vendor_challan_tds_vendor_challan,tds_vendor_challan.tds_vendor_challan,model_tds_vendor_challan_tds_vendor_challan,,1,0,0,0
+access_tds_vendor_challan,access_tds_vendor_challan,model_tds_vendor_challan,account_tds.group_tds_manager,1,1,1,1

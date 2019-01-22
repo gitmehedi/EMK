@@ -17,14 +17,20 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
         challan_line_obj = self.env['tds.vendor.challan.line']
         challan_id = False
         pre_supplier_list = []
+        pre_op_unit_list = []
+
+        if self.operating_unit_id:
+            account_move_line_objs = account_move_line_objs.filtered(lambda r: r.operating_unit_id.id == self.operating_unit_id.id)
+
         for account_move_line_obj in account_move_line_objs:
 
-            if account_move_line_obj.partner_id.id in pre_supplier_list:
+            if account_move_line_obj.partner_id.id in pre_supplier_list and account_move_line_obj.operating_unit_id.id in pre_op_unit_list:
                 pass
             else:
                 challan = {
                     'supplier_id': account_move_line_obj.partner_id.id,
-                    # 'operating_unit_id': account_move_line_obj,
+                    'operating_unit_id': account_move_line_obj.operating_unit_id.id,
+                    'date': fields.Date.today(),
                     'state': 'draft',
                 }
 
@@ -32,6 +38,7 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
                 if res_challan_obj:
                     challan_id = res_challan_obj.id
                     pre_supplier_list.append(res_challan_obj.supplier_id.id)
+                    pre_op_unit_list.append(res_challan_obj.operating_unit_id.id)
 
             line = {
                 'supplier_id': account_move_line_obj.partner_id.id,

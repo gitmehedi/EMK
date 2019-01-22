@@ -33,7 +33,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
             vals.append(('partner_id','=',self.supplier_id.id))
 
         if self.operating_unit_id:
-            vals.append('operating_unit','=',self.operating_unit_id.id)
+            vals.append(('operating_unit_id','=',self.operating_unit_id.id))
 
         result = {
             'name': _('List'),
