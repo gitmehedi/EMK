@@ -1,5 +1,6 @@
 from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError
+import numpy as np
 
 class LetterOfCredit(models.Model):
     _inherit = "letter.credit"
@@ -13,6 +14,7 @@ class LetterOfCredit(models.Model):
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
     lc_document_line = fields.One2many('lc.document.line', 'lc_id', string='LC Documents')
 
+    pi_note = fields.Char(string='PI Step', track_visibility='onchange')
 
     @api.onchange('pi_ids_temp')
     def pi_product_line(self):
@@ -57,25 +59,70 @@ class LetterOfCredit(models.Model):
                                     }))
         self.product_lines = vals
 
+    @api.multi
+    def write(self, values):
+        # In this funtion only allow local, foreign -> export
+        # Update or Remove LC reference at PI change
+        if self.type == 'export' and (self.state == 'confirmed' or self.state == 'progress'):
+            if values.get('pi_ids_temp'):
+                pi_numbers = []
+                old_pi = self.pi_ids_temp.ids
+                current_pi = values['pi_ids_temp'][0][2]
+                newly_added_pi = np.setdiff1d(current_pi, old_pi)
+                newly_removed_pi = np.setdiff1d(old_pi,current_pi)
+
+                for pi_id in newly_added_pi:
+                    pi_obj = self.env['proforma.invoice'].search([('id', '=', pi_id)])
+                    self.associate_with_lc(pi_obj)
+                    pi_numbers.append(pi_obj.name)
+
+                if pi_numbers:
+                    values['pi_note'] = 'Associate ' + ','.join(pi_numbers) +' PI(s)'
+
+                pi_numbers = []
+                for pi_id in newly_removed_pi:
+                    pi_obj = self.env['proforma.invoice'].search([('id', '=', pi_id)])
+                    pi_numbers.append(pi_obj.name)
+
+                    pi_obj.suspend_security().write({'lc_id': None})
+
+                    sale_obj = self.env['sale.order'].search([('pi_id', '=', pi_id)])
+                    if sale_obj:
+                        for s_order in sale_obj:
+                            s_order.suspend_security().write({'lc_id': None})
+
+                if pi_numbers:
+                    values['pi_note'] += ' Remove '+ ','.join(pi_numbers) +' PI(s)'
+
+        res = super(LetterOfCredit, self).write(values)
+        return res
 
     @api.multi
     def action_confirm_export(self):
+        pi_numbers = []
         for pi in self.pi_ids_temp:
+            self.associate_with_lc(pi)
+            pi_numbers.append(pi.name)
 
-            pi.suspend_security().write({'lc_id': self.id})
+        self.write({'state': 'confirmed', 'last_note': 'Getting Confirmation',
+                    'pi_note': 'Associate ' + ','.join(pi_numbers) +' PI(s)'})
 
-            sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
-            if sale_obj:
-                for s_order in sale_obj:
-                    s_order.write({'lc_id':self.id}) # update lc_id
 
-                    # Update 100 MT logic
-                    da_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', s_order.id)])
+    def associate_with_lc(self, pi):
+        pi.suspend_security().write({'lc_id': self.id})
 
-                    for d in da_obj:
-                        d.sudo().update_lc_id_for_houndred_mt()
+        sale_obj = pi.env['sale.order'].search([('pi_id', '=', pi.id)])
+        if sale_obj:
+            for s_order in sale_obj:
+                s_order.write({'lc_id': self.id})  # update lc_id
 
-        self.write({'state': 'confirmed', 'last_note': 'Getting Confirmation'})
+                # Update 100 MT logic
+                da_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', s_order.id)])
+
+                for d in da_obj:
+                    d.sudo().update_lc_id_for_houndred_mt()
+        return
+
 
     @api.multi
     def action_cancel_export(self):
