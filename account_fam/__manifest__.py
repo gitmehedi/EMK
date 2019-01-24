@@ -9,17 +9,20 @@
     'depends': [
         'base',
         'operating_unit',
+        'sub_operating_unit',
         'account_asset',
         'account',
     ],
     'data': [
         'views/menu_view.xml',
+        'wizard/asset_modify_views.xml',
+        'wizard/asset_allocation_wizard_view.xml',
         'views/account_asset_views.xml',
         'views/account_asset_type_view.xml',
         'views/product_template_views.xml',
         'views/account_invoice_line.xml',
         'views/account_move_view.xml',
-        'wizard/asset_modify_views.xml',
+
     ],
     'installable': True,
     'application': True,
