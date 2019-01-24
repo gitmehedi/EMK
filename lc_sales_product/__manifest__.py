@@ -1,5 +1,5 @@
 {
-    'name': 'Sale By LC (Local)',
+    'name': 'Local LC Sales Function',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Commercial',
