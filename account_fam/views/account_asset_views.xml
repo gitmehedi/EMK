@@ -51,9 +51,9 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Allocation History">
                     <field name="asset_allocation_ids" string="Allocation History">
-                        <tree string="Allocation History" decoration-success="status=='active'"
-                              decoration-bf="status=='active'"
-                              decoration-muted="status=='inactive'" delete="0" create="0">
+                        <tree string="Allocation History" decoration-success="state=='active'"
+                              decoration-bf="state=='active'"
+                              decoration-muted="state=='inactive'" delete="0" create="0">
                             <field name="operating_unit_id"/>
                             <field name="receive_date"/>
                             <field name="transfer_date"/>
