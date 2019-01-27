@@ -6,20 +6,29 @@ from odoo import api, fields, models, _
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', ondelete="restrict")
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Category', ondelete="restrict")
 
     @api.onchange('asset_category_id')
-    def onchange_asset_category(self):
-        if self.asset_category_id:
-            self.asset_type_id = None
-            category_ids = self.env['account.asset.category'].search(
-                [('parent_type_id', '=', self.asset_category_id.id)])
-            return {
-                'domain': {'asset_type_id': [('id', 'in', category_ids.ids)]}
-            }
+    def onchange_asset_category_id(self):
+        if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
+            self.account_id = self.asset_category_id.account_asset_id.id
+        elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:
+            self.account_id = self.asset_category_id.account_asset_id.id
 
+        if self.asset_category_id:
+            self.asset_type_id = self.product_id.product_tmpl_id.asset_type_id
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        vals = super(AccountInvoiceLine, self)._onchange_product_id()
+        if self.product_id:
+            if self.invoice_id.type == 'out_invoice':
+                self.asset_category_id = self.product_id.product_tmpl_id.deferred_revenue_category_id
+            elif self.invoice_id.type == 'in_invoice':
+                self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id
+                self.asset_type_id = self.product_id.product_tmpl_id.asset_type_id
+        return vals
 
     @api.one
     def asset_create(self):
@@ -37,6 +46,8 @@ class AccountInvoiceLine(models.Model):
                     'currency_id': self.invoice_id.company_currency_id.id,
                     'date': self.invoice_id.date_invoice,
                     'invoice_id': self.invoice_id.id,
+                    'operating_unit_id': self.env.user.default_operating_unit_id.id,
+                    'prorata': True,
                 }
                 changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['category_id'])
                 vals.update(changed_vals['value'])

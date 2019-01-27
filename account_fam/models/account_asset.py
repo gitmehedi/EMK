@@ -15,6 +15,25 @@ class AccountAssetCategory(models.Model):
 
     category_ids = fields.One2many('account.asset.category', 'parent_type_id', string="Category")
     parent_type_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict")
+    prorata = fields.Boolean(string='Prorata Temporis', default=True)
+    depreciation_year = fields.Integer(string='Total Year', required=True, default=1)
+    method_number = fields.Integer(string='Number of Depreciations',
+                                   help="The number of depreciations needed to depreciate your asset")
+    method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
+                              string='Computation Method', required=True, default='linear',
+                              help="Choose the method to use to compute the amount of depreciation lines.\n"
+                                   "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
+                                   "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
+
+    @api.onchange('depreciation_year')
+    def onchange_depreciation_year(self):
+        if self.depreciation_year:
+            self.method_number = int(12 * self.depreciation_year)
+
+    @api.constrains('depreciation_year')
+    def check_depreciation_year(self):
+        if self.depreciation_year < 1:
+            raise ValidationError(_('Total year cannot be zero or negative value.'))
 
     @api.one
     def unlink(self):
@@ -44,8 +63,8 @@ class AccountAssetAsset(models.Model):
 
     method_progress_factor = fields.Float('Depreciation Factor', default=0.2)
     is_custom_depr = fields.Boolean(default=True, required=True)
-    depreciation_year = fields.Integer(string='Total Year', required=True)
-    method = fields.Selection([('linear', 'Straight Line/ Linear'), ('degressive', 'Reducing Method')],
+    depreciation_year = fields.Integer(string='Total Year', required=True, default=1)
+    method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
                               string='Computation Method', required=True, default='linear',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
@@ -56,6 +75,13 @@ class AccountAssetAsset(models.Model):
                                     readonly=True, states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date')
+    method_period = fields.Integer(string='Number of Months in a Period', required=True, readonly=True, default=1,
+                                   states={'draft': [('readonly', False)]})
+
+    @api.constrains('depreciation_year')
+    def check_depreciation_year(self):
+        if self.depreciation_year < 1:
+            raise ValidationError(_('Total year cannot be zero or negative value.'))
 
     @api.onchange('category_id')
     def onchange_asset_category(self):
@@ -198,13 +224,11 @@ class AccountAssetAsset(models.Model):
                     if sequence == 1:
                         days = no_of_day - datetime.strptime(self.date, "%Y-%m-%d").day
                         amount = (self.value_residual / total_days) * days
-                    elif sequence==undone_dotation_number:
+                    elif sequence == undone_dotation_number:
                         amount = residual_amount
                     else:
                         days = no_of_day
                         amount = (self.value_residual / total_days) * days
-
-
 
                     # if sequence == 1:
                     #     if self.method_period % 12 != 0:
@@ -238,3 +262,19 @@ class AccountAssetAsset(models.Model):
                                                                         undone_dotation_number,
                                                                         posted_depreciation_line_ids, total_days,
                                                                         depreciation_date)
+
+    def onchange_category_id_values(self, category_id):
+        if category_id:
+            category = self.env['account.asset.category'].browse(category_id)
+            return {
+                'value': {
+                    'method': category.method,
+                    'method_number': category.method_number,
+                    'method_time': category.method_time,
+                    'method_period': category.method_period,
+                    'method_progress_factor': category.method_progress_factor,
+                    'method_end': category.method_end,
+                    'prorata': category.prorata,
+                    'depreciation_year': category.depreciation_year,
+                }
+            }

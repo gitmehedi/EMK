@@ -54,7 +54,7 @@
                         <field name="method_time" string="Time Method Based On" widget="radio"
                                attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <field name="method_number" string="Number of Entries"
-                               attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
+                               attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)]}"/>
                         <label for="method_period" string="One Entry Every"/>
                         <div>
                             <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}"
@@ -179,6 +179,18 @@
 
     <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
         <field name="domain">[('type', '=', 'purchase'),('parent_type_id','=',False)]</field>
+    </record>
+
+
+    <record model="ir.ui.view" id="inherited_account_asset_category_form">
+        <field name="model">account.asset.category</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_category_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='method_number']" position="before">
+                <field name="depreciation_year"
+                       attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
+            </xpath>
+        </field>
     </record>
 
 </odoo>
