@@ -5,4 +5,5 @@ from . import account_move
 from . import product_template
 from . import account_invoice_line
 from . import account_asset_allocation_history
+from . import account_asset_disposal
 

@@ -46,7 +46,7 @@ class AccountInvoiceLine(models.Model):
                     'currency_id': self.invoice_id.company_currency_id.id,
                     'date': self.invoice_id.date_invoice,
                     'invoice_id': self.invoice_id.id,
-                    'operating_unit_id': self.env.user.default_operating_unit_id.id,
+                    'operating_unit_id': self.invoice_id.operating_unit_id.id,
                     'prorata': True,
                 }
                 changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['category_id'])

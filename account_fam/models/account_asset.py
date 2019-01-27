@@ -229,17 +229,6 @@ class AccountAssetAsset(models.Model):
                     else:
                         days = no_of_day
                         amount = (self.value_residual / total_days) * days
-
-                    # if sequence == 1:
-                    #     if self.method_period % 12 != 0:
-                    #         date = datetime.strptime(self.date, '%Y-%m-%d')
-                    #         month_days = calendar.monthrange(date.year, date.month)[1]
-                    #         days = month_days - date.day + 1
-                    #         amount = (amount_to_depr / self.method_number) / month_days * days
-                    #     else:
-                    #         days = (self.company_id.compute_fiscalyear_dates(depreciation_date)[
-                    #                     'date_to'] - depreciation_date).days + 1
-                    #         amount = (amount_to_depr / self.method_number) / total_days * days
             elif self.method == 'degressive':
                 if self.prorata:
                     if sequence == 1:

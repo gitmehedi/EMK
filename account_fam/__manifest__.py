@@ -17,6 +17,8 @@
         'views/menu_view.xml',
         'wizard/asset_modify_views.xml',
         'wizard/asset_allocation_wizard_view.xml',
+        'wizard/asset_dispose_wizard_view.xml',
+        'views/account_asset_disposal_view.xml',
         'views/account_asset_views.xml',
         'views/account_asset_type_view.xml',
         'views/product_template_views.xml',
