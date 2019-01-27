@@ -10,7 +10,8 @@
                 <field name="inapplicable_type" attrs="{'invisible':[('is_tds_applicable','=',True)]}"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
-                <field name="tds_amount"/>
+                <field name="account_tds_id" invisible="1"/>
+                <field name="tds_amount" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='residual']" position="after">
                 <field name="total_tds_amount" class="oe_subtotal_footer_separator"
