@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_account_asset_disposal_form">
+        <field name="name">account.asset.disposal.form</field>
+        <field name="model">account.asset.disposal</field>
+        <field name="arch" type="xml">
+            <form string="Asset Disposal">
+                <header>
+                    <button name="%(action_asset_dispose_wizard)d" string="DISPOSAL" type="action" class="oe_highlight"
+                            states="draft"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="total_value"/>
+                            <field name="total_depreciation_amount"/>
+                        </group>
+                        <group>
+                            <field name="request_date"/>
+                            <field name="approve_date"/>
+                            <field name="dispose_date"/>
+                            <field name="request_user_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="approve_user_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="dispose_user_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Assets">
+                            <field name="line_ids">
+                                <tree string="Tree Views">
+                                    <field name="asset_id"/>
+                                    <field name="asset_value"/>
+                                    <field name="depreciation_value"/>
+                                    <field name="journal_entry"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_disposal_tree">
+        <field name="name">account.asset.disposal.tree</field>
+        <field name="model">account.asset.disposal</field>
+        <field name="arch" type="xml">
+            <tree string="Asset Disposal">
+                <field name="name"/>
+                <field name="total_value"/>
+                <field name="total_depreciation_amount"/>
+                <field name="request_date"/>
+                <field name="approve_date"/>
+                <field name="dispose_date"/>
+                <field name="request_user_id"/>
+                <field name="approve_user_id"/>
+                <field name="dispose_user_id"/>
+                <field name="state" widget="statusbar"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_account_asset_disposal">
+        <field name="name">Asset Disposal</field>
+        <field name="res_model">account.asset.disposal</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_account_asset_disposal_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_account_asset_disposal_tree"/>
+        <field name="act_window_id" ref="action_account_asset_disposal"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_account_asset_disposal_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_account_asset_disposal_form"/>
+        <field name="act_window_id" ref="action_account_asset_disposal"/>
+    </record>
+
+    <menuitem parent="sub_configuration_menu" id="menu_action_account_asset_disposal"
+              action="action_account_asset_disposal" sequence="10"/>
+
+</odoo>
