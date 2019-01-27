@@ -18,6 +18,7 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
         challan_id = False
         pre_supplier_list = []
         pre_op_unit_list = []
+        tds_challan_list = []
 
         if self.operating_unit_id:
             account_move_line_objs = account_move_line_objs.filtered(lambda r: r.operating_unit_id.id == self.operating_unit_id.id)
@@ -37,6 +38,7 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
                 res_challan_obj = challan_obj.create(challan)
                 if res_challan_obj:
                     challan_id = res_challan_obj.id
+                    tds_challan_list.append(res_challan_obj.id)
                     pre_supplier_list.append(res_challan_obj.supplier_id.id)
                     pre_op_unit_list.append(res_challan_obj.operating_unit_id.id)
 
@@ -52,5 +54,17 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
             }
             challan_line_obj.create(line)
 
-        return {'type': 'ir.actions.act_window_close'}
+        # res_view = self.env.ref('tds_vendor_challan.tds_vendor_challan_tree_view')
+        vals = [('id', 'in', tds_challan_list)]
+        return {
+            'name': _('TDS Challan'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'view_id': False,
+            'res_model': 'tds.vendor.challan',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'domain': vals,
+        }
 
