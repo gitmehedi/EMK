@@ -13,6 +13,7 @@ from odoo.tools import float_compare, float_is_zero
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
 
+    is_custom_depr = fields.Boolean(default=True, required=True)
     category_ids = fields.One2many('account.asset.category', 'parent_type_id', string="Category")
     parent_type_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict")
     prorata = fields.Boolean(string='Prorata Temporis', default=True)
@@ -24,6 +25,10 @@ class AccountAssetCategory(models.Model):
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
+    asset_suspense_account_id = fields.Many2one('account.account', string='Asset Suspense Account', required=True,
+                                                domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    account_depreciation_id = fields.Many2one('account.account',
+                                              string='Depreciation Entries: Asset Account (Accumulated)', )
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
@@ -63,7 +68,7 @@ class AccountAssetAsset(models.Model):
 
     method_progress_factor = fields.Float('Depreciation Factor', default=0.2)
     is_custom_depr = fields.Boolean(default=True, required=True)
-    depreciation_year = fields.Integer(string='Total Year', required=True, default=1)
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1)
     method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
                               string='Computation Method', required=True, default='linear',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"

@@ -34,8 +34,11 @@
             <xpath expr="//field[@name='method_number']" position="before">
                 <field name="depreciation_year"/>
             </xpath>
-            <xpath expr="//field[@name='method_period']" position="replace">
+            <xpath expr="//field[@name='method_number']" position="replace">
                 <field name="method_period" invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='prorata']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Allocation History">
@@ -60,6 +63,17 @@
                         </form>
                     </field>
                 </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_account_asset_search" model="ir.ui.view">
+
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="asset_type_id"/>
             </xpath>
         </field>
     </record>
