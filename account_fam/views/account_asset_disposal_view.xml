@@ -6,11 +6,11 @@
         <field name="arch" type="xml">
             <form string="Asset Disposal">
                 <header>
-                    <button name="%(action_asset_dispose_wizard)d" string="ADD ASSET" type="action" class="oe_highlight"
+                    <button name="%(action_asset_dispose_wizard)d" string="Add Asset" type="action" class="oe_highlight"
                             states="draft"/>
-                    <button name="action_approve" string="APROVE" type="object" class="oe_highlight"
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft"/>
-                    <button name="action_dispose" string="DISPOSE" type="object" class="oe_highlight"
+                    <button name="action_dispose" string="Dispose" type="object" class="oe_highlight"
                             states="approve"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,dispose"/>
                 </header>

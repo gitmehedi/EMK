@@ -19,8 +19,8 @@
                 <field name="batch_no"/>
             </xpath>
             <xpath expr="//form/header/button[5]" position="after">
-                <button name="%(action_asset_allocation_wizard)d" states="open" string="ALLOCATION OR REALLOCATION"
-                        type="action" class="oe_highlight"/>
+                <button name="%(action_asset_allocation_wizard)d" states="open" string="Allocation or Reallocation"
+                        type="action" />
             </xpath>
             <xpath expr="//form/sheet/div[2]" position="replace">
                 <div class="oe_title">
@@ -33,6 +33,12 @@
             <xpath expr="//form/sheet/group/group/field[@name='value']" position="before">
                 <field name="operating_unit_id"
                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_id']" position="attributes">
+                <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='date']" position="after">
                 <field name="receive_date"/>
