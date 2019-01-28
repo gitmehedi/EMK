@@ -14,8 +14,9 @@
         'account',
     ],
     'data': [
-        'views/menu_view.xml',
+        'security/security.xml',
         'data/sequence.xml',
+        'views/menu_view.xml',
         'wizard/asset_modify_views.xml',
         'wizard/asset_allocation_wizard_view.xml',
         'wizard/asset_dispose_wizard_view.xml',
