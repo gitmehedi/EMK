@@ -1,8 +1,11 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class VendorAgreement(models.Model):
-    _inherit = "agreement"
+    _name = "agreement"
+    _inherit = ["agreement",'mail.thread']
+
 
     agreement_type = fields.Selection([
         ('sale', 'Sale'),
@@ -10,21 +13,21 @@ class VendorAgreement(models.Model):
     ], string='Type', required=True, default='purchase', invisible=True)
 
     code = fields.Char(required=False, copy=False)
-    name = fields.Char(required=False)
+    name = fields.Char(required=False,track_visibility='onchange')
     partner_id = fields.Many2one(
-        'res.partner', string='Partner', ondelete='restrict', required=True,
+        'res.partner', string='Partner', ondelete='restrict', required=True,track_visibility='onchange',
         domain=[('parent_id', '=', False)],readonly= True,states={'draft':[('readonly', False)]})
     product_id = fields.Many2one('product.product', string='Product', required=True, readonly= True,
-                                 states={'draft':[('readonly', False)]})
-    start_date = fields.Date(string='Start Date', required=True,readonly=True,
+                                 track_visibility='onchange',states={'draft':[('readonly', False)]})
+    start_date = fields.Date(string='Start Date', required=True,readonly=True,track_visibility='onchange',
                              states={'draft': [('readonly', False)]})
-    end_date = fields.Date(string='End Date', required=True,readonly=True,
+    end_date = fields.Date(string='End Date', required=True,readonly=True,track_visibility='onchange',
                            states={'draft': [('readonly', False)]})
-    advance_amount = fields.Float(string="Advance Amount", readonly=1)
-    adjusted_amount = fields.Float(string="Adjusted Amount", readonly=1)
+    advance_amount = fields.Float(string="Advance Amount", readonly=1,track_visibility='onchange')
+    adjusted_amount = fields.Float(string="Adjusted Amount", readonly=1,track_visibility='onchange')
     acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
                                         ondelete='restrict')
-    description = fields.Text('Notes',readonly= True,
+    description = fields.Text('Notes',readonly= True, track_visibility='onchange',
                                  states={'draft':[('readonly', False)]})
 
     state = fields.Selection([
@@ -39,6 +42,21 @@ class VendorAgreement(models.Model):
         vals['name'] = seq
 
         return super(VendorAgreement, self).create(vals)
+
+    @api.constrains('start_date','end_date')
+    def check_end_date(self):
+        date = fields.Date.today()
+        if self.start_date < date:
+            raise ValidationError("Agreement 'Start Date' never be less then 'Current Date'.")
+        elif self.end_date < date:
+            raise ValidationError("Agreement 'End Date' never be less then 'Current Date'.")
+        elif self.start_date > self.end_date:
+            raise ValidationError("Agreement 'End Date' never be less then 'Start Date'.")
+
+
+    @api.one
+    def action_payment(self):
+        self.state = 'done'
 
     @api.one
     def action_confirm(self):
@@ -60,16 +78,16 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'partner_id': self.partner_id.id or False,
-                        'product_id': self.product_id.id or False,
-                        'start_date': self.start_date or False,
-                        'end_date': self.end_date or False,
-                        'advance_amount': self.advance_amount or False,
-                        'adjusted_amount': self.adjusted_amount or False,
-                        },
+            'context': {'end_date': self.end_date or False},
         }
         return result
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not draft state!'))
+        return super(VendorAgreement, self).unlink()
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"

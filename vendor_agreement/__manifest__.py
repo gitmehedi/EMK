@@ -15,9 +15,7 @@
     'website': "http://www.genweb2.com",
     'version': '10.0.0.1',
     'category': 'Vendor',
-    'depends': ['agreement_account',
-                'account',
-                ],
+    'depends': ['agreement_account'],
     'data': [
         'wizards/amendment_agreement.xml',
         'views/vendor_agreement_view.xml',
