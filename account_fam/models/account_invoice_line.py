@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import random
+
 from odoo import api, fields, models, _
 
 
@@ -34,6 +36,7 @@ class AccountInvoiceLine(models.Model):
     def asset_create(self):
         if self.asset_category_id:
             asset_value = self.price_subtotal / self.quantity
+            batch_seq = {val:key for key,val in enumerate(self.invoice_id.invoice_line_ids.ids)}
             for rec in range(0, int(self.quantity)):
                 vals = {
                     'name': self.name,
@@ -48,6 +51,7 @@ class AccountInvoiceLine(models.Model):
                     'invoice_id': self.invoice_id.id,
                     'operating_unit_id': self.invoice_id.operating_unit_id.id,
                     'prorata': True,
+                    'batch_no': "{0}-{1}".format(self.invoice_id.number,batch_seq[self.id])
                 }
                 changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['category_id'])
                 vals.update(changed_vals['value'])

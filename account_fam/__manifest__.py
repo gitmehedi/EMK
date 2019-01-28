@@ -14,6 +14,8 @@
         'account',
     ],
     'data': [
+        'security/security.xml',
+        'data/sequence.xml',
         'views/menu_view.xml',
         'wizard/asset_modify_views.xml',
         'wizard/asset_allocation_wizard_view.xml',
@@ -25,7 +27,6 @@
         'views/product_template_views.xml',
         'views/account_invoice_line.xml',
         'views/account_move_view.xml',
-
     ],
     'installable': True,
     'application': True,
