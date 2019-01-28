@@ -86,6 +86,8 @@ class TDSRules(models.Model):
                 if rec.type_rate == 'flat':
                     if rec.flat_rate < 0:
                         raise ValidationError("Please Check Your Tds Rate!! \n Rate Never Take Negative Value!")
+                    elif rec.flat_rate > 100:
+                        raise ValidationError("Please Check Your Tds Rate!! \n Rate never take more than 100%!")
                 elif rec.type_rate == 'slab':
                     if len(rec.line_ids) <= 0:
                         raise ValidationError("Please, Add Slab Details ")
@@ -162,6 +164,22 @@ class TDSRules(models.Model):
                         },
         }
         return result
+
+    @api.constrains('effective_from')
+    def _check_effective_from(self):
+        date = fields.Date.today()
+        if self.effective_from:
+            if self.effective_from < date:
+                raise ValidationError(
+                    "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
+
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not draft state!'))
+        return super(TDSRules, self).unlink()
 
 
 

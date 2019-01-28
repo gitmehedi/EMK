@@ -48,12 +48,24 @@ class TDSRulesWizard(models.TransientModel):
                 }
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
 
+    @api.constrains('effective_from')
+    def _check_effective_from(self):
+        date = fields.Date.today()
+        if self.effective_from:
+            if self.effective_from < date:
+                raise ValidationError("Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
+
+
+
     @api.constrains('flat_rate', 'line_ids')
     def _check_flat_rate(self):
         for rec in self:
             if rec.type_rate == 'flat':
                 if rec.flat_rate < 0:
                     raise ValidationError("Please Check Your Tds Rate!! \n Rate never take negative value!")
+                elif rec.flat_rate > 100:
+                    raise ValidationError("Please Check Your Tds Rate!! \n Rate never take more than 100%!")
+
             elif rec.type_rate == 'slab':
                 if len(rec.line_ids) <= 0:
                     raise ValidationError("Please, Add Slab Details ")
