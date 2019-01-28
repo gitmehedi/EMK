@@ -66,6 +66,8 @@ class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
     _order = 'id desc'
 
+    asset_seq = fields.Char(string='Code', readonly=True)
+    batch_no = fields.Char(string='Batch No', readonly=True)
     method_progress_factor = fields.Float('Depreciation Factor', default=0.2)
     is_custom_depr = fields.Boolean(default=True, required=True)
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1)
@@ -102,6 +104,12 @@ class AccountAssetAsset(models.Model):
     def onchange_depreciation_year(self):
         if self.depreciation_year:
             self.method_number = int(12 * self.depreciation_year)
+
+    @api.multi
+    def validate(self):
+        super(AccountAssetAsset, self).validate()
+        code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
+        self.write({'asset_seq': code})
 
     def depr_date_format(self, depreciation_date):
         no_of_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]

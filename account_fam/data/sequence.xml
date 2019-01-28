@@ -1,10 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
     <data noupdate="1">
-        <record id="seq_asset_tag" model="ir.sequence">
-            <field name="name">Account Asset Tag or ID</field>
-            <field name="code">account.asset.tag.id</field>
+        <record id="seq_account_asset_asset" model="ir.sequence">
+            <field name="name">Account Asset Asset Code</field>
+            <field name="code">account.asset.asset.code</field>
             <field name="prefix">MTB01-0101-%(year)s-%(month)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment" eval="1"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_asset_disposal" model="ir.sequence">
+            <field name="name">Account Asset Disposal</field>
+            <field name="code">account.asset.disposal</field>
+            <field name="prefix">MTB/DISP/%(year)s/%(month)s/</field>
             <field name="padding">4</field>
             <field name="number_increment" eval="1"/>
             <field name="company_id" eval="False"/>
