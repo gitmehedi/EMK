@@ -42,7 +42,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
             'view_id': res_view and res_view.id or False,
             'res_model': 'account.move.line',
             'type': 'ir.actions.act_window',
-            # 'nodestroy': True,
+            'nodestroy': True,
             'target': 'current',
             'domain': vals,
         }
