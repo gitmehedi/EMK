@@ -35,13 +35,13 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="operating_unit_id" readonly="1"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="deposit_approver" attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                <field name="distribute_approver" attrs="{'invisible': [('state', 'in', ('draft','deposited'))]}"/>
+                                <field name="deposit_approver" attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
+                                <field name="distribute_approver" attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
                             </group>
                             <group>
                                 <field name="date"/>
-                                <field name="deposit_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                <field name="distribute_date" attrs="{'invisible': [('state', 'in', ('draft','deposited'))]}"/>
+                                <field name="deposit_date" attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
+                                <field name="distribute_date" attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -68,10 +68,29 @@
             </field>
         </record>
 
+        <record id="tds_vendor_challan_filter" model="ir.ui.view">
+            <field name="name">tds.vendor.challan.select</field>
+            <field name="model">tds.vendor.challan</field>
+            <field name="arch" type="xml">
+                <search string="Search Challan">
+                    <field name="supplier_id"/>
+                    <field name="operating_unit_id" />
+                    <group expand="0" string="Group By">
+                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <separator/>
+                        <filter string="Supplier" context="{'group_by':'supplier_id'}"/>
+                        <separator/>
+                        <filter string="Branch" context="{'group_by':'operating_unit_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="tds_vendor_challan_action">
             <field name="name">TDS Vendor Challan</field>
             <field name="res_model">tds.vendor.challan</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="tds_vendor_challan_filter"/>
         </record>
 
 

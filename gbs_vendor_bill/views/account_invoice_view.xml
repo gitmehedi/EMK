@@ -37,6 +37,9 @@
                        options="{'no_create': True}" widget="selection"
                        groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
+                <field name="price_subtotal_without_vat"/>
+            </xpath>
         </field>
     </record>
 

@@ -9,7 +9,7 @@ class TdsVendorChallan(models.Model):
     _description = 'TDS Vendor Challan'
 
     supplier_id = fields.Many2one('res.partner', string="Supplier", track_visibility='onchange')
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', track_visibility='onchange')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', track_visibility='onchange')
     date = fields.Date(string='Date', track_visibility='onchange',help="Creation date.")
     deposit_date = fields.Datetime(string='Deposit Date',readonly=True, track_visibility='onchange')
     deposit_approver = fields.Many2one('res.users', string='Deposit By', readonly=True,
@@ -84,7 +84,7 @@ class TdsVendorChallanLine(models.Model):
     undistributed_bill = fields.Float(String='Undistributed Bill')
     parent_id = fields.Many2one('tds.vendor.challan')
     acc_move_line_id = fields.Many2one('account.move.line')
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', track_visibility='onchange')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Draft"),
