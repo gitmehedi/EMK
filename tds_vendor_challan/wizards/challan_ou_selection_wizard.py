@@ -12,7 +12,7 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
     @api.multi
     def generate_challan(self):
         # active_ids = self.env.context.get('active_ids')
-        account_move_line_objs = self.env['account.move.line'].search([('id', 'in', self.env.context.get('active_ids'))])
+        account_move_line_objs = self.env['account.move.line'].search([('id', 'in', self.env.context.get('active_ids'))], order='partner_id asc')
         challan_obj = self.env['tds.vendor.challan']
         challan_line_obj = self.env['tds.vendor.challan.line']
         challan_id = False
@@ -54,10 +54,11 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
             }
             challan_line_obj.create(line)
 
-        # res_view = self.env.ref('tds_vendor_challan.tds_vendor_challan_tree_view')
+            account_move_line_obj.write({'is_deposit': True})
+
         vals = [('id', 'in', tds_challan_list)]
         return {
-            'name': _('TDS Challan'),
+            'name': _('TDS/VAT Challan'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'view_id': False,

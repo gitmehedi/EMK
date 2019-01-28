@@ -33,7 +33,7 @@ class TdsVendorChallan(models.Model):
     @api.one
     def action_deposited(self):
         for line in self.line_ids:
-            line.acc_move_line_id.write({'is_deposit':True})
+            # line.acc_move_line_id.write({'is_deposit':True})
             line.write({'state':'deposited','challan_provided':line.undistributed_bill})
         res = {
             'state': 'deposited',
@@ -56,7 +56,7 @@ class TdsVendorChallan(models.Model):
     @api.one
     def action_cancel(self):
         for line in self.line_ids:
-            line.acc_move_line_id.write({'is_deposit': True})
+            line.acc_move_line_id.write({'is_deposit': False})
             line.write({'state':'cancel'})
         res = {
             'state': 'cancel',

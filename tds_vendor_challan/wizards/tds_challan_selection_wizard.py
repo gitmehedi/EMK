@@ -36,7 +36,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
             vals.append(('operating_unit_id','=',self.operating_unit_id.id))
 
         result = {
-            'name': _('List'),
+            'name': _('Pending Challan'),
             'view_type': 'form',
             'view_mode': 'tree',
             'view_id': res_view and res_view.id or False,
