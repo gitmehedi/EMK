@@ -10,7 +10,9 @@
                     <sheet>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Name"/>
-                            <h1><field name="name" placeholder="Name"/></h1>
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
                         </div>
                         <group>
                             <group>
@@ -18,12 +20,14 @@
                                 <field name="type_rate"/>
                                 <label for="flat_rate" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
                                 <div attrs="{'invisible':[('type_rate', '!=', 'flat')]}">
-                                    <field name="flat_rate" class="oe_inline" attrs="{'required':[('type_rate', '=','flat')]}"/>
+                                    <field name="flat_rate" class="oe_inline"
+                                           attrs="{'required':[('type_rate', '=','flat')]}"/>
                                     <label string="%" class="oe_inline"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="account_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                             </group>
                         </group>
                         <notebook colspan="4" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
@@ -39,15 +43,17 @@
                         </notebook>
                     </sheet>
                     <footer>
-						 <button string="Save" name="generate_rule" type="object" confirm="Are you sure you want to create a version?" class="oe_highlight"  />
+                        <button string="Generate" name="generate_rule" type="object"
+                                confirm="Are you sure you want to confirm?" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
             </field>
         </record>
 
         <record id="tds_rule_wizard_action_view" model="ir.actions.act_window">
-			<field name="name">TDS Rule</field>
-			<field name="res_model">tds.rule.wizard</field>
+            <field name="name">TDS Rule</field>
+            <field name="res_model">tds.rule.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

@@ -14,7 +14,6 @@ class TDSRulesWizard(models.TransientModel):
     account_id = fields.Many2one('account.account',string="Tds Account",required=True,default=lambda  self: self.env.context.get('account_id'))
     line_ids = fields.One2many('tds.rule.wizard.line','tds_rule_wiz_id',string='Rule Details',default=lambda self: self.env.context.get('line_ids'))
     effective_from = fields.Date(string='Effective Date', required=True,default=lambda self: self.env.context.get('effective_from'))
-    #effective_end = fields.Date(string='Effective End Date', required=False)
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
@@ -47,6 +46,8 @@ class TDSRulesWizard(models.TransientModel):
                     'rel_id': rule.id
                 }
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
+        #return rule_list.compute_version()
+
 
     @api.constrains('effective_from')
     def _check_effective_from(self):

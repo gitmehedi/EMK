@@ -33,8 +33,8 @@ class TDSRules(models.Model):
 
     state = fields.Selection([
         ('draft', "Draft"),
-        ('confirm', "Confirm"),
-    ], default='draft')
+        ('confirm', "Confirmed"),
+    ], default='draft',track_visibility='onchange')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
