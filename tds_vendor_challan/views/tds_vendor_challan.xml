@@ -24,7 +24,7 @@
                                 states="draft" class="oe_highlight"/>
                         <button string="Distribute" name="action_distributed" type="object"
                                 states="deposited" class="oe_highlight"/>
-                        <button string="Cancel" name="action_distributed" type="object"
+                        <button string="Cancel" name="action_cancel" type="object"
                                 states="draft,deposited" class="btn-default"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,deposited,distributed"/>
                     </header>
