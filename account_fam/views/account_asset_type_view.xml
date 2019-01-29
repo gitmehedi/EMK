@@ -28,6 +28,32 @@
             <xpath expr="//field[@name='account_depreciation_expense_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
+            <xpath expr="//field[@name='account_depreciation_expense_id']" position="after">
+                <div>
+                    <label for="account_asset_loss_id"
+                           attrs="{'invisible': [('type','!=','purchase')]}"/>
+                    <label for="account_asset_loss_id"
+                           attrs="{'invisible': [('type','!=','sale')]}"/>
+                </div>
+                <field name="account_asset_loss_id" nolabel="1"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <div>
+                    <label for="account_asset_gain_id"
+                           attrs="{'invisible': [('type','!=','purchase')]}"/>
+                    <label for="account_asset_gain_id"
+                           attrs="{'invisible': [('type','!=','sale')]}"/>
+                </div>
+                <field name="account_asset_gain_id" nolabel="1"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <div>
+                    <label for="asset_sale_suspense_account_id"
+                           attrs="{'invisible': [('type','!=','purchase')]}"/>
+                    <label for="asset_sale_suspense_account_id"
+                           attrs="{'invisible': [('type','!=','sale')]}"/>
+                </div>
+                <field name="asset_sale_suspense_account_id" nolabel="1"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+            </xpath>
 
             <xpath expr="//field[@name='method_number']" position="before">
                 <field name="is_custom_depr" invisible="True"/>
