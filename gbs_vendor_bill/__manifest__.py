@@ -11,6 +11,7 @@
         'sub_operating_unit',
     ],
     'data': [
+        'views/product_product_view.xml',
         'views/account_invoice_view.xml',
 
     ],
