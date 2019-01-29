@@ -46,17 +46,20 @@ class TDSRulesWizard(models.TransientModel):
                     'rel_id': rule.id
                 }
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
-        #return rule_list.compute_version()
+        return rule_list.compute_version()
 
 
     @api.constrains('effective_from')
     def _check_effective_from(self):
         date = fields.Date.today()
+        rule_list = self.env['tds.rule'].browse([self._context['active_id']])
         if self.effective_from:
-            if self.effective_from < date:
-                raise ValidationError("Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
-
-
+            if self.effective_from not in [x.effective_from for x in rule_list.version_ids]:
+                if self.effective_from < date:
+                    raise ValidationError("Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
+            else:
+                raise ValidationError(
+                    "Please Check Version Details!! \n already have a version on this effective date")
 
     @api.constrains('flat_rate', 'line_ids')
     def _check_flat_rate(self):
@@ -90,8 +93,8 @@ class TDSRuleWizardLine(models.TransientModel):
     _name = 'tds.rule.wizard.line'
 
     tds_rule_wiz_id = fields.Many2one('tds.rule.wizard')
-    range_from = fields.Float(string='From Range', required=True)
-    range_to = fields.Float(string='To Range', required=True)
+    range_from = fields.Integer(string='From Range', required=True)
+    range_to = fields.Integer(string='To Range', required=True)
     rate = fields.Float(string='Rate', required=True, size=50)
 
     @api.constrains('range_from', 'range_to')

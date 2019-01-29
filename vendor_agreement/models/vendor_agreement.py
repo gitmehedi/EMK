@@ -82,12 +82,13 @@ class VendorAgreement(models.Model):
         }
         return result
 
-    @api.multi
-    def unlink(self):
-        for rec in self:
-            if rec.state != 'draft':
-                raise UserError(_('You cannot delete a record which is not draft state!'))
-        return super(VendorAgreement, self).unlink()
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
