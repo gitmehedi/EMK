@@ -15,6 +15,7 @@
     ],
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
         'data/sequence.xml',
         'views/menu_view.xml',
         'wizard/asset_modify_views.xml',
