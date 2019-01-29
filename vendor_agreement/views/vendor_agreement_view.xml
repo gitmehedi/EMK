@@ -28,15 +28,15 @@
                     <form string="Agreement">
                         <header>
                             <button name="action_confirm" type="object"
-                                    string="Confirm" states="draft"
+                                    string="Confirm" states="draft" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
                                     class="oe_highlight"/>
                             <button name="action_validate" type="object"
-                                    string="Validate" states="confirm"
+                                    string="Validate" states="confirm" groups="vendor_agreement.group_vendor_agreement_manager"
                                     class="oe_highlight"/>
                             <button string="Amendment" name="action_amendment" states="done"
-                                    type="object" class="oe_read_only"/>
+                                    type="object" class="oe_read_only" groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Payment" name="action_payment" states="done"
-                                    type="object" class="oe_read_only"/>
+                                    type="object" class="oe_read_only" groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <field name="state" widget="statusbar"/>
                         </header>
                         <sheet>
@@ -107,7 +107,7 @@
         </record>
 
         <menuitem id="agreement_account.agreement_menu" action="agreement_account.agreement_action"
-                  name="Vendor Agreement"
+                  name="Vendor Agreement" groups="group_vendor_agreement_manager,group_vendor_agreement_user"
                   parent="account.menu_finance_payables" sequence="0"/>
     </data>
 </odoo>

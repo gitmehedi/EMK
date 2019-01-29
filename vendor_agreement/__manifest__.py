@@ -17,6 +17,8 @@
     'category': 'Vendor',
     'depends': ['agreement_account'],
     'data': [
+        'security/ir_rule.xml',
+        'security/ir.model.access.csv',
         'wizards/amendment_agreement.xml',
         'views/vendor_agreement_view.xml',
         ],

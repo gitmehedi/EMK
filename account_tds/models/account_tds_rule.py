@@ -1,6 +1,4 @@
-from odoo import models, fields, api,_
-from datetime import datetime
-
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -10,35 +8,51 @@ class TDSRules(models.Model):
     _order = 'name desc'
     _description = 'TDS Rule'
 
-    name = fields.Char(string='Name',required=True,size=50,
-                       track_visibility='onchange', states={'confirm':[('readonly', True)]})
-    active = fields.Boolean(string='Active',default = True,
-                            track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    current_version = fields.Char('Current Version',readonly=True,compute='_compute_current_version',
-                                  states={'confirm':[('readonly', True)]})
-    account_id = fields.Many2one('account.account',string = "TDS Account",required=True,
-                                 track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id',string="Versions Details",states={'confirm':[('readonly', True)]})
-    line_ids = fields.One2many('tds.rule.line','tds_rule_id',string='Rule Details',states={'confirm':[('readonly', True)]})
+    name = fields.Char(string='Name', required=True, size=50,
+                       track_visibility='onchange', states={'confirm': [('readonly', True)]})
+    active = fields.Boolean(string='Active', default=True,
+                            track_visibility='onchange', states={'confirm': [('readonly', True)]})
+    current_version = fields.Char('Current Version', readonly=True, compute='_compute_current_version',
+                                  states={'confirm': [('readonly', True)]})
+    account_id = fields.Many2one('account.account', string="TDS Account", required=True,
+                                 track_visibility='onchange', states={'confirm': [('readonly', True)]})
+    version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id', string="Versions Details",
+                                  states={'confirm': [('readonly', True)]})
+    line_ids = fields.One2many('tds.rule.line', 'tds_rule_id', string='Rule Details',
+                               states={'confirm': [('readonly', True)]})
     effective_from = fields.Date(string='Effective Date', required=True,
-                                 track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    # effective_end = fields.Date(string='Effective To Date', required=False,
-    #                             track_visibility='onchange',states={'confirm':[('readonly', True)]})
+                                 track_visibility='onchange', states={'confirm': [('readonly', True)]})
+
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
-    ], string='TDS Type', required=True,track_visibility='onchange',states={'confirm':[('readonly', True)]})
-    flat_rate = fields.Float(string='Rate',size=50,
-                             track_visibility='onchange',states={'confirm':[('readonly', True)]})
+    ], string='TDS Type', required=True, track_visibility='onchange', states={'confirm': [('readonly', True)]})
+    flat_rate = fields.Float(string='Rate', size=50,
+                             track_visibility='onchange', states={'confirm': [('readonly', True)]})
 
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
-    ], default='draft')
+    ], default='draft', track_visibility='onchange')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
     ]
+
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not draft state!'))
+        return super(TDSRules, self).unlink()
 
     @api.multi
     def _compute_current_version(self):
@@ -52,34 +66,30 @@ class TDSRules(models.Model):
 
     @api.model
     def compute_version(self):
-        vals = []
-        today = datetime.now()
+        today = fields.Date.today()
         rule = self.env['tds.rule'].search([])
         for record in rule:
-            for rec in record.version_ids:
-                date = datetime.strptime(rec.effective_from, "%Y-%m-%d")
-                if today.day == date.day and today.month == date.month and today.year == date.year:
-                    if rec.active == True:
-                        record.effective_from = rec.effective_from
-                        record.type_rate = rec.type_rate
-                        record.account_id = rec.account_id.id
-                        if record.flat_rate:
-                            record.flat_rate = rec.flat_rate
-                        if rec.version_line_ids:
-                            for obj in rec.version_line_ids:
-                                vals.append((0, 0, {'range_from': obj.range_from,
-                                                    'range_to': obj.range_to,
-                                                    'rate': obj.rate,
+            for ver in record.version_ids:
+                if today == ver.effective_from:
+                    record.effective_from = ver.effective_from
+                    record.type_rate = ver.type_rate
+                    record.account_id = ver.account_id.id
+                    if ver.type_rate == 'flat':
+                        if ver.flat_rate:
+                            record.flat_rate = ver.flat_rate
+                    else:
+                        if ver.version_line_ids:
+                            vals = []
+                            for ver_line in ver.version_line_ids:
+                                vals.append((0, 0, {'range_from': ver_line.range_from,
+                                                    'range_to': ver_line.range_to,
+                                                    'rate': ver_line.rate,
                                                     }))
-
                             record.line_ids.unlink()
                             record.line_ids = vals
         return
 
-
-
-
-    @api.constrains('flat_rate','line_ids')
+    @api.constrains('flat_rate', 'line_ids')
     def _check_flat_rate(self):
         for rec in self:
             if rec.state == 'draft':
@@ -94,20 +104,22 @@ class TDSRules(models.Model):
                     elif len(rec.line_ids) > 0:
                         for line in rec.line_ids:
                             if line.range_from >= line.range_to:
-                                raise ValidationError("Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
-                            elif line.rate <0:
-                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
-                            elif line.range_from <0:
-                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
-                            elif line.range_to <0:
-                                raise ValidationError("Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
-
+                                raise ValidationError(
+                                    "Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
+                            elif line.rate < 0:
+                                raise ValidationError(
+                                    "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                            elif line.range_from < 0:
+                                raise ValidationError(
+                                    "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                            elif line.range_to < 0:
+                                raise ValidationError(
+                                    "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
 
     @api.onchange('type_rate')
     def _check_type_rate(self):
         self.flat_rate = 0
         self.line_ids = []
-
 
     @api.multi
     def action_confirm(self):
@@ -127,9 +139,9 @@ class TDSRules(models.Model):
         if self.type_rate == 'slab':
             for rule in self.line_ids:
                 line_res = {
-                    'range_from' : rule.range_from,
-                    'range_to' : rule.range_to,
-                    'rate' : rule.rate,
+                    'range_from': rule.range_from,
+                    'range_to': rule.range_to,
+                    'rate': rule.rate,
                     'rel_id': rule.id
                 }
                 self.version_ids.version_line_ids += self.env['tds.rule.version.line'].create(line_res)
@@ -173,14 +185,13 @@ class TDSRules(models.Model):
                 raise ValidationError(
                     "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
 
-
-    @api.multi
-    def unlink(self):
-        for rec in self:
-            if rec.state != 'draft':
-                raise UserError(_('You cannot delete a record which is not draft state!'))
-        return super(TDSRules, self).unlink()
-
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
 
 
 class TDSRuleVersion(models.Model):
@@ -189,28 +200,26 @@ class TDSRuleVersion(models.Model):
     _description = 'TDS Rule Version'
 
     emp_code_id = fields.Char(string='Code')
-    name = fields.Char(string='Name', required=True,size=50)
-    active = fields.Boolean(string='Active',default=True)
+    name = fields.Char(string='Name', required=True, size=50)
+    active = fields.Boolean(string='Active', default=True)
     tds_version_rule_id = fields.Many2one('tds.rule')
-    account_id = fields.Many2one('account.account',string="Tds Account",required=True)
+    account_id = fields.Many2one('account.account', string="Tds Account", required=True)
     effective_from = fields.Date(string='Effective Date', required=True)
-    #effective_end = fields.Date(string='Effective End Date', required=False)
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
-    ], string='Tds Type',required=True)
-    flat_rate = fields.Float(string='Rate',size=50)
-    version_line_ids = fields.One2many('tds.rule.version.line','tds_version_id',string='Rule Details')
-
+    ], string='Tds Type', required=True)
+    flat_rate = fields.Float(string='Rate', size=50)
+    version_line_ids = fields.One2many('tds.rule.version.line', 'tds_version_id', string='Rule Details')
 
 
 class TDSRuleLine(models.Model):
     _name = 'tds.rule.line'
 
     tds_rule_id = fields.Many2one('tds.rule')
-    range_from = fields.Integer(string='From Range',required=True)
-    range_to = fields.Integer(string='To Range',required=True)
-    rate = fields.Float(string='Rate',required=True,size=50)
+    range_from = fields.Integer(string='From Range', required=True)
+    range_to = fields.Integer(string='To Range', required=True)
+    rate = fields.Float(string='Rate', required=True, size=50)
 
     @api.constrains('range_from', 'range_to')
     def _check_time(self):
@@ -235,9 +244,6 @@ class TDSRuleVersionLine(models.Model):
     _name = 'tds.rule.version.line'
 
     tds_version_id = fields.Many2one('tds.rule.version')
-    range_from = fields.Integer(string='From Range',required=True)
-    range_to = fields.Integer(string='To Range',required=True)
-    rate = fields.Float(string='Rate',required=True,size=50)
-
-
-
+    range_from = fields.Integer(string='From Range', required=True)
+    range_to = fields.Integer(string='To Range', required=True)
+    rate = fields.Float(string='Rate', required=True, size=50)
