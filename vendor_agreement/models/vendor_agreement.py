@@ -16,7 +16,7 @@ class VendorAgreement(models.Model):
     name = fields.Char(required=False,track_visibility='onchange')
     partner_id = fields.Many2one(
         'res.partner', string='Partner', ondelete='restrict', required=True,track_visibility='onchange',
-        domain=[('parent_id', '=', False)],readonly= True,states={'draft':[('readonly', False)]})
+        domain=[('parent_id', '=', False),('supplier','=',True)],readonly= True,states={'draft':[('readonly', False)]})
     product_id = fields.Many2one('product.product', string='Product', required=True, readonly= True,
                                  track_visibility='onchange',states={'draft':[('readonly', False)]})
     start_date = fields.Date(string='Start Date', required=True,readonly=True,track_visibility='onchange',

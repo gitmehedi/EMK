@@ -98,6 +98,7 @@
                 </xpath>
             </field>
         </record>
+
         <!-- Sequence Records -->
         <record id="seq_agreement" model="ir.sequence">
             <field name="name">agreement</field>
@@ -109,5 +110,21 @@
         <menuitem id="agreement_account.agreement_menu" action="agreement_account.agreement_action"
                   name="Vendor Agreement" groups="group_vendor_agreement_manager,group_vendor_agreement_user"
                   parent="account.menu_finance_payables" sequence="0"/>
+
+
+        <!-- inherit 'invoice supplier form' from agreement_account to add domain -->
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">agreement.supplier.invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="agreement_account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='agreement_id']" position="replace">
+                    <field name="agreement_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                        domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase'),('state','=','done')]"
+                        context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>
