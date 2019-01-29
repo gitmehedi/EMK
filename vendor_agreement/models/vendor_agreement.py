@@ -67,6 +67,13 @@ class VendorAgreement(models.Model):
         self.state = 'done'
 
     @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not draft state!'))
+        return super(VendorAgreement, self).unlink()
+
+    @api.multi
     def action_amendment(self):
         res = self.env.ref('vendor_agreement.view_agreement_form_wizard')
         result = {

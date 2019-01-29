@@ -1,6 +1,4 @@
 from odoo import models, fields, api, _
-from datetime import datetime
-
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -40,6 +38,21 @@ class TDSRules(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
     ]
+
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not draft state!'))
+        return super(TDSRules, self).unlink()
 
     @api.multi
     def _compute_current_version(self):
@@ -164,21 +177,21 @@ class TDSRules(models.Model):
         }
         return result
 
-        @api.constrains('effective_from')
-        def _check_effective_from(self):
-            date = fields.Date.today()
-            if self.effective_from:
-                if self.effective_from < date:
-                    raise ValidationError(
-                        "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
+    @api.constrains('effective_from')
+    def _check_effective_from(self):
+        date = fields.Date.today()
+        if self.effective_from:
+            if self.effective_from < date:
+                raise ValidationError(
+                    "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
 
-        @api.constrains('name')
-        def _check_unique_constrain(self):
-            if self.name:
-                filters = [['name', '=ilike', self.name]]
-                name = self.search(filters)
-                if len(name) > 1:
-                    raise Warning('[Unique Error] Name must be unique!')
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
 
 
 class TDSRuleVersion(models.Model):
