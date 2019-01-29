@@ -53,10 +53,34 @@
                         <div>
                             <label for="account_depreciation_expense_id"
                                    attrs="{'invisible': [('type','!=','purchase')]}"/>
-                            <label for="account_depreciation_expense_id" string="Recognition Account"
+                            <label for="account_depreciation_expense_id"
                                    attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_expense_id" nolabel="1"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <div>
+                            <label for="account_asset_loss_id"
+                                   attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_asset_loss_id"
+                                   attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="account_asset_loss_id" nolabel="1"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <div>
+                            <label for="account_asset_gain_id"
+                                   attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_asset_gain_id"
+                                   attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="account_asset_gain_id" nolabel="1"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <div>
+                            <label for="asset_sale_suspense_account_id"
+                                   attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="asset_sale_suspense_account_id"
+                                   attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="asset_sale_suspense_account_id" nolabel="1"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     </group>
