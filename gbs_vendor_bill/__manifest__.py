@@ -7,6 +7,7 @@
     'version': '10.0.0.1',
     'category': 'Accounting',
     'depends': [
+        'account',
         'account_operating_unit',
         'sub_operating_unit',
     ],
