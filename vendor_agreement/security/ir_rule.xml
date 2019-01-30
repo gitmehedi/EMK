@@ -2,14 +2,19 @@
 <odoo>
     <data noupdate="0">
 
+        <record id="module_category_vendor_agreement" model="ir.module.category">
+            <field name="name">Vendor</field>
+            <field name="sequence">240</field>
+        </record>
+
         <record id="group_vendor_agreement_manager" model="res.groups">
             <field name="name">Vendor Agreement Manager</field>
-            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="category_id" ref="vendor_agreement.module_category_vendor_agreement"/>
             <field name="sequence">40</field>
         </record>
         <record id="group_vendor_agreement_user" model="res.groups">
             <field name="name">Vendor Agreement User</field>
-            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="category_id" ref="vendor_agreement.module_category_vendor_agreement"/>
             <field name="sequence">50</field>
         </record>
 
