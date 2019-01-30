@@ -12,7 +12,8 @@ class AccountAssetAllocationHistory(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True)
     receive_date = fields.Datetime(string='Receive Date', required=True)
     transfer_date = fields.Datetime(string='Transfer Date')
-    state = fields.Selection([('active', 'Active'), ('inactive', 'Active')], default='active', required=True)
+    state = fields.Selection([('active', 'Active'), ('inactive', 'Inactive')], default='active')
+    move_id = fields.Many2one('account.move', string='Journal')
 
     @api.multi
     def unlink(self):

@@ -5,54 +5,148 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import float_compare, float_is_zero
 
 
 class AssetAllocationWizard(models.TransientModel):
     _name = 'asset.allocation.wizard'
 
-    date = fields.Date(default=fields.Date.today(), string='Allocation/Relocation Date')
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True)
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Branch')
+    date = fields.Date(default=fields.Date.today(), string='Allocation/Transfer Date', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='From Branch', required=True)
+    to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
 
-    @api.onchange('operating_unit_id')
-    def onchange_operating_unit(self):
-        if self.operating_unit_id:
-            self.sub_operating_unit_id = None
-            sub_operating = self.env['sub.operating.unit'].search(
-                [('operating_unit_id', '=', self.operating_unit_id.id)])
-            return {
-                'domain': {'sub_operating_unit_id': [('id', 'in', sub_operating.ids)]}
-            }
+    # @api.onchange('operating_unit_id')
+    # def onchange_operating_unit(self):
+    #     if self.operating_unit_id:
+    #         self.sub_operating_unit_id = None
+    #         sub_operating = self.env['sub.operating.unit'].search(
+    #             [('operating_unit_id', '=', self.operating_unit_id.id)])
+    #         return {
+    #             'domain': {'sub_operating_unit_id': [('id', 'in', sub_operating.ids)]}
+    #         }
 
     @api.multi
     def allocation(self):
         asset_id = self.env.context.get('active_id', False)
         asset = self.env['account.asset.asset'].browse(asset_id)
+        prec = self.env['decimal.precision'].precision_get('Account')
+        company_currency = asset.company_id.currency_id
+        current_currency = asset.currency_id
 
-        last_allocation = self.env['account.asset.allocation.history'].search(
-            [('asset_id', '=', asset_id), ('status', '=', True), ('transfer_date', '=', False)])
+        def asset_move(asset):
+            last_allocation = self.env['account.asset.allocation.history'].search(
+                [('asset_id', '=', asset.id), ('state', '=', 'active'), ('transfer_date', '=', False)])
 
-        if last_allocation:
-            if last_allocation.receive_date >= self.date:
-                raise ValidationError(_("Receive date shouldn\'t less than previous receive date."))
+            if last_allocation:
+                if last_allocation.receive_date >= self.date:
+                    raise ValidationError(_("Receive date shouldn\'t less than previous receive date."))
 
-            last_allocation.write({
-                'transfer_date': datetime.strptime(self.date, '%Y-%m-%d') + timedelta(days=-1),
-                'status': False,
+                last_allocation.write({
+                    'transfer_date': datetime.strptime(self.date, '%Y-%m-%d') + timedelta(days=-1),
+                    'state': 'inactive',
+                })
+
+            return self.env['account.asset.allocation.history'].create({
+                'asset_id': asset.id,
+                'operating_unit_id': self.to_operating_unit_id.id,
+                'receive_date': self.date,
+                'state': 'active',
             })
 
-        self.env['account.asset.allocation.history'].create({
-            'asset_id': asset_id,
-            'operating_unit_id': self.operating_unit_id.id,
-            'receive_date': self.date,
-            'status': True,
-        })
+        if self.env.context.get('allocation'):
+            credit = {
+                'name': asset.display_name,
+                'account_id': asset.category_id.asset_suspense_account_id.id,
+                'debit': 0.0,
+                'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'journal_id': asset.category_id.journal_id.id,
+                'partner_id': asset.partner_id.id,
+                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
+                'operating_unit_id': self.operating_unit_id.id,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+            }
+            debit = {
+                'name': asset.display_name,
+                'account_id': asset.category_id.account_asset_id.id,
+                'debit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'credit': 0.0,
+                'journal_id': asset.category_id.journal_id.id,
+                'partner_id': asset.partner_id.id,
+                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
+                'operating_unit_id': self.to_operating_unit_id.id,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+            }
 
-        # asset.write(asset_vals)
-        # asset.compute_depreciation_board()
-        # tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_period', 'method_end'])
-        # changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
-        # if changes:
-        #     asset.message_post(subject=_('Depreciation board modified'), body=self.name,
-        #                        tracking_value_ids=tracking_value_ids)
+            move = self.env['account.move'].create({
+                'ref': asset.code,
+                'date': self.date or False,
+                'journal_id': asset.category_id.journal_id.id,
+                'line_ids': [(0, 0, debit), (0, 0, credit)],
+            })
+
+            assetmove = asset_move(asset)
+            assetmove.write({'move_id': move.id})
+            move.post()
+            asset.write({'allocation_status': True})
+
+        if self.env.context.get('transfer'):
+            from_total_credit = {
+                'name': asset.display_name,
+                'account_id': asset.category_id.asset_suspense_account_id.id,
+                'debit': 0.0,
+                'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'journal_id': asset.category_id.journal_id.id,
+                'partner_id': asset.partner_id.id,
+                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
+                'operating_unit_id': self.operating_unit_id.id,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+            }
+            to_total_debit = {
+                'name': asset.display_name,
+                'account_id': asset.category_id.account_asset_id.id,
+                'debit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'credit': 0.0,
+                'journal_id': asset.category_id.journal_id.id,
+                'partner_id': asset.partner_id.id,
+                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
+                'operating_unit_id': self.to_operating_unit_id.id,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+            }
+
+            depr_value = asset.value - asset.value_residual
+            from_depr_credit = {
+                'name': asset.display_name,
+                'account_id': asset.category_id.account_depreciation_id.id,
+                'debit': 0.0,
+                'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'journal_id': asset.category_id.journal_id.id,
+                'partner_id': asset.partner_id.id,
+                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
+                'operating_unit_id': self.operating_unit_id.id,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+            }
+            to_depr_debit = {
+                'name': asset.display_name,
+                'account_id': asset.category_id.account_depreciation_id.id,
+                'debit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'credit': 0.0,
+                'journal_id': asset.category_id.journal_id.id,
+                'partner_id': asset.partner_id.id,
+                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
+                'operating_unit_id': self.to_operating_unit_id.id,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+            }
+
+            move = self.env['account.move'].create({
+                'ref': asset.code,
+                'date': self.date or False,
+                'journal_id': asset.category_id.journal_id.id,
+                'line_ids': [(0, 0, from_total_credit), (0, 0, to_total_debit),
+                             (0, 0, from_depr_credit), (0, 0, to_depr_debit)],
+            })
+
+            assetmove = asset_move(asset)
+            assetmove.write({'move_id': move.id})
+            move.post()
+
         return {'type': 'ir.actions.act_window_close'}

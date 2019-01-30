@@ -26,10 +26,20 @@ class AccountAssetCategory(models.Model):
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
     asset_suspense_account_id = fields.Many2one('account.account', string='Asset Suspense Account', required=True,
-                                                domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    account_depreciation_id = fields.Many2one('account.account',
+                                                domain=[('deprecated', '=', False)])
+    account_depreciation_id = fields.Many2one('account.account', required=True,
+                                              domain=[('deprecated', '=', False)],
                                               string='Depreciation Entries: Asset Account (Accumulated)', )
 
+    account_asset_loss_id = fields.Many2one('account.account', required=True,
+                                            domain=[('deprecated', '=', False)],
+                                            string='Asset Loss Account GL')
+    account_asset_gain_id = fields.Many2one('account.account', required=True,
+                                            domain=[('deprecated', '=', False)],
+                                            string='Asset Gain Account GL')
+    asset_sale_suspense_account_id = fields.Many2one('account.account', required=True,
+                                                     domain=[('deprecated', '=', False)],
+                                                     string='Asset Sales Suspense Account', )
 
     @api.onchange('parent_type_id')
     def onchange_asset_type(self):
@@ -39,6 +49,9 @@ class AccountAssetCategory(models.Model):
             self.account_asset_id = self.parent_type_id.account_asset_id
             self.account_depreciation_id = self.parent_type_id.account_depreciation_id
             self.account_depreciation_expense_id = self.parent_type_id.account_depreciation_expense_id
+            self.account_asset_loss_id = self.parent_type_id.account_asset_loss_id
+            self.account_asset_gain_id = self.parent_type_id.account_asset_gain_id
+            self.asset_sale_suspense_account_id = self.parent_type_id.asset_sale_suspense_account_id
             self.method = self.parent_type_id.method
             self.depreciation_year = self.parent_type_id.depreciation_year
             self.method_period = self.parent_type_id.method_period
@@ -75,4 +88,3 @@ class AccountAssetCategory(models.Model):
             name = self.search([('name', '=ilike', self.name), ('parent_type_id', '=', parent_type)])
             if len(name) > 1:
                 raise ValidationError(_(msg))
-

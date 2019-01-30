@@ -3,18 +3,21 @@
     <data noupdate="0">
         <record id="module_category_fixed_asset" model="ir.module.category">
             <field name="name">Fixed Asset</field>
-            <field name="sequence">200</field>
+            <field name="sequence">50</field>
         </record>
-        <record id="group_fixed_asset_user" model="res.groups">
+        <record id="grp_fixasset_user" model="res.groups">
             <field name="name">User</field>
             <field name="category_id" ref="module_category_fixed_asset"/>
             <field name="sequence">10</field>
         </record>
-        <record id="group_fixed_asset_manager" model="res.groups">
+        <record id="grp_fixasset_manager" model="res.groups">
             <field name="name">Manager</field>
             <field name="category_id" ref="module_category_fixed_asset"/>
-            <field name="implied_ids" eval="[(4, ref('group_fixed_asset_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('grp_fixasset_user'))]"/>
             <field name="sequence">20</field>
         </record>
     </data>
 </odoo>
+
+
+
