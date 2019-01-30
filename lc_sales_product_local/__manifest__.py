@@ -40,4 +40,5 @@
     'summary': 'Sale By LC',
     'installable': True,
     'application': False,
+    'auto_install': True
 }
