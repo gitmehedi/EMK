@@ -11,7 +11,7 @@
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft"/>
                     <button name="action_dispose" string="Dispose" type="object" class="oe_highlight"
-                            states="approve"/>
+                            context="{'dispose':True}" states="approve"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,dispose"/>
                 </header>
                 <sheet>
