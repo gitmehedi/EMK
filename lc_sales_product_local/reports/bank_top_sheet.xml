@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_top_sheet"
+                string="Bank Forwarding"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product_local.report_top_sheet"
+                name="lc_sales_product_local.report_top_sheet"
+                paperformat="report_layout.custom_pad_paperformat"
+                menu="False"
+
+        />
+
+        <template id="report_top_sheet">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .bank-letter_subject { margin:30px 0; }
+                            .bank-letter_body { margin-bottom:30px; }
+                            .bank-letter_doclist { width: 80%; margin-left:30px; }
+                            .bank-letter_doclist > tbody > tr > td {
+                                border:0 none!important; padding: 0px!important;
+                            }
+                            .bank-letter_head p,
+                            .bank-letter_head span,
+                            .bank-letter_head div {
+                                margin:0; padding:0;
+                            }
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
+                        </style>
+                        <div class="bank-letter">
+                            <p>Date: </p>
+                            <br/>
+                            <div class="bank-letter_head">
+                                <p>To, <br/>
+                                    The Manager <br/>
+                                    <span t-esc="data['first_party_branch_bank']"/> <br/>
+                                    <span t-raw="data['first_party_branch_add']"/>
+                                </p>
+                            </div>
+                            <div class="bank-letter_subject">
+                                <p>Sub: Request for negotiation/collection of Export document amounting to <strong t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> against L/C No: <strong t-esc="data['lc_id']"/> Date: <b><span t-esc="data['issue_date']"/></b></p>
+                            </div>
+                            <div class="bank-letter_body">
+                                <p>Dear Sir,</p>
+                                <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>
+                            </div>
+
+                            <p><b>The enclosed documents are:</b></p>
+
+                            <table class="bank-letter_doclist table table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>1. Draft</td>
+                                        <td>: 1 Set</td>
+                                    </tr>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr class="text-left">
+                                            <td style="width:40%"><span t-esc="l_index+2"/>. <span t-esc="l['name']"/></td>
+                                            <td>: <span t-esc="l['original']"/> Original+    <span t-esc="l['copy']"/> Copies</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <br/>
+                            <p>Your prompt action in this respect is solicited.</p>
+                            <br/>
+                            <p>Thank you.</p>
+                            <br/>
+                            <p>For and on behalf of <br/>
+                               <span t-esc="data['company']"/>
+                            </p>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p class="auth-signature">Authorised Signature</p>
+                        </div> <!-- end bl -->
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

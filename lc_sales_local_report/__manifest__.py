@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "LC Sales Local Report",
+    'name': "Local LC Sales Report",
 
     'summary': """
         Custom Report For local LC Sales""",
@@ -15,7 +15,7 @@
     'category': 'Commercial',
     'version': '10.0.1',
 
-    'depends': ['lc_sales_product'],
+    'depends': ['lc_sales_product_local'],
 
     'data': [
         # 'security/ir.model.access.csv',
