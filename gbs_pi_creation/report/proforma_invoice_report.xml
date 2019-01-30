@@ -129,7 +129,7 @@
                             <p t-raw="data['terms_condition']"/>
                         </div>
                         <hr class="hr-xxs"/>
-                        <div>
+                        <div style="margin-top:50px">
                             <p>For and on behalf of <br/>
                                 <span t-esc="data['beneficiary_id']"/>
                             </p>

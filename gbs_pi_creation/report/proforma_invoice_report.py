@@ -36,7 +36,12 @@ class GbsProformaInvoice(models.AbstractModel):
         data['swift_code'] = pi_obj.advising_bank_acc_id.bank_swift_code
         data['currency'] = pi_obj.currency_id.name
         data['packing'] = pi_obj.pack_type.packaging_mode
-        data['terms_str'] = "By Equivalent Letter Of Credit"
+
+        if pi_obj.region_type == 'foreign' and pi_obj.terms_id and pi_obj.terms_id.name:
+            data['terms_str'] = pi_obj.terms_id.name
+        else:
+            data['terms_str'] = "By Equivalent Letter Of Credit"
+
         data['terms_of_delivery'] = pi_obj.terms_of_delivery
 
         data['unit_address'] = report_utility_pool.getAddressByUnit(pi_obj.operating_unit_id)
