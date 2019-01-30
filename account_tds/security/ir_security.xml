@@ -2,14 +2,18 @@
 <odoo>
     <data noupdate="0">
 
+        <record id="module_category_tds" model="ir.module.category">
+            <field name="name">Tax Deducted at Source</field>
+            <field name="sequence">230</field>
+        </record>
         <record id="group_tds_manager" model="res.groups">
             <field name="name">TDS Manager</field>
-            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="category_id" ref="account_tds.module_category_tds"/>
             <field name="sequence">40</field>
         </record>
         <record id="group_tds_user" model="res.groups">
             <field name="name">TDS User</field>
-            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="category_id" ref="account_tds.module_category_tds"/>
             <field name="sequence">50</field>
         </record>
 
