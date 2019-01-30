@@ -109,6 +109,14 @@ class AccountInvoice(models.Model):
     def finalize_invoice_move_lines(self, move_lines):
         return move_lines
 
+    @api.multi
+    def action_move_create(self):
+        res = super(AccountInvoice, self).action_move_create()
+        if res:
+            account_move = self.env['account.move'].search([('id','=',self.move_id.id)])
+            account_move.write({'operating_unit_id': self.operating_unit_id.id})
+        return res
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
@@ -163,6 +171,10 @@ class ProductProduct(models.Model):
     @api.model
     def _convert_prepared_anglosaxon_line(self, line, partner):
         res = super(ProductProduct, self)._convert_prepared_anglosaxon_line(line, partner)
-        if res and line.get('operating_unit_id'):
-            res.update({'operating_unit_id': line.get('operating_unit_id')})
+        if res:
+            if line.get('operating_unit_id'):
+                res.update({'operating_unit_id': line.get('operating_unit_id')})
+            else:
+                inv_obj = self.env['account.invoice'].search([('id', '=', line['invoice_id'])])
+                res.update({'operating_unit_id': inv_obj.operating_unit_id.id})
         return res
