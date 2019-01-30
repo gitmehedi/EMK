@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_bill_exchange"
+                string="Bill OF Exchange(First)"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product_local.report_bill_exchange"
+                name="lc_sales_product_local.report_bill_exchange"
+                paperformat="report_layout.custom_pad_paperformat"
+                menu="False"
+
+        />
+
+        <template id="report_bill_exchange">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
+                        </style>
+                        <div class="report-title">
+                            <h3 class="mt-0"><b>Bill Of Exchange (First)</b></h3>
+                        </div>
+                        <hr class="hr-sm mb-0"/>
+                        <div class="bill-ofexcfi row">
+                            <div class="col-xs-8">
+                                <p>For <span t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> </p>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <p>No.: <strong t-esc="data['invoice_id']"/> <br/>
+                                   Date: <strong t-esc="data['invoice_date']"/></p>
+                            </div>
+                        </div>
+                        <br/>
+                        <div>
+                            <p><strong>First</strong> Bill of Exchange(<b>Second</b> Unpaid)</p>
+                            <br/>
+                            <table class="mb-0">
+                                <tbody>
+                                    <tr>
+                                        <td class="w20">Tenure:</td>
+                                        <td><span t-esc="data['tenure']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w20">Pay to the order of:</td>
+                                        <td><span t-esc="data['first_party_bank']"/>. <span t-esc="data['first_party_bank_add']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w20">Sum of <span t-esc="data['currency_id']"/>:</td>
+                                        <td><strong t-esc="amt_to_word"/> <strong>only</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr class="hr-xs"/>
+
+                        <div class="clearfix">
+                            <table class="m-middle table table-report-sm table-bordered table-striped mb-0">
+                                <thead>
+                                    <p>Value received against <strong t-esc="price_total"/> <strong t-esc="uom"/> delivery of</p>
+                                    <tr class="odo-bg-gray">
+                                        <th>Sl</th>
+                                        <th>Products</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td class="w5"><span t-esc="l_index+1"/></td>
+                                            <td class="w60"><span t-esc="l['name']"/></td>
+                                            <td class="w10 text-right"><span t-esc="'%.2f'% l['quantity']"/></td>
+                                            <td class="w10"><span t-esc="l['uom']"/></td>
+                                            <td class="w15 text-right"><span t-esc="l['price_unit']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <div class="mt-10">Proforma Invoice No:
+                                <t t-foreach="pi_list" t-as="p">
+                                    <strong t-esc="p['number']"/> Date: <strong t-esc="p['date']"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <hr class="hr-xs"/>
+
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <p class="m-0 p-0" t-raw="data['terms_condition']"/>
+                            </div>
+                            <div class="col-xs-2">
+                            </div>
+                            <div class="col-xs-5">
+                                Drawn under the Document Credit No: <br/>
+                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']"/> <br/>
+                                <t t-foreach="lc_revision_list" t-as="r">
+                                    <strong>
+                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']"/> <br/>
+                                    </strong>
+                                </t>
+                                <span style="padding-left:30%;">of</span> <br/>
+                                <span t-raw="data['second_party_bank']"/>
+                            </div>
+                        </div>
+
+                        <hr class="hr-xs"/>
+
+                        <table class="mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="w75px">To: </td>
+                                    <td><span t-esc="data['second_party_bank']"/><br/><br/></td>
+                                </tr>
+                                <tr>
+                                    <td>A/C: </td>
+                                    <td><span t-esc="data['second_party_applicant']"/></td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td>Office: <span t-esc="data['invoice_address']"/></td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td>Factory: <span t-esc="data['delivery_address']"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr class="hr-sm mb-10"/>
+
+                        <div class="row text-right">
+                            <div class="col-xs-12 text-right">
+                                <p>For and on behalf of <br/> <span t-esc="data['first_party']"/></p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p class="auth-signature">Authorized Signature</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

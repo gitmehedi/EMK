@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_letter_credit_export_filter" model="ir.ui.view">
+            <field name="name">letter.credit.filter</field>
+            <field name="model">letter.credit</field>
+            <field name="arch" type="xml">
+                <search string="Search Letter of Credit">
+                    <field name="name"/>
+                    <field name="second_party_applicant" string="Customer"/>
+                    <filter name="active" string="Active" domain="[('state', 'in', ('draft','open','confirmed','amendment','progress'))]"/>
+                    <filter string="Beneficiary" name="first_party" context="{'group_by':'first_party'}"/>
+                </search>
+            </field>
+        </record>
+
+        <!--      ###############################       -->
+        <!--<record model="ir.actions.act_window" id="lc_export_foreign_creation_action">-->
+            <!--<field name="name">Letter of Credit: Export</field>-->
+            <!--<field name="res_model">letter.credit</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+            <!--<field name="domain">[('type','=','export'),('region_type','=','foreign')]</field>-->
+            <!--<field name="context">{'default_type': 'export','default_region_type': 'foreign','search_default_active':1}</field>-->
+            <!--<field name="view_id" ref="export_letter_credit_tree_view"/>-->
+            <!--<field name="search_view_id" ref="view_letter_credit_export_filter"/>-->
+        <!--</record>-->
+
+        <record model="ir.actions.act_window" id="lc_export_local_creation_action">
+            <field name="name">Letter of Credit: Export</field>
+            <field name="res_model">letter.credit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','export'),('region_type','=','local')]</field>
+            <field name="context">{'default_type': 'export','default_region_type': 'local','search_default_active':1}</field>
+            <field name="view_id" ref="export_letter_credit_tree_view"/>
+            <field name="search_view_id" ref="view_letter_credit_export_filter"/>
+        </record>
+        <!--      ###############################       -->
+
+        <!--      ###############################       -->
+        <record id="action_cnf_quotation_view1" model="ir.actions.act_window.view">
+            <field eval="111" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="export_letter_credit_tree_view"/>
+            <field name="act_window_id" ref="lc_export_local_creation_action"/>
+        </record>
+
+        <record id="action_cnf_quotation_view2" model="ir.actions.act_window.view">
+            <field eval="112" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_lc_export_form"/>
+            <field name="act_window_id" ref="lc_export_local_creation_action"/>
+        </record>
+
+
+
+        <!--<record id="action_cnf_quotation_view3" model="ir.actions.act_window.view">-->
+            <!--<field eval="111" name="sequence"/>-->
+            <!--<field name="view_mode">tree</field>-->
+            <!--<field name="view_id" ref="export_letter_credit_tree_view"/>-->
+            <!--<field name="act_window_id" ref="lc_export_foreign_creation_action"/>-->
+        <!--</record>-->
+        <!--<record id="action_cnf_quotation_view4" model="ir.actions.act_window.view">-->
+            <!--<field eval="112" name="sequence"/>-->
+            <!--<field name="view_mode">form</field>-->
+            <!--<field name="view_id" ref="view_lc_export_form"/>-->
+            <!--<field name="act_window_id" ref="lc_export_foreign_creation_action"/>-->
+        <!--</record>-->
+        <!--      ###############################       -->
+
+
+
+        <!--<menuitem id="lc_export_foreign_submenu" name="Export LC(Foreign)" parent="lc_sales_product.lc_export_creation_menu"-->
+                  <!--action="lc_export_foreign_creation_action" groups="gbs_application_group.group_export_foreign_lc"/>-->
+
+        <!--<menuitem id="lc_commercial_export_foreign_creation_submenu" name="Export LC(Foreign)" parent="letter_of_credit.lc_commercial_creation_menu"-->
+                <!--sequence="1" action="lc_export_foreign_creation_action" groups="gbs_application_group.group_export_foreign_lc"/>-->
+
+        <menuitem id="lc_export_local_submenu" name="Export LC(Local)" parent="lc_sales_product.lc_export_creation_menu"
+                  action="lc_export_local_creation_action" groups="gbs_application_group.group_export_local_lc"/>
+
+        <menuitem id="lc_commercial_export_local_creation_submenu" name="Export LC(Local)" parent="letter_of_credit.lc_commercial_creation_menu"
+                sequence="3" action="lc_export_local_creation_action" groups="gbs_application_group.group_export_local_lc"/>
+
+        <menuitem id="menu_lc_sales_comm"
+                  parent="lc_sales_product.main_menu_lc_sales_comm"
+                  sequence="1" name="Sales Orders (Local)"
+                  action="lc_sales_product_local.action_sale_order_comm" groups="gbs_application_group.group_export_local_lc"/>
+
+        <menuitem id="menu_lc_pi_comm"
+                  parent="lc_sales_product.main_menu_lc_sales_comm"
+                  sequence="2" name="Proforma Invoice (Local)"
+                  action="lc_sales_product_local.action_sale_pi_comm" groups="gbs_application_group.group_export_local_lc"/>
+
+        <menuitem
+                action="action_comm_invoice"
+                groups="commercial.group_commercial_user_export"
+                id="menu_comm_invoice"
+                parent="lc_sales_product.main_menu_lc_sales_comm"
+                sequence="5"/>
+
+    </data>
+</odoo>

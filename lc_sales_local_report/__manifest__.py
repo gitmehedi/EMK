@@ -15,7 +15,7 @@
     'category': 'Commercial',
     'version': '10.0.1',
 
-    'depends': ['lc_sales_product'],
+    'depends': ['lc_sales_product_local'],
 
     'data': [
         # 'security/ir.model.access.csv',

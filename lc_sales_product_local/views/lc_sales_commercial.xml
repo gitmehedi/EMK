@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_sale_order_comm" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="lc_sales_product.view_sale_order_comm_tree"/>
+            <field name="search_view_id" ref="lc_sales_product.view_sale_order_comm_filter"/>
+            <field name="domain">[('state','=','done'),('region_type','=','local'),('type_id.sale_order_type','in',('lc_sales','tt_sales','contract_sales'))]</field>
+            <field name="context">{'hide_sale': True,'default_region_type': 'local'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Approved list of the sales orders are show in here
+                </p>
+            </field>
+        </record>
+
+        <record id="action_sale_pi_comm" model="ir.actions.act_window">
+            <field name="name">Proforma Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">proforma.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="lc_sales_product.pi_comm_tree_view"/>
+            <field name="search_view_id" ref="lc_sales_product.pi_comm_filter"/>
+            <field name="domain">[('region_type','=','local'),('state','=','confirm')]</field>
+            <field name="context">{'default_region_type': 'local'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Approved list of the Proforma Invoice are show in here
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

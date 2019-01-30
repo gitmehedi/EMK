@@ -6,7 +6,6 @@ class LCProduct(models.Model):
     delivered_qty =  fields.Float(string='Delivered',compute = '_compute_delivered_qty',store=False)
 
     @api.one
-    # @api.depends('lc_id.pi_ids_temp.so_ids.order_line.qty_delivered')
     def _compute_delivered_qty(self):
         for pi_id in self.lc_id.pi_ids_temp:
             so_ids = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
