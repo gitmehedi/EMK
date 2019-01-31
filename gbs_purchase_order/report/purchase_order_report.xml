@@ -119,7 +119,7 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
-                                            <td><span t-esc="l['product_qty']"/></td>
+                                            <td><span t-esc="l['product_qty']"/>&amp;nbsp;&amp;nbsp;&amp;nbsp;<span t-esc="l['product_uom']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
                                             <td><span t-esc="l['price_subtotal_price']"/></td>
                                         </tr>
