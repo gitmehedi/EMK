@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="view_account_asset_sell_form">
-        <field name="name">account.asset.sell.form</field>
-        <field name="model">account.asset.sell</field>
+    <record model="ir.ui.view" id="view_account_asset_sale_form">
+        <field name="name">account.asset.sale.form</field>
+        <field name="model">account.asset.sale</field>
         <field name="arch" type="xml">
-            <form string="Asset Sell">
+            <form string="Asset Sale">
                 <header>
-                    <button name="%(action_asset_sell_wizard)d" string="Asset To Sell" type="action" class="oe_highlight"
+                    <button name="%(action_asset_sale_wizard)d" string="Asset To Sale" type="action" class="oe_highlight"
                             states="draft"/>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft"/>
-                    <button name="action_sell" string="Sell" type="object" class="oe_highlight"
-                            context="{'sell':True}" states="approve"/>
+                    <button name="action_sale" string="Sale" type="object" class="oe_highlight"
+                            context="{'sale':True,'sale_id':name}" states="approve"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,sold"/>
                 </header>
                 <sheet>
@@ -19,17 +19,17 @@
                         <group>
                             <field name="name" states="approve,sold"/>
                             <field name="total_value"/>
-                            <field name="total_sell_amount"/>
+                            <field name="total_sale_amount"/>
                         </group>
                         <group>
                             <field name="request_date"/>
                             <field name="approve_date" states="approve,sold"/>
-                            <field name="sell_date" states="sell"/>
+                            <field name="sale_date" states="sale"/>
                             <field name="request_user_id"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                            <field name="approve_user_id" states="approve,sell"
+                            <field name="approve_user_id" states="approve,sale"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                            <field name="sell_user_id" states="sell"
+                            <field name="sale_user_id" states="sale"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         </group>
                         <field name="note"/>
@@ -42,7 +42,7 @@
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="asset_value"/>
                                     <field name="depreciation_value"/>
-                                    <field name="sell_value"/>
+                                    <field name="sale_value"/>
                                     <field name="journal_entry"/>
                                 </tree>
                             </field>
@@ -53,47 +53,47 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_account_asset_sell_tree">
-        <field name="name">account.asset.sell.tree</field>
-        <field name="model">account.asset.sell</field>
+    <record model="ir.ui.view" id="view_account_asset_sale_tree">
+        <field name="name">account.asset.sale.tree</field>
+        <field name="model">account.asset.sale</field>
         <field name="arch" type="xml">
-            <tree string="Asset Sell">
+            <tree string="Asset Sale">
                 <field name="name"/>
                 <field name="total_value"/>
-                <field name="total_sell_amount"/>
+                <field name="total_sale_amount"/>
                 <field name="request_date"/>
                 <field name="approve_date"/>
-                <field name="sell_date"/>
+                <field name="sale_date"/>
                 <field name="request_user_id"/>
                 <field name="approve_user_id"/>
-                <field name="sell_user_id"/>
+                <field name="sale_user_id"/>
                 <field name="state" widget="statusbar"/>
             </tree>
         </field>
     </record>
 
 
-    <record model="ir.actions.act_window" id="action_account_asset_sell">
-        <field name="name">Asset Sell</field>
-        <field name="res_model">account.asset.sell</field>
+    <record model="ir.actions.act_window" id="action_account_asset_sale">
+        <field name="name">Asset Sale</field>
+        <field name="res_model">account.asset.sale</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window.view" id="action_account_asset_sell_tree">
+    <record model="ir.actions.act_window.view" id="action_account_asset_sale_tree">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_account_asset_sell_tree"/>
-        <field name="act_window_id" ref="action_account_asset_sell"/>
+        <field name="view_id" ref="view_account_asset_sale_tree"/>
+        <field name="act_window_id" ref="action_account_asset_sale"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_account_asset_sell_form">
+    <record model="ir.actions.act_window.view" id="action_account_asset_sale_form">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_account_asset_sell_form"/>
-        <field name="act_window_id" ref="action_account_asset_sell"/>
+        <field name="view_id" ref="view_account_asset_sale_form"/>
+        <field name="act_window_id" ref="action_account_asset_sale"/>
     </record>
 
-    <menuitem parent="sub_assets_menu" id="menu_action_account_asset_sell"
-              action="action_account_asset_sell" sequence="10"/>
+    <menuitem parent="sub_assets_menu" id="menu_action_account_asset_sale"
+              action="action_account_asset_sale" sequence="10"/>
 
 </odoo>

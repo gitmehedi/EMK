@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Account Fixed Asset Management (FAM)',
+    'name': 'Fixed Assets Management (FAM)',
     'description': """ Main module for asset management which include all css,js and image files.""",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
@@ -21,9 +21,9 @@
         'wizard/asset_modify_views.xml',
         'wizard/asset_allocation_wizard_view.xml',
         'wizard/asset_dispose_wizard_view.xml',
-        'wizard/asset_sell_wizard_view.xml',
+        'wizard/asset_sale_wizard_view.xml',
         'views/account_asset_disposal_view.xml',
-        'views/account_asset_sell_view.xml',
+        'views/account_asset_sale_view.xml',
         'views/account_asset_views.xml',
         'views/account_asset_type_view.xml',
         'views/account_asset_category_view.xml',

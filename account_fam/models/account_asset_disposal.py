@@ -10,7 +10,7 @@ class AccountAssetDisposal(models.Model):
     _order = 'id desc'
     _rec_name = 'name'
 
-    name = fields.Char(string='Disponal Sequence', readonly=True, default='New')
+    name = fields.Char(string='Serial No', readonly=True, default='New')
     total_value = fields.Float(string='Total Asset Value', compute='_compute_total_value')
     total_depr_amount = fields.Float(string='Total Depreciation Value', compute='_compute_total_depr_amount')
     request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now(),
