@@ -5,7 +5,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools import float_compare, float_is_zero
 
@@ -32,6 +32,9 @@ class AccountAssetAsset(models.Model):
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date')
     method_period = fields.Integer(string='Number of Months in a Period', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]})
+    allocation_status = fields.Boolean(default=False, string='Allocation Status')
+    value = fields.Float(string='Cost Value')
+    value_residual = fields.Float(string='Book Value')
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):
@@ -228,3 +231,200 @@ class AccountAssetAsset(models.Model):
                     'depreciation_year': category.depreciation_year,
                 }
             }
+
+
+class AccountAssetDepreciationLine(models.Model):
+    _inherit = 'account.asset.depreciation.line'
+
+    line_type = fields.Selection([('depreciation', 'Depreciation'), ('sale', 'Sale'), ('dispose', 'Dispose')],
+                                 default='depreciation', required=True, string="Line Type")
+
+    @api.multi
+    def create_move(self, post_move=True):
+        created_moves = self.env['account.move']
+        prec = self.env['decimal.precision'].precision_get('Account')
+        for line in self:
+            if line.move_id:
+                raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
+            category_id = line.asset_id.category_id
+            depreciation_date = self.env.context.get(
+                'depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
+            company_currency = line.asset_id.company_id.currency_id
+            current_currency = line.asset_id.currency_id
+            amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
+            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
+
+            if self.env.context.get('dispose'):
+                move_vals = self.format_dispose_move(amount, asset_name, category_id, prec, line,
+                                                     company_currency,
+                                                     current_currency, depreciation_date)
+                line.write({'line_type': 'dispose'})
+            elif self.env.context.get('sale'):
+                move_vals = self.format_sale_move(amount, asset_name, category_id, prec, line,
+                                                  company_currency,
+                                                  current_currency, depreciation_date)
+                line.write({'line_type': 'sale'})
+            else:
+                move_vals = self.format_depreciation_move(amount, asset_name, category_id, prec, line,
+                                                          company_currency,
+                                                          current_currency, depreciation_date)
+                line.write({'line_type': 'depreciation'})
+
+            move = self.env['account.move'].create(move_vals)
+            line.write({'move_id': move.id, 'move_check': True})
+            created_moves |= move
+
+        if post_move and created_moves:
+            created_moves.filtered(
+                lambda m: any(m.asset_depreciation_ids.mapped('asset_id.category_id.open_asset'))).post()
+        return [x.id for x in created_moves]
+
+    def format_dispose_move(self, amount, asset_name, category_id, prec, line, company_currency, current_currency,
+                            depreciation_date):
+        depr_credit = {
+            'name': asset_name,
+            'account_id': category_id.account_asset_id.id,
+            'debit': 0.0,
+            'credit': self.asset_id.value if float_compare(self.asset_id.value, 0.0,
+                                                           precision_digits=prec) > 0 else 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+        }
+        depr_debit_1 = {
+            'name': asset_name,
+            'account_id': category_id.account_depreciation_id.id,
+            'credit': 0.0,
+            'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and line.amount or 0.0,
+        }
+        depr_debit_2 = {
+            'name': asset_name,
+            'account_id': category_id.account_asset_loss_id.id,
+            'debit': self.asset_id.value - amount if float_compare(self.asset_id.value - amount, 0.0,
+                                                                   precision_digits=prec) > 0 else 0.0,
+            'credit': 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+        }
+        return {
+            'ref': line.asset_id.code,
+            'date': depreciation_date or False,
+            'journal_id': category_id.journal_id.id,
+            'line_ids': [(0, 0, depr_credit), (0, 0, depr_debit_1), (0, 0, depr_debit_2)],
+        }
+
+    def format_sale_move(self, amount, asset_name, category_id, prec, line, company_currency, current_currency,
+                         depreciation_date):
+        sale_id = self.env['account.asset.sale'].search([('name', '=', self.env.context.get('sale_id'))])
+        sales = self.env['account.asset.sale.line'].search(
+            [('sale_id', '=', sale_id.id), ('asset_id', '=', self.asset_id.id)])
+
+        if sales.sale_value > amount:
+            gain = sales.sale_value - amount
+            loss_gain = {
+                'name': asset_name,
+                'account_id': category_id.account_asset_loss_id.id,
+                'debit': 0.0,
+                'credit': gain - amount if float_compare(gain, 0.0, precision_digits=prec) > 0 else 0.0,
+                'journal_id': category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id,
+                'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+                'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+            }
+        else:
+            loss = amount - sales.sale_value
+            loss_gain = {
+                'name': asset_name,
+                'account_id': category_id.account_asset_loss_id.id,
+                'debit': loss if float_compare(loss, 0.0, precision_digits=prec) > 0 else 0.0,
+                'credit': 0.0,
+                'journal_id': category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id,
+                'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+                'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+            }
+        asset_credit = {
+            'name': asset_name,
+            'account_id': category_id.account_asset_id.id,
+            'debit': 0.0,
+            'credit': self.asset_id.value if float_compare(self.asset_id.value, 0.0,
+                                                           precision_digits=prec) > 0 else 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+        }
+        depr_debit = {
+            'name': asset_name,
+            'account_id': category_id.account_depreciation_id.id,
+            'credit': 0.0,
+            'debit': self.asset_id.value - amount if float_compare(self.asset_id.value - amount, 0.0,
+                                                                   precision_digits=prec) > 0 else 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and line.amount or 0.0,
+        }
+
+        sale_susp_debit = {
+            'name': asset_name,
+            'account_id': category_id.asset_sale_suspense_account_id.id,
+            'debit': sales.sale_value if float_compare(sales.sale_value, 0.0, precision_digits=prec) > 0 else 0.0,
+            'credit': 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+        }
+        return {
+            'ref': line.asset_id.code,
+            'date': depreciation_date or False,
+            'journal_id': category_id.journal_id.id,
+            'line_ids': [(0, 0, asset_credit), (0, 0, depr_debit), (0, 0, loss_gain), (0, 0, sale_susp_debit)],
+        }
+
+    def format_depreciation_move(self, amount, asset_name, category_id, prec, line, company_currency,
+                                 current_currency, depreciation_date):
+        move_line_1 = {
+            'name': asset_name,
+            'account_id': category_id.account_depreciation_id.id,
+            'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+            'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+        }
+        move_line_2 = {
+            'name': asset_name,
+            'account_id': category_id.account_depreciation_expense_id.id,
+            'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+            'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': line.asset_id.partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+            'amount_currency': company_currency != current_currency and line.amount or 0.0,
+        }
+        return {
+            'ref': line.asset_id.code,
+            'date': depreciation_date or False,
+            'journal_id': category_id.journal_id.id,
+            'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
+        }

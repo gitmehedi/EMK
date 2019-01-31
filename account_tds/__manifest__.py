@@ -17,7 +17,8 @@
     'depends': [
         'account',
         'date_range',
-        'product'
+        'product',
+        'account_operating_unit',
     ],
     'data': [
         'data/tds_version_scheduler.xml',

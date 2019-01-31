@@ -10,7 +10,7 @@
             <xpath expr="//field[@name='journal_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='journal_id']" position="after">
+            <xpath expr="//field[@name='account_asset_id']" position="after">
                 <div>
                     <label for="asset_suspense_account_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                     <label for="asset_suspense_account_id" string="Asset Suspense Account"

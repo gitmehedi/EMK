@@ -30,18 +30,18 @@
                     <group string="Journal Entries">
                         <field name="journal_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <div>
-                            <label for="asset_suspense_account_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
-                            <label for="asset_suspense_account_id" string="Asset Suspense Account"
-                                   attrs="{'invisible': [('type','!=','sale')]}"/>
-                        </div>
-                        <field name="asset_suspense_account_id" nolabel="1" domain="[('company_id', '=', company_id)]"
-                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                        <div>
                             <label for="account_asset_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_asset_id" string="Deferred Revenue Account"
                                    attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <div>
+                            <label for="asset_suspense_account_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="asset_suspense_account_id" string="Asset Suspense Account"
+                                   attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="asset_suspense_account_id" nolabel="1" domain="[('company_id', '=', company_id)]"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <div>
                             <label for="account_depreciation_id" attrs="{'invisible': [('type','!=','purchase')]}"/>

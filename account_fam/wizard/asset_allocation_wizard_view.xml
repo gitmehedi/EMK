@@ -12,7 +12,7 @@
                     <group>
                         <field name="operating_unit_id"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                        <field name="sub_operating_unit_id"
+                        <field name="to_operating_unit_id"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                 </group>
@@ -25,7 +25,7 @@
     </record>
 
     <record id="action_asset_allocation_wizard" model="ir.actions.act_window">
-        <field name="name">Asset Allocation</field>
+        <field name="name">Asset Allocation/Transfer</field>
         <field name="res_model">asset.allocation.wizard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>

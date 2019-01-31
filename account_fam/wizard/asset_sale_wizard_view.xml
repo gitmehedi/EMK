@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="asset_sale_wizard_form">
+        <field name="name">asset.sale.wizard</field>
+        <field name="model">asset.sale.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asset Sale">
+                <group>
+                    <field name="asset_ids" widget="many2many" nolabel="1"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                </group>
+                <footer>
+                    <button name="sale" string="Sale" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asset_sale_wizard" model="ir.actions.act_window">
+        <field name="name">Asset Sale</field>
+        <field name="res_model">asset.sale.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="asset_sale_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

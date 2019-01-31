@@ -6,6 +6,25 @@ from odoo.exceptions import UserError
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    @api.one
+    @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
+                 'type')
+    def _compute_amount(self):
+        round_curr = self.currency_id.round
+        self.amount_untaxed = sum(line.price_subtotal_without_vat for line in self.invoice_line_ids)
+        self.amount_tax = sum(round_curr(line.amount) for line in self.tax_line_ids if line.tax_id)
+        self.amount_total = self.amount_untaxed + self.amount_tax
+        amount_total_company_signed = self.amount_total
+        amount_untaxed_signed = self.amount_untaxed
+        if self.currency_id and self.company_id and self.currency_id != self.company_id.currency_id:
+            currency_id = self.currency_id.with_context(date=self.date_invoice)
+            amount_total_company_signed = currency_id.compute(self.amount_total, self.company_id.currency_id)
+            amount_untaxed_signed = currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
+        self.amount_total_company_signed = amount_total_company_signed * sign
+        self.amount_total_signed = self.amount_total * sign
+        self.amount_untaxed_signed = amount_untaxed_signed * sign
+
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',
                                         default=lambda self:
                                         self.env['res.users'].
@@ -28,15 +47,14 @@ class AccountInvoice(models.Model):
             if len(bill_no) > 1:
                 raise UserError(_('Reference must be unique for %s !') % self.partner_id.name)
 
-    # @api.multi
-    # def compute_invoice_totals(self, company_currency, invoice_move_lines):
-    #     res = super(AccountInvoice, self).compute_invoice_totals(company_currency, invoice_move_lines)
-    #     if res:
-
-    # @api.model
-    # def invoice_line_move_line_get(self):
-    #     res = super(AccountInvoice, self).invoice_line_move_line_get()
-    #     return res
+    @api.model
+    def invoice_line_move_line_get(self):
+        res = super(AccountInvoice, self).invoice_line_move_line_get()
+        if res:
+            for iml in res:
+                inv_line_obj = self.env['account.invoice.line'].search([('id','=',iml['invl_id'])])
+                iml.update({'operating_unit_id': inv_line_obj.operating_unit_id.id})
+        return res
 
     @api.model
     def tax_line_move_line_get(self):
@@ -61,10 +79,44 @@ class AccountInvoice(models.Model):
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
+                    'operating_unit_id': tax_line.operating_unit_id.id,
                     'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
                 })
                 done_taxes.append(tax.id)
         return res
+
+    @api.multi
+    def get_taxes_values(self):
+        tax_grouped = {}
+        for line in self.invoice_line_ids:
+            price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id,
+                                                          self.partner_id)['taxes']
+            for tax in taxes:
+                val = self._prepare_tax_line_vals(line, tax)
+                key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
+
+                val.update({'operating_unit_id': line.operating_unit_id.id})
+                key = key+'-'+str(line.operating_unit_id.id)
+                if key not in tax_grouped:
+                    tax_grouped[key] = val
+                else:
+                    tax_grouped[key]['amount'] += val['amount']
+                    tax_grouped[key]['base'] += val['base']
+        return tax_grouped
+
+    @api.multi
+    def finalize_invoice_move_lines(self, move_lines):
+        return move_lines
+
+    @api.multi
+    def action_move_create(self):
+        res = super(AccountInvoice, self).action_move_create()
+        if res:
+            account_move = self.env['account.move'].search([('id','=',self.move_id.id)])
+            account_move.write({'operating_unit_id': self.operating_unit_id.id})
+        return res
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
@@ -95,6 +147,7 @@ class AccountInvoiceLine(models.Model):
                                      store=True, readonly=True, compute='_compute_price')
 
     operating_unit_id = fields.Many2one('operating.unit',string='Branch',required=True,
+                                        related='',
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
@@ -104,3 +157,24 @@ class AccountInvoiceLine(models.Model):
     def _onchange_operating_unit_id(self):
         for line in self:
             line.sub_operating_unit_id = []
+
+
+class AccountInvoiceTax(models.Model):
+    _inherit = "account.invoice.tax"
+
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+
+
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    @api.model
+    def _convert_prepared_anglosaxon_line(self, line, partner):
+        res = super(ProductProduct, self)._convert_prepared_anglosaxon_line(line, partner)
+        if res:
+            if line.get('operating_unit_id'):
+                res.update({'operating_unit_id': line.get('operating_unit_id')})
+            else:
+                inv_obj = self.env['account.invoice'].search([('id', '=', line['invoice_id'])])
+                res.update({'operating_unit_id': inv_obj.operating_unit_id.id})
+        return res
