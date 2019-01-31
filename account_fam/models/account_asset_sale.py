@@ -60,6 +60,7 @@ class AccountAssetSale(models.Model):
                 for depr in rec.asset_id.depreciation_line_ids:
                     if depr.move_id.state == 'draft':
                         depr.move_id.post()
+                rec.journal_entry='post'
 
             self.state = 'sale'
             self.sale_date = fields.Datetime.now()

@@ -12,18 +12,18 @@
                             states="draft"/>
                     <button name="action_sale" string="Sale" type="object" class="oe_highlight"
                             context="{'sale':True,'sale_id':name}" states="approve"/>
-                    <field name="state" widget="statusbar" statusbar_visible="approve,sold"/>
+                    <field name="state" widget="statusbar" statusbar_visible="approve,sale"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" states="approve,sold"/>
+                            <field name="name" states="approve,sale"/>
                             <field name="total_value"/>
                             <field name="total_sale_amount"/>
                         </group>
                         <group>
                             <field name="request_date"/>
-                            <field name="approve_date" states="approve,sold"/>
+                            <field name="approve_date" states="approve,sale"/>
                             <field name="sale_date" states="sale"/>
                             <field name="request_user_id"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
