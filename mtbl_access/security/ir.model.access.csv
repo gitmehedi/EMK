@@ -6,10 +6,17 @@ access_operating_unit_admin,account_operating_unit_admin,operating_unit.model_op
 access_sub_operating_unit_admin,account_sub_operating_unit_admin,sub_operating_unit.model_sub_operating_unit,group_mtbl_sys_admin,1,1,1,1
 
 access_acquiring_channel_admin,account_acquiring_channel_admin,account_mtbl.model_acquiring_channel,group_mtbl_sys_admin,1,1,1,1
-access_acquiring_channel_accountant,account_acquiring_channel_accountant,account_mtbl.model_acquiring_channel,,1,0,0,0
+access_acquiring_channel_user,account_acquiring_channel_user,account_mtbl.model_acquiring_channel,,1,0,0,0
 
 access_segment_admin,account_segment_admin,account_mtbl.model_segment,group_mtbl_sys_admin,1,1,1,1
-access_segment_accountant,account_segment_accountant,account_mtbl.model_segment,,1,0,0,0
+access_segment_user,account_segment_user,account_mtbl.model_segment,,1,0,0,0
 
 access_servicing_channel_admin,account_servicing_channel_admin,account_mtbl.model_servicing_channel,group_mtbl_sys_admin,1,1,1,1
-access_servicing_channel_accountant,account_servicing_channel_accountant,account_mtbl.model_servicing_channel,,1,0,0,0
+access_servicing_channel_user,account_servicing_channel_user,account_mtbl.model_servicing_channel,,1,0,0,0
+
+access_account_journal_admin,account_account_journal_admin,account.model_account_journal,group_mtbl_sys_admin,1,1,1,1
+access_account_journal_user,account_account_journal_user,account.model_account_journal,,1,0,0,0
+
+access_res_bank_admin,account_res_bank_admin,base.model_res_bank,group_mtbl_sys_admin,1,1,1,1
+access_res_bank_user,account_res_bank_user,base.model_res_bank,,1,0,0,0
+
