@@ -28,15 +28,19 @@
                     <form string="Agreement">
                         <header>
                             <button name="action_confirm" type="object"
-                                    string="Confirm" states="draft" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
+                                    string="Confirm" states="draft"
+                                    groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
                                     class="oe_highlight"/>
                             <button name="action_validate" type="object"
-                                    string="Validate" states="confirm" groups="vendor_agreement.group_vendor_agreement_manager"
+                                    string="Validate" states="confirm"
+                                    groups="vendor_agreement.group_vendor_agreement_manager"
                                     class="oe_highlight"/>
                             <button string="Amendment" name="action_amendment" states="done"
-                                    type="object" class="oe_read_only" groups="vendor_agreement.group_vendor_agreement_manager"/>
+                                    type="object" class="oe_read_only"
+                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Payment" name="action_payment" states="done"
-                                    type="object" class="oe_read_only" groups="vendor_agreement.group_vendor_agreement_manager"/>
+                                    type="object" class="oe_read_only"
+                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <field name="state" widget="statusbar"/>
                         </header>
                         <sheet>
@@ -54,8 +58,10 @@
                             </div>
                             <group name="main">
                                 <group name="left">
-                                    <field name="partner_id" string="Vendor" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="product_id" string="Product / Service" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
+                                    <field name="partner_id" string="Vendor"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="product_id" string="Product / Service"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
                                     <field name="start_date"/>
                                     <field name="end_date"/>
                                     <field name="pro_advance_amount"/>
@@ -63,12 +69,26 @@
                                 <group name="right">
                                     <field name="agreement_type" widget="radio" invisible="1"/>
                                     <field name="code" invisible="1"/>
-                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="adjustment_value"/>
+                                    <field name="service_value"/>
+                                    <field name="company_id" groups="base.group_multi_company"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="advance_amount"/>
                                     <field name="adjusted_amount"/>
                                 </group>
                             </group>
                             <notebook>
+                                <page string="Notes">
+                                    <field name="description"/>
+                                </page>
+                                <page string="Accounting">
+                                    <group>
+                                        <group>
+                                            <field name="account_id"
+                                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                        </group>
+                                    </group>
+                                </page>
                                 <page string="Invoices" class="oe_page_title"
                                       attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
                                     <group string="Vendor Bills" name="in_invoices">
@@ -78,16 +98,14 @@
                                 <page string="Payments" class="oe_page_title">
                                     <field name="acc_move_line_ids" widget="one2many_list">
                                         <tree editable="bottom" string="Journal Items">
-                                            <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                                            <field name="account_id"
+                                                   domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                             <field name="name"/>
                                             <field name="debit" sum="Total Debit"/>
                                             <field name="credit" sum="Total Credit"/>
                                             <field name="date_maturity" required="0"/>
                                         </tree>
                                     </field>
-                                </page>
-                                <page string="Notes">
-                                    <field name="description"/>
                                 </page>
                             </notebook>
                         </sheet>
@@ -107,19 +125,22 @@
             <field name="arch" type="xml">
                 <xpath expr="//search" position="replace">
                     <search string="Search Agreements">
-                        <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Name or Number"/>
+                        <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
+                               string="Name or Number"/>
                         <field name="partner_id"/>
                         <field name="product_id"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
                         <field name="pro_advance_amount"/>
+                        <field name="adjustment_value"/>
+                        <field name="service_value"/>
                         <field name="advance_amount"/>
                         <field name="adjusted_amount"/>
                         <separator/>
                         <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                         <group name="groupby">
                             <filter name="partner_groupby" string="Customer"
-                                context="{'group_by': 'partner_id'}"/>
+                                    context="{'group_by': 'partner_id'}"/>
                         </group>
                     </search>
                 </xpath>
@@ -148,8 +169,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='agreement_id']" position="replace">
                     <field name="agreement_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
-                        domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase'),('state','=','done')]"
-                        context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
+                           domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase'),('state','=','done')]"
+                           context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
                 </xpath>
             </field>
         </record>
