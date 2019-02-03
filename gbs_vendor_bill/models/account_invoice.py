@@ -107,7 +107,39 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
+        if self.agreement_id and self.agreement_id.active == True \
+                and self.date >= self.agreement_id.start_date and self.date <= self.agreement_id.end_date:
+            self.update_move_lines_with_agreement(move_lines)
         return move_lines
+
+    def update_move_lines_with_agreement(self,move_lines):
+        if self.agreement_id.pro_advance_amount > self.agreement_id.adjusted_amount:
+            remaining_amount = self.agreement_id.pro_advance_amount - self.agreement_id.adjusted_amount
+            if remaining_amount >= self.agreement_id.adjustment_value:
+                amount = self.agreement_id.adjustment_value
+            else:
+                amount = remaining_amount
+        else:
+            amount = 0.0
+        if amount:
+            move_lines[-1][2]['credit'] = move_lines[-1][2]['credit'] - amount
+            agreement_values = {
+                'account_id': self.agreement_id.account_id.id,
+                'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,
+                'credit': amount,
+                'date_maturity': self.date_due,
+                'debit': False,
+                'invoice_id': self.id,
+                'name': self.agreement_id.name,
+                'operating_unit_id': self.operating_unit_id.id,
+                'partner_id': self.partner_id.id,
+            }
+            move_lines.append((0, 0, agreement_values))
+
+        self.agreement_id.write({'adjusted_amount':self.agreement_id.adjusted_amount+amount})
+
+        return True
+
 
     @api.multi
     def action_move_create(self):
@@ -178,3 +210,15 @@ class ProductProduct(models.Model):
                 inv_obj = self.env['account.invoice'].search([('id', '=', line['invoice_id'])])
                 res.update({'operating_unit_id': inv_obj.operating_unit_id.id})
         return res
+
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    @api.multi
+    def post(self):
+        res = super(AccountMove, self).post()
+        if res:
+            op_unit = [i.operating_unit_id.id for i in self.line_ids if i.operating_unit_id][0]
+            self.write({'operating_unit_id':op_unit})
+        return res
+
