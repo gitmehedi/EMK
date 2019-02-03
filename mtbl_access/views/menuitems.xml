@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="account.menu_config_multi_currency" name="Multi-Currencies"
+              parent="account.menu_finance_configuration" sequence="9"
+              groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem id="account.menu_action_currency_form" action="base.action_currency_form" name="Currencies"
+              parent="account.menu_config_multi_currency" sequence="20"
+              groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem action="account_mtbl.action_acquiring_channel" groups="mtbl_access.group_mtbl_sys_admin"
+              id="account_mtbl.menu_action_acquiring_channel_tree"
+              parent="account.account_account_menu"/>
+    <menuitem action="account_mtbl.action_segment" groups="mtbl_access.group_mtbl_sys_admin"
+              id="account_mtbl.menu_action_segment_tree"
+              parent="account.account_account_menu"/>
+    <menuitem action="account_mtbl.action_servicing_channel" groups="mtbl_access.group_mtbl_sys_admin"
+              id="account_mtbl.menu_action_servicing_channel_tree"
+              parent="account.account_account_menu"/>
+</odoo>
