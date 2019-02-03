@@ -26,8 +26,6 @@ class AccountAssetAsset(models.Model):
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
     receive_date = fields.Date(string='Receive Date')
     asset_usage_date = fields.Date(string='Allocation Date', help='Asset Allocation/Usage Date')
-    asset_type_id = fields.Many2one('account.asset.category', string='Asset Type', required=True, change_default=True,
-                                    readonly=True, states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date')
     method_period = fields.Integer(string='Number of Months in a Period', required=True, readonly=True, default=1,
@@ -40,16 +38,6 @@ class AccountAssetAsset(models.Model):
     def check_depreciation_year(self):
         if self.depreciation_year < 1:
             raise ValidationError(_('Total year cannot be zero or negative value.'))
-
-    @api.onchange('category_id')
-    def onchange_asset_category(self):
-        if self.category_id:
-            self.asset_type_id = None
-            category_ids = self.env['account.asset.category'].search(
-                [('parent_type_id', '=', self.category_id.id)])
-            return {
-                'domain': {'asset_type_id': [('id', 'in', category_ids.ids)]}
-            }
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):

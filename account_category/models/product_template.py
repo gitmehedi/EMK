@@ -14,7 +14,7 @@ class ProductTemplate(models.Model):
         if self.asset_category_id:
             self.asset_type_id = None
             category_ids = self.env['account.asset.category'].search(
-                [('parent_type_id', '=', self.asset_category_id.id)])
+                [('parent_id', '=', self.asset_category_id.id)])
             return {
                 'domain': {'asset_type_id': [('id', 'in', category_ids.ids)]}
             }
