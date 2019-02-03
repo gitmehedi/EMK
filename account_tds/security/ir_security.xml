@@ -9,6 +9,7 @@
         <record id="group_tds_manager" model="res.groups">
             <field name="name">TDS Manager</field>
             <field name="category_id" ref="account_tds.module_category_tds"/>
+            <field name="implied_ids" eval="[(4, ref('account_tds.group_tds_user'))]"/>
             <field name="sequence">40</field>
         </record>
         <record id="group_tds_user" model="res.groups">

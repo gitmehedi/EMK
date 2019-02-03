@@ -9,6 +9,8 @@
     "category": "Generic",
     "depends": [
         "base",
+        'operating_unit',
+        'sub_operating_unit',
         'mail',
     ],
     "data": [
@@ -16,6 +18,7 @@
         'views/servicing_channel.xml',
         'views/acquiring_channel.xml',
         'views/inherit_res_currency.xml',
+        'views/mtbl_branch.xml',
     ],
     'installable': True,
     'application': True,

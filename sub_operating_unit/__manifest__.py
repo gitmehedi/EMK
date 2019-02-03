@@ -9,6 +9,7 @@
     "category": "Generic",
     "depends": [
         "operating_unit",
+        'mail'
     ],
     "data": [
         'security/ir.model.access.csv',

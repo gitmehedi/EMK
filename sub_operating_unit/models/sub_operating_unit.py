@@ -6,16 +6,18 @@ from odoo.exceptions import UserError
 
 class SubOperatingUnit(models.Model):
     _name = 'sub.operating.unit'
+    _inherit = ['mail.thread']
     _description = 'Sub Operating Unit'
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
-    active = fields.Boolean('Active', default=True)
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
-    partner_id = fields.Many2one('res.partner', 'Partner', required=True)
+    name = fields.Char('Name', required=True ,track_visibility='onchange')
+    code = fields.Char('Code', required=True ,size=3,track_visibility='onchange')
+    active = fields.Boolean('Active', default=True,track_visibility='onchange')
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
+                                        track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', 'Partner', required=True,track_visibility='onchange')
     company_id = fields.Many2one(
-        'res.company', 'Company', required=True, default=lambda self:
-        self.env['res.company']._company_default_get('account.account'))
+        'res.company', 'Company', required=True,track_visibility='onchange',
+                        default=lambda self:self.env['res.company']._company_default_get('account.account'))
 
     _sql_constraints = [
         ('code_company_sub_uniq', 'unique (code,company_id)',
