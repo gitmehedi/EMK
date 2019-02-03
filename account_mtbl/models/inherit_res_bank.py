@@ -16,3 +16,12 @@ class Banks(models.Model):
     fax = fields.Char(track_visibility='onchange')
     active = fields.Boolean(track_visibility='onchange')
     bic = fields.Char(track_visibility='onchange')
+
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            filters_name = [['name', '=ilike', self.name]]
+            name = self.search(filters_name)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
+
