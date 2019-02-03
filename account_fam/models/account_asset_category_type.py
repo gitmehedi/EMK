@@ -14,8 +14,8 @@ class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
 
     is_custom_depr = fields.Boolean(default=True, required=True)
-    category_ids = fields.One2many('account.asset.category', 'parent_type_id', string="Category")
-    parent_type_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict")
+    # category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
+    # parent_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict")
     prorata = fields.Boolean(string='Prorata Temporis', default=True)
     depreciation_year = fields.Integer(string='Total Year', required=True, default=1)
     method_number = fields.Integer(string='Number of Depreciations',
@@ -41,22 +41,22 @@ class AccountAssetCategory(models.Model):
                                                      domain=[('deprecated', '=', False)],
                                                      string='Asset Sales Suspense Account', )
 
-    @api.onchange('parent_type_id')
-    def onchange_asset_type(self):
-        if self.parent_type_id:
-            self.journal_id = self.parent_type_id.journal_id
-            self.asset_suspense_account_id = self.parent_type_id.asset_suspense_account_id
-            self.account_asset_id = self.parent_type_id.account_asset_id
-            self.account_depreciation_id = self.parent_type_id.account_depreciation_id
-            self.account_depreciation_expense_id = self.parent_type_id.account_depreciation_expense_id
-            self.account_asset_loss_id = self.parent_type_id.account_asset_loss_id
-            self.account_asset_gain_id = self.parent_type_id.account_asset_gain_id
-            self.asset_sale_suspense_account_id = self.parent_type_id.asset_sale_suspense_account_id
-            self.method = self.parent_type_id.method
-            self.depreciation_year = self.parent_type_id.depreciation_year
-            self.method_period = self.parent_type_id.method_period
-            self.method_number = self.parent_type_id.method_number
-            self.method_progress_factor = self.parent_type_id.method_progress_factor
+    # @api.onchange('parent_id')
+    # def onchange_asset_type(self):
+    #     if self.parent_id:
+    #         self.journal_id = self.parent_id.journal_id
+    #         self.asset_suspense_account_id = self.parent_id.asset_suspense_account_id
+    #         self.account_asset_id = self.parent_id.account_asset_id
+    #         self.account_depreciation_id = self.parent_id.account_depreciation_id
+    #         self.account_depreciation_expense_id = self.parent_id.account_depreciation_expense_id
+    #         self.account_asset_loss_id = self.parent_id.account_asset_loss_id
+    #         self.account_asset_gain_id = self.parent_id.account_asset_gain_id
+    #         self.asset_sale_suspense_account_id = self.parent_id.asset_sale_suspense_account_id
+    #         self.method = self.parent_id.method
+    #         self.depreciation_year = self.parent_id.depreciation_year
+    #         self.method_period = self.parent_id.method_period
+    #         self.method_number = self.parent_id.method_number
+    #         self.method_progress_factor = self.parent_id.method_progress_factor
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
@@ -73,18 +73,18 @@ class AccountAssetCategory(models.Model):
         if self.category_ids:
             raise ValidationError(_("Please delete all asset category related with it."))
         return super(AccountAssetCategory, self).unlink()
-
-    @api.constrains('name', 'parent_type_id')
-    def _check_unique_name(self):
-        if self.name:
-            parent_type, msg = None, ''
-
-            if self.parent_type_id:
-                parent_type = self.parent_type_id.id
-                msg = 'Asset Category already exists, Please choose another.'
-            else:
-                msg = 'Asset Type already exists, Please choose another.'
-
-            name = self.search([('name', '=ilike', self.name), ('parent_type_id', '=', parent_type)])
-            if len(name) > 1:
-                raise ValidationError(_(msg))
+    #
+    # @api.constrains('name', 'parent_id')
+    # def _check_unique_name(self):
+    #     if self.name:
+    #         parent_type, msg = None, ''
+    #
+    #         if self.parent_id:
+    #             parent_type = self.parent_id.id
+    #             msg = 'Asset Category already exists, Please choose another.'
+    #         else:
+    #             msg = 'Asset Type already exists, Please choose another.'
+    #
+    #         name = self.search([('name', '=ilike', self.name), ('parent_id', '=', parent_type)])
+    #         if len(name) > 1:
+    #             raise ValidationError(_(msg))

@@ -8,15 +8,24 @@ from odoo import api, fields, models, _
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', ondelete="restrict")
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Category', ondelete="restrict")
 
     @api.onchange('asset_category_id')
     def onchange_asset_category_id(self):
-        if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.account_asset_id.id
-        elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.account_asset_id.id
+        super(AccountInvoiceLine,self).onchange_asset_category_id()
+        if self.asset_category_id:
+            self.asset_type_id = self.product_id.product_tmpl_id.asset_type_id
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        vals = super(AccountInvoiceLine, self)._onchange_product_id()
+        if self.product_id:
+            if self.invoice_id.type == 'out_invoice':
+                self.asset_category_id = self.product_id.product_tmpl_id.deferred_revenue_category_id
+            elif self.invoice_id.type == 'in_invoice':
+                self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id
+                self.asset_type_id = self.product_id.product_tmpl_id.asset_type_id
+        return vals
 
     @api.one
     def asset_create(self):

@@ -14,12 +14,12 @@
                         <h1>
                             <field name="name" placeholder="e.g. Lenovo"/>
                         </h1>
-                        <label for="parent_type_id" string="Asset Type" class="oe_edit_only"
+                        <label for="parent_id" string="Asset Type" class="oe_edit_only"
                                attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <h1>
-                            <field name="parent_type_id" required="True"
+                            <field name="parent_id" required="True"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"
-                                   domain="[('parent_type_id','=',False)]"/>
+                                   domain="[('parent_id','=',False)]"/>
                         </h1>
                     </div>
                     <group>
@@ -163,7 +163,7 @@
         <field name="arch" type="xml">
             <tree string="Asset category">
                 <field name="name" string="Asset Category"/>
-                <field name="parent_type_id"/>
+                <field name="parent_id"/>
                 <field name="journal_id"/>
                 <field name="method"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -193,7 +193,7 @@
         <field name="domain">[('type', '=', 'purchase')]</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('parent_type_id','!=',False)]</field>
+        <field name="domain">[('parent_id','!=',False)]</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_account_asset_type_tree">
@@ -215,10 +215,10 @@
         <field name="act_window_id" ref="action_account_asset_type"/>
     </record>
 
-    <menuitem parent="sub_configuration_menu" id="menu_action_account_asset_type"
+    <menuitem parent="account_fam.sub_configuration_menu" id="menu_action_account_asset_type"
               action="action_account_asset_type" sequence="10"/>
 
     <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
-        <field name="domain">[('type', '=', 'purchase'),('parent_type_id','=',False)]</field>
+        <field name="domain">[('type', '=', 'purchase'),('parent_id','=',False)]</field>
     </record>
 </odoo>
