@@ -20,6 +20,7 @@
     ],
     'data': [
         'data/provisional_scheduler.xml',
+        'data/provesional_expenses_journal_data.xml',
         # 'security/ir_security.xml',
         # 'security/ir.model.access.csv',
         # 'views/account_tds_rule_view.xml',
