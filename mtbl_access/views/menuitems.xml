@@ -44,11 +44,18 @@
 
     <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
               parent="account.account_account_menu" sequence="1"
-              groups="account_parent.group_coas_user,mtbl_access.group_mtbl_sys_admin"/>
+              groups="base.group_no_one"/>
     <menuitem id="account_type_menu.account_type_menu"
               action="account.action_account_type_form"
               sequence="30"
-              groups="base.group_no_one"
+              groups="mtbl_access.group_mtbl_sys_admin"
               parent="account.account_account_menu"/>
+    
+    <menuitem id="account.menu_analytic_accounting" name="Analytic Accounting" parent="account.menu_finance_configuration"
+              groups="analytic.group_analytic_accounting" sequence="5"/>
+    <menuitem action="analytic.action_account_analytic_account_form" id="account.account_analytic_def_account"
+              parent="account.menu_analytic_accounting"
+              groups="analytic.group_analytic_accounting,mtbl_access.group_mtbl_sys_admin" sequence="0"/>
+
 
 </odoo>
