@@ -13,8 +13,11 @@ This application allows you to easily maintain access rights of mtbl process.
 """,
     'depends': [
         'base',
-        'account_mtbl'
-
+        'account_mtbl',
+        'account_fiscal_year',
+        'date_range',
+        'account_type_menu',
+        'account_parent'
     ],
     'data': [
         'security/ir_security.xml',

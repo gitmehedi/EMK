@@ -20,3 +20,9 @@ access_account_journal_user,account_account_journal_user,account.model_account_j
 access_res_bank_admin,account_res_bank_admin,base.model_res_bank,group_mtbl_sys_admin,1,1,1,1
 access_res_bank_user,account_res_bank_user,base.model_res_bank,,1,0,0,0
 
+access_date_range_admin,account_date_range_admin,date_range.model_date_range,group_mtbl_sys_admin,1,1,1,1
+access_date_range_user,account_date_range_user,date_range.model_date_range,,1,0,0,0
+
+access_account_account_type_admin,account_account_account_type_admin,account.model_account_account_type,group_mtbl_sys_admin,1,1,1,1
+access_account_account_type_user,account_account_account_type_user,account.model_account_account_type,,1,0,0,0
+
