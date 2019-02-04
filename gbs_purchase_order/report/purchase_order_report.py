@@ -49,6 +49,7 @@ class GbsPurchaseOrder(models.AbstractModel):
                 list_obj['product_id']= ol.product_id.name
                 list_obj['product_qty']= ol.product_qty
                 list_obj['price_unit']= formatLang(self.env,ol.price_unit)
+                list_obj['product_uom'] = ol.product_uom.name
                 list_obj['price_subtotal']= ol.price_subtotal
                 list_obj['price_subtotal_price']= formatLang(self.env,ol.price_subtotal)
                 total_amount.append(list_obj['price_subtotal'])
