@@ -23,7 +23,7 @@
         'data/provesional_expenses_journal_data.xml',
         # 'security/ir_security.xml',
         # 'security/ir.model.access.csv',
-        # 'views/account_tds_rule_view.xml',
+        'views/inherit_product_view.xml',
     ],
     'installable': True,
     'application': True,
