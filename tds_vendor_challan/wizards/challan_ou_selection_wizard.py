@@ -45,8 +45,8 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
             line = {
                 'supplier_id': account_move_line_obj.partner_id.id,
                 'challan_provided': 0.0,
-                'total_bill': account_move_line_obj.debit,
-                'undistributed_bill': account_move_line_obj.debit,
+                'total_bill': account_move_line_obj.credit,
+                'undistributed_bill': account_move_line_obj.credit,
                 'parent_id': challan_id,
                 'acc_move_line_id': account_move_line_obj.id,
                 'state': 'draft',
