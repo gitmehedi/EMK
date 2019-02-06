@@ -146,8 +146,9 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
         if res:
-            account_move = self.env['account.move'].search([('id','=',self.move_id.id)])
-            account_move.write({'operating_unit_id': self.operating_unit_id.id})
+            for inv in self:
+                account_move = self.env['account.move'].search([('id','=',inv.move_id.id)])
+                account_move.write({'operating_unit_id': inv.operating_unit_id.id})
         return res
 
 
@@ -219,7 +220,8 @@ class AccountMove(models.Model):
     def post(self):
         res = super(AccountMove, self).post()
         if res:
-            op_unit = [i.operating_unit_id.id for i in self.line_ids if i.operating_unit_id][0]
-            self.write({'operating_unit_id':op_unit})
+            for move in self:
+                op_unit = [i.operating_unit_id.id for i in move.line_ids if i.operating_unit_id][0]
+                move.write({'operating_unit_id':op_unit})
         return res
 
