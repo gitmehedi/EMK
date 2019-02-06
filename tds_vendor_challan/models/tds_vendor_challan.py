@@ -18,6 +18,7 @@ class TdsVendorChallan(models.Model):
     distribute_approver = fields.Many2one('res.users', string='Distribute By', readonly=True,
                                           help="who is distributed.",track_visibility='onchange')
     line_ids = fields.One2many('tds.vendor.challan.line','parent_id',string='Vendor Challan', select=True, track_visibility='onchange')
+    total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -30,10 +31,14 @@ class TdsVendorChallan(models.Model):
     # Business methods
     ####################################################
 
+    @api.multi
+    @api.depends('line_ids')
+    def _compute_amount(self):
+        self.total_amount= sum([line.total_bill for line in self.line_ids])
+
     @api.one
     def action_deposited(self):
         for line in self.line_ids:
-            # line.acc_move_line_id.write({'is_deposit':True})
             line.write({'state':'deposited','challan_provided':line.undistributed_bill})
         res = {
             'state': 'deposited',

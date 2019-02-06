@@ -1,4 +1,5 @@
 from odoo import models, fields, api,_
+from odoo.exceptions import UserError
 
 
 class TDSChallaSelectionWizard(models.TransientModel):
@@ -48,3 +49,4 @@ class TDSChallaSelectionWizard(models.TransientModel):
             'domain': vals,
         }
         return result
+
