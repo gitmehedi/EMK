@@ -6,7 +6,7 @@
             <field name="model">tds.challan.ou.selection.wizard</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="TDS Vendor Challan">
+                <form string="TDS/Vat Vendor Challan">
                     <group>
                         <group>
                             <field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' placeholder="All"/>
@@ -21,7 +21,7 @@
         </record>
 
         <record id="tds_challan_ou_selection_wizard_action_view" model="ir.actions.act_window">
-            <field name="name">TDS Vendor Challan</field>
+            <field name="name">TDS/VAT Vendor Challan</field>
             <field name="res_model">tds.challan.ou.selection.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

@@ -6,10 +6,10 @@
             <field name="model">tds.vendor.challan</field>
             <field name="arch" type="xml">
                 <tree delete="false" create="false" edit="false">
-                    <field name="date"/>
-                    <field name="supplier_id"/>
+                    <field name="date" string="Bill Date"/>
+                    <field name="supplier_id" string="Vendor"/>
                     <field name="operating_unit_id"/>
-                    <field name="state"/>
+                    <!--<field name="state"/>-->
                 </tree>
             </field>
         </record>
@@ -18,7 +18,7 @@
             <field name="name">tds_vendor_challan_from_view</field>
             <field name="model">tds.vendor.challan</field>
             <field name="arch" type="xml">
-                 <form string="TDS Vendor Challan" create="false" edit="false">
+                <form string="TDS/VAT Vendor Challan" create="false" edit="false">
                     <header>
                         <button string="Deposit" name="action_deposited" type="object"
                                 states="draft" class="oe_highlight"/>
@@ -35,13 +35,17 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="operating_unit_id" readonly="1"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="deposit_approver" attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
-                                <field name="distribute_approver" attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
+                                <field name="deposit_approver"
+                                       attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
+                                <field name="distribute_approver"
+                                       attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
                             </group>
                             <group>
                                 <field name="date"/>
-                                <field name="deposit_date" attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
-                                <field name="distribute_date" attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
+                                <field name="deposit_date"
+                                       attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
+                                <field name="distribute_date"
+                                       attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -50,9 +54,9 @@
                                     <field name="line_ids" nolabel="1" readonly="1">
                                         <tree string="List" editable="false" create="false" delete="false">
                                             <field name="supplier_id"/>
-                                            <field name="total_bill"/>
-                                            <field name="challan_provided"/>
-                                            <field name="undistributed_bill"/>
+                                            <field name="total_bill" string="TDS/VAT Bills"/>
+                                            <!--<field name="challan_provided"/>-->
+                                            <!--<field name="undistributed_bill"/>-->
                                             <field name="state" invisible="1"/>
                                         </tree>
                                     </field>
@@ -74,7 +78,7 @@
             <field name="arch" type="xml">
                 <search string="Search Challan">
                     <field name="supplier_id"/>
-                    <field name="operating_unit_id" />
+                    <field name="operating_unit_id"/>
                     <group expand="0" string="Group By">
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
@@ -82,12 +86,12 @@
                         <separator/>
                         <filter string="Branch" context="{'group_by':'operating_unit_id'}"/>
                     </group>
-               </search>
+                </search>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="tds_vendor_challan_action">
-            <field name="name">TDS Vendor Challan</field>
+            <field name="name">TDS/VAT Vendor Challan</field>
             <field name="res_model">tds.vendor.challan</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="tds_vendor_challan_filter"/>
@@ -95,11 +99,33 @@
 
 
         <menuitem
-                name="TDS Challan"
+                name="TDS/VAT Challan"
                 parent="account.menu_finance_payables"
                 action="tds_vendor_challan_action"
                 id="tds_challan_menu"
-                sequence="11" />
+                sequence="11"/>
+
+
+        <record id="account.action_account_unreconcile" model="ir.actions.act_window">
+            <field name="name">Unreconcile Entries youi</field>
+            <field name="res_model">account.unreconcile</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_no_one')])]"/>
+        </record>
+
+        <record id="account.action_view_account_move_line_reconcile" model="ir.actions.act_window">
+            <field name="name">Reconcile Entries why</field>
+            <field name="res_model">account.move.line.reconcile</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_account_move_line_reconcile_full"/>
+            <field name="target">new</field>
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_no_one')])]"/>
+        </record>
 
     </data>
 </odoo>
