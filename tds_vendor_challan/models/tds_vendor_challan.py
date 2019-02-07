@@ -23,7 +23,7 @@ class TdsVendorChallan(models.Model):
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
 
     state = fields.Selection([
-        ('draft', "Draft"),
+        ('draft', "Pending"),
         ('deposited', "Deposited"),
         ('distributed', "Distributed"),
         ('cancel', "Cancel"),
@@ -44,7 +44,7 @@ class TdsVendorChallan(models.Model):
         for record in self:
             if record.state not in ('draft'):
                 raise UserError(
-                    _("Selected record cannot be deposited as they are not in 'Draft' state."))
+                    _("Selected record cannot be deposited as they are not in 'Pending' state."))
             for line in record.line_ids:
                 line.write({'state': 'deposited', 'challan_provided': line.undistributed_bill})
             res = {

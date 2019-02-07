@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Challan distribute">
                     <p class="oe_grey">
-                        Once draft challan are distributed, you will not be able
+                        Once challan are distributed, you will not be able
                         to modify them.
                     </p>
                     <footer>
