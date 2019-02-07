@@ -79,6 +79,17 @@ class TdsVendorChallan(models.Model):
         }
         self.write(res)
 
+    @api.multi
+    def generate_account_journal(self):
+        for rec in self:
+            date = fields.Date.context_today(self)
+            account_move_obj = self.env['account.move']
+            account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
+            #TODO add function to create move
+            #TODO add function to create move line
+
+        return True
+
     ####################################################
     # ORM Overrides methods
     ####################################################

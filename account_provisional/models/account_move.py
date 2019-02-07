@@ -64,7 +64,7 @@ class AccountMove(models.Model):
             'debit':  False,
             'name': '/',
             'operating_unit_id':  acc_inv_line_obj.operating_unit_id.id,
-            'partner_id': acc_inv_line_obj.partner_id.id,
+            # 'partner_id': acc_inv_line_obj.partner_id.id,
             'move_id': account_move_id,
         }
         account_move_line_obj.create(account_move_line_credit)
@@ -79,7 +79,7 @@ class AccountMove(models.Model):
             'debit':  acc_inv_line_obj.price_subtotal,
             'name': acc_inv_line_obj.name,
             'operating_unit_id':  acc_inv_line_obj.operating_unit_id.id,
-            'partner_id': acc_inv_line_obj.partner_id.id,
+            # 'partner_id': acc_inv_line_obj.partner_id.id,
             'move_id': account_move_id,
         }
         account_move_line_obj.create(account_move_line_debit)
