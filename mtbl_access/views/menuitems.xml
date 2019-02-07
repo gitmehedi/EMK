@@ -22,11 +22,11 @@
               groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"/>
     <menuitem action="operating_unit.action_operating_unit_tree"
               id="operating_unit.menu_action_operating_unit_tree"
-              parent="base.menu_users"
+              parent="account.account_account_menu"
               groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
     <menuitem action="sub_operating_unit.action_sub_operating_unit_tree"
               id="sub_operating_unit.menu_action_sub_operating_unit_tree"
-              parent="base.menu_users"
+              parent="account.account_account_menu"
               groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
     <menuitem action="base.action_res_bank_form"
               id="menu_action_res_bank_manu"

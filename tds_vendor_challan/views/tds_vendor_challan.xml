@@ -46,6 +46,7 @@
                                        attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
                                 <field name="distribute_date"
                                        attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
+                                <field name="total_amount"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -54,7 +55,7 @@
                                     <field name="line_ids" nolabel="1" readonly="1">
                                         <tree string="List" editable="false" create="false" delete="false">
                                             <field name="supplier_id"/>
-                                            <field name="total_bill" string="TDS/VAT Bills"/>
+                                            <field name="total_bill" string="TDS/VAT Amount"/>
                                             <!--<field name="challan_provided"/>-->
                                             <!--<field name="undistributed_bill"/>-->
                                             <field name="state" invisible="1"/>
@@ -63,11 +64,6 @@
                                 </group>
                             </page>
                         </notebook>
-                        <group>
-                            <group class="oe_subtotal_footer oe_right" name="amount_total">
-                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                            </group>
-                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -113,7 +109,7 @@
                 sequence="11"/>
 
         <record id="account.action_account_unreconcile" model="ir.actions.act_window">
-            <field name="name">Unreconcile Entries youi</field>
+            <field name="name">Unreconcile Entries</field>
             <field name="res_model">account.unreconcile</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -123,7 +119,7 @@
         </record>
 
         <record id="account.action_view_account_move_line_reconcile" model="ir.actions.act_window">
-            <field name="name">Reconcile Entries why</field>
+            <field name="name">Reconcile Entries</field>
             <field name="res_model">account.move.line.reconcile</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
