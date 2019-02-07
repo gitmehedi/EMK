@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+
 class TdsVendorChallan(models.Model):
     _name = 'tds.vendor.challan'
     _inherit = ['mail.thread']
@@ -10,14 +11,15 @@ class TdsVendorChallan(models.Model):
 
     supplier_id = fields.Many2one('res.partner', string="Supplier", track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', track_visibility='onchange')
-    date = fields.Date(string='Date', track_visibility='onchange',help="Creation date.")
-    deposit_date = fields.Datetime(string='Deposit Date',readonly=True, track_visibility='onchange')
+    date = fields.Date(string='Date', track_visibility='onchange', help="Creation date.")
+    deposit_date = fields.Datetime(string='Deposit Date', readonly=True, track_visibility='onchange')
     deposit_approver = fields.Many2one('res.users', string='Deposit By', readonly=True,
-                                       help="who is deposited.",track_visibility='onchange')
-    distribute_date = fields.Datetime(string='Distribute Date',readonly=True, track_visibility='onchange')
+                                       help="who is deposited.", track_visibility='onchange')
+    distribute_date = fields.Datetime(string='Distribute Date', readonly=True, track_visibility='onchange')
     distribute_approver = fields.Many2one('res.users', string='Distribute By', readonly=True,
-                                          help="who is distributed.",track_visibility='onchange')
-    line_ids = fields.One2many('tds.vendor.challan.line','parent_id',string='Vendor Challan', select=True, track_visibility='onchange')
+                                          help="who is distributed.", track_visibility='onchange')
+    line_ids = fields.One2many('tds.vendor.challan.line', 'parent_id', string='Vendor Challan', select=True,
+                               track_visibility='onchange')
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
 
     state = fields.Selection([
@@ -34,35 +36,44 @@ class TdsVendorChallan(models.Model):
     @api.multi
     @api.depends('line_ids')
     def _compute_amount(self):
-        self.total_amount= sum([line.total_bill for line in self.line_ids])
+        for rec in self:
+            rec.total_amount = sum([line.total_bill for line in rec.line_ids])
 
-    @api.one
+    @api.multi
     def action_deposited(self):
-        for line in self.line_ids:
-            line.write({'state':'deposited','challan_provided':line.undistributed_bill})
-        res = {
-            'state': 'deposited',
-            'deposit_approver': self.env.user.id,
-            'deposit_date': fields.Datetime.now(),
-        }
-        self.write(res)
+        for record in self:
+            if record.state not in ('draft'):
+                raise UserError(
+                    _("Selected record cannot be deposited as they are not in 'Draft' state."))
+            for line in record.line_ids:
+                line.write({'state': 'deposited', 'challan_provided': line.undistributed_bill})
+            res = {
+                'state': 'deposited',
+                'deposit_approver': record.env.user.id,
+                'deposit_date': fields.Datetime.now(),
+            }
+            record.write(res)
 
-    @api.one
+    @api.multi
     def action_distributed(self):
-        for line in self.line_ids:
-            line.write({'state':'distributed','undistributed_bill':0.0})
-        res = {
-            'state': 'distributed',
-            'distribute_approver': self.env.user.id,
-            'distribute_date': fields.Datetime.now(),
-        }
-        self.write(res)
+        for record in self:
+            if record.state not in ('deposited'):
+                raise UserError(
+                    _("Selected record cannot be distributed as they are not in 'Deposited' state."))
+            for line in record.line_ids:
+                line.write({'state': 'distributed', 'undistributed_bill': 0.0})
+            res = {
+                'state': 'distributed',
+                'distribute_approver': record.env.user.id,
+                'distribute_date': fields.Datetime.now(),
+            }
+            record.write(res)
 
     @api.one
     def action_cancel(self):
         for line in self.line_ids:
             line.acc_move_line_id.write({'is_deposit': False})
-            line.write({'state':'cancel'})
+            line.write({'state': 'cancel'})
         res = {
             'state': 'cancel',
         }
