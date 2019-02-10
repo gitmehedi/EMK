@@ -33,6 +33,8 @@ class AccountInvoice(models.Model):
                                         states={'draft': [('readonly',False)]})
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Branch',
                                         readonly=True,states={'draft': [('readonly',False)]})
+    agreement_adjusted_amount = fields.Float('Agreement Adjusted Amount',
+                                    store=True, readonly=True, track_visibility='onchange')
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -136,6 +138,7 @@ class AccountInvoice(models.Model):
                 'agreement_id': self.agreement_id.id,
             }
             move_lines.append((0, 0, agreement_values))
+            self.agreement_adjusted_amount = amount
 
         self.agreement_id.write({'adjusted_amount':self.agreement_id.adjusted_amount+amount})
 

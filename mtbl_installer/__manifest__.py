@@ -39,6 +39,7 @@
                 #'cheque_printing',
                 #'account_invoice_merge',
                 #'account_invoice_merge_operating_unit',
+                #'account_invoice_merge_attachment',
                 ],
 
     'data': [ ],
