@@ -6,7 +6,6 @@
     'category': 'Accounting',
     'depends': ['account',
                 'analytic',
-                'mtbl_access',
                 'account_asset',
                 'account_budget',
                 'account_cancel',
@@ -26,6 +25,8 @@
                 'gbs_vendor_bill',
                 'tds_vendor_challan',
                 'account_mtbl',
+                'mtbl_access',
+
                 #'account_move_fiscal_month',
                 #'account_operating_unit',
                 #'base_bank_bd',
