@@ -17,6 +17,8 @@
     'data': [
         'security/ir.model.access.csv',
         'wizards/tds_challan_selection_wizard.xml',
+        'wizards/challan_deposited_wizard.xml',
+        'wizards/challan_distributed_wizard.xml',
         'wizards/challan_ou_selection_wizard.xml',
         'views/tds_account_move_line_view.xml',
         'views/tds_vendor_challan.xml',

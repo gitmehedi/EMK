@@ -24,6 +24,9 @@
                 'vendor_agreement',
                 'gbs_vendor_bill',
                 'tds_vendor_challan',
+                'account_mtbl',
+                'mtbl_access',
+
                 #'account_move_fiscal_month',
                 #'account_operating_unit',
                 #'base_bank_bd',
@@ -37,6 +40,7 @@
                 #'cheque_printing',
                 #'account_invoice_merge',
                 #'account_invoice_merge_operating_unit',
+                #'account_invoice_merge_attachment',
                 ],
 
     'data': [ ],

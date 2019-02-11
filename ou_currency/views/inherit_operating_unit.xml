@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="view_operating_unit_form_inherit" model="ir.ui.view">
-            <field name="name">view.operating.unit.form.view</field>
+            <field name="name">operating.unit.form.view</field>
             <field name="model">operating.unit</field>
             <field name="inherit_id" ref="operating_unit.view_operating_unit_form" />
             <field name="arch" type="xml">

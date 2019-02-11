@@ -1,6 +1,6 @@
 from odoo import api, fields, models,_
 
-class OperatingUnitCurrency(models.Model):
+class Brabnch(models.Model):
     _name = 'operating.unit'
     _inherit = ['operating.unit','mail.thread']
 

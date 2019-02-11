@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_operating_unit_inherit" model="ir.ui.view">
-            <field name="name">view.operating.unit.form</field>
-            <field name="model">operating.unit</field>
-            <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
+        <record id="view_account_type_form_inherit" model="ir.ui.view">
+            <field name="name">account.account.type.form.view</field>
+            <field name="model">account.account.type</field>
+            <field name="inherit_id" ref="account.view_account_type_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form string="Operating Unit" version="7.0">
+                    <form string="Account Type">
                         <sheet>
                             <group>
                                 <group>
                                     <field name="name"/>
-                                    <field name="code"/>
-                                    <field name="branch_type"/>
+                                    <field name="type"/>
                                     <field name="active"/>
                                 </group>
                                 <group>
-                                    <field name="partner_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                    <field name="include_initial_balance"/>
                                 </group>
                             </group>
-
+                            <separator string="Description"/>
+                            <field name="note"/>
                         </sheet>
                         <div class="oe_chatter">
                             <field name="message_follower_ids" widget="mail_followers"/>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="account_challan_deposit_view" model="ir.ui.view">
+            <field name="name">account.challan_deposit.form</field>
+            <field name="model">challan.deposit</field>
+            <field name="arch" type="xml">
+                <form string="Challan Deposit">
+                    <p class="oe_grey">
+                        Once pending challan are deposited, you will not be able
+                        to modify them.
+                    </p>
+                    <footer>
+                        <button string="Confirm" name="action_deposited" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_challan_deposit"
+            multi="True"
+            key2="client_action_multi" name="Deposit"
+            res_model="challan.deposit" src_model="tds.vendor.challan"
+            view_mode="form" target="new" view_type="form" />
+    </data>
+</odoo>

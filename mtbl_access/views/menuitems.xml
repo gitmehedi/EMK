@@ -16,4 +16,46 @@
     <menuitem action="account_mtbl.action_servicing_channel" groups="mtbl_access.group_mtbl_sys_admin"
               id="account_mtbl.menu_action_servicing_channel_tree"
               parent="account.account_account_menu"/>
+    <menuitem action="account.action_account_journal_form" id="account.menu_action_account_journal_form"
+              name="Journal Type"
+              parent="account.account_account_menu"
+              groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem action="operating_unit.action_operating_unit_tree"
+              id="operating_unit.menu_action_operating_unit_tree"
+              parent="account.account_account_menu"
+              groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem action="sub_operating_unit.action_sub_operating_unit_tree"
+              id="sub_operating_unit.menu_action_sub_operating_unit_tree"
+              parent="account.account_account_menu"
+              groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem action="base.action_res_bank_form"
+              id="menu_action_res_bank_manu"
+              name="Bank"
+              parent="account.account_account_menu"
+              groups="mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem id="account_fiscal_year.menu_date_range_accounting" name="Date ranges"
+              parent="account.account_account_menu" sequence="50" groups="mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem action="date_range.date_range_action" id="account_fiscal_year.menu_date_range_action_accounting"
+              parent="account_fiscal_year.menu_date_range_accounting" groups="mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem action="date_range.date_range_type_action" groups="mtbl_access.group_mtbl_sys_admin"
+              id="account_fiscal_year.menu_date_range_type_action_accounting"
+              parent="account_fiscal_year.menu_date_range_accounting"/>
+
+    <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
+              parent="account.account_account_menu" sequence="1"
+              groups="base.group_no_one"/>
+    <menuitem id="account_type_menu.account_type_menu"
+              action="account.action_account_type_form"
+              sequence="30"
+              groups="mtbl_access.group_mtbl_sys_admin"
+              parent="account.account_account_menu"/>
+
+    <menuitem id="account.menu_analytic_accounting" name="Analytic Accounting" parent="account.menu_finance_configuration"
+              groups="analytic.group_analytic_accounting" sequence="5"/>
+    <menuitem action="analytic.action_account_analytic_account_form" id="account.account_analytic_def_account"
+              parent="account.menu_analytic_accounting"
+              groups="analytic.group_analytic_accounting,mtbl_access.group_mtbl_sys_admin" sequence="0"/>
+
+
 </odoo>

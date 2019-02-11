@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'sequence': 5}-->
+        <record id="stock_location_lenders" model="account.journal">
+            <field name="name">Provisional Expenses</field>
+            <field name="type">provisional</field>
+            <field name="code">PROE</field>
+            <field name="favorite">True</field>
+            <field name="sequence">10</field>
+        </record>
+    </data>
+</odoo>

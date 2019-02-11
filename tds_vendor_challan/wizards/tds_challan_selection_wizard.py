@@ -1,4 +1,5 @@
 from odoo import models, fields, api,_
+from odoo.exceptions import UserError
 
 
 class TDSChallaSelectionWizard(models.TransientModel):
@@ -43,7 +44,9 @@ class TDSChallaSelectionWizard(models.TransientModel):
             'res_model': 'account.move.line',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
+            'account.action_view_account_move_line_reconcile' : False,
             'target': 'current',
             'domain': vals,
         }
         return result
+

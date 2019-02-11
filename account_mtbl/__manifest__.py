@@ -10,7 +10,9 @@
     "depends": [
         "base",
         'operating_unit',
+        'account',
         'sub_operating_unit',
+        'account_operating_unit',
         'mail',
     ],
     "data": [
@@ -18,6 +20,10 @@
         'views/servicing_channel.xml',
         'views/acquiring_channel.xml',
         'views/inherit_res_currency.xml',
+        'views/inherit_account_journal.xml',
+        'views/inherit_res_bank.xml',
+        'views/inherit_account_move.xml',
+        #'views/inherit_account_type.xml',
         'views/mtbl_branch.xml',
     ],
     'installable': True,

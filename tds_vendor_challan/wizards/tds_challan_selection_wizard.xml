@@ -6,7 +6,7 @@
             <field name="model">tds.challan.selection.wizard</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="TDS Vendor Challan">
+                <form string="TDS/VAT Vendor Challan">
                     <group>
                         <group>
                             <field name="date_from"/>
@@ -35,7 +35,7 @@
         </record>
 
         <menuitem
-                name="TDS Challan Wizard"
+                name="Pending TDS/VAT Challan"
                 parent="account.menu_finance_payables"
                 action="tds_challan_selection_wizard_action_view"
                 id="tds_challan_selection_wizard_menu"
