@@ -9,7 +9,7 @@ class TdsVendorChallan(models.Model):
     _rec_name = 'supplier_id'
     _description = 'TDS Vendor Challan'
 
-    supplier_id = fields.Many2one('res.partner', string="Supplier", track_visibility='onchange')
+    supplier_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', track_visibility='onchange')
     date = fields.Date(string='Date', track_visibility='onchange', help="Creation date.")
     deposit_date = fields.Datetime(string='Deposit Date', readonly=True, track_visibility='onchange')
@@ -105,7 +105,7 @@ class TdsVendorChallan(models.Model):
 class TdsVendorChallanLine(models.Model):
     _name = 'tds.vendor.challan.line'
 
-    supplier_id = fields.Many2one('res.partner', string="Supplier")
+    supplier_id = fields.Many2one('res.partner', string="Vendor")
     challan_provided = fields.Float(String='Challan Provided')
     total_bill = fields.Float(String='Total Bill')
     undistributed_bill = fields.Float(String='Undistributed Bill')
