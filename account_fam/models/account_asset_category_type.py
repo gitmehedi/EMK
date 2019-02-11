@@ -68,11 +68,6 @@ class AccountAssetCategory(models.Model):
         if self.depreciation_year < 1:
             raise ValidationError(_('Total year cannot be zero or negative value.'))
 
-    @api.one
-    def unlink(self):
-        if self.category_ids:
-            raise ValidationError(_("Please delete all asset category related with it."))
-        return super(AccountAssetCategory, self).unlink()
     #
     # @api.constrains('name', 'parent_id')
     # def _check_unique_name(self):

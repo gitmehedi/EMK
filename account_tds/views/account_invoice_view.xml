@@ -15,7 +15,7 @@
             </xpath>
             <xpath expr="//field[@name='residual']" position="after">
                 <field name="total_tds_amount" class="oe_subtotal_footer_separator"
-                       attrs="{'invisible': [('is_tds_applicable', '=', False)]}"/>
+                       attrs="{'invisible': [('is_tds_applicable', '=', False)]}" widget="monetary"/>
             </xpath>
         </field>
     </record>

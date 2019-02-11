@@ -58,6 +58,10 @@
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="replace">
                 <field name="amount" sum="Total"/>
             </xpath>
+            <xpath expr="//field[@name='residual']" position="after">
+                <field name="agreement_adjusted_amount" class="oe_subtotal_footer_separator"
+                       attrs="{'invisible': [('agreement_id', '=', False)]}" widget="monetary"/>
+            </xpath>
         </field>
     </record>
 
