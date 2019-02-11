@@ -53,3 +53,9 @@ class AccountAssetCategory(models.Model):
             name = self.search([('name', '=ilike', self.name), ('parent_id', '=', parent_type)])
             if len(name) > 1:
                 raise ValidationError(_(msg))
+
+    @api.one
+    def unlink(self):
+        if self.category_ids:
+            raise ValidationError(_("Please delete all asset category related with it."))
+        return super(AccountAssetCategory, self).unlink()
