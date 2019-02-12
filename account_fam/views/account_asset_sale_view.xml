@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Asset Sale">
                 <header>
-                    <button name="%(action_asset_sale_wizard)d" string="Asset To Sale" type="action" class="oe_highlight"
+                    <button name="%(action_asset_sale_wizard)d" string="Asset To Sell" type="action" class="oe_highlight"
                             states="draft"/>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft"/>
