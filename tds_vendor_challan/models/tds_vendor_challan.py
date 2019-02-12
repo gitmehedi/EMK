@@ -9,7 +9,7 @@ class TdsVendorChallan(models.Model):
     _rec_name = 'supplier_id'
     _description = 'TDS Vendor Challan'
 
-    supplier_id = fields.Many2one('res.partner', string="Supplier", track_visibility='onchange')
+    supplier_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', track_visibility='onchange')
     date = fields.Date(string='Date', track_visibility='onchange', help="Creation date.")
     deposit_date = fields.Datetime(string='Deposit Date', readonly=True, track_visibility='onchange')
@@ -53,6 +53,7 @@ class TdsVendorChallan(models.Model):
                 'deposit_date': fields.Datetime.now(),
             }
             record.write(res)
+            record.generate_account_journal()
 
     @api.multi
     def action_distributed(self):
@@ -83,11 +84,65 @@ class TdsVendorChallan(models.Model):
     def generate_account_journal(self):
         for rec in self:
             date = fields.Date.context_today(self)
+            acc_journal_objs = self.env['account.journal'].search([('type', '=', 'bank')])
             account_move_obj = self.env['account.move']
             account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-            #TODO add function to create move
-            #TODO add function to create move line
+            move_obj = rec._generate_move(acc_journal_objs,account_move_obj,date)
+            rec._generate_credit_move_line(acc_journal_objs,date,move_obj.id,account_move_line_obj)
+            rec._generate_debit_move_line(acc_journal_objs,date,move_obj.id,account_move_line_obj)
+            move_obj.post()
+            #TODO need to update properties of account move
+            #TODO need to update properties of account move line
+        return True
 
+    def _generate_move(self, journal,account_move_obj,date):
+        if not journal.sequence_id:
+            raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
+        if not journal.sequence_id.active:
+            raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
+
+        name = journal.with_context(ir_sequence_date=date).sequence_id.next_by_id()
+        account_move_id = False
+        if not account_move_id:
+            account_move_dict = {
+                'name': name,
+                'date': date,
+                'ref': '',
+                'company_id': self.operating_unit_id.partner_id.id,
+                'journal_id': journal.id,
+                'operating_unit_id': self.operating_unit_id.id,
+            }
+            account_move = account_move_obj.create(account_move_dict)
+        return account_move
+
+    def _generate_credit_move_line(self,journal,date,account_move_id,account_move_line_obj):
+        account_move_line_credit = {
+            'account_id': journal.default_credit_account_id.id,
+            # 'analytic_account_id': acc_inv_line_obj.account_analytic_id.id,
+            'credit': self.total_amount,
+            'date_maturity': date,
+            'debit':  False,
+            'name': '/',
+            'operating_unit_id':  self.operating_unit_id.id,
+            # 'partner_id': acc_inv_line_obj.partner_id.id,
+            'move_id': account_move_id,
+        }
+        account_move_line_obj.create(account_move_line_credit)
+        return True
+
+    def _generate_debit_move_line(self,journal,date,account_move_id,account_move_line_obj):
+        account_move_line_debit = {
+            'account_id': journal.default_debit_account_id.id,
+            # 'analytic_account_id': acc_inv_line_obj.account_analytic_id.id,
+            'credit': False,
+            'date_maturity': date,
+            'debit':  self.total_amount,
+            'name': 'TDS/Vat Challan',
+            'operating_unit_id':  self.operating_unit_id.id,
+            # 'partner_id': acc_inv_line_obj.partner_id.id,
+            'move_id': account_move_id,
+        }
+        account_move_line_obj.create(account_move_line_debit)
         return True
 
     ####################################################
@@ -105,7 +160,7 @@ class TdsVendorChallan(models.Model):
 class TdsVendorChallanLine(models.Model):
     _name = 'tds.vendor.challan.line'
 
-    supplier_id = fields.Many2one('res.partner', string="Supplier")
+    supplier_id = fields.Many2one('res.partner', string="Vendor")
     challan_provided = fields.Float(String='Challan Provided')
     total_bill = fields.Float(String='Total Bill')
     undistributed_bill = fields.Float(String='Undistributed Bill')

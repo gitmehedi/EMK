@@ -10,7 +10,6 @@ class AccountMove(models.Model):
         # todo need to add date range query
         acc_inv_line_objs = self.env['account.invoice.line'].search([('product_id.is_provisional_expense','=',True)], order='operating_unit_id asc')
         acc_journal_objs = self.env['account.journal'].search([('type','=','provisional')])
-        account_move_obj = self.env['account.move']
         account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         op_unit_list = []
         acc_inv_line_grp_list = []
@@ -27,7 +26,7 @@ class AccountMove(models.Model):
 
         for acc_inv_line_obj_list in acc_inv_line_grp_list:
             move_obj = self._generate_move(acc_journal_objs, acc_inv_line_obj_list[0],
-                                           date,account_move_obj)
+                                           date)
             for acc_inv_line_obj in acc_inv_line_obj_list:
                 self._generate_debit_move_line(acc_inv_line_obj, date, move_obj.id,account_move_line_obj)
                 self._generate_credit_move_line(acc_journal_objs,acc_inv_line_obj,date,move_obj.id,account_move_line_obj)
@@ -35,7 +34,7 @@ class AccountMove(models.Model):
             move_obj.post()
         return True
 
-    def _generate_move(self, journal,acc_inv_line_obj_list,date,account_move_obj):
+    def _generate_move(self, journal,acc_inv_line_obj_list,date):
         if not journal.sequence_id:
             raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
@@ -52,7 +51,7 @@ class AccountMove(models.Model):
                 'journal_id': journal.id,
                 'operating_unit_id': acc_inv_line_obj_list.operating_unit_id.id,
             }
-            account_move = account_move_obj.create(account_move_dict)
+            account_move = self.create(account_move_dict)
         return account_move
 
     def _generate_credit_move_line(self,journal,acc_inv_line_obj,date,account_move_id,account_move_line_obj):

@@ -6,9 +6,6 @@
     "sequence": 10,
     'summary': 'All Access Rights of mtbl',
     'description': """
-Manage the recruitment access rights
-================================================
-
 This application allows you to easily maintain access rights of mtbl process.
 """,
     'depends': [

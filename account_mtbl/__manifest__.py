@@ -23,7 +23,6 @@
         'views/inherit_account_journal.xml',
         'views/inherit_res_bank.xml',
         'views/inherit_account_move.xml',
-        #'views/inherit_account_type.xml',
         'views/mtbl_branch.xml',
     ],
     'installable': True,

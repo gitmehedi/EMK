@@ -15,7 +15,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
         ('tds', 'TDS'),
     ], string='Type', required=True,default= 'both')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch')
-    supplier_id = fields.Many2one('res.partner', string="Supplier")
+    supplier_id = fields.Many2one('res.partner', string="Vendor")
 
     @api.multi
     def generate_action(self):
