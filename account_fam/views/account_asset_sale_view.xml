@@ -10,7 +10,7 @@
                             states="draft"/>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft"/>
-                    <button name="action_sale" string="Sale" type="object" class="oe_highlight"
+                    <button name="action_sale" string="Sell" type="object" class="oe_highlight"
                             context="{'sale':True,'sale_id':name}" states="approve"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,sale"/>
                 </header>
