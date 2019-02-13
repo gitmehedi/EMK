@@ -18,6 +18,7 @@ class VendorAgreement(models.Model):
         domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
         states={'draft': [('readonly', False)]})
     product_id = fields.Many2one('product.product', string='Product/Service', required=True, readonly=True,
+                                 domain=[('type', '=', 'service')],
                                  track_visibility='onchange', states={'draft': [('readonly', False)]})
     start_date = fields.Date(string='Start Date', default=fields.Date.today(), required=True, readonly=True,
                              track_visibility='onchange',
@@ -49,6 +50,17 @@ class VendorAgreement(models.Model):
         ('confirm', "Confirm"),
         ('done', "Done"),
     ], default='draft', track_visibility='onchange')
+
+    is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True,store=True,string="Is Remaining",
+                                  help="Take decision that advance amount is remaing or not")
+
+    @api.depends('adjusted_amount','advance_amount')
+    def _compute_is_remaining(self):
+        for record in self:
+            if record.adjusted_amount and record.advance_amount and record.adjusted_amount>=record.advance_amount:
+                record.is_remaining = False
+            else:
+                record.is_remaining = True
 
     @api.model
     def create(self, vals):
@@ -139,4 +151,4 @@ class VendorAgreement(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    agreement_id = fields.Many2one('agreement')
+    agreement_id = fields.Many2one('agreement',copy=False)

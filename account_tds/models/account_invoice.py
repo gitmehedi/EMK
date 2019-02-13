@@ -23,7 +23,10 @@ class AccountInvoice(models.Model):
         If there any chance to add TDS in this bill then its temporary inapplicable""")
 
     total_tds_amount = fields.Float('Total TDS', compute='_compute_total_tds',
-        store=True, readonly=True, track_visibility='always')
+        store=True, readonly=True, track_visibility='always',copy=False)
+
+    tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines', oldname='tax_line',
+                                   readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
     @api.multi
     def action_invoice_open(self):
@@ -91,7 +94,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    tds_amount = fields.Float('Tds value',readonly=True,store=True)
+    tds_amount = fields.Float('Tds value',readonly=True,store=True,copy=False)
     account_tds_id = fields.Many2one('tds.rule',related='product_id.account_tds_id', string='TDS Rule',
                                      store=True)
 
