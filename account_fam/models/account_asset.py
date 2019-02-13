@@ -323,7 +323,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'name': asset_name,
                 'account_id': category_id.account_asset_loss_id.id,
                 'debit': 0.0,
-                'credit': gain - amount if float_compare(gain, 0.0, precision_digits=prec) > 0 else 0.0,
+                'credit': gain if float_compare(gain, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id,
                 'partner_id': line.asset_id.partner_id.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,

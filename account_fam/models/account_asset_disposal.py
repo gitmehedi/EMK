@@ -11,8 +11,8 @@ class AccountAssetDisposal(models.Model):
     _rec_name = 'name'
 
     name = fields.Char(string='Serial No', readonly=True, default='New')
-    total_value = fields.Float(string='Total Asset Value', compute='_compute_total_value')
-    total_depr_amount = fields.Float(string='Total Depreciation Value', compute='_compute_total_depr_amount')
+    total_value = fields.Float(string='Asset Value', compute='_compute_total_value')
+    total_depr_amount = fields.Float(string='Depreciation Value', compute='_compute_total_depr_amount')
     request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now(),
                                    readonly=True, states={'draft': [('readonly', False)]})
     approve_date = fields.Datetime(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]})

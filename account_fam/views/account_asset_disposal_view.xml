@@ -56,7 +56,9 @@
         <field name="name">account.asset.disposal.tree</field>
         <field name="model">account.asset.disposal</field>
         <field name="arch" type="xml">
-            <tree string="Asset Disposal">
+            <tree string="Asset Disposal" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                              decoration-bf="state in ('draft','approve')"
+                              decoration-muted="state=='dispose'">
                 <field name="name"/>
                 <field name="total_value"/>
                 <field name="total_depr_amount"/>

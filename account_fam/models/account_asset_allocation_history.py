@@ -9,7 +9,8 @@ class AccountAssetAllocationHistory(models.Model):
     _order = 'id desc'
 
     asset_id = fields.Many2one('account.asset.asset', ondelete='restrict')
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True)
+    from_branch_id = fields.Many2one('operating.unit', string='From Branch')
+    operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
     receive_date = fields.Datetime(string='Receive Date', required=True)
     transfer_date = fields.Datetime(string='Transfer Date')
     state = fields.Selection([('active', 'Active'), ('inactive', 'Inactive')], default='active')

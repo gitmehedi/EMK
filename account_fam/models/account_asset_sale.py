@@ -11,8 +11,8 @@ class AccountAssetSale(models.Model):
     _rec_name = 'name'
 
     name = fields.Char(string='Serial No', readonly=True, default='New')
-    total_value = fields.Float(string='Total Asset Value', compute='_compute_total_value')
-    total_sale_amount = fields.Float(string='Total Sale Value', compute='_compute_total_sale_amount')
+    total_value = fields.Float(string='Asset Value', compute='_compute_total_value')
+    total_sale_amount = fields.Float(string='Sale Value', compute='_compute_total_sale_amount')
     request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now(),
                                    readonly=True, states={'draft': [('readonly', False)]})
     approve_date = fields.Datetime(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]})
@@ -85,7 +85,7 @@ class AccountAssetSaleLine(models.Model):
 
     sale_id = fields.Many2one('account.asset.sale', string='Sale', ondelete='restrict')
     journal_entry = fields.Selection([('unpost', 'Unposted'), ('post', 'Posted')], default='unpost', requried=True)
-
+    
     @api.onchange('asset_id')
     def onchange_asset(self):
         if self.asset_id:

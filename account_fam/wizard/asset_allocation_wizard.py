@@ -11,8 +11,18 @@ from odoo.tools import float_compare, float_is_zero
 class AssetAllocationWizard(models.TransientModel):
     _name = 'asset.allocation.wizard'
 
-    date = fields.Date(default=fields.Date.today(), string='Allocation/Transfer Date', required=True)
-    operating_unit_id = fields.Many2one('operating.unit', string='From Branch', required=True)
+    def default_from_branch(self):
+        asset_id = self.env.context.get('active_id', False)
+        asset = self.env['account.asset.asset'].browse(asset_id)
+        if not asset.asset_allocation_ids:
+            return asset.operating_unit_id
+        else:
+            branch = asset.asset_allocation_ids.search([('asset_id', '=', asset_id), ('state', '=', 'active')], limit=1)
+            return branch.operating_unit_id
+
+    date = fields.Date(string='Allocation/Transfer Date', required=True, default=fields.Date.today())
+    operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
+                                        default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
 
     # @api.onchange('operating_unit_id')
@@ -41,6 +51,9 @@ class AssetAllocationWizard(models.TransientModel):
                 if last_allocation.receive_date >= self.date:
                     raise ValidationError(_("Receive date shouldn\'t less than previous receive date."))
 
+                if self.operating_unit_id.id >= self.to_operating_unit_id.id:
+                    raise ValidationError(_("Same branch transfer shouldn\'t possible."))
+
                 last_allocation.write({
                     'transfer_date': datetime.strptime(self.date, '%Y-%m-%d') + timedelta(days=-1),
                     'state': 'inactive',
@@ -48,6 +61,7 @@ class AssetAllocationWizard(models.TransientModel):
 
             return self.env['account.asset.allocation.history'].create({
                 'asset_id': asset.id,
+                'from_branch_id': self.operating_unit_id.id,
                 'operating_unit_id': self.to_operating_unit_id.id,
                 'receive_date': self.date,
                 'state': 'active',
@@ -116,7 +130,7 @@ class AssetAllocationWizard(models.TransientModel):
             depr_value = asset.value - asset.value_residual
             from_depr_credit = {
                 'name': asset.display_name,
-                'account_id': asset.category_id.account_depreciation_id.id,
+                'account_id': asset.category_id.account_asset_id.id,
                 'debit': 0.0,
                 'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.category_id.journal_id.id,

@@ -65,6 +65,7 @@
                         <tree string="Allocation History" decoration-success="state=='active'"
                               decoration-bf="state=='active'"
                               decoration-muted="state=='inactive'" delete="0" create="0">
+                            <field name="from_branch_id"/>
                             <field name="operating_unit_id"/>
                             <field name="receive_date"/>
                             <field name="transfer_date"/>
