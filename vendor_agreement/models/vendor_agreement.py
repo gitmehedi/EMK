@@ -125,7 +125,7 @@ class VendorAgreement(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res and res.id or False,
-            'res_model': 'agreement.wizard',
+            'res_model': 'amendment.agreement.wizard',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
