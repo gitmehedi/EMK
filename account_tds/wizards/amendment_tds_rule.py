@@ -11,13 +11,13 @@ class TDSRulesWizard(models.TransientModel):
     name = fields.Char(string='Name',size=50,readonly=True,default=lambda self: self.env.context.get('name'))
     active = fields.Boolean(string='Active',default=lambda self: self.env.context.get('active'))
     current_version = fields.Char('Current Version',readonly=True)
-    account_id = fields.Many2one('account.account',string="Tds Account",required=True,default=lambda  self: self.env.context.get('account_id'))
+    account_id = fields.Many2one('account.account',string="TDS Account",required=True,default=lambda  self: self.env.context.get('account_id'))
     line_ids = fields.One2many('tds.rule.wizard.line','tds_rule_wiz_id',string='Rule Details',default=lambda self: self.env.context.get('line_ids'))
     effective_from = fields.Date(string='Effective Date', required=True,default=lambda self: self.env.context.get('effective_from'))
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
-    ], string='Tds Type', required=True,default=lambda self: self.env.context.get('type_rate'))
+    ], string='TDS Type', required=True,default=lambda self: self.env.context.get('type_rate'))
     flat_rate = fields.Float(string='Rate',size=50,default=lambda  self: self.env.context.get('flat_rate'))
 
 

@@ -94,7 +94,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    tds_amount = fields.Float('Tds value',readonly=True,store=True,copy=False)
+    tds_amount = fields.Float('TDS Value',readonly=True,store=True,copy=False)
     account_tds_id = fields.Many2one('tds.rule',related='product_id.account_tds_id', string='TDS Rule',
                                      store=True)
 

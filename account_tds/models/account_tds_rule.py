@@ -95,9 +95,9 @@ class TDSRules(models.Model):
             if rec.state == 'draft':
                 if rec.type_rate == 'flat':
                     if rec.flat_rate < 0:
-                        raise ValidationError("Please Check Your Tds Rate!! \n Rate Never Take Negative Value!")
+                        raise ValidationError("Please Check Your TDS Rate!! \n Rate Never Take Negative Value!")
                     elif rec.flat_rate > 100:
-                        raise ValidationError("Please Check Your Tds Rate!! \n Rate never take more than 100%!")
+                        raise ValidationError("Please Check Your TDS Rate!! \n Rate never take more than 100%!")
                 elif rec.type_rate == 'slab':
                     if len(rec.line_ids) <= 0:
                         raise ValidationError("Please, Add Slab Details ")
@@ -108,13 +108,13 @@ class TDSRules(models.Model):
                                     "Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
                             elif line.rate < 0:
                                 raise ValidationError(
-                                    "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                                    "Please Check Your Slab's TDS Rate!! \n Rate Never Take Negative Value!")
                             elif line.range_from < 0:
                                 raise ValidationError(
-                                    "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                                    "Please Check Your Slab's TDS Rate!! \n Rate Never Take Negative Value!")
                             elif line.range_to < 0:
                                 raise ValidationError(
-                                    "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                                    "Please Check Your Slab's TDS Rate!! \n Rate Never Take Negative Value!")
 
     @api.onchange('type_rate')
     def _check_type_rate(self):
@@ -203,12 +203,12 @@ class TDSRuleVersion(models.Model):
     name = fields.Char(string='Name', required=True, size=50)
     active = fields.Boolean(string='Active', default=True)
     tds_version_rule_id = fields.Many2one('tds.rule')
-    account_id = fields.Many2one('account.account', string="Tds Account", required=True)
+    account_id = fields.Many2one('account.account', string="TDS Account", required=True)
     effective_from = fields.Date(string='Effective Date', required=True)
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
-    ], string='Tds Type', required=True)
+    ], string='TDS Type', required=True)
     flat_rate = fields.Float(string='Rate', size=50)
     version_line_ids = fields.One2many('tds.rule.version.line', 'tds_version_id', string='Rule Details')
 
