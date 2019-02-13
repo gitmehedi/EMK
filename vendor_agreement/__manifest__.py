@@ -21,6 +21,7 @@
         'security/ir.model.access.csv',
         'wizards/amendment_agreement.xml',
         'views/vendor_agreement_view.xml',
+        'views/account_invoice_view.xml',
         ],
     'installable': True,
     'application': True,

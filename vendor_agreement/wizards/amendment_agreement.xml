@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <record id="view_agreement_form_wizard" model="ir.ui.view">
-            <field name="name">agreement.wizard.form</field>
-            <field name="model">agreement.wizard</field>
+        <record id="view_amendment_agreement_form_wizard" model="ir.ui.view">
+            <field name="name">amendment.agreement.wizard.form</field>
+            <field name="model">amendment.agreement.wizard</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Agreement Amendment">
@@ -27,9 +27,9 @@
             </field>
         </record>
 
-        <record id="agreement_wizard_action_view" model="ir.actions.act_window">
+        <record id="amendment_agreement_wizard_action_view" model="ir.actions.act_window">
             <field name="name">Agreement Amendment</field>
-            <field name="res_model">agreement.wizard</field>
+            <field name="res_model">amendment.agreement.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

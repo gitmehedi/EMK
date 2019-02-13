@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_supplier_agreement_form" model="ir.ui.view">
+        <field name="name">account.invoice.agreement.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='residual']" position="after">
+                <field name="agreement_adjusted_amount" class="oe_subtotal_footer_separator"
+                       attrs="{'invisible': [('agreement_id', '=', False)]}" widget="monetary"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

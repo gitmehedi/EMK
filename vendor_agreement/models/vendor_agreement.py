@@ -30,8 +30,8 @@ class VendorAgreement(models.Model):
                                       track_visibility='onchange', states={'draft': [('readonly', False)]})
     service_value = fields.Float(string="Service Value", required=True, readonly=True,
                                       track_visibility='onchange', states={'draft': [('readonly', False)]})
-    advance_amount = fields.Float(string="Advance Amount", readonly=1, track_visibility='onchange')
-    adjusted_amount = fields.Float(string="Adjusted Amount", readonly=1, track_visibility='onchange')
+    advance_amount = fields.Float(string="Advance Amount", track_visibility='onchange')
+    adjusted_amount = fields.Float(string="Adjusted Amount", track_visibility='onchange')
     account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]})
     acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
@@ -113,7 +113,7 @@ class VendorAgreement(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res and res.id or False,
-            'res_model': 'agreement.wizard',
+            'res_model': 'amendment.agreement.wizard',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
