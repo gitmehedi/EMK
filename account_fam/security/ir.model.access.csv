@@ -17,6 +17,12 @@ acc_acc_ass_dis_manager,acc_ass_dis_manager,model_account_asset_disposal,grp_fix
 acc_acc_ass_dis_line_user,acc_ass_dis_line_user,model_account_asset_disposal_line,grp_fixasset_user,1,1,1,1
 acc_acc_ass_dis_line_manager,acc_ass_dis_line_manager,model_account_asset_disposal_line,grp_fixasset_manager,1,1,1,1
 
+acc_acc_ass_sale_user,acc_ass_sale_user,model_account_asset_sale,grp_fixasset_user,1,1,1,1
+acc_acc_ass_sale_manager,acc_ass_sale_manager,model_account_asset_sale,grp_fixasset_manager,1,1,1,1
+
+acc_acc_ass_sale_line_user,acc_ass_sale_line_user,model_account_asset_sale_line,grp_fixasset_user,1,1,1,1
+acc_acc_ass_sale_line_manager,acc_ass_sale_line_manager,model_account_asset_sale_line,grp_fixasset_manager,1,1,1,1
+
 acc_acc_inv_user,acc_inv_user,account.model_account_invoice,grp_fixasset_user,1,1,1,1
 acc_acc_inv_manager,acc_inv_manager,account.model_account_invoice,grp_fixasset_manager,1,1,1,1
 

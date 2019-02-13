@@ -10,7 +10,6 @@
         'account',
         'account_operating_unit',
         'sub_operating_unit',
-        'vendor_agreement',
     ],
     'data': [
         'views/product_product_view.xml',
