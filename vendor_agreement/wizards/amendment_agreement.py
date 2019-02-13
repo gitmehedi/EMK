@@ -3,10 +3,9 @@ from odoo.exceptions import UserError, ValidationError
 
 
 
-class AgreementWizard(models.TransientModel):
-    _name = 'agreement.wizard'
-    _order = 'name desc'
-    _description = 'Vendor Agreement'
+class AmendmentAgreementWizard(models.TransientModel):
+    _name = 'amendment.agreement.wizard'
+
 
     name = fields.Char('Name',readonly=True)
     end_date = fields.Date(string='End Date', required=True,
