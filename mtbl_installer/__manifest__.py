@@ -16,6 +16,7 @@
                 'account_fiscal_year',
                 'account_fiscal_month',
                 'account_move_fiscal_year',
+                'account_category',
                 'base_vat_bd',
                 'sub_operating_unit',
                 'ou_currency',
@@ -25,6 +26,9 @@
                 'gbs_vendor_bill',
                 'tds_vendor_challan',
                 'account_mtbl',
+                'account_provisional',
+                'account_fam',
+                'purchase',
                 'mtbl_access',
 
                 #'account_move_fiscal_month',
