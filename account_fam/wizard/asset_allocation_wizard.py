@@ -43,12 +43,12 @@ class AssetAllocationWizard(models.TransientModel):
         company_currency = asset.company_id.currency_id
         current_currency = asset.currency_id
 
+        if self.operating_unit_id.id == self.to_operating_unit_id.id:
+            raise ValidationError(_("Same branch transfer shouldn\'t possible."))
+
         def asset_move(asset):
             last_allocation = self.env['account.asset.allocation.history'].search(
                 [('asset_id', '=', asset.id), ('state', '=', 'active'), ('transfer_date', '=', False)])
-
-            if self.operating_unit_id.id == self.to_operating_unit_id.id:
-                raise ValidationError(_("Same branch transfer shouldn\'t possible."))
 
             if last_allocation:
                 if last_allocation.receive_date >= self.date:
