@@ -73,6 +73,10 @@ class AccountAssetDisposal(models.Model):
                 raise ValidationError(_('Record cannot delete after approval.'))
         return super(AccountAssetDisposal, self).unlink()
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'approve')]
+
 
 class AccountAssetDisposalLine(models.Model):
     _name = 'account.asset.disposal.line'
