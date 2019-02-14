@@ -51,7 +51,7 @@ class AssetAllocationWizard(models.TransientModel):
                 if last_allocation.receive_date >= self.date:
                     raise ValidationError(_("Receive date shouldn\'t less than previous receive date."))
 
-                if self.operating_unit_id.id >= self.to_operating_unit_id.id:
+                if self.operating_unit_id.id == self.to_operating_unit_id.id:
                     raise ValidationError(_("Same branch transfer shouldn\'t possible."))
 
                 last_allocation.write({
