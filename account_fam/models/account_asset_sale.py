@@ -73,6 +73,9 @@ class AccountAssetSale(models.Model):
                 raise ValidationError(_('Record cannot delete after approval.'))
         return super(AccountAssetSale, self).unlink()
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'approve')]
 
 class AccountAssetSaleLine(models.Model):
     _name = 'account.asset.sale.line'

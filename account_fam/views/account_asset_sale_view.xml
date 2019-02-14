@@ -6,7 +6,8 @@
         <field name="arch" type="xml">
             <form string="Asset Sale">
                 <header>
-                    <button name="%(action_asset_sale_wizard)d" string="Asset To Sell" type="action" class="oe_highlight"
+                    <button name="%(action_asset_sale_wizard)d" string="Asset To Sell" type="action"
+                            class="oe_highlight"
                             states="draft"/>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft"/>
@@ -49,6 +50,10 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -58,8 +63,8 @@
         <field name="model">account.asset.sale</field>
         <field name="arch" type="xml">
             <tree string="Asset Sale" decoration-info="state=='draft'" decoration-success="state=='approve'"
-                              decoration-bf="state in ('approve','draft')"
-                              decoration-muted="state=='sale'">
+                  decoration-bf="state in ('approve','draft')"
+                  decoration-muted="state=='sale'">
                 <field name="name"/>
                 <field name="total_value"/>
                 <field name="total_sale_amount"/>

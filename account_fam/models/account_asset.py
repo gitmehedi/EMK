@@ -14,7 +14,7 @@ class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
     _order = 'id desc'
 
-    asset_seq = fields.Char(string='Code', readonly=True)
+    asset_seq = fields.Char(string='Asset Code', readonly=True)
     batch_no = fields.Char(string='Batch No', readonly=True)
     method_progress_factor = fields.Float('Depreciation Factor', default=0.2)
     is_custom_depr = fields.Boolean(default=True, required=True)
@@ -53,6 +53,29 @@ class AccountAssetAsset(models.Model):
     def depr_date_format(self, depreciation_date):
         no_of_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
         return depreciation_date.replace(day=no_of_days)
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            name = record.name
+            if record.asset_seq:
+                name = '[' + record.asset_seq + '] ' + record.name
+            result.append((record.id, name))
+        return result
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
+        names2 = []
+        if name:
+            domain = [('name', '=ilike', name + '%')]
+            names2 = self.search(domain, limit=limit).name_get()
+        return list(set(names1) | set(names2))[:limit]
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'open')]
 
     @api.multi
     def compute_depreciation_board(self):
