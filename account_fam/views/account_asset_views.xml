@@ -104,4 +104,26 @@
             </xpath>
         </field>
     </record>
+
+    <record id="inherit_view_account_asset_asset_purchase_tree" model="ir.ui.view">
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Assets" decoration-info="(state == 'draft')" decoration-bf="(state == 'open')"
+                      decoration-success="(state == 'open')" decoration-muted="(state == 'close')">
+                    <field name="asset_seq"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="date"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="value"/>
+                    <field name="value_residual" widget="monetary"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="True"/>
+                    <field name="state"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
 </odoo>

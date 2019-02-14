@@ -43,6 +43,9 @@ class AssetAllocationWizard(models.TransientModel):
         company_currency = asset.company_id.currency_id
         current_currency = asset.currency_id
 
+        if self.operating_unit_id.id == self.to_operating_unit_id.id:
+            raise ValidationError(_("Same branch transfer shouldn\'t possible."))
+
         def asset_move(asset):
             last_allocation = self.env['account.asset.allocation.history'].search(
                 [('asset_id', '=', asset.id), ('state', '=', 'active'), ('transfer_date', '=', False)])
@@ -50,9 +53,6 @@ class AssetAllocationWizard(models.TransientModel):
             if last_allocation:
                 if last_allocation.receive_date >= self.date:
                     raise ValidationError(_("Receive date shouldn\'t less than previous receive date."))
-
-                if self.operating_unit_id.id >= self.to_operating_unit_id.id:
-                    raise ValidationError(_("Same branch transfer shouldn\'t possible."))
 
                 last_allocation.write({
                     'transfer_date': datetime.strptime(self.date, '%Y-%m-%d') + timedelta(days=-1),
@@ -106,7 +106,7 @@ class AssetAllocationWizard(models.TransientModel):
         if self.env.context.get('transfer'):
             from_total_credit = {
                 'name': asset.display_name,
-                'account_id': asset.category_id.asset_suspense_account_id.id,
+                'account_id': asset.category_id.account_asset_id.id,
                 'debit': 0.0,
                 'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.category_id.journal_id.id,
@@ -130,13 +130,13 @@ class AssetAllocationWizard(models.TransientModel):
             depr_value = asset.value - asset.value_residual
             from_depr_credit = {
                 'name': asset.display_name,
-                'account_id': asset.category_id.account_asset_id.id,
+                'account_id': asset.category_id.account_depreciation_id.id,
                 'debit': 0.0,
                 'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
                 'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
-                'operating_unit_id': self.operating_unit_id.id,
+                'operating_unit_id': self.to_operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
             to_depr_debit = {
@@ -147,7 +147,7 @@ class AssetAllocationWizard(models.TransientModel):
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
                 'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
-                'operating_unit_id': self.to_operating_unit_id.id,
+                'operating_unit_id': self.operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
 
