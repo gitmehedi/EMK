@@ -47,12 +47,12 @@ class AssetAllocationWizard(models.TransientModel):
             last_allocation = self.env['account.asset.allocation.history'].search(
                 [('asset_id', '=', asset.id), ('state', '=', 'active'), ('transfer_date', '=', False)])
 
+            if self.operating_unit_id.id == self.to_operating_unit_id.id:
+                raise ValidationError(_("Same branch transfer shouldn\'t possible."))
+
             if last_allocation:
                 if last_allocation.receive_date >= self.date:
                     raise ValidationError(_("Receive date shouldn\'t less than previous receive date."))
-
-                if self.operating_unit_id.id == self.to_operating_unit_id.id:
-                    raise ValidationError(_("Same branch transfer shouldn\'t possible."))
 
                 last_allocation.write({
                     'transfer_date': datetime.strptime(self.date, '%Y-%m-%d') + timedelta(days=-1),
