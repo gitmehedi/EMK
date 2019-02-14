@@ -23,10 +23,12 @@
                                     <group>
                                         <group>
                                             <field name="amount_type" string="VAT Computation"/>
-                                            <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
+                                            <label for="amount"
+                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
                                             <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
-                                                <field name="amount" class="oe_inline" />
-                                                <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
+                                                <field name="amount" class="oe_inline"/>
+                                                <label string="%" class="oe_inline"
+                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
                                             </div>
                                         </group>
                                         <group attrs="{'invisible':[('amount_type','=', 'group')]}">
@@ -35,35 +37,47 @@
                                         </group>
                                     </group>
                                     <field name="children_tax_ids"
-                                        attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
-                                        domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
+                                           attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
+                                           domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                         <tree string="Children Taxes">
-                                            <field name="sequence" widget="handle" />
+                                            <field name="sequence" widget="handle"/>
                                             <field name="name"/>
-                                            <field name="amount_type" />
-                                            <field name="amount" />
+                                            <field name="amount_type"/>
+                                            <field name="amount"/>
                                         </tree>
                                     </field>
                                 </page>
                                 <page string="Advanced Options">
                                     <group>
                                         <group>
-                                            <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                            <field name="description"
+                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                             <field name="tax_group_id" string="VAT Group"/>
-                                            <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
-                                            <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
-                                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                            <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]"
+                                                   widget="many2many_tags"
+                                                   context="{'default_applicability': 'taxes'}"/>
+                                            <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}"
+                                                   groups="analytic.group_analytic_accounting"/>
+                                            <field name="company_id" options="{'no_create': True}"
+                                                   groups="base.group_multi_company"/>
                                             <field name="active" groups="base.group_no_one"/>
                                         </group>
                                         <group name="advanced_booleans">
-                                            <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
-                                            <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" string="Affect Base of Subsequent Vats"/>
+                                            <field name="price_include"
+                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                            <field name="include_base_amount"
+                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"
+                                                   string="Affect Base of Subsequent Vats"/>
                                             <field name="tax_adjustment" string="VAT Adjustment"/>
                                         </group>
                                     </group>
                                 </page>
                             </notebook>
                         </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
                     </form>
                 </xpath>
             </field>
@@ -93,7 +107,7 @@
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True}</field>
             <field name="view_id" ref="inherited_view_tax_tree"/>
         </record>
-        <menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="VATS" parent="account.account_account_menu" sequence="1"/>
+
 
         <record id="inherited_invoice_supplier_form" model="ir.ui.view">
             <field name="name">account.invoice.from</field>

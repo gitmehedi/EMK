@@ -9,9 +9,10 @@
     "category": "Generic",
     "depends": [
         "base",
+        'mail'
     ],
     "data": [
-        #'views/inherit_operating_unit.xml',
+        #'views/inherit_res_partner.xml',
     ],
     'installable': True,
     'application': False,

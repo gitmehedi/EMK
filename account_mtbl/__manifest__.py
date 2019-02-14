@@ -24,6 +24,8 @@
         'views/inherit_res_bank.xml',
         'views/inherit_account_move.xml',
         'views/mtbl_branch.xml',
+        'views/inherit_account_account.xml',
+        'views/inherit_account_type.xml',
     ],
     'installable': True,
     'application': True,
