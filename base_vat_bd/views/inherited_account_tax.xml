@@ -67,7 +67,7 @@
                                                    attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                             <field name="include_base_amount"
                                                    attrs="{'invisible':[('amount_type','=', 'group')]}"
-                                                   string="Affect Base of Subsequent Vats"/>
+                                                   string="Affect Base of Subsequent Vat"/>
                                             <field name="tax_adjustment" string="VAT Adjustment"/>
                                         </group>
                                     </group>
@@ -99,7 +99,7 @@
             </field>
         </record>
         <record id="account.action_tax_form" model="ir.actions.act_window">
-            <field name="name">VATS</field>
+            <field name="name">VAT</field>
             <field name="res_model">account.tax</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -115,7 +115,7 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='invoice_line_tax_ids']" position="attributes">
-                    <attribute name="string">VATS</attribute>
+                    <attribute name="string">VAT</attribute>
                 </xpath>
                 <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='name']" position="attributes">
                     <attribute name="string">VAT / Tax Description</attribute>
