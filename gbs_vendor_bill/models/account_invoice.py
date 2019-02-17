@@ -42,7 +42,7 @@ class AccountInvoice(models.Model):
     @api.constrains('reference')
     def _check_unique_reference(self):
         if self.partner_id and self.reference:
-            filters = [['reference', '=ilike', self.reference.strip()], ['partner_id', '=', self.partner_id.id]]
+            filters = [['reference', '=ilike', self.reference], ['partner_id', '=', self.partner_id.id]]
             bill_no = self.search(filters)
             if len(bill_no) > 1:
                 raise UserError(_('Reference must be unique for %s !') % self.partner_id.name)
@@ -117,6 +117,18 @@ class AccountInvoice(models.Model):
                 account_move = self.env['account.move'].search([('id','=',inv.move_id.id)])
                 account_move.write({'operating_unit_id': inv.operating_unit_id.id})
         return res
+
+    @api.model
+    def create(self, vals):
+        if 'reference' in vals:
+            vals['reference'] = vals['reference'].strip()
+        return super(AccountInvoice, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('reference'):
+            vals.update({'reference': vals.get('reference').strip()})
+        return super(AccountInvoice, self).write(vals)
 
 
 class AccountInvoiceLine(models.Model):
