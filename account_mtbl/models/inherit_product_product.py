@@ -4,7 +4,7 @@ class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = ['product.product','mail.thread']
 
-    name = fields.Char(track_visibility='onchange')
+    #name = fields.Char(track_visibility='onchange')
     parent_id = fields.Many2one(track_visibility='onchange')
     #categ_id = fields.Many2one(track_visibility='onchange')
     # type = fields.Selection(track_visibility='onchange')

@@ -25,10 +25,9 @@
                 'gbs_vendor_bill',
                 'tds_vendor_challan',
                 'account_mtbl',
+                'account_fam',
                 'account_provisional',
                 'mtbl_access',
-                'account_fam',
-
                 # 'account_move_fiscal_month',
                 # 'account_operating_unit',
                 # 'base_bank_bd',
