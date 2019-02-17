@@ -1,0 +1,9 @@
+.lc_attachment th[data-id='name'] {
+  width: 60%;
+}
+
+.oe_danger_custom {
+    color: #ffffff !important;
+    background-color: #d9534f !important;
+    border-color: #d43f3a !important;
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="doc_receive_wizard_export_foreign" model="ir.ui.view">
+            <field name="name">doc.receive.wizard.export.foreign</field>
+            <field name="model">doc.receive.wizard.export.foreign</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Please Enter Shipment Products" create="false" edit="false">
+                    <field name="shipment_id" invisible='1'/>
+                    <field name="product_lines" widget="one2many">
+                        <tree string="Purchase Order Lines" create="false" editable="bottom">
+                            <field name="product_id" readonly='1'/>
+                            <field name="name" readonly='1'/>
+                            <field name="date_planned" readonly='1'/>
+                            <field name="product_qty"/>
+                            <field name="product_uom" readonly='1'/>
+                            <field name="price_unit" invisible='1'/>
+                            <field name="lc_pro_line_id" invisible='1'/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Save" name="save_shipment_products" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
