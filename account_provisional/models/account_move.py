@@ -7,13 +7,18 @@ class AccountMove(models.Model):
 
 
     def action_create_provisional_journal(self):
-        # todo need to add date range query
-        acc_inv_line_objs = self.env['account.invoice.line'].search([('product_id.is_provisional_expense','=',True)], order='operating_unit_id asc')
+        date = fields.Date.context_today(self)
+        # todo need to update date range query
+        date_range_objs = self.env['date.range'].search([('date_end', '<', date), ('type_name', '=', 'Account')],
+                                                        order='id DESC', limit=1)
+        acc_inv_line_objs = self.env['account.invoice.line'].search([('product_id.is_provisional_expense','=',True),
+                                                                     ('invoice_id.date', '<=', date_range_objs.date_end),
+                                                                     ('invoice_id.date', '>=', date_range_objs.date_start),
+                                                                     ], order='operating_unit_id asc')
         acc_journal_objs = self.env['account.journal'].search([('type','=','provisional')])
         account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         op_unit_list = []
         acc_inv_line_grp_list = []
-        date = fields.Date.context_today(self)
 
         for acc_inv_line_obj in acc_inv_line_objs:
             value = acc_inv_line_obj.operating_unit_id.id
@@ -89,7 +94,9 @@ class AccountMove(models.Model):
         journal_id = self.env['account.journal'].search([('type','=','provisional')])
         # todo need to update date range query
         date_range_objs = self.env['date.range'].search([('date_end', '<', date),('type_name', '=', 'Account')],order='id DESC',limit=1)
-        ac_move_ids = self.env['account.move'].search([('date', '<=', date_range_objs.date_end),('date', '>=', date_range_objs.date_start),
-                                                       ('journal_id','=',journal_id)])
-        res = self.env['account.move'].browse(ac_move_ids).reverse_moves(date, journal_id or False)
+        ac_move_ids = self.search([('date', '<=', date_range_objs.date_end),('date', '>=', date_range_objs.date_start),
+                                                       ('journal_id','=',journal_id.id)])
+        # ac_move_ids = self.search([('journal_id','=',journal_id.id)])
+        if ac_move_ids:
+            res = self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
         return res

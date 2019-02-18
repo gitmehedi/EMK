@@ -120,7 +120,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'reference' in vals:
+        if vals.get('reference'):
             vals['reference'] = vals['reference'].strip()
         return super(AccountInvoice, self).create(vals)
 
