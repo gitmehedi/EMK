@@ -8,7 +8,7 @@
         "sale_order_type",
                 ],
     "data": [
-        "views/inherit_sale_order_type.xml",
+        "views/inherit_sale_team.xml",
     ],
 
     'installable': True,

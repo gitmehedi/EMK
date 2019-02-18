@@ -17,7 +17,6 @@ class SaleOrderType(models.Model):
 
     name = fields.Char(track_visibility='onchange')
     company_id = fields.Many2one(track_visibility='onchange')
-    currency_id = fields.Many2one(track_visibility='onchange')
     journal_id = fields.Many2one(track_visibility='onchange')
     pricelist_id = fields.Many2one(track_visibility='onchange')
     incoterm_id = fields.Many2one(track_visibility='onchange')

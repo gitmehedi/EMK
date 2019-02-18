@@ -14,6 +14,13 @@ class InheritedSaleOrderType(models.Model):
         ('contract_sales', 'Sales Contract'),
     ], string='Sale Order Type', required=True,track_visibility='onchange')
 
+    region_type = fields.Selection([
+        ('local', 'Local'),
+        ('foreign', 'Foreign'),
+    ], string="Region Type", required=True, track_visibility='onchange',
+        help="Local: Local LC.\n"
+             "Foreign: Foreign LC.")
+
     currency_id = fields.Many2one('res.currency', string="Currency", required=True,track_visibility='onchange')
 
     @api.constrains('name')
