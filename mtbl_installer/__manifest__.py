@@ -23,7 +23,7 @@
                 'account_tds',
                 'vendor_agreement',
                 'gbs_vendor_bill',
-                'tds_vendor_challan',
+                'tds_vat_challan',
                 'account_mtbl',
                 'account_fam',
                 'account_provisional',

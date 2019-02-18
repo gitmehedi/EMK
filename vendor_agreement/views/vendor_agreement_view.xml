@@ -75,7 +75,7 @@
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="advance_amount"/>
                                     <field name="adjusted_amount"/>
-                                    <field name="is_remaining"/>
+                                    <field name="is_remaining" invisible="1"/>
                                 </group>
                             </group>
                             <notebook>

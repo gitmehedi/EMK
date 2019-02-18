@@ -8,4 +8,4 @@ class ChallanDistributed(models.TransientModel):
 
     @api.one
     def action_distributed(self):
-        self.env['tds.vendor.challan'].browse(self._context.get('active_ids')).action_distributed()
+        self.env['tds.vat.challan'].browse(self._context.get('active_ids')).action_distributed()

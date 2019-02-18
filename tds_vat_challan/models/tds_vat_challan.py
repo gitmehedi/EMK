@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class TdsVendorChallan(models.Model):
-    _name = 'tds.vendor.challan'
+    _name = 'tds.vat.challan'
     _inherit = ['mail.thread']
     _order = 'date desc'
     _rec_name = 'supplier_id'
@@ -18,7 +18,7 @@ class TdsVendorChallan(models.Model):
     distribute_date = fields.Datetime(string='Distribute Date', readonly=True, track_visibility='onchange')
     distribute_approver = fields.Many2one('res.users', string='Distribute By', readonly=True,
                                           help="who is distributed.", track_visibility='onchange')
-    line_ids = fields.One2many('tds.vendor.challan.line', 'parent_id', string='Vendor Challan', select=True,
+    line_ids = fields.One2many('tds.vat.challan.line', 'parent_id', string='Vendor Challan', select=True,
                                track_visibility='onchange')
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
 
@@ -84,15 +84,15 @@ class TdsVendorChallan(models.Model):
     def generate_account_journal(self):
         for rec in self:
             date = fields.Date.context_today(self)
-            acc_journal_objs = self.env['account.journal'].search([('type', '=', 'bank')])
+            account_conf_pool = self.env['account.config.settings'].search([], order='id desc', limit=1)
+            acc_journal_objs = account_conf_pool.tds_vat_transfer_journal_id
             account_move_obj = self.env['account.move']
             account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
             move_obj = rec._generate_move(acc_journal_objs,account_move_obj,date)
-            rec._generate_credit_move_line(acc_journal_objs,date,move_obj.id,account_move_line_obj)
-            rec._generate_debit_move_line(acc_journal_objs,date,move_obj.id,account_move_line_obj)
-            move_obj.post()
-            #TODO need to update properties of account move
-            #TODO need to update properties of account move line
+            for line in rec.line_ids:
+                self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
+            self._generate_credit_move_line(account_conf_pool.tds_vat_transfer_account_id,date,move_obj.id,account_move_line_obj)
+            # move_obj.post()
         return True
 
     def _generate_move(self, journal,account_move_obj,date):
@@ -115,32 +115,32 @@ class TdsVendorChallan(models.Model):
             account_move = account_move_obj.create(account_move_dict)
         return account_move
 
-    def _generate_credit_move_line(self,journal,date,account_move_id,account_move_line_obj):
+    def _generate_credit_move_line(self,tds_vat_transfer_account_id,date,account_move_id,account_move_line_obj):
         account_move_line_credit = {
-            'account_id': journal.default_credit_account_id.id,
-            # 'analytic_account_id': acc_inv_line_obj.account_analytic_id.id,
+            'account_id': tds_vat_transfer_account_id.id,
             'credit': self.total_amount,
             'date_maturity': date,
             'debit':  False,
             'name': '/',
             'operating_unit_id':  self.operating_unit_id.id,
-            # 'partner_id': acc_inv_line_obj.partner_id.id,
             'move_id': account_move_id,
+            # 'partner_id': acc_inv_line_obj.partner_id.id,
+            # 'analytic_account_id': acc_inv_line_obj.account_analytic_id.id,
         }
         account_move_line_obj.create(account_move_line_credit)
         return True
 
-    def _generate_debit_move_line(self,journal,date,account_move_id,account_move_line_obj):
+    def _generate_debit_move_line(self,line,date,account_move_id,account_move_line_obj):
         account_move_line_debit = {
-            'account_id': journal.default_debit_account_id.id,
-            # 'analytic_account_id': acc_inv_line_obj.account_analytic_id.id,
+            'account_id': line.acc_move_line_id.account_id.id,
+            'analytic_account_id': line.acc_move_line_id.analytic_account_id.id,
             'credit': False,
             'date_maturity': date,
-            'debit':  self.total_amount,
-            'name': 'TDS/Vat Challan',
+            'debit':  line.total_bill,
+            'name': 'challan/'+line.acc_move_line_id.name,
             'operating_unit_id':  self.operating_unit_id.id,
-            # 'partner_id': acc_inv_line_obj.partner_id.id,
             'move_id': account_move_id,
+            # 'partner_id': acc_inv_line_obj.partner_id.id,
         }
         account_move_line_obj.create(account_move_line_debit)
         return True
@@ -158,13 +158,13 @@ class TdsVendorChallan(models.Model):
 
 
 class TdsVendorChallanLine(models.Model):
-    _name = 'tds.vendor.challan.line'
+    _name = 'tds.vat.challan.line'
 
     supplier_id = fields.Many2one('res.partner', string="Vendor")
     challan_provided = fields.Float(String='Challan Provided')
     total_bill = fields.Float(String='Total Bill')
     undistributed_bill = fields.Float(String='Undistributed Bill')
-    parent_id = fields.Many2one('tds.vendor.challan')
+    parent_id = fields.Many2one('tds.vat.challan')
     acc_move_line_id = fields.Many2one('account.move.line')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', track_visibility='onchange')
 

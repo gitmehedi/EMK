@@ -6,4 +6,4 @@ class ChallanDeposited(models.TransientModel):
 
     @api.one
     def action_deposited(self):
-        self.env['tds.vendor.challan'].browse(self._context.get('active_ids')).action_deposited()
+        self.env['tds.vat.challan'].browse(self._context.get('active_ids')).action_deposited()
