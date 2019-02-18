@@ -13,6 +13,55 @@
                 <field name="bin"/>
                 <field name="tin"/>
             </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="replace">
+                <page name="sales_purchases" string="Sales &amp; Purchases" invisible="1">
+                    <group name="container_row_2">
+                        <group string="Sale" name="sale" invisible="1">
+                            <field name="customer"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="Purchase" name="purchase">
+                            <field name="supplier"/>
+                        </group>
+                        <group string="Misc" invisible="1">
+                            <field name="ref"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_view_partner_property_form" model="ir.ui.view">
+        <field name="name">inherited.res.partner.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="replace">
+                <page string="Accounting" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                    <group>
+                        <group string="Sale" name="acc_sale" invisible="1">>
+                            <field name="property_payment_term_id" widget="selection"/>
+                            <field name="credit" groups="base.group_no_one"/>
+                            <field name="trust"/>
+                        </group>
+                        <group string="Purchase" name="acc_purchase">
+                            <field name="property_supplier_payment_term_id" widget="selection"/>
+                            <field name="debit" groups="base.group_no_one"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Fiscal Information" name="fiscal_information">
+                            <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
+                            <field name="property_account_receivable_id"/>
+                            <field name="property_account_payable_id"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
         </field>
     </record>
 

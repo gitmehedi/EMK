@@ -47,7 +47,7 @@ class VendorAgreement(models.Model):
 
     state = fields.Selection([
         ('draft', "Draft"),
-        ('confirm', "Confirm"),
+        ('confirm', "Confirmed"),
         ('done', "Done"),
     ], default='draft', track_visibility='onchange')
 
