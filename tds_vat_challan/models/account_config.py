@@ -18,6 +18,11 @@ class AccountConfigSettings(models.TransientModel):
                                                   help="Account Journal that used when TDS/VAT challan deposited")
 
     @api.multi
-    def set_loan_approve(self):
+    def set_tds_vat_transfer_account_id(self):
         return self.env['ir.values'].sudo().set_default(
-            'account.config.settings', 'tds_vat_transfer_account_id', self.tds_vat_transfer_account_id)
+            'account.config.settings', 'tds_vat_transfer_account_id', self.tds_vat_transfer_account_id.id)
+
+    @api.multi
+    def set_tds_vat_transfer_journal_id(self):
+        return self.env['ir.values'].sudo().set_default(
+            'account.config.settings', 'tds_vat_transfer_journal_id', self.tds_vat_transfer_journal_id.id)
