@@ -87,7 +87,7 @@ class TdsVendorChallan(models.Model):
             account_conf_pool = self.env['account.config.settings'].search([], order='id desc', limit=1)
             if not account_conf_pool:
                 raise UserError(
-                    _("Account Setting not setup properly.Please contact with system admin."))
+                    _("Account Settings are not properly set. Please contact your system administrator for assistance."))
             acc_journal_objs = account_conf_pool.tds_vat_transfer_journal_id
             account_move_obj = self.env['account.move']
             account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
