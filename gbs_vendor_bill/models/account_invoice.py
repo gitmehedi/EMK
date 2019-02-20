@@ -120,10 +120,10 @@ class AccountInvoice(models.Model):
         return res
 
     @api.multi
-    def do_merge(self, keep_references=False, date_invoice=False, remove_empty_invoice_lines=True):
+    def do_merge(self, keep_references=True, date_invoice=False):
         for invoice in self:
             invoice.reference = ''
-        return super(AccountInvoice, self).do_merge(keep_references, date_invoice, remove_empty_invoice_lines)
+        return super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
 
     @api.model
     def create(self, vals):
