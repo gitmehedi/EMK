@@ -36,7 +36,7 @@
                                 </group>
                             </group>
                             <group colspan="4">
-                                <field name="title" class="gbs-text-area"/>
+                                <field name="title" class="gbs-text-area" required="1"/>
                             </group>
 
                             <group>
