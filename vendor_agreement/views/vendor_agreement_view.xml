@@ -158,7 +158,7 @@
         </record>
 
         <menuitem id="agreement_account.agreement_menu" action="agreement_account.agreement_action"
-                  name="Vendor Agreement" groups="group_vendor_agreement_manager,group_vendor_agreement_user"
+                  name="Vendor Agreement" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
                   parent="account.menu_finance_payables" sequence="0"/>
 
 

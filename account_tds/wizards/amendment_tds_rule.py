@@ -72,7 +72,7 @@ class TDSRulesWizard(models.TransientModel):
 
             elif rec.type_rate == 'slab':
                 if len(rec.line_ids) <= 0:
-                    raise ValidationError("Please, Add Slab Details ")
+                    raise ValidationError("Please, Add Slab Details!! \n Make sure slab values('Range from','Range to') must be number.")
                 elif len(rec.line_ids) > 0:
                     for line in rec.line_ids:
                         if line.range_from >= line.range_to:
