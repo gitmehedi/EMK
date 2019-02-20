@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gbs_invoice_merge" model="ir.ui.view">
+        <field name="name">GBS Merger Partner Invoice</field>
+        <field name="model">invoice.merge</field>
+        <field name="inherit_id" ref="account_invoice_merge.view_invoice_merge" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='keep_references']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
