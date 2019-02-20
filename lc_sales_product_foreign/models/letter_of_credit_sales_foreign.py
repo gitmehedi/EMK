@@ -26,6 +26,18 @@ class LetterOfCreditCommon(models.Model):
              "TT: Telegraphic Transfer\n"
              "SC: Sales Contract.")
 
+    @api.onchange('second_party_applicant')
+    def onchange_second_party_applicant(self):
+        if self.region_type == 'foreign' and self.type == 'export':
+            if self.second_party_applicant.country_id.code:
+                if self.second_party_applicant.country_id.code == 'IN':
+                    self.declaration = "We hereby certify that goods are of Bangladesh origin" \
+                                       "and are freely importable and not covered under the negative " \
+                                       "list as per foreign trade policy 2015-2020,India."
+                else:
+                    self.declaration = "We hereby certify that goods are of Bangladesh origin."
+            else:
+                self.declaration = " "
     @api.multi
     def action_revision_export_foreign(self,amendment_date=None):
         self.ensure_one()

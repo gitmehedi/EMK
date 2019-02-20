@@ -12,6 +12,8 @@
         'views/lc_sales_view.xml',
         'views/shipment_sale_view.xml',
         'views/lc_sales_commercial.xml',
+        'reports/packing_list_report_view.xml',
+        'reports/commercial_invoice_report_view.xml',
         'wizard/lc_sales_report_wizard.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/sales_invoice_export_wizard_view.xml',
