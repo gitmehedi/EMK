@@ -34,8 +34,8 @@
                             <page string="Slab Details">
                                 <field name="line_ids">
                                     <tree string="List" editable="bottom">
-                                        <field name="range_from"/>
-                                        <field name="range_to"/>
+                                        <field name="range_from" placeholder="Enter Numeric Number"/>
+                                        <field name="range_to"  placeholder="Enter Numeric Number"/>
                                         <field name="rate"/>
                                     </tree>
                                 </field>

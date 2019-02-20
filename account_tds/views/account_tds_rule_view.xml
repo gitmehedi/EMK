@@ -39,11 +39,11 @@
                                             <label string="%" class="oe_inline"/>
                                         </div>
                                     </group>
-                                    <field name="line_ids" nolabel="1"
+                                    <field name="line_ids" nolabel="1" string="Slab Details"
                                            attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
                                         <tree string="List" editable="bottom">
-                                            <field name="range_from"/>
-                                            <field name="range_to"/>
+                                            <field name="range_from" placeholder="Enter Numeric Number"/>
+                                            <field name="range_to" placeholder="Enter Numeric Number"/>
                                             <field name="rate" string="Rate(%)"/>
                                         </tree>
                                     </field>
@@ -139,8 +139,8 @@
                             <page string="Slab Details">
                                 <field name="version_line_ids">
                                     <tree string="List" editable="bottom">
-                                        <field name="range_from"/>
-                                        <field name="range_to"/>
+                                        <field name="range_from" placeholder="Enter Numeric Number"/>
+                                        <field name="range_to" placeholder="Enter Numeric Number"/>
                                         <field name="rate"/>
                                     </tree>
                                 </field>

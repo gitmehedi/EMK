@@ -47,7 +47,7 @@ class VendorAgreement(models.Model):
 
     state = fields.Selection([
         ('draft', "Draft"),
-        ('confirm', "Confirm"),
+        ('confirm', "Confirmed"),
         ('done', "Done"),
     ], default='draft', track_visibility='onchange')
 
@@ -119,7 +119,7 @@ class VendorAgreement(models.Model):
 
     @api.multi
     def action_amendment(self):
-        res = self.env.ref('vendor_agreement.view_agreement_form_wizard')
+        res = self.env.ref('vendor_agreement.view_amendment_agreement_form_wizard')
         result = {
             'name': _('Agreement'),
             'view_type': 'form',

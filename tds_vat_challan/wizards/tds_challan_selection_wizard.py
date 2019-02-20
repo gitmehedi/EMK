@@ -1,5 +1,4 @@
 from odoo import models, fields, api,_
-from odoo.exceptions import UserError
 
 
 class TDSChallaSelectionWizard(models.TransientModel):
@@ -19,7 +18,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
 
     @api.multi
     def generate_action(self):
-        res_view = self.env.ref('tds_vendor_challan.view_tds_acc_move_line_tree')
+        res_view = self.env.ref('tds_vat_challan.view_tds_acc_move_line_tree')
 
         selection_type = []
         if self.type == 'both':

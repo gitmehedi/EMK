@@ -15,7 +15,6 @@
     'version': '10.0.0.1',
     'category': 'Account',
     'depends': [
-        'account',
         'date_range',
         'product',
         'account_operating_unit',

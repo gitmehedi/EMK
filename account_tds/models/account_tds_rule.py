@@ -32,7 +32,7 @@ class TDSRules(models.Model):
 
     state = fields.Selection([
         ('draft', "Draft"),
-        ('confirm', "Confirm"),
+        ('confirm', "Confirmed"),
     ], default='draft', track_visibility='onchange')
 
     _sql_constraints = [
@@ -99,8 +99,8 @@ class TDSRules(models.Model):
                     elif rec.flat_rate > 100:
                         raise ValidationError("Please Check Your TDS Rate!! \n Rate never take more than 100%!")
                 elif rec.type_rate == 'slab':
-                    if len(rec.line_ids) <= 0:
-                        raise ValidationError("Please, Add Slab Details ")
+                    if not rec.line_ids:
+                        raise ValidationError("Please, Add Slab Details!! \n Make sure slab('Range from','Range to')values must be number.")
                     elif len(rec.line_ids) > 0:
                         for line in rec.line_ids:
                             if line.range_from >= line.range_to:

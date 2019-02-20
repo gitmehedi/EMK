@@ -21,7 +21,7 @@
         <act_window id="action_challan_distribute"
             multi="True"
             key2="client_action_multi" name="Distribute"
-            res_model="challan.distribute" src_model="tds.vendor.challan"
+            res_model="challan.distribute" src_model="tds.vat.challan"
             view_mode="form" target="new" view_type="form" />
     </data>
 </odoo>

@@ -42,10 +42,11 @@ class AccountInvoice(models.Model):
     @api.constrains('reference')
     def _check_unique_reference(self):
         if self.partner_id and self.reference:
-            filters = [['reference', '=ilike', self.reference], ['partner_id', '=', self.partner_id.id]]
+            filters = [['reference', '=ilike', self.reference],['partner_id', '=', self.partner_id.id],['state','!=','cancel']]
             bill_no = self.search(filters)
             if len(bill_no) > 1:
                 raise UserError(_('Reference must be unique for %s !') % self.partner_id.name)
+
 
     @api.model
     def invoice_line_move_line_get(self):
@@ -118,9 +119,15 @@ class AccountInvoice(models.Model):
                 account_move.write({'operating_unit_id': inv.operating_unit_id.id})
         return res
 
+    @api.multi
+    def do_merge(self, keep_references=True, date_invoice=False):
+        for invoice in self:
+            invoice.reference = ''
+        return super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
+
     @api.model
     def create(self, vals):
-        if 'reference' in vals:
+        if vals.get('reference'):
             vals['reference'] = vals['reference'].strip()
         return super(AccountInvoice, self).create(vals)
 

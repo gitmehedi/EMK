@@ -9,8 +9,6 @@
     "category": "Generic",
     "depends": [
         "base",
-        'operating_unit',
-        'account',
         'sub_operating_unit',
         'account_operating_unit',
         'mail',
@@ -26,6 +24,7 @@
         'views/mtbl_branch.xml',
         'views/inherit_account_account.xml',
         'views/inherit_account_type.xml',
+        'views/inherit_product_product.xml'
     ],
     'installable': True,
     'application': True,

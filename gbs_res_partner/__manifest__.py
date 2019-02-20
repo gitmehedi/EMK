@@ -9,6 +9,7 @@
     "category": "Generic",
     "depends": [
         "base",
+        'base_vat_bd',
         'mail'
     ],
     "data": [

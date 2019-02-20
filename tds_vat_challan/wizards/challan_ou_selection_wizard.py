@@ -13,8 +13,8 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
     def generate_challan(self):
         # active_ids = self.env.context.get('active_ids')
         account_move_line_objs = self.env['account.move.line'].search([('id', 'in', self.env.context.get('active_ids'))], order='partner_id asc')
-        challan_obj = self.env['tds.vendor.challan']
-        challan_line_obj = self.env['tds.vendor.challan.line']
+        challan_obj = self.env['tds.vat.challan']
+        challan_line_obj = self.env['tds.vat.challan.line']
         challan_id = False
         pre_supplier_list = []
         pre_op_unit_list = []
@@ -62,7 +62,7 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'view_id': False,
-            'res_model': 'tds.vendor.challan',
+            'res_model': 'tds.vat.challan',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
