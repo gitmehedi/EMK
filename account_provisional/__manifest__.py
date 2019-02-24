@@ -14,7 +14,7 @@
     'category': 'Accounting & Finance',
     'depends': [
         'product',
-        'date_range',
+        'account_fiscal_month',
         'account_operating_unit',
     ],
     'data': [
