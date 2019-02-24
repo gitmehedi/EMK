@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os
-import shutil
-import traceback
+import os, shutil, xlrd, traceback, logging
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from glob import iglob
 from odoo import exceptions, models, fields, api, _, tools
 from odoo.service import db
-import logging
 
 _logger = logging.getLogger(__name__)
 try:
@@ -131,6 +128,7 @@ class ServerFileProcess(models.Model):
                     with rec.backup_log():
                         with rec.sftp_connection() as remote:
                             # Directory must exist
+                            self.create_journal(remote)
                             try:
                                 remote.makedirs(rec.folder)
                             except pysftp.ConnectionException:
@@ -261,4 +259,89 @@ class ServerFileProcess(models.Model):
 
         return pysftp.Connection(**params)
 
+    @api.one
+    def move_file_from_src_to_des(self, var_src_dir, var_des_dir):
+        """Move file from one to another directory
+        :param var_src_dir: source directory
+        :param var_des_dir: destination directory
+        """
+        shutil.move(var_src_dir, var_des_dir)
 
+    @api.one
+    def get_formatted_data(self, var_worksheet):
+        """Read Excel sheet and create list from sheet data
+        :param var_worksheet: take worksheet
+        :returns: The return value. list of dictionary
+        """
+        worksheet_col = []  # list of columns
+        for col in range(var_worksheet.ncols):
+            worksheet_col.append(str(var_worksheet.cell(0, col).value))
+
+        formatted_data = []  # collection of dict
+        for row in range(1, var_worksheet.nrows):
+            my_dict = {}
+            for col in range(var_worksheet.ncols - 1):
+                my_dict[worksheet_col[col]] = str(var_worksheet.cell(row, col).value)
+            formatted_data.append(my_dict)
+
+        return formatted_data
+
+    @api.one
+    def create_journal(self, remote):
+        source = remote.listdir(self.dest_path)
+        my_files_path = filter(lambda x: x.endswith('.xls'), source)
+        for file_path in my_files_path:
+            if os.path.splitext(file_path)[1] in ['.xls']:
+                full_path = self.dest_path + file_path
+                local_path = '/home/mehedi/' + file_path
+                remote.get(full_path, local_path)
+                file_obj = xlrd.open_workbook(local_path)
+                for worksheet_index in range(file_obj.nsheets):
+                    records = self.get_formatted_data(file_obj.sheet_by_index(worksheet_index))
+                    lines = []
+                    for rec in records[0]:
+                        journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
+                        account_id = self.env['account.account'].search([('code', '=', 100000)])
+                        currency_id = self.env['res.currency'].search([('name','=',rec['CURRENCY'])])
+
+                        if rec['DEBIT_CREDIT_FLAG'] == 'CR':
+                            moves = {
+                                'name': rec['BATCH_DESCRIPTION'],
+                                'account_id': account_id.id,
+                                'credit': float(rec['TRANSACTION_AMOUNT']),
+                                'debit': 0.0,
+                                'journal_id': journal.id,
+                                'partner_id': None,
+                                'analytic_account_id': None,
+                                'currency_id': currency_id,
+                                'amount_currency': 0.0,
+                            }
+
+                        if rec['DEBIT_CREDIT_FLAG'] == 'DR':
+                            moves = {
+                                'name': rec['BATCH_DESCRIPTION'],
+                                'account_id': account_id.id,
+                                'debit': float(rec['TRANSACTION_AMOUNT']),
+                                'credit': 0.0,
+                                'journal_id': journal.id,
+                                'partner_id': None,
+                                'analytic_account_id': None,
+                                'currency_id': currency_id,
+                                'amount_currency': 0.0,
+                            }
+
+                        lines.append((0, 0, moves))
+
+                    move_obj = self.env['account.move'].create({
+                        'journal_id': journal.id,
+                        'data': fields.Date.today(),
+                        'line_ids': lines,
+                        'journal_id': journal.id,
+                    })
+                    if move_obj.state == 'draft':
+                        move_obj.post()
+
+                    # if records:
+                    #     move_file_from_src_to_des(file_path, get_destination_dir())
+            else:
+                print("File extension is not valid")
