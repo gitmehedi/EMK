@@ -1,6 +1,6 @@
 from odoo import api, fields, models,_
 
-class Brabnch(models.Model):
+class Branch(models.Model):
     _name = 'operating.unit'
     _inherit = ['operating.unit','mail.thread']
 

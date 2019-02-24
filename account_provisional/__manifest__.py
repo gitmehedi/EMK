@@ -11,10 +11,10 @@
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
     'version': '10.0.0.1',
-    'category': 'Account',
+    'category': 'Accounting & Finance',
     'depends': [
         'product',
-        'date_range',
+        'account_fiscal_month',
         'account_operating_unit',
     ],
     'data': [
