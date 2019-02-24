@@ -98,5 +98,5 @@ class AccountMove(models.Model):
                                                        ('journal_id','=',journal_id.id)])
         # ac_move_ids = self.search([('journal_id','=',journal_id.id)])
         if ac_move_ids:
-            res = self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
-        return res
+            return self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
+

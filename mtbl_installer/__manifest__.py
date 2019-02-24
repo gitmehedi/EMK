@@ -16,6 +16,7 @@
                 'account_fiscal_year',
                 'account_fiscal_month',
                 'account_move_fiscal_year',
+                'agreement_account',
                 'base_vat_bd',
                 'sub_operating_unit',
                 'ou_currency',
