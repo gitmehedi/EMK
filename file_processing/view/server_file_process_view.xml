@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_server_file_process_form">
+        <field name="name">File Processing</field>
+        <field name="model">server.file.process</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <h1>
+                    <field name="name" invisible="True"/>
+                </h1>
+                <group>
+                    <group>
+                        <field name="folder"/>
+                        <field name="days_to_keep"/>
+                        <field name="method"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Source SFTP Settings">
+                        <field name="source_sftp_host" placeholder="sftp.example.com"/>
+                        <field name="source_sftp_port"/>
+                        <field name="source_sftp_user" placeholder="john"/>
+                        <field name="source_sftp_password"/>
+                        <field name="source_path" placeholder="/var/backups"/>
+                        <field name="source_sftp_private_key"
+                               placeholder="/home/odoo/.ssh/id_rsa"/>
+                        <br/>
+                        <br/>
+                        <button name="action_sftp_test_connection"
+                                type="object" context="{'target':'source'}"
+                                string="Test Source SFTP"
+                                icon="fa-television"/>
+                    </group>
+                    <group string="Destination SFTP Settings" attrs="{'invisible': [('method', '!=', 'sftp')]}">
+                        <field name="dest_sftp_host" placeholder="sftp.example.com"/>
+                        <field name="dest_sftp_port"/>
+                        <field name="dest_sftp_user" placeholder="john"/>
+                        <field name="dest_sftp_password"/>
+                        <field name="dest_path" placeholder="/var/backups"/>
+                        <field name="dest_sftp_private_key"
+                               placeholder="/home/odoo/.ssh/id_rsa"/>
+                        <br/>
+                        <br/>
+                        <button
+                                name="action_sftp_test_connection"
+                                type="object" context="{'target':'destination'}"
+                                string="Test Destination SFTP"
+                                icon="fa-television"/>
+                    </group>
+                </group>
+
+                <separator string="Help" colspan="2"/>
+                <div class="bg-warning text-warning">
+                    <h3>Warning:</h3>
+                    Use SFTP with caution! This writes files to external servers under the path you specify.
+                </div>
+                <div>
+                    Automatic backups of the database can be scheduled as follows:
+                    <ol>
+                        <li>Go to Settings / Technical / Automation / Scheduled Actions.</li>
+                        <li>Search the action named 'Backup scheduler'.</li>
+                        <li>Set the scheduler to active and fill in how often you want backups generated.</li>
+                    </ol>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_server_file_process_tree">
+        <field name="name">File Processing</field>
+        <field name="model">server.file.process</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Backups">
+                <field name='name'/>
+                <field name='folder'/>
+                <field name="source_sftp_host"/>
+                <field name="source_path"/>
+                <field name="dest_sftp_host"/>
+                <field name="dest_path"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_server_file_process_search">
+        <field name="name">File Processing</field>
+        <field name="model">server.file.process</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search options">
+                <field name='name'/>
+                <field name='folder'/>
+                <field name="source_sftp_host"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window
+            name="File Processing"
+            id="action_server_file_process_form"
+            res_model="server.file.process"/>
+
+    <menuitem
+            parent="base.next_id_9"
+            action="action_server_file_process_form"
+            id="server_file_process_menu"/>
+
+    <!-- Execute backup from "More" menu -->
+    <record id="action_server_backup" model="ir.actions.server">
+        <field name="name">Execute backup(s)</field>
+        <field name="model_id" ref="model_server_file_process"/>
+        <field name="code">
+            object.action_backup()
+        </field>
+    </record>
+
+    <record model="ir.values" id="action_backup">
+        <field name="name">Execute backup(s)</field>
+        <field name="action_id" ref="action_server_backup"/>
+        <field
+                name="value"
+                eval="'ir.actions.server,%d' % ref('action_server_backup')"/>
+        <field name="key">action</field>
+        <field name="model_id" ref="model_server_file_process"/>
+        <field name="model">server.file.process</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+</odoo>
