@@ -28,8 +28,11 @@
                 'account_fam',
                 'account_provisional',
                 'mtbl_access',
+                'account_operating_unit',
+                'account_invoice_merge',
+                'account_invoice_merge_operating_unit',
+                'account_invoice_merge_attachment',
                 # 'account_move_fiscal_month',
-                # 'account_operating_unit',
                 # 'base_bank_bd',
                 # 'account_check_printing',
                 # 'account_invoice_supplier_ref_unique',
@@ -39,9 +42,7 @@
                 # 'account_journal_report',
                 # 'custom_amount_conversion',
                 # 'cheque_printing',
-                # 'account_invoice_merge',
-                # 'account_invoice_merge_operating_unit',
-                # 'account_invoice_merge_attachment',
+
                 ],
 
     'data': [],

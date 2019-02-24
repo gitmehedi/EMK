@@ -8,6 +8,7 @@
     'category': 'Accounting',
     'depends': [
         'account_invoice_merge_operating_unit',
+        'account_invoice_merge_attachment',
         'sub_operating_unit',
     ],
     'data': [

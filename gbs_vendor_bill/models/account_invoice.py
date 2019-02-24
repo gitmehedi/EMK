@@ -207,7 +207,8 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).post()
         if res:
             for move in self:
-                op_unit = [i.operating_unit_id.id for i in move.line_ids if i.operating_unit_id][0]
-                move.write({'operating_unit_id':op_unit})
+                op_unit = [i.operating_unit_id.id for i in move.line_ids if i.operating_unit_id]
+                if op_unit:
+                    move.write({'operating_unit_id':op_unit[0]})
         return res
 

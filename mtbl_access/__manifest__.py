@@ -1,6 +1,6 @@
 {
     'name': 'MTBL Access Rights',
-    'author': 'Genweb2',
+    'author': 'Genweb2 Limited',
     'version': '10.0.1.0.0',
     'category': 'base',
     "sequence": 10,
