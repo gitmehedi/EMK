@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 class HrMobileBillLimits(models.Model):
     _name = 'hr.mobile.bill.limit'
     _inherit = ['mail.thread']
+    _order = 'effective_bill_date desc'
 
 
     name = fields.Char('Name', required=True,states={'draft': [('invisible', False)],

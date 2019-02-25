@@ -14,6 +14,7 @@
         'views/lc_sales_commercial.xml',
         'reports/packing_list_report_view.xml',
         'reports/commercial_invoice_report_view.xml',
+        'reports/bill_of_exchange_report.xml',
         'wizard/lc_sales_report_wizard.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/sales_invoice_export_wizard_view.xml',
@@ -22,7 +23,6 @@
         'wizard/buyer_bank_export_wizard_view.xml',
         'wizard/lc_amendment_wizard_view_foreign.xml',
         'wizard/maturity_export_wizard_view_foreign.xml',
-        # 'views/lc_sales_comm_acc.xml',
         'views/lc_sales_menu.xml',
     ],
 

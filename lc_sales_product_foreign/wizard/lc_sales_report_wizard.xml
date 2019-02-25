@@ -14,6 +14,10 @@
                         <button string="Commercial Invoice" name="process_commercial_invoice" type="object"
                                 class="oe_highlight"/>
                     </group>
+                    <group>
+                        <button string="Bill of Exchange" name="process_bill_exchange" type="object"
+                                class="oe_highlight"/>
+                    </group>
                     <footer>
                         <button special="cancel" string="Cancel" type="object"/>
                     </footer>

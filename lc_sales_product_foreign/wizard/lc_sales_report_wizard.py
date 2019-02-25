@@ -14,3 +14,9 @@ class LcSalesReportWizard(models.TransientModel):
     def process_commercial_invoice(self):
         return self.env['report'].get_action(self, 'lc_sales_product_foreign.report_commercial_invoice',
                                              {'lc_id': self.env.context.get('active_id')})
+
+    @api.multi
+    def process_bill_exchange(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product_local.report_bill_exchange', data)
