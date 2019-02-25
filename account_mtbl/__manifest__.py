@@ -13,6 +13,7 @@
         'product',
         'sub_operating_unit',
         'account_operating_unit',
+        'account_type_inactive',
     ],
     "data": [
         'views/segment_view.xml',
