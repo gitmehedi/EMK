@@ -147,9 +147,9 @@
                                 <thead>
                                     <tr class="odo-bg-gray">
                                         <th class="w50">Products</th>
-                                        <th class="text-center w10">H.S Code</th>
                                         <th class="text-center w10">Qty</th>
                                         <th class="text-center w10">UoM</th>
+                                        <th class="text-center w10">H.S Code</th>
                                         <th class="text-center w10">Unit Price</th>
                                         <th class="text-center w10">Total Price</th>
                                     </tr>
@@ -160,16 +160,15 @@
                                             <td>
                                                 <span t-esc="l['name']"/>
                                             </td>
-                                            <td>
-                                                <span t-esc="l['hs_code']"/>
-                                            </td>
                                             <td class="text-right">
                                                 <span t-esc="l['quantity']"/>
                                             </td>
                                             <td>
                                                 <span t-esc="l['product_uom']"/>
                                             </td>
-
+                                            <td>
+                                                <span t-esc="l['hs_code']"/>
+                                            </td>
                                             <td class="text-right">
                                                 <span t-esc="l['unit_price']"/>
                                             </td>
@@ -179,18 +178,13 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="2" class="text-right">Total
+                                        <td colspan="5" class="text-right">Total
                                             <t t-if="data['is_print_cfr'] == True">CER</t>
                                             <t t-if="data['fob_value']">(FOB <span t-esc="data['fob_value']"/></t>
                                             <t t-if="data['feright_value']">+Feright <span t-esc="data['feright_value']"/>)</t>
-
                                         </td>
                                         <td class="text-right">
-                                            <strong t-esc="total_qty"/>
-                                        </td>
-                                        <td colspan="2" class="text-right"></td>
-                                        <td class="text-right">
-                                            <strong t-esc="invoice_value"/>
+                                            <strong t-esc=" '%.2f' %data['invoice_value']"/>
                                         </td>
                                     </tr>
                                 </tbody>
