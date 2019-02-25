@@ -106,6 +106,7 @@
                 parent="account.menu_finance_payables"
                 action="tds_vat_challan_action"
                 id="tds_challan_menu"
+                groups="account_tds.group_tds_manager,account_tds.group_tds_user"
                 sequence="11"/>
 
         <record id="account.action_account_unreconcile" model="ir.actions.act_window">

@@ -1,8 +1,7 @@
 from odoo import models, fields, api, _
 
 class ProductProduct(models.Model):
-    _name = 'product.product'
-    _inherit = ['product.product','mail.thread']
+    _inherit = 'product.product'
 
     parent_id = fields.Many2one(track_visibility='onchange')
     default_code = fields.Char(track_visibility='onchange')

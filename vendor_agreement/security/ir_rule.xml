@@ -3,7 +3,7 @@
     <data noupdate="0">
 
         <record id="module_category_vendor_agreement" model="ir.module.category">
-            <field name="name">Vendor</field>
+            <field name="name">Vendor Agreement</field>
             <field name="sequence">240</field>
         </record>
 

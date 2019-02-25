@@ -39,6 +39,7 @@
                 parent="account.menu_finance_payables"
                 action="tds_challan_selection_wizard_action_view"
                 id="tds_challan_selection_wizard_menu"
+                groups="account_tds.group_tds_manager,account_tds.group_tds_user"
                 sequence="10" />
     </data>
 </odoo>
