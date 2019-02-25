@@ -106,9 +106,9 @@ class AccountInvoice(models.Model):
                     tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        return move_lines
+    # @api.multi
+    # def finalize_invoice_move_lines(self, move_lines):
+    #     return move_lines
 
     @api.multi
     def action_move_create(self):
