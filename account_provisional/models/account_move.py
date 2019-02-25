@@ -8,7 +8,6 @@ class AccountMove(models.Model):
 
     def action_create_provisional_journal(self):
         date = fields.Date.context_today(self)
-        # todo need to update date range query
         date_range_objs = self.env['date.range'].search([('date_end', '<', date), ('type_id.fiscal_month', '=', True)],
                                                         order='id DESC', limit=1)
         acc_inv_line_objs = self.env['account.invoice.line'].search([('product_id.is_provisional_expense','=',True),
@@ -90,10 +89,8 @@ class AccountMove(models.Model):
         return True
 
     def action_reverse_provisional_journal(self):
-        # date = fields.Date.context_today(self)
-        date = '2019-03-01'
+        date = fields.Date.context_today(self)
         journal_id = self.env['account.journal'].search([('type','=','provisional')])
-        # todo need to update date range query
         date_range_objs = self.env['date.range'].search([('date_end', '<', date),('type_id.fiscal_month', '=', True)],order='id DESC',limit=1)
         ac_move_ids = self.search([('date', '<=', date_range_objs.date_end),('date', '>=', date_range_objs.date_start),
                                                        ('journal_id','=',journal_id.id)])
