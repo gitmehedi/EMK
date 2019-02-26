@@ -14,14 +14,14 @@ This application allows you to easily maintain access rights of mtbl process.
         'account_fiscal_year',
         'date_range',
         'account_type_menu',
-        'account_parent'
+        'account_parent',
+        'operating_unit',
     ],
     'data': [
         'security/ir_security.xml',
+        'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'views/menuitems.xml'
-
-
     ],
     'installable': True,
     'auto_install': False,
