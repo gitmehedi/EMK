@@ -8,21 +8,58 @@
             <field name="arch" type="xml">
                 <form string="Print Reports" create="false" edit="false">
                     <group>
-                        <button string="Packing List" name="process_packing_list" type="object" class="oe_highlight"/>
+                        <group>
+                            <button string="Packing List" name="process_packing_list" type="object"
+                                    class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Commercial Invoice" name="process_commercial_invoice" type="object"
+                                    class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Bill of Exchange"
+                                    name="action_bill_of_exchange_no" type="object"
+                                    class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Certificate of Origin" name="process_certificate_origin" type="object"
+                                    class="oe_highlight"/>
+                        </group>
                     </group>
-                    <group>
-                        <button string="Commercial Invoice" name="process_commercial_invoice" type="object"
-                                class="oe_highlight"/>
-                    </group>
-                    <group>
-                        <button string="Bill of Exchange" name="process_bill_exchange" type="object"
-                                class="oe_highlight"/>
-                    </group>
+
                     <footer>
                         <button special="cancel" string="Cancel" type="object"/>
                     </footer>
                 </form>
             </field>
         </record>
+
+        <record id="bill_of_exc_wizard_view" model="ir.ui.view">
+            <field name="name">bill.of.exc.wizard</field>
+            <field name="model">bill.of.exc.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bill of Exchange Number" create="false" edit="false">
+                    <group>
+                        <group>
+                            <field name="bill_exchange"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print" class="oe_highlight" name="process_bill_exchange" type="object"/>
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!--<record id="action_bill_of_exc_wizard_view" model="ir.actions.act_window">-->
+        <!--<field name="name">Repay</field>-->
+        <!--<field name="type">ir.actions.act_window</field>-->
+        <!--<field name="res_model">lc.sales.report.foreign.wizard</field>-->
+        <!--<field name="view_type">form</field>-->
+        <!--<field name="view_mode">form</field>-->
+        <!--<field name="view_id" ref="bill_of_exc_wizard_view"/>-->
+        <!--<field name="target">new</field>-->
+        <!--</record>-->
     </data>
 </odoo>

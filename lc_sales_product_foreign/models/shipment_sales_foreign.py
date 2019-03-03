@@ -9,7 +9,6 @@ class ShipmentLocal(models.Model):
     fob_value = fields.Float(string='FOB Value')
     feright_value = fields.Float(string='Feright Value', compute='_compute_feright_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
-
     invoice_number_dummy = fields.Char(string='Invoice Number (Dummy)', track_visibility='onchange')
     truck_receipt_no = fields.Char(string='BL/Truck Receipt No.')
     bl_date = fields.Date(string='BL Date')
