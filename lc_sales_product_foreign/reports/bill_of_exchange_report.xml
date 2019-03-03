@@ -61,48 +61,49 @@
                                     <tr>
                                         <b>"<strong t-esc="data['tenure']"/>"
                                         </b>
-                                        OF THIS <span t-esc="data['bill_exchange']"/> BILL OF EXCHANGE PAY TO THE ORDER OF
+                                        OF THIS
+                                        <span t-esc="data['bill_exchange']"/>
+                                        BILL OF EXCHANGE PAY TO THE ORDER OF
                                         <strong t-esc="data['first_party_bank']"/>.
                                         <strong t-esc="data['first_party_bank_add']"/>.
-                                        THE SUM OF <span t-esc="data['currency_id']"/>:
+                                        THE SUM OF
+                                        <span t-esc="data['currency_id']"/>
                                         <strong t-esc="amt_to_word"/>
-                                        <strong> ONLY.</strong>
+                                        <strong>ONLY.</strong>
                                     </tr>
                                     <br/>
                                     <br/>
                                     <tr>
-                                        VALUE WILL BE RECEIVED AGAINST DELIVERY OF
                                         <t t-foreach="lists" t-as="l">
                                             <tr style="page-break-inside: avoid">
-                                                <span t-esc="l['name']"/>,
-                                                <strong t-esc="'%.2f'% l['quantity']"/>
-                                                <strong t-esc="l['uom']"/>,
-                                                (DUMMY IN 30 KGS HDPE JAR) AT THE RATE OF
-                                                <strong t-esc="data['currency_id']"/>
-                                                <strong t-esc="l['price_unit']"/>
-                                                ON
-                                                <span t-esc="data['inco_terms']"/>,
-                                                <span t-esc="data['landing_port']"/>,
-                                                <span t-esc="data['landing_port_country_id']"/>
-                                                AS PER PROFORMA INVOICE NO:
-                                                <t t-foreach="pi_list" t-as="p">
-                                                    <strong t-esc="p['number']"/>
-                                                    <b>, DATE: </b>
-                                                    <strong t-esc="p['date']"/>
-                                                </t>
-                                                <t t-if="len(pi_list)>1">,</t>
+                                                <p>VALUE WILL BE RECEIVED AGAINST DELIVERY OF
+                                                    <span t-esc="l['name']"/>,
+                                                    <strong t-esc="'%.2f'% l['quantity']"/> <strong t-esc="l['uom']"/>, (DUMMY IN 30 KGS HDPE JAR) AT THE RATE OF
+                                                    <strong t-esc="data['currency_id']"/> <strong t-esc="l['price_unit']"/>
+                                                    ON
+                                                    <span t-esc="data['inco_terms']"/>,
+                                                    <span t-esc="data['landing_port']"/>,
+                                                    <span t-esc="data['landing_port_country_id']"/>
+                                                    AS PER PROFORMA INVOICE NO:
+                                                    <t t-foreach="pi_list" t-as="p">
+                                                        <strong t-esc="p['number']"/>
+                                                        <b>, DATE:</b>
+                                                        <strong t-esc="p['date']"/>
+                                                    </t>
+                                                    <t t-if="len(pi_list)>1">,</t>
+                                                </p>
                                             </tr>
                                         </t>
                                     </tr>
                                     <br/>
                                     <br/>
                                     <tr>
-                                        <t t-if= "data['model_type'] == 'lc'">
+                                        <t t-if="data['model_type'] == 'lc'">
                                             DRAWN UNDER THE CONFIRMATION OF LC NO:
                                             <strong t-esc="data['lc_id']"/>,
-                                            <strong>DATE: </strong>
+                                            <strong>DATE:</strong>
                                             <strong t-esc="data['issue_date']"/>
-                                            <b> (MARINE INSURANCE COVER NOTE NO:<strong t-esc="data['cover_note_no']"/>)
+                                            <b>(MARINE INSURANCE COVER NOTE NO:<strong t-esc="data['cover_note_no']"/>)
                                             </b>
                                             <strong>OF</strong>
                                             <strong t-raw="data['second_party_bank']"/>,
@@ -113,18 +114,24 @@
                                             <t t-if="len(lists)>1">,</t>
                                         </t>
                                         <t t-else="data['model_type'] != 'lc'">
-                                            DRAWN UNDER <span t-esc="data['model_type']"/> NO:
+                                            DRAWN UNDER
+                                            <span t-esc="data['model_type']"/>
+                                            NO:
                                             <strong t-esc="data['lc_id']"/>,
-                                            <strong>DATE: </strong>
+                                            <strong>DATE:</strong>
                                             <strong t-esc="data['issue_date']"/>
-                                             BETWEEN
+                                            BETWEEN
                                             <strong t-esc="data['first_party']"/>,
-                                            <b>ADDRESS: </b><span t-esc="data['first_party_add']"/>
-                                            <b> FACTORY: </b><span t-esc="data['factory']"/>
-                                            <strong> AND </strong>
+                                            <b>ADDRESS:</b>
+                                            <span t-esc="data['first_party_add']"/>
+                                            <b>FACTORY:</b>
+                                            <span t-esc="data['factory']"/>
+                                            <strong>AND</strong>
                                             <strong t-raw="data['second_party_applicant']"/>,
-                                            <b> ADDRESS: </b><span t-esc="data['invoice_address']"/>
-                                            , IMPORTER'S BANK: <strong t-esc="data['second_party_bank']"/>
+                                            <b>ADDRESS:</b>
+                                            <span t-esc="data['invoice_address']"/>
+                                            , IMPORTER'S BANK:
+                                            <strong t-esc="data['second_party_bank']"/>
                                             GOODS ARE UNDER H.S.CODE NO:
                                             <t t-foreach="lists" t-as="l">
                                                 <strong t-esc="l['hs_code']"/>
@@ -165,10 +172,10 @@
                                     </td>
                                 </tr>
                                 <!--<tr>-->
-                                    <!--<td></td>-->
-                                    <!--<td>FACTORY:-->
-                                        <!--<span t-esc="data['delivery_address']"/>-->
-                                    <!--</td>-->
+                                <!--<td></td>-->
+                                <!--<td>FACTORY:-->
+                                <!--<span t-esc="data['delivery_address']"/>-->
+                                <!--</td>-->
                                 <!--</tr>-->
                                 <tr>
                                     <td></td>

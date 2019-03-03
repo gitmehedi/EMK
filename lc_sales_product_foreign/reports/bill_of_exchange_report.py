@@ -30,7 +30,7 @@ class BillExchangeFirst(models.AbstractModel):
             'tenure': shipment_obj.lc_id.tenure,
             'first_party_bank': shipment_obj.lc_id.first_party_bank_acc.bank_id.name,
             'first_party_bank_add': report_utility_pool.getBranchAddress(shipment_obj.lc_id.first_party_bank_acc),
-            'inco_terms': shipment_obj.lc_id.inco_terms.name,
+            'inco_terms': shipment_obj.lc_id.inco_terms.code,
             'landing_port': shipment_obj.lc_id.landing_port,
             'landing_port_country_id': shipment_obj.lc_id.landing_port_country_id.name,
             'cover_note_no': shipment_obj.lc_id.cover_note_no,

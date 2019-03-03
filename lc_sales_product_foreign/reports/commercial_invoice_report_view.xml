@@ -178,8 +178,7 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="5" class="text-right">Total
-                                            <t t-if="data['is_print_cfr'] == True">CER</t>
+                                        <td colspan="5" class="text-right">Total CFR
                                             <t t-if="data['fob_value']">(FOB <span t-esc="data['fob_value']"/></t>
                                             <t t-if="data['feright_value']">+Feright <span t-esc="data['feright_value']"/>)</t>
                                         </td>
