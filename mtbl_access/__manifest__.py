@@ -16,6 +16,7 @@ This application allows you to easily maintain access rights of mtbl process.
         'account_type_menu',
         'account_parent',
         'operating_unit',
+        'sub_operating_unit',
     ],
     'data': [
         'security/ir_security.xml',

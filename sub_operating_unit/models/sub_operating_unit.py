@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models,_
 
 
 class SubOperatingUnit(models.Model):
@@ -36,9 +35,7 @@ class SubOperatingUnit(models.Model):
         return list(set(names1) | set(names2))[:limit]
 
     @api.multi
-    def unlink(self):
-        for rec in self:
-            if not rec:
-                raise UserError('Data doesn\'t exist in system')
-            rec.unlink()
-        return super(SubOperatingUnit, self).unlink
+    def copy(self, default=None):
+        self.ensure_one()
+        default = dict(default or {}, name=_('%s (copy)') % self.name,code='COD')
+        return super(SubOperatingUnit, self).copy(default)

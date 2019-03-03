@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="0">
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
@@ -19,14 +19,6 @@
         <field eval="0" name="perm_create"/>
     </record>
 
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'operating_unit'), ('name', '=', 'ir_rule_operating_unit_allowed_operating_units')]"/>
-        </function>
-        <value eval="{'noupdate': True}"/>
-    </function>
-
-
     <record id="ir_rule_op_unit_allowed_sys_admin" model="ir.rule">
         <field name="model_id" ref="operating_unit.model_operating_unit"/>
         <field name="domain_force">[(1 ,'=', 1)]</field>
@@ -37,5 +29,34 @@
         <field eval="1" name="perm_read"/>
         <field eval="1" name="perm_create"/>
     </record>
+
+    <record id="sub_operating_unit.ir_rule_sub_operating_unit_allowed_user" model="ir.rule">
+        <field name="model_id" ref="sub_operating_unit.model_sub_operating_unit"/>
+        <field name="domain_force">[('operating_unit_id','in',user.operating_unit_ids.ids)]</field>
+        <field name="name">Allowed sub operating units to User</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <record id="ir_rule_sub_op_unit_allowed_sys_admin" model="ir.rule">
+        <field name="model_id" ref="sub_operating_unit.model_sub_operating_unit"/>
+        <field name="domain_force">[(1 ,'=', 1)]</field>
+        <field name="name">Allowed sub operating units to Admin</field>
+        <field name="groups" eval="[(4,ref('group_mtbl_sys_admin'))]"/>
+        <field eval="1" name="perm_unlink"/>
+        <field eval="1" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="1" name="perm_create"/>
+    </record>
+
+    <!--<function name="write" model="ir.model.data">-->
+        <!--<function name="search" model="ir.model.data">-->
+            <!--<value eval="[('module', '=', 'operating_unit'), ('name', '=', 'ir_rule_operating_unit_allowed_operating_units')]"/>-->
+        <!--</function>-->
+        <!--<value eval="{'noupdate': True}"/>-->
+    <!--</function>-->
 
 </odoo>

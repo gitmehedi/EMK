@@ -193,6 +193,12 @@ class TDSRules(models.Model):
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        return super(TDSRules, self).copy(default)
+
 
 class TDSRuleVersion(models.Model):
     _name = 'tds.rule.version'
