@@ -7,12 +7,13 @@
     'version': '10.0.0.1',
     'category': 'Accounting',
     'depends': [
-        'account',
-        'account_operating_unit',
+        'account_invoice_merge_operating_unit',
+        'account_invoice_merge_attachment',
         'sub_operating_unit',
     ],
     'data': [
         'views/product_product_view.xml',
+        'views/invoice_merge_view.xml',
         'views/account_invoice_view.xml',
 
     ],

@@ -84,7 +84,7 @@ class TdsVendorChallan(models.Model):
     def generate_account_journal(self):
         for rec in self:
             date = fields.Date.context_today(self)
-            account_conf_pool = self.env['account.config.settings'].search([], order='id desc', limit=1)
+            account_conf_pool = self.env['account.config.settings'].sudo().search([], order='id desc', limit=1)
             if not account_conf_pool:
                 raise UserError(
                     _("Account Settings are not properly set. Please contact your system administrator for assistance."))

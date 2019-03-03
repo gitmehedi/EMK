@@ -42,10 +42,11 @@ class AccountInvoice(models.Model):
     @api.constrains('reference')
     def _check_unique_reference(self):
         if self.partner_id and self.reference:
-            filters = [['reference', '=ilike', self.reference], ['partner_id', '=', self.partner_id.id]]
+            filters = [['reference', '=ilike', self.reference],['partner_id', '=', self.partner_id.id],['state','!=','cancel']]
             bill_no = self.search(filters)
             if len(bill_no) > 1:
                 raise UserError(_('Reference must be unique for %s !') % self.partner_id.name)
+
 
     @api.model
     def invoice_line_move_line_get(self):
@@ -105,9 +106,9 @@ class AccountInvoice(models.Model):
                     tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        return move_lines
+    # @api.multi
+    # def finalize_invoice_move_lines(self, move_lines):
+    #     return move_lines
 
     @api.multi
     def action_move_create(self):
@@ -117,6 +118,12 @@ class AccountInvoice(models.Model):
                 account_move = self.env['account.move'].search([('id','=',inv.move_id.id)])
                 account_move.write({'operating_unit_id': inv.operating_unit_id.id})
         return res
+
+    @api.multi
+    def do_merge(self, keep_references=True, date_invoice=False):
+        for invoice in self:
+            invoice.reference = ''
+        return super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
 
     @api.model
     def create(self, vals):
@@ -200,7 +207,8 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).post()
         if res:
             for move in self:
-                op_unit = [i.operating_unit_id.id for i in move.line_ids if i.operating_unit_id][0]
-                move.write({'operating_unit_id':op_unit})
+                op_unit = [i.operating_unit_id.id for i in move.line_ids if i.operating_unit_id]
+                if op_unit:
+                    move.write({'operating_unit_id':op_unit[0]})
         return res
 

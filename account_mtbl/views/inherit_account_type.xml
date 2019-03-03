@@ -13,7 +13,7 @@
                                 <group>
                                     <field name="name"/>
                                     <field name="type"/>
-                                    <field name="active"/>
+                                    <field name="active" />
                                 </group>
                                 <group>
                                     <field name="include_initial_balance"/>

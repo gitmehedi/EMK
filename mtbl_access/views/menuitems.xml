@@ -73,5 +73,10 @@
             id='payment.root_payment_menu'
             parent='account.menu_finance_configuration' groups="base.group_no_one"/>
 
+    <!--<menuitem-->
+            <!--id="account.menu_account_config"-->
+            <!--name="Settings" parent="account.menu_finance_configuration"-->
+            <!--sequence="0" groups="base.group_system,mtbl_access.group_mtbl_sys_admin"/>-->
+
 
 </odoo>

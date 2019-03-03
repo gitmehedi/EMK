@@ -2,6 +2,7 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_res_currency_admin,account_res_currency_admin,base.model_res_currency,group_mtbl_sys_admin,1,1,1,1
 
 access_operating_unit_admin,account_operating_unit_admin,operating_unit.model_operating_unit,group_mtbl_sys_admin,1,1,1,1
+operating_unit.access_account_operating_unit_user,operating_unit user,operating_unit.model_operating_unit,base.group_user,1,0,0,0
 
 access_sub_operating_unit_admin,account_sub_operating_unit_admin,sub_operating_unit.model_sub_operating_unit,group_mtbl_sys_admin,1,1,1,1
 
@@ -23,6 +24,14 @@ access_res_bank_user,account_res_bank_user,base.model_res_bank,,1,0,0,0
 access_date_range_admin,account_date_range_admin,date_range.model_date_range,group_mtbl_sys_admin,1,1,1,1
 access_date_range_user,account_date_range_user,date_range.model_date_range,,1,0,0,0
 
+access_date_range_generator_admin,access_date_range_generator_admin,date_range.model_date_range_generator,group_mtbl_sys_admin,1,1,1,1
+access_date_range_generator_user,access_date_range_generator_user,date_range.model_date_range_generator,,1,0,0,0
+
+access_date_range_type_admin,access_date_range_type_admin,date_range.model_date_range_type,group_mtbl_sys_admin,1,1,1,1
+access_date_range_type_user,access_date_range_type_user,date_range.model_date_range_type,,1,0,0,0
+
 access_account_account_type_admin,account_account_account_type_admin,account.model_account_account_type,group_mtbl_sys_admin,1,1,1,1
 access_account_account_type_user,account_account_account_type_user,account.model_account_account_type,,1,0,0,0
+
+access_res_company_group_sys_admin,access_res_company_group_sys_admin,base.model_res_company,group_mtbl_sys_admin,1,1,1,1
 

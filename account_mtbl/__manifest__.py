@@ -8,10 +8,12 @@
     'website': 'http://www.genweb2.com',
     "category": "Generic",
     "depends": [
-        "base",
+        'base',
+        'mail',
+        'product',
         'sub_operating_unit',
         'account_operating_unit',
-        'mail',
+        'account_type_inactive',
     ],
     "data": [
         'views/segment_view.xml',

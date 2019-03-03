@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='active']" position="after">
                     <field name="tds_year"/>
-                    <field name="tds_month"/>
+                    <!--<field name="tds_month"/>-->
                 </xpath>
             </field>
         </record>

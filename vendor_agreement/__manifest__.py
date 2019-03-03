@@ -11,10 +11,10 @@
         6. Adjustment History (if any)
 
         """,
-    'author': "Genweb2",
+    'author': "Genweb2 Limited",
     'website': "http://www.genweb2.com",
     'version': '10.0.0.1',
-    'category': 'Vendor',
+    'category': 'Accounting & Finance',
     'depends': ['agreement_account'],
     'data': [
         'security/ir_rule.xml',
