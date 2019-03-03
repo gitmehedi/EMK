@@ -6,6 +6,7 @@ from . import mtbl_branch
 from . import inherit_account_journal
 from . import inherit_res_bank
 from . import inherit_account_move
+from . import inherit_account_move_line
 from . import inherit_account_account
 from . import inherit_account_type
 from . import inherit_product_product
