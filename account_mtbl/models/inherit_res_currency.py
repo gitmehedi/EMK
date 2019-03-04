@@ -12,4 +12,5 @@ class Currency(models.Model):
                                 string='Symbol Position',track_visibility='onchange',
                                 help="Determines where the currency symbol should be placed after or before the amount.")
     active = fields.Boolean(default=True, track_visibility='onchange')
+    code = fields.Char('Code', required=True, track_visibility='onchange')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01, track_visibility='onchange')
