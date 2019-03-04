@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os, shutil, xlrd, traceback, logging
+import os, shutil, xlrd, traceback, logging, json
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from glob import iglob
 from odoo import exceptions, models, fields, api, _, tools
-from odoo.service import db
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 try:
@@ -24,37 +24,34 @@ class ServerFileProcess(models.Model):
          "I cannot remove backups from the future. Ask Doc for that."),
     ]
 
-    name = fields.Char(string="Name", compute="_compute_name", store=True)
-    folder = fields.Char(default=lambda self: self._default_folder(), required=True, string="Local Path Location")
+    name = fields.Char(string="Name", required=True)
+    folder = fields.Char(default=lambda self: self._default_path(), required=True, string="Local Path Location")
     days_to_keep = fields.Integer(required=True, default=0, )
-    method = fields.Selection(selection=[("local", "Local disk"), ("sftp", "Remote SFTP server")], default="local")
+    method = fields.Selection(selection=[("local", "Local disk"), ("sftp", "Remote SFTP Server")], default="local",
+                              required=True)
 
+    source_path = fields.Char(string="Path Location", required=True)
     source_sftp_host = fields.Char(string='SFTP Server')
     source_sftp_port = fields.Integer(string="SFTP Port", default=22)
     source_sftp_user = fields.Char(string='Username')
     source_sftp_password = fields.Char(string="SFTP Password")
     source_sftp_private_key = fields.Char(string="Primary Key Location")
-    source_path = fields.Char(string="Path Location")
 
+    dest_path = fields.Char(string="Path Location", required=True)
     dest_sftp_host = fields.Char(string='SFTP Server')
     dest_sftp_port = fields.Integer(string="SFTP Port", default=22)
     dest_sftp_user = fields.Char(string='Username')
     dest_sftp_password = fields.Char(string="SFTP Password")
     dest_sftp_private_key = fields.Char(string="PK Location")
-    dest_path = fields.Char(string="Path Location")
 
     @api.model
-    def _default_folder(self):
+    def _default_path(self):
         """Default to ``backups`` folder inside current server datadir."""
-        return os.path.join(
-            tools.config["data_dir"],
-            "backups",
-            self.env.cr.dbname)
+        return os.path.expanduser('~')
 
     @api.multi
     @api.depends("folder", "method", "source_sftp_host", "source_sftp_port", "source_sftp_user")
     def _compute_name(self):
-        """Get the right summary for this job."""
         for rec in self:
             if rec.method == "local":
                 rec.name = "%s @ localhost" % rec.folder
@@ -77,9 +74,15 @@ class ServerFileProcess(models.Model):
     @api.multi
     def action_sftp_test_connection(self):
         """Check if the SFTP settings are correct."""
+
+        if self.env.context.get('target') == 'source':
+            connection = 'source'
+        else:
+            connection = 'destination'
+
         try:
             # Just open and close the connection
-            with self.sftp_connection():
+            with self.sftp_connection(connection):
                 raise exceptions.Warning(_("Connection Test Succeeded!"))
         except (pysftp.CredentialException,
                 pysftp.ConnectionException,
@@ -87,63 +90,277 @@ class ServerFileProcess(models.Model):
             _logger.info("Connection Test Failed!", exc_info=True)
             raise exceptions.Warning(_("Connection Test Failed!"))
 
-    @api.multi
-    def action_backup(self):
-        """Run selected backups."""
-        backup = None
-        filename = self.filename(datetime.now())
-        successful = self.browse()
-
-        # Start with local storage
-        for rec in self.filtered(lambda r: r.method == "local"):
-            with rec.backup_log():
-                # Directory must exist
+    @api.one
+    def directory_check(self, dirs):
+        for dir in dirs:
+            if not os.path.isdir(dir):
                 try:
-                    os.makedirs(rec.folder)
+                    os.makedirs(dir)
                 except OSError:
                     pass
 
-                with open(os.path.join(rec.folder, filename),
-                          'wb') as destiny:
-                    # Copy the cached backup
-                    if backup:
-                        with open(backup) as cached:
-                            shutil.copyfileobj(cached, destiny)
-                    # Generate new backup
-                    else:
-                        db.dump_db(self.env.cr.dbname, destiny)
-                        backup = backup or destiny.name
-                successful |= rec
+    @api.multi
+    def sftp_connection(self, connection):
+        """Return a new SFTP connection with found parameters."""
+        self.ensure_one()
+        if connection == 'source':
+            params = {
+                "host": self.source_sftp_host,
+                "username": self.source_sftp_user,
+                "port": self.source_sftp_port,
+            }
+            _logger.debug(
+                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
+                extra=params)
+            if self.source_sftp_private_key:
+                params["private_key"] = self.source_sftp_private_key
+                if self.source_sftp_password:
+                    params["private_key_pass"] = self.source_sftp_password
+            else:
+                params["password"] = self.source_sftp_password
+        else:
+            params = {
+                "host": self.dest_sftp_host,
+                "username": self.dest_sftp_user,
+                "port": self.dest_sftp_port,
+            }
+            _logger.debug(
+                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
+                extra=params)
+            if self.dest_sftp_private_key:
+                params["private_key"] = self.dest_sftp_private_key
+                if self.dest_sftp_password:
+                    params["private_key_pass"] = self.dest_sftp_password
+            else:
+                params["password"] = self.dest_sftp_password
+
+        return pysftp.Connection(**params)
+
+    @api.multi
+    def action_backup(self):
+
+        for rec in self.filtered(lambda r: r.method == "local"):
+            dirs = [rec.folder, rec.source_path, rec.dest_path]
+            self.directory_check(dirs)
+
+            files = filter(lambda x: x.endswith('.xls'), os.listdir(rec.source_path))
+            for file in files:
+                if os.path.splitext(file)[1] in ['.xls']:
+                    rec.create_journal(file)
 
         # Ensure a local backup exists if we are going to write it remotely
-        sftp = self.filtered(lambda r: r.method == "sftp")
-        if sftp:
-            if backup:
-                cached = open(backup)
+
+        with self.sftp_connection('source') as source:
+            with self.sftp_connection('destination') as destination:
+                for rec in self.filtered(lambda r: r.method == "sftp"):
+                    dirs = [rec.folder, rec.source_path, rec.dest_path]
+                    self.directory_check(dirs)
+                    files = filter(lambda x: x.endswith('.xls'), source.listdir(rec.source_path))
+                    for file in files:
+                        source_path = os.path.join(rec.source_path, file)
+                        dest_path = os.path.join(rec.dest_path,file)
+                        local_path = os.path.join(rec.folder, file)
+
+                        source.get(source_path, localpath=local_path, preserve_mtime=True)
+                        journal = rec.create_journal(file, {'source': source, 'dest': destination})
+
+                        if journal:
+                            if destination.put(local_path, dest_path) and source.unlink(source_path):
+                                os.remove(local_path)
+
+    def get_file_path(self, file, loc='s'):
+        if self.method == 'local':
+            if loc == 's':
+                return os.path.join(self.source_path, file)
             else:
-                cached = db.dump_db(self.env.cr.dbname, None)
+                return os.path.join(self.dest_path, file)
+        else:
+            return os.path.join(self.folder, file)
 
-            with cached:
-                for rec in sftp:
-                    with rec.backup_log():
-                        with rec.sftp_connection() as remote:
-                            # Directory must exist
-                            self.create_journal(remote)
-                            try:
-                                remote.makedirs(rec.folder)
-                            except pysftp.ConnectionException:
-                                pass
+    def preprocess(self, data):
+        filter = data.split('.')
+        return filter[0].strip() if len(filter) > 0 else None
 
-                            # Copy cached backup to remote server
-                            with remote.open(
-                                    os.path.join(rec.folder, filename),
-                                    "wb") as destiny:
-                                shutil.copyfileobj(cached, destiny)
-                        successful |= rec
+    @api.one
+    def create_journal(self, file, conn={}):
+        source_path = self.get_file_path(file)
+        response = False
+        if len(conn) > 0:
+            dest_path = self.get_file_path(file, loc='d')
+        else:
+            dest_path = ''
 
-        # Remove old files for successful backups
-        successful.cleanup()
+        file_ins = xlrd.open_workbook(source_path)
+        errors = []
 
+        for worksheet_index in range(file_ins.nsheets):
+            records = self.get_formatted_data(file_ins.sheet_by_index(worksheet_index))
+            moves = {}
+            for rec in records[0]:
+                index = records[0].index(rec) + 1
+                trn_no = int(self.preprocess(rec['TRN_NO']))
+                journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
+                if trn_no not in moves:
+                    moves[trn_no] = {
+                        'journal_id': journal.id,
+                        'date': fields.Date.today(),
+                        'line_ids': [],
+                    }
+
+                name = rec['BATCH_DESCRIPTION'].strip()
+                if not name:
+                    errors.append({'line_no': index, 'des': 'BATCH_DESCRIPTION has invalid value'})
+
+                amount = float(rec['TRANSACTION_AMOUNT'].strip())
+                if not amount:
+                    errors.append({'line_no': index, 'des': 'BATCH_DESCRIPTION has invalid value'})
+
+                journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
+
+                currency_id = self.env['res.currency'].search([('code', '=', self.preprocess(rec['CURRENCY']))])
+                if not currency_id:
+                    errors.append({'line_no': index, 'des': 'CURRENCY has invalid value'})
+
+                segment_id = self.env['segment'].search([('code', '=', self.preprocess(rec['SEGMENT']))])
+                if not segment_id:
+                    errors.append({'line_no': index, 'des': 'SEGMENT has invalid value'})
+
+                ac_id = self.env['acquiring.channel'].search([('code', '=', self.preprocess(rec['AC']))])
+                if not ac_id:
+                    errors.append({'line_no': index, 'des': 'AC has invalid value'})
+                sc_id = self.env['servicing.channel'].search([('code', '=', self.preprocess(rec['SC']))])
+                if not sc_id:
+                    errors.append({'line_no': index, 'des': 'SC has invalid value'})
+                branch_id = self.env['operating.unit'].search([('code', '=', self.preprocess(rec['BRANCH']))])
+                if not branch_id:
+                    errors.append({'line_no': index, 'des': 'BRANCH has invalid value'})
+
+                cost_centre_id = self.env['account.analytic.account'].search(
+                    [('name', '=', self.preprocess(rec['COST_CENTRE']))])
+                if not cost_centre_id:
+                    errors.append({'line_no': index, 'des': 'COST_CENTRE has invalid value'})
+
+                if rec['COMP_1'] and rec['COMP_2']:
+                    comp_1 = self.preprocess(rec['COMP_1'])
+                    comp_2 = self.preprocess(rec['COMP_2'])
+
+                    account = comp_1 + comp_2
+                    account_id = self.env['account.account'].search([('code', '=', account)])
+                    if not account_id:
+                        errors.append({'line_no': index, 'des': 'COMP_1 or COMP_2 has invalid value'})
+
+                if rec['DEBIT_CREDIT_FLAG'] == 'CR':
+                    line = {
+                        'name': name,
+                        'account_id': account_id.id,
+                        'credit': amount,
+                        'debit': 0.0,
+                        'journal_id': journal.id,
+                        'analytic_account_id': cost_centre_id.id,
+                        'currency_id': currency_id.id,
+                        'segment_id': segment_id.id,
+                        'acquiring_channel_id': ac_id.id,
+                        'servicing_channel_id': sc_id.id,
+                        'operating_unit_id': branch_id.id,
+                    }
+
+                if rec['DEBIT_CREDIT_FLAG'] == 'DR':
+                    line = {
+                        'name': name,
+                        'account_id': account_id.id,
+                        'credit': 0.0,
+                        'debit': amount,
+                        'journal_id': journal.id,
+                        'analytic_account_id': cost_centre_id.id,
+                        'currency_id': currency_id.id,
+                        'segment_id': segment_id.id,
+                        'acquiring_channel_id': ac_id.id,
+                        'servicing_channel_id': sc_id.id,
+                        'operating_unit_id': branch_id.id,
+                    }
+                moves[trn_no]['line_ids'].append((0, 0, line))
+
+            if len(errors) > 0:
+                self.env['server.file.error'].create({'file_path': dest_path, 'errors': json.dumps(errors)})
+            else:
+                try:
+                    for key in moves:
+                        move_obj = self.env['account.move'].create(moves[key])
+                        if move_obj.state == 'draft':
+                            move_obj.post()
+                    response = True
+                except Exception:
+                    self.env['server.file.error'].create(
+                        {'file_path': dest_path, 'errors': 'Unknown Error. Please check your file.'})
+
+        return response
+
+    # @api.one
+    # def create_journal(self, source_con):
+    #     source = source_con.listdir(self.dest_path)
+    #     files_path = filter(lambda x: x.endswith('.xls'), source)
+    #     for file_path in files_path:
+    #         if os.path.splitext(file_path)[1] in ['.xls']:
+    #             full_path = self.dest_path + file_path
+    #             local_path = self.folder + file_path
+    #             source_con.get(full_path, local_path)
+    #             file_obj = xlrd.open_workbook(local_path)
+    #             for worksheet_index in range(file_obj.nsheets):
+    #                 records = self.get_formatted_data(file_obj.sheet_by_index(worksheet_index))
+    #                 lines = []
+    #                 for rec in records[0]:
+    #                     journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
+    #                     currency_id = self.env['res.currency'].search([('name', '=', rec['CURRENCY'])])
+    #
+    #                     if rec['COMP_1'] and rec['COMP_2']:
+    #                         part1 = rec['COMP_1'].split('.')
+    #                         part2 = rec['COMP_2'].split('.')
+    #                         account = part1[0] + part2[0]
+    #                         account_id = self.env['account.account'].search([('code', '=', account)])
+    #
+    #                         if not account_id:
+    #                             raise ValidationError(_('Account is not available'))
+    #
+    #                     if rec['DEBIT_CREDIT_FLAG'] == 'CR':
+    #                         moves = {
+    #                             'name': rec['BATCH_DESCRIPTION'],
+    #                             'account_id': account_id.id,
+    #                             'credit': float(rec['TRANSACTION_AMOUNT']),
+    #                             'debit': 0.0,
+    #                             'journal_id': journal.id,
+    #                             'partner_id': None,
+    #                             'analytic_account_id': None,
+    #                             'currency_id': currency_id,
+    #                             'amount_currency': 0.0,
+    #                         }
+    #
+    #                     if rec['DEBIT_CREDIT_FLAG'] == 'DR':
+    #                         moves = {
+    #                             'name': rec['BATCH_DESCRIPTION'],
+    #                             'account_id': account_id.id,
+    #                             'debit': float(rec['TRANSACTION_AMOUNT']),
+    #                             'credit': 0.0,
+    #                             'journal_id': journal.id,
+    #                             'partner_id': None,
+    #                             'analytic_account_id': None,
+    #                             'currency_id': currency_id,
+    #                             'amount_currency': 0.0,
+    #                         }
+    #
+    #                     lines.append((0, 0, moves))
+    #
+    #                 move_obj = self.env['account.move'].create({
+    #                     'journal_id': journal.id,
+    #                     'data': fields.Date.today(),
+    #                     'line_ids': lines,
+    #                     'journal_id': journal.id,
+    #                 })
+    #                 if move_obj.state == 'draft':
+    #                     move_obj.post()
+    #                 else:
+    #                     self.move_file_src_to_des(source_con)
+    #         else:
+    #             print("File extension is not valid")
     @api.model
     def action_backup_all(self):
         """Run all scheduled backups."""
@@ -213,59 +430,10 @@ class ServerFileProcess(models.Model):
             _logger.info("Cleanup of old database backups succeeded: %s",
                          self.name)
 
-    @api.model
-    def filename(self, when):
-        """Generate a file name for a backup.
-
-        :param datetime.datetime when:
-            Use this datetime instead of :meth:`datetime.datetime.now`.
-        """
-        return "{:%Y_%m_%d_%H_%M_%S}.dump.zip".format(when)
-
-    @api.multi
-    def sftp_connection(self):
-        """Return a new SFTP connection with found parameters."""
-        self.ensure_one()
-        if self.env.context.get('target') == 'source':
-            params = {
-                "host": self.source_sftp_host,
-                "username": self.source_sftp_user,
-                "port": self.source_sftp_port,
-            }
-            _logger.debug(
-                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
-                extra=params)
-            if self.source_sftp_private_key:
-                params["private_key"] = self.source_sftp_private_key
-                if self.source_sftp_password:
-                    params["private_key_pass"] = self.source_sftp_password
-            else:
-                params["password"] = self.source_sftp_password
-        else:
-            params = {
-                "host": self.dest_sftp_host,
-                "username": self.dest_sftp_user,
-                "port": self.dest_sftp_port,
-            }
-            _logger.debug(
-                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
-                extra=params)
-            if self.dest_sftp_private_key:
-                params["private_key"] = self.dest_sftp_private_key
-                if self.dest_sftp_password:
-                    params["private_key_pass"] = self.dest_sftp_password
-            else:
-                params["password"] = self.dest_sftp_password
-
-        return pysftp.Connection(**params)
-
     @api.one
-    def move_file_from_src_to_des(self, var_src_dir, var_des_dir):
-        """Move file from one to another directory
-        :param var_src_dir: source directory
-        :param var_des_dir: destination directory
-        """
-        shutil.move(var_src_dir, var_des_dir)
+    def move_file_src_to_des(self, source_con):
+        dest_con = ''
+        shutil.move(source_con, dest_con)
 
     @api.one
     def get_formatted_data(self, var_worksheet):
@@ -285,63 +453,3 @@ class ServerFileProcess(models.Model):
             formatted_data.append(my_dict)
 
         return formatted_data
-
-    @api.one
-    def create_journal(self, remote):
-        source = remote.listdir(self.dest_path)
-        my_files_path = filter(lambda x: x.endswith('.xls'), source)
-        for file_path in my_files_path:
-            if os.path.splitext(file_path)[1] in ['.xls']:
-                full_path = self.dest_path + file_path
-                local_path = '/home/mehedi/' + file_path
-                remote.get(full_path, local_path)
-                file_obj = xlrd.open_workbook(local_path)
-                for worksheet_index in range(file_obj.nsheets):
-                    records = self.get_formatted_data(file_obj.sheet_by_index(worksheet_index))
-                    lines = []
-                    for rec in records[0]:
-                        journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
-                        account_id = self.env['account.account'].search([('code', '=', 100000)])
-                        currency_id = self.env['res.currency'].search([('name','=',rec['CURRENCY'])])
-
-                        if rec['DEBIT_CREDIT_FLAG'] == 'CR':
-                            moves = {
-                                'name': rec['BATCH_DESCRIPTION'],
-                                'account_id': account_id.id,
-                                'credit': float(rec['TRANSACTION_AMOUNT']),
-                                'debit': 0.0,
-                                'journal_id': journal.id,
-                                'partner_id': None,
-                                'analytic_account_id': None,
-                                'currency_id': currency_id,
-                                'amount_currency': 0.0,
-                            }
-
-                        if rec['DEBIT_CREDIT_FLAG'] == 'DR':
-                            moves = {
-                                'name': rec['BATCH_DESCRIPTION'],
-                                'account_id': account_id.id,
-                                'debit': float(rec['TRANSACTION_AMOUNT']),
-                                'credit': 0.0,
-                                'journal_id': journal.id,
-                                'partner_id': None,
-                                'analytic_account_id': None,
-                                'currency_id': currency_id,
-                                'amount_currency': 0.0,
-                            }
-
-                        lines.append((0, 0, moves))
-
-                    move_obj = self.env['account.move'].create({
-                        'journal_id': journal.id,
-                        'data': fields.Date.today(),
-                        'line_ids': lines,
-                        'journal_id': journal.id,
-                    })
-                    if move_obj.state == 'draft':
-                        move_obj.post()
-
-                    # if records:
-                    #     move_file_from_src_to_des(file_path, get_destination_dir())
-            else:
-                print("File extension is not valid")

@@ -7,46 +7,54 @@
         <field name="arch" type="xml">
             <form>
                 <h1>
-                    <field name="name" invisible="True"/>
+                    <field name="name"/>
                 </h1>
                 <group>
                     <group>
                         <field name="folder"/>
                         <field name="days_to_keep"/>
+                    </group>
+                    <group>
                         <field name="method"/>
                     </group>
                 </group>
-                <group>
-                    <group string="Source SFTP Settings">
-                        <field name="source_sftp_host" placeholder="sftp.example.com"/>
-                        <field name="source_sftp_port"/>
-                        <field name="source_sftp_user" placeholder="john"/>
-                        <field name="source_sftp_password"/>
+                <group string="Source and Destination Settings">
+                    <group string="Source Settings">
                         <field name="source_path" placeholder="/var/backups"/>
+
+                        <field name="source_sftp_host" placeholder="sftp.example.com"
+                               attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="source_sftp_port" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="source_sftp_user" placeholder="john"
+                               attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="source_sftp_password" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                         <field name="source_sftp_private_key"
-                               placeholder="/home/odoo/.ssh/id_rsa"/>
+                               placeholder="/home/odoo/.ssh/id_rsa" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                         <br/>
                         <br/>
                         <button name="action_sftp_test_connection"
                                 type="object" context="{'target':'source'}"
                                 string="Test Source SFTP"
-                                icon="fa-television"/>
+                                icon="fa-television" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                     </group>
-                    <group string="Destination SFTP Settings" attrs="{'invisible': [('method', '!=', 'sftp')]}">
-                        <field name="dest_sftp_host" placeholder="sftp.example.com"/>
-                        <field name="dest_sftp_port"/>
-                        <field name="dest_sftp_user" placeholder="john"/>
-                        <field name="dest_sftp_password"/>
+                    <group string="Destination Settings">
                         <field name="dest_path" placeholder="/var/backups"/>
+                        <field name="dest_sftp_host" placeholder="sftp.example.com"
+                               attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="dest_sftp_port" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="dest_sftp_user" placeholder="john"
+                               attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="dest_sftp_password" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+
                         <field name="dest_sftp_private_key"
-                               placeholder="/home/odoo/.ssh/id_rsa"/>
+                               placeholder="/home/odoo/.ssh/id_rsa" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                         <br/>
                         <br/>
                         <button
                                 name="action_sftp_test_connection"
                                 type="object" context="{'target':'destination'}"
                                 string="Test Destination SFTP"
-                                icon="fa-television"/>
+                                icon="fa-television" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                     </group>
                 </group>
 
@@ -75,6 +83,7 @@
             <tree string="Backups">
                 <field name='name'/>
                 <field name='folder'/>
+                <field name='method'/>
                 <field name="source_sftp_host"/>
                 <field name="source_path"/>
                 <field name="dest_sftp_host"/>
