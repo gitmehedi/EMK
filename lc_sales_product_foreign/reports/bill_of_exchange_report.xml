@@ -87,7 +87,7 @@
                                                     AS PER PROFORMA INVOICE NO:
                                                     <t t-foreach="pi_list" t-as="p">
                                                         <strong t-esc="p['number']"/>
-                                                        <b>, DATE:</b>
+                                                        <b>,DATE:</b>
                                                         <strong t-esc="p['date']"/>
                                                     </t>
                                                     <t t-if="len(pi_list)>1">,</t>
@@ -99,44 +99,44 @@
                                     <br/>
                                     <tr>
                                         <t t-if="data['model_type'] == 'lc'">
-                                            DRAWN UNDER THE CONFIRMATION OF LC NO:
+                                            <p>DRAWN UNDER THE CONFIRMATION OF LC NO:
                                             <strong t-esc="data['lc_id']"/>,
                                             <strong>DATE:</strong>
                                             <strong t-esc="data['issue_date']"/>
-                                            <b>(MARINE INSURANCE COVER NOTE NO:<strong t-esc="data['cover_note_no']"/>)
+                                            <b> (MARINE INSURANCE COVER NOTE NO: <strong t-esc="data['cover_note_no']"/>)
                                             </b>
-                                            <strong>OF</strong>
+                                            <strong>OF </strong>
                                             <strong t-raw="data['second_party_bank']"/>,
                                             GOODS ARE UNDER H.S.CODE NO:
                                             <t t-foreach="lists" t-as="l">
                                                 <strong t-esc="l['hs_code']"/>
                                             </t>
-                                            <t t-if="len(lists)>1">,</t>
+                                            <t t-if="len(lists)>1">,</t></p>
                                         </t>
                                         <t t-else="data['model_type'] != 'lc'">
-                                            DRAWN UNDER
+                                            <p>DRAWN UNDER
                                             <span t-esc="data['model_type']"/>
                                             NO:
                                             <strong t-esc="data['lc_id']"/>,
-                                            <strong>DATE:</strong>
+                                            <strong>DATE: </strong>
                                             <strong t-esc="data['issue_date']"/>
                                             BETWEEN
                                             <strong t-esc="data['first_party']"/>,
-                                            <b>ADDRESS:</b>
+                                            <b>ADDRESS: </b>
                                             <span t-esc="data['first_party_add']"/>
-                                            <b>FACTORY:</b>
+                                            <b>FACTORY: </b>
                                             <span t-esc="data['factory']"/>
-                                            <strong>AND</strong>
+                                            <strong> AND </strong>
                                             <strong t-raw="data['second_party_applicant']"/>,
-                                            <b>ADDRESS:</b>
+                                            <b> ADDRESS: </b>
                                             <span t-esc="data['invoice_address']"/>
-                                            , IMPORTER'S BANK:
+                                            ,IMPORTER'S BANK:
                                             <strong t-esc="data['second_party_bank']"/>
                                             GOODS ARE UNDER H.S.CODE NO:
                                             <t t-foreach="lists" t-as="l">
                                                 <strong t-esc="l['hs_code']"/>
                                             </t>
-                                            <t t-if="len(lists)>1">,</t>
+                                            <t t-if="len(lists)>1">,</t></p>
                                         </t>
                                     </tr>
                                 </tbody>

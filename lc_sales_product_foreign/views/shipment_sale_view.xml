@@ -91,7 +91,7 @@
 
                                 <field name="fob_value" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="feright_value" readonly="1"/>
-                                <field name="is_print_cfr" required="1"
+                                <field name="is_print_cfr" required="1" invisible="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             </group>
 
