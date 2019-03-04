@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
 
 
 class AccountInvoice(models.Model):
@@ -25,6 +25,12 @@ class AccountInvoice(models.Model):
         self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
+    @api.one
+    @api.depends('payment_line_ids.amount')
+    def _compute_payment_amount(self):
+        for invoice in self:
+            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
+
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',
                                         default=lambda self:
                                         self.env['res.users'].
@@ -33,6 +39,10 @@ class AccountInvoice(models.Model):
                                         states={'draft': [('readonly',False)]})
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Branch',
                                         readonly=True,states={'draft': [('readonly',False)]})
+
+    payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
+    total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
+        store=True, readonly=True, track_visibility='onchange',copy=False)
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -124,6 +134,26 @@ class AccountInvoice(models.Model):
         for invoice in self:
             invoice.reference = ''
         return super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
+
+    def action_payment_instruction(self):
+        if self.amount_untaxed <= self.total_payment_amount:
+            raise ValidationError(_('Payment is not required for this bill!!'))
+
+        res = self.env.ref('gbs_vendor_bill.view_bill_payment_instruction_wizard')
+
+        return {
+            'name': _('Payment Instruction'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'bill.payment.instruction.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'invoice_amount': self.amount_untaxed or False,
+                        'instructed_amount': self.total_payment_amount or False,
+                        },
+        }
 
     @api.model
     def create(self, vals):

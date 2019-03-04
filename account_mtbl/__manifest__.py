@@ -11,9 +11,11 @@
         'base',
         'mail',
         'product',
-        'sub_operating_unit',
+        'account_parent',
         'account_operating_unit',
         'account_type_inactive',
+        'sub_operating_unit',
+
     ],
     "data": [
         'views/segment_view.xml',

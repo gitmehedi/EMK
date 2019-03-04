@@ -9,9 +9,10 @@
     'depends': [
         'account_invoice_merge_operating_unit',
         'account_invoice_merge_attachment',
-        'sub_operating_unit',
+        'account_mtbl',
     ],
     'data': [
+        'wizards/bill_payment_instruction_wizard.xml',
         'views/product_product_view.xml',
         'views/invoice_merge_view.xml',
         'views/account_invoice_view.xml',
