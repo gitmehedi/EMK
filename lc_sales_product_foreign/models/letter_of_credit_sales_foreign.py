@@ -16,6 +16,8 @@ class LetterOfCreditCommon(models.Model):
     declaration = fields.Text(string='Declaration') # (For Packing List  & Commercial Invoice)
     document_receiver_bank = fields.Text(string='Document Receiver Bank')
     insurance_company_address = fields.Text(string='Address')
+    insurance_policy_date = fields.Date(string='Policy Date')
+    is_seaworthy_packing = fields.Boolean(string='Is Seaworthy Packing')
 
     model_type = fields.Selection([
         ('lc', 'LC'),
@@ -25,6 +27,12 @@ class LetterOfCreditCommon(models.Model):
         help="LC: Letter Of Credit\n"
              "TT: Telegraphic Transfer\n"
              "SC: Sales Contract.")
+
+    sc_type = fields.Selection([
+        ('sc', 'SC'),
+        ('po', 'PO'),
+        ('pi', 'PI')
+    ], string="SC Type")
 
     @api.onchange('second_party_applicant')
     def onchange_second_party_applicant(self):
