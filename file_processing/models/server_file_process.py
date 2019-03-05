@@ -158,7 +158,7 @@ class ServerFileProcess(models.Model):
                     files = filter(lambda x: x.endswith('.xls'), source.listdir(rec.source_path))
                     for file in files:
                         source_path = os.path.join(rec.source_path, file)
-                        dest_path = os.path.join(rec.dest_path,file)
+                        dest_path = os.path.join(rec.dest_path, file)
                         local_path = os.path.join(rec.folder, file)
 
                         source.get(source_path, localpath=local_path, preserve_mtime=True)
@@ -197,7 +197,7 @@ class ServerFileProcess(models.Model):
             records = self.get_formatted_data(file_ins.sheet_by_index(worksheet_index))
             moves = {}
             for rec in records[0]:
-                index = records[0].index(rec) + 1
+                index = records[0].index(rec) + 2
                 trn_no = int(self.preprocess(rec['TRN_NO']))
                 journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
                 if trn_no not in moves:
@@ -281,7 +281,9 @@ class ServerFileProcess(models.Model):
                 moves[trn_no]['line_ids'].append((0, 0, line))
 
             if len(errors) > 0:
-                self.env['server.file.error'].create({'file_path': dest_path, 'errors': json.dumps(errors)})
+                self.env['server.file.error'].create({'file_path': source_path,
+                                                      'errors': json.dumps(errors),
+                                                      'ftp_ip': self.source_sftp_host})
             else:
                 try:
                     for key in moves:
