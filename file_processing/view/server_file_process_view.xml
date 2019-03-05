@@ -27,7 +27,8 @@
                         <field name="source_sftp_port" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                         <field name="source_sftp_user" placeholder="john"
                                attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
-                        <field name="source_sftp_password" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="source_sftp_password" attrs="{'invisible': [('method', '!=', 'sftp')]}"
+                               password="True"/>
                         <field name="source_sftp_private_key"
                                placeholder="/home/odoo/.ssh/id_rsa" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                         <br/>
@@ -44,7 +45,8 @@
                         <field name="dest_sftp_port" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
                         <field name="dest_sftp_user" placeholder="john"
                                attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
-                        <field name="dest_sftp_password" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        <field name="dest_sftp_password" attrs="{'invisible': [('method', '!=', 'sftp')]}"
+                               password="True"/>
 
                         <field name="dest_sftp_private_key"
                                placeholder="/home/odoo/.ssh/id_rsa" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>

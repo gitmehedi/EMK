@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_server_file_error_form">
+        <field name="name">File Processing Error</field>
+        <field name="model">server.file.error</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="File Processing Error" create="false" copy="false" delete="false" edit="false">
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="process_date"/>
+                            <field name="file_path"/>
+                        </group>
+                        <group>
+                            <field name="ftp_ip"/>
+                            <field name="status"/>
+
+                        </group>
+                    </group>
+                    <separator string="Error Details"/>
+                    <field name="errors"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_server_file_error_tree">
+        <field name="name">File Processing</field>
+        <field name="model">server.file.error</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="File Processing Error" create="false" copy="false" delete="false" edit="false">
+                <field name="name"/>
+                <field name="process_date"/>
+                <field name="file_path"/>
+                <field name="ftp_ip"/>
+                <field name="status"/>
+                <field name="errors"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_server_file_error_search">
+        <field name="name">File Processing</field>
+        <field name="model">server.file.error</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="File Processing Error Search">
+                <field name="process_date"/>
+                <field name="file_path"/>
+                <field name="ftp_ip"/>
+                <field name="status"/>
+                <field name="errors"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window
+            name="File Processing Error"
+            id="action_server_file_error_form"
+            res_model="server.file.error"/>
+
+    <menuitem
+            parent="base.next_id_9"
+            action="action_server_file_error_form"
+            id="server_file_error_menu"/>
+
+</odoo>
