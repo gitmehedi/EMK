@@ -4,7 +4,7 @@
         <field name="name">servicing.channel.form</field>
         <field name="model">servicing.channel</field>
         <field name="arch" type="xml">
-            <form string="Servicing Channel" delete="false" copy='false'>
+            <form string="Servicing Channel" copy='false'>
                 <sheet>
                     <group>
                         <group>
@@ -28,7 +28,7 @@
         <field name="name">servicing.channel.tree</field>
         <field name="model">servicing.channel</field>
         <field name="arch" type="xml">
-            <tree string="Servicing Channel" delete="false" copy='false'>
+            <tree string="Servicing Channel" copy='false'>
                 <field name="code"/>
                 <field name="name"/>
             </tree>
