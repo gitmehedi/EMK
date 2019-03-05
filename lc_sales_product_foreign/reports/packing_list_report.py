@@ -30,8 +30,11 @@ class PackingList(models.AbstractModel):
         data['landing_port_country_id'] = shipment_obj.lc_id.landing_port_country_id.name
         data['payment_terms'] = shipment_obj.lc_id.payment_terms
         data['declaration'] = shipment_obj.lc_id.declaration
+        data['model_type'] = shipment_obj.lc_id.model_type
+        data['sc_type'] = shipment_obj.lc_id.sc_type
         data['shipment_number'] = shipment_obj.name
         data['cylinder_details'] = shipment_obj.cylinder_details
+        data['cylinder_details_label'] = "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details"
         data['buyer_address'] = report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant)
         data['cover_note_no'] = shipment_obj.lc_id.cover_note_no
         data['insurance_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.insurance_date))

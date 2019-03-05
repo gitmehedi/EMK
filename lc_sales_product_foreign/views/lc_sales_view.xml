@@ -31,7 +31,7 @@
                                     <field name="name" string="LC/TT/SC Number" required="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                     <field name="type" attrs="{'invisible': '1'}" required="1"/>
                                     <field name="model_type" widget="radio" options="{'horizontal': true}"/>
-                                    <field name="sc_type" attrs="{'required': [('model_type', '==', ('sales_contract'))]}"/>
+                                    <field name="sc_type" attrs="{'required': [('model_type', '==', ('sales_contract'))],'invisible': [('model_type', '!=', ('sales_contract'))]}"/>
                                 </group>
                                 <group>
                                     <field name="region_type" widget="radio" options="{'horizontal': true}"/>
