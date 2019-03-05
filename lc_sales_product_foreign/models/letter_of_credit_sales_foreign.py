@@ -16,6 +16,8 @@ class LetterOfCreditCommon(models.Model):
     declaration = fields.Text(string='Declaration') # (For Packing List  & Commercial Invoice)
     document_receiver_bank = fields.Text(string='Document Receiver Bank')
     insurance_company_address = fields.Text(string='Address')
+    insurance_policy_date = fields.Date(string='Policy Date')
+    is_seaworthy_packing = fields.Boolean(string='Is Seaworthy Packing')
 
     model_type = fields.Selection([
         ('lc', 'LC'),

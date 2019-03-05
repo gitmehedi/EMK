@@ -10,9 +10,15 @@ class ShipmentLocal(models.Model):
     feright_value = fields.Float(string='Feright Value', compute='_compute_feright_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
     invoice_number_dummy = fields.Char(string='Invoice Number (Dummy)', track_visibility='onchange')
+    invoice_date_dummy = fields.Date(string='Invoice Date (Dummy)', track_visibility='onchange')
     truck_receipt_no = fields.Char(string='BL/Truck Receipt No.')
     bl_date = fields.Date(string='BL Date')
     cylinder_details = fields.Text(string='Cylinder Details')
+    container_no = fields.Char(string='Container No.')
+    mother_vessel = fields.Char(string='Mother Vessel')
+
+    eta_trans_shipment_date = fields.Date(string='ETA(Trans Shipment)')
+    etd_trans_shipment_date = fields.Date(string='ETD(Trans Shipment)')
 
     @api.one
     def _compute_feright_value(self):

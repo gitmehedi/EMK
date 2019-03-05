@@ -83,7 +83,7 @@
                             <notebook colspan="4">
                                 <page string="Additional Info">
                                     <group string="Port Info" colspan="4">
-                                        <p><b>Landing Place/Port: &#x2063;&#x2063;&#x2063;&#x2063;</b>
+                                        <p><b>Loading Place/Port: &#x2063;&#x2063;&#x2063;&#x2063;</b>
                                             <field name="landing_port" class="oe_inline" required="1" nolable="1"
                                                 style="width: 110px !important"/>&#x2063;&#x2063;
                                             <field name="landing_port_country_id" required="1" class="oe_inline" nolable="1" style="width: 110px !important"
