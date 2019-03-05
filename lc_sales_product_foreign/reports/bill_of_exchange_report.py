@@ -33,6 +33,8 @@ class BillExchangeFirst(models.AbstractModel):
             'inco_terms': shipment_obj.lc_id.inco_terms.code,
             'landing_port': shipment_obj.lc_id.landing_port,
             'landing_port_country_id': shipment_obj.lc_id.landing_port_country_id.name,
+            'discharge_port': shipment_obj.lc_id.discharge_port,
+            'discharge_port_country_id': shipment_obj.lc_id.discharge_port_country_id.name,
             'cover_note_no': shipment_obj.lc_id.cover_note_no,
             'model_type': shipment_obj.lc_id.model_type,
             'second_party_bank': shipment_obj.lc_id.second_party_bank,

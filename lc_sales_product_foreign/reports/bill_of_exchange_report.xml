@@ -59,7 +59,7 @@
                             <table class="mb-0">
                                 <tbody>
                                     <tr>
-                                        <b>"<strong t-esc="data['tenure']"/>"
+                                        <p><b>"<strong t-esc="data['tenure']"/>"
                                         </b>
                                         OF THIS
                                         <span t-esc="data['bill_exchange']"/>
@@ -69,7 +69,7 @@
                                         THE SUM OF
                                         <span t-esc="data['currency_id']"/>
                                         <strong t-esc="amt_to_word"/>
-                                        <strong>ONLY.</strong>
+                                        <strong> ONLY.</strong></p>
                                     </tr>
                                     <br/>
                                     <br/>
@@ -78,12 +78,15 @@
                                             <tr style="page-break-inside: avoid">
                                                 <p>VALUE WILL BE RECEIVED AGAINST DELIVERY OF
                                                     <span t-esc="l['name']"/>,
-                                                    <strong t-esc="'%.2f'% l['quantity']"/> <strong t-esc="l['uom']"/>, (DUMMY IN 30 KGS HDPE JAR) AT THE RATE OF
+                                                    <strong t-esc="'%.2f'% l['quantity']"/> <strong t-esc="l['uom']"/>, IN
+                                                    <t t-foreach="pi_id_list" t-as="r">
+                                                        <span t-esc="r['pack_type']"/><t t-if="len(pi_id_list)>1">,<br/></t>
+                                                    </t> AT THE RATE OF
                                                     <strong t-esc="data['currency_id']"/> <strong t-esc="l['price_unit']"/>
                                                     ON
                                                     <span t-esc="data['inco_terms']"/>,
-                                                    <span t-esc="data['landing_port']"/>,
-                                                    <span t-esc="data['landing_port_country_id']"/>
+                                                    <span t-esc="data['discharge_port']"/>,
+                                                    <span t-esc="data['discharge_port_country_id']"/>
                                                     AS PER PROFORMA INVOICE NO:
                                                     <t t-foreach="pi_list" t-as="p">
                                                         <strong t-esc="p['number']"/>
@@ -115,8 +118,8 @@
                                         </t>
                                         <t t-else="data['model_type'] != 'lc'">
                                             <p>DRAWN UNDER
-                                            <span t-esc="data['model_type']"/>
-                                            NO:
+                                                <t t-if="data['model_type'] == 'tt'">TT NO: </t>
+                                                <t t-elif="data['model_type'] == 'sales_contract'">Sales Contract NO: </t>
                                             <strong t-esc="data['lc_id']"/>,
                                             <strong>DATE: </strong>
                                             <strong t-esc="data['issue_date']"/>
