@@ -14,9 +14,9 @@
                             <field name="shipment_id" invisible="1"/>
                         </group>
                         <group>
-                            <field name="fob_value"/>
                             <field name="feright_value"/>
-                            <field name="is_print_cfr"/>
+                            <field name="fob_value"/>
+                            <field name="is_print_cfr" invisible="1"/>
                         </group>
                     </group>
                     <footer>

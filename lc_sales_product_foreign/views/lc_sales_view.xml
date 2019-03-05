@@ -31,6 +31,7 @@
                                     <field name="name" string="LC/TT/SC Number" required="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                     <field name="type" attrs="{'invisible': '1'}" required="1"/>
                                     <field name="model_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="sc_type" attrs="{'required': [('model_type', '==', ('sales_contract'))]}"/>
                                 </group>
                                 <group>
                                     <field name="region_type" widget="radio" options="{'horizontal': true}"/>
@@ -64,14 +65,15 @@
                             </group>
                             <group string="LC/TT/SC Dateline">
                                 <field name="issue_date" required="1"/>
-                                <field name="expiry_date" required="1"/>
-                                <field name="shipment_date" required="1"/>
+                                <field name="expiry_date" required="0"/>
+                                <field name="shipment_date" required="0"/>
                             </group>
                             <group string="Others Info" colspan="4">
                                 <group>
                                     <field name="payment_terms" required="1"/>
                                     <field name="period_of_presentation"/>
                                     <field name="not_for_medical_use" />
+                                    <field name="is_seaworthy_packing" />
                                 </group>
                                 <group>
                                     <field name="master_lc_number"/>
@@ -108,11 +110,12 @@
                                             <field name="insurance_company_name" string="Company Name:"/>
                                             <field name="insurance_company_address" string="Address:"/>
                                             <field name="insurance_number" string="Policy Number:"/>
+                                            <field name="insurance_policy_date" string="Policy Date:"/>
                                         </group>
                                         <group>
-                                            <field name="insurance_bill"/>
-                                            <field name="cover_note_no" required="1"/>
-                                            <field name="insurance_date" required="1"/>
+                                            <field name="insurance_bill" string="Insurance Bill:"/>
+                                            <field name="cover_note_no" required="0" string="Cover Note No.:"/>
+                                            <field name="insurance_date" required="0" string="Cover Note Date:"/>
                                         </group>
                                     </group>
                                 </page>

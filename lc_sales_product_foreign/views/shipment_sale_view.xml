@@ -66,6 +66,10 @@
                                            attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                     <field name="eta_date" string="ETA"
                                            attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                    <field name="etd_trans_shipment_date"
+                                           attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                    <field name="eta_trans_shipment_date"
+                                           attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 </group>
                                 <separator class="gbs-goods-condition" string="Remarks/Status"/>
                                 <field name="comment" nolabel="1"
@@ -84,13 +88,14 @@
                             <group string="Invoice">
                                 <field name="invoice_number_dummy" string="Number (Dummy)"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <field name="invoice_date_dummy" string="Invoice Date (Dummy)"
+                                       attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="invoice_id" readonly="1"
                                        options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                 <field name="invoice_value" required="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-
-                                <field name="fob_value" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                <field name="feright_value" readonly="1"/>
+                                <field name="feright_value" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <field name="fob_value" readonly="1"/>
                                 <field name="is_print_cfr" required="1" invisible="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             </group>
@@ -102,6 +107,10 @@
                                 <field name="truck_receipt_no" required="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="bl_date" required="1"
+                                       attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <field name="container_no"
+                                       attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <field name="mother_vessel"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             </group>
                             <group string="Packing Details" colspan="4">

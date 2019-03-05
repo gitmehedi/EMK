@@ -6,8 +6,8 @@ class ShipmentLocal(models.Model):
 
     _inherit = 'purchase.shipment'
 
-    fob_value = fields.Float(string='FOB Value')
-    feright_value = fields.Float(string='Feright Value', compute='_compute_feright_value', store=False)
+    feright_value = fields.Float(string='Feright Value')
+    fob_value= fields.Float(string='FOB Value', compute='_compute_fob_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
     invoice_number_dummy = fields.Char(string='Invoice Number (Dummy)', track_visibility='onchange')
     invoice_date_dummy = fields.Date(string='Invoice Date (Dummy)', track_visibility='onchange')
@@ -21,16 +21,28 @@ class ShipmentLocal(models.Model):
     etd_trans_shipment_date = fields.Date(string='ETD(Trans Shipment)')
 
     @api.one
-    def _compute_feright_value(self):
-        self.feright_value = None
-        if self.fob_value > 0:
-            self.feright_value = self.invoice_value - self.fob_value
+    def _compute_fob_value(self):
+        self.fob_value = None
+        if self.feright_value > 0:
+            self.fob_value = self.invoice_value - self.feright_value
 
-    @api.onchange('fob_value')
-    def _onchange_fob_value(self):
-        self.feright_value = None
-        if self.fob_value > 0:
-            self.feright_value = self.invoice_value - self.fob_value
+    @api.onchange('feright_value')
+    def _onchange_feright_value(self):
+        self.fob_value = None
+        if self.feright_value > 0:
+            self.fob_value = self.invoice_value - self.feright_value
+
+    # @api.one
+    # def _compute_feright_value(self):
+    #     self.feright_value = None
+    #     if self.fob_value > 0:
+    #         self.feright_value = self.invoice_value - self.fob_value
+
+    # @api.onchange('fob_value')
+    # def _onchange_fob_value(self):
+    #     self.feright_value = None
+    #     if self.fob_value > 0:
+    #         self.feright_value = self.invoice_value - self.fob_value
 
     @api.multi
     def action_doc_receive_export_foreign(self):
