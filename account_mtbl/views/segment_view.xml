@@ -4,7 +4,7 @@
         <field name="name">segment.form</field>
         <field name="model">segment</field>
         <field name="arch" type="xml">
-            <form string="Segment" delete="false" copy='false'>
+            <form string="Segment" copy='false'>
                 <sheet>
                     <group>
                         <group>
@@ -28,7 +28,7 @@
         <field name="name">segment.tree</field>
         <field name="model">segment</field>
         <field name="arch" type="xml">
-            <tree string="Segment" delete="false" copy='false'>
+            <tree string="Segment" copy='false'>
                 <field name="code"/>
                 <field name="name"/>
             </tree>

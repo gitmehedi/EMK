@@ -4,7 +4,7 @@
         <field name="name">acquiring.channel.form</field>
         <field name="model">acquiring.channel</field>
         <field name="arch" type="xml">
-            <form string="Acquiring Channel" delete="false" copy='false'>
+            <form string="Acquiring Channel" copy='false'>
                 <sheet>
                     <group>
                         <group>
@@ -28,7 +28,7 @@
         <field name="name">acquiring.channel.tree</field>
         <field name="model">acquiring.channel</field>
         <field name="arch" type="xml">
-            <tree string="Acquiring Channel" delete="false" copy='false'>
+            <tree string="Acquiring Channel" copy='false'>
                 <field name="code"/>
                 <field name="name"/>
             </tree>
