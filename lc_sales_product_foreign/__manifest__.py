@@ -15,6 +15,7 @@
         'reports/packing_list_report_view.xml',
         'reports/commercial_invoice_report_view.xml',
         'reports/bill_of_exchange_report.xml',
+        'reports/beneficiary_certificate.xml',
         'reports/certificate_of_origin.xml',
         'wizard/lc_sales_report_wizard.xml',
         'wizard/doc_receive_wizard_view.xml',

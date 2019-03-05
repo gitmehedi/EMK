@@ -39,16 +39,11 @@ class LcSalesReportWizard(models.TransientModel):
         data['shipment_id'] = self.env.context.get('active_id')
         return self.env['report'].get_action(self, 'lc_sales_product_foreign.report_certificate_origin', data)
 
-
-
-    # @api.multi
-    # def process_bill_exchange(self):
-    #     data = {}
-    #     data['shipment_id'] = self.env.context.get('active_id')
-    #     return self.env['report'].get_action(self, 'lc_sales_product_foreign.report_bill_exchange', data)
-
-
-
+    @api.multi
+    def process_beneficiary_certificate(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product_foreign.report_beneficiary_certificate', data)
 
     @api.multi
     def action_bill_of_exchange_no(self):
