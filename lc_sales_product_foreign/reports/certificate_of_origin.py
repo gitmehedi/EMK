@@ -24,6 +24,7 @@ class BeneficiaryCertificate(models.AbstractModel):
             'lc_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date)),
             'second_party_bank': shipment_obj.lc_id.second_party_bank,
             'invoice_number_dummy': shipment_obj.invoice_number_dummy,
+            'invoice_date_dummy': shipment_obj.invoice_date_dummy,
             'count_qty': shipment_obj.count_qty,
             'count_uom': shipment_obj.count_uom.name,
             'discharge_port': shipment_obj.lc_id.discharge_port,

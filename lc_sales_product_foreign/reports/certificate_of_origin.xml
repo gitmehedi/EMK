@@ -29,7 +29,6 @@
                             <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th class="w5">Sl</th>
                                         <th>Shipping Mark No.</th>
                                         <th>Packages</th>
                                         <th>Description of Goods</th>
@@ -40,9 +39,6 @@
                                 <tbody>
                                     <t t-foreach="lists" t-as="l">
                                         <tr style="page-break-inside: avoid">
-                                            <td style="width:2%">
-                                                <span t-esc="l_index+1"/>
-                                            </td>
                                             <td>
                                                 <span t-esc="data['count_qty']"/>
                                                 <span t-esc="data['count_uom']"/>
@@ -54,6 +50,7 @@
                                             <td>
                                                 <t t-foreach="pack_list" t-as="r">
                                                     <span t-esc="r['pack_type']"/>
+                                                    <t t-if="len(pack_list)>1">,<br/></t>
                                                 </t>
                                             </td>
                                             <td>
@@ -132,7 +129,7 @@
                                         <td>    </td>
                                         <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
-                                             DUMMY
+                                             <strong t-esc="data['invoice_date_dummy']"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -151,7 +148,7 @@
                             </table>
                             <hr class="hr-xs mb-10"/>
                             <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED/MANUFACTURE IN BANGLADESH </p>
-                            <P>AND HAVE BEEN SHIPPED TO <strong t-esc="data['landing_port']"/>, <strong t-esc="data['landing_port_country_id']"/>. FROM <strong t-esc="data['discharge_port']"/>,<strong t-esc="data['discharge_port_country_id']"/></P>
+                            <P>AND HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>, <strong t-esc="data['discharge_port_country_id']"/>. FROM <strong t-esc="data['landing_port']"/>,<strong t-esc="data['landing_port_country_id']"/></P>
                             <div class="text-right">
                                 <p>For and on behalf of
                                     <br/>
