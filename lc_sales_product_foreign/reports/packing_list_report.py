@@ -11,44 +11,44 @@ class PackingList(models.AbstractModel):
         shipment_obj = shipment_pool.browse(data.get('shipment_id'))
         report_utility_pool = self.env['report.utility']
         prod_list = []
-        data = {}
         qty_list = []
         total_price_list = []
         pi_id_list = []
         lc_revision_list = []
-
-        data['company_id'] = shipment_obj.company_id.name
-        data['factory'] = report_utility_pool.getAddressByUnit(shipment_obj.operating_unit_id)
-        data['buyer'] = shipment_obj.lc_id.second_party_applicant.name
-        data['ntn_no'] = shipment_obj.lc_id.second_party_applicant.ntn_no
-        data['iec_no'] = shipment_obj.lc_id.second_party_applicant.iec_no
-        data['gst_no'] = shipment_obj.lc_id.second_party_applicant.gst_no
-        data['cus_country_id'] = shipment_obj.lc_id.second_party_applicant.country_id.code
-        data['discharge_port'] = shipment_obj.lc_id.discharge_port
-        data['discharge_port_country_id'] = shipment_obj.lc_id.discharge_port_country_id.name
-        data['landing_port'] = shipment_obj.lc_id.landing_port
-        data['landing_port_country_id'] = shipment_obj.lc_id.landing_port_country_id.name
-        data['payment_terms'] = shipment_obj.lc_id.payment_terms
-        data['declaration'] = shipment_obj.lc_id.declaration
-        data['model_type'] = shipment_obj.lc_id.model_type
-        data['sc_type'] = shipment_obj.lc_id.sc_type
-        data['shipment_number'] = shipment_obj.name
-        data['cylinder_details'] = shipment_obj.cylinder_details
-        data['cylinder_details_label'] = "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details"
-        data['buyer_address'] = report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant)
-        data['cover_note_no'] = shipment_obj.lc_id.cover_note_no
-        data['insurance_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.insurance_date))
-        data['truck_receipt_no'] = shipment_obj.truck_receipt_no
-        data['bl_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.bl_date))
-        data['not_for_medical_use'] = shipment_obj.lc_id.not_for_medical_use
-        data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
-        data['lc_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
-        data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
-        data['gross_weight'] = formatLang(self.env,shipment_obj.gross_weight)
-        data['net_weight'] = formatLang(self.env,shipment_obj.net_weight)
-        data['weight_uom'] = shipment_obj.weight_uom.name
-        data['count_qty'] = formatLang(self.env,shipment_obj.count_qty)
-        data['count_uom'] = shipment_obj.count_uom.name
+        data = {
+                'company_id': shipment_obj.company_id.name,
+                'factory': report_utility_pool.getAddressByUnit(shipment_obj.operating_unit_id),
+                'buyer': shipment_obj.lc_id.second_party_applicant.name,
+                'ntn_no': shipment_obj.lc_id.second_party_applicant.ntn_no,
+                'iec_no': shipment_obj.lc_id.second_party_applicant.iec_no,
+                'gst_no': shipment_obj.lc_id.second_party_applicant.gst_no,
+                'cus_country_id': shipment_obj.lc_id.second_party_applicant.country_id.code,
+                'discharge_port': shipment_obj.lc_id.discharge_port,
+                'discharge_port_country_id': shipment_obj.lc_id.discharge_port_country_id.name,
+                'landing_port': shipment_obj.lc_id.landing_port,
+                'landing_port_country_id': shipment_obj.lc_id.landing_port_country_id.name,
+                'payment_terms': shipment_obj.lc_id.payment_terms,
+                'declaration': shipment_obj.lc_id.declaration,
+                'model_type': shipment_obj.lc_id.model_type,
+                'sc_type': shipment_obj.lc_id.sc_type,
+                'shipment_number': shipment_obj.name,
+                'cylinder_details': shipment_obj.cylinder_details,
+                'cylinder_details_label': "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details",
+                'buyer_address': report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant),
+                'cover_note_no': shipment_obj.lc_id.cover_note_no,
+                'insurance_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.insurance_date)),
+                'truck_receipt_no': shipment_obj.truck_receipt_no,
+                'bl_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.bl_date)),
+                'not_for_medical_use': shipment_obj.lc_id.not_for_medical_use,
+                'lc_id': shipment_obj.lc_id.unrevisioned_name,
+                'lc_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date)),
+                'second_party_bank': shipment_obj.lc_id.second_party_bank,
+                'gross_weight': formatLang(self.env,shipment_obj.gross_weight),
+                'net_weight': formatLang(self.env,shipment_obj.net_weight),
+                'weight_uom': shipment_obj.weight_uom.name,
+                'count_qty': formatLang(self.env,shipment_obj.count_qty),
+                'count_uom': shipment_obj.count_uom.name,
+                }
 
         for pi_id in shipment_obj.lc_id.pi_ids:
             pi_id_list.append({'pi_id':pi_id.name,'pack_type':pi_id.pack_type.display_name,'pi_date':report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(pi_id.create_date))})
