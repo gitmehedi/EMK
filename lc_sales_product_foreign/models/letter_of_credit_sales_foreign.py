@@ -28,6 +28,12 @@ class LetterOfCreditCommon(models.Model):
              "TT: Telegraphic Transfer\n"
              "SC: Sales Contract.")
 
+    sc_type = fields.Selection([
+        ('sc', 'SC'),
+        ('po', 'PO'),
+        ('pi', 'PI')
+    ], string="SC Type")
+
     @api.onchange('second_party_applicant')
     def onchange_second_party_applicant(self):
         if self.region_type == 'foreign' and self.type == 'export':
