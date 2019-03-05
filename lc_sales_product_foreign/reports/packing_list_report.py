@@ -59,14 +59,14 @@ class PackingList(models.AbstractModel):
 
         if shipment_obj.shipment_product_lines:
             for prod_line in shipment_obj.shipment_product_lines:
-                prod = {}
-                prod['name'] = prod_line.product_id.name_get()[0][1]
-                prod['hs_code'] = prod_line.product_id.hs_code_id.display_name
-                prod['quantity'] = prod_line.product_qty
-                prod['product_uom'] = prod_line.product_uom.name
-                prod['unit_price'] = prod_line.price_unit
-                prod['total_price'] = prod_line.product_qty * prod_line.price_unit
-
+                prod = {
+                    'name': prod_line.product_id.name_get()[0][1],
+                    'hs_code':prod_line.product_id.hs_code_id.display_name,
+                    'quantity': prod_line.product_qty,
+                    'product_uom': prod_line.product_uom.name,
+                    'unit_price': prod_line.price_unit,
+                    'total_price': prod_line.product_qty * prod_line.price_unit
+                }
                 prod_list.append(prod)
 
                 qty_list.append(prod['quantity'])
