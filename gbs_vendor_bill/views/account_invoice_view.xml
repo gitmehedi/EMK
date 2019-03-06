@@ -9,31 +9,28 @@
                 <button name="action_payment_instruction" type="object" states="open"
                         string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
             </xpath>
-            <xpath expr="//field[@name='date_due']" position="after">
-                <field name="total_payment_amount"/>
-            </xpath>
             <xpath expr="//notebook/page[2]" position="after">
                 <page string="Payment">
                     <field name="payment_line_ids" readonly="1">
                         <tree string="Payment lines">
-                            <!--<field name="sequence" widget="handle" />-->
-                            <!--<field name="currency"  />-->
+                            <field name="sequence" widget="handle" />
                             <field name="instruction_date"/>
                             <field name="partner_id"/>
                             <field name="default_debit_account_id"/>
                             <field name="default_credit_account_id"/>
                             <field name="amount"/>
+                            <field name="currency_id"/>
                             <field name="is_sync"/>
                         </tree>
                     </field>
                     <group>
                         <group></group>
                         <group class="oe_subtotal_footer oe_right">
-                            <fields name="total_payment_amount" widget="monetary"/>
+                            <field name="total_payment_amount" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
                         </group>
                     </group>
-                    <!--class="oe_subtotal_footer_separator"-->
-<!--attrs="{'invisible': [('payment_line_ids', '=', False)]}"-->
+                    <!--attrs="{'invisible': [('payment_line_ids', '=', False)]}"-->
                 </page>
             </xpath>
         </field>

@@ -137,7 +137,7 @@ class AccountInvoice(models.Model):
 
     def action_payment_instruction(self):
         if self.amount_untaxed <= self.total_payment_amount:
-            raise ValidationError(_('Payment is not required for this bill!!'))
+            raise ValidationError(_('There is no Remaining Balance for this Bill!!'))
 
         res = self.env.ref('gbs_vendor_bill.view_bill_payment_instruction_wizard')
 
