@@ -15,7 +15,8 @@ except ImportError:  # pragma: no cover
 
 
 class ServerFileProcess(models.Model):
-    _name = 'server.file.process'
+    _name = "server.file.process"
+    _description = "Configuration of SFTP File Processing"
     _inherit = "mail.thread"
 
     _sql_constraints = [
@@ -24,25 +25,42 @@ class ServerFileProcess(models.Model):
          "I cannot remove backups from the future. Ask Doc for that."),
     ]
 
-    name = fields.Char(string="Name", required=True)
-    folder = fields.Char(default=lambda self: self._default_path(), required=True, string="Local Path Location")
+    name = fields.Char(string="Name", required=True, track_visibility='onchange')
+    folder = fields.Char(default=lambda self: self._default_path(), string="Local Folder Path",
+                         track_visibility='onchange')
     days_to_keep = fields.Integer(required=True, default=0, )
     method = fields.Selection(selection=[("local", "Local disk"), ("sftp", "Remote SFTP Server")], default="local",
-                              required=True)
+                              required=True, track_visibility='onchange')
 
-    source_path = fields.Char(string="Path Location", required=True)
-    source_sftp_host = fields.Char(string='SFTP Server')
-    source_sftp_port = fields.Integer(string="SFTP Port", default=22)
-    source_sftp_user = fields.Char(string='Username')
+    source_path = fields.Char(string="Folder Path", required=True, track_visibility='onchange')
+    source_sftp_host = fields.Char(string='SFTP Server', track_visibility='onchange')
+    source_sftp_port = fields.Integer(string="SFTP Port", default=22, track_visibility='onchange')
+    source_sftp_user = fields.Char(string='Username', track_visibility='onchange')
     source_sftp_password = fields.Char(string="SFTP Password")
-    source_sftp_private_key = fields.Char(string="Primary Key Location")
+    source_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
 
-    dest_path = fields.Char(string="Path Location", required=True)
-    dest_sftp_host = fields.Char(string='SFTP Server')
-    dest_sftp_port = fields.Integer(string="SFTP Port", default=22)
-    dest_sftp_user = fields.Char(string='Username')
+    dest_path = fields.Char(string="Folder Path", required=True, track_visibility='onchange')
+    dest_sftp_host = fields.Char(string='SFTP Server', track_visibility='onchange')
+    dest_sftp_port = fields.Integer(string="SFTP Port", default=22, track_visibility='onchange')
+    dest_sftp_user = fields.Char(string='Username', track_visibility='onchange')
     dest_sftp_password = fields.Char(string="SFTP Password")
-    dest_sftp_private_key = fields.Char(string="PK Location")
+    dest_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
+
+    @api.onchange('method')
+    def onchange_name(self):
+        if self.method == 'local':
+            self.source_path = None
+            self.source_sftp_host = None
+            self.source_sftp_port = None
+            self.source_sftp_user = None
+            self.source_sftp_password = None
+            self.source_sftp_private_key = None
+            self.dest_path = None
+            self.dest_sftp_host = None
+            self.dest_sftp_port = None
+            self.dest_sftp_user = None
+            self.dest_sftp_password = None
+            self.dest_sftp_private_key = None
 
     @api.model
     def _default_path(self):
@@ -140,7 +158,7 @@ class ServerFileProcess(models.Model):
     def action_backup(self):
 
         for rec in self.filtered(lambda r: r.method == "local"):
-            dirs = [rec.folder, rec.source_path, rec.dest_path]
+            dirs = [rec.source_path, rec.dest_path]
             self.directory_check(dirs)
 
             files = filter(lambda x: x.endswith('.xls'), os.listdir(rec.source_path))

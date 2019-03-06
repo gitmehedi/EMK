@@ -5,7 +5,7 @@
         <field name="model">server.file.error</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="File Processing Error" create="false" copy="false" delete="false" edit="false">
+            <form string="File Processing Error" >
                 <sheet>
                     <h1>
                         <field name="name"/>
@@ -37,7 +37,7 @@
         <field name="model">server.file.error</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="File Processing Error" create="false" copy="false" delete="false" edit="false">
+            <tree string="File Processing Error">
                 <field name="name"/>
                 <field name="process_date"/>
                 <field name="file_path"/>
