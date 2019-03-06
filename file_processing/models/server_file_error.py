@@ -7,6 +7,7 @@ class ServerFileError(models.Model):
     _name = 'server.file.error'
     _description = "File Processing Error"
     _inherit = ["mail.thread"]
+    _order = 'id desc'
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     process_date = fields.Datetime(default=fields.Datetime.now)

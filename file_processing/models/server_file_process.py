@@ -2,8 +2,6 @@
 
 import os, shutil, xlrd, traceback, logging, json
 from contextlib import contextmanager
-from datetime import datetime, timedelta
-from glob import iglob
 from odoo import exceptions, models, fields, api, _, tools
 from odoo.exceptions import ValidationError
 
@@ -45,6 +43,31 @@ class ServerFileProcess(models.Model):
     dest_sftp_user = fields.Char(string='Username', track_visibility='onchange')
     dest_sftp_password = fields.Char(string="SFTP Password")
     dest_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
+
+    @api.constrains('source_path', 'dest_path', 'folder')
+    def onchange_path(self):
+        if self.method == 'local':
+            if self.source_path:
+                if not os.path.exists(self.source_path):
+                    raise ValidationError(_('Source Path [{0}] doesn\'t exists.'.format(self.source_path)))
+            if self.dest_path:
+                if not os.path.exists(self.dest_path):
+                    raise ValidationError(_('Destination Path [{0}] doesn\'t exists.'.format(self.dest_path)))
+
+        if self.method == 'sftp':
+            with self.sftp_connection('source') as source:
+                if self.source_path:
+                    if not source.exists(self.source_path):
+                        raise ValidationError(_('Source Path [{0}] doesn\'t exists.'.format(self.source_path)))
+
+            with self.sftp_connection('destination') as destination:
+                if self.dest_path:
+                    if not destination.exists(self.dest_path):
+                        raise ValidationError(_('Destination Path [{0}] doesn\'t exists.'.format(self.dest_path)))
+
+            if self.folder:
+                if not os.path.exists(self.folder):
+                    raise ValidationError(_('Local Path [{0}] doesn\'t exists.'.format(self.folder)))
 
     @api.onchange('method')
     def onchange_name(self):
@@ -164,9 +187,10 @@ class ServerFileProcess(models.Model):
             files = filter(lambda x: x.endswith('.xls'), os.listdir(rec.source_path))
             for file in files:
                 if os.path.splitext(file)[1] in ['.xls']:
-                    rec.create_journal(file)
-
-        # Ensure a local backup exists if we are going to write it remotely
+                    journal = rec.create_journal(file)
+                    if journal:
+                        if not shutil.move(os.path.join(rec.source_path, file), os.path.join(rec.dest_path, file)):
+                            raise ValidationError(_('Please check path configuration.'))
 
         with self.sftp_connection('source') as source:
             with self.sftp_connection('destination') as destination:
@@ -183,8 +207,12 @@ class ServerFileProcess(models.Model):
                         journal = rec.create_journal(file, {'source': source, 'dest': destination})
 
                         if journal:
-                            if destination.put(local_path, dest_path) and source.unlink(source_path):
-                                os.remove(local_path)
+                            if destination.put(local_path, dest_path):
+                                if source.unlink(source_path):
+                                    os.remove(local_path)
+                                raise ValidationError(_('Please check path configuration.'))
+                            else:
+                                raise ValidationError(_('Please check path configuration.'))
 
     def get_file_path(self, file, loc='s'):
         if self.method == 'local':
@@ -206,7 +234,7 @@ class ServerFileProcess(models.Model):
         if len(conn) > 0:
             dest_path = self.get_file_path(file, loc='d')
         else:
-            dest_path = ''
+            dest_path = self.get_file_path(self, filegit )
 
         file_ins = xlrd.open_workbook(source_path)
         errors = []
@@ -227,36 +255,44 @@ class ServerFileProcess(models.Model):
 
                 name = rec['BATCH_DESCRIPTION'].strip()
                 if not name:
-                    errors.append({'line_no': index, 'des': 'BATCH_DESCRIPTION has invalid value'})
+                    errors.append(
+                        {'line_no': index, 'details': 'BATCH_DESCRIPTION [{0}]has invalid value'.format(name)})
 
                 amount = float(rec['TRANSACTION_AMOUNT'].strip())
                 if not amount:
-                    errors.append({'line_no': index, 'des': 'BATCH_DESCRIPTION has invalid value'})
+                    errors.append(
+                        {'line_no': index, 'details': 'TRANSACTION_AMOUNT [{0}] has invalid value'.format(amount)})
 
-                journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
-
-                currency_id = self.env['res.currency'].search([('code', '=', self.preprocess(rec['CURRENCY']))])
+                currency = self.preprocess(rec['CURRENCY'])
+                currency_id = self.env['res.currency'].search([('code', '=', currency)])
                 if not currency_id:
-                    errors.append({'line_no': index, 'des': 'CURRENCY has invalid value'})
+                    errors.append({'line_no': index, 'details': 'CURRENCY [{0}]  has invalid value'.format(currency)})
 
-                segment_id = self.env['segment'].search([('code', '=', self.preprocess(rec['SEGMENT']))])
+                segment = self.preprocess(rec['SEGMENT'])
+                segment_id = self.env['segment'].search([('code', '=', segment)])
                 if not segment_id:
-                    errors.append({'line_no': index, 'des': 'SEGMENT has invalid value'})
+                    errors.append({'line_no': index, 'details': 'SEGMENT [{0}]  has invalid value'.format(segment)})
 
-                ac_id = self.env['acquiring.channel'].search([('code', '=', self.preprocess(rec['AC']))])
+                ac = self.preprocess(rec['AC'])
+                ac_id = self.env['acquiring.channel'].search([('code', '=', ac)])
                 if not ac_id:
-                    errors.append({'line_no': index, 'des': 'AC has invalid value'})
-                sc_id = self.env['servicing.channel'].search([('code', '=', self.preprocess(rec['SC']))])
-                if not sc_id:
-                    errors.append({'line_no': index, 'des': 'SC has invalid value'})
-                branch_id = self.env['operating.unit'].search([('code', '=', self.preprocess(rec['BRANCH']))])
-                if not branch_id:
-                    errors.append({'line_no': index, 'des': 'BRANCH has invalid value'})
+                    errors.append({'line_no': index, 'details': 'AC [{0}]  has invalid value'.format(ac)})
 
-                cost_centre_id = self.env['account.analytic.account'].search(
-                    [('name', '=', self.preprocess(rec['COST_CENTRE']))])
+                sc = self.preprocess(rec['SC'])
+                sc_id = self.env['servicing.channel'].search([('code', '=', sc)])
+                if not sc_id:
+                    errors.append({'line_no': index, 'details': 'SC [{0}]  has invalid value'.format(sc)})
+
+                branch = self.preprocess(rec['BRANCH'])
+                branch_id = self.env['operating.unit'].search([('code', '=', branch)])
+                if not branch_id:
+                    errors.append({'line_no': index, 'details': 'BRANCH  [{0}] has invalid value'.format(branch)})
+
+                cost_centre = self.preprocess(rec['COST_CENTRE'])
+                cost_centre_id = self.env['account.analytic.account'].search([('name', '=', cost_centre)])
                 if not cost_centre_id:
-                    errors.append({'line_no': index, 'des': 'COST_CENTRE has invalid value'})
+                    errors.append(
+                        {'line_no': index, 'details': 'COST_CENTRE [{0}]  has invalid value'.format(cost_centre)})
 
                 if rec['COMP_1'] and rec['COMP_2']:
                     comp_1 = self.preprocess(rec['COMP_1'])
@@ -265,7 +301,8 @@ class ServerFileProcess(models.Model):
                     account = comp_1 + comp_2
                     account_id = self.env['account.account'].search([('code', '=', account)])
                     if not account_id:
-                        errors.append({'line_no': index, 'des': 'COMP_1 or COMP_2 has invalid value'})
+                        errors.append({'line_no': index,
+                                       'details': 'Combination of COMP_1 and COMP_2 has invalid value'.format(account)})
 
                 if rec['DEBIT_CREDIT_FLAG'] == 'CR':
                     line = {
@@ -315,72 +352,6 @@ class ServerFileProcess(models.Model):
 
         return response
 
-    # @api.one
-    # def create_journal(self, source_con):
-    #     source = source_con.listdir(self.dest_path)
-    #     files_path = filter(lambda x: x.endswith('.xls'), source)
-    #     for file_path in files_path:
-    #         if os.path.splitext(file_path)[1] in ['.xls']:
-    #             full_path = self.dest_path + file_path
-    #             local_path = self.folder + file_path
-    #             source_con.get(full_path, local_path)
-    #             file_obj = xlrd.open_workbook(local_path)
-    #             for worksheet_index in range(file_obj.nsheets):
-    #                 records = self.get_formatted_data(file_obj.sheet_by_index(worksheet_index))
-    #                 lines = []
-    #                 for rec in records[0]:
-    #                     journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
-    #                     currency_id = self.env['res.currency'].search([('name', '=', rec['CURRENCY'])])
-    #
-    #                     if rec['COMP_1'] and rec['COMP_2']:
-    #                         part1 = rec['COMP_1'].split('.')
-    #                         part2 = rec['COMP_2'].split('.')
-    #                         account = part1[0] + part2[0]
-    #                         account_id = self.env['account.account'].search([('code', '=', account)])
-    #
-    #                         if not account_id:
-    #                             raise ValidationError(_('Account is not available'))
-    #
-    #                     if rec['DEBIT_CREDIT_FLAG'] == 'CR':
-    #                         moves = {
-    #                             'name': rec['BATCH_DESCRIPTION'],
-    #                             'account_id': account_id.id,
-    #                             'credit': float(rec['TRANSACTION_AMOUNT']),
-    #                             'debit': 0.0,
-    #                             'journal_id': journal.id,
-    #                             'partner_id': None,
-    #                             'analytic_account_id': None,
-    #                             'currency_id': currency_id,
-    #                             'amount_currency': 0.0,
-    #                         }
-    #
-    #                     if rec['DEBIT_CREDIT_FLAG'] == 'DR':
-    #                         moves = {
-    #                             'name': rec['BATCH_DESCRIPTION'],
-    #                             'account_id': account_id.id,
-    #                             'debit': float(rec['TRANSACTION_AMOUNT']),
-    #                             'credit': 0.0,
-    #                             'journal_id': journal.id,
-    #                             'partner_id': None,
-    #                             'analytic_account_id': None,
-    #                             'currency_id': currency_id,
-    #                             'amount_currency': 0.0,
-    #                         }
-    #
-    #                     lines.append((0, 0, moves))
-    #
-    #                 move_obj = self.env['account.move'].create({
-    #                     'journal_id': journal.id,
-    #                     'data': fields.Date.today(),
-    #                     'line_ids': lines,
-    #                     'journal_id': journal.id,
-    #                 })
-    #                 if move_obj.state == 'draft':
-    #                     move_obj.post()
-    #                 else:
-    #                     self.move_file_src_to_des(source_con)
-    #         else:
-    #             print("File extension is not valid")
     @api.model
     def action_backup_all(self):
         """Run all scheduled backups."""
@@ -407,27 +378,6 @@ class ServerFileProcess(models.Model):
         else:
             _logger.info("Database backup succeeded: %s", self.name)
             self.message_post(_("Database backup succeeded."))
-
-    @api.multi
-    def cleanup(self):
-        """Clean up old backups."""
-        now = datetime.now()
-        for rec in self.filtered("days_to_keep"):
-            with rec.cleanup_log():
-                oldest = self.filename(now - timedelta(days=rec.days_to_keep))
-
-                if rec.method == "local":
-                    for name in iglob(os.path.join(rec.folder,
-                                                   "*.dump.zip")):
-                        if os.path.basename(name) < oldest:
-                            os.unlink(name)
-
-                elif rec.method == "sftp":
-                    with rec.sftp_connection() as remote:
-                        for name in remote.listdir(rec.folder):
-                            if (name.endswith(".dump.zip") and
-                                    os.path.basename(name) < oldest):
-                                remote.unlink('%s/%s' % (rec.folder, name))
 
     @api.multi
     @contextmanager
@@ -457,10 +407,6 @@ class ServerFileProcess(models.Model):
 
     @api.one
     def get_formatted_data(self, var_worksheet):
-        """Read Excel sheet and create list from sheet data
-        :param var_worksheet: take worksheet
-        :returns: The return value. list of dictionary
-        """
         worksheet_col = []  # list of columns
         for col in range(var_worksheet.ncols):
             worksheet_col.append(str(var_worksheet.cell(0, col).value))
