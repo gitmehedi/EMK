@@ -31,7 +31,6 @@ class AccountInvoice(models.Model):
         for invoice in self:
             invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
 
-    type = fields.Selection(selection_add=[('payment_ins', 'Payment Instruction')])
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',
                                         default=lambda self:
                                         self.env['res.users'].
@@ -157,13 +156,15 @@ class AccountInvoice(models.Model):
         }
 
     def action_paid_invoice(self):
-        # for invoice in self.search([('state', '=', 'open')]):
         to_pay_invoices = self.search([('state', '=', 'open')]).filtered(lambda inv: len(inv.payment_line_ids) > 0
                                                                and inv.residual<=inv.total_payment_amount)
         for to_pay_invoice in to_pay_invoices:
             if len([i.is_sync for i in to_pay_invoice.payment_line_ids if not i.is_sync])>0:
                 pass
             else:
+                for line in to_pay_invoice.sudo().move_id.line_ids:
+                    if line.account_id.internal_type in ('receivable', 'payable'):
+                        line.write({'amount_residual': 0.0})
                 to_pay_invoice.write({'state': 'paid'})
         return True
 
