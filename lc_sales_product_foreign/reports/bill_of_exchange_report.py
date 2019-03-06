@@ -11,6 +11,7 @@ class BillExchangeFirst(models.AbstractModel):
         shipment_obj = shipment_pool.browse(data.get('shipment_id'))
         report_utility_pool = self.env['report.utility']
         line_list = []
+        pi_id_list = []
         address = shipment_obj.lc_id.second_party_applicant.address_get(['delivery', 'invoice'])
         delivery_address = self.env['res.partner'].browse(address['delivery'])
         invoice_address = self.env['res.partner'].browse(address['invoice'])
@@ -37,6 +38,7 @@ class BillExchangeFirst(models.AbstractModel):
             'discharge_port_country_id': shipment_obj.lc_id.discharge_port_country_id.name,
             'cover_note_no': shipment_obj.lc_id.cover_note_no,
             'model_type': shipment_obj.lc_id.model_type,
+            'sc_type': shipment_obj.lc_id.sc_type,
             'second_party_bank': shipment_obj.lc_id.second_party_bank,
             'first_party': shipment_obj.lc_id.first_party.name,
             'first_party_add': report_utility_pool.getBranchAddress(shipment_obj.lc_id.first_party),
@@ -60,6 +62,9 @@ class BillExchangeFirst(models.AbstractModel):
                 uom.append(list_obj['uom'])
                 line_list.append(list_obj)
 
+        for pi_id in shipment_obj.lc_id.pi_ids:
+            pi_id_list.append({'pi_id':pi_id.name,'pack_type':pi_id.pack_type.display_name,'pi_date':report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(pi_id.create_date))})
+
         pi_list =[]
         if shipment_obj.lc_id.pi_ids_temp:
             for pi in shipment_obj.lc_id.pi_ids_temp:
@@ -78,6 +83,7 @@ class BillExchangeFirst(models.AbstractModel):
             'price_total': price_total,
             'amt_to_word': amt_to_word,
             'pi_list': pi_list,
+            'pi_id_list': pi_id_list,
             'uom': uom[0] if len(uom)>0 else 0,
 
         }

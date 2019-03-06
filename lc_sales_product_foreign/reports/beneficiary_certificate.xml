@@ -56,19 +56,26 @@
                                 <br/>
                                 <div>
                                     <p>
-                                        <b>RE:</b>
+                                        <b>RE: </b>
                                         <t t-foreach="lists" t-as="l">
                                             <strong t-esc="l['quantity']"/>
                                             <strong t-esc="l['uom']"/>
                                             <span t-esc="l['name']"/>
                                             <t t-if="len(lists)>1">,</t>
                                         </t>
-                                        DESPATCHED UNDER LC NO:
+                                        DESPATCHED UNDER
+                                        <t t-if="data['model_type'] == 'tt'"> TT NO: </t>
+                                        <t t-elif="data['model_type'] == 'lc'"> LC NO: </t>
+                                        <t t-elif="data['model_type'] == 'sales_contract'">
+                                            <t t-if = "data['sc_type'] == 'sc'"> Sales contract NO: </t>
+                                            <t t-elif = "data['sc_type'] == 'pi'"> Proforma invoice NO: </t>
+                                            <t t-elif = "data['sc_type'] == 'po'"> Purchase order NO: </t>
+                                        </t>
                                         <strong t-esc="data['lc_id']"/>,
-                                        <strong>DATE:</strong>
+                                        <strong>DATE: </strong>
                                         <strong t-esc="data['issue_date']"/>
-                                        <b>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>, DATE:
-                                            INSURANCE DATE) OF
+                                        <b>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>
+                                             DATE: <strong t-esc="data['insurance_policy_date']"/> OF
                                             <strong t-esc="data['second_party_bank']"/>
                                         </b>
                                         GOODS ARE UNDER H.S.CODE NO:
@@ -105,11 +112,10 @@
                                     <p>
                                         THIS IS TO CERTIFY THAT GOODS DESPATCHED STRICTLY AS PER OUR PROFORMA INVOICE:
                                         <t t-foreach="pi_list" t-as="p">
-                                            <strong t-esc="p['number']"/>
-                                            <b>,DATE:</b>
+                                            <strong t-esc="p['number']"/><b>, DATE: </b>
                                             <strong t-esc="p['date']"/>
+                                            <t t-if="len(pi_list)>1">,</t>
                                         </t>
-                                        <t t-if="len(pi_list)>1">,</t>
                                     </p>
                                 </div>
                             </div>
@@ -127,12 +133,17 @@
                                 <tbody>
                                     <p><tr>
                                         <td class="w200px">
-                                            <span t-esc="data['model_type']"/>
-                                            NO
+                                            <t t-if="data['model_type'] == 'tt'">TT NO</t>
+                                            <t t-elif="data['model_type'] == 'lc'">LC NO</t>
+                                            <t t-elif="data['model_type'] == 'sales_contract'">
+                                                <t t-if = "data['sc_type'] == 'sc'">Sales contract NO</t>
+                                                <t t-elif = "data['sc_type'] == 'pi'">Proforma invoice NO</t>
+                                                <t t-elif = "data['sc_type'] == 'po'">Purchase order NO</t>
+                                            </t>
                                         </td>
                                         <td>
                                             :   <strong t-esc="data['lc_id']"/>,
-                                            <strong>DATE: </strong>
+                                            <strong> DATE: </strong>
                                             <strong t-esc="data['issue_date']"/>
                                         </td>
                                     </tr>
@@ -162,7 +173,7 @@
                                     <tr>
                                         <td class="w200px">BL No.   </td>
                                         <td>
-                                            :   <strong t-esc="data['truck_receipt_no']"/>
+                                            :   <strong t-esc="data['truck_receipt_no']"/> <b>Date: </b><strong t-esc="data['bl_date']"/>
                                         </td>
                                     </tr>
                                     <tr>

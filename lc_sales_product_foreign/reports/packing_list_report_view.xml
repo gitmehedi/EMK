@@ -17,7 +17,7 @@
         <template id="report_packing_list">
             <t t-call="report.html_container">
                 <t t-call="report_layout.gbs_custom_pad_report_template">
-                    <div class="page" style="page-break-inside: auto; text-transform: uppercase;">
+                    <div class="page" style="page-break-inside: auto;">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
@@ -52,7 +52,7 @@
                                                 <td class="w50 bt-0">
                                                     <p><b><u>Proforma Invoice No:</u></b> <br/>
                                                             <t t-foreach="pi_id_list" t-as="r">
-                                                                <strong t-esc="r['pi_id']"/>
+                                                                <strong t-esc="r['pi_id']"/><br/>
                                                                 Date: <strong t-esc="r['pi_date']"/>
                                                             </t>
                                                         </p>
@@ -65,7 +65,7 @@
                                             <tr class="odo-bg-gray">
                                                 <td>
                                                     <p><u><b>Place/Port of Loading:</b></u> <br/>
-                                                        <span t-esc="data['landing_port']"/>,<span t-esc="data['landing_port_country_id']"/>
+                                                        <span t-esc="data['landing_port']"/>, <span t-esc="data['landing_port_country_id']"/>
                                                     </p>
                                                 </td>
                                                 <td>
@@ -95,15 +95,27 @@
                                             </tr>
                                             <tr class="odo-bg-gray">
                                                 <td>
-                                                    <p><u><b>Marine Cover Note No:</b></u> <br/>
-                                                        <span t-esc="data['cover_note_no']"/><br/>
-                                                        Date: <span t-esc="data['insurance_date']"/>
+                                                    <p>
+                                                        <t t-if="data['insurance_number']">
+                                                            <u><b>Marine Cargo Policy No:</b></u> <br/>
+                                                            <span t-esc="data['insurance_number']"/><br/>
+                                                        </t>
+                                                        <t t-if="data['insurance_policy_date']">
+                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
+                                                        </t>
+                                                        <t t-if="data['cover_note_no']">
+                                                            <u><b>Marine Cover Note No:</b></u> <br/>
+                                                            <span t-esc="data['cover_note_no']"/><br/>
+                                                        </t>
+                                                        <t t-if="data['insurance_date']">
+                                                            Date: <span t-esc="data['insurance_date']"/>
+                                                        </t>
                                                     </p>
                                                 </td>
                                                 <td>
                                                     <p><u><b>BL No.</b></u> <br/>
                                                         <span t-esc="data['truck_receipt_no']"/><br/>
-                                                        Date: <span t-esc="data['bl_date']"/>                                             </p>
+                                                        Date: <span t-esc="data['bl_date']"/></p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -192,8 +204,8 @@
                                 </div>
                                 <div class="col-xs-4 text-center"><b>Total: </b><span t-esc="data['count_qty']"/> <span t-esc="data['count_uom']"/><br/>
                                     <t t-foreach="pi_id_list" t-as="r">
-                                        <span t-esc="r['pack_type']"/>
-                                        <t t-if="len(pi_id_list)>1">,<br/></t>
+                                        (<span t-esc="r['pack_type']"/>
+                                        <t t-if="len(pi_id_list)>1">,<br/></t>)
                                     </t>
                                 </div>
                                 <div class="col-xs-4 text-right"><b>Net Weight: </b>

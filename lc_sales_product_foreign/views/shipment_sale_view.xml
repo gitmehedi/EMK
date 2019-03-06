@@ -88,7 +88,7 @@
                             <group string="Invoice">
                                 <field name="invoice_number_dummy" string="Number (Dummy)"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                <field name="invoice_date_dummy" string="Invoice Date (Dummy)"
+                                <field name="invoice_date_dummy" string="Date (Dummy)"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="invoice_id" readonly="1"
                                        options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>

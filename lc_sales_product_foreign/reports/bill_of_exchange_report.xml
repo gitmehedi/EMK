@@ -53,8 +53,6 @@
                             </div>
                         </div>
                         <br/>
-                        <br/>
-
                         <div>
                             <table class="mb-0">
                                 <tbody>
@@ -72,7 +70,6 @@
                                         <strong> ONLY.</strong></p>
                                     </tr>
                                     <br/>
-                                    <br/>
                                     <tr>
                                         <t t-foreach="lists" t-as="l">
                                             <tr style="page-break-inside: avoid">
@@ -80,7 +77,8 @@
                                                     <span t-esc="l['name']"/>,
                                                     <strong t-esc="'%.2f'% l['quantity']"/> <strong t-esc="l['uom']"/>, IN
                                                     <t t-foreach="pi_id_list" t-as="r">
-                                                        <span t-esc="r['pack_type']"/><t t-if="len(pi_id_list)>1">,<br/></t>
+                                                        <span t-esc="r['pack_type']"/>
+                                                        <t t-if="len(pi_id_list)>1">,<br/></t>
                                                     </t> AT THE RATE OF
                                                     <strong t-esc="data['currency_id']"/> <strong t-esc="l['price_unit']"/>
                                                     ON
@@ -89,20 +87,19 @@
                                                     <span t-esc="data['discharge_port_country_id']"/>
                                                     AS PER PROFORMA INVOICE NO:
                                                     <t t-foreach="pi_list" t-as="p">
-                                                        <strong t-esc="p['number']"/>
-                                                        <b>,DATE:</b>
-                                                        <strong t-esc="p['date']"/>
+                                                        <strong t-esc="p['number']"/><b>, DATE: </b><strong t-esc="p['date']"/>
+                                                        <t t-if="len(pi_list)>1">,</t>
                                                     </t>
-                                                    <t t-if="len(pi_list)>1">,</t>
                                                 </p>
                                             </tr>
                                         </t>
                                     </tr>
                                     <br/>
-                                    <br/>
                                     <tr>
-                                        <t t-if="data['model_type'] == 'lc'">
-                                            <p>DRAWN UNDER THE CONFIRMATION OF LC NO:
+                                        <t t-if="data['model_type'] != 'sales_contract'">
+                                            <p>DRAWN UNDER THE CONFIRMATION OF
+                                                <t t-if="data['model_type'] == 'tt'">TT NO: </t>
+                                                <t t-elif="data['model_type'] == 'lc'">LC NO: </t>
                                             <strong t-esc="data['lc_id']"/>,
                                             <strong>DATE:</strong>
                                             <strong t-esc="data['issue_date']"/>
@@ -116,40 +113,45 @@
                                             </t>
                                             <t t-if="len(lists)>1">,</t></p>
                                         </t>
-                                        <t t-else="data['model_type'] != 'lc'">
-                                            <p>DRAWN UNDER
-                                                <t t-if="data['model_type'] == 'tt'">TT NO: </t>
-                                                <t t-elif="data['model_type'] == 'sales_contract'">Sales Contract NO: </t>
-                                            <strong t-esc="data['lc_id']"/>,
-                                            <strong>DATE: </strong>
-                                            <strong t-esc="data['issue_date']"/>
-                                            BETWEEN
-                                            <strong t-esc="data['first_party']"/>,
-                                            <b>ADDRESS: </b>
-                                            <span t-esc="data['first_party_add']"/>
-                                            <b>FACTORY: </b>
-                                            <span t-esc="data['factory']"/>
-                                            <strong> AND </strong>
-                                            <strong t-raw="data['second_party_applicant']"/>,
-                                            <b> ADDRESS: </b>
-                                            <span t-esc="data['invoice_address']"/>
-                                            ,IMPORTER'S BANK:
-                                            <strong t-esc="data['second_party_bank']"/>
-                                            GOODS ARE UNDER H.S.CODE NO:
-                                            <t t-foreach="lists" t-as="l">
-                                                <strong t-esc="l['hs_code']"/>
-                                            </t>
-                                            <t t-if="len(lists)>1">,</t></p>
+                                        <t t-else="data['model_type'] == 'sales_contract'">
+                                            <p>
+                                                <t t-if = "data['sc_type'] == 'sc'">
+                                                    Drawn under the sales contract No.:
+                                                </t>
+                                                <t t-elif = "data['sc_type'] == 'pi'">
+                                                    Drawn under the proforma invoice No.:
+                                                </t>
+                                                <t t-elif = "data['sc_type'] == 'po'">
+                                                    Drawn under the purchase order No.:
+                                                </t>
+                                                <strong t-esc="data['lc_id']"/>,
+                                                <strong> DATE: </strong>
+                                                <strong t-esc="data['issue_date']"/>
+                                                 BETWEEN
+                                                <strong t-esc="data['first_party']"/>.
+                                                <b> ADDRESS: </b>
+                                                <span t-esc="data['first_party_add']"/>.
+                                                <b> FACTORY: </b>
+                                                <span t-esc="data['factory']"/>
+                                                <strong> AND </strong>
+                                                <strong t-raw="data['second_party_applicant']"/>.
+                                                <b> ADDRESS: </b>
+                                                <span t-esc="data['invoice_address']"/>.
+                                                 IMPORTER'S BANK:
+                                                <strong t-esc="data['second_party_bank']"/>
+                                                 GOODS ARE UNDER H.S.CODE NO:
+                                                <t t-foreach="lists" t-as="l">
+                                                    <strong t-esc="l['hs_code']"/>
+                                                </t>
+                                                <t t-if="len(lists)>1">,</t>
+                                            </p>
                                         </t>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <br/>
-                        <br/>
-
                         <hr class="hr-xs"/>
-
                         <table class="mb-0">
                             <tbody>
                                 <t t-if="data['document_receiver_bank']">
@@ -163,7 +165,7 @@
                                     </tr>
                                 </t>
                                 <tr>
-                                    <td>A/C:</td>
+                                    <td class="w75px">A/C:</td>
                                     <td>
                                         <strong t-esc="data['second_party_applicant']"/>
                                     </td>
@@ -174,12 +176,6 @@
                                         <span t-esc="data['invoice_address']"/>
                                     </td>
                                 </tr>
-                                <!--<tr>-->
-                                <!--<td></td>-->
-                                <!--<td>FACTORY:-->
-                                <!--<span t-esc="data['delivery_address']"/>-->
-                                <!--</td>-->
-                                <!--</tr>-->
                                 <tr>
                                     <td></td>
                                     <t t-if="data['gst_no']">
