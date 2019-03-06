@@ -15,15 +15,25 @@ class BeneficiaryCertificate(models.AbstractModel):
         prod_list = []
         address = shipment_obj.lc_id.second_party_applicant.address_get(['delivery', 'invoice'])
         invoice_address = self.env['res.partner'].browse(address['invoice'])
+        lc_clause = data['lc_clause']
         data = {
+            'lc_clause': lc_clause,
             'insurance_company_name': shipment_obj.lc_id.insurance_company_name,
             'insurance_company_address': shipment_obj.lc_id.insurance_company_address,
             'insurance_number': shipment_obj.lc_id.insurance_number,
+            'insurance_policy_date': shipment_obj.lc_id.insurance_policy_date,
+            'trans_shipment': shipment_obj.lc_id.trans_shipment,
             'lc_id': shipment_obj.lc_id.unrevisioned_name,
             'issue_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date)),
             'second_party_bank': shipment_obj.lc_id.second_party_bank,
             'partial_shipment': shipment_obj.lc_id.partial_shipment,
             'shipment_number': shipment_obj.name,
+            'container_no': shipment_obj.container_no,
+            'mother_vessel': shipment_obj.mother_vessel,
+            'etd_date': shipment_obj.etd_date,
+            'eta_date': shipment_obj.eta_date,
+            'etd_trans_shipment_date': shipment_obj.etd_trans_shipment_date,
+            'eta_trans_shipment_date': shipment_obj.eta_trans_shipment_date,
             'second_party_applicant': shipment_obj.lc_id.second_party_applicant.name,
             'invoice_address': report_utility_pool.getCoustomerAddress(invoice_address),
             'first_party': shipment_obj.lc_id.first_party.name,

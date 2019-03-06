@@ -28,25 +28,27 @@
                                         <u>Beneficiary Certificate/DESPATCH NOTE/SHIPMENT ADVICE</u>
                                     </b>
                                 </h4>
-                                <h6 class="mt-0">
-                                    <b>(AS PER LC CLAUSE 46A: POINT 3)</b>
-                                </h6>
+                                <t t-if="data['lc_clause']">
+                                    <h6 class="mt-0">
+                                        <strong t-esc="data['lc_clause']"/>
+                                    </h6>
+                                </t>
                             </div>
+                            <br/>
                             <div>
-                                <p>Date:
-                                    <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+                                <p><b>Date: </b>
+                                    <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
                                 </p>
                                 <div>
-                                    <p>To: <strong t-esc="data['insurance_company_name']"/>,
+                                    <p><b>To: </b><strong t-esc="data['insurance_company_name']"/>,
                                         <strong t-raw="data['insurance_company_address']"/>
                                     </p>
                                 </div>
                                 <div>
                                     <h5>
                                         <b>
-                                            <u>INSURANCE OPEN POLICY NO.:<strong t-esc="data['insurance_number']"/>,
-                                                DATE:
-                                                INSURANCE DATE
+                                            <u>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>
+                                                DATE: <strong t-esc="data['insurance_policy_date']"/>
                                             </u>
                                         </b>
                                     </h5>
@@ -65,18 +67,18 @@
                                         <strong t-esc="data['lc_id']"/>,
                                         <strong>DATE:</strong>
                                         <strong t-esc="data['issue_date']"/>
-                                        <b>(INSURANCE OPEN POLICY NO.:<strong t-esc="data['insurance_number']"/>, DATE:
+                                        <b>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>, DATE:
                                             INSURANCE DATE) OF
                                             <strong t-esc="data['second_party_bank']"/>
                                         </b>
                                         GOODS ARE UNDER H.S.CODE NO:
                                         <t t-foreach="lists" t-as="l">
-                                            <strong t-esc="l['hs_code']"/>
+                                            <strong t-esc="l['hs_code']"/>.
                                         </t>
                                         <t t-if="len(lists)>1">,</t>
                                         <t t-if="data['partial_shipment'] == True">
-                                            <p>Partial Shipment>:
-                                            <span t-esc="data['shipment_number']"/></p>
+                                            (Partial Shipment:
+                                            <span t-esc="data['shipment_number']"/>)
                                         </t>
                                     </p>
                                 </div>
@@ -166,7 +168,7 @@
                                     <tr>
                                         <td class="w200px">CONTAINER No.   </td>
                                         <td>
-                                            :   <b>DUMMY</b>
+                                            :   <strong t-esc="data['container_no']"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -178,31 +180,33 @@
                                     <tr>
                                         <td class="w200px">ETD <span t-esc="data['landing_port']"/> (DATE OF SHIPMENT)   </td>
                                         <td>
-                                            :   <b>DUMMY</b>
+                                            :   <strong t-esc="data['etd_date']"/>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="w200px">ETA <SPAN t-esc="data['transshipment_country_id']"/>   </td>
-                                        <td>
-                                            :   <b>DUMMY</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="w200px">MOTHER VESSEL   </td>
-                                        <td>
-                                            :   <b>DUMMY</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="w200px">ETD <SPAN t-esc="data['transshipment_country_id']"/>   </td>
-                                        <td>
-                                            :   <b>DUMMY</b>
-                                        </td>
-                                    </tr>
+                                    <t t-if="data['trans_shipment']== True">
+                                        <tr>
+                                            <td class="w200px">ETA <SPAN t-esc="data['transshipment_country_id']"/>   </td>
+                                            <td>
+                                                :   <strong t-esc="data['eta_trans_shipment_date']"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="w200px">MOTHER VESSEL   </td>
+                                            <td>
+                                                :   <strong t-esc="data['mother_vessel']"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="w200px">ETD <SPAN t-esc="data['transshipment_country_id']"/>   </td>
+                                            <td>
+                                                :   <strong t-esc="data['etd_trans_shipment_date']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
                                     <tr>
                                         <td class="w200px">ETA <span t-esc="data['discharge_port']"/>,<span t-esc="data['discharge_port_country_id']"/>   </td>
                                         <td>
-                                            :   <b>DUMMY</b>
+                                            :   <strong t-esc="data['eta_date']"/>
                                         </td>
                                     </tr>
                                     <tr>

@@ -6,7 +6,7 @@
             <field name="model">lc.sales.report.foreign.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Print Reports" create="false" edit="false">
+                <form string="Print Reports">
                     <group>
                         <group>
                             <button string="Packing List" name="process_packing_list" type="object"
@@ -26,7 +26,7 @@
                                     class="oe_highlight"/>
                         </group>
                         <group>
-                            <button string="Beneficiary Certificate" name="process_beneficiary_certificate" type="object" class="oe_highlight"/>
+                            <button string="Beneficiary Certificate" name="action_beneficiary_certificate" type="object" class="oe_highlight"/>
                         </group>
                     </group>
 
@@ -37,12 +37,13 @@
             </field>
         </record>
 
+        <!-- bill of exchange wizard for Add Bill of Exchange No:(first,second,single)-->
         <record id="bill_of_exc_wizard_view" model="ir.ui.view">
             <field name="name">bill.of.exc.wizard</field>
             <field name="model">bill.of.exc.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Bill of Exchange Number" create="false" edit="false">
+                <form string="Bill of Exchange Number">
                     <group>
                         <group>
                             <field name="bill_exchange"/>
@@ -55,14 +56,26 @@
                 </form>
             </field>
         </record>
-        <!--<record id="action_bill_of_exc_wizard_view" model="ir.actions.act_window">-->
-        <!--<field name="name">Repay</field>-->
-        <!--<field name="type">ir.actions.act_window</field>-->
-        <!--<field name="res_model">lc.sales.report.foreign.wizard</field>-->
-        <!--<field name="view_type">form</field>-->
-        <!--<field name="view_mode">form</field>-->
-        <!--<field name="view_id" ref="bill_of_exc_wizard_view"/>-->
-        <!--<field name="target">new</field>-->
-        <!--</record>-->
+
+        <!-- beneficiary certificate wizard for Add LC clause-->
+        <record id="beneficiary_certificate_wizard_view" model="ir.ui.view">
+            <field name="name">beneficiary.certificate.wizard</field>
+            <field name="model">beneficiary.certificate.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Beneficiary Certificate LC Clause">
+                    <group>
+                        <group>
+                            <field name="lc_clause"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print" class="oe_highlight" name="process_beneficiary_certificate" type="object"/>
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>
