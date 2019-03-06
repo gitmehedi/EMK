@@ -5,7 +5,7 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="after">
+            <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="after">
                 <button name="action_payment_instruction" type="object" states="open"
                         string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
             </xpath>

@@ -10,8 +10,10 @@
         'account_invoice_merge_operating_unit',
         'account_invoice_merge_attachment',
         'account_mtbl',
+        'gbs_payment_instruction',
     ],
     'data': [
+        'data/bill_payment_instruction_scheduler.xml',
         'wizards/bill_payment_instruction_wizard.xml',
         'views/product_product_view.xml',
         'views/invoice_merge_view.xml',

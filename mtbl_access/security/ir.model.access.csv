@@ -34,6 +34,3 @@ access_account_account_type_admin,account_account_account_type_admin,account.mod
 access_account_account_type_user,account_account_account_type_user,account.model_account_account_type,,1,0,0,0
 
 access_res_company_group_sys_admin,access_res_company_group_sys_admin,base.model_res_company,group_mtbl_sys_admin,1,1,1,1
-
-access_payment_instruction_sys_admin,access_payment_instruction_sys_admin,gbs_vendor_bill.model_payment_instruction,group_mtbl_sys_admin,1,1,1,1
-
