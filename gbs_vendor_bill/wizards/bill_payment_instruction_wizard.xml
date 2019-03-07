@@ -9,12 +9,11 @@
                     <group>
                         <group>
                             <field name="invoice_id"/>
-                            <field name="invoice_amount"/>
-                            <field name="instructed_amount" invisible="1"/>
+                            <field name="amount"/>
                         </group>
                         <group>
+                            <field name="instructed_amount" invisible="1"/>
                             <field name="instruction_date"/>
-                            <field name="amount"/>
                         </group>
                     </group>
                 </sheet>
