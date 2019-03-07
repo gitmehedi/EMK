@@ -39,11 +39,10 @@
         <field name="arch" type="xml">
             <tree string="File Processing Error">
                 <field name="name"/>
-                <field name="process_date"/>
                 <field name="file_path"/>
                 <field name="ftp_ip"/>
+                <field name="process_date"/>
                 <field name="status"/>
-                <field name="errors"/>
             </tree>
         </field>
     </record>

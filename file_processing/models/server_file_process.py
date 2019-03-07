@@ -208,9 +208,10 @@ class ServerFileProcess(models.Model):
 
                         if journal:
                             if destination.put(local_path, dest_path):
-                                if source.unlink(source_path):
+                                if not source.unlink(source_path):
                                     os.remove(local_path)
-                                raise ValidationError(_('Please check path configuration.'))
+                                else:
+                                    raise ValidationError(_('Please check path configuration.'))
                             else:
                                 raise ValidationError(_('Please check path configuration.'))
 
@@ -221,22 +222,27 @@ class ServerFileProcess(models.Model):
             else:
                 return os.path.join(self.dest_path, file)
         else:
-            return os.path.join(self.folder, file)
+            if loc == 'l':
+                return os.path.join(self.folder, file)
+            elif loc == 's':
+                return os.path.join(self.source_path, file)
+            else:
+                return os.path.join(self.dest_path, file)
 
     def preprocess(self, data):
         filter = data.split('.')
         return filter[0].strip() if len(filter) > 0 else None
 
-    @api.one
+    @api.multi
     def create_journal(self, file, conn={}):
-        source_path = self.get_file_path(file)
+        local_path = self.get_file_path(file, loc='l')
         response = False
         if len(conn) > 0:
-            dest_path = self.get_file_path(file, loc='d')
+            source_path = self.get_file_path(file)
         else:
-            dest_path = self.get_file_path(self, filegit )
+            source_path = self.get_file_path(file)
 
-        file_ins = xlrd.open_workbook(source_path)
+        file_ins = xlrd.open_workbook(local_path)
         errors = []
 
         for worksheet_index in range(file_ins.nsheets):
@@ -345,12 +351,14 @@ class ServerFileProcess(models.Model):
                         move_obj = self.env['account.move'].create(moves[key])
                         if move_obj.state == 'draft':
                             move_obj.post()
-                    response = True
+                    return True
                 except Exception:
                     self.env['server.file.error'].create(
-                        {'file_path': dest_path, 'errors': 'Unknown Error. Please check your file.'})
+                        {'file_path': source_path,
+                         'errors': 'Unknown Error. Please check your file.',
+                         'ftp_ip': 'localhost'})
 
-        return response
+        return False
 
     @api.model
     def action_backup_all(self):
