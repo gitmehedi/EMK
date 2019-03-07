@@ -38,11 +38,11 @@ class AccountInvoice(models.Model):
                                         readonly=True,required=True,
                                         states={'draft': [('readonly',False)]})
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Branch',
-                                        readonly=True,states={'draft': [('readonly',False)]})
+                                            readonly=True,states={'draft': [('readonly',False)]})
 
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
-        store=True, readonly=True, track_visibility='onchange',copy=False)
+                                        store=True, readonly=True, track_visibility='onchange',copy=False)
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -136,7 +136,7 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
 
     def action_payment_instruction(self):
-        if self.amount_untaxed <= self.total_payment_amount:
+        if self.residual <= self.total_payment_amount:
             raise ValidationError(_('There is no Remaining Balance for this Bill!!'))
 
         res = self.env.ref('gbs_vendor_bill.view_bill_payment_instruction_wizard')
@@ -150,10 +150,23 @@ class AccountInvoice(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'invoice_amount': self.amount_untaxed or False,
+            'context': {'invoice_amount': self.residual or False,
                         'instructed_amount': self.total_payment_amount or False,
                         },
         }
+
+    def action_paid_invoice(self):
+        to_pay_invoices = self.search([('state', '=', 'open')]).filtered(lambda inv: len(inv.payment_line_ids) > 0
+                                                               and inv.residual<=inv.total_payment_amount)
+        for to_pay_invoice in to_pay_invoices:
+            if len([i.is_sync for i in to_pay_invoice.payment_line_ids if not i.is_sync])>0:
+                pass
+            else:
+                for line in to_pay_invoice.sudo().move_id.line_ids:
+                    if line.account_id.internal_type in ('receivable', 'payable'):
+                        line.write({'amount_residual': 0.0})
+                to_pay_invoice.write({'state': 'paid'})
+        return True
 
     @api.model
     def create(self, vals):
@@ -194,7 +207,7 @@ class AccountInvoiceLine(models.Model):
     price_subtotal = fields.Monetary(string='Amount With Vat',
                                      store=True, readonly=True, compute='_compute_price')
     price_subtotal_without_vat = fields.Monetary(string='Amount',
-                                     store=True, readonly=True, compute='_compute_price')
+                                                 store=True, readonly=True, compute='_compute_price')
 
     operating_unit_id = fields.Many2one('operating.unit',string='Branch',required=True,
                                         related='',
