@@ -137,20 +137,20 @@
                                         <div>
                                             <p>
                                                 <t t-if = "data['model_type'] == 'lc'">
-                                                    Drawn under the LC No.:
+                                                    Drawn under the LC no.:
                                                 </t>
                                                 <t t-elif = "data['model_type'] == 'tt'">
-                                                    Delivery under confirmation of TT No.:
+                                                    Delivery under confirmation of TT no.:
                                                 </t>
                                                 <t t-elif = "data['model_type'] == 'sales_contract'">
                                                     <t t-if = "data['sc_type'] == 'sc'">
-                                                        Drawn under the sales contract No.:
+                                                        Drawn under the sales contract no.:
                                                     </t>
                                                     <t t-elif = "data['sc_type'] == 'pi'">
-                                                        Drawn under the proforma invoice No.:
+                                                        Drawn under the proforma invoice no.:
                                                     </t>
                                                     <t t-elif = "data['sc_type'] == 'po'">
-                                                        Drawn under the purchase order No.:
+                                                        Drawn under the purchase order no.:
                                                     </t>
                                                 </t>
                                                 <br/>

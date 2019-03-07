@@ -40,15 +40,15 @@
                                     <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y')"/>
                                 </p>
                                 <div>
-                                    <p><b>To: </b><strong t-esc="data['insurance_company_name']"/>,
-                                        <strong t-raw="data['insurance_company_address']"/>
+                                    <p><b>To: </b><t t-if="data['insurance_company_name']"><strong t-esc="data['insurance_company_name']"/>,</t>
+                                        <t t-if="data['insurance_company_address']"><strong t-raw="data['insurance_company_address']"/></t>
                                     </p>
                                 </div>
                                 <div>
                                     <h5>
                                         <b>
-                                            <u>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>
-                                                DATE: <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
+                                            <u><t t-if="data['insurance_number'] or data['insurance_policy_date']">(</t><t t-if="data['insurance_number']">INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/></t>
+                                                <t t-if="data['insurance_policy_date']"> DATE: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/></t><t t-if="data['insurance_number'] or data['insurance_policy_date']">)</t>
                                             </u>
                                         </b>
                                     </h5>
@@ -67,17 +67,20 @@
                                         <t t-if="data['model_type'] == 'tt'"> TT NO: </t>
                                         <t t-elif="data['model_type'] == 'lc'"> LC NO: </t>
                                         <t t-elif="data['model_type'] == 'sales_contract'">
-                                            <t t-if = "data['sc_type'] == 'sc'"> Sales contract NO: </t>
-                                            <t t-elif = "data['sc_type'] == 'pi'"> Proforma invoice NO: </t>
-                                            <t t-elif = "data['sc_type'] == 'po'"> Purchase order NO: </t>
+                                            <t t-if = "data['sc_type'] == 'sc'"> Sales Contract NO: </t>
+                                            <t t-elif = "data['sc_type'] == 'pi'"> Proforma Invoice NO: </t>
+                                            <t t-elif = "data['sc_type'] == 'po'"> Purchase Order NO: </t>
                                         </t>
                                         <strong t-esc="data['lc_id']"/>,
                                         <strong>DATE: </strong>
                                         <strong t-esc="data['issue_date']"/>
-                                        <b>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>
-                                             DATE: <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/> OF
-                                            <strong t-esc="data['second_party_bank']"/>
-                                        </b>
+                                        <t t-if="data['insurance_number'] or data['insurance_policy_date']"><b>(</b></t><t t-if="data['insurance_number']">
+                                            <b>INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/></b></t>
+                                             <b><t t-if="data['insurance_policy_date']">
+                                                    Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
+                                             </t><t t-if="data['insurance_number'] or data['insurance_policy_date']"><b>)</b></t> OF
+                                                <strong t-esc="data['second_party_bank']"/>
+                                            </b>
                                         GOODS ARE UNDER H.S.CODE NO:
                                         <t t-foreach="lists" t-as="l">
                                             <strong t-esc="l['hs_code']"/>.
@@ -136,13 +139,13 @@
                                             <t t-if="data['model_type'] == 'tt'">TT NO</t>
                                             <t t-elif="data['model_type'] == 'lc'">LC NO</t>
                                             <t t-elif="data['model_type'] == 'sales_contract'">
-                                                <t t-if = "data['sc_type'] == 'sc'">Sales contract NO</t>
-                                                <t t-elif = "data['sc_type'] == 'pi'">Proforma invoice NO</t>
-                                                <t t-elif = "data['sc_type'] == 'po'">Purchase order NO</t>
+                                                <t t-if = "data['sc_type'] == 'sc'">Sales Contract NO</t>
+                                                <t t-elif = "data['sc_type'] == 'pi'">Proforma Invoice NO</t>
+                                                <t t-elif = "data['sc_type'] == 'po'">Purchase Order NO</t>
                                             </t>
                                         </td>
                                         <td>
-                                            :   <strong t-esc="data['lc_id']"/>,
+                                            :   <strong t-esc="data['lc_id']"/>
                                             <strong> DATE: </strong>
                                             <strong t-esc="data['issue_date']"/>
                                         </td>

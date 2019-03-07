@@ -116,13 +116,13 @@
                                         <t t-else="data['model_type'] == 'sales_contract'">
                                             <p>
                                                 <t t-if = "data['sc_type'] == 'sc'">
-                                                    Drawn under the sales contract No.:
+                                                    Drawn under the sales contract no.:
                                                 </t>
                                                 <t t-elif = "data['sc_type'] == 'pi'">
-                                                    Drawn under the proforma invoice No.:
+                                                    Drawn under the proforma invoice no.:
                                                 </t>
                                                 <t t-elif = "data['sc_type'] == 'po'">
-                                                    Drawn under the purchase order No.:
+                                                    Drawn under the purchase order no.:
                                                 </t>
                                                 <strong t-esc="data['lc_id']"/>,
                                                 <strong> DATE: </strong>
