@@ -108,7 +108,7 @@
                                                             <span t-esc="data['cover_note_no']"/><br/>
                                                         </t>
                                                         <t t-if="data['insurance_date']">
-                                                            Date: <span t-esc="data['insurance_date']"/>
+                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_date'],'%Y-%m-%d'))"/>
                                                         </t>
                                                     </p>
                                                 </td>

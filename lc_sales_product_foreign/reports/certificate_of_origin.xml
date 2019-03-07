@@ -129,7 +129,7 @@
                                         <td>    </td>
                                         <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
-                                             <strong t-esc="data['invoice_date_dummy']"/>
+                                             <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
                                         </td>
                                     </tr>
                                     <tr>

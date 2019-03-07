@@ -75,7 +75,7 @@
                                             <tr style="page-break-inside: avoid">
                                                 <p>VALUE WILL BE RECEIVED AGAINST DELIVERY OF
                                                     <span t-esc="l['name']"/>,
-                                                    <strong t-esc="'%.2f'% l['quantity']"/> <strong t-esc="l['uom']"/>, IN
+                                                    <strong t-esc="'%.2f'% l['quantity']"/> <strong t-esc="l['uom']"/> IN
                                                     <t t-foreach="pi_id_list" t-as="r">
                                                         <span t-esc="r['pack_type']"/>
                                                         <t t-if="len(pi_id_list)>1">,<br/></t>

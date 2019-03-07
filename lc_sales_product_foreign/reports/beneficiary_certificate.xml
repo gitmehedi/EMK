@@ -37,7 +37,7 @@
                             <br/>
                             <div>
                                 <p><b>Date: </b>
-                                    <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
+                                    <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y')"/>
                                 </p>
                                 <div>
                                     <p><b>To: </b><strong t-esc="data['insurance_company_name']"/>,
@@ -48,7 +48,7 @@
                                     <h5>
                                         <b>
                                             <u>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>
-                                                DATE: <strong t-esc="data['insurance_policy_date']"/>
+                                                DATE: <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
                                             </u>
                                         </b>
                                     </h5>
@@ -75,7 +75,7 @@
                                         <strong>DATE: </strong>
                                         <strong t-esc="data['issue_date']"/>
                                         <b>(INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>
-                                             DATE: <strong t-esc="data['insurance_policy_date']"/> OF
+                                             DATE: <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/> OF
                                             <strong t-esc="data['second_party_bank']"/>
                                         </b>
                                         GOODS ARE UNDER H.S.CODE NO:
@@ -173,7 +173,7 @@
                                     <tr>
                                         <td class="w200px">BL No.   </td>
                                         <td>
-                                            :   <strong t-esc="data['truck_receipt_no']"/> <b>Date: </b><strong t-esc="data['bl_date']"/>
+                                            :   <strong t-esc="data['truck_receipt_no']"/> <b>Date: </b><strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -191,14 +191,14 @@
                                     <tr>
                                         <td class="w200px">ETD <span t-esc="data['landing_port']"/> (DATE OF SHIPMENT)   </td>
                                         <td>
-                                            :   <strong t-esc="data['etd_date']"/>
+                                            :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_date'],'%Y-%m-%d'))"/>
                                         </td>
                                     </tr>
                                     <t t-if="data['trans_shipment']== True">
                                         <tr>
                                             <td class="w200px">ETA <SPAN t-esc="data['transshipment_country_id']"/>   </td>
                                             <td>
-                                                :   <strong t-esc="data['eta_trans_shipment_date']"/>
+                                                :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_trans_shipment_date'],'%Y-%m-%d'))"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -210,14 +210,14 @@
                                         <tr>
                                             <td class="w200px">ETD <SPAN t-esc="data['transshipment_country_id']"/>   </td>
                                             <td>
-                                                :   <strong t-esc="data['etd_trans_shipment_date']"/>
+                                                :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_trans_shipment_date'],'%Y-%m-%d'))"/>
                                             </td>
                                         </tr>
                                     </t>
                                     <tr>
                                         <td class="w200px">ETA <span t-esc="data['discharge_port']"/>,<span t-esc="data['discharge_port_country_id']"/>   </td>
                                         <td>
-                                            :   <strong t-esc="data['eta_date']"/>
+                                            :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_date'],'%Y-%m-%d'))"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -235,13 +235,13 @@
                                     <tr>
                                         <td class="w200px">PORT OF LOADING   </td>
                                         <td>
-                                            :   <span t-esc="data['landing_port']"/>,<strong t-esc="data['landing_port_country_id']"/>
+                                            :   <span t-esc="data['landing_port']"/>, <strong t-esc="data['landing_port_country_id']"/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="w200px">PORT OF DESTINATION   </td>
                                         <td>
-                                            :   <span t-esc="data['discharge_port']"/>,<span t-esc="data['discharge_port_country_id']"/>
+                                            :   <span t-esc="data['discharge_port']"/>, <span t-esc="data['discharge_port_country_id']"/>
                                         </td>
                                     </tr></p>
                                 </tbody>

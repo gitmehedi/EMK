@@ -53,7 +53,7 @@
                                                     Invoice No: <br/><strong t-esc="data['invoice_number_dummy']"/>
                                                 </td>
                                                 <td class="w50 bt-0">
-                                                    Date: <strong t-esc="data['invoice_date_dummy']"/>
+                                                    Date: <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
                                                 </td>
                                             </tr>
                                             <tr class="odo-bg-gray">
@@ -105,7 +105,7 @@
                                                             <span t-esc="data['cover_note_no']"/><br/>
                                                         </t>
                                                         <t t-if="data['insurance_date']">
-                                                            Date: <span t-esc="data['insurance_date']"/>
+                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_date'],'%Y-%m-%d'))"/>
                                                         </t>
                                                     </p>
                                                 </td>
