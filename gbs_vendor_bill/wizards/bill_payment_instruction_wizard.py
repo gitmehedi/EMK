@@ -7,16 +7,16 @@ class BillPaymentInstructionWizard(models.TransientModel):
 
     invoice_id = fields.Many2one('account.invoice', default=lambda self: self.env.context.get('active_id'),
                                  string="Invoice", copy=False, readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
+                                  default=lambda self: self.env.context.get('currency_id'))
     amount = fields.Float(string='Amount', required=True,
                           default=lambda self: self.env.context.get('invoice_amount'))
     instruction_date = fields.Date(string='Date', default=fields.Date.context_today,
                                    required=True, copy=False)
-    instructed_amount = fields.Float(readonly=True,default=lambda self: self.env.context.get('instructed_amount'))
 
     @api.constrains('amount')
     def _check_amount(self):
         for line in self:
-            # rem_amount = line.invoice_amount - line.instructed_amount
             rem_amount = self.env.context.get('invoice_amount')
             if line.amount > rem_amount:
                 raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "

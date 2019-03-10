@@ -6,6 +6,12 @@ class VendorAgreement(models.Model):
     _name = "agreement"
     _inherit = ["agreement", 'mail.thread']
 
+    @api.one
+    @api.depends('payment_line_ids.amount')
+    def _compute_payment_amount(self):
+        for invoice in self:
+            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
+
     agreement_type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase'),
@@ -56,6 +62,11 @@ class VendorAgreement(models.Model):
     is_amendment = fields.Boolean(default=False, string="Is Amendment",
                                   help="Take decision that, this agreement is amendment.")
 
+    payment_line_ids = fields.One2many('payment.instruction', 'agreement_id', readonly=True, copy=False)
+    total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
+                                        store=True, readonly=True, track_visibility='onchange', copy=False)
+
+
     @api.depends('adjusted_amount','advance_amount')
     def _compute_is_remaining(self):
         for record in self:
@@ -94,11 +105,9 @@ class VendorAgreement(models.Model):
                 raise ValidationError(
                     "Please Check Your Service Value!! \n Amount Never Take Negative Value!")
 
-
-
-    @api.one
+    @api.multi
     def action_payment(self):
-        if self.advance_amount <= 0.0:
+        if self.advance_amount <= self.total_payment_amount:
             raise ValidationError(_('No instruction needed!'))
 
         res = self.env.ref('vendor_agreement.view_agreement_payment_instruction_wizard')
@@ -112,7 +121,8 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'amount': self.advance_amount or False
+            'context': {'amount': self.advance_amount-self.total_payment_amount or False,
+                        'currency_id': self.env.user.company_id.currency_id.id or False,
                         },
         }
 

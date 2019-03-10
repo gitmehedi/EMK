@@ -16,11 +16,11 @@
                             <field name="sequence" widget="handle" />
                             <field name="instruction_date"/>
                             <field name="partner_id"/>
-                            <field name="default_debit_account_id"/>
-                            <field name="default_credit_account_id"/>
+                            <field name="default_debit_account_id" invisible="1"/>
+                            <field name="default_credit_account_id" invisible="1"/>
                             <field name="amount"/>
                             <field name="currency_id"/>
-                            <field name="is_sync"/>
+                            <field name="is_sync" widget="widgetonbutton"/>
                         </tree>
                     </field>
                     <group>
