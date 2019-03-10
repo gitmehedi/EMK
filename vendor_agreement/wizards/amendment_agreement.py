@@ -29,6 +29,7 @@ class AmendmentAgreementWizard(models.TransientModel):
             'adjustment_value': self.adjustment_value,
             'service_value': self.service_value,
             'account_id': self.account_id.id,
+            'is_amendment': True,
             'rel_id': self.id,
         })
 
