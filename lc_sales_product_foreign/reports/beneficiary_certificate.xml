@@ -191,38 +191,48 @@
                                             :   <strong t-esc="data['truck_receipt_no']"/>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="w200px">ETD <span t-esc="data['landing_port']"/> (DATE OF SHIPMENT)   </td>
-                                        <td>
-                                            :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_date'],'%Y-%m-%d'))"/>
-                                        </td>
-                                    </tr>
-                                    <t t-if="data['trans_shipment']== True">
+                                    <t t-if="data['etd_date']">
                                         <tr>
-                                            <td class="w200px">ETA <SPAN t-esc="data['transshipment_country_id']"/>   </td>
+                                            <td class="w200px">ETD <span t-esc="data['landing_port']"/>, <span t-esc="data['discharge_port_country_id']"/>   </td>
                                             <td>
-                                                :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_trans_shipment_date'],'%Y-%m-%d'))"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="w200px">MOTHER VESSEL   </td>
-                                            <td>
-                                                :   <strong t-esc="data['mother_vessel']"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="w200px">ETD <SPAN t-esc="data['transshipment_country_id']"/>   </td>
-                                            <td>
-                                                :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_trans_shipment_date'],'%Y-%m-%d'))"/>
+                                                :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_date'],'%Y-%m-%d'))"/>
                                             </td>
                                         </tr>
                                     </t>
-                                    <tr>
-                                        <td class="w200px">ETA <span t-esc="data['discharge_port']"/>,<span t-esc="data['discharge_port_country_id']"/>   </td>
-                                        <td>
-                                            :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_date'],'%Y-%m-%d'))"/>
-                                        </td>
-                                    </tr>
+                                    <t t-if="data['trans_shipment']== True">
+                                        <t t-if="data['eta_trans_shipment_date']">
+                                            <tr>
+                                                <td class="w200px">ETA <SPAN t-esc="data['transshipment_country_id']"/>   </td>
+                                                <td>
+                                                    :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_trans_shipment_date'],'%Y-%m-%d'))"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="data['mother_vessel']">
+                                            <tr>
+                                                <td class="w200px">MOTHER VESSEL   </td>
+                                                <td>
+                                                    :   <strong t-esc="data['mother_vessel']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="data['etd_trans_shipment_date']">
+                                            <tr>
+                                                <td class="w200px">ETD <SPAN t-esc="data['transshipment_country_id']"/>   </td>
+                                                <td>
+                                                    :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_trans_shipment_date'],'%Y-%m-%d'))"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <t t-if="data['eta_date']">
+                                        <tr>
+                                            <td class="w200px">ETA <span t-esc="data['discharge_port']"/>, <span t-esc="data['discharge_port_country_id']"/>   </td>
+                                            <td>
+                                                :   <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_date'],'%Y-%m-%d'))"/>
+                                            </td>
+                                        </tr>
+                                    </t>
                                     <tr>
                                         <td class="w200px">GROSS WEIGHT   </td>
                                         <td>
