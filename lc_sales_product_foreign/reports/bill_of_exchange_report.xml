@@ -178,6 +178,15 @@
                                 </tr>
                                 <tr>
                                     <td></td>
+                                    <t t-if="data['ntn_no']">
+                                        <td>
+                                            <b>NTN NO:</b>
+                                            <span t-esc="data['ntn_no']"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <td></td>
                                     <t t-if="data['gst_no']">
                                         <td>
                                             <b>GST NO:</b>

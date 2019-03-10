@@ -99,6 +99,7 @@
                                         <p><b>Allow Trans. Shipment: &#x2063;&#x2063;&#x2063;&#x2063;</b>
                                             <field name="trans_shipment" class="oe_inline" nolable="1" style="width: 89px !important"/>&#x2063;&#x2063;
                                             <field name="transshipment_country_id" class="oe_inline" nolable="1" style="width: 110px !important"
+                                                   attrs="{'required': [('trans_shipment', '==', True)],'invisible': [('trans_shipment', '!=', True)]}"
                                                 options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                         </p>
                                         <p><b>C&amp;F Agent: &#x2063;&#x2063;&#x2063;&#x2063;</b>

@@ -26,7 +26,7 @@ class LetterOfCreditCommon(models.Model):
     ], string="Type",
         help="LC: Letter Of Credit\n"
              "TT: Telegraphic Transfer\n"
-             "SC: Sales Contract.")
+             "SC: Sales Contract.",default='lc')
 
     sc_type = fields.Selection([
         ('sc', 'SC'),

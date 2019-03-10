@@ -9,7 +9,7 @@ class InvoiceExportWizard(models.TransientModel):
 
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
 
-    feright_value = fields.Float(string='Feright Value')
+    feright_value = fields.Float(string='Freight Value')
     fob_value= fields.Float(string='FOB Value', compute='_compute_fob_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
 

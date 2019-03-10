@@ -6,7 +6,7 @@ class ShipmentLocal(models.Model):
 
     _inherit = 'purchase.shipment'
 
-    feright_value = fields.Float(string='Feright Value')
+    feright_value = fields.Float(string='Freight Value')
     fob_value= fields.Float(string='FOB Value', compute='_compute_fob_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
     invoice_number_dummy = fields.Char(string='Invoice Number (Dummy)', track_visibility='onchange')
@@ -16,7 +16,11 @@ class ShipmentLocal(models.Model):
     cylinder_details = fields.Text(string='Cylinder Details')
     container_no = fields.Char(string='Container No.')
     mother_vessel = fields.Char(string='Mother Vessel')
-
+    landing_port_country_id = fields.Many2one('res.country', 'Landing',related='lc_id.landing_port_country_id')
+    discharge_port_country_id = fields.Many2one('res.country', 'Discharge', related='lc_id.discharge_port_country_id')
+    transshipment_country_id = fields.Many2one('res.country', 'Transshipment Country', related='lc_id.transshipment_country_id')
+    shipment_country_id = fields.Many2one('res.country', 'Transshipment Country', related='lc_id.transshipment_country_id')
+    trans_shipment = fields.Boolean(string='Allow Trans. Shipment', related='lc_id.trans_shipment')
     eta_trans_shipment_date = fields.Date(string='ETA(Trans Shipment)')
     etd_trans_shipment_date = fields.Date(string='ETD(Trans Shipment)')
 
