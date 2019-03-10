@@ -151,7 +151,6 @@ class AccountInvoice(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {'invoice_amount': self.residual or False,
-                        'instructed_amount': self.total_payment_amount or False,
                         'currency_id': self.currency_id.id or False,
                         },
         }

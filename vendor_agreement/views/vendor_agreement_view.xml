@@ -116,7 +116,7 @@
                                             <field name="default_credit_account_id" invisible="1"/>
                                             <field name="amount"/>
                                             <field name="currency_id"/>
-                                            <field name="is_sync" widget="widgetonbutton"/>
+                                            <field name="is_sync" string="Status"/>
                                         </tree>
                                     </field>
                                     <group>

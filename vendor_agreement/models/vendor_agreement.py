@@ -86,11 +86,11 @@ class VendorAgreement(models.Model):
     def check_date(self):
         date = fields.Date.today()
         if not self.is_amendment and self.start_date < date:
-            raise ValidationError("Agreement 'Start Date' never be less then 'Current Date'.")
+            raise ValidationError("Agreement 'Start Date' never be less than 'Current Date'.")
         if self.end_date < date:
-            raise ValidationError("Agreement 'End Date' never be less then 'Current Date'.")
+            raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
         elif self.start_date >= self.end_date:
-            raise ValidationError("Agreement 'End Date' never be less then or equal to 'Start Date'.")
+            raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
     @api.constrains('pro_advance_amount','adjustment_value','service_value')
     def check_pro_advance_amount(self):
@@ -108,7 +108,7 @@ class VendorAgreement(models.Model):
     @api.multi
     def action_payment(self):
         if self.advance_amount <= self.total_payment_amount:
-            raise ValidationError(_('No instruction needed!'))
+            raise ValidationError(_('No payment instruction needed!'))
 
         res = self.env.ref('vendor_agreement.view_agreement_payment_instruction_wizard')
 
