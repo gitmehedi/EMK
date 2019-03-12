@@ -97,16 +97,6 @@
                                     </group>
                                 </page>
                                 <page string="Payments" class="oe_page_title" attrs="{'invisible': [('state', '!=', 'done')]}">
-                                    <!--<field name="acc_move_line_ids" widget="one2many_list">-->
-                                    <!--<tree editable="bottom" string="Journal Items">-->
-                                    <!--<field name="account_id"-->
-                                    <!--domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>-->
-                                    <!--<field name="name"/>-->
-                                    <!--<field name="debit" sum="Total Debit"/>-->
-                                    <!--<field name="credit" sum="Total Credit"/>-->
-                                    <!--<field name="date_maturity" required="0"/>-->
-                                    <!--</tree>-->
-                                    <!--</field>-->
                                     <field name="payment_line_ids" readonly="1">
                                         <tree string="Payment lines">
                                             <field name="sequence" widget="handle" />

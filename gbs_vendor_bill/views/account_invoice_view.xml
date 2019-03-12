@@ -10,7 +10,7 @@
                         string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
             </xpath>
             <xpath expr="//notebook/page[2]" position="after">
-                <page string="Payment">
+                <page string="Payment" attrs="{'invisible': [('state', '=', 'draft')]}">
                     <field name="payment_line_ids" readonly="1">
                         <tree string="Payment lines">
                             <field name="sequence" widget="handle" />
@@ -20,7 +20,7 @@
                             <field name="default_credit_account_id" invisible="1"/>
                             <field name="amount"/>
                             <field name="currency_id"/>
-                            <field name="is_sync" widget="widgetonbutton"/>
+                            <field name="is_sync" string="Status"/>
                         </tree>
                     </field>
                     <group>
