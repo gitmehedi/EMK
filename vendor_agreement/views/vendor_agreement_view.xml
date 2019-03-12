@@ -97,7 +97,7 @@
                                     </group>
                                 </page>
                                 <page string="Payments" class="oe_page_title" attrs="{'invisible': [('state', '!=', 'done')]}">
-                                    <field name="payment_line_ids" readonly="1">
+                                    <field name="payment_line_ids" string="Payments" readonly="1">
                                         <tree string="Payment lines">
                                             <field name="sequence" widget="handle" />
                                             <field name="instruction_date"/>
@@ -106,8 +106,28 @@
                                             <field name="default_credit_account_id" invisible="1"/>
                                             <field name="amount"/>
                                             <field name="currency_id"/>
-                                            <field name="is_sync" string="Status"/>
+                                            <field name="is_sync" invisible="1"/>
+                                            <button name="sync" string="Sync" type="action"
+                                                    icon="fa fa-check text-success"
+                                                    attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                                            <button name="not_sync" string="Not Sync" type="action"
+                                                    icon="fa-times-circle text-danger"
+                                                    attrs="{'invisible': [('is_sync', '=', True)]}"/>
                                         </tree>
+                                        <form string="Payment">
+                                            <group>
+                                                <group>
+                                                    <field name="agreement_id"/>
+                                                    <field name="instruction_date"/>
+                                                    <field name="partner_id"/>
+                                                </group>
+                                                <group>
+                                                    <field name="amount"/>
+                                                    <field name="currency_id"/>
+                                                    <field name="is_sync" invisible="1"/>
+                                                </group>
+                                            </group>
+                                        </form>
                                     </field>
                                     <group>
                                         <group></group>
