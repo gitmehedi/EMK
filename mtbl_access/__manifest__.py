@@ -10,6 +10,7 @@ This application allows you to easily maintain access rights of mtbl process.
 """,
     'depends': [
         'base',
+        'portal',
         'account_fiscal_year',
         'account_type_menu',
         'account_parent',
@@ -22,7 +23,9 @@ This application allows you to easily maintain access rights of mtbl process.
         'security/ir_security.xml',
         # 'security/ir_rule.xml',
         'security/ir.model.access.csv',
-        'views/menuitems.xml'
+        'views/menuitems.xml',
+        'views/report_view_access.xml',
+        'views/act_window_access.xml',
     ],
     'installable': True,
     'auto_install': False,
