@@ -15,13 +15,6 @@
         />
 
         <!--Vendor-->
-        <act_window id="portal.partner_wizard_action"
-                    name="Portal Access Management"
-                    src_model="res.partner"
-                    res_model="portal.wizard"
-                    view_type="form" view_mode="form"
-                    key2="client_action_multi" target="new"
-                    groups="base.group_system"/>
         <act_window
                 id="account.act_account_partner_ledger_payable"
                 name="Partner Ledger: Payable"
@@ -59,14 +52,26 @@
                 res_model="account.move.line"
                 src_model="res.partner"
                 groups="base.group_system"/>
-        <act_window
-                id="account.act_account_invoice_partner_relation"
-                name="Monthly Turnover"
-                groups="base.group_system"
-                context="{'search_default_partner_id':[active_id], 'search_default_month':1,'search_default_user':1,'group_by_no_leaf':1,'group_by':[]}"
-                res_model="account.invoice.report"
-                src_model="res.partner"
-                view_mode="graph"/>
+
+        <record id="account.act_account_invoice_partner_relation" model="ir.actions.act_window">
+            <field name="name">Monthly Turnover</field>
+            <field name="res_model">account.invoice.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="target">new</field>
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
+        <record id="portal.partner_wizard_action" model="ir.actions.act_window">
+            <field name="name">Portal Access Management</field>
+            <field name="res_model">portal.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
+
 
     </data>
 </odoo>
