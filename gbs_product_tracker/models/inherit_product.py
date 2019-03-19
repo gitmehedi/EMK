@@ -12,6 +12,7 @@ class ProductCategory(models.Model):
     categ_id = fields.Many2one(track_visibility='onchange')
     list_price = fields.Float(track_visibility='onchange')
     hs_code = fields.Char(track_visibility='onchange')
+    hs_code_id = fields.Many2one(track_visibility='onchange')
     origin_country_id = fields.Many2one(track_visibility='onchange')
     company_id = fields.Many2one(track_visibility='onchange')
     uom_id = fields.Many2one(track_visibility='onchange')

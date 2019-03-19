@@ -254,7 +254,7 @@
                                     <tr>
                                         <td class="w200px">PORT OF DESTINATION   </td>
                                         <td>
-                                            :   <span t-esc="data['discharge_port']"/>, <span t-esc="data['discharge_port_country_id']"/>
+                                            :   <span t-esc="data['discharge_port']"/>, <strong t-esc="data['discharge_port_country_id']"/>
                                         </td>
                                     </tr></p>
                                 </tbody>

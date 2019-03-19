@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='taxes_id']" position="after">
-                <field name="commission_expense" string="Commission Expense"/>
+                <field name="commission_expense" string="Commission Expense" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
             </xpath>
         </field>
     </record>
