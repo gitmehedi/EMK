@@ -72,6 +72,12 @@
             name='Payments'
             id='payment.root_payment_menu'
             parent='account.menu_finance_configuration' groups="base.group_system"/>
+    <menuitem
+            action="account.action_account_payments_payable"
+            id="account.menu_action_account_payments_payable"
+            parent="account.menu_finance_payables"
+            sequence="20"
+            groups="base.group_system"/>
 
     <!--<menuitem-->
             <!--id="account.menu_account_config"-->

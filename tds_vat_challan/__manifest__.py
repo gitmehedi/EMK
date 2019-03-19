@@ -17,6 +17,7 @@
                 ],
     'data': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'wizards/tds_challan_selection_wizard.xml',
         'wizards/challan_deposited_wizard.xml',
         'wizards/challan_distributed_wizard.xml',
