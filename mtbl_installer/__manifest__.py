@@ -26,6 +26,7 @@
         "account_fam",
         "account_tds",
         "tds_vat_challan",
+        "gbs_payment_instruction",
         "gbs_vendor_bill",
         "vendor_agreement",
         "account_provisional",

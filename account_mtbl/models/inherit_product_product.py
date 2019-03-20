@@ -8,7 +8,6 @@ class ProductProduct(models.Model):
     barcode = fields.Char(track_visibility='onchange')
     lst_price = fields.Float(track_visibility='onchange')
     standard_price = fields.Float(track_visibility='onchange')
-    account_tds_id = fields.Many2one(track_visibility='onchange')
 
     @api.constrains('name')
     def _check_unique_constrain(self):

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!--{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'sequence': 5}-->
         <record id="account_provisional_expenses" model="account.journal">
             <field name="name">Provisional Expenses</field>
             <field name="type">provisional</field>

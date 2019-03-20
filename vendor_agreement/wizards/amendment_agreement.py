@@ -29,6 +29,7 @@ class AmendmentAgreementWizard(models.TransientModel):
             'adjustment_value': self.adjustment_value,
             'service_value': self.service_value,
             'account_id': self.account_id.id,
+            'is_amendment': True,
             'rel_id': self.id,
         })
 
@@ -36,7 +37,7 @@ class AmendmentAgreementWizard(models.TransientModel):
     def check_end_date(self):
         date = fields.Date.today()
         if self.end_date < date:
-            raise ValidationError("Agreement 'End Date' never be less then 'Current Date'.")
+            raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
 
     @api.constrains('pro_advance_amount')
     def check_pro_advance_amount(self):

@@ -2,6 +2,7 @@
 <odoo>
     <!-- Fixed Assets Main Menus -->
     <menuitem id="main_fixed_asset_menu" name="Fixed Assets" sequence="10"
+              web_icon="account_fam,static/description/icon.png"
               groups=""/>
 
     <!-- Assets Main Menus -->

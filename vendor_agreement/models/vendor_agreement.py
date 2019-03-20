@@ -6,6 +6,12 @@ class VendorAgreement(models.Model):
     _name = "agreement"
     _inherit = ["agreement", 'mail.thread']
 
+    @api.one
+    @api.depends('payment_line_ids.amount')
+    def _compute_payment_amount(self):
+        for invoice in self:
+            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
+
     agreement_type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase'),
@@ -53,6 +59,13 @@ class VendorAgreement(models.Model):
 
     is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True,store=True,string="Is Remaining",
                                   help="Take decision that advance amount is remaing or not")
+    is_amendment = fields.Boolean(default=False, string="Is Amendment",
+                                  help="Take decision that, this agreement is amendment.")
+
+    payment_line_ids = fields.One2many('payment.instruction', 'agreement_id', readonly=True, copy=False)
+    total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
+                                        store=True, readonly=True, track_visibility='onchange', copy=False)
+
 
     @api.depends('adjusted_amount','advance_amount')
     def _compute_is_remaining(self):
@@ -72,12 +85,12 @@ class VendorAgreement(models.Model):
     @api.constrains('start_date', 'end_date')
     def check_date(self):
         date = fields.Date.today()
-        if self.start_date < date:
-            raise ValidationError("Agreement 'Start Date' never be less then 'Current Date'.")
-        elif self.end_date < date:
-            raise ValidationError("Agreement 'End Date' never be less then 'Current Date'.")
+        if not self.is_amendment and self.start_date < date:
+            raise ValidationError("Agreement 'Start Date' never be less than 'Current Date'.")
+        if self.end_date < date:
+            raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
         elif self.start_date >= self.end_date:
-            raise ValidationError("Agreement 'End Date' never be less then 'Start Date'.")
+            raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
     @api.constrains('pro_advance_amount','adjustment_value','service_value')
     def check_pro_advance_amount(self):
@@ -92,11 +105,26 @@ class VendorAgreement(models.Model):
                 raise ValidationError(
                     "Please Check Your Service Value!! \n Amount Never Take Negative Value!")
 
-
-
-    @api.one
+    @api.multi
     def action_payment(self):
-        self.state = 'done'
+        if self.advance_amount <= self.total_payment_amount:
+            raise ValidationError(_('No payment instruction needed!'))
+
+        res = self.env.ref('vendor_agreement.view_agreement_payment_instruction_wizard')
+
+        return {
+            'name': _('Payment Instruction'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'agreement.payment.instruction.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'amount': self.advance_amount-self.total_payment_amount or False,
+                        'currency_id': self.env.user.company_id.currency_id.id or False,
+                        },
+        }
 
 
     @api.one

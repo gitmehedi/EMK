@@ -116,7 +116,7 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="groups_id"
-                   eval="[(6, 0, [ref('base.group_no_one')])]"/>
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
         </record>
 
         <record id="account.action_view_account_move_line_reconcile" model="ir.actions.act_window">
@@ -127,7 +127,7 @@
             <field name="view_id" ref="account.view_account_move_line_reconcile_full"/>
             <field name="target">new</field>
             <field name="groups_id"
-                   eval="[(6, 0, [ref('base.group_no_one')])]"/>
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
         </record>
 
     </data>

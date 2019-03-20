@@ -136,8 +136,8 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
 
     def action_payment_instruction(self):
-        if self.residual <= self.total_payment_amount:
-            raise ValidationError(_('There is no Remaining Balance for this Bill!!'))
+        if self.residual <= 0.0:
+            raise ValidationError(_('There is no remaining balance for this Bill!'))
 
         res = self.env.ref('gbs_vendor_bill.view_bill_payment_instruction_wizard')
 
@@ -151,7 +151,7 @@ class AccountInvoice(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {'invoice_amount': self.residual or False,
-                        'instructed_amount': self.total_payment_amount or False,
+                        'currency_id': self.currency_id.id or False,
                         },
         }
 
