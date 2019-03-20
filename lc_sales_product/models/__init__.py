@@ -1,5 +1,4 @@
-import letter_of_credit_sales
-import shipment_sales
+import letter_of_credit_sales_common
+import shipment_sales_common
 import proforma_invoice
-import lc_document_line
 import lc_product_sales

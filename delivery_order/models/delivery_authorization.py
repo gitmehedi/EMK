@@ -58,6 +58,8 @@ class DeliveryAuthorization(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True, track_visibility='onchange')
 
     state = fields.Selection([
@@ -302,12 +304,12 @@ class DeliveryAuthorization(models.Model):
 
     @api.multi
     def action_validate(self):
-        if self.so_type == 'cash':
+        if self.so_type == 'cash' or self.so_type == 'tt_sales':
             cash_check = self.payments_amount_checking_with_products_subtotal()
             #self._create_delivery_authorization_back_order()
             return cash_check
 
-        elif self.so_type == 'lc_sales':
+        elif self.so_type == 'lc_sales' or self.so_type == 'contract_sales':
             if self.lc_id and self.pi_id:
                 if self.lc_id.lc_value >= self.total_sub_total_amount():
 

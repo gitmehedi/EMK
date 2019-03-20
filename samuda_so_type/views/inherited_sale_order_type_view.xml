@@ -29,7 +29,8 @@
                     <field name="sale_order_type"/>
                 </xpath>
                 <xpath expr="//field[@name='sale_order_type']" position="after">
-                    <field name="currency_id"/>
+                    <field name="region_type"/>
+                    <field name="currency_id" options="{'no_open':True,'no_create':True}"/>
                 </xpath>
 
             </field>

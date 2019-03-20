@@ -11,7 +11,7 @@ class LetterOfCredit(models.Model):
     # Import -> Applicant(Samuda)
 
     name = fields.Char(string='LC Number', index=True,readonly=True)
-    title = fields.Text(string='Description', required=True)
+    title = fields.Text(string='Description')
 
     type = fields.Selection([
         ('export', 'Export'),

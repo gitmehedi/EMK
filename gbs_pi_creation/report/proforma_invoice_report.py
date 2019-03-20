@@ -15,15 +15,19 @@ class GbsProformaInvoice(models.AbstractModel):
         data = {}
 
         address = pi_obj.partner_id.address_get(['delivery', 'invoice'])
-        delivery_address = self.env['res.partner'].browse(address['delivery'])
+        customer = self.env['res.partner'].browse(address['delivery'])
 
         data['name'] = pi_obj.name
+        data['region_type'] = pi_obj.region_type
         data['pi_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(pi_obj.invoice_date))
         data['beneficiary_id'] = pi_obj.beneficiary_id.name
         data['vat'] = pi_obj.operating_unit_id.partner_id.vat
         data['bin'] = pi_obj.operating_unit_id.partner_id.bin
         data['customer'] = pi_obj.partner_id.name
-        data['customer_add'] = report_utility_pool.getCoustomerAddress(delivery_address)
+        data['customer_add'] = report_utility_pool.getCoustomerAddress(customer)
+        data['ntn_no'] = customer.ntn_no
+        data['gst_no'] = customer.gst_no
+        data['iec_no'] = customer.iec_no
         data['transport_by'] = pi_obj.transport_by
         data['terms_condition'] = pi_obj.terms_condition
         data['advising_bank'] = pi_obj.advising_bank_acc_id.bank_id.name
@@ -32,7 +36,13 @@ class GbsProformaInvoice(models.AbstractModel):
         data['swift_code'] = pi_obj.advising_bank_acc_id.bank_swift_code
         data['currency'] = pi_obj.currency_id.name
         data['packing'] = pi_obj.pack_type.packaging_mode
-        data['terms_str'] = "By Equivalent Letter Of Credit"
+
+        if pi_obj.region_type == 'foreign' and pi_obj.terms_id and pi_obj.terms_id.name:
+            data['terms_str'] = pi_obj.terms_id.name
+        else:
+            data['terms_str'] = "By Equivalent Letter Of Credit"
+
+        data['terms_of_delivery'] = pi_obj.terms_of_delivery
 
         data['unit_address'] = report_utility_pool.getAddressByUnit(pi_obj.operating_unit_id)
 

@@ -114,7 +114,6 @@ class DeviceDetail(models.Model):
 
     @api.model
     def pull_automation(self):
-        print "-------------------123243434343--------------------------"
         for dc in self.search([]):
             try:
                 dc.action_pull_data()

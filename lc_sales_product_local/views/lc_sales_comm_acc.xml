@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_comm_invoice_filter" model="ir.ui.view">
+            <field name="name">view.comm.invoice.filter</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <search string="Search Invoice">
+                    <filter name="comm_state" string="Open" domain="[('state','=','open')]"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_comm_invoice" model="ir.actions.act_window">
+            <field name="name">Commercial Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',('open','paid')),('sale_type_id.sale_order_type','in',('lc_sales','tt_sales','contract_sales'))]</field>
+            <field name="search_view_id" ref="view_comm_invoice_filter"/>
+            <field name="context">{'search_default_comm_state':1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Invoice list of the LC Sales.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

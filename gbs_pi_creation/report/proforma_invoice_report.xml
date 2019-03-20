@@ -30,7 +30,11 @@
                             <hr class="hr-sm mb-0"/>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <p><b><u>Beneficiary:</u></b></p>
+                                    <t t-if="data['region_type']=='local'">
+                                        <p><b><u>Beneficiary:</u></b></p>
+                                    </t><t t-else="">
+                                        <p><b><u>Exporter/Seller:</u></b></p>
+                                    </t>
                                     <p class="mb-5"><strong t-esc="data['beneficiary_id']"/> <br/>
                                         Factory: <span t-esc="data['unit_address']"/></p>
                                     <p><b>Vat Registration No:</b>
@@ -47,15 +51,26 @@
 
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <p><b><u>Applicant:</u></b></p>
+                                    <t t-if="data['region_type']=='local'">
+                                        <p><b><u>Applicant:</u></b></p>
+                                    </t><t t-else="">
+                                        <p><b><u>Importer/Buyer:</u></b></p>
+                                    </t>
                                     <p><strong t-esc="data['customer']"/> <br/>
                                         Factory: <span t-esc="data['customer_add']" /></p>
+                                    <t t-if="data['ntn_no']"><b>NTN No : </b><span t-esc="data['ntn_no']"/><br/></t>
+                                    <t t-if="data['gst_no']"><b>GST No : </b><span t-esc="data['gst_no']"/><br/></t>
+                                    <t t-if="data['iec_no']"><b>IEC No : </b><span t-esc="data['iec_no']"/><br/></t>
                                 </div>
-                                <div class="col-xs-6 text-left">
-                                    <p><b>Mode of Shipment : </b><span t-esc="data['transport_by']"/> <br/>
+                                <div class="col-xs-6 text-left"><p>
+                                    <b>Mode of Shipment : </b><span t-esc="data['transport_by']"/> <br/>
+                                    <t t-if="data['region_type']=='local'">
                                         <b>Place of Loading : </b>From Factory Premises of Beneficiary. <br/>
-                                        <b>Final Destination : </b>Applicant's Factory.</p>
-                                </div>
+                                        <b>Final Destination : </b>Applicant's Factory.
+                                    </t><t t-else="">
+                                        <b>Terms of Delivery : </b><span t-esc="data['terms_of_delivery']"/>
+                                    </t>
+                                </p></div>
                             </div>
                         </div>
                         <div class="clearfix mb-10">
@@ -114,7 +129,7 @@
                             <p t-raw="data['terms_condition']"/>
                         </div>
                         <hr class="hr-xxs"/>
-                        <div>
+                        <div style="margin-top:50px">
                             <p>For and on behalf of <br/>
                                 <span t-esc="data['beneficiary_id']"/>
                             </p>
