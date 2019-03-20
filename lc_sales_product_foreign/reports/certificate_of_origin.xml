@@ -105,7 +105,7 @@
                                         <td></td>
                                         <td></td>
                                         <td class="w75px text-right">
-                                            <p>Date:</p>
+                                            <p>Date: </p>
                                         </td>
                                         <td class="text-right">
                                             <t t-foreach="pi_list" t-as="p">
@@ -121,7 +121,7 @@
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td class="w75px text-right">Date:</td>
+                                        <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
                                             <strong t-esc="data['lc_date']"/>
                                         </td>
@@ -135,7 +135,7 @@
                                         </t>
                                         <td></td>
                                         <td></td>
-                                        <td class="w75px text-right">Date:</td>
+                                        <td class="w75px text-right">Date: </td>
                                         <t t-if="data['invoice_date_dummy']">
                                             <td class="text-right">
                                                 <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
@@ -149,7 +149,7 @@
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td class="w75px text-right">Date:</td>
+                                        <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
                                             <strong t-esc="data['bl_date']"/>
                                         </td>
@@ -158,8 +158,8 @@
                             </table>
                             <hr class="hr-xs mb-10"/>
                             <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND
-                                HAVE BEEN SHIPPED TO<strong t-esc="data['discharge_port']"/>,<strong
-                                        t-esc="data['discharge_port_country_id']"/>. FROM<strong
+                                HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>,<strong
+                                        t-esc="data['discharge_port_country_id']"/>. FROM <strong
                                         t-esc="data['landing_port']"/>,
                                 <strong t-esc="data['landing_port_country_id']"/>
                             </p>
