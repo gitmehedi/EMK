@@ -9,7 +9,7 @@
                 <xpath expr="//form/sheet/group[1]" position="after">
                     <group>
                         <group>
-                            <field name="type"/>
+                            <field name="type" attrs="{'readonly': [('state','!=','draft')]}"/>
                             <field name="festival_date"
                                attrs="{'required': [('type','!=','0')],'invisible': [('type','=','0')]}"/>
                         </group>

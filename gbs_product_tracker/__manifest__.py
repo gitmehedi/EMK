@@ -8,8 +8,8 @@
         "stock",
                 ],
     "data": [
-        #"views/inherit_product_category.xml",
-        #"views/inherit_product_attribute.xml",
+        "views/inherit_product_category.xml",
+        "views/inherit_unit_measure.xml",
     ],
 
     'installable': True,

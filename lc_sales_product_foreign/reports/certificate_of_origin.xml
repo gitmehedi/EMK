@@ -50,7 +50,9 @@
                                             <td>
                                                 <t t-foreach="pack_list" t-as="r">
                                                     <span t-esc="r['pack_type']"/>
-                                                    <t t-if="len(pack_list)>1">,<br/></t>
+                                                    <t t-if="len(pack_list)>1">,
+                                                        <br/>
+                                                    </t>
                                                 </t>
                                             </td>
                                             <td>
@@ -93,61 +95,74 @@
                             <table class="mb-0">
                                 <tbody>
                                     <tr>
-                                        <td class="w75px">PI No.: </td>
+                                        <td class="w75px">PI No.:</td>
                                         <td>
                                             <t t-foreach="pi_list" t-as="p">
-                                                <strong t-esc="p['number']"/><br/>
+                                                <strong t-esc="p['number']"/>
+                                                <br/>
                                             </t>
                                         </td>
-                                        <td>    </td>
-                                        <td>    </td>
-                                        <td class="w75px text-right"><p>Date: </p></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="w75px text-right">
+                                            <p>Date: </p>
+                                        </td>
                                         <td class="text-right">
                                             <t t-foreach="pi_list" t-as="p">
-                                                 <strong t-esc="p['date']"/><br/>
+                                                <strong t-esc="p['date']"/>
+                                                <br/>
                                             </t>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="w75px">LC No.: </td>
+                                        <td class="w75px">LC No.:</td>
                                         <td>
                                             <strong t-esc="data['lc_id']"/>
                                         </td>
-                                        <td>    </td>
-                                        <td>    </td>
+                                        <td></td>
+                                        <td></td>
                                         <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
-                                             <strong t-esc="data['lc_date']"/>
+                                            <strong t-esc="data['lc_date']"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="w75px">Commercial Invoice No.: </td>
-                                        <td>
-                                            <strong t-esc="data['invoice_number_dummy']"/>
-                                        </td>
-                                        <td>    </td>
-                                        <td>    </td>
+                                        <td class="w75px">Commercial Invoice No.:</td>
+                                        <t t-if="data['invoice_number_dummy']">
+                                            <td>
+                                                <strong t-esc="data['invoice_number_dummy']"/>
+                                            </td>
+                                        </t>
+                                        <td></td>
+                                        <td></td>
                                         <td class="w75px text-right">Date: </td>
-                                        <td class="text-right">
-                                             <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
-                                        </td>
+                                        <t t-if="data['invoice_date_dummy']">
+                                            <td class="text-right">
+                                                <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
+                                            </td>
+                                        </t>
                                     </tr>
                                     <tr>
-                                        <td class="w75px">BL No.: </td>
+                                        <td class="w75px">BL No.:</td>
                                         <td>
                                             <strong t-esc="data['truck_receipt_no']"/>
                                         </td>
-                                        <td>    </td>
-                                        <td>    </td>
+                                        <td></td>
+                                        <td></td>
                                         <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
-                                             <strong t-esc="data['bl_date']"/>
+                                            <strong t-esc="data['bl_date']"/>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <hr class="hr-xs mb-10"/>
-                            <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>, <strong t-esc="data['discharge_port_country_id']"/>. FROM <strong t-esc="data['landing_port']"/>, <strong t-esc="data['landing_port_country_id']"/></p>
+                            <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND
+                                HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>,<strong
+                                        t-esc="data['discharge_port_country_id']"/>. FROM <strong
+                                        t-esc="data['landing_port']"/>,
+                                <strong t-esc="data['landing_port_country_id']"/>
+                            </p>
                             <div class="text-right">
                                 <p>For and on behalf of
                                     <br/>

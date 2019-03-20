@@ -21,6 +21,7 @@
                                         <th>SN</th>
                                         <th>Employee</th>
                                         <th>Designation</th>
+                                        <th>Department</th>
                                         <th style="min-width:90px">D.O.J</th>
                                         <th style="min-width:90px">Employee ID</th>
                                         <t t-foreach="rules" t-as="r">
@@ -45,6 +46,9 @@
                                                 <span class="text-nowrap" t-esc="o['designation']"></span>
                                             </td>
                                             <td>
+                                                <span t-esc="o['department']"></span>
+                                            </td>
+                                            <td>
                                                 <span t-esc="o['doj']"></span>
                                             </td>
                                             <td>
@@ -57,7 +61,7 @@
                                     </t>
                                     <tr style="page-break-inside: avoid">
                                         <t t-if="data['type'] != '1'">
-                                            <td colspan="5" class="text-right">Total</td>
+                                            <td colspan="6" class="text-right">Total</td>
                                             <t t-foreach="rules" t-as="r">
                                                 <t t-if="r['code']== 'LOAN'">
                                                     <td class="text-right">

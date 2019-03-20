@@ -77,7 +77,7 @@
                                         <tr attrs="{'invisible': [('trans_shipment', '!=', True)]}">
                                             <td colspan="1" class="o_td_label">
                                                 <b>ETA
-                                                (<field name="shipment_country_id" required="1" class="oe_inline" nolable="1"
+                                                (<field name="shipment_country_id" class="oe_inline" nolable="1"
                                                                readonly="1" />)</b>
                                             </td>
                                             <td colspan="1" style="width: 100%;">
@@ -97,7 +97,7 @@
                                         <tr attrs="{'invisible': [('trans_shipment', '!=', True)]}">
                                             <td colspan="1" class="o_td_label">
                                                 <b>ETD
-                                                (<field name="transshipment_country_id" required="1" class="oe_inline" nolable="1"
+                                                (<field name="transshipment_country_id" class="oe_inline" nolable="1"
                                                                readonly="1"/>)</b>
                                             </td>
                                             <td colspan="1" style="width: 100%;">

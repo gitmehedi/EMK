@@ -24,6 +24,7 @@ class BillExchangeFirst(models.AbstractModel):
             'document_receiver_bank' : shipment_obj.lc_id.document_receiver_bank,
             'iec_no' : shipment_obj.lc_id.second_party_applicant.iec_no,
             'gst_no' : shipment_obj.lc_id.second_party_applicant.gst_no,
+            'ntn_no' : shipment_obj.lc_id.second_party_applicant.ntn_no,
             'lc_id' : shipment_obj.lc_id.unrevisioned_name,
             'issue_date' : report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date)),
             'currency_id': shipment_obj.lc_id.currency_id.name,

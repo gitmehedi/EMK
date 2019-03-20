@@ -50,10 +50,12 @@
                                         <table class="table table-bordered mb-0">
                                             <tr class="odo-bg-gray">
                                                 <td class="w50 bt-0">
-                                                    Invoice No: <br/><strong t-esc="data['invoice_number_dummy']"/>
+                                                    Invoice No: <br/><t t-if="data['invoice_number_dummy']">
+                                                    <strong t-esc="data['invoice_number_dummy']"/></t>
                                                 </td>
                                                 <td class="w50 bt-0">
-                                                    Date: <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
+                                                    Date: <t t-if="data['invoice_date_dummy']">
+                                                    <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/></t>
                                                 </td>
                                             </tr>
                                             <tr class="odo-bg-gray">
