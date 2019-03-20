@@ -28,6 +28,9 @@
                         <group>
                             <button string="Beneficiary Certificate" name="action_beneficiary_certificate" type="object" class="oe_highlight"/>
                         </group>
+                        <group>
+                            <button string="LC Status Summary" name="process_ls_status_summary" type="object" class="oe_highlight"/>
+                        </group>
                     </group>
 
                     <footer>

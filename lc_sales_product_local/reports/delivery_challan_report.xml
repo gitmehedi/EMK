@@ -44,12 +44,18 @@
                                                     <p><b><u>To the order of</u></b><br/>
                                                         <span t-esc="data['second_party_bank']"/>
                                                     </p>
-
-                                                    <p><b><u>Shipping Mark</u></b> <br/>
-                                                        <t t-foreach="lists" t-as="l">
-                                                            <span t-esc="l['name']"/>
-                                                        </t>
-                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr class="odo-bg-gray">
+                                                <td style="width: 14em;">
+                                                    <b><u>Shipping Mark </u></b><br/>
+                                                    <t t-foreach="lists" t-as="l">
+                                                        <span t-esc="l['name']"/>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <b><u>Delivery Date </u></b><br/>
+                                                    <span t-esc="data['invoice_date']"/>
                                                 </td>
                                             </tr>
                                             <tr class="odo-bg-gray">

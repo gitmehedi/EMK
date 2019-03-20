@@ -6,6 +6,8 @@ class LetterOfCreditCommon(models.Model):
     _inherit = "letter.credit"
 
     lc_document_line = fields.One2many('lc.document.line', 'lc_id', string='LC Documents')
+    bank_code = fields.Char(string='Bank')
+    bank_branch = fields.Char(string='Bank Branch')
 
 
     @api.multi

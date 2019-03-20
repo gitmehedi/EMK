@@ -49,7 +49,9 @@
                             <group>
                                 <separator string="Customer" colspan="2"/>
                                 <field name="second_party_applicant" required="1"/>
-                                <field name="second_party_bank" required="1"/>
+                                <field name="second_party_bank" required="1" string="Bank Details"/>
+                                <field name="bank_code"/>
+                                <field name="bank_branch"/>
                             </group>
 
 
