@@ -10,7 +10,7 @@ class HrEmployeeMobileBillLimit(models.Model):
     effective_date = fields.Date('Effective Date', required=True)
 
     """ Relational Fields """
-    parent_id = fields.Many2one(comodel_name='hr.mobile.bill.limit', ondelete='cascade',required=True)
+    parent_id = fields.Many2one(comodel_name='hr.mobile.bill.limit', ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string="Employee", ondelete='cascade')
 
 

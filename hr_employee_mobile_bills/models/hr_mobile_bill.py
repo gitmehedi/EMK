@@ -6,7 +6,7 @@ from odoo import api
 class HrMobileBill(models.Model):
     _name = 'hr.mobile.bill'
     _inherit = ['mail.thread']
-    _order = 'name desc'
+    _order = 'state desc'
     _description = 'Employee Mobile Bill'
     _rec_name = 'name'
 

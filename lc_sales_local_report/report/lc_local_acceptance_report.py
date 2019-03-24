@@ -61,6 +61,8 @@ class AcceptanceReportsUtility(models.TransientModel):
                                   COALESCE((ps.invoice_value),0) as value,
                                   rp.name as customer,
                                   lc.tenure as tenor,
+                                  lc.bank_code as bank_code,
+                                  lc.bank_branch as bank_branch,
                                   lc.second_party_bank as customer_bank,
                                   rb.bic as beneficiary_bank,
                                   ps.to_sales_date as dispatch_to_sale,

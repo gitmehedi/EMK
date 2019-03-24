@@ -6,7 +6,7 @@ class ProductCategory(models.Model):
     _inherit = ['product.category', 'mail.thread']
 
     name = fields.Char('Name', index=True, required=True, translate=True,track_visibility='onchange')
-    parent_id = fields.Many2one('product.category', 'Parent Categoryyttttttt', index=True, ondelete='cascade',track_visibility='onchange')
+    parent_id = fields.Many2one('product.category', 'Parent Category', index=True, ondelete='cascade',track_visibility='onchange')
     type = fields.Selection([
         ('view', 'View'),
         ('normal', 'Normal')], 'Category Type', default='normal',track_visibility='onchange',

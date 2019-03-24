@@ -73,7 +73,7 @@
         <menuitem id="gbs_document_type.hr_do_type_menu"
 				name="Document Type"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
-				sequence="21" groups="commercial.group_commercial_manager_export"
+				sequence="21" groups="gbs_application_group.group_export_local_lc"
                 action="gbs_document_type.action_document_type"/>
 
         <menuitem

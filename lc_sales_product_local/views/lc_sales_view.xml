@@ -16,7 +16,6 @@
                         <button string="Done" name="action_lc_done_export" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to continue?"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
                         <button string="Cancel" name="action_cancel_export" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="confirmed,progress" confirm="Are you sure you want to continue?"/>
-
                     </header>
 
                     <sheet>
@@ -37,7 +36,7 @@
                                 </group>
                             </group>
                             <group colspan="4">
-                                <field name="title" class="gbs-text-area"/>
+                                <field name="title" class="gbs-text-area" required="1"/>
                             </group>
 
                             <group>
@@ -50,7 +49,9 @@
                             <group>
                                 <separator string="Customer" colspan="2"/>
                                 <field name="second_party_applicant" required="1"/>
-                                <field name="second_party_bank" required="1"/>
+                                <field name="second_party_bank" required="1" string="Bank Details"/>
+                                <field name="bank_code"/>
+                                <field name="bank_branch"/>
                             </group>
 
 

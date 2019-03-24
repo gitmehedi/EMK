@@ -41,6 +41,7 @@ class MonthlyLoanDeduction(models.AbstractModel):
                 if d.id == slip.employee_id.department_id.id:
                     payslip['emp_name'] = slip.employee_id.name
                     payslip['designation'] = slip.employee_id.job_id.name
+                    payslip['department'] = slip.employee_id.department_id.name
                     payslip['doj'] = slip.employee_id.initial_employment_date
                     payslip['device_employee_acc'] = slip.employee_id.device_employee_acc
                     payslip['emp_seq'] = slip.employee_id.employee_sequence

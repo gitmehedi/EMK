@@ -16,22 +16,27 @@
                                attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                     </xpath>
                     <xpath expr="//field[@name='taxes_id']" position="replace">
-                        <field name="taxes_id" widget="many2many_tags" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
+                        <field name="taxes_id" widget="many2many_tags"
+                               attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='property_account_expense_id']" position="replace">
                         <field name="property_account_expense_id"
-                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"
-                                    groups="account.group_account_user" attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                               domain="[('internal_type','=','other'),('deprecated','=',False)]"
+                               groups="account.group_account_user"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                               attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='supplier_taxes_id']" position="replace">
-                        <field name="supplier_taxes_id" widget="many2many_tags" attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                        <field name="supplier_taxes_id" widget="many2many_tags"
+                               attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
                     </xpath>
 
 
                     <xpath expr="//field[@name='list_price']" position="replace">
-                        <field name="list_price" widget='monetary' readonly='True' options="{'currency_field': 'currency_id'}"
+                        <field name="list_price" widget='monetary' readonly='True'
+                               options="{'currency_field': 'currency_id'}"
                                attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                     </xpath>
 
@@ -41,8 +46,8 @@
                     </xpath>
 
                     <!--<xpath expr="//field[@name='purchase_method']" position="replace">-->
-                        <!--<field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"-->
-                            <!--attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
+                    <!--<field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"-->
+                    <!--attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
                     <!--</xpath>-->
 
                     <xpath expr="//label[@for='standard_price']" position="replace">
@@ -51,9 +56,10 @@
                     </xpath>
 
                     <xpath expr="//div[@name='standard_price_uom']" position="replace">
-                        <div name="standard_price_uom"  attrs="{'invisible': [('purchase_ok', '=', False)]}">
-                            <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"
-                                attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                        <div name="standard_price_uom" attrs="{'invisible': [('purchase_ok', '=', False)]}">
+                            <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"
+                                   class="oe_inline"
+                                   attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
                         </div>
                     </xpath>
                 </data>
@@ -64,9 +70,30 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='barcode']" position="replace">
-                        <field name="barcode" invisible="1"/>
-                 </xpath>
+                <xpath expr="//field[@name='barcode']" position="replace">
+                    <field name="barcode" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="replace">
+                    <field name="company_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                </xpath>
+                <xpath expr="//field[@name='attribute_id']" position="replace">
+                    <field name="attribute_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                </xpath>
+                <xpath expr="//field[@name='attribute_id']" position="replace">
+                    <field name="attribute_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                </xpath>
+                <xpath expr="//field[@name='uom_id']" position="replace">
+                    <field name="uom_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                </xpath>
+                <xpath expr="//field[@name='uom_po_id']" position="replace">
+                    <field name="uom_po_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                </xpath>
+                <xpath expr="//field[@name='categ_id']" position="replace">
+                    <field name="categ_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                </xpath>
+                <xpath expr="//field[@name='asset_category_id']" position="replace">
+                    <field name="asset_category_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                </xpath>
             </field>
         </record>
         <record model="ir.ui.view" id="product_view_control_purchase_bill">
@@ -74,10 +101,10 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='purchase_method']" position="replace">
-                     <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"
-                            attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
-                 </xpath>
+                <xpath expr="//field[@name='purchase_method']" position="replace">
+                    <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"
+                           attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                </xpath>
             </field>
         </record>
     </data>
