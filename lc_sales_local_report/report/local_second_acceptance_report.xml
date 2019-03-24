@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="head_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
-        <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
-            <attribute name="t-call">lc_sales_local_report.external_local_second_acceptance_temp</attribute>
-        </xpath>
-    </template>
+    <!--<template id="head_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">-->
+        <!--<xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">-->
+            <!--<attribute name="t-call">lc_sales_local_report.external_local_second_acceptance_temp</attribute>-->
+        <!--</xpath>-->
+    <!--</template>-->
     <!--<template id="external_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout_header" primary="True">-->
         <!--<xpath expr="//div[@class='company-info']" position="after">-->
             <!--<div name="company_address" style="margin-top: -25px;">-->
@@ -16,7 +16,7 @@
     <!-- Main template -->
     <template id="local_second_acceptance_temp">
         <t t-call="report.html_container">
-            <t t-call="lc_sales_local_report.head_local_second_acceptance_temp">
+            <t t-call="report_layout.gbs_internal_layout">
                 <div class="page" style="page-break-inside:auto">
                     <div class="row" style="padding-top:-5px;">
                         <style type="text/css">
@@ -44,7 +44,7 @@
                                     <th class="text-center" style="width:8%;">L/C No</th>
                                     <th class="text-center" style="width:6%;">Shipment No</th>
                                     <th class="text-center" style="width:7%;">Value</th>
-                                    <th class="text-center" style="width:4.5%;">Tenor</th>
+                                    <th class="text-center" style="width:4%;">Tenor</th>
                                     <th class="text-center" style="width:5.5%;">TBL Receive on</th>
                                     <th class="text-center" style="width:5.5%;">Party Bank Receive</th>
                                     <th class="text-center" style="width:3%;">Aging</th>
@@ -53,7 +53,7 @@
                                     <th class="text-center" style="width:8%;">Remarks/Status</th>
                                     <th class="text-center" style="width:8%;">F.P.R</th>
                                     <th class="text-center" style="width:8%;">Bank</th>
-                                    <th class="text-center" style="width:8.5%;">Branch</th>
+                                    <th class="text-center" style="width:9%;">Branch</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,8 +75,8 @@
                                             <td class="text-left">
                                                 <t t-esc="line['shipment_name']"/>
                                             </td>
-                                            <td class="text-right">
-                                                <span t-esc="line['currency']"/> <span t-esc="line['value']"/>
+                                            <td>
+                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
                                             </td>
                                             <td class="text-left">
                                                 <t t-esc="line['tenor'][0:9]"/>
