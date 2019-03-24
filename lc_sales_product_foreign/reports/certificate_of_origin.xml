@@ -9,14 +9,14 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product_foreign.report_certificate_origin"
                 name="lc_sales_product_foreign.report_certificate_origin"
-                paperformat="report_layout.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat_foreign"
                 menu="False"
 
         />
         <template id="report_certificate_origin">
             <t t-call="report.html_container">
-                <t t-call="report_layout.gbs_custom_pad_report_template">
-                    <div class="page" style="page-break-inside: auto; text-transform: uppercase;">
+                <t t-call="report_layout.gbs_custom_pad_foreign_report_template">
+                    <div class="page" style="page-break-inside: auto; text-transform: uppercase;padding-top:30px;">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
@@ -105,7 +105,7 @@
                                         <td></td>
                                         <td></td>
                                         <td class="w75px text-right">
-                                            <p>Date:</p>
+                                            <p>Date: </p>
                                         </td>
                                         <td class="text-right">
                                             <t t-foreach="pi_list" t-as="p">
@@ -121,7 +121,7 @@
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td class="w75px text-right">Date:</td>
+                                        <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
                                             <strong t-esc="data['lc_date']"/>
                                         </td>
@@ -135,7 +135,7 @@
                                         </t>
                                         <td></td>
                                         <td></td>
-                                        <td class="w75px text-right">Date:</td>
+                                        <td class="w75px text-right">Date: </td>
                                         <t t-if="data['invoice_date_dummy']">
                                             <td class="text-right">
                                                 <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
@@ -149,7 +149,7 @@
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td class="w75px text-right">Date:</td>
+                                        <td class="w75px text-right">Date: </td>
                                         <td class="text-right">
                                             <strong t-esc="data['bl_date']"/>
                                         </td>
@@ -158,8 +158,8 @@
                             </table>
                             <hr class="hr-xs mb-10"/>
                             <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND
-                                HAVE BEEN SHIPPED TO<strong t-esc="data['discharge_port']"/>,<strong
-                                        t-esc="data['discharge_port_country_id']"/>. FROM<strong
+                                HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>,<strong
+                                        t-esc="data['discharge_port_country_id']"/>. FROM <strong
                                         t-esc="data['landing_port']"/>,
                                 <strong t-esc="data['landing_port_country_id']"/>
                             </p>

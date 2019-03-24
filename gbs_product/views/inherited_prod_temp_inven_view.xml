@@ -28,9 +28,9 @@
                                     </div>
                                 </group>
                                 <group name="stock_property" groups="base_technical_features.group_technical_features">
-                                    <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
-                                    <field name="property_stock_production" domain="[('usage','=','production')]"/>
-                                    <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                                    <field name="property_stock_procurement" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('usage','=','procurement')]"/>
+                                    <field name="property_stock_production" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('usage','=','production')]"/>
+                                    <field name="property_stock_inventory" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('usage','=','inventory')]"/>
                                 </group>
                             </group>
                         </page>

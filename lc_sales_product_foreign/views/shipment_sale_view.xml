@@ -176,7 +176,7 @@
                             </group>
                             <group colspan="4">
                                 <p>
-                                    <b>Total(Jar/Drum/Bag/Balk): &#x2063;&#x2063;</b>
+                                    <b>Total(Jar/Drum/Bag/Bulk): &#x2063;&#x2063;</b>
                                     <field name="count_qty" required="1" class="oe_inline" nolable="1"
                                            style="width: 70px !important"
                                            attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>

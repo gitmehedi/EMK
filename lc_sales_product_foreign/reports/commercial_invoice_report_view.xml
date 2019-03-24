@@ -9,17 +9,19 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product_foreign.report_commercial_invoice"
                 name="lc_sales_product_foreign.report_commercial_invoice"
-                paperformat="report_layout.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat_foreign"
                 menu="False"
 
         />
 
         <template id="report_commercial_invoice">
             <t t-call="report.html_container">
-                <t t-call="report_layout.gbs_custom_pad_report_template">
-                    <div class="page" style="page-break-inside: auto;">
+                <t t-call="report_layout.gbs_custom_pad_foreign_report_template">
+                    <div class="page" style="page-break-inside: auto;padding-top:30px;">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
+                            .cylinder { margin:0; padding:0; list-style: 0 none; }
+                            .cylinder-item { display: block; margin:0 padding:0; font-size: 0.80em; }
                         </style>
                         <div class="commercial-invo">
                             <div class="report-title">
@@ -34,15 +36,16 @@
                                         <br/>
                                         <p><strong><u>Importer</u></strong></p>
                                         <p><strong t-esc="data['buyer']"/> <br/>
-                                           <span t-esc="data['buyer_address']"/></p>
+                                           <span t-esc="data['buyer_address']"/>
+                                        </p>
                                         <t t-if="data['ntn_no']">
-                                            <p><b>NTN No: </b><span t-esc="data['ntn_no']"/></p>
+                                            <b>NTN No: </b><span t-esc="data['ntn_no']"/><br/>
                                         </t>
                                         <t t-if="data['gst_no']">
-                                            <p><b>GST No: </b><span t-esc="data['gst_no']"/></p>
+                                            <b>GST No: </b><span t-esc="data['gst_no']"/><br/>
                                         </t>
                                         <t t-if="data['iec_no']">
-                                            <p><b>IEC No: </b><span t-esc="data['iec_no']"/></p>
+                                            <b>IEC No: </b><span t-esc="data['iec_no']"/><br/>
                                         </t>
                                     </td>
 
@@ -63,12 +66,14 @@
                                                     <p><u><b>Place/Port of Loading:</b></u> <br/>
                                                         <span t-esc="data['landing_port']"/>, <span t-esc="data['landing_port_country_id']"/>
                                                     </p>
-                                                    <p><u><b>Payment Terms: </b></u><br/>
+                                                    <p class="m-0">
+                                                        <u><b>Payment Terms: </b></u><br/>
                                                         <span t-esc="data['payment_terms']"/>
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <p><u><b>Place/Port of Discharge:</b></u> <br/>
+                                                    <p class="m-0">
+                                                        <u><b>Place/Port of Discharge:</b></u> <br/>
                                                         <span t-esc="data['discharge_port']"/>,
                                                         <span t-esc="data['discharge_port_country_id']"/>
                                                     </p>
@@ -76,7 +81,8 @@
                                             </tr>
                                             <tr class="odo-bg-gray">
                                                 <td>
-                                                    <p><b><u>Packing:</u></b> <br/>
+                                                    <p class="m-0">
+                                                        <b><u>Packing:</u></b> <br/>
                                                         Export Standard Packing
                                                         <t t-foreach="pi_id_list" t-as="r">
                                                             (<span t-esc="r['pack_type']"/><t t-if="len(pi_id_list)>1">,<br/></t>)
@@ -87,14 +93,15 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <p><b><u>Partial Shipment:</u></b> <br/>
+                                                    <p class="m-0">
+                                                        <b><u>Partial Shipment:</u></b> <br/>
                                                         <span t-esc="data['shipment_number']"/>
                                                     </p>
                                                 </td>
                                             </tr>
                                             <tr class="odo-bg-gray">
                                                 <td>
-                                                    <p>
+                                                    <p class="mb-5">
                                                         <t t-if="data['insurance_number']">
                                                             <u><b>Marine Cargo Policy No:</b></u> <br/>
                                                             <span t-esc="data['insurance_number']"/><br/>
@@ -102,6 +109,8 @@
                                                         <t t-if="data['insurance_policy_date']">
                                                             Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
                                                         </t>
+                                                    </p>
+                                                    <p class="m-0">
                                                         <t t-if="data['cover_note_no']">
                                                             <u><b>Marine Cover Note No:</b></u> <br/>
                                                             <span t-esc="data['cover_note_no']"/><br/>
@@ -112,7 +121,7 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <p><u><b>BL No.</b></u> <br/>
+                                                    <p class="m-0"><u><b>BL No.</b></u> <br/>
                                                         <span t-esc="data['truck_receipt_no']"/><br/>
                                                         Date: <span t-esc="data['bl_date']"/></p>
                                                 </td>
@@ -124,7 +133,7 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <p>We certify that the goods supplied are strictly
+                                            <p class="m-0">We certify that the goods supplied are strictly
                                                 in accordance with the Proforma Invoice No.
                                             <t t-foreach="pi_id_list" t-as="r">
                                                 <strong t-esc="r['pi_id']"/>
@@ -173,7 +182,7 @@
                             <!--<hr class="hr-xxs"/>-->
                             <h5 class="text-left"><u><b>Description of Goods</b></u></h5>
 
-                            <table class="table table-report-sm table-bordered table-striped m-middle">
+                            <table class="table table-report-sm table-bordered table-striped m-middle mb-5">
                                 <thead>
                                     <tr class="odo-bg-gray">
                                         <th class="w50">Products</th>
@@ -222,10 +231,12 @@
                             <p>
                                 In Words: <span t-esc="data['currency_id']"/> <strong t-esc="amt_to_word"/> <strong>only</strong>
                             </p>
-                            <hr class="hr-xs mb-10"/>
+                            <hr class="hr-xs mb-5"/>
                             <div class="text-left">
-                                <p><u><strong t-esc="data['cylinder_details_label']"/></u></p>
-                                <p class="m-0 p-0" t-raw="data['cylinder_details']"/>
+                                <p class="mb-5"><u><strong t-esc="data['cylinder_details_label']"/></u></p>
+                                <ul class="cylinder">
+                                    <li class="cylinder-item" t-raw="data['cylinder_details']"/>
+                                </ul>
                             </div><br/>
 
                             <div class="text-right">
