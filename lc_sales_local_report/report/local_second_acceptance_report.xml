@@ -6,13 +6,13 @@
             <attribute name="t-call">lc_sales_local_report.external_local_second_acceptance_temp</attribute>
         </xpath>
     </template>
-    <template id="external_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
-        <xpath expr="//div[@class='company-info']" position="after">
-            <div name="company_address" style="margin-top: -25px;">
-                <h5><span t-esc="address"/></h5>
-            </div>
-        </xpath>
-    </template>
+    <!--<template id="external_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout_header" primary="True">-->
+        <!--<xpath expr="//div[@class='company-info']" position="after">-->
+            <!--<div name="company_address" style="margin-top: -25px;">-->
+                <!--<h5><span t-esc="address"/></h5>-->
+            <!--</div>-->
+        <!--</xpath>-->
+    <!--</template>-->
     <!-- Main template -->
     <template id="local_second_acceptance_temp">
         <t t-call="report.html_container">
