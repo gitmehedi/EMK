@@ -9,15 +9,15 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product_foreign.report_packing_list"
                 name="lc_sales_product_foreign.report_packing_list"
-                paperformat="report_layout.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat_foreign"
                 menu="False"
 
         />
 
         <template id="report_packing_list">
             <t t-call="report.html_container">
-                <t t-call="report_layout.gbs_custom_pad_report_template">
-                    <div class="page" style="page-break-inside: auto;">
+                <t t-call="report_layout.gbs_custom_pad_foreign_report_template">
+                    <div class="page" style="page-break-inside: auto;padding-top:30px;">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                             .cylinder { margin:0; padding:0; list-style: 0 none; }

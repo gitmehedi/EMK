@@ -16,7 +16,7 @@
         <template id="report_certificate_origin">
             <t t-call="report.html_container">
                 <t t-call="report_layout.gbs_custom_pad_foreign_report_template">
-                    <div class="page" style="page-break-inside: auto; text-transform: uppercase;">
+                    <div class="page" style="page-break-inside: auto; text-transform: uppercase;padding-top:30px;">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>

@@ -44,7 +44,7 @@
                                     <th class="text-center" style="width:8%;">L/C No</th>
                                     <th class="text-center" style="width:6%;">Shipment No</th>
                                     <th class="text-center" style="width:7%;">Value</th>
-                                    <th class="text-center" style="width:4%;">Tenor</th>
+                                    <th class="text-center" style="width:4.5%;">Tenor</th>
                                     <th class="text-center" style="width:5.5%;">TBL Receive on</th>
                                     <th class="text-center" style="width:5.5%;">Party Bank Receive</th>
                                     <th class="text-center" style="width:3%;">Aging</th>
@@ -53,7 +53,7 @@
                                     <th class="text-center" style="width:8%;">Remarks/Status</th>
                                     <th class="text-center" style="width:8%;">F.P.R</th>
                                     <th class="text-center" style="width:8%;">Bank</th>
-                                    <th class="text-center" style="width:9%;">Branch</th>
+                                    <th class="text-center" style="width:8.5%;">Branch</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,8 +75,8 @@
                                             <td class="text-left">
                                                 <t t-esc="line['shipment_name']"/>
                                             </td>
-                                            <td>
-                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
+                                            <td class="text-right">
+                                                <span t-esc="line['currency']"/> <span t-esc="line['value']"/>
                                             </td>
                                             <td class="text-left">
                                                 <t t-esc="line['tenor'][0:9]"/>

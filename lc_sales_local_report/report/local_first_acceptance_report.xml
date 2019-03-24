@@ -44,7 +44,7 @@
                                     <th class="text-center" style="width:8%;">L/C No</th>
                                     <th class="text-center" style="width:6%;">Shipment No</th>
                                     <th class="text-center" style="width:7%;">Value</th>
-                                    <th class="text-center" style="width:4%;">Tenor</th>
+                                    <th class="text-center" style="width:4.5%;">Tenor</th>
                                     <th class="text-center" style="width:5.5%;">Dispatch To Sales</th>
                                     <th class="text-center" style="width:5.5%;">Dispatch To Customer</th>
                                     <th class="text-center" style="width:3%;">Aging</th>
@@ -53,7 +53,7 @@
                                     <th class="text-center" style="width:8%;">Remarks/Status</th>
                                     <th class="text-center" style="width:8%;">F.P.R</th>
                                     <th class="text-center" style="width:8%;">Bank</th>
-                                    <th class="text-center" style="width:9%;">Branch</th>
+                                    <th class="text-center" style="width:8.5%;">Branch</th>
                                 </tr>
                             </thead>
                             <tbody>
