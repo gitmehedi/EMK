@@ -26,20 +26,20 @@
                                     <b>Certificate of Origin</b>
                                 </h3>
                             </div>
-                            <table class="table table-report-sm table-bordered table-striped">
+                            <table class="table table-report-x table-bordered table-striped text-center">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th>Shipping Mark No.</th>
-                                        <th>Packages</th>
-                                        <th>Description of Goods</th>
-                                        <th>Quantity or Weight</th>
-                                        <th>Estimated Value</th>
+                                        <th class="w20 text-center">Shipping Mark No.</th>
+                                        <th class="w15 text-center">Packages</th>
+                                        <th class="text-center">Description of Goods</th>
+                                        <th class="w15 text-center">Quantity or Weight</th>
+                                        <th class="w15 text-center">Estimated Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <t t-foreach="lists" t-as="l">
                                         <tr style="page-break-inside: avoid">
-                                            <td>
+                                            <td class="v-align-middle">
                                                 <span t-esc="data['count_qty']"/>
                                                 <span t-esc="data['count_uom']"/>
                                                 <br/>
@@ -47,7 +47,7 @@
                                                     <span t-esc="r['pack_type']"/>
                                                 </t>
                                             </td>
-                                            <td>
+                                            <td class="v-align-middle">
                                                 <t t-foreach="pack_list" t-as="r">
                                                     <span t-esc="r['pack_type']"/>
                                                     <t t-if="len(pack_list)>1">,
@@ -55,17 +55,17 @@
                                                     </t>
                                                 </t>
                                             </td>
-                                            <td>
+                                            <td class="v-align-middle">
                                                 <span t-esc="l['name']"/>
                                                 <br/>
                                                 H.S Code:
                                                 <span t-esc="l['hs_code']"/>
                                             </td>
-                                            <td>
+                                            <td class="v-align-middle">
                                                 <span t-esc="l['quantity']"/>
                                                 <span t-esc="l['uom']"/>
                                             </td>
-                                            <td>
+                                            <td class="v-align-middle">
                                                 <span t-esc="data['currency_id']"/>
                                                 <span t-esc="l['total_price']"/>
                                             </td>
@@ -73,41 +73,38 @@
                                     </t>
                                 </tbody>
                             </table>
-                            <table class="mb-0">
+
+                            <br/><br/>
+
+                            <table class="mb-20">
                                 <tbody>
                                     <tr>
-                                        <td class="w75px">TO:</td>
                                         <td>
+                                            <p>TO,</p>
                                             <strong t-esc="data['second_party_applicant']"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td>ADDRESS:
-                                            <span t-esc="data['invoice_address']"/>
+                                        <td>
+                                            <p class="w60">ADDRESS: <span t-esc="data['invoice_address']"/></p>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <br/>
-                            <br/>
-                            <hr class="hr-xs mb-10"/>
-                            <table class="mb-0">
+
+                            <table class="table table-bordered table-striped" style="line-height:2em;">
                                 <tbody>
                                     <tr>
-                                        <td class="w75px">PI No.:</td>
-                                        <td>
+                                        <td class="w50">
+                                            PI No.:
                                             <t t-foreach="pi_list" t-as="p">
                                                 <strong t-esc="p['number']"/>
                                                 <br/>
                                             </t>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="w75px text-right">
-                                            <p>Date: </p>
-                                        </td>
-                                        <td class="text-right">
+                                        <td class="w50">
+                                            Date:
                                             <t t-foreach="pi_list" t-as="p">
                                                 <strong t-esc="p['date']"/>
                                                 <br/>
@@ -115,54 +112,55 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="w75px">LC No.:</td>
-                                        <td>
+                                        <td class="w50">
+                                            LC No.:
                                             <strong t-esc="data['lc_id']"/>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="w75px text-right">Date: </td>
-                                        <td class="text-right">
+                                        <td class="w50">
+                                            Date:
                                             <strong t-esc="data['lc_date']"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="w75px">Commercial Invoice No.:</td>
-                                        <t t-if="data['invoice_number_dummy']">
-                                            <td>
-                                                <strong t-esc="data['invoice_number_dummy']"/>
-                                            </td>
-                                        </t>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="w75px text-right">Date: </td>
-                                        <t t-if="data['invoice_date_dummy']">
-                                            <td class="text-right">
+                                        <td class="w50">
+                                            Commercial Invoice No.:
+                                            <t t-if="data['invoice_number_dummy']">
+                                               <strong t-esc="data['invoice_number_dummy']"/>
+                                            </t>
+                                        </td>
+                                        <td class="w50">
+                                            Date:
+                                            <t t-if="data['invoice_date_dummy']">
                                                 <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
-                                            </td>
-                                        </t>
+                                            </t>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td class="w75px">BL No.:</td>
-                                        <td>
+                                        <td class="w50">
+                                            BL No.:
                                             <strong t-esc="data['truck_receipt_no']"/>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="w75px text-right">Date: </td>
-                                        <td class="text-right">
+                                        <td class="w50">
+                                            Date:
                                             <strong t-esc="data['bl_date']"/>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+
+                            <br/>
                             <hr class="hr-xs mb-10"/>
-                            <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND
-                                HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>,<strong
-                                        t-esc="data['discharge_port_country_id']"/>. FROM <strong
-                                        t-esc="data['landing_port']"/>,
-                                <strong t-esc="data['landing_port_country_id']"/>
-                            </p>
+
+                            <div class="mb-25">
+                                <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND
+                                    HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>,<strong
+                                            t-esc="data['discharge_port_country_id']"/>. FROM <strong
+                                            t-esc="data['landing_port']"/>,
+                                    <strong t-esc="data['landing_port_country_id']"/>
+                                </p>
+                            </div>
+
+                            <br/><br/><br/><br/>
                             <div class="text-right">
                                 <p>For and on behalf of
                                     <br/>
@@ -173,7 +171,6 @@
                                 <br/>
                                 <p class="auth-signature">Authorised Signature</p>
                             </div>
-
                         </div>
                     </div>
                 </t>
