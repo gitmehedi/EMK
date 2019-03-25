@@ -26,7 +26,6 @@
         'views/account_asset_sale_view.xml',
         'views/account_asset_views.xml',
         'views/account_asset_type_view.xml',
-        # 'views/account_asset_category_view.xml',
         'views/account_invoice_line.xml',
         'views/account_move_view.xml',
     ],

@@ -24,8 +24,10 @@ class AccountAssetDisposal(models.Model):
     dispose_user_id = fields.Many2one('res.users', string='Dispose User', readonly=True,
                                       states={'approve': [('readonly', False)]}, )
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  default=lambda self: self.env.user.company_id.currency_id.id)
     note = fields.Text(string='Note', readonly=True, states={'draft': [('readonly', False)]}, )
-
     line_ids = fields.One2many('account.asset.disposal.line', 'dispose_id', string='Disposal Line', readonly=True,
                                states={'draft': [('readonly', False)]}, )
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('dispose', 'Disposed')], default='draft',

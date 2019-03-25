@@ -24,6 +24,9 @@ class AccountAssetSale(models.Model):
     sale_user_id = fields.Many2one('res.users', string='Dispose User', readonly=True,
                                    states={'approve': [('readonly', False)]}, )
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  default=lambda self: self.env.user.company_id.currency_id.id)
     note = fields.Text(string='Note', readonly=True, states={'draft': [('readonly', False)]}, )
 
     line_ids = fields.One2many('account.asset.sale.line', 'sale_id', string='Sale Line', readonly=True,
@@ -60,7 +63,7 @@ class AccountAssetSale(models.Model):
                 for depr in rec.asset_id.depreciation_line_ids:
                     if depr.move_id.state == 'draft':
                         depr.move_id.post()
-                rec.journal_entry='post'
+                rec.journal_entry = 'post'
 
             self.state = 'sale'
             self.sale_date = fields.Datetime.now()
@@ -77,6 +80,7 @@ class AccountAssetSale(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'approve')]
 
+
 class AccountAssetSaleLine(models.Model):
     _name = 'account.asset.sale.line'
     _rec = 'id ASC'
@@ -88,7 +92,7 @@ class AccountAssetSaleLine(models.Model):
 
     sale_id = fields.Many2one('account.asset.sale', string='Sale', ondelete='restrict')
     journal_entry = fields.Selection([('unpost', 'Unposted'), ('post', 'Posted')], default='unpost', requried=True)
-    
+
     @api.onchange('asset_id')
     def onchange_asset(self):
         if self.asset_id:

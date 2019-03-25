@@ -66,17 +66,25 @@
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
                                     <field name="start_date"/>
                                     <field name="end_date"/>
-                                    <field name="pro_advance_amount"/>
+
                                 </group>
                                 <group name="right">
+                                    <field name="pro_advance_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="advance_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
                                     <field name="agreement_type" widget="radio" invisible="1"/>
                                     <field name="code" invisible="1"/>
-                                    <field name="adjustment_value"/>
-                                    <field name="service_value"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="adjustment_value" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="service_value" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="advance_amount"/>
-                                    <field name="adjusted_amount"/>
+
+                                    <field name="adjusted_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
                                     <field name="is_remaining" invisible="1"/>
                                 </group>
                             </group>

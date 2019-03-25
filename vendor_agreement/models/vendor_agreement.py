@@ -6,18 +6,6 @@ class VendorAgreement(models.Model):
     _name = "agreement"
     _order = 'name desc'
     _inherit = ["agreement", 'mail.thread', 'ir.needaction_mixin']
-    _order = "name desc"
-
-    @api.one
-    @api.depends('payment_line_ids.amount')
-    def _compute_payment_amount(self):
-        for invoice in self:
-            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
-
-    agreement_type = fields.Selection([
-        ('sale', 'Sale'),
-        ('purchase', 'Purchase'),
-    ], string='Type', required=True, default='purchase', invisible=True)
 
     code = fields.Char(required=False, copy=False)
     name = fields.Char(required=False, track_visibility='onchange')
@@ -31,9 +19,9 @@ class VendorAgreement(models.Model):
     start_date = fields.Date(string='Start Date', default=fields.Date.today(), required=True, readonly=True,
                              track_visibility='onchange',
                              states={'draft': [('readonly', False)]})
-    end_date = fields.Date(string='End Date', required=True, readonly=True, track_visibility='onchange',
-                           default=fields.Date.today(), states={'draft': [('readonly', False)]})
-    pro_advance_amount = fields.Float(string="Proposed Advance Amount", required=True, readonly=True,
+    end_date = fields.Date(string='End Date', required=True, readonly=True, track_visibility='onchange'
+                           , states={'draft': [('readonly', False)]})
+    pro_advance_amount = fields.Float(string="Pro. Advance Amount", required=True, readonly=True,
                                       track_visibility='onchange', states={'draft': [('readonly', False)]})
     adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]})
@@ -47,18 +35,20 @@ class VendorAgreement(models.Model):
                                         ondelete='restrict')
     description = fields.Text('Notes', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  default=lambda self: self.env.user.company_id.currency_id.id)
     company_id = fields.Many2one(
         'res.company', string='Company', readonly=True, track_visibility='onchange',
         states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get(
             'agreement'))
 
-    state = fields.Selection([
-        ('draft', "Draft"),
-        ('confirm', "Confirmed"),
-        ('done', "Done"),
-    ], default='draft', track_visibility='onchange')
+    state = fields.Selection([('draft', "Draft"), ('confirm', "Confirmed"), ('done', "Done"), ], default='draft',
+                             track_visibility='onchange')
 
+    agreement_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ], string='Type', required=True,
+                                      default='purchase', invisible=True)
     is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True, store=True, string="Is Remaining",
                                   help="Take decision that advance amount is remaing or not")
     is_amendment = fields.Boolean(default=False, string="Is Amendment",
@@ -67,6 +57,12 @@ class VendorAgreement(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'agreement_id', readonly=True, copy=False)
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
+
+    @api.one
+    @api.depends('payment_line_ids.amount')
+    def _compute_payment_amount(self):
+        for invoice in self:
+            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
 
     @api.depends('adjusted_amount', 'advance_amount')
     def _compute_is_remaining(self):
