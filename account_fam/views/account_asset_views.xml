@@ -43,6 +43,12 @@
             <xpath expr="//field[@name='invoice_id']" position="attributes">
                 <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
             </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="attributes">
+                <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+            </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='date']" position="after">
                 <field name="receive_date"/>
                 <field name="asset_usage_date"/>

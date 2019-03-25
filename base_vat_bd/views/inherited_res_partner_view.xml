@@ -7,6 +7,9 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="priority" eval="30"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
             <xpath expr="//field[@name='lang']" position="after">
                 <field name="tax"/>
                 <field name="vat"/>
@@ -56,8 +59,8 @@
                             <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
-                            <field name="property_account_receivable_id"/>
-                            <field name="property_account_payable_id"/>
+                            <field name="property_account_receivable_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="property_account_payable_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                     </group>
                 </page>

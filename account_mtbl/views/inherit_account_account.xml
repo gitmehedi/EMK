@@ -6,6 +6,12 @@
             <field name="model">account.account</field>
             <field name="inherit_id" ref="account.view_account_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
