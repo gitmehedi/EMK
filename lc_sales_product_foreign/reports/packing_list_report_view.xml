@@ -25,7 +25,7 @@
                         </style>
                         <div class="packing-list">
                             <div class="report-title">
-                                <h3 class="mt-0"><b>Packing List</b></h3>
+                                <h3 class="mt-0"><b>PACKING LIST</b></h3>
                             </div>
                             <table class="table table-bordered mb-0">
                                 <tr>
@@ -127,7 +127,9 @@
                                                 <td>
                                                    <u><b>BL No.</b></u> <br/>
                                                         <span t-esc="data['truck_receipt_no']"/><br/>
-                                                        Date: <span t-esc="data['bl_date']"/>
+                                                        <t t-if="data['bl_date']">
+                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/>
+                                                        </t>
                                                 </td>
                                             </tr>
                                         </table>

@@ -57,7 +57,7 @@
                                         <p><b><u>Importer/Buyer:</u></b></p>
                                     </t>
                                     <p><strong t-esc="data['customer']"/> <br/>
-                                        Factory: <span t-esc="data['customer_add']" /></p>
+                                        <span t-esc="data['customer_add']" /></p>
                                     <t t-if="data['ntn_no']"><b>NTN No : </b><span t-esc="data['ntn_no']"/><br/></t>
                                     <t t-if="data['gst_no']"><b>GST No : </b><span t-esc="data['gst_no']"/><br/></t>
                                     <t t-if="data['iec_no']"><b>IEC No : </b><span t-esc="data['iec_no']"/><br/></t>

@@ -154,7 +154,7 @@
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="truck_receipt_no" required="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                <field name="bl_date" required="1"
+                                <field name="bl_date"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="container_no"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>

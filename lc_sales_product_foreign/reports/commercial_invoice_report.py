@@ -34,7 +34,7 @@ class CommercialInvoice(models.AbstractModel):
             'insurance_number': shipment_obj.lc_id.insurance_number,
             'insurance_policy_date': shipment_obj.lc_id.insurance_policy_date,
             'truck_receipt_no': shipment_obj.truck_receipt_no,
-            'bl_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.bl_date)),
+            'bl_date': shipment_obj.bl_date,
             'cylinder_details': shipment_obj.cylinder_details,
             'cylinder_details_label': "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details",
             'invoice_number_dummy': shipment_obj.invoice_number_dummy,
