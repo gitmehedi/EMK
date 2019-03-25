@@ -7,6 +7,7 @@ class AccountMove(models.Model):
 
     journal_id = fields.Many2one(track_visibility='onchange')
     date = fields.Date(track_visibility='onchange')
-    ref = fields.Char(track_visibility='onchange')
+    ref = fields.Char(states={'posted': [('readonly', True)]},track_visibility='onchange')
     state = fields.Selection(track_visibility='onchange')
-    operating_unit_id = fields.Many2one(track_visibility='onchange')
+    narration = fields.Text(states={'posted': [('readonly', True)]},track_visibility='onchange')
+    operating_unit_id = fields.Many2one(states={'posted': [('readonly', True)]},track_visibility='onchange')
