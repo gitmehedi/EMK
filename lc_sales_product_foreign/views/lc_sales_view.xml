@@ -52,7 +52,7 @@
                             <group>
                                 <separator string="Customer" colspan="2"/>
                                 <field name="second_party_applicant" required="1" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
-                                <field name="second_party_bank" required="1"/>
+                                <field name="second_party_bank" attrs="{'required': [('model_type', '!=', ('tt'))]}"/>
                                 <field name="document_receiver_bank" />
                             </group>
 

@@ -133,6 +133,9 @@
                                             <t t-if="data['invoice_date_dummy']">
                                                 <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
                                             </t>
+                                            <t t-else="">
+                                                N/A
+                                            </t>
                                         </td>
                                     </tr>
                                     <tr>
@@ -142,7 +145,12 @@
                                         </td>
                                         <td class="w50">
                                             Date:
-                                            <strong t-esc="data['bl_date']"/>
+                                            <t t-if="data['bl_date']">
+                                                <strong t-esc="data['bl_date']"/>
+                                            </t>
+                                            <t t-else="">
+                                                N/A
+                                            </t>
                                         </td>
                                     </tr>
                                 </tbody>

@@ -40,7 +40,7 @@ class PackingList(models.AbstractModel):
                 'insurance_number': shipment_obj.lc_id.insurance_number,
                 'insurance_policy_date': shipment_obj.lc_id.insurance_policy_date,
                 'truck_receipt_no': shipment_obj.truck_receipt_no,
-                'bl_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.bl_date)),
+                'bl_date': shipment_obj.bl_date,
                 'not_for_medical_use': shipment_obj.lc_id.not_for_medical_use,
                 'lc_id': shipment_obj.lc_id.unrevisioned_name,
                 'lc_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date)),

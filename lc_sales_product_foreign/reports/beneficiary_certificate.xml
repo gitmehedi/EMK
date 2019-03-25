@@ -176,7 +176,7 @@
                                     <tr>
                                         <td class="w200px">BL No.   </td>
                                         <td>
-                                            :   <strong t-esc="data['truck_receipt_no']"/> <b>Date: </b><strong t-esc="data['bl_date']"/>
+                                            :   <strong t-esc="data['truck_receipt_no']"/> <t t-if="data['bl_date']"><b>Date: </b><strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/></t>
                                         </td>
                                     </tr>
                                     <tr>

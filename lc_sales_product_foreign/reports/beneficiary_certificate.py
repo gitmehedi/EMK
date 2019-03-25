@@ -40,7 +40,7 @@ class BeneficiaryCertificate(models.AbstractModel):
             'model_type': shipment_obj.lc_id.model_type,
             'sc_type': shipment_obj.lc_id.sc_type,
             'truck_receipt_no': shipment_obj.truck_receipt_no,
-            'bl_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.bl_date)),
+            'bl_date': shipment_obj.bl_date,
             'landing_port': shipment_obj.lc_id.landing_port,
             'landing_port_country_id': shipment_obj.lc_id.landing_port_country_id.name,
             'transshipment_country_id': shipment_obj.lc_id.transshipment_country_id.name,

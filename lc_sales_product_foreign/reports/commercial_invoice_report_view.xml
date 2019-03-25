@@ -123,7 +123,10 @@
                                                 <td>
                                                     <p class="m-0"><u><b>BL No.</b></u> <br/>
                                                         <span t-esc="data['truck_receipt_no']"/><br/>
-                                                        Date: <span t-esc="data['bl_date']"/></p>
+                                                        <t t-if="data['bl_date']">
+                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/>
+                                                        </t>
+                                                    </p>
                                                 </td>
                                             </tr>
                                         </table>
