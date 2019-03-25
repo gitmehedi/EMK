@@ -81,7 +81,8 @@
             <field name="model">tds.rule</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="TDS Rule">
+                <tree string="TDS Rule" colors="blue:state == 'draft';green:state == 'confirm';"
+                          fonts="bold:state =='confirm';">
                     <field name="name"/>
                     <field name="effective_from"/>
                     <field name="type_rate"/>

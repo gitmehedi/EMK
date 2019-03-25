@@ -6,6 +6,7 @@ class VendorAgreement(models.Model):
     _name = "agreement"
     _order = 'name desc'
     _inherit = ["agreement", 'mail.thread']
+    _order = "name desc"
 
     @api.one
     @api.depends('payment_line_ids.amount')
