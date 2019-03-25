@@ -2,7 +2,9 @@ from odoo import models, fields, api, _
 
 class AccountAccountType(models.Model):
     _name = 'account.account.type'
+    _order = 'name desc'
     _inherit = ['account.account.type','mail.thread']
+
 
     name = fields.Char(track_visibility='onchange')
     include_initial_balance = fields.Boolean(track_visibility='onchange')

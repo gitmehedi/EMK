@@ -2,6 +2,7 @@ from odoo import api, fields, models,_
 
 class Branch(models.Model):
     _name = 'operating.unit'
+    _order = 'name desc'
     _inherit = ['operating.unit','mail.thread']
 
     code = fields.Char('Code', required=True, size=3,track_visibility='onchange')

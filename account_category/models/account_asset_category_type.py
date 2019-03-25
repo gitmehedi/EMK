@@ -12,6 +12,7 @@ from odoo.tools import float_compare, float_is_zero
 
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
+    _order = "name desc"
 
     category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
     parent_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict")

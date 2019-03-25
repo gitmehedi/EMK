@@ -3,7 +3,9 @@ from odoo import models, fields, api, _
 
 class PaymentInstruction(models.Model):
     _name = 'payment.instruction'
+    _order='sequence desc'
     _description = 'Payment Instruction'
+
 
     sequence = fields.Integer('Sequence',help="Gives the sequence of this line when displaying the invoice.")
     instruction_date = fields.Date(string='Date')

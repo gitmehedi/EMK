@@ -263,7 +263,6 @@ class ServerFileProcess(models.Model):
             date_con = datetime.strptime(data, '%m-%d-%Y %H:%M:%S')
             if date_con:
                 return date_con
-
         return None
 
     @api.multi

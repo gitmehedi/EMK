@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 class AccountAssetDisposal(models.Model):
     _name = 'account.asset.disposal'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = 'id desc'
+    _order = 'name desc,id desc'
     _rec_name = 'name'
 
     name = fields.Char(string='Serial No', readonly=True, default='New')
