@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, shutil, xlrd, traceback, logging, json
+from datetime import datetime
 from contextlib import contextmanager
 from odoo import exceptions, models, fields, api, _, tools
 from odoo.exceptions import ValidationError
@@ -184,20 +185,24 @@ class ServerFileProcess(models.Model):
             dirs = [rec.source_path, rec.dest_path]
             self.directory_check(dirs)
 
-            files = filter(lambda x: x.endswith('.xls'), os.listdir(rec.source_path))
+            files = filter(lambda x: x.endswith('.txt'), os.listdir(rec.source_path))
             for file in files:
-                if os.path.splitext(file)[1] in ['.xls']:
+
+                if os.path.splitext(file)[1] in ['.txt']:
+                    source_path = os.path.join(rec.source_path, file)
+                    dest_path = os.path.join(rec.dest_path, file)
+
                     journal = rec.create_journal(file)
                     if journal:
-                        if not shutil.move(os.path.join(rec.source_path, file), os.path.join(rec.dest_path, file)):
+                        if shutil.move(source_path, dest_path):
                             raise ValidationError(_('Please check path configuration.'))
 
-        with self.sftp_connection('source') as source:
-            with self.sftp_connection('destination') as destination:
-                for rec in self.filtered(lambda r: r.method == "sftp"):
+        for rec in self.filtered(lambda r: r.method == "sftp"):
+            with self.sftp_connection('source') as source:
+                with self.sftp_connection('destination') as destination:
                     dirs = [rec.folder, rec.source_path, rec.dest_path]
                     self.directory_check(dirs)
-                    files = filter(lambda x: x.endswith('.xls'), source.listdir(rec.source_path))
+                    files = filter(lambda x: x.endswith('.txt'), source.listdir(rec.source_path))
                     for file in files:
                         source_path = os.path.join(rec.source_path, file)
                         dest_path = os.path.join(rec.dest_path, file)
@@ -215,102 +220,136 @@ class ServerFileProcess(models.Model):
                             else:
                                 raise ValidationError(_('Please check path configuration.'))
 
-    def get_file_path(self, file, loc='s'):
+    def get_file_path(self, file):
+        path = {}
         if self.method == 'local':
-            if loc == 's':
-                return os.path.join(self.source_path, file)
-            else:
-                return os.path.join(self.dest_path, file)
+            path['folder'] = os.path.join(self.folder, file)
+            path['source'] = os.path.join(self.source_path, file)
+            path['destination'] = os.path.join(self.dest_path, file)
         else:
-            if loc == 'l':
-                return os.path.join(self.folder, file)
-            elif loc == 's':
-                return os.path.join(self.source_path, file)
-            else:
-                return os.path.join(self.dest_path, file)
+            path['folder'] = os.path.join(self.folder, file)
+            path['source'] = os.path.join(self.source_path, file)
+            path['destination'] = os.path.join(self.dest_path, file)
+
+        return path
 
     def preprocess(self, data):
         filter = data.split('.')
         return filter[0].strip() if len(filter) > 0 else None
 
+    def data_mapping(self, data):
+        data = data.split('|')
+        glcc_struc = [3, 3, 1, 5, 3, 2, 2, 3]
+        date_struc = [2, 2, 4, 2, 2, 2]
+        glcc_name = ['BRANCH', 'CURRENCY', 'SEGMENT', 'COMP_1', 'COMP_2', 'AC', 'SC', 'COST_CENTRE']
+
+        data[9] = dict(zip(glcc_name, self.strslice(data[9], glcc_struc)))
+        data[0] = self.format_data(self.strslice(data[0] + data[2], date_struc))
+        data[1] = self.format_data(self.strslice(data[1] + '000000', date_struc))
+        data[13] = self.format_data(self.strslice(data[13] + '000000', date_struc))
+
+        keys = ['POSTING-DATE', 'SYSTEM-DATE', 'POSTING-TIME', 'SOURCE', 'JOURNAL-NBR', 'JOURNAL-SEQ',
+                'SOC', 'BRCH', 'FCY-CODE', 'GL-CLASS-CODE', 'DESC-TRCODE-6', 'DESC-TEXT-24', 'POSTING-IND',
+                'TRANS-DATE', 'LCY-AMT',
+                'FCY-AMT', 'REVERSAL-CODE', 'REVERSAL-DATE', 'REFERENCE', 'SOURCE-APPLN', 'PS-JOURNAL-ID',
+                'PS-JOURNAL-NBR', 'CNTL-CENTRE']
+
+        return dict(zip(keys, data[:len(data)]))
+
+    @api.multi
+    def format_data(self, date):
+        if len(date) == 6:
+            data = "{0}-{1}-{2} {3}:{4}:{5}".format(date[0], date[1], date[2], date[3], date[4], date[5])
+            date_con = datetime.strptime(data, '%m-%d-%Y %H:%M:%S')
+            if date_con:
+                return date_con
+
+        return None
+
+    @api.multi
+    def strslice(self, pattern, lists):
+        first, last = 0, 0
+        values = []
+        for val in lists:
+            last += val
+            values.append(pattern[first:last])
+            first += val
+        return values
+
     @api.multi
     def create_journal(self, file, conn={}):
-        local_path = self.get_file_path(file, loc='l')
-        response = False
-        if len(conn) > 0:
-            source_path = self.get_file_path(file)
-        else:
-            source_path = self.get_file_path(file)
+        errors, response = [], False
+        path = self.get_file_path(file)
+        source_path = path['source'] if self.method == 'local' else path['folder']
 
-        file_ins = xlrd.open_workbook(local_path)
-        errors = []
-
-        for worksheet_index in range(file_ins.nsheets):
-            records = self.get_formatted_data(file_ins.sheet_by_index(worksheet_index))
+        with open(source_path, 'r') as file_ins:
             moves = {}
-            for rec in records[0]:
-                index = records[0].index(rec) + 2
-                trn_no = int(self.preprocess(rec['TRN_NO']))
+            for worksheet_index in file_ins:
+                index = worksheet_index.index(worksheet_index) + 1
+                rec = self.data_mapping(worksheet_index)
+
+                journal_no = rec['JOURNAL-NBR']
                 journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
-                if trn_no not in moves:
-                    moves[trn_no] = {
+                if journal_no not in moves:
+                    moves[journal_no] = {
                         'journal_id': journal.id,
-                        'date': fields.Date.today(),
+                        'date': rec['POSTING-DATE'],
                         'line_ids': [],
                     }
 
-                name = rec['BATCH_DESCRIPTION'].strip()
+                name = rec['DESC-TEXT-24'].strip()
                 if not name:
                     errors.append(
-                        {'line_no': index, 'details': 'BATCH_DESCRIPTION [{0}]has invalid value'.format(name)})
+                        {'line_no': index, 'details': 'DESC-TEXT-24 [{0}] has invalid value'.format(name)})
 
-                amount = float(rec['TRANSACTION_AMOUNT'].strip())
+                amount = float(rec['LCY-AMT'][:14] + '.' + rec['LCY-AMT'][14:17])
                 if not amount:
                     errors.append(
-                        {'line_no': index, 'details': 'TRANSACTION_AMOUNT [{0}] has invalid value'.format(amount)})
+                        {'line_no': index, 'details': 'LCY-AMT [{0}] has invalid value'.format(amount)})
 
-                currency = self.preprocess(rec['CURRENCY'])
+                branch = rec['GL-CLASS-CODE']['BRANCH']
+                branch_id = self.env['operating.unit'].search([('code', '=', branch)])
+                if not branch_id:
+                    errors.append({'line_no': index, 'details': 'BRANCH [{0}] has invalid value'.format(branch)})
+
+                currency = rec['GL-CLASS-CODE']['CURRENCY']
                 currency_id = self.env['res.currency'].search([('code', '=', currency)])
                 if not currency_id:
                     errors.append({'line_no': index, 'details': 'CURRENCY [{0}]  has invalid value'.format(currency)})
 
-                segment = self.preprocess(rec['SEGMENT'])
+                segment = rec['GL-CLASS-CODE']['SEGMENT']
                 segment_id = self.env['segment'].search([('code', '=', segment)])
                 if not segment_id:
                     errors.append({'line_no': index, 'details': 'SEGMENT [{0}]  has invalid value'.format(segment)})
 
-                ac = self.preprocess(rec['AC'])
+                ac = rec['GL-CLASS-CODE']['AC']
                 ac_id = self.env['acquiring.channel'].search([('code', '=', ac)])
                 if not ac_id:
                     errors.append({'line_no': index, 'details': 'AC [{0}]  has invalid value'.format(ac)})
 
-                sc = self.preprocess(rec['SC'])
+                sc = rec['GL-CLASS-CODE']['SC']
                 sc_id = self.env['servicing.channel'].search([('code', '=', sc)])
                 if not sc_id:
                     errors.append({'line_no': index, 'details': 'SC [{0}]  has invalid value'.format(sc)})
 
-                branch = self.preprocess(rec['BRANCH'])
-                branch_id = self.env['operating.unit'].search([('code', '=', branch)])
-                if not branch_id:
-                    errors.append({'line_no': index, 'details': 'BRANCH  [{0}] has invalid value'.format(branch)})
-
-                cost_centre = self.preprocess(rec['COST_CENTRE'])
+                cost_centre = rec['GL-CLASS-CODE']['COST_CENTRE']
                 cost_centre_id = self.env['account.analytic.account'].search([('name', '=', cost_centre)])
                 if not cost_centre_id:
                     errors.append(
                         {'line_no': index, 'details': 'COST_CENTRE [{0}]  has invalid value'.format(cost_centre)})
 
-                if rec['COMP_1'] and rec['COMP_2']:
-                    comp_1 = self.preprocess(rec['COMP_1'])
-                    comp_2 = self.preprocess(rec['COMP_2'])
+                if rec['GL-CLASS-CODE']['COMP_1'] and rec['GL-CLASS-CODE']['COMP_2']:
+                    comp_1 = rec['GL-CLASS-CODE']['COMP_1']
+                    comp_2 = rec['GL-CLASS-CODE']['COMP_2']
 
                     account = comp_1 + comp_2
                     account_id = self.env['account.account'].search([('code', '=', account)])
                     if not account_id:
                         errors.append({'line_no': index,
-                                       'details': 'Combination of COMP_1 and COMP_2 has invalid value'.format(account)})
+                                       'details': 'Combination of COMP_1 and COMP_2 [{0}] has invalid value'.format(
+                                           account)})
 
-                if rec['DEBIT_CREDIT_FLAG'] == 'CR':
+                if rec['JOURNAL-SEQ'] == '01':
                     line = {
                         'name': name,
                         'account_id': account_id.id,
@@ -324,8 +363,9 @@ class ServerFileProcess(models.Model):
                         'servicing_channel_id': sc_id.id,
                         'operating_unit_id': branch_id.id,
                     }
+                    moves[journal_no]['line_ids'].append((0, 0, line))
 
-                if rec['DEBIT_CREDIT_FLAG'] == 'DR':
+                if rec['JOURNAL-SEQ'] == '02':
                     line = {
                         'name': name,
                         'account_id': account_id.id,
@@ -339,7 +379,8 @@ class ServerFileProcess(models.Model):
                         'servicing_channel_id': sc_id.id,
                         'operating_unit_id': branch_id.id,
                     }
-                moves[trn_no]['line_ids'].append((0, 0, line))
+
+                    moves[journal_no]['line_ids'].append((0, 0, line))
 
             if len(errors) > 0:
                 self.env['server.file.error'].create({'file_path': source_path,
@@ -353,10 +394,9 @@ class ServerFileProcess(models.Model):
                             move_obj.post()
                     return True
                 except Exception:
-                    self.env['server.file.error'].create(
-                        {'file_path': source_path,
-                         'errors': 'Unknown Error. Please check your file.',
-                         'ftp_ip': 'localhost'})
+                    self.env['server.file.error'].create({'file_path': source_path,
+                                                          'errors': 'Unknown Error. Please check your file.',
+                                                          'ftp_ip': 'localhost'})
 
         return False
 
