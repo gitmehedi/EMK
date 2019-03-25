@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class TDSRules(models.Model):
     _name = 'tds.rule'
     _inherit = ['mail.thread']
-    _order = 'name desc'
+    _order = 'id desc'
     _description = 'TDS Rule'
 
     name = fields.Char(string='Name', required=True, size=50,

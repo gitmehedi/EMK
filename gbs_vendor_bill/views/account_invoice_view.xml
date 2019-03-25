@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-
     <record id="inherit_invoice_payment_instruction" model="ir.ui.view">
         <field name="name">inherit.account.invoice.payment.instruction</field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_supplier_form" />
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="replace">
                 <button name="action_payment_instruction" type="object" states="open"
@@ -15,7 +13,7 @@
                 <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
                     <field name="payment_line_ids" readonly="1">
                         <tree string="Payment lines">
-                            <field name="sequence" widget="handle" />
+                            <field name="sequence" widget="handle"/>
                             <field name="instruction_date"/>
                             <field name="partner_id"/>
                             <field name="default_debit_account_id" invisible="1"/>
@@ -61,7 +59,7 @@
     <record id="inherit_invoice_supplier_form_ou" model="ir.ui.view">
         <field name="name">account.invoice.supplier.inherit.form</field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou" />
+        <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='operating_unit_id']" position="attributes">
                 <attribute name="string">Branch</attribute>
@@ -88,7 +86,8 @@
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']" position="attributes">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
+                   position="attributes">
                 <attribute name="required">1</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
@@ -103,5 +102,16 @@
         </field>
     </record>
 
-
+    <record id="inherited_invoice_supplier_tree" model="ir.ui.view">
+        <field name="name">invoice.supplier.tree.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-success">state == 'open'</attribute>
+                <attribute name="decoration-muted">state == 'paid'</attribute>
+                <attribute name="decoration-bf">state in ('open','paid')</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>

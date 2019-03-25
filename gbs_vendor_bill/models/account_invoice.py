@@ -4,7 +4,8 @@ from odoo.exceptions import UserError,ValidationError
 
 
 class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+    _name = 'account.invoice'
+    _inherit = ['account.invoice','ir.needaction_mixin']
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -179,6 +180,10 @@ class AccountInvoice(models.Model):
         if vals.get('reference'):
             vals.update({'reference': vals.get('reference').strip()})
         return super(AccountInvoice, self).write(vals)
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'open')]
 
 
 class AccountInvoiceLine(models.Model):

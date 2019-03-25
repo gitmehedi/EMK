@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class VendorAgreement(models.Model):
     _name = "agreement"
     _order = 'name desc'
-    _inherit = ["agreement", 'mail.thread']
+    _inherit = ["agreement", 'mail.thread', 'ir.needaction_mixin']
     _order = "name desc"
 
     @api.one
@@ -170,6 +170,10 @@ class VendorAgreement(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'confirm')]
 
 
 class AccountMoveLine(models.Model):

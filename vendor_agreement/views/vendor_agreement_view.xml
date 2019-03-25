@@ -7,8 +7,9 @@
             <field name="inherit_id" ref="agreement_account.agreement_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="replace">
-                    <tree string="Agreements" colors="blue:state == 'draft';green:state == 'confirm';gray:state == 'done';"
-                          fonts="bold:state in ('confirm','done');">
+                    <tree string="Agreements"
+                          decoration-info="state=='draft'" decoration-success="state=='confirm'"
+                          decoration-bf="state in ('confirm','done')" decoration-muted="state=='done'">
                         <field name="name" string="Agreement reference"/>
                         <field name="partner_id" string="Vendor"/>
                         <field name="start_date"/>
@@ -97,10 +98,11 @@
                                         <field name="in_invoice_ids" colspan="4" nolabel="1"/>
                                     </group>
                                 </page>
-                                <page string="Payments" class="oe_page_title" attrs="{'invisible': [('state', '!=', 'done')]}">
+                                <page string="Payments" class="oe_page_title"
+                                      attrs="{'invisible': [('state', '!=', 'done')]}">
                                     <field name="payment_line_ids" string="Payments" readonly="1">
                                         <tree string="Payment lines">
-                                            <field name="sequence" widget="handle" />
+                                            <field name="sequence" widget="handle"/>
                                             <field name="instruction_date"/>
                                             <field name="partner_id"/>
                                             <field name="default_debit_account_id" invisible="1"/>
@@ -188,7 +190,8 @@
         </record>
 
         <menuitem id="agreement_account.agreement_menu" action="agreement_account.agreement_action"
-                  name="Vendor Agreement" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
+                  name="Vendor Agreement"
+                  groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
                   parent="account.menu_finance_payables" sequence="0"/>
 
 

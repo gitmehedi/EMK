@@ -1,13 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record model="ir.ui.view" id="tds_vat_challan_tree_view">
             <field name="name">tds_vat_challan_list</field>
             <field name="model">tds.vat.challan</field>
             <field name="arch" type="xml">
                 <tree delete="false" create="false" edit="false"
-                      colors="blue:state == 'draft';green:state == 'deposited';gray:state == 'distributed';gray:state == 'cancel';"
-                      fonts="bold:state in ('deposited','distributed');">
+                      decoration-info="state == 'draft'" decoration-success="state == 'deposited'"
+                      decoration-muted="state in ('distributed','cancel') "
+                      decoration-bf="state in ('deposited','distributed') ">
                     <field name="date" string="Bill Date"/>
                     <field name="supplier_id" string="Vendor"/>
                     <field name="operating_unit_id"/>
@@ -58,8 +59,6 @@
                                         <tree string="List" editable="false" create="false" delete="false">
                                             <field name="supplier_id"/>
                                             <field name="total_bill" string="TDS/VAT Amount"/>
-                                            <!--<field name="challan_provided"/>-->
-                                            <!--<field name="undistributed_bill"/>-->
                                             <field name="state" invisible="1"/>
                                         </tree>
                                     </field>

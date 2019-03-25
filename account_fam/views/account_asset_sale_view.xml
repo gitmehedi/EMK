@@ -63,7 +63,7 @@
         <field name="model">account.asset.sale</field>
         <field name="arch" type="xml">
             <tree string="Asset Sale" decoration-info="state=='draft'" decoration-success="state=='approve'"
-                  decoration-bf="state in ('approve','draft')"
+                  decoration-bf="state in ('approve','sale')"
                   decoration-muted="state=='sale'">
                 <field name="name"/>
                 <field name="total_value"/>
