@@ -56,6 +56,9 @@
                     <!--attrs="{'invisible': [('payment_line_ids', '=', False)]}"-->
                 </page>
             </xpath>
+            <xpath expr="//notebook/page[1]/field/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
             <xpath expr="//notebook/page[1]/field/tree/field[@name='account_analytic_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
