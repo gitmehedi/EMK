@@ -22,6 +22,9 @@
             <xpath expr="//field[@name='account_asset_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
+            <xpath expr="//field[@name='account_analytic_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
             <xpath expr="//field[@name='account_depreciation_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>

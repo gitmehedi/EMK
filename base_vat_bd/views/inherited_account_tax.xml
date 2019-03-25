@@ -32,8 +32,10 @@
                                             </div>
                                         </group>
                                         <group attrs="{'invisible':[('amount_type','=', 'group')]}">
-                                            <field name="account_id" string="VAT Account"/>
-                                            <field name="refund_account_id" string="VAT Account on Refunds"/>
+                                            <field name="account_id" string="VAT Account"
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                            <field name="refund_account_id" string="VAT Account on Refunds"
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                         </group>
                                     </group>
                                     <field name="children_tax_ids"
@@ -52,13 +54,14 @@
                                         <group>
                                             <field name="description"
                                                    attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                            <field name="tax_group_id" string="VAT Group"/>
+                                            <field name="tax_group_id" string="VAT Group"
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                             <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]"
                                                    widget="many2many_tags"
                                                    context="{'default_applicability': 'taxes'}"/>
                                             <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}"
                                                    groups="analytic.group_analytic_accounting"/>
-                                            <field name="company_id" options="{'no_create': True}"
+                                            <field name="company_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                                    groups="base.group_multi_company"/>
                                             <field name="active" groups="base.group_no_one"/>
                                         </group>

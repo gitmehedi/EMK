@@ -29,6 +29,7 @@
         'views/inherit_account_account.xml',
         'views/inherit_account_type.xml',
         'views/inherit_product_product.xml',
+        'views/inherit_analytic_account.xml',
     ],
     'installable': True,
     'application': True,
