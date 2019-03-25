@@ -73,10 +73,10 @@
                                 <field name="invoice_id" readonly="1" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                 <field name="invoice_value" required="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             </group>
-                            <group>
-                                <separator string="Received the avobe goods in good order &amp; condition"/>
-                                <field name="goods_condition" nolabel="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                            </group>
+                            <!--<group>-->
+                                <!--<separator string="Received the avobe goods in good order &amp; condition"/>-->
+                                <!--<field name="goods_condition" nolabel="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>-->
+                            <!--</group>-->
                             <group string="Transport Information">
                                 <field name="transport_by" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="vehical_no" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
