@@ -80,7 +80,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <p>TO,</p>
+                                            <p>TO</p>
                                             <strong t-esc="data['second_party_applicant']"/>
                                         </td>
                                     </tr>
