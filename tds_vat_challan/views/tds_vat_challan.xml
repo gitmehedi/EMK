@@ -5,7 +5,9 @@
             <field name="name">tds_vat_challan_list</field>
             <field name="model">tds.vat.challan</field>
             <field name="arch" type="xml">
-                <tree delete="false" create="false" edit="false">
+                <tree delete="false" create="false" edit="false"
+                      colors="blue:state == 'draft';green:state == 'deposited';gray:state == 'distributed';gray:state == 'cancel';"
+                      fonts="bold:state in ('deposited','distributed');">
                     <field name="date" string="Bill Date"/>
                     <field name="supplier_id" string="Vendor"/>
                     <field name="operating_unit_id"/>

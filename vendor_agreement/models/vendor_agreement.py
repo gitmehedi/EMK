@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class VendorAgreement(models.Model):
     _name = "agreement"
     _inherit = ["agreement", 'mail.thread']
+    _order = "name desc"
 
     @api.one
     @api.depends('payment_line_ids.amount')
