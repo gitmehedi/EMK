@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 
 class Currency(models.Model):
     _name = 'res.currency'
+    _order = 'name desc'
     _inherit = ['res.currency','mail.thread']
 
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)",

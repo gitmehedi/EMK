@@ -12,7 +12,7 @@ from odoo.tools import float_compare, float_is_zero
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
-    _order = 'id desc'
+    _order = "asset_seq desc,id desc"
 
     asset_seq = fields.Char(string='Asset Code', readonly=True)
     batch_no = fields.Char(string='Batch No', readonly=True)

@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 
 class Banks(models.Model):
     _name = 'res.bank'
+    _order = 'name desc'
     _inherit = ['res.bank','mail.thread']
 
     name = fields.Char(track_visibility='onchange')

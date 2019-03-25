@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 class ServicingChannel(models.Model):
     _name = 'servicing.channel'
     _inherit = ['mail.thread']
-    _order = 'code asc'
+    _order = 'code desc'
     _description = 'Servicing Channel'
 
     name = fields.Char('Name', required=True, track_visibility='onchange')

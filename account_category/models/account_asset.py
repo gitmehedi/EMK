@@ -12,6 +12,7 @@ from odoo.tools import float_compare, float_is_zero
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
+
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Type', required=True, change_default=True,
                                     readonly=True, states={'draft': [('readonly', False)]})
 

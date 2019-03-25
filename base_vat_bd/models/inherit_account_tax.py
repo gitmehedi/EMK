@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 
 class AccountTax(models.Model):
     _name = 'account.tax'
+    _order = 'name desc'
     _inherit = ['account.tax','mail.thread']
 
 

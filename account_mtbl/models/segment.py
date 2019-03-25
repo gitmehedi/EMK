@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 class Segment(models.Model):
     _name = 'segment'
     _inherit = ['mail.thread']
-    _order = 'code asc'
+    _order = 'code desc'
     _description = 'Segment'
 
     name = fields.Char('Name', required=True, track_visibility='onchange')

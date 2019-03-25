@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class VendorAgreement(models.Model):
     _name = "agreement"
+    _order = 'name desc'
     _inherit = ["agreement", 'mail.thread']
     _order = "name desc"
 
@@ -35,9 +36,9 @@ class VendorAgreement(models.Model):
     pro_advance_amount = fields.Float(string="Proposed Advance Amount", required=True, readonly=True,
                                       track_visibility='onchange', states={'draft': [('readonly', False)]})
     adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
-                                      track_visibility='onchange', states={'draft': [('readonly', False)]})
+                                    track_visibility='onchange', states={'draft': [('readonly', False)]})
     service_value = fields.Float(string="Service Value", required=True, readonly=True,
-                                      track_visibility='onchange', states={'draft': [('readonly', False)]})
+                                 track_visibility='onchange', states={'draft': [('readonly', False)]})
     advance_amount = fields.Float(string="Advance Amount", track_visibility='onchange')
     adjusted_amount = fields.Float(string="Adjusted Amount", track_visibility='onchange')
     account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
@@ -47,7 +48,7 @@ class VendorAgreement(models.Model):
     description = fields.Text('Notes', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
     company_id = fields.Many2one(
-        'res.company', string='Company', readonly=True,track_visibility='onchange',
+        'res.company', string='Company', readonly=True, track_visibility='onchange',
         states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get(
             'agreement'))
@@ -58,7 +59,7 @@ class VendorAgreement(models.Model):
         ('done', "Done"),
     ], default='draft', track_visibility='onchange')
 
-    is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True,store=True,string="Is Remaining",
+    is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True, store=True, string="Is Remaining",
                                   help="Take decision that advance amount is remaing or not")
     is_amendment = fields.Boolean(default=False, string="Is Amendment",
                                   help="Take decision that, this agreement is amendment.")
@@ -67,11 +68,10 @@ class VendorAgreement(models.Model):
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
 
-
-    @api.depends('adjusted_amount','advance_amount')
+    @api.depends('adjusted_amount', 'advance_amount')
     def _compute_is_remaining(self):
         for record in self:
-            if record.adjusted_amount and record.advance_amount and record.adjusted_amount>=record.advance_amount:
+            if record.adjusted_amount and record.advance_amount and record.adjusted_amount >= record.advance_amount:
                 record.is_remaining = False
             else:
                 record.is_remaining = True
@@ -93,7 +93,7 @@ class VendorAgreement(models.Model):
         elif self.start_date >= self.end_date:
             raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
-    @api.constrains('pro_advance_amount','adjustment_value','service_value')
+    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value')
     def check_pro_advance_amount(self):
         if self.pro_advance_amount or self.adjustment_value or self.service_value:
             if self.pro_advance_amount < 0:
@@ -122,21 +122,18 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'amount': self.advance_amount-self.total_payment_amount or False,
+            'context': {'amount': self.advance_amount - self.total_payment_amount or False,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
                         },
         }
-
 
     @api.one
     def action_confirm(self):
         self.state = 'confirm'
 
-
     @api.one
     def action_validate(self):
         self.state = 'done'
-
 
     @api.multi
     def unlink(self):
@@ -144,7 +141,6 @@ class VendorAgreement(models.Model):
             if rec.state != 'draft':
                 raise UserError(_('You cannot delete a record which is not draft state!'))
         return super(VendorAgreement, self).unlink()
-
 
     @api.multi
     def action_amendment(self):
@@ -167,7 +163,6 @@ class VendorAgreement(models.Model):
         }
         return result
 
-
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
@@ -180,4 +175,4 @@ class VendorAgreement(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    agreement_id = fields.Many2one('agreement',copy=False)
+    agreement_id = fields.Many2one('agreement', copy=False)
