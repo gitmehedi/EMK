@@ -164,7 +164,7 @@ class TdsVendorChallan(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'deposited')]
+        return [('state', '=', 'draft')]
 
 
 class TdsVendorChallanLine(models.Model):
