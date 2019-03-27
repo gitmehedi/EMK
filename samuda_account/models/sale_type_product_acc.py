@@ -1,32 +1,30 @@
-from odoo import models, fields, api
+from odoo import api, fields, models, exceptions, _
 
 
 class SaleTypeProductAccount(models.Model):
     _name = 'sale.type.product.account'
 
-    # product_parent_id = fields.Many2one('product.template', default=lambda self: self.env.context.get('id'))
-    #
-    # product_id = fields.Many2one('product.product', string='Product', domain="[('product_tmpl_id','=',product_parent_id)]")
 
-
-    product_parent_id = fields.Many2one('product.template')
-
+    parent_id = fields.Many2one(comodel_name='product.template', ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product')
-
     account_id = fields.Many2one('account.account', string='Account', required=True)
     sale_order_type_id = fields.Many2one('sale.order.type', string='Sale Order Type', required=True)
 
-    @api.onchange('product_id')
-    def _onchange_product_parent_id(self):
-        domain_id = self.env['product.product'].search([('product_tmpl_id', '=', 9)]).ids
+    _sql_constraints = [
+        ('unique_product_id', 'unique(product_id, sale_order_type_id)','Warning!!: This "Product and Sale Order Type" is already in use.'),
+        ('unique_account_id', 'unique(account_id)','Warning!!: This "Account" is already exists.'),
+    ]
 
-        return {'domain': {'product_id': [('id', 'in', domain_id)]}}
+
+    # @api.onchange('product_id')
+    # def _onchange_product_parent_id(self):
+    #     domain_id = self.env['product.product'].search([('product_tmpl_id', '=', self.id)]).ids
+    #
+    #     return {'domain': {'product_id': [('id', 'in', domain_id)]}}
 
 
 class ProductProduct(models.Model):
     _inherit = 'product.template'
 
-    sale_type_account_ids = fields.One2many('sale.type.product.account', 'product_parent_id',
+    sale_type_account_ids = fields.One2many('sale.type.product.account', 'parent_id',
                                             string='Sale Product Account')
-
-
