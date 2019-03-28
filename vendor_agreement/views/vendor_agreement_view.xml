@@ -66,32 +66,34 @@
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
                                     <field name="start_date"/>
                                     <field name="end_date"/>
-                                    <field name="pro_advance_amount"/>
+                                    <field name="company_id" groups="base.group_multi_company"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="account_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="is_remaining" invisible="1"/>
                                 </group>
                                 <group name="right">
                                     <field name="agreement_type" widget="radio" invisible="1"/>
                                     <field name="code" invisible="1"/>
+                                    <field name="pro_advance_amount"/>
+                                    <field name="advance_amount"/>
                                     <field name="adjustment_value"/>
                                     <field name="service_value"/>
-                                    <field name="company_id" groups="base.group_multi_company"
-                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="advance_amount"/>
                                     <field name="adjusted_amount"/>
-                                    <field name="is_remaining" invisible="1"/>
                                 </group>
                             </group>
                             <notebook>
                                 <page string="Notes">
                                     <field name="description"/>
                                 </page>
-                                <page string="Accounting">
-                                    <group>
-                                        <group>
-                                            <field name="account_id"
-                                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                        </group>
-                                    </group>
-                                </page>
+                                <!--<page string="Accounting">-->
+                                    <!--<group>-->
+                                        <!--<group>-->
+                                            <!--<field name="account_id"-->
+                                                   <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
+                                        <!--</group>-->
+                                    <!--</group>-->
+                                <!--</page>-->
                                 <page string="Invoices" class="oe_page_title"
                                       attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
                                     <group string="Vendor Bills" name="in_invoices">

@@ -26,32 +26,36 @@ class VendorAgreement(models.Model):
         domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
         states={'draft': [('readonly', False)]})
     product_id = fields.Many2one('product.product', string='Service', required=True, readonly=True,
-                                 domain=[('type', '=', 'service')],
-                                 track_visibility='onchange', states={'draft': [('readonly', False)]})
+                                 domain=[('type', '=', 'service')],track_visibility='onchange',
+                                 states={'draft': [('readonly', False)]},
+                                 help = "Agreement Service")
     start_date = fields.Date(string='Start Date', default=fields.Date.today(), required=True, readonly=True,
-                             track_visibility='onchange',
-                             states={'draft': [('readonly', False)]})
+                             track_visibility='onchange',states={'draft': [('readonly', False)]})
     end_date = fields.Date(string='End Date', required=True, readonly=True, track_visibility='onchange',
                            states={'draft': [('readonly', False)]})
-    pro_advance_amount = fields.Float(string="Proposed Advance Amount", required=True, readonly=True,
-                                      track_visibility='onchange', states={'draft': [('readonly', False)]})
+    pro_advance_amount = fields.Float(string="Proposed Amount", required=True, readonly=True,
+                                      track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                      help = "Proposed advance amount. Initially proposed amount raise by vendor")
     adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
-                                    track_visibility='onchange', states={'draft': [('readonly', False)]})
+                                    track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                    help = "Adjustment amount which will be adjust in bill")
     service_value = fields.Float(string="Service Value", required=True, readonly=True,
-                                 track_visibility='onchange', states={'draft': [('readonly', False)]})
-    advance_amount = fields.Float(string="Advance Amount", track_visibility='onchange')
-    adjusted_amount = fields.Float(string="Adjusted Amount", track_visibility='onchange')
+                                 track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                 help = "Service value.")
+    advance_amount = fields.Float(string="Advance Amount",required=True,readonly=True,states={'draft': [('readonly', False)]},
+                                  track_visibility='onchange',help = "Finally granted advance amount.")
+    adjusted_amount = fields.Float(string="Adjusted Amount",readonly=True, states={'draft': [('readonly', False)]},
+                                   track_visibility='onchange',help = "Total amount which are already adjusted in bill.")
     account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
-                                 track_visibility='onchange', states={'draft': [('readonly', False)]})
+                                 track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                 help = "Account for the agreement.")
     acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
                                         ondelete='restrict')
     description = fields.Text('Notes', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one(
-        'res.company', string='Company', readonly=True, track_visibility='onchange',
-        states={'draft': [('readonly', False)]},
-        default=lambda self: self.env['res.company']._company_default_get(
-            'agreement'))
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, track_visibility='onchange',
+                                 states={'draft': [('readonly', False)]},
+                                 default=lambda self: self.env['res.company']._company_default_get('agreement'))
 
     state = fields.Selection([
         ('draft', "Draft"),
