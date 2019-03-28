@@ -79,6 +79,13 @@
             sequence="20"
             groups="base.group_system"/>
 
+    <menuitem
+            id="account.account_analytic_tag_menu"
+            name="Analytic Accounts Tags"
+            parent="account.menu_analytic_accounting"
+            action="analytic.account_analytic_tag_action"
+            groups="mtbl_access.group_mtbl_sys_admin"/>
+
     <!--<menuitem-->
             <!--id="account.menu_account_config"-->
             <!--name="Settings" parent="account.menu_finance_configuration"-->

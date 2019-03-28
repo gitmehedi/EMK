@@ -12,7 +12,14 @@
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 </xpath>
+                <xpath expr="//field[@name='operating_unit_ids']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                </xpath>
             </field>
         </record>
+
     </data>
 </odoo>

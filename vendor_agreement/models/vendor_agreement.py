@@ -25,14 +25,14 @@ class VendorAgreement(models.Model):
         'res.partner', string='Partner', ondelete='restrict', required=True, track_visibility='onchange',
         domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
         states={'draft': [('readonly', False)]})
-    product_id = fields.Many2one('product.product', string='Product/Service', required=True, readonly=True,
+    product_id = fields.Many2one('product.product', string='Service', required=True, readonly=True,
                                  domain=[('type', '=', 'service')],
                                  track_visibility='onchange', states={'draft': [('readonly', False)]})
     start_date = fields.Date(string='Start Date', default=fields.Date.today(), required=True, readonly=True,
                              track_visibility='onchange',
                              states={'draft': [('readonly', False)]})
     end_date = fields.Date(string='End Date', required=True, readonly=True, track_visibility='onchange',
-                           default=fields.Date.today(), states={'draft': [('readonly', False)]})
+                           states={'draft': [('readonly', False)]})
     pro_advance_amount = fields.Float(string="Proposed Advance Amount", required=True, readonly=True,
                                       track_visibility='onchange', states={'draft': [('readonly', False)]})
     adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
