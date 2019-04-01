@@ -53,7 +53,7 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="operating_unit_id"/>
+								<field name="operating_unit_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
 								<field name="connection_type" placeholder="Please Select"/>
 								<field name="last_update"/>
 								<field name="duty_date_set_last_update"/>
@@ -115,7 +115,6 @@
 
 		<menuitem id="menu_hr_attendance_detail_config" name="Device Configuration" parent="hr_attendance.menu_hr_attendance_settings"
 					action="hr_attendance_device_detail_action" />
-
 
 	</data>
 </openerp>

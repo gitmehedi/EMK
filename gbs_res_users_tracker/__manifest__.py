@@ -10,7 +10,7 @@
         'base_user_role'
     ],
     'data': [
-        'views/res_user_inherited_views.xml'
+        'views/res_user_inherited_views.xml',
     ],
 
     'description':

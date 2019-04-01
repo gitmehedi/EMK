@@ -59,7 +59,12 @@
                                                 <span t-esc="l['name']"/>
                                                 <br/>
                                                 H.S Code:
-                                                <span t-esc="l['hs_code']"/>
+                                                <t t-if="l['hs_code']">
+                                                    <span t-esc="l['hs_code']"/>
+                                                    </t>
+                                                <t t-else="">
+                                                    N/A
+                                                </t>
                                             </td>
                                             <td class="v-align-middle">
                                                 <span t-esc="l['quantity']"/>
@@ -127,6 +132,9 @@
                                             <t t-if="data['invoice_number_dummy']">
                                                <strong t-esc="data['invoice_number_dummy']"/>
                                             </t>
+                                            <t t-else="">
+                                                <b>N/A</b>
+                                            </t>
                                         </td>
                                         <td class="w50">
                                             Date:
@@ -134,14 +142,19 @@
                                                 <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
                                             </t>
                                             <t t-else="">
-                                                N/A
+                                                <b>N/A</b>
                                             </t>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="w50">
                                             BL No.:
-                                            <strong t-esc="data['truck_receipt_no']"/>
+                                            <t t-if="data['truck_receipt_no']">
+                                                <strong t-esc="data['truck_receipt_no']"/>
+                                            </t>
+                                            <t t-else="">
+                                                <b>N/A</b>
+                                            </t>
                                         </td>
                                         <td class="w50">
                                             Date:
@@ -149,7 +162,7 @@
                                                 <strong t-esc="data['bl_date']"/>
                                             </t>
                                             <t t-else="">
-                                                N/A
+                                                <b>N/A</b>
                                             </t>
                                         </td>
                                     </tr>
@@ -161,10 +174,9 @@
 
                             <div class="mb-25">
                                 <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND
-                                    HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>,<strong
+                                    HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>, <strong
                                             t-esc="data['discharge_port_country_id']"/>. FROM <strong
-                                            t-esc="data['landing_port']"/>,
-                                    <strong t-esc="data['landing_port_country_id']"/>
+                                            t-esc="data['landing_port']"/>, <strong t-esc="data['landing_port_country_id']"/>
                                 </p>
                             </div>
 

@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <record id="view_users_form_inherited1" model="ir.ui.view">
+        <record id="view_users_form1" model="ir.ui.view">
             <field name="name">res.users.form.view1</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
@@ -31,6 +31,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </odoo>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="date_range.date_range_comp_rule" model="ir.rule">
-        <field name="active" eval="False"/>
+    <record model="res.groups" id="group_manage_user">
+        <field name="name">Manage User</field>
     </record>
 
-    <record id="date_range.date_range_type_comp_rule" model="ir.rule">
-        <field name="active" eval="False"/>
+    <record model="res.groups" id="group_manage_attendance_device">
+        <field name="name">Manage Attendance Device</field>
     </record>
 
 </odoo>

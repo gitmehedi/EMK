@@ -58,7 +58,7 @@
 
                                 <p class="mb-20">
                                     <b>
-                                        <t t-if="data['insurance_number'] or data['insurance_policy_date']">(</t><t t-if="data['insurance_number']">INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/></t>,
+                                        <t t-if="data['insurance_number'] or data['insurance_policy_date']">(</t><t t-if="data['insurance_number']">INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>,</t>
                                         <t t-if="data['insurance_policy_date']"> DATE: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/></t><t t-if="data['insurance_number'] or data['insurance_policy_date']">)</t>
                                     </b>
                                 </p>
@@ -164,7 +164,12 @@
                                         <td>H.S.CODE   </td>
                                         <td>
                                             <t t-foreach="lists" t-as="l">
-                                                <strong t-esc="l['hs_code']"/>
+                                                <t t-if="l['hs_code']">
+                                                    <strong t-esc="l['hs_code']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <b>N/A</b>
+                                                </t>
                                             </t>
                                         </td>
                                     </tr>
@@ -174,24 +179,30 @@
                                             <strong t-esc="data['second_party_applicant']"/>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>BL No.   </td>
-                                        <td>
-                                            <strong t-esc="data['truck_receipt_no']"/> <t t-if="data['bl_date']"><b>Date: </b><strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/></t>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>CONTAINER No.   </td>
-                                        <td>
-                                            <strong t-esc="data['container_no']"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>LOADING/CARRYING VESSEL   </td>
-                                        <td>
-                                            <strong t-esc="data['truck_receipt_no']"/>
-                                        </td>
-                                    </tr>
+                                    <t t-if="data['truck_receipt_no']">
+                                        <tr>
+                                            <td>BL No.   </td>
+                                            <td>
+                                                <strong t-esc="data['truck_receipt_no']"/> <t t-if="data['bl_date']"><b>Date: </b><strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/></t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data['container_no']">
+                                        <tr>
+                                            <td>CONTAINER No.   </td>
+                                            <td>
+                                                <strong t-esc="data['container_no']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data['truck_receipt_no']">
+                                        <tr>
+                                            <td>LOADING/CARRYING VESSEL   </td>
+                                            <td>
+                                                <strong t-esc="data['truck_receipt_no']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
                                     <t t-if="data['etd_date']">
                                         <tr>
                                             <td>ETD <span t-esc="data['landing_port']"/>, <span t-esc="data['discharge_port_country_id']"/>   </td>
