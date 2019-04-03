@@ -259,8 +259,12 @@ class ServerFileProcess(models.Model):
     @api.multi
     def format_data(self, date):
         if len(date) == 6:
-            data = "{0}-{1}-{2} {3}:{4}:{5}".format(date[0], date[1], date[2], date[3], date[4], date[5])
-            date_con = datetime.strptime(data, '%m-%d-%Y %H:%M:%S')
+            try:
+                data = "{0}-{1}-{2} {3}:{4}:{5}".format(date[0], date[1], date[2], date[3], date[4], date[5])
+                date_con = datetime.strptime(data, '%m-%d-%Y %H:%M:%S')
+            except Exception:
+                date_con = False
+
             if date_con:
                 return date_con
         return None
@@ -283,103 +287,119 @@ class ServerFileProcess(models.Model):
 
         with open(source_path, 'r') as file_ins:
             moves = {}
+            index = 0
             for worksheet_index in file_ins:
-                index = worksheet_index.index(worksheet_index) + 1
-                rec = self.data_mapping(worksheet_index)
+                index += 1
+                if len(worksheet_index)>2:
 
-                journal_no = rec['JOURNAL-NBR']
-                journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
-                if journal_no not in moves:
-                    moves[journal_no] = {
-                        'journal_id': journal.id,
-                        'date': rec['POSTING-DATE'],
-                        'line_ids': [],
-                    }
+                    rec = self.data_mapping(worksheet_index)
 
-                name = rec['DESC-TEXT-24'].strip()
-                if not name:
-                    errors.append(
-                        {'line_no': index, 'details': 'DESC-TEXT-24 [{0}] has invalid value'.format(name)})
+                    journal_no = rec['JOURNAL-NBR']
+                    journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
+                    if journal_no not in moves:
+                        moves[journal_no] = {
+                            'journal_id': journal.id,
+                            'date': rec['POSTING-DATE'],
+                            'line_ids': [],
+                        }
 
-                amount = float(rec['LCY-AMT'][:14] + '.' + rec['LCY-AMT'][14:17])
-                if not amount:
-                    errors.append(
-                        {'line_no': index, 'details': 'LCY-AMT [{0}] has invalid value'.format(amount)})
+                    name = rec['DESC-TEXT-24'].strip()
+                    if not name:
+                        errors.append(
+                            {'line_no': index, 'details': 'DESC-TEXT-24 [{0}] has invalid value'.format(name)})
 
-                branch = rec['GL-CLASS-CODE']['BRANCH']
-                branch_id = self.env['operating.unit'].search([('code', '=', branch)])
-                if not branch_id:
-                    errors.append({'line_no': index, 'details': 'BRANCH [{0}] has invalid value'.format(branch)})
+                    amount = float(rec['LCY-AMT'][:14] + '.' + rec['LCY-AMT'][14:17])
+                    if not amount:
+                        errors.append(
+                            {'line_no': index, 'details': 'LCY-AMT [{0}] has invalid value'.format(amount)})
 
-                currency = rec['GL-CLASS-CODE']['CURRENCY']
-                currency_id = self.env['res.currency'].search([('code', '=', currency)])
-                if not currency_id:
-                    errors.append({'line_no': index, 'details': 'CURRENCY [{0}]  has invalid value'.format(currency)})
+                    posting_date = rec['POSTING-DATE']
+                    if not posting_date:
+                        errors.append({'line_no': index, 'details': 'POSTING-DATE has invalid value'})
 
-                segment = rec['GL-CLASS-CODE']['SEGMENT']
-                segment_id = self.env['segment'].search([('code', '=', segment)])
-                if not segment_id:
-                    errors.append({'line_no': index, 'details': 'SEGMENT [{0}]  has invalid value'.format(segment)})
+                    system_date = rec['SYSTEM-DATE']
+                    if not system_date:
+                        errors.append({'line_no': index, 'details': 'SYSTEM-DATE has invalid value'})
 
-                ac = rec['GL-CLASS-CODE']['AC']
-                ac_id = self.env['acquiring.channel'].search([('code', '=', ac)])
-                if not ac_id:
-                    errors.append({'line_no': index, 'details': 'AC [{0}]  has invalid value'.format(ac)})
+                    trans_date = rec['TRANS-DATE']
+                    if not trans_date:
+                        errors.append({'line_no': index, 'details': 'TRANS-DATE has invalid value'})
 
-                sc = rec['GL-CLASS-CODE']['SC']
-                sc_id = self.env['servicing.channel'].search([('code', '=', sc)])
-                if not sc_id:
-                    errors.append({'line_no': index, 'details': 'SC [{0}]  has invalid value'.format(sc)})
+                    branch = rec['GL-CLASS-CODE']['BRANCH']
+                    branch_id = self.env['operating.unit'].search([('code', '=', branch)])
+                    if not branch_id:
+                        errors.append({'line_no': index, 'details': 'BRANCH [{0}] has invalid value'.format(branch)})
 
-                cost_centre = rec['GL-CLASS-CODE']['COST_CENTRE']
-                cost_centre_id = self.env['account.analytic.account'].search([('name', '=', cost_centre)])
-                if not cost_centre_id:
-                    errors.append(
-                        {'line_no': index, 'details': 'COST_CENTRE [{0}]  has invalid value'.format(cost_centre)})
+                    currency = rec['GL-CLASS-CODE']['CURRENCY']
+                    currency_id = self.env['res.currency'].search([('code', '=', currency)])
+                    if not currency_id:
+                        errors.append(
+                            {'line_no': index, 'details': 'CURRENCY [{0}]  has invalid value'.format(currency)})
 
-                if rec['GL-CLASS-CODE']['COMP_1'] and rec['GL-CLASS-CODE']['COMP_2']:
-                    comp_1 = rec['GL-CLASS-CODE']['COMP_1']
-                    comp_2 = rec['GL-CLASS-CODE']['COMP_2']
+                    segment = rec['GL-CLASS-CODE']['SEGMENT']
+                    segment_id = self.env['segment'].search([('code', '=', segment)])
+                    if not segment_id:
+                        errors.append({'line_no': index, 'details': 'SEGMENT [{0}]  has invalid value'.format(segment)})
 
-                    account = comp_1 + comp_2
-                    account_id = self.env['account.account'].search([('code', '=', account)])
-                    if not account_id:
-                        errors.append({'line_no': index,
-                                       'details': 'Combination of COMP_1 and COMP_2 [{0}] has invalid value'.format(
-                                           account)})
+                    ac = rec['GL-CLASS-CODE']['AC']
+                    ac_id = self.env['acquiring.channel'].search([('code', '=', ac)])
+                    if not ac_id:
+                        errors.append({'line_no': index, 'details': 'AC [{0}]  has invalid value'.format(ac)})
 
-                if rec['JOURNAL-SEQ'] == '01':
-                    line = {
-                        'name': name,
-                        'account_id': account_id.id,
-                        'credit': amount,
-                        'debit': 0.0,
-                        'journal_id': journal.id,
-                        'analytic_account_id': cost_centre_id.id,
-                        'currency_id': currency_id.id,
-                        'segment_id': segment_id.id,
-                        'acquiring_channel_id': ac_id.id,
-                        'servicing_channel_id': sc_id.id,
-                        'operating_unit_id': branch_id.id,
-                    }
-                    moves[journal_no]['line_ids'].append((0, 0, line))
+                    sc = rec['GL-CLASS-CODE']['SC']
+                    sc_id = self.env['servicing.channel'].search([('code', '=', sc)])
+                    if not sc_id:
+                        errors.append({'line_no': index, 'details': 'SC [{0}]  has invalid value'.format(sc)})
 
-                if rec['JOURNAL-SEQ'] == '02':
-                    line = {
-                        'name': name,
-                        'account_id': account_id.id,
-                        'credit': 0.0,
-                        'debit': amount,
-                        'journal_id': journal.id,
-                        'analytic_account_id': cost_centre_id.id,
-                        'currency_id': currency_id.id,
-                        'segment_id': segment_id.id,
-                        'acquiring_channel_id': ac_id.id,
-                        'servicing_channel_id': sc_id.id,
-                        'operating_unit_id': branch_id.id,
-                    }
+                    cost_centre = rec['GL-CLASS-CODE']['COST_CENTRE']
+                    cost_centre_id = self.env['account.analytic.account'].search([('name', '=', cost_centre)])
+                    if not cost_centre_id:
+                        errors.append(
+                            {'line_no': index, 'details': 'COST_CENTRE [{0}]  has invalid value'.format(cost_centre)})
 
-                    moves[journal_no]['line_ids'].append((0, 0, line))
+                    if rec['GL-CLASS-CODE']['COMP_1'] and rec['GL-CLASS-CODE']['COMP_2']:
+                        comp_1 = rec['GL-CLASS-CODE']['COMP_1']
+                        comp_2 = rec['GL-CLASS-CODE']['COMP_2']
+
+                        account = comp_1 + comp_2
+                        account_id = self.env['account.account'].search([('code', '=', account)])
+                        if not account_id:
+                            errors.append({'line_no': index,
+                                           'details': 'Combination of COMP_1 and COMP_2 [{0}] has invalid value'.format(
+                                               account)})
+
+                    if rec['JOURNAL-SEQ'] == '01':
+                        line = {
+                            'name': name,
+                            'account_id': account_id.id,
+                            'credit': amount,
+                            'debit': 0.0,
+                            'journal_id': journal.id,
+                            'analytic_account_id': cost_centre_id.id,
+                            'currency_id': currency_id.id,
+                            'segment_id': segment_id.id,
+                            'acquiring_channel_id': ac_id.id,
+                            'servicing_channel_id': sc_id.id,
+                            'operating_unit_id': branch_id.id,
+                        }
+                        moves[journal_no]['line_ids'].append((0, 0, line))
+
+                    if rec['JOURNAL-SEQ'] == '02':
+                        line = {
+                            'name': name,
+                            'account_id': account_id.id,
+                            'credit': 0.0,
+                            'debit': amount,
+                            'journal_id': journal.id,
+                            'analytic_account_id': cost_centre_id.id,
+                            'currency_id': currency_id.id,
+                            'segment_id': segment_id.id,
+                            'acquiring_channel_id': ac_id.id,
+                            'servicing_channel_id': sc_id.id,
+                            'operating_unit_id': branch_id.id,
+                        }
+
+                        moves[journal_no]['line_ids'].append((0, 0, line))
 
             if len(errors) > 0:
                 self.env['server.file.error'].create({'file_path': source_path,
