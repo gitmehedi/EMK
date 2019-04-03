@@ -6,7 +6,7 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
     _name = 'agreement.payment.instruction.wizard'
 
     agreement_id = fields.Many2one('agreement', default=lambda self: self.env.context.get('active_id'),
-                                 string="Invoice", copy=False, readonly=True)
+                                 string="Agreement", copy=False, readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.context.get('currency_id'))
     amount = fields.Float(string='Amount', required=True,
