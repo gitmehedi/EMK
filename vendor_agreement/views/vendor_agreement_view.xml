@@ -84,9 +84,6 @@
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="service_value" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
-                                    <field name="company_id" groups="base.group_multi_company"
-                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-
                                     <field name="adjusted_amount" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="is_remaining" invisible="1"/>

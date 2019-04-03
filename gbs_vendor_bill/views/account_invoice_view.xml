@@ -120,6 +120,12 @@
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="replace">
                 <field name="amount" sum="Total"/>
             </xpath>
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_analytic_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
         </field>
     </record>
 

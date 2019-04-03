@@ -1,0 +1,2 @@
+name,active,VAT Scope,VAT Computation,VAT Account,VAT Account on Refunds,Label on Invoices,VAT Group,Include in Analytic Cost,Amount
+Tax 5.00%,True,Purchases,Percentage of Price,Tax Paid,Tax Paid,5.00%,Taxes,TRUE,5

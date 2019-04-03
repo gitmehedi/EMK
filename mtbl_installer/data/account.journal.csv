@@ -1,0 +1,7 @@
+Short Code,Default Credit Account/Display Name,Default Debit Account/Display Name,Display Name,Type,Entry Sequence/Display Name,Show journal on dashboard
+INV,200000 Product Sales,200000 Product Sales,Customer Invoices (USD),Sale,Customer Invoices,True
+BILL,220000 Expenses,220000 Expenses,Vendor Bills (USD),Purchase,Vendor Bills,True
+MISC,,,Miscellaneous Operations (USD),Miscellaneous,Miscellaneous Operations,False
+EXCH,201000 Foreign Exchange Gain,211000 Foreign Exchange Loss,Exchange Difference (USD),Miscellaneous,Exchange Difference,False
+BNK1,101401 Bank,101401 Bank,Bank (USD),Bank,Bank,True
+CSH1,101501 Cash,101501 Cash,Cash (USD),Cash,Cash,True
