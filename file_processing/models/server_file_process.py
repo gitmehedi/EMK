@@ -315,7 +315,7 @@ class ServerFileProcess(models.Model):
 
                     posting_date = rec['POSTING-DATE']
                     if not posting_date:
-                        errors.append({'line_no': index, 'details': 'POSTING-DATE has invalid value'})
+                        errors.append({'line_no': index, 'details': 'POSTING-DATE or POSTING-TIME has invalid value'})
 
                     system_date = rec['SYSTEM-DATE']
                     if not system_date:
