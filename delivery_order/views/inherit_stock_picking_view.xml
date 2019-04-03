@@ -17,6 +17,13 @@
 
                 <xpath expr="//field[@name='vat_challan_id']" position="after">
                     <field name="pack_type" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="region_type" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="delivery_mode" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='location_dest_id']" position="after">
+                    <field name="vat_mode" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="bonded_mode" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="after">
@@ -50,6 +57,10 @@
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="lc_id" options="{'no_open': True, 'no_create': True}"
                            attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="issue_date" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="expiry_date" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="shipment_date" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="bank_code" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="replace">
                     <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>

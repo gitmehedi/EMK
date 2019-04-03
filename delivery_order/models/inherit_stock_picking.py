@@ -11,11 +11,24 @@ class InheritStockPicking(models.Model):
     _order = 'id DESC'
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
-
-    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True)
-
+    delivery_mode = fields.Selection([('cnf', 'C&F'), ('fob', 'FOB')],compute="_calculate_delivery_mode", store=False,
+                                     string='Delivery Mode',readonly=True)
+    vat_mode = fields.Selection([('vat', 'VAT'), ('non_vat', 'Non VAT')], string='Is VAT Applicable',
+                                compute="_calculate_vat_mode", store=False,readonly=True)
+    bonded_mode = fields.Selection([('bonded', 'Bonded'), ('non_bonded', 'Non Bonded')], readonly=True,
+                                   compute="_calculate_bonded_mode", store=False,
+                                   string='Is Bonded Applicable')
     lc_id = fields.Many2one('letter.credit', string='L/C No', readonly=True, compute="_calculate_lc_id", store=False)
-
+    region_type = fields.Selection([('local', "Local"), ('foreign', "Foreign")], readonly=True, compute="_calculate_region_type",store=False)
+    expiry_date = fields.Date('Expiry Date',readonly=True,
+                              compute="_calculate_expiry_date", store=False)
+    shipment_date = fields.Date('Shipment Date',readonly=True,
+                                compute="_calculate_shipment_date", store=False)
+    issue_date = fields.Date('LC Date', readonly=True,
+                             compute="_calculate_issue_date", store=False)
+    bank_code = fields.Char(string='Bank',readonly=True,
+                            compute="_calculate_bank_code", store=False)
+    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True)
     show_transport_info = fields.Boolean(string='Show Transport Info', default=False,
                                          states={'partially_available': [('readonly', True)],
                                                  'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
@@ -58,7 +71,7 @@ class InheritStockPicking(models.Model):
                                  states={'assigned': [('readonly', True)], 'partially_available': [('readonly', True)],
                                          'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                          'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    min_date = fields.Datetime('Scheduled Date', compute='_compute_dates', inverse='_set_min_date', store=True,
+    min_date = fields.Datetime('Delivery Order Date', compute='_compute_dates', inverse='_set_min_date', store=True,
                                index=True, track_visibility='onchange',
                                states={'assigned': [('readonly', True)], 'partially_available': [('readonly', True)],
                                        'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
@@ -133,6 +146,8 @@ class InheritStockPicking(models.Model):
                                                                             'done': [('readonly', True)],
                                                                             'cancel': [('readonly', True)]})
 
+
+
     # Inherit Validate Button function
     @api.multi
     def do_new_transfer(self):
@@ -188,6 +203,46 @@ class InheritStockPicking(models.Model):
     def _calculate_lc_id(self):
         for stock_lc in self:
             stock_lc.lc_id = stock_lc.delivery_order_id.sale_order_id.lc_id.id
+
+    @api.multi
+    def _calculate_region_type(self):
+        for stock_picking in self:
+            stock_picking.region_type = stock_picking.delivery_order_id.sale_order_id.region_type
+
+    @api.multi
+    def _calculate_delivery_mode(self):
+        for sp in self:
+            sp.delivery_mode = sp.delivery_order_id.sale_order_id.delivery_mode
+
+    @api.multi
+    def _calculate_vat_mode(self):
+        for sp in self:
+            sp.vat_mode = sp.delivery_order_id.sale_order_id.vat_mode
+
+    @api.multi
+    def _calculate_bonded_mode(self):
+        for sp in self:
+            sp.bonded_mode = sp.delivery_order_id.sale_order_id.bonded_mode
+
+    @api.multi
+    def _calculate_expiry_date(self):
+        for sp in self:
+            sp.expiry_date = sp.delivery_order_id.sale_order_id.lc_id.expiry_date
+
+    @api.multi
+    def _calculate_issue_date(self):
+        for sp in self:
+            sp.issue_date = sp.delivery_order_id.sale_order_id.lc_id.issue_date
+
+    @api.multi
+    def _calculate_shipment_date(self):
+        for sp in self:
+            sp.shipment_date = sp.delivery_order_id.sale_order_id.lc_id.shipment_date
+
+    @api.multi
+    def _calculate_bank_code(self):
+        for sp in self:
+            sp.bank_code = sp.delivery_order_id.sale_order_id.lc_id.bank_code
 
     @api.multi
     def do_print_delivery_challan(self):

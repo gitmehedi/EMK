@@ -8,25 +8,25 @@
             <field name="inherit_id" ref="gbs_hr_device_config.attendance_device_detail_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet/group/group[2]" position="attributes">
-                    <attribute name="groups">gbs_samuda_hr_access.group_manage_attendance_device</attribute>
+                    <attribute name="groups">gbs_samuda_hr_access.group_manage_attendance_device,base.group_system</attribute>
                 </xpath>
                 <xpath expr="//sheet/notebook" position="attributes">
-                    <attribute name="groups">gbs_samuda_hr_access.group_manage_attendance_device</attribute>
+                    <attribute name="groups">gbs_samuda_hr_access.group_manage_attendance_device,base.group_system</attribute>
                 </xpath>
             </field>
         </record>
 
         <menuitem id="gbs_hr_device_config.menu_hr_attendance_detail_config" name="Device Configuration" parent="hr_attendance.menu_hr_attendance_settings"
-					action="gbs_hr_device_config.hr_attendance_device_detail_action" groups="hr_attendance.group_hr_attendance_user,gbs_samuda_hr_access.group_manage_attendance_device"/>
-		<menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="hr_attendance.menu_hr_attendance_root"
-        sequence="99" action="hr_attendance.action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_user,gbs_samuda_hr_access.group_manage_attendance_device"/>
+					action="gbs_hr_device_config.hr_attendance_device_detail_action" groups="hr_attendance.group_hr_attendance_user,gbs_samuda_hr_access.group_manage_attendance_device,base.group_system"/>
+		<!--<menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="hr_attendance.menu_hr_attendance_root"-->
+        <!--sequence="99" action="hr_attendance.action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_user,gbs_samuda_hr_access.group_manage_attendance_device"/>-->
 
 
         <menuitem name="Settings"
                   id="base.menu_administration"
                   web_icon="base,static/description/settings.png"
                   sequence="500"
-                  groups="base.group_erp_manager,gbs_samuda_hr_access.group_manage_user"/>
+                  groups="base.group_erp_manager,gbs_samuda_hr_access.group_manage_user,base.group_system"/>
 
         <menuitem id="base_user_role.menu_action_res_users_role_tree"
                   parent="base.menu_users"

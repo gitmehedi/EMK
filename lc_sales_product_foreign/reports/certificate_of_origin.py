@@ -34,6 +34,8 @@ class BeneficiaryCertificate(models.AbstractModel):
             'currency_id': shipment_obj.lc_id.currency_id.name,
             'second_party_applicant': shipment_obj.lc_id.second_party_applicant.name,
             'truck_receipt_no': shipment_obj.truck_receipt_no,
+            'model_type': shipment_obj.lc_id.model_type,
+            'sc_type': shipment_obj.lc_id.sc_type,
             'bl_date': shipment_obj.bl_date
         }
         uom = []

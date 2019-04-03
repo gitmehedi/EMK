@@ -350,6 +350,15 @@
                                attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale')),('fields_readonly','=', True)]}"/>
                     </xpath>
 
+                    <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                        <field name="delivery_mode"
+                               attrs="{'invisible': [('region_type', '==', 'foreign')],'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="vat_mode" widget="radio" options="{'horizontal': true}"
+                               attrs="{'invisible': [('region_type', '==', 'foreign')],'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="bonded_mode" widget="radio" options="{'horizontal': true}"
+                               attrs="{'invisible': [('region_type', '==', 'foreign')],'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
                     <xpath expr="//field[@name='date_order']" position="replace">
                         <field name="date_order"
                                attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>

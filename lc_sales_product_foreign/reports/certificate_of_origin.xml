@@ -118,7 +118,23 @@
                                     </tr>
                                     <tr>
                                         <td class="w50">
-                                            LC No.:
+                                            <t t-if = "data['model_type'] == 'lc'">
+                                                LC No.:
+                                            </t>
+                                            <t t-elif = "data['model_type'] == 'tt'">
+                                                TT no.:
+                                            </t>
+                                            <t t-elif = "data['model_type'] == 'sales_contract'">
+                                                <t t-if = "data['sc_type'] == 'sc'">
+                                                    SC no.:
+                                                </t>
+                                                <t t-elif = "data['sc_type'] == 'pi'">
+                                                    PI no.:
+                                                </t>
+                                                <t t-elif = "data['sc_type'] == 'po'">
+                                                    PO no.:
+                                                </t>
+                                            </t>
                                             <strong t-esc="data['lc_id']"/>
                                         </td>
                                         <td class="w50">
