@@ -24,6 +24,7 @@
         "account_asset",
         "gbs_res_partner",
         "account_fam",
+        "account_category",
         "account_tds",
         "tds_vat_challan",
         "gbs_payment_instruction",
