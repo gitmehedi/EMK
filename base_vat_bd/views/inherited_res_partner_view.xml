@@ -55,7 +55,7 @@
                             <field name="debit" groups="base.group_no_one"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
-                        <group string="Fiscal Information" name="fiscal_information">
+                        <group string="Fiscal Information" name="fiscal_information" groups="base.group_system">
                             <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">

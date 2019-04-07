@@ -71,12 +71,7 @@
     <menuitem
             name='Payments'
             id='payment.root_payment_menu'
-            parent='account.menu_finance_configuration' groups="base.group_system"/>
-    <menuitem
-            action="account.action_account_payments_payable"
-            id="account.menu_action_account_payments_payable"
-            parent="account.menu_finance_payables"
-            sequence="20"
+            parent='account.menu_finance_configuration'
             groups="base.group_system"/>
 
     <menuitem
@@ -85,6 +80,12 @@
             parent="account.menu_analytic_accounting"
             action="analytic.account_analytic_tag_action"
             groups="mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem
+            action="account.action_account_fiscal_position_form"
+            id="account.menu_action_account_fiscal_position_form"
+            groups="base.group_system"
+            parent="account.account_account_menu" sequence="3"/>
 
     <!--<menuitem-->
             <!--id="account.menu_account_config"-->

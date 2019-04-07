@@ -55,23 +55,27 @@
                                             <field name="description"
                                                    attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                             <field name="tax_group_id" string="VAT Group"
-                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                                   groups="base.group_system"/>
                                             <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]"
                                                    widget="many2many_tags"
-                                                   context="{'default_applicability': 'taxes'}"/>
+                                                   context="{'default_applicability': 'taxes'}"
+                                                   groups="base.group_system"/>
                                             <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}"
                                                    groups="analytic.group_analytic_accounting"/>
                                             <field name="company_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                                    groups="base.group_multi_company"/>
-                                            <field name="active" groups="base.group_no_one"/>
+                                            <field name="active" groups="base.group_system"/>
                                         </group>
                                         <group name="advanced_booleans">
                                             <field name="price_include"
                                                    attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                             <field name="include_base_amount"
                                                    attrs="{'invisible':[('amount_type','=', 'group')]}"
-                                                   string="Affect Base of Subsequent Vat"/>
-                                            <field name="tax_adjustment" string="VAT Adjustment"/>
+                                                   string="Affect Base of Subsequent Vat"
+                                                   groups="base.group_system"/>
+                                            <field name="tax_adjustment" string="VAT Adjustment"
+                                                   groups="base.group_system"/>
                                         </group>
                                     </group>
                                 </page>
