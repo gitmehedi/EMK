@@ -20,6 +20,13 @@ class InheritStockPicking(models.Model):
                                    string='Is Bonded Applicable')
     lc_id = fields.Many2one('letter.credit', string='L/C No', readonly=True, compute="_calculate_lc_id", store=False)
     region_type = fields.Selection([('local', "Local"), ('foreign', "Foreign")], readonly=True, compute="_calculate_region_type",store=False)
+    so_type = fields.Selection([
+        ('cash', 'Cash'),
+        ('credit_sales', 'Credit'),
+        ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
+    ], string='Sales Type', readonly=True,compute="_calculate_so_type",store=False)
     expiry_date = fields.Date('Expiry Date',readonly=True,
                               compute="_calculate_expiry_date", store=False)
     shipment_date = fields.Date('Shipment Date',readonly=True,
@@ -208,6 +215,11 @@ class InheritStockPicking(models.Model):
     def _calculate_region_type(self):
         for stock_picking in self:
             stock_picking.region_type = stock_picking.delivery_order_id.sale_order_id.region_type
+
+    @api.multi
+    def _calculate_so_type(self):
+        for stock_picking in self:
+            stock_picking.so_type = stock_picking.delivery_order_id.sale_order_id.type_id.sale_order_type
 
     @api.multi
     def _calculate_delivery_mode(self):
