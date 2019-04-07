@@ -8,6 +8,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from odoo.exceptions import Warning, ValidationError
+from openerp import http
 
 
 driver = '{ODBC Driver 13 for SQL Server}'
@@ -88,6 +89,8 @@ class DeviceDetail(models.Model):
 
     @api.multi
     def action_check_connection(self):
+
+        print http.request.env['ir.config_parameter'].get_param('web.base.url')
 
         isConnect = False
         conn = None
