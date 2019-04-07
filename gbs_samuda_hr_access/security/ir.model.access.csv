@@ -2,6 +2,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 access_manage_user_res_users,access_manage_user_res_users,base.model_res_users,group_manage_user,1,1,1,1
 access_manage_user_res_users_role,access_manage_user_res_users_role,base_user_role.model_res_users_role,group_manage_user,1,1,1,1
+access_manage_user_res_partner,access_manage_res_partner,base.model_res_partner,group_manage_user,1,1,1,1
+
 access_manage_user_res_users_role_line,access_manage_user_res_users_role_line,base_user_role.model_res_users_role_line,group_manage_user,1,1,1,1
 
 access_res_groups_manage_user,res_groups_manage_user,base.model_res_groups,group_manage_user,1,1,1,1
