@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="reference" position="after" >
                 <field name="is_tds_applicable"/>
-                <field name="inapplicable_type" attrs="{'invisible':[('is_tds_applicable','=',True)]}"/>
+                <field name="inapplicable_type" attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
                 <field name="account_tds_id" invisible="1"/>
