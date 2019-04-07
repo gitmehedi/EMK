@@ -9,6 +9,7 @@
                     <field name="name" string="TDS/VAT Description"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" string="Vendor"/>
+                    <field name="operating_unit_id" string="Branch"/>
                     <field name="credit" sum="Total Credit" string="Amount"/>
                 </tree>
             </field>
