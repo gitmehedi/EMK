@@ -18,7 +18,7 @@ class InheritStockPicking(models.Model):
     bonded_mode = fields.Selection([('bonded', 'Bonded'), ('non_bonded', 'Non Bonded')], readonly=True,
                                    compute="_calculate_bonded_mode", store=False,
                                    string='Is Bonded Applicable')
-    lc_id = fields.Many2one('letter.credit', string='L/C No', readonly=True, compute="_calculate_lc_id", store=False)
+    lc_id = fields.Many2one('letter.credit', string='Number', readonly=True, compute="_calculate_lc_id", store=False)
     region_type = fields.Selection([('local', "Local"), ('foreign', "Foreign")], readonly=True, compute="_calculate_region_type",store=False)
     so_type = fields.Selection([
         ('cash', 'Cash'),
@@ -31,7 +31,7 @@ class InheritStockPicking(models.Model):
                               compute="_calculate_expiry_date", store=False)
     shipment_date = fields.Date('Shipment Date',readonly=True,
                                 compute="_calculate_shipment_date", store=False)
-    issue_date = fields.Date('LC Date', readonly=True,
+    issue_date = fields.Date('Date', readonly=True,
                              compute="_calculate_issue_date", store=False)
     bank_code = fields.Char(string='Bank',readonly=True,
                             compute="_calculate_bank_code", store=False)
