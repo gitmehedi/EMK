@@ -11,6 +11,16 @@
                 </xpath>
                 <xpath expr="//field[@name='currency_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_ids']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//field[@name='deprecated']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
                 </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">

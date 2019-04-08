@@ -24,6 +24,12 @@
                 <xpath expr="//field[@name='default_debit_account_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 </xpath>
+                <xpath expr="//page[@name='advanced_settings']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
             </field>
         </record>
         <record id="view_account_journal_form_ou_inherit" model="ir.ui.view">

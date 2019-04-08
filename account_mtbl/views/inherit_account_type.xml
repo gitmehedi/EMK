@@ -16,7 +16,8 @@
                                     <field name="active" />
                                 </group>
                                 <group>
-                                    <field name="include_initial_balance"/>
+                                    <field name="include_initial_balance"
+                                           groups="base.group_system"/>
                                 </group>
                             </group>
                             <separator string="Description"/>

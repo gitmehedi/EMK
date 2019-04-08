@@ -11,6 +11,7 @@ class Branch(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company', required=True, track_visibility='onchange',default=lambda self:
         self.env['res.company']._company_default_get('account.account'))
-    partner_id = fields.Many2one('res.partner', 'Partner', required=True,track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', 'Partner', required=True,default=lambda self:
+        self.env['res.company']._company_default_get('account.account'))
     branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'),('rural','Rural')],
-                                string='Branch Type', track_visibility='onchange')
+                                   string='Branch Type', track_visibility='onchange')

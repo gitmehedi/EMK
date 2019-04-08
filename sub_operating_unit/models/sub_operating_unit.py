@@ -14,7 +14,8 @@ class SubOperatingUnit(models.Model):
     active = fields.Boolean('Active', default=True, track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
                                         track_visibility='onchange')
-    partner_id = fields.Many2one('res.partner', 'Partner', required=True, track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', 'Partner', required=True,
+                                 default=lambda self: self.env['res.company']._company_default_get('account.account'))
     company_id = fields.Many2one(
         'res.company', 'Company', required=True, track_visibility='onchange',
         default=lambda self: self.env['res.company']._company_default_get('account.account'))

@@ -42,5 +42,16 @@
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.values" id="account.action_account_move_reversal">
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="name">Reverse Moves</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('account.action_view_account_move_reversal'))" />
+            <field name="key">action</field>
+            <field name="model">account.move</field>
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
     </data>
 </odoo>
