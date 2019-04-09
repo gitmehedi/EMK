@@ -51,7 +51,7 @@ class AccountInvoice(models.Model):
         if not self.date:
             self.date = fields.Date.context_today(self)
         date_range_objs = self.env['date.range'].search(
-            [('date_start', '<=', self.date), ('date_end', '>=', self.date), ('type_id.tds_year', '=', True)],
+            [('date_start', '<=', self.date), ('date_end', '>=', self.date), ('type_id.tds_year', '=', True),('active','=',True)],
             order='id DESC', limit=1)
         if date_range_objs:
             invoice_objs = self.search(
