@@ -24,7 +24,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
 
     @api.multi
     def action_validate(self):
-        for line in self.invoice_id.sudo().move_id.line_ids:
+        for line in self.invoice_id.suspend_security().move_id.line_ids:
             if line.account_id.internal_type in ('receivable', 'payable'):
                 if line.amount_residual<0:
                     val = -1

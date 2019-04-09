@@ -163,7 +163,7 @@ class AccountInvoice(models.Model):
             if len([i.is_sync for i in to_pay_invoice.payment_line_ids if not i.is_sync])>0:
                 pass
             else:
-                for line in to_pay_invoice.sudo().move_id.line_ids:
+                for line in to_pay_invoice.suspend_security().move_id.line_ids:
                     if line.account_id.internal_type in ('receivable', 'payable'):
                         line.write({'amount_residual': 0.0})
                 to_pay_invoice.write({'state': 'paid'})

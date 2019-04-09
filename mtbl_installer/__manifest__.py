@@ -15,6 +15,7 @@
         "account_fiscal_month",
         "agreement_account",
         "date_range",
+        "base_suspend_security",
         "account_type_menu",
         "account_type_inactive",
         "base_vat_bd",
