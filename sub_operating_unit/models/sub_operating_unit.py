@@ -12,7 +12,7 @@ class SubOperatingUnit(models.Model):
     name = fields.Char('Name', required=True, track_visibility='onchange')
     code = fields.Char('Code', required=True, size=3, track_visibility='onchange')
     active = fields.Boolean('Active', default=True, track_visibility='onchange')
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True,
                                         track_visibility='onchange')
     partner_id = fields.Many2one('res.partner', 'Partner', required=True,
                                  default=lambda self: self.env['res.company']._company_default_get('account.account'))

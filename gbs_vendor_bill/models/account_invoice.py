@@ -32,7 +32,7 @@ class AccountInvoice(models.Model):
         for invoice in self:
             invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
 
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',
+    operating_unit_id = fields.Many2one('operating.unit', 'Branch',
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid),

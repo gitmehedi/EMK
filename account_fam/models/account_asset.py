@@ -26,7 +26,7 @@ class AccountAssetAsset(models.Model):
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
     receive_date = fields.Date(string='Receive Date')
     asset_usage_date = fields.Date(string='Allocation Date', help='Asset Allocation/Usage Date')
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True)
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date')
     method_period = fields.Integer(string='Number of Months in a Period', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]})

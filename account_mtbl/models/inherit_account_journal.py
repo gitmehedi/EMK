@@ -9,7 +9,7 @@ class AccountJournal(models.Model):
     type = fields.Selection(track_visibility='onchange')
     currency_id = fields.Many2one(track_visibility='onchange')
     company_id = fields.Many2one(track_visibility='onchange')
-    operating_unit_id = fields.Many2one(track_visibility='onchange')
+    operating_unit_id = fields.Many2one(track_visibility='onchange',string='Branch')
     default_credit_account_id = fields.Many2one(track_visibility='onchange')
     default_debit_account_id = fields.Many2one(track_visibility='onchange')
     refund_sequence = fields.Boolean(track_visibility='onchange')
