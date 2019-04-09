@@ -126,7 +126,12 @@
                                                 </td>
                                                 <td>
                                                    <u><b>BL No.</b></u> <br/>
-                                                        <span t-esc="data['truck_receipt_no']"/><br/>
+                                                        <t t-if="data['truck_receipt_no']">
+                                                            <span t-esc="data['truck_receipt_no']"/><br/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            N/A
+                                                        </t>
                                                         <t t-if="data['bl_date']">
                                                             Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/>
                                                         </t>

@@ -37,7 +37,7 @@
 		
 		<!-- Menu Item -->
 		<menuitem id="menu_hr_manual_attendance_min_day" name="Minimum Days Restriction" parent="hr_attendance.menu_hr_attendance_settings"  
-					groups="hr.group_hr_attendance,base.group_user" sequence="7" action="hr_manual_attendance_min_day_ac" />
+					groups="hr.group_hr_attendance,base.group_system" sequence="7" action="hr_manual_attendance_min_day_ac" />
 		
 	</data>
 </odoo>

@@ -59,7 +59,12 @@
                                                 <span t-esc="l['name']"/>
                                                 <br/>
                                                 H.S Code:
-                                                <span t-esc="l['hs_code']"/>
+                                                <t t-if="l['hs_code']">
+                                                    <span t-esc="l['hs_code']"/>
+                                                    </t>
+                                                <t t-else="">
+                                                    N/A
+                                                </t>
                                             </td>
                                             <td class="v-align-middle">
                                                 <span t-esc="l['quantity']"/>
@@ -113,7 +118,23 @@
                                     </tr>
                                     <tr>
                                         <td class="w50">
-                                            LC No.:
+                                            <t t-if = "data['model_type'] == 'lc'">
+                                                LC No.:
+                                            </t>
+                                            <t t-elif = "data['model_type'] == 'tt'">
+                                                TT no.:
+                                            </t>
+                                            <t t-elif = "data['model_type'] == 'sales_contract'">
+                                                <t t-if = "data['sc_type'] == 'sc'">
+                                                    SC no.:
+                                                </t>
+                                                <t t-elif = "data['sc_type'] == 'pi'">
+                                                    PI no.:
+                                                </t>
+                                                <t t-elif = "data['sc_type'] == 'po'">
+                                                    PO no.:
+                                                </t>
+                                            </t>
                                             <strong t-esc="data['lc_id']"/>
                                         </td>
                                         <td class="w50">
@@ -127,6 +148,9 @@
                                             <t t-if="data['invoice_number_dummy']">
                                                <strong t-esc="data['invoice_number_dummy']"/>
                                             </t>
+                                            <t t-else="">
+                                                <b>N/A</b>
+                                            </t>
                                         </td>
                                         <td class="w50">
                                             Date:
@@ -134,14 +158,19 @@
                                                 <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
                                             </t>
                                             <t t-else="">
-                                                N/A
+                                                <b>N/A</b>
                                             </t>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="w50">
                                             BL No.:
-                                            <strong t-esc="data['truck_receipt_no']"/>
+                                            <t t-if="data['truck_receipt_no']">
+                                                <strong t-esc="data['truck_receipt_no']"/>
+                                            </t>
+                                            <t t-else="">
+                                                <b>N/A</b>
+                                            </t>
                                         </td>
                                         <td class="w50">
                                             Date:
@@ -149,7 +178,7 @@
                                                 <strong t-esc="data['bl_date']"/>
                                             </t>
                                             <t t-else="">
-                                                N/A
+                                                <b>N/A</b>
                                             </t>
                                         </td>
                                     </tr>
@@ -161,10 +190,9 @@
 
                             <div class="mb-25">
                                 <p>WE HEREBY DECLARE THAT THE ABOVE GOODS HAVE BEEN PRODUCED / MANUFACTURE IN BANGLADESH AND
-                                    HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>,<strong
+                                    HAVE BEEN SHIPPED TO <strong t-esc="data['discharge_port']"/>, <strong
                                             t-esc="data['discharge_port_country_id']"/>. FROM <strong
-                                            t-esc="data['landing_port']"/>,
-                                    <strong t-esc="data['landing_port_country_id']"/>
+                                            t-esc="data['landing_port']"/>, <strong t-esc="data['landing_port_country_id']"/>
                                 </p>
                             </div>
 

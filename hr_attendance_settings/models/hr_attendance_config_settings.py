@@ -25,6 +25,16 @@ class HRAttendanceConfigSettings(models.Model):
 
     time_duration = fields.Integer(size= 5, default=_get_time_duration)
 
+    @api.multi
+    def _get_server_url(self):
+        query = """select server_url from hr_attendance_config_settings order by id desc limit 1"""
+        self._cr.execute(query, tuple([]))
+        url_value = self._cr.fetchone()
+        if url_value:
+            return url_value[0]
+
+    server_url = fields.Char(default=_get_server_url)
+
     @api.model
     def create(self,vals):
         config_id = super(HRAttendanceConfigSettings, self).create( vals)

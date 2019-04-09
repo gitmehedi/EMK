@@ -49,6 +49,10 @@ class SaleOrder(models.Model):
         ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True, related='type_id.sale_order_type')
 
+    delivery_mode = fields.Selection([('cnf','C&F'),('fob','FOB')], string='Delivery Mode')
+    vat_mode = fields.Selection([('vat','VAT'),('non_vat','Non VAT')], string='Is VAT Applicable')
+    bonded_mode = fields.Selection([('bonded','Bonded'),('non_bonded','Non Bonded')], string='Is Bonded Applicable')
+
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))

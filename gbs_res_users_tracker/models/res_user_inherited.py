@@ -27,22 +27,27 @@ class InheritResUsers(models.Model):
                                                 'Default Operating Unit',track_visibility='onchange',
                                                 default=_get_operating_unit)
 
-    name = fields.Char(related='partner_id.name', inherited=True,track_visibility='onchange')
+    name = fields.Char(track_visibility='onchange')
     login = fields.Char(required=True, help="Used to log into the system",track_visibility='onchange')
+    company_id = fields.Many2one(track_visibility='onchange')
+    default_opportunity_id = fields.Many2one(track_visibility='onchange')
+
+    partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,track_visibility='onchange',
+                                 string='Related Partner', help='Partner-related data of the user')
 
 class InheritResUsersRole(models.Model):
     _name = "res.users.role"
     _inherit = ['res.users.role', 'mail.thread', 'ir.needaction_mixin']
     _order = "seq asc"
 
-    seq = fields.Integer(string='Sequence', required=True)
-    implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid', track_visibility='onchange',
-                                   string='Inherits', help='Users of this group automatically inherit those groups')
+    seq = fields.Integer(string='Sequence', required=True,track_visibility='onchange')
     group_id = fields.Many2one(
         'res.groups', required=True, ondelete='cascade',track_visibility='onchange',
-        readonly=True, string=u"Associated group")
-    internal_user_group= fields.Boolean('Internal User Group',default=False,)
+        readonly=True, string="Associated group")
+    internal_user_group= fields.Boolean('Internal User Group',default=False,track_visibility='onchange')
+    name = fields.Char(track_visibility='onchange')
 
-    line_ids = fields.One2many(
-        'res.users.role.line', 'role_id',track_visibility='onchange', string=u"Users")
-
+    # implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid', track_visibility='onchange',
+    #                                string='Inherits', help='Users of this group automatically inherit those groups')
+    # line_ids = fields.One2many(
+    #     'res.users.role.line', 'role_id', track_visibility='onchange', string="Users")

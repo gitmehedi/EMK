@@ -152,7 +152,7 @@
                                 <field name="transport_by" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="vehical_no" string="Vehicle/Vessel Name"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                <field name="truck_receipt_no" required="1"
+                                <field name="truck_receipt_no"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="bl_date"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>

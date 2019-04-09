@@ -73,15 +73,18 @@ class HrPayslipRun(models.Model):
 
             ## Prepare the Bank Arrays
             banks = []
+            company_list = []
             for slip in run.slip_ids:
                 if slip.employee_id.bank_account_id and slip.employee_id.bank_account_id.bank_id:
                     if slip.employee_id.bank_account_id.bank_id.id not in banks:
                         banks.append(slip.employee_id.bank_account_id.bank_id.id)
+                    if slip.employee_id.bank_account_id.company_id.id not in company_list:
+                        company_list.append(slip.employee_id.bank_account_id.company_id.id)
 
             ### Create Payment Advice
             for bank in banks:
                 ### Set Bank Account
-                bank_accs = self.env['res.partner.bank'].search([('bank_id','=',bank),
+                bank_accs = self.env['res.partner.bank'].search([('bank_id','=',bank),('company_id','=',company_list),
                                                                 ('is_payroll_account','=',True)])
                 if not bank_accs:
                     raise UserError(_('Please define payroll bank account.'))

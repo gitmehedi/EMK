@@ -14,14 +14,10 @@ class AccountInvoice(models.Model):
             for inv_line in self.invoice_line_ids:
                 if product_acc_list:
                     for sale_acc_line in product_acc_list:
-                        if sale_acc_line.sale_order_type_id.id == self.sale_type_id.id and \
-                             inv_line.product_id.id == sale_acc_line.product_id.id:
+                        if sale_acc_line.sale_order_type_id.id == self.sale_type_id.id and inv_line.product_id.id == sale_acc_line.product_id.id:
                                 inv_line.account_id = sale_acc_line.account_id.id
-                                break;
-                        else:
-                            inv_line.account_id = inv_line.product_id.property_account_income_id.id
-                else:
-                    inv_line.account_id = inv_line.product_id.property_account_income_id.id
+
+
 
 
 class AccountInvoiceLine(models.Model):
@@ -36,5 +32,24 @@ class AccountInvoiceLine(models.Model):
             if self.invoice_id.sale_type_id:
                 if product_account:
                     self.account_id = product_account.account_id.id
-            else:
-                self.account_id = self.product_id.property_account_income_id.id
+
+
+
+class Picking(models.Model):
+    _inherit = 'stock.picking'
+
+    @api.multi
+    def do_new_transfer(self):
+        res = super(Picking, self).do_new_transfer()
+        product_acc_list = self.env['sale.type.product.account'].search(
+            [('product_id', '=', self.sale_id.product_id.id)])
+
+        for inv in self.sale_id.invoice_ids:
+            for inv_line in inv.invoice_line_ids:
+                if product_acc_list:
+                    for sale_acc_line in product_acc_list:
+                        if sale_acc_line.sale_order_type_id.id == self.sale_id.type_id.id and inv_line.product_id.id == sale_acc_line.product_id.id:
+                            inv_line.account_id = sale_acc_line.account_id.id
+
+        return res
+
