@@ -27,9 +27,9 @@
                                 seconds, then system will consider only first Check In/Check Out.
                                 </strong></p>
                         </div>
-                        <label for="ser_url" string="Server Base URL"/>
+                        <label for="server_url" string="Server Base URL"/>
                         <div>
-                            <p><strong>From This URL <field name="ser_url" class="oe_inline" nolable="1" style="width: 40% !important"/> Attendance Data Can Pull</strong></p>
+                            <p><strong>From This URL <field name="server_url" class="oe_inline" nolable="1" style="width: 40% !important"/> Attendance Data Can Pull</strong></p>
                         </div>
                     </group>
                 </sheet>
