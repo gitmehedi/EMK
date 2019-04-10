@@ -52,11 +52,11 @@
               groups="mtbl_access.group_mtbl_sys_admin"/>
     <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
               parent="account.account_account_menu" sequence="1"
-              groups="base.group_no_one"/>
+              groups="mtbl_access.group_mtbl_sys_admin"/>
     <menuitem id="account_type_menu.account_type_menu"
               action="account.action_account_type_form"
               sequence="12"
-              groups="mtbl_access.group_mtbl_sys_admin"
+              groups="base.group_system"
               parent="account.account_account_menu"/>
     <menuitem id="account.menu_analytic_accounting" name="Analytic Accounting"
               parent="account.menu_finance_configuration"
@@ -79,7 +79,7 @@
             name="Analytic Accounts Tags"
             parent="account.menu_analytic_accounting"
             action="analytic.account_analytic_tag_action"
-            groups="mtbl_access.group_mtbl_sys_admin"/>
+            groups="base.group_system"/>
 
     <menuitem
             action="account.action_account_fiscal_position_form"

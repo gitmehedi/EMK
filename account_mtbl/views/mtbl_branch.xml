@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form string="Operating Unit" version="7.0">
+                    <form string="Branch" version="7.0">
                         <sheet>
                             <group>
                                 <group>
@@ -33,6 +33,29 @@
                         </div>
                     </form>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_view_operating_unit_search" model="ir.ui.view">
+            <field name="name">inherit.operating.unit.search</field>
+            <field name="model">operating.unit</field>
+            <field name="inherit_id" ref="operating_unit.view_operating_unit_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="string">Branch</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="operating_unit.action_operating_unit_tree" model="ir.actions.act_window">
+            <field name="name">Branch</field>
+            <field name="res_model">operating.unit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Operating Unit.
+                </p>
             </field>
         </record>
     </data>

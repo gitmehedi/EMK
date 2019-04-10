@@ -4,7 +4,7 @@
         <field name="name">sub.operating.unit.form</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <form string="Sub Operating Unit" version="7.0">
+            <form string="Sub Branch" version="7.0">
                 <sheet>
                     <group>
                         <group>
@@ -35,7 +35,7 @@
         <field name="name">sub.operating.unit.tree</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <tree string="Sub Operating Unit">
+            <tree string="Sub Branch">
                 <field name="code"/>
                 <field name="name"/>
                 <field name="operating_unit_id"/>
@@ -47,22 +47,22 @@
         <field name="name">sub.operating.unit.search</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <search string="Search Operating Unit">
-                <field name="name" string="Sub Operating Unit"/>
-                <field name="operating_unit_id" string="Operating Unit"/>
+            <search string="Search Branch">
+                <field name="name" string="Sub Branch"/>
+                <field name="operating_unit_id" string="Branch"/>
                 <field name="code" string="Code"/>
             </search>
         </field>
     </record>
 
     <record id="action_sub_operating_unit_tree" model="ir.actions.act_window">
-        <field name="name">Sub Operating Units</field>
+        <field name="name">Sub Branch</field>
         <field name="res_model">sub.operating.unit</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to start a new Sub Operating Unit.
+                Click to start a new Sub Branch.
             </p>
         </field>
     </record>
