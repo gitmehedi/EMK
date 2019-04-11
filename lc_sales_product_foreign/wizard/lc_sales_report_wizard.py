@@ -58,6 +58,22 @@ class LcSalesReportWizard(models.TransientModel):
         return self.env['report'].get_action(self, 'lc_sales_product_foreign.lc_status_foreign_template', data)
 
     @api.multi
+    def action_ls_status_summary(self):
+        res = self.env.ref('lc_sales_product_foreign.lc_status_wizard_view')
+        result = {
+            'name': _('LC Status'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'lc.status.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'shipment_id': self.env.context.get('active_id')},
+        }
+        return result
+
+    @api.multi
     def action_bill_of_exchange_no(self):
         res = self.env.ref('lc_sales_product_foreign.bill_of_exc_wizard_view')
         result = {
