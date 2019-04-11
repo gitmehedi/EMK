@@ -10,3 +10,17 @@ class AccountAccount(models.Model):
     user_type_id = fields.Many2one(track_visibility='onchange')
     deprecated = fields.Boolean(track_visibility='onchange')
     reconcile = fields.Boolean(track_visibility='onchange')
+
+    @api.constrains('code')
+    def _check_numeric_constrain(self):
+        for i in self:
+            if i.code and not i.code.isdigit():
+                raise Warning('[Format Error] Code must be numeric!')
+
+    @api.onchange('name')
+    def set_caps(self):
+        for i in self:
+            if i.name:
+                i.name = str(i.name).upper()
+
+

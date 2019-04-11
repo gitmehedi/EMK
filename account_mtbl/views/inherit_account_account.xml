@@ -30,5 +30,16 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="inherit_view_account_list" model="ir.ui.view">
+            <field name="name">inherit.account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='currency_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

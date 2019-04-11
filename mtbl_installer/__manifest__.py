@@ -34,6 +34,7 @@
         "account_provisional",
         "account_mtbl",
         "mtbl_access",
+        "file_processing",
     ],
     'description': 'Install all modules which is related to MTBL Accounting',
     'installable': True,
