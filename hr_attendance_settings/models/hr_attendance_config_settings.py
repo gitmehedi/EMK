@@ -27,13 +27,13 @@ class HRAttendanceConfigSettings(models.Model):
 
     @api.multi
     def _get_server_url(self):
-        query = """select ser_url from hr_attendance_config_settings order by id desc limit 1"""
+        query = """select server_url from hr_attendance_config_settings order by id desc limit 1"""
         self._cr.execute(query, tuple([]))
         url_value = self._cr.fetchone()
         if url_value:
             return url_value[0]
 
-    ser_url = fields.Char(default=_get_server_url)
+    server_url = fields.Char(default=_get_server_url)
 
     @api.model
     def create(self,vals):

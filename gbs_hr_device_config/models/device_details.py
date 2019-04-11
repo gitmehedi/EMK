@@ -84,18 +84,23 @@ class DeviceDetail(models.Model):
 
         attendanceErrorProcess = self.env['hr.attendance.error.data.temp']
         attendanceErrorProcess.setDutyDate(self.operating_unit_id[0].id)
-        self.duty_date_set_last_update = datetime.datetime.now()
+        self.suspend_security().duty_date_set_last_update = datetime.datetime.now()
 
 
     @api.multi
     def action_check_connection(self):
 
-        print http.request.env['ir.config_parameter'].get_param('web.base.url')
-
         isConnect = False
         conn = None
         cursor = None
+        is_rigth_url = False
         try:
+            app_url = http.request.env['ir.config_parameter'].get_param('web.base.url').strip()
+            if self.is_live_server(app_url) == False:
+                raise ValidationError(
+                    "Attendance only pull from a specific server. Please check attendance settings or contact administrator.")
+
+            is_rigth_url = True
             conn = pyodbc.connect('DRIVER=' + driver +';PORT=1433;SERVER=' +
                                 self.server + ';PORT=1443;DATABASE=' +
                                 self.database + ';UID=' + self.username +
@@ -112,7 +117,11 @@ class DeviceDetail(models.Model):
             if isConnect == True:
                 raise Warning("Successfully connect to the "+self.name+" ("+self.server+ ") server.")
             else:
-                raise ValidationError("Unable to connect the "+self.server+ " server. Please check the configuration.")
+                if is_rigth_url == False:
+                   raise ValidationError(
+                        'You can not pull date from this server, please check "Server Base URL" or contact admin.')
+                else:
+                    raise ValidationError("Unable to connect the "+self.server+ " server. Please check the configuration.")
 
 
     @api.model
@@ -135,7 +144,16 @@ class DeviceDetail(models.Model):
         isConnect = False
         conn = None
         cursor = None
+        is_rigth_url = False
         try:
+
+            app_url = http.request.env['ir.config_parameter'].get_param('web.base.url').strip()
+            if self.is_live_server(app_url) == False:
+                raise ValidationError(
+                    'You can not pull date from this server, please check "Server Base URL" or contact admin.')
+
+
+            is_rigth_url = True
             hr_att_device_pool = self.env['hr.attendance.device.detail']
             attDevice = hr_att_device_pool.search([('id', '=', self.id)])
             if attDevice is None:
@@ -164,7 +182,7 @@ class DeviceDetail(models.Model):
             error_message = self.processData(maxId[0], attDevice, conn, cursor)
 
             if len(error_message) == 0:
-                self.write({'last_update': currentDate})
+                self.suspend_security().write({'last_update': currentDate})
                 success_message = "Successfully pull the data from "+self.name+" ("+self.server+ ") server."
                 _logger.info("Attendance Date pull from " + attDevice.server + " : at " + str(datetime.datetime.now()) + " Whrere checkoutin table ID between: " + str(minId[0]) +"to"+str(maxId[0]))
 
@@ -179,7 +197,11 @@ class DeviceDetail(models.Model):
             if conn is not None:
                 conn.close()
             if isConnect == False:
-                raise ValidationError("Unable to connect the " + self.server + " server. Please check the configuration.")
+                if is_rigth_url == False:
+                   raise ValidationError(
+                        "Attendance only pull from a specific server. Please check attendance settings or contact administrator.")
+                else:
+                    raise ValidationError("Unable to connect the " + self.server + " server. Please check the configuration.")
             elif len(error_message) > 0:
                 raise ValidationError(error_message)
             else:
@@ -196,6 +218,30 @@ class DeviceDetail(models.Model):
                 }
                 return result
 
+
+
+    def is_live_server(self, app_url):
+        if self.getBaseURL() == app_url:
+            return True
+        else:
+            return False
+
+    def getBaseURL(self):
+
+        query = """SELECT 
+                         server_url
+                    FROM
+                         hr_attendance_config_settings 
+                    order by id desc limit 1"""
+
+        self._cr.execute(query, (tuple([])))
+        server_url = self._cr.fetchone()
+
+
+        if server_url[0] == None:
+            return ""
+
+        return server_url[0].strip()
 
     def processData(self, maxId, attDevice, conn, cursor):
 
