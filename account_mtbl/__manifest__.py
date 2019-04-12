@@ -11,13 +11,14 @@
         'base',
         'mail',
         'product',
+        'analytic',
         'account_parent',
         'account_operating_unit',
         'account_type_inactive',
         'sub_operating_unit',
-
     ],
     "data": [
+        'views/menu_view.xml',
         'views/segment_view.xml',
         'views/servicing_channel.xml',
         'views/acquiring_channel.xml',
@@ -30,6 +31,7 @@
         'views/inherit_account_type.xml',
         'views/inherit_product_product.xml',
         'views/inherit_analytic_account.xml',
+        'views/account_analytic_account_view.xml',
     ],
     'installable': True,
     'application': True,

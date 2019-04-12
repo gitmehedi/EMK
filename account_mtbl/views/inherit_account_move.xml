@@ -18,14 +18,18 @@
                 <xpath expr="//field[@name='line_ids']/tree//field[@name='analytic_account_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>>
                 </xpath>
+                <xpath expr="//field[@name='date']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
                 <xpath expr="//sheet/notebook/page/field/tree/field[@name='operating_unit_id']" position="after">
-                    <field name="sub_operating_unit_id"
-                           options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
                     <field name="segment_id" options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
                     <field name="acquiring_channel_id"
                            options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
                     <field name="servicing_channel_id"
                            options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
+                </xpath>
+                <xpath expr="//sheet/notebook/page/field/tree/field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
                 </xpath>
             </field>
         </record>
@@ -44,10 +48,10 @@
         </record>
 
         <record model="ir.values" id="account.action_account_move_reversal">
-            <field name="model_id" ref="account.model_account_move" />
+            <field name="model_id" ref="account.model_account_move"/>
             <field name="name">Reverse Moves</field>
             <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' +str(ref('account.action_view_account_move_reversal'))" />
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('account.action_view_account_move_reversal'))"/>
             <field name="key">action</field>
             <field name="model">account.move</field>
             <field name="groups_id"

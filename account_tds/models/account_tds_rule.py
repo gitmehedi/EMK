@@ -47,6 +47,11 @@ class TDSRules(models.Model):
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
+    @api.onchange("name")
+    def onchange_strips(self):
+        if self.name:
+            self.name = self.name.strip()
+
     @api.multi
     def unlink(self):
         for rec in self:

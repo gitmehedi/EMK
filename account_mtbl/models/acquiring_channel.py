@@ -1,12 +1,13 @@
 from odoo import models, fields, api, _
 
+
 class AcquiringChannel(models.Model):
     _name = 'acquiring.channel'
     _inherit = ['mail.thread']
     _order = 'code desc'
     _description = 'Acquiring Channel'
 
-    name = fields.Char('Name', required=True, track_visibility='onchange')
+    name = fields.Char('Name', required=True, size=50, track_visibility='onchange')
     code = fields.Char('Code', required=True, size=2, track_visibility='onchange')
     active = fields.Boolean('Active', default=True, track_visibility='onchange')
 
@@ -21,3 +22,17 @@ class AcquiringChannel(models.Model):
                 raise Warning('[Unique Error] Name must be unique!')
             elif len(code) > 1:
                 raise Warning('[Unique Error] Code must be unique!')
+
+    @api.one
+    def name_get(self):
+        name = self.name
+        if self.name and self.code:
+            name = '[%s] %s' % (self.code, self.name)
+        return (self.id, name)
+
+    @api.onchange("name", "code")
+    def onchange_strips(self):
+        if self.name:
+            self.name = self.name.strip()
+        if self.code:
+            self.code = str(self.code.strip()).upper()

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherited_account_analytic_account_form" model="ir.ui.view">
+        <field name="name">analytic.analytic.account.form</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='company_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='currency_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="analytic.action_analytic_account_form" model="ir.actions.act_window">
+        <field name="name">Cost Centers</field>
+    </record>
+
+    <record id="analytic.account_analytic_tag_action" model="ir.actions.act_window">
+        <field name="name">Cost Center Tags</field>
+    </record>
+
+    <record id="analytic.account_analytic_line_action_entries" model="ir.actions.act_window">
+        <field name="name">Cost Centers Entries</field>
+    </record>
+
+    <record id="account.menu_action_analytic_account_tree2" model="ir.ui.menu">
+        <field name="name">Cost Centers</field>
+    </record>
+
+    <record id="account.menu_action_analytic_lines_tree" model="ir.ui.menu">
+        <field name="name">Cost Centers Entries</field>
+    </record>
+
+    <record id="account.account_analytic_tag_menu" model="ir.ui.menu">
+        <field name="name">Cost Centers Tags</field>
+    </record>
+    <record id="account.account_analytic_def_account" model="ir.ui.menu">
+        <field name="name">Cost Centers Tags</field>
+    </record>
+
+    <record id="view_account_analytic_line_form_inherit_account_cost" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit.account</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='account_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="string">Cost Center</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

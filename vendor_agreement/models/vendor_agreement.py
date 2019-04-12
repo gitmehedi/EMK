@@ -78,6 +78,8 @@ class VendorAgreement(models.Model):
             else:
                 record.is_remaining = True
 
+
+
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].get('name')
