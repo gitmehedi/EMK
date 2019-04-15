@@ -11,13 +11,13 @@
                        attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
             </field>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="attributes">
-                <attribute name="invisible">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="attributes">
-                <attribute name="invisible">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
                 <field name="account_tds_id" invisible="1"/>
