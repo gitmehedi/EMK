@@ -12,4 +12,14 @@
         <field name="model">server.file.process</field>
         <field name="function">action_backup_all</field>
     </record>
+    <record id="ir_cron_soap_request_response_scheduler" model="ir.cron">
+        <field name="name">SOAP Request Response</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
+        <field name="model">soap.request.response</field>
+        <field name="function">soap_request</field>
+    </record>
 </odoo>
