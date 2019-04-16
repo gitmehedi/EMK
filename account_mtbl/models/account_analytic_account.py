@@ -8,7 +8,7 @@ class AccountAnalyticAccount(models.Model):
     _description = 'Cost Centre'
 
     name = fields.Char('Name', required=True, size=50, track_visibility='onchange')
-    code = fields.Char('Code', required=True, size=2, track_visibility='onchange')
+    code = fields.Char('Code', required=True, size=3, track_visibility='onchange')
     operating_unit_ids = fields.Many2many(string='Branch', track_visibility='onchange')
 
     @api.constrains('name', 'code')
