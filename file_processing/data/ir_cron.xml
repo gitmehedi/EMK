@@ -13,7 +13,7 @@
         <field name="function">action_backup_all</field>
     </record>
     <record id="ir_cron_soap_process_scheduler" model="ir.cron">
-        <field name="name">SOAP Process</field>
+        <field name="name">Generic Transfer</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>

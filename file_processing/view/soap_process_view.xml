@@ -7,11 +7,12 @@
         <field name="arch" type="xml">
             <form string="SOAP Process">
                 <sheet>
-                    <label for="name" string="Endpoint Name"/>
+                    <label for="endpoint_fullname" string="Endpoint Name"/>
                     <h4>
-                        <field name="name" placeholder="Name"/>
+                        <field name="endpoint_fullname" placeholder="Endpoint Name"/>
                     </h4>
                     <group>
+                        <field name="name"/>
                         <field name="endpoint_url"/>
                         <field name="endpoint_port"/>
                         <field name="wsdl_name"/>
@@ -35,6 +36,7 @@
                   decoration-bf="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
+                <field name='endpoint_fullname'/>
                 <field name="endpoint_url"/>
                 <field name="endpoint_port"/>
                 <field name="wsdl_name"/>
@@ -50,6 +52,7 @@
         <field name="arch" type="xml">
             <search string="Search options">
                 <field name='name'/>
+                <field name='endpoint_fullname'/>
                 <field name="endpoint_url"/>
                 <field name="endpoint_port"/>
                 <field name="wsdl_name"/>

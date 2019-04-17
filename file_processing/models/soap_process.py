@@ -20,22 +20,30 @@ class SOAPProcess(models.Model):
     _rec_name = 'name'
     _description = 'SOAP Endpoint'
 
-    name = fields.Char(string='Endpoint', compute='_compute_endpoint')
+    name = fields.Char(string='Endpoint Name', required=True)
+    endpoint_fullname = fields.Char(string='Endpoint', compute='_compute_endpoint_fullname', store=True)
+
     endpoint_url = fields.Char(string='Host IP', size=24, required=True, track_visibility='onchange')
     endpoint_port = fields.Char(string='Host Port', size=10, required=True, track_visibility='onchange')
     wsdl_name = fields.Char(string='WSDL', size=100, required=True, track_visibility='onchange')
     status = fields.Boolean(string='Status', default=True)
 
-    @api.constrains('name', 'code')
+    @api.constrains('name', 'endpoint_fullname')
     def _check_unique_constrain(self):
-        if self.name or self.code:
-            filters_name = [['name', '=ilike', self.name]]
-            name = self.search(filters_name)
+        if self.name or self.endpoint_fullname:
+            name = [['name', '=ilike', self.name]]
+            endpoint_fullname = [['name', '=ilike', self.endpoint_fullname]]
+            name = self.search(name)
+            endpoint_fullname = self.search(endpoint_fullname)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+            if len(endpoint_fullname) > 1:
+                raise Warning('[Unique Error] Endpoint must be unique!')
 
-    @api.onchange("endpoint_url", "endpoint_port", "wsdl_name")
+    @api.onchange("name", "endpoint_url", "endpoint_port", "wsdl_name")
     def onchange_strips(self):
+        if self.name:
+            self.name = self.name.strip()
         if self.endpoint_url:
             self.endpoint_url = self.endpoint_url.strip()
         if self.endpoint_port:
@@ -43,12 +51,13 @@ class SOAPProcess(models.Model):
         if self.wsdl_name:
             self.wsdl_name = self.wsdl_name.strip()
 
-    @api.multi
-    def _compute_endpoint(self):
+    @api.depends("endpoint_url", "endpoint_port", "wsdl_name")
+    def _compute_endpoint_fullname(self):
         for rec in self:
             if rec.endpoint_url and rec.endpoint_port and rec.wsdl_name:
-                rec.name = rec.endpoint_url + ':' + rec.endpoint_port + rec.wsdl_name
+                rec.endpoint_fullname = rec.endpoint_url + ':' + rec.endpoint_port + rec.wsdl_name
 
+    @api.model
     def soap_request(self):
         wsdl = "http://124.109.105.40:9680/GenericTransferAmount/GenericTransferAmountInterfaceHttpService?wsdl"
         # s_url = "http://obiee.banrep.gov.co/analytics/saw.dll?wsdl"
@@ -85,19 +94,20 @@ class SOAPProcess(models.Model):
       </v1:genericTransferAmount>
    </soapenv:Body>
 </soapenv:Envelope>"""
+        endpoint = self.search([('name', '=', 'GenericTransfer')], limit=1)
+        if len(endpoint) > 0:
+            response = requests.post(endpoint.endpoint_fullname, data=body, headers=headers)
+            print(response.content)
 
-        response = requests.post(wsdl, data=body, headers=headers)
-        print(response.content)
+            # url = "http://www.soapclient.com/xml/soapresponder.wsdl"
+            # soap_res = Client(wsdl=url)
+            # soap_res.service.Method1('Zeep','is value')
+            # print(soap_res.service.Method1('Zeep', 'is value'))
+            # print(soap_res.service.Method1('', ''))
 
-        # url = "http://www.soapclient.com/xml/soapresponder.wsdl"
-        # soap_res = Client(wsdl=url)
-        # soap_res.service.Method1('Zeep','is value')
-        # print(soap_res.service.Method1('Zeep', 'is value'))
-        # print(soap_res.service.Method1('', ''))
-
-        # with client.settings(raw_response=True):
-        #     response = client.service.myoperation()
-        #
-        #     # response is now a regular requests.Response object
-        #     assert response.status_code == 200
-        #     assert response.content
+            # with client.settings(raw_response=True):
+            #     response = client.service.myoperation()
+            #
+            #     # response is now a regular requests.Response object
+            #     assert response.status_code == 200
+            #     assert response.content
