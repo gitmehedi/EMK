@@ -253,8 +253,24 @@
                 menu="False"
                 report_type="qweb-pdf"/>
 
+        <record id="paperformat_stock_summary_landscape" model="report.paperformat">
+            <field name="name">Stock Summary Landscape Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">12</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">17</field>
+            <field name="dpi">90</field>
+        </record>
+
         <record id="report_stock_inventory_summary" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="report_layout.paperformat_stock_summary_landscape"/>
+            <field name="paperformat_id" ref="paperformat_stock_summary_landscape"/>
         </record>
     </data>
 </odoo>
