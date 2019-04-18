@@ -28,7 +28,7 @@
         </record>
 
         <record id="action_lc_status_wizard" model="ir.actions.act_window">
-            <field name="name">LC Status(Foreign) Report</field>
+            <field name="name">LC Status(Foreign)</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">lc.status.wizard</field>
             <field name="view_type">form</field>

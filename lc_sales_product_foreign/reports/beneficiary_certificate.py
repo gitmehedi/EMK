@@ -30,6 +30,7 @@ class BeneficiaryCertificate(models.AbstractModel):
             'shipment_number': shipment_obj.name,
             'container_no': shipment_obj.container_no,
             'mother_vessel': shipment_obj.mother_vessel,
+            'vehical_no': shipment_obj.vehical_no,
             'etd_date': shipment_obj.etd_date,
             'eta_date': shipment_obj.eta_date,
             'etd_trans_shipment_date': shipment_obj.etd_trans_shipment_date,
