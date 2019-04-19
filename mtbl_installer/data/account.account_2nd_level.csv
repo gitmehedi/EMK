@@ -1,0 +1,24 @@
+Parent Account,Code,Name,Type
+Liability,11000000,Capital & Reserve,View Type
+Liability,12000000,Borrowings,View Type
+Liability,13000000,Deposits,View Type
+Liability,14000000,Bond,View Type
+Liability,15000000,Other Liabilities,View Type
+Liability,16000000,Inter Branch Account,View Type
+Liability,17000000,Income 2,View Type
+Assets,21000000,Cash & Bank Balance,View Type
+Assets,22000000,Money at Call & Short Notice,View Type
+Assets,23000000,Investments,View Type
+Assets,24000000,Loans & Advances,View Type
+Assets,25000000,Fixed Assets,View Type
+Assets,26000000,Other Assets,View Type
+Assets,28000000,Expenditure,View Type
+Income,31000000,Interest Income,View Type
+Income,32000000,Income fm Investments,View Type
+Income,33000000,"Comm, Exch & Brokerage",View Type
+Income,34000000,Other Operating Income,View Type
+Expenses,41000000,Interest Expenses,View Type
+Expenses,42000000,Non-Interest Expenses,View Type
+Expenses,43000000,Provisions,View Type
+Contra & Contingent <L>,51000000,Contra ,View Type
+Contra & Contingent <L>,52000000,Contingent,View Type
