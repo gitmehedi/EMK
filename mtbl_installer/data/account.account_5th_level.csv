@@ -1,0 +1,1026 @@
+Parent Account,Code,Name,Type
+Paid up Capital ,11101001,Paid up Capital ,General
+General Reserve ,11201001,General Reserve ,General
+Statutory Reserve ,11202001,Statutory Reserve ,General
+Revaluation Reserve,11203001,Revaluation gain on HTM Securities,General
+Revaluation Reserve,11203002,Revaluation gain on HFT Securities (T Bill),General
+Revaluation Reserve,11203003,Revaluation gain on HFT Securities (T Bond),General
+Share Premium ,11204001,Share Premium ,General
+Retained earnings,11205001,Retained earnings ,General
+Foreign Currency Translational Gain/ Loss,11206001,Foreign Currency Translational Gain/ Loss ,General
+Borrowings under Bangladesh Bank-others,12101001,EGBMP Fund,General
+Borrowings under Bangladesh Bank-others,12101002,Export Dev. Fund,General
+Borrowings under Bangladesh Bank-others,12101003,Assured liquidity Support (ALS-Repo),General
+Borrowings under Bangladesh Bank-others,12101004,Special Repo ,General
+Borrowings under BB Pre-finance,12102001,JICA Fund SME,General
+Borrowings under BB Refinance,12103001,"Solar Energy, Bio Gas EFT & HHK fund",General
+Borrowings under BB Refinance,12103002,Taka 10 Account Holders,General
+Borrowings under BB Refinance,12103003,Woman Enterpreneurs Fund (SME),General
+Borrowings under BB Refinance,12103004,SME Loan Refinance,General
+Borrowings under BB Refinance,12103005,Home Loan Refinance,General
+Borrowings under BB Refinance,12103006,ADB Fund (SME),General
+Borrowings under BB Refinance,12103007,ADB Fund (Brick Klin),General
+Borrowings under BB Refinance,12103008,EGBMP Fund (SME),General
+Borrowings under BB Refinance,12103009,JICA Fund (SME),General
+Borrowings under BB Refinance,12103010,Agro-Processing Rural Industries Fund,General
+Borrowings under BB Refinance,12103011,Bangladesh Bank Fund (Others),General
+Borrowings under BB Refinance,12103012,Agro-Processing Rural Industries Fund Old,General
+Investment Promotion and Financing Facility (IPFF) FC,12104001,Investment Promotion and Financing Fund (IPFF) USD,General
+Long Term Financing Facility (LTFF),12105001,Long Term Financing Facility (LTFF) under FSSP,General
+Interest Payable on Borrowings fm BB,12501007,Intt Payable on Boorrowing under EDF from BB,General
+Term Borrowing in FC,12201001,Term Borrowing in FC <USD>,General
+Term Borrowing in FC,12201002,Term Borrowing in FC <GBP>,General
+REPO <Borrowings under>,12204001,Repo T Bill,General
+REPO <Borrowings under>,12204002,Repo T Bond,General
+Call Borrowing in FC,12205001,Call Borrowing in FC <USD>,General
+Call Borrowing in FC,12205002,Call Borrowing in FC <GBP>,General
+Interest Payable on Borrowings from other Banks,12502001,Interest Payable on Term Borrowing in FC <USD>,General
+Interest Payable on Borrowings from other Banks,12502002,Interest Payable on Term Borrowings ,General
+Interest Payable on Borrowings from other Banks,12502003,Interest Payable on Call Borrowing ,General
+Interest Payable on Borrowings from other Banks,12502004,Interest Payable A/c- Repo ,General
+Interest Payable on Borrowings from other Banks,12502005,Interest payable on Call Borrowing in FC <USD>,General
+Interest Payable on Borrowings from other Banks,12502006,Interest payable on Call Borrowing in FC <GBP>,General
+Interest Payable on Borrowings from other Banks,12502007,SME Foundation,General
+Other Institutes,12301001,SME Foundation Fund (MTB Youth Line),General
+Pre-finance (Other Institute),12302001,SME Foundation Fund (MTB Gunabati),General
+Borrowings from NBFI,12303001,Interest Payable on Borrowings from SME Foundation,General
+Interest Payable on Borrowings fm other Institution,12503001,Interest Payable on Borrowing from NBFI,General
+Interest Payable on Borrowings fm other Institution,12503002,OBU Borrowings from Foreign Country FC-USD,General
+OBU Borrowings from foreign country <FC>,12401001,OBU Borrowings from MTB <FC-USD>,General
+OBU Borrowings from Bangladesh <FC>,12402001,OBU Brwings fm Banks/ Inst other than MTB USD,General
+OBU Borrowings from Bangladesh <FC>,12402002,Interest Payable on Borrowings from LTFF  under FSSP,General
+Interest Payable on Borrowings fm BB,12501001,Interest Payable on Borrowing -IPFF Fund USD,General
+Interest Payable on Borrowings fm BB,12501002,Interest Payable on Borrowing -IPFF Fund GBP,General
+Interest Payable on Borrowings fm BB,12501003,Interest Payable on Borrowings from BB-others,General
+Interest Payable on Borrowings fm BB,12501004,Interest Payable on Borrowings from BB-under prefinance,General
+Interest Payable on Borrowings fm BB,12501005,Interest Payable on Borrowings from BB-under Refinance,General
+Interest Payable on Borrowings fm BB,12501006,Current Account Regular <CAREG>,General
+Current Accounts <BDT>,13101001,MTB Probaho,General
+Current Accounts <BDT>,13101002,Current CMS,General
+Current Accounts <BDT>,13101003,NITA Account <CAFNT>,General
+Current Accounts <BDT>,13101004,Non-Resident Taka Account <CAFNR>,General
+Current Accounts <BDT>,13101005,CA FCERQ USD,General
+Current Accounts <FC>,13102001,CA FCEPZ <NFCD> USD,General
+Current Accounts <FC>,13102011,Current Deposits DBW USD,General
+Current Accounts <FC>,13102021,CA FCDAD USD,General
+Current Accounts <FC>,13102031,CA FCOTH USD,General
+Current Accounts <FC>,13102041,Credit Balance IN OD/CC Accounts,General
+MiSc Customer Deposit,13103001,FBPAR USD,General
+Sundry Deposits <FC>,13104001,RTGS Adjusting Account,General
+Sundry Deposits,13105001,RTGS FI to FI Settlement,General
+Sundry Deposits,13105002,Excess Cash,General
+Sundry Deposits,13105003,MasterCard Prepaid International (USD),General
+Sundry Deposits,13105004,Revenue Stamp Charge Payable,General
+Sundry Deposits,13105005,bKash Commission Payable,General
+Sundry Deposits,13105006,Payable to Bangladesh Bank - Service Charge,General
+Sundry Deposits,13105007,BEFTN Transaction,General
+Sundry Deposits,13105008,Exchange House Coop Fund,General
+Sundry Deposits,13105009,MasterCard Local Prepaid,General
+Sundry Deposits,13105010,Prepaid Gift Card,General
+Sundry Deposits,13105011,Prepaid International Card,General
+Sundry Deposits,13105012,Online Clearing Adjustment,General
+Sundry Deposits,13105013,Risk Fund (Auto Loan),General
+Sundry Deposits,13105014,Stamp Charge Recovery,General
+Sundry Deposits,13105015,Retail CIB Charge Recover for BB,General
+Sundry Deposits,13105016,Retail Notarization Charge Recovery,General
+Sundry Deposits,13105017,Central Fund (RMG Sector),General
+Sundry Deposits,13105018,Risk Fund (Card),General
+Sundry Deposits,13105019,Credit Report Charges Payable,General
+Sundry Deposits,13105020,Online GL Transaction,General
+Sundry Deposits,13105022,Online Transfer DD Amount,General
+Sundry Deposits,13105023,Clearing House Payable,General
+Sundry Deposits,13105024,Risk Fund (Small Business Loan),General
+Sundry Deposits,13105025,Risk Fund (House Repair/Renovation Loan),General
+Sundry Deposits,13105026,Lease Deposit,General
+Sundry Deposits,13105027,P. Fund Loan Instalment,General
+Sundry Deposits,13105028,Foreign Bank Adjustment A/c,General
+Sundry Deposits,13105029,SWIFT Charges,General
+Sundry Deposits,13105030,Margin on L/C (Others),General
+Sundry Deposits,13105031,Margin on L/G (Inland),General
+Sundry Deposits,13105032,Margin on L/G (Foreign),General
+Sundry Deposits,13105033,Risk Fund (Lease Finance),General
+Sundry Deposits,13105034,AIT <Advance Income Tax> Payable Account,General
+Sundry Deposits,13105035,Fund Build up Aganist Export Bill,General
+Sundry Deposits,13105036,Sundry Creditors,General
+Sundry Deposits,13105037,Security Deposit,General
+Sundry Deposits,13105038,Margin on L/C (Cash),General
+Sundry Deposits,13105039,Margin on IBP/FDBP,General
+Sundry Deposits,13105040,LDBC,General
+Sundry Deposits,13105041,Duty Draw Back,General
+Sundry Deposits,13105042,Cash Incentive (Traditional),General
+Sundry Deposits,13105043,Cash Incentive (Non Traditional),General
+Sundry Deposits,13105044,OBC Outward Bill Collection,General
+Sundry Deposits,13105045,Advance Lease Rental,General
+Sundry Deposits,13105047,Risk Fund (CCS),General
+Sundry Deposits,13105048,OBC Outward Cheque Collection,General
+Sundry Deposits,13105049,Transfer Delivery,General
+Sundry Deposits,13105021,FCC/ FCP <parking account>,General
+Sundry Deposits <FC>,13106001,MTB Buniad,General
+Term Deposits,13201001,NRB Fixed Deposit,General
+Term Deposits,13201002,Term Deposit General,General
+Term Deposits,13201003,Term Deposit Monthly Benefit Plan,General
+Term Deposits,13201004,RTD MTB Buniad,General
+Term Deposits Reinvestments,13202001,Reinvestment Term Deposits General,General
+Term Deposits Reinvestments,13202002,RTD Double Benefit Scheme,General
+Term Deposits Reinvestments,13202003,RTD NRB,General
+Term Deposits Reinvestments,13202004,RD Brick-by-Brick,General
+Recurring Deposit,13203001,RD MTB Educational Plan,General
+Recurring Deposit,13203002,RD Kotipati,General
+Recurring Deposit,13203004,RD Millionnaire Plan,General
+Recurring Deposit,13203005,NFCD USD,General
+Special Notice Deposit,13205001,MTB Ankur,General
+Savings Bank Account,13206001,MTB Staff,General
+Savings Bank Account,13206012,MTB Payroll Premium,General
+Savings Bank Account,13206013,MTB Payroll eSavers,General
+Savings Bank Account,13206014,MTB Payroll Saver,General
+Savings Bank Account,13206015,MTB Ruby,General
+Savings Bank Account,13206002,MTB Graduate,General
+Savings Bank Account,13206003,MTB Junior,General
+Savings Bank Account,13206004,MTB Privilege Saving,General
+Savings Bank Account,13206005,NRB Savings Account,General
+Savings Bank Account,13206006,MTB Senior,General
+Savings Bank Account,13206007,MTB Inspire,General
+Savings Bank Account,13206008,MTB Shanchay,General
+Savings Bank Account,13206009,MTB Care,General
+Savings Bank Account,13206010,Regular Savings  Deposit,General
+Savings Bank Account,13206011,SBResident Foreign Currency USD,General
+Savings Bank Account <FC>,13207001,SB Personal Foreign Currency Account USD,General
+Current Deposits from NBFI,13302001,Bank Deposits -FD  <BDT>,General
+Bank Deposits -FD ,13401001,Bank Deposits -FD  <USD>,General
+Bank Deposits -FD ,13401002,Bank Deposits -FD  <EUR>,General
+Bank Deposits -FD ,13401003,Bank Deposits -FD  <GBP>,General
+Bank Deposits -FD ,13401004,NBFI Deposits -FD ,General
+Interest Payable on Current Deposits,13501001,IP MTB Ankur,General
+Interest Payable on TD Accounts,13601001,IP MTB Ruby,General
+Interest Payable on TD Accounts,13601002,IP MTB Graduate,General
+Interest Payable on TD Accounts,13601003,IP MTB Junior,General
+Interest Payable on TD Accounts,13601004,IP MTB Privilege Saving,General
+Interest Payable on Savings Bank Accounts,13602001,IP MTB Senior,General
+Interest Payable on Savings Bank Accounts,13602002,IP on MTB Inspire,General
+Interest Payable on Savings Bank Accounts,13602003,IP on MTB Shanchay,General
+Interest Payable on Savings Bank Accounts,13602004,IP on MTB Care,General
+Interest Payable on Savings Bank Accounts,13602005,IP on Regular Savings  Deposit,General
+Interest Payable on Savings Bank Accounts,13602006,Interest payable on RD Brick-by-Brick,General
+Interest Payable on Savings Bank Accounts,13602007,Interest payable on RD MTB Educational Plan,General
+Interest Payable on Savings Bank Accounts,13602008,Interest payable on RD Kotipati,General
+Interest Payable on Savings Bank Accounts,13602009,Interest payable on RD Millionnaire Plan,General
+Interest Payable on Savings Bank Accounts,13602010,Interest payable on RD NRB,General
+Interest payable on Recurring Deposit,13603001,Interest Payable on NFCD USD,General
+Interest payable on Recurring Deposit,13603002,IP RTD Double Benefit Scheme,General
+Interest payable on Recurring Deposit,13603003,IP Reinvestment Term Deposits General,General
+Interest payable on Recurring Deposit,13603004,IP RTD MTB Buniad,General
+Interest payable on Recurring Deposit,13603006,P O Issued,General
+Interest Payable on Special Notice Deposits,13604001,PO Payable pending printing,General
+Interest Payable on Term Deposits FC,13605001,P.S. Issued,General
+Interest Payable on Savings Bank Accounts FC,13606001,DD Payable pending printing,General
+Interest Payable on Savings Bank Accounts FC,13606002,DD Issued,General
+Interest payable on Term Deposits Reinvestments,13607001,T.T. Payable,General
+Interest payable on Term Deposits Reinvestments,13607002,M.T. Payable,General
+Interest payable on Term Deposits Reinvestments,13607003,xxxxx,General
+Interest Payable on NBFI Deposits,13702001,Interest Payable on Subordinated Bond,General
+Bills Payable,13801007,Interest Suspenses Account Sub-Standard,General
+Bills Payable,13801003,Interest Suspenses Account Doubtful,General
+Bills Payable,13801004,Interest Suspenses Account Bad & Loss,General
+Other Bond,14201001, Liabilities under Finance Lease,General
+Clearing House Adjustment,15201001,Employees' Death Benefit  Fund,General
+Deferred Tax Liability,15207001,Transit A/c- Reverase Repo,General
+Staff Fund,15208002,VAT on Income,General
+Staff Fund,15208003,VAT on Expenditure,General
+Staff Fund,15208004,Excise Duty,General
+Contribution to MTB Foundation,15209001,Source Tax on Revenue Expenses,General
+Repo Interest Income Account,15210001,Source Tax on Interest on Deposits,General
+Exchange Equalization Fund,15211001,"Source Tax on SWIFT, Reuters & VISA Bill <Outward remittance>",General
+Advance Intt. on Treasury Bill,15212001,Source Tax on misc income of customers,General
+NOSTRO A/c Adjustment,15213001,Insurance Premium (BDT),General
+Revaluation Gain on HFT Securities,15215001,Dispute Account - ATM,General
+VAT payable,15216001,Dispute Account - POS,General
+VAT payable,15216002,Marchant Payable A/c,General
+Excise Duty payable,15217001,Card Tran. Fees Receive (VISA),General
+Source Tax <TDS> payable,15218001,VISA Prepaid International (USD),General
+Source Tax <TDS> payable,15218002,NPSB  OFF-US ATM,General
+Source Tax <TDS> payable,15218003,Transaction Fee (NPSB) Debit Card,General
+Source Tax <TDS> payable,15218004,Agent Banking Utility Bill Payable,General
+Card Settlement Account,15219001,Agent Banking Utility Bill Commision Payable,General
+Card Settlement Account,15219002,Agent Banking Float Sharing Commision Payable,General
+Card Settlement Account,15219003,Agent Banking Loan Reletionship Fee Payable,General
+Card Settlement Account,15219004,Agent Banking Cheque Book Fee Comm. Payable,General
+Card Settlement Account,15219005,Agent Banking Transaction Commision Payable,General
+Card Settlement Account,15219006,Agent Banking Remittance Commision Payable,General
+Card Settlement Account <FC>,15220001,Agent Banking Debit Card Fee Commision Payable,General
+Agent Banking,15222002,Provision for Unclassified Loans & Advance,General
+Agent Banking,15222003,Provision for Classified Loans & Advance,General
+Agent Banking,15222004,Provision for Off-balance sheet Items,General
+Agent Banking,15222005,General Provision ,General
+Agent Banking,15222006,Provision agt. Investment in Securities,General
+Agent Banking,15222007,Provision for Other Asset,General
+Agent Banking,15222008,MTB General Account,General
+Bonus Payable,15224001,Cash with Vault,General
+Provision for Advances,15301002,Cash with ATM ,General
+Provision for Advances,15301004,Cash with Vault <USD>,General
+Provision for Investments,15302001,Cash with Vault <GBP>,General
+Provision for others,15303001,Cash with Chief Cashier <GBP>,General
+Branch Accounts,16101001,Cash with Teller <GBP>,General
+Income for the period fm 1 Jan to lwd,17101001,Cash with Vault <JPY>,General
+Cash in Hand <BDT>,21101001,Cash with Chief Cashier <JPY>,General
+Cash in Transit,21102001,Cash with Vault <EUR>,General
+Cash with Service Provider,21103001,Cash with Teller 1 <EUR>,General
+Cash with ATM,21104001,Cash in Transit <GBP>,General
+Cash in Booth,21105001,Cash in Transit <USD>,General
+Cash in Hand <FC>,21106001,Cash in Transit <EUR>,General
+Cash in Hand <FC>,21106004,Cash in Transit <JPY>,General
+Cash in Hand <FC>,21106006,Bangladesh Bank- RTGS Settlement A/c,General
+Cash in Hand <FC>,21106007,Bangladesh Bank FC Clearing A/c (EUR),General
+Cash in Hand <FC>,21106008,Bangladesh Bank FC Clearing A/c (USD),General
+Cash in Hand <FC>,21106010,Bangladesh Bank FC Clearing A/c Other,General
+Cash in Hand <FC>,21106012,Bangladesh Bank FC Clearing A/c (GBP),General
+Cash in Transit <FC>,21107001,Bangladesh Bank FC Clearing A/c (JPY),General
+Cash in Transit <FC>,21107002,Bangladesh Bank FC Clearing A/c (DAD-USD),General
+Cash in Transit <FC>,21107003,Bangladesh Bank FC Clearing A/c (DAD-EUR),General
+Cash in Transit <FC>,21107004,Bangladesh Bank FC Clearing A/c (DAD-GBP),General
+Balance with BB <LCY>,21201001,Bangladesh Bank RTGS Settlement A/c (USD),General
+Balance with BB <LCY>,21201002,Bangladesh Bank RTGS Settlement A/c (GBP),General
+Balance with BB  <FCY>,21202001,Bangladesh Bank RTGS Settlement A/c (EUR),General
+Balance with BB  <FCY>,21202002,Balance with Sonali Bank,General
+Balance with BB  <FCY>,21202003,Balance with other Banks,General
+Balance with BB  <FCY>,21202004,Balance with Mobile Wallet,General
+Balance with BB  <FCY>,21202005,Balance with Other Banks in FC,General
+Balance with BB  <FCY>,21202021,Foreign Banks Nostro (USD),General
+Balance with BB  <FCY>,21202022,Foreign Banks Nostro (ACU),General
+Balance with BB  <FCY>,21202023,Foreign Banks Nostro (EUR),General
+Balance with BB  <FCY>,21202041,Foreign Banks Nostro (GBP),General
+Balance with BB  <FCY>,21202042,Foreign Banks Nostro (JPY),General
+Balance with BB  <FCY>,21202043,Foreign Banks Nostro (SGD),General
+Balance with Agent Bank <BDT>,21301001,Foreign Banks Nostro (CHF),General
+Other Banks & FIs in Bangladesh,21401001,Foreign Banks Nostro(ACU-USD),General
+Other Banks & FIs in Bangladesh,21401002,Foreign Banks Nostro (ACU-EUR),General
+Other Banks & FIs in Bangladesh <FC>,21402001,Foreign Banks Nostro (AED),General
+Other Banks & FIs outside Bangladesh <FC>,21403001,Foreign Banks Nostro (QAR),General
+Other Banks & FIs outside Bangladesh <FC>,21403002,Interest receivable on Balance with Other Banks,General
+Other Banks & FIs outside Bangladesh <FC>,21403003,NOSTRO for OBU,General
+Other Banks & FIs outside Bangladesh <FC>,21403004,Call Money ,General
+Other Banks & FIs outside Bangladesh <FC>,21403005,Call Money USD,General
+Other Banks & FIs outside Bangladesh <FC>,21403007,Interest Receivable on Call Money <USD>,General
+Other Banks & FIs outside Bangladesh <FC>,21403008,Stock of Prize Bonds,General
+Other Banks & FIs outside Bangladesh <FC>,21403009,Govt. Securities (Encumbered),General
+Other Banks & FIs outside Bangladesh <FC>,21403010,Bangladesh Bank Bill,General
+Other Banks & FIs outside Bangladesh <FC>,21403011,Repo Interest Adjustment,General
+Interest Receivable FC,21404001,Treasury Bills Held for Trading (HFT) Reverse Repo,General
+Interest Receivable BDT,21405001,Treasury Bills Held for Trading (HFT),General
+OBU other Banks & FI <FC>,21406001,Treasury Bills Held to Maturity (HTM) Reverse Repo,General
+Call Money <BDT>,22101001,Treasury Bills Held to Maturity (HTM),General
+Call Money <FC>,22102001,Govt. Securities T Bill  (Encumbered),General
+Interest Receivable on Call Money <BDT>,22103001,Treasury Bond (HTM) Reverse Repo,General
+Interest Receivable on Call Money <FC>,22104001,Treasury Bond Held for Trading (HFT) Reverse Repo,General
+Securities other than Tbill Tbond,23101001,Treasury Bond Held to Maturity (HTM),General
+Securities other than Tbill Tbond,23101002,Remeasured HTM,General
+Securities other than Tbill Tbond,23101003,Interest Receivables on Treasury Bond,General
+Securities other than Tbill Tbond,23101004,Treasury Bond Held for Trading (HFT),General
+Treasury Bills ,23103001,<Private> Equity Investments,General
+Treasury Bills ,23103002,<Private> Investments in Debenture,General
+Treasury Bills ,23103003,<Private> Investments in Bonds <Corp>,General
+Treasury Bills ,23103004,<Private> Investments in Bonds <Sub-ordinated>,General
+Treasury Bills ,23103005,<public> Proprietary Investment Portfolio,General
+T Bond,23104001,Investment under Managed Portfolio,General
+T Bond,23104002,Investment in Mutual Fund <pvt placement> Open ended,General
+T Bond,23104003,Investment in Mutual Fund <pvt placement> Closed ended,General
+T Bond,23104004,Investment in Preference Share,General
+T Bond,23104005,Investment in Zero Coupon Bond <Corporate>,General
+T Bond,23104006,Investment in Commercial Paper,General
+Other Investments,23201001,Interest Receivable on Investment  in Commercial Paper,General
+Other Investments,23201002,IR in <Private> Investments in Debenture,General
+Other Investments,23201003,IR in <Private> Investments in Bonds <Corp>,General
+Other Investments,23201004,IR in <Private> Investments in Bonds <Sub-ordinated>,General
+Other Investments,23201005,Investment in Subsidiaries MTB SL,General
+Other Investments,23201006,Investment in Subsidiaries MTB CL,General
+Other Investments,23201007,Investment in Subsidiaries MTB EX UK,General
+Other Investments,23201008,MTB Auto Loan,General
+Other Investments,23201009,MTB Home Loan,General
+Other Investments,23201010,MTB Home Equity Loan,General
+Other Investments,23201011,MTB NRB Home Loan,General
+Other Investments,23201012,MTB Neer,General
+Other Investments,23201013,MTB Personal Loan,General
+Other Investments,23201014,MTB Professional Loan,General
+Other Investments,23201015,Consumer Financing,General
+Investment in Subsidiaries,23301001,Car Loan (Employee),General
+Investment in Subsidiaries,23301002,Employees House Building Loan,General
+Investment in Subsidiaries,23301003,Staff Loan Aganist Prov. Fund,General
+Retail Term Loans <excl. Staff Loans>,24101001,House Building Loan <Developer>,General
+Retail Term Loans <excl. Staff Loans>,24101002,Lease Finance (Monthly),General
+Retail Term Loans <excl. Staff Loans>,24101003,Lease Finance (Quarterly),General
+Retail Term Loans <excl. Staff Loans>,24101004,House Building Loan <Commercial>,General
+Retail Term Loans <excl. Staff Loans>,24101005,Term Loan Non-Industrial,General
+Retail Term Loans <excl. Staff Loans>,24101006,Term Loan Industrial,General
+Retail Term Loans <excl. Staff Loans>,24101007,House Building Loan <Residential>,General
+Retail Term Loans <excl. Staff Loans>,24101008,MTB Digoon,General
+Retail Term Loans <Staff>,24102001,Small Business Loan Scheme,General
+Retail Term Loans <Staff>,24102002,2403-0300  MTB Life Line,General
+Retail Term Loans <Staff>,24102003,2403-0400  MTB Krishi,General
+Corporate & SME Term Loan,24103001,MTB Bhagyaboti <Re-finance>,General
+Corporate & SME Term Loan,24103002,MTB Gunaboti <Pre-finance>,General
+Corporate & SME Term Loan,24103004,2403-0800 MTB Green Energy,General
+Corporate & SME Term Loan,24103005,2403-0900 MTB IT Geniuos,General
+Corporate & SME Term Loan,24103006,2403-1000 MTB Krishijat,General
+Corporate & SME Term Loan,24103007,2403-1100 MTB Light Engineering,General
+SME Term Loan excl Agri & Micro Fin.,24104001,2403-1200 MTB Mousumi,General
+SME Term Loan excl Agri & Micro Fin.,24104002,2403-1300 MTB Youth Line,General
+SME Term Loan excl Agri & Micro Fin.,24104003,MTB Inclusive Finance,General
+SME Term Loan excl Agri & Micro Fin.,24104004,Microfinance <Agri-TL>,General
+SME Term Loan excl Agri & Micro Fin.,24104005,Microfinance <Micro-TL>,General
+SME Term Loan excl Agri & Micro Fin.,24104006,Demand Loan General,General
+SME Term Loan excl Agri & Micro Fin.,24104007,Demand Loan Forced,General
+SME Term Loan excl Agri & Micro Fin.,24104008,Demand Loan Short Term,General
+SME Term Loan excl Agri & Micro Fin.,24104009,Demand Loan Time,General
+SME Term Loan excl Agri & Micro Fin.,24104010,Payment Aganist Document,General
+SME Term Loan excl Agri & Micro Fin.,24104011,Payment Against Document (B-to-B),General
+SME Term Loan excl Agri & Micro Fin.,24104012,Inland Doc. Bill Purchased <Sight>,General
+SME Term Loan excl Agri & Micro Fin.,24104013,Inland Doc. Bill Discounted <Usance> Cust Risk,General
+SME Term Loan excl Agri & Micro Fin.,24104014,Inland Doc. Bill Discounted <Usance> Bank Risk,General
+SME Term Loan <Agri Fin.>,24105001,Foreign D.B Purchased <Sight>,General
+Corporate & SME Demand Loan,24201001,Foreign D.B Discounted <Usance> Bank Risk,General
+Corporate & SME Demand Loan,24201002,Loan Against Trust Receipt ,General
+Corporate & SME Demand Loan,24201003,Advance Against Cash Incentive ,General
+Corporate & SME Demand Loan,24201004,Cash Aganist Document DL,General
+Corporate & SME Demand Loan,24201005,Demand Loan Garments <SOD>,General
+Corporate & SME Demand Loan,24201006,Packing Credit,General
+Corporate & SME Demand Loan,24201007,EDF Loan,General
+Corporate & SME Demand Loan,24201008,Demand Loans against Rural Credit,General
+Corporate & SME Demand Loan,24201009,Foreign Cheque Purchased,General
+Corporate & SME Demand Loan,24201010,Inland Cheque Purchased,General
+Corporate & SME Demand Loan,24201011,Secured Overdraft against Bank's own TD,General
+Corporate & SME Demand Loan,24201012,Secured Overdraft against other Bank's TD,General
+Corporate & SME Demand Loan,24201013,Secured Overdraft against Shares etc.,General
+Corporate & SME Demand Loan,24201014,Corp Cash Credit Hypo,General
+Corporate & SME Demand Loan,24201015,SOD (Shares & Debentures) C & S,General
+Corporate & SME Demand Loan,24201016,SOD (FO) WBD C & S,General
+Corporate & SME Demand Loan,24201017,Secured Overdraft Work/ Supply Order C & S,General
+Corporate & SME Demand Loan <FC>,24202001,Secured Overdraft Pay Order C & S,General
+SME Demand Loan,24203001,Secured Overdraft Real Estate C & CS,General
+Misc Demand Loans <C/S/R>,24204001,Secured Overdraft Business C & CS,General
+Misc Demand Loans <C/S/R>,24204002,Secured Overdraft Garments C & CS,General
+Retail Continuous Loans,24301001,Export Cash Credit C & CS,General
+Retail Continuous Loans,24301002,SOD (Others),General
+Retail Continuous Loans,24301003,MTB SME Cash Credit Hypo,General
+Corporate & SME Continuous Loan,24302001,MTB Revolving Loan,General
+Corporate & SME Continuous Loan,24302002,MTB Microfinance Agri Revolving Loan,General
+Corporate & SME Continuous Loan,24302003,MTB Microfinance enterprise Revolving Loan,General
+Corporate & SME Continuous Loan,24302004,MTB Light Engineering Revolving Loan,General
+Corporate & SME Continuous Loan,24302005,MTB IT Genious Revolving Loan,General
+Corporate & SME Continuous Loan,24302006,MTB Krishijat Revolving Loan,General
+Corporate & SME Continuous Loan,24302007,Credit Card Loans,General
+Corporate & SME Continuous Loan,24302008,IR on MTB Auto Loan,General
+Corporate & SME Continuous Loan,24302009,IR on MTB Home Loan,General
+Corporate & SME Continuous Loan,24302010,IR on MTB Home Equity Loan,General
+SME Continuous Loan,24303001,IR on MTB NRB Home Loan,General
+SME Continuous Loan,24303002,IR on MTB Neer,General
+SME Continuous Loan,24303003,IR on MTB Personal Loan,General
+SME Continuous Loan,24303004,IR on MTB Professional Loan,General
+SME Continuous Loan,24303005,IR on Consumer Financing,General
+SME Continuous Loan,24303006,IR on Car Loan (Employee),General
+SME Continuous Loan,24303007,IR on Employees House Building Loan,General
+Credit Cards,24401001,IR on Staff Loan Aganist Prov. Fund,General
+Interest Receivable on RTL,24601001,Lease Finance (Monthly) Rental receivables,General
+Interest Receivable on RTL,24601002,Lease Finance (Quarterly) Rental receivables,General
+Interest Receivable on RTL,24601003,IR on House Building Loan <Developer>,General
+Interest Receivable on RTL,24601004,IR on House Building Loan <Commercial>,General
+Interest Receivable on RTL,24601005,IR on Term Loan Non-Industrial,General
+Interest Receivable on RTL,24601006,IR on Term Loan Industrial,General
+Interest Receivable on RTL,24601007,IR on MTB Digoon,General
+Interest Receivable on RTL,24601008,IR on Small Business Loan Scheme,General
+Interest Receivable on Staff Loans,24602001,IR on  MTB Life Line,General
+Interest Receivable on Staff Loans,24602002,IR on  MTB Krishi,General
+Interest Receivable on Staff Loans,24602003,IR on MTB Inclusive Finance,General
+IR on Corporate Term Loan,24603001,IR on MTB Bhagyaboti <Re-finance>,General
+IR on Corporate Term Loan,24603002,IR on MTB Gunaboti <Pre-finance>,General
+IR on Corporate Term Loan,24603003,IR on MTB Green Energy,General
+IR on Corporate Term Loan,24603004,IR on MTB IT Geniuos,General
+IR on Corporate Term Loan,24603005,IR on MTB Krishijat,General
+IR on Corporate Term Loan,24603006,IR on MTB Light Engineering,General
+IR on SME Term Loan excl Agri & MF,24604001,IR on  MTB Mousumi,General
+IR on SME Term Loan excl Agri & MF,24604002,IR on MTB Youth Line,General
+IR on SME Term Loan excl Agri & MF,24604003,IR on Microfinance <Agri&Micro-TL>,General
+IR on SME Term Loan excl Agri & MF,24604004,IR on Microfinance (Enterprise-TL),General
+IR on SME Term Loan excl Agri & MF,24604005,IR on Demand Loan General,General
+IR on SME Term Loan excl Agri & MF,24604006,IR on Demand Loan Forced,General
+IR on SME Term Loan excl Agri & MF,24604007,IR on Demand Loan Short Term,General
+IR on SME Term Loan excl Agri & MF,24604008,IR on Demand Loan Time,General
+IR on SME Term Loan excl Agri & MF,24604009,IR on Payment Aganist Document,General
+IR on SME Term Loan excl Agri & MF,24604010,IR on Payment Against Document (B-to-B),General
+IR on SME Term Loan excl Agri & MF,24604011,IR on Inland Doc. Bill Purchased <Sight>,General
+IR on SME Term Loan excl Agri & MF,24604012,IR on Inland Doc. Bill Discounted <Usance> Cust Risk,General
+IR on SME Term Loan excl Agri & MF,24604013,IR on Inland Doc. Bill Discounted <Usance> Bank Risk,General
+IR on SME Term Loan <Agri & MF>,24605001,IR on Foreign D.B Purchased <Sight>,General
+IR on SME Term Loan <Agri & MF>,24605002,IR on Foreign D.B Discounted <Usance> Cust Risk,General
+IR on Corporate & SME Demand Loan,24606001,IR on Foreign D.B Discounted <Usance> Bank Risk,General
+IR on Corporate & SME Demand Loan,24606002,IR on Loan Against Trust Receipt ,General
+IR on Corporate & SME Demand Loan,24606003,IR on Cash Aganist Document DL,General
+IR on Corporate & SME Demand Loan,24606004,IR on Demand Loan Garments,General
+IR on Corporate & SME Demand Loan,24606005,IR on Packing Credit,General
+IR on Corporate & SME Demand Loan,24606006,IR on Advance Against Cash Incentive ,General
+IR on Corporate & SME Demand Loan,24606007,IR on EDF Loan <USD>,General
+IR on Corporate & SME Demand Loan,24606008,IR on Demand Loans against Rural Credit,General
+IR on Corporate & SME Demand Loan,24606009,IR on Secured Overdraft against Bank's own TD,General
+IR on Corporate & SME Demand Loan,24606010,IR on Secured Overdraft against other Bank's TD,General
+IR on Corporate & SME Demand Loan,24606011,IR on Secured Overdraft against Shares etc.,General
+IR on Corporate & SME Demand Loan,24606012,IR on Corp Cash Credit Hypo,General
+IR on Corporate & SME Demand Loan,24606013,IR on SOD (Shares & Debentures) C or CS??,General
+IR on Corporate & SME Demand Loan,24606014,IR on SOD (FO) WBD Cor CS ??,General
+IR on Corporate & SME Demand Loan,24606015,IR on Secured Overdraft Work/ Supply Order C or CS ??,General
+IR on Corporate & SME Demand Loan,24606016,IR on Secured Overdraft Pay Order C or CS ??,General
+IR on Corporate & SME Demand Loan,24606017,IR on Secured Overdraft Real Estate C or CS ??,General
+IR on Corporate & SME Demand Loan FC,24607001,IR on Secured Overdraft Business C or CS ??,General
+IR on SME Demand Loan,24608001,IR on Secured Overdraft Garments C or CS ??,General
+IR on Retail Continuous Loan,24609001,IR on Export Cash Credit C or CS??,General
+IR on Retail Continuous Loan,24609002,What is Interest Receivable on SOD (Others) ?? ,General
+IR on Retail Continuous Loan,24609003,IR on MTB SME Cash Credit Hypo,General
+IR on Corporate &/ or SME Continuous Loan,24610001,IR on MTB Revolving Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610002,IR on MTB Microfinance Agri Revolving Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610003,IR on MTB Microfinance enterprise Revolving Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610004,IR on MTB Light Engineering Revolving Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610005,IR on MTB IT Genious Revolving Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610006,IR on MTB Krishijat Revolving Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610007,IR on Debit Balance in Liability Accounts,General
+IR on Corporate &/ or SME Continuous Loan,24610008,PIR on MTB Auto Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610009,PIR on MTB Home Loan,General
+IR on Corporate &/ or SME Continuous Loan,24610010,PIR on MTB Home Equity Loan,General
+IR on SME Continuous Loan,24611001,PIR on MTB NRB Home Loan,General
+IR on SME Continuous Loan,24611002,PIR on MTB Neer,General
+IR on SME Continuous Loan,24611003,PIR on MTB Personal Loan,General
+IR on SME Continuous Loan,24611004,PIR on MTB Professional Loan,General
+IR on SME Continuous Loan,24611005,PIR on Consumer Financing,General
+IR on SME Continuous Loan,24611006,PIR on Car Loan (Employee),General
+IR on SME Continuous Loan,24611007,PIR on Employees House Building Loan,General
+IR on Other Loans and Assets,24612001,PIR on Staff Loan Aganist Prov. Fund,General
+Penal Interest Receivable on RTL,24701001,Lease Finance (Monthly) Rental receivables Penal,General
+Penal Interest Receivable on RTL,24701002,Lease Finance (Quarterly) Rental receivables Penal,General
+Penal Interest Receivable on RTL,24701003,PIR on House Building Loan <Developer>,General
+Penal Interest Receivable on RTL,24701004,PIR on House Building Loan <Commercial>,General
+Penal Interest Receivable on RTL,24701005,PIR on Term Loan Non-Industrial,General
+Penal Interest Receivable on RTL,24701006,PIR on Term Loan Industrial,General
+Penal Interest Receivable on RTL,24701007,PIR on MTB Digoon,General
+Penal Interest Receivable on RTL,24701008,PIR on Small Business Loan Scheme,General
+Penal Intt Receivable on Staff Loans,24702001,PIR on  MTB Life Line,General
+Penal Intt Receivable on Staff Loans,24702002,PIR on  MTB Krishi,General
+Penal Intt Receivable on Staff Loans,24702003,PIR on MTB Inclusive Finance,General
+PIR on Corporate Term Loan,24703001,PIR on MTB Bhagyaboti <Re-finance>,General
+PIR on Corporate Term Loan,24703002,PIR on MTB Gunaboti <Pre-finance>,General
+PIR on Corporate Term Loan,24703003,PIR on MTB Green Energy,General
+PIR on Corporate Term Loan,24703004,PIR on MTB IT Geniuos,General
+PIR on Corporate Term Loan,24703005,PIR on MTB Krishijat,General
+PIR on Corporate Term Loan,24703006,PIR on MTB Light Engineering,General
+PIR on SME Term Loan excl Agri & MF,24704001,PIR on  MTB Mousumi,General
+PIR on SME Term Loan excl Agri & MF,24704002,PIR on MTB Youth Line,General
+PIR on SME Term Loan excl Agri & MF,24704003,PIR on Microfinance <Agri&Micro-TL>,General
+PIR on SME Term Loan excl Agri & MF,24704004,PIR on Microfinance (Enterprise-TL),General
+PIR on SME Term Loan excl Agri & MF,24704005,PIR on Demand Loan General,General
+PIR on SME Term Loan excl Agri & MF,24704006,PIR on Demand Loan Forced,General
+PIR on SME Term Loan excl Agri & MF,24704007,PIR on Demand Loan Short Term,General
+PIR on SME Term Loan excl Agri & MF,24704008,PIR on Demand Loan Time,General
+PIR on SME Term Loan excl Agri & MF,24704009,PIR on Payment Aganist Document,General
+PIR on SME Term Loan excl Agri & MF,24704010,PIR on Payment Against Document (B-to-B),General
+PIR on SME Term Loan excl Agri & MF,24704011,PIR on Inland Doc. Bill Purchased <Sight>,General
+PIR on SME Term Loan excl Agri & MF,24704012,PIR on Inland Doc. Bill Discounted <Usance> Cust Risk,General
+PIR on SME Term Loan excl Agri & MF,24704013,PIR on Inland Doc. Bill Discounted <Usance> Bank Risk,General
+PIR on SME Term Loan <Agri & MF>,24705001,PIR on Foreign D.B Purchased <Sight>,General
+PIR on SME Term Loan <Agri & MF>,24705002,PIR on Foreign D.B Discounted <Usance> Cust Risk,General
+PIR on Corporate & SME Demand Loan,24706001,PIR on Foreign D.B Discounted <Usance> Bank Risk,General
+PIR on Corporate & SME Demand Loan,24706002,PIR on Loan Against Trust Receipt ,General
+PIR on Corporate & SME Demand Loan,24706003,PIR on Cash Aganist Document DL,General
+PIR on Corporate & SME Demand Loan,24706004,PIR on Demand Loan Garments,General
+PIR on Corporate & SME Demand Loan,24706005,PIR on Packing Credit,General
+PIR on Corporate & SME Demand Loan,24706006,PIR on Advance Against Cash Incentive ,General
+PIR on Corporate & SME Demand Loan,24706007,PIR on EDF Loan <USD>,General
+PIR on Corporate & SME Demand Loan,24706008,PIR on Demand Loans against Rural Credit,General
+PIR on Corporate & SME Demand Loan,24706009,PIR on Secured Overdraft against Bank's own TD,General
+PIR on Corporate & SME Demand Loan,24706010,PIR on Secured Overdraft against other Bank's TD,General
+PIR on Corporate & SME Demand Loan,24706011,PIR on Secured Overdraft against Shares etc.,General
+PIR on Corporate & SME Demand Loan,24706012,PIR on Corp Cash Credit Hypo,General
+PIR on Corporate & SME Demand Loan,24706013,PIR on SOD (Shares & Debentures) C or CS??,General
+PIR on Corporate & SME Demand Loan,24706014,PIR on SOD (FO) WBD Cor CS ??,General
+PIR on Corporate & SME Demand Loan,24706015,PIR on Secured Overdraft Work/ Supply Order C & CS,General
+PIR on Corporate & SME Demand Loan,24706016,PIR on Secured Overdraft Pay Order C & CS,General
+PIR on Corporate & SME Demand Loan,24706017,PIR on Secured Overdraft Real Estate C & CS,General
+PIR on Corporate & SME Demand Loan FC,24707001,PIR on Secured Overdraft Business C & CS,General
+PIR on SME Demand Loan,24708001,PIR on Secured Overdraft Garments C & CS,General
+PIR on Retail Continuous Loan,24709001,PIR on Export Cash Credit C & CS,General
+PIR on Retail Continuous Loan,24709002,Penal Interest Receivable on SOD (Others) ,General
+PIR on Retail Continuous Loan,24709003,PIR on MTB SME Cash Credit Hypo,General
+PIR on Corporate &/ or SME Continuous Loan,24710001,PIR on MTB Revolving Loan,General
+PIR on Corporate &/ or SME Continuous Loan,24710002,PIR on MTB Microfinance Agri Revolving Loan,General
+PIR on Corporate &/ or SME Continuous Loan,24710003,PIR on MTB Microfinance enterprise Revolving Loan,General
+PIR on Corporate &/ or SME Continuous Loan,24710004,PIR on MTB Light Engineering Revolving Loan,General
+PIR on Corporate &/ or SME Continuous Loan,24710005,PIR on MTB IT Genious Revolving Loan,General
+PIR on Corporate &/ or SME Continuous Loan,24710006,PIR on MTB Krishijat Revolving Loan,General
+PIR on Corporate &/ or SME Continuous Loan,24710007,Bill DiscountingUSD,General
+PIR on Corporate &/ or SME Continuous Loan,24710008,UPAS/ Buyer's Credit USD,General
+PIR on Corporate &/ or SME Continuous Loan,24710009,Debit Balance in Liability Accounts,General
+PIR on SME Continuous Loan,24711001,Land,General
+PIR on SME Continuous Loan,24711002,Immovable Property other than Land,General
+PIR on SME Continuous Loan,24711007,Motor Cycles,General
+Office Equipments,25104001,Advance against Suppliers/ Parties <Vendors>,General
+Motor Vehicles,25107002,Advance Rent <Advance Rent_less than 1 year>,General
+Books & Periodicals,25108001,Advance Rent <Advance Rent_more than 1 year>,General
+Advance against Suppliers/ Parties,26202001,IR on Placement to Off-Shore Banking Unit,General
+Advance Income Tax,26204001,Receivable from Subsidiaries Others,General
+Advance against POSTAGE,26209001,Suspense account for Exchange Houses 1,General
+Coupon Interest Expenditure Account,26301001,Suspense account for Exchange Houses 2,General
+Chargeback Settlement A/c,26601001,Repo Interest Expenditure Account,General
+Sanchay Patra,26603001,Stamps in Hand,General
+Suspense account for Foreign Banks,26606001,Printed stationeries,General
+Suspense account for Exchange Houses,26607001,Security Stationeries,General
+Remittance Payment Account,26608001,Transit Account _Repo,General
+Suspense account for Exchange Houses,26607002,Transit Account Bangladesh Bank,General
+DD Paid Without Advice,26609001,IE on MTB Auto Loan,General
+Receivable from OBU,26701001,IE on MTB Home Loan,General
+Preliminary Expenses,26901001,IE on MTB Home Equity Loan,General
+Prepaid Promotional and Development Expenses,26902001,IE on MTB Neer,General
+Stock of Commemorative Coins,26903001,IE on MTB Professional Loan,General
+Stock of Fixed Assets,26904001,IE on Consumer Financing,General
+Stock of stationeries,26905001,IE on Car Loan (Employee),General
+Stock of stationeries,26905002,IE on Employees House Building Loan,General
+Transit Account,26906001,IE on Staff Loan Aganist Prov. Fund,General
+Transit Account,26906002,Lease Finance (Monthly) Rental Earned,General
+Branch Account,27101001,Lease Finance (Quarterly) Rental Earned,General
+Expenditure for the period fm 1st Jan to ..,28101001,IE on House Building Loan <Developer>,General
+Interest Earned on RTL,31101001,IE on House Building Loan <Commercial>,General
+Interest Earned on RTL,31101002,IE on Term Loan Non-Industrial,General
+Interest Earned on RTL,31101003,IE on Term Loan Industrial,General
+Interest Earned on RTL,31101004,IE on MTB Digoon,General
+Interest Earned on RTL,31101005,IE on Small Business Loan Scheme,General
+Interest Earned on RTL,31101006,IE on  MTB Life Line,General
+Interest Earned on RTL,31101007,IE on  MTB Krishi,General
+Interest Earned on RTL,31101008,IE on MTB Inclusive Finance,General
+Interest Earned on Staff Loans,31102001,IE on MTB Bhagyaboti <Re-finance>,General
+Interest Earned on Staff Loans,31102002,IE on MTB Gunaboti <Pre-finance>,General
+Interest Earned on Staff Loans,31102003,IE on MTB Green Energy,General
+IE on Corporate Term Loan,31103001,IE on MTB IT Geniuos,General
+IE on Corporate Term Loan,31103002,IE on MTB Krishijat,General
+IE on Corporate Term Loan,31103003,IE on MTB Light Engineering,General
+IE on Corporate Term Loan,31103004,IE on  MTB Mousumi,General
+IE on Corporate Term Loan,31103005,IE on MTB Youth Line,General
+IE on Corporate Term Loan,31103006,IE on Microfinance <Agri&Micro-TL>,General
+IE on SME Term Loan excl Agri & MF,31104001,IE on Microfinance (Enterprise-TL),General
+IE on SME Term Loan excl Agri & MF,31104002,IE on Demand Loan General,General
+IE on SME Term Loan excl Agri & MF,31104003,IE on Demand Loan Forced,General
+IE on SME Term Loan excl Agri & MF,31104004,IE on Demand Loan Short Term,General
+IE on SME Term Loan excl Agri & MF,31104005,IE on Demand Loan Time,General
+IE on SME Term Loan excl Agri & MF,31104006,IE on Payment Aganist Document,General
+IE on SME Term Loan excl Agri & MF,31104007,IE on Payment Against Document (B-to-B),General
+IE on SME Term Loan excl Agri & MF,31104008,IE on Inland Doc. Bill Purchased <Sight>,General
+IE on SME Term Loan excl Agri & MF,31104009,IE on Inland Doc. Bill Discounted <Usance> Cust Risk,General
+IE on SME Term Loan excl Agri & MF,31104010,IE on Inland Doc. Bill Discounted <Usance> Bank Risk,General
+IE on SME Term Loan excl Agri & MF,31104011,IE on Foreign D.B Purchased <Sight>,General
+IE on SME Term Loan excl Agri & MF,31104012,IE on Foreign D.B Discounted <Usance> Cust Risk,General
+IE on SME Term Loan excl Agri & MF,31104013,IE on Foreign D.B Discounted <Usance> Bank Risk,General
+IE on SME Term Loan <Agri & MF>,31105001,IE on Loan Against Trust Receipt ,General
+IE on SME Term Loan <Agri & MF>,31105002,IE on Cash Aganist Document DL,General
+IE on Corporate & SME Demand Loan,31106001,IE on Demand Loan Garments,General
+IE on Corporate & SME Demand Loan,31106002,IE on Packing Credit,General
+IE on Corporate & SME Demand Loan,31106003,IE on Advance Against Cash Incentive ,General
+IE on Corporate & SME Demand Loan,31106004,IE on EDF Loan <USD>,General
+IE on Corporate & SME Demand Loan,31106005,IE on Demand Loans against Rural Credit,General
+IE on Corporate & SME Demand Loan,31106006,IE on Secured Overdraft against Bank's own TD,General
+IE on Corporate & SME Demand Loan,31106007,IE on Secured Overdraft against other Bank's TD,General
+IE on Corporate & SME Demand Loan,31106008,IE on Secured Overdraft against Shares etc.,General
+IE on Corporate & SME Demand Loan,31106009,IE on Corp Cash Credit Hypo,General
+IE on Corporate & SME Demand Loan,31106010,IE on SOD (Shares & Debentures) C or CS??,General
+IE on Corporate & SME Demand Loan,31106011,IE on SOD (FO) WBD Cor CS ??,General
+IE on Corporate & SME Demand Loan,31106012,IE on Secured Overdraft Work/ Supply Order C or CS ??,General
+IE on Corporate & SME Demand Loan,31106013,IE on Secured Overdraft Pay Order C or CS ??,General
+IE on Corporate & SME Demand Loan,31106014,IE on Secured Overdraft Real Estate C or CS ??,General
+IE on Corporate & SME Demand Loan,31106015,IE on Secured Overdraft Business C or CS ??,General
+IE on Corporate & SME Demand Loan,31106016,IE on Secured Overdraft Garments C or CS ??,General
+IE on Corporate & SME Demand Loan,31106017,IE on Export Cash Credit C or CS??,General
+IE on Corporate & SME Demand Loan FC,31107001,What is Interest Earned on SOD (Others) ?? ,General
+IE on SME Demand Loan,31108001,IE on MTB SME Cash Credit Hypo,General
+IE on Retail Continuous Loan,31109001,IE on MTB Revolving Loan,General
+IE on Retail Continuous Loan,31109002,IE on MTB Microfinance Agri Revolving Loan,General
+IE on Retail Continuous Loan,31109003,IE on MTB Microfinance enterprise Revolving Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110001,IE on MTB Light Engineering Revolving Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110002,IE on MTB IT Genious Revolving Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110003,IE on MTB Krishijat Revolving Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110004,IE on Foreign Cheque Purchased,General
+IE on Corporate &/ or SME Continuous Loan,31110005,IE on Inland Cheque Purchased,General
+IE on Corporate &/ or SME Continuous Loan,31110006,P I E on MTB Auto Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110007,P I E on MTB Home Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110008,P I E on MTB Home Equity Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110009,P I E on MTB NRB Home Loan,General
+IE on Corporate &/ or SME Continuous Loan,31110010,P I E on MTB Neer,General
+IE on SME Continuous Loan,31111001,P I E on MTB Personal Loan,General
+IE on SME Continuous Loan,31111002,P I E on MTB Professional Loan,General
+IE on SME Continuous Loan,31111003,P I E on Consumer Financing,General
+IE on SME Continuous Loan,31111004,P I E on Car Loan (Employee),General
+IE on SME Continuous Loan,31111005,P I E on Employees House Building Loan,General
+IE on SME Continuous Loan,31111006,P I E on Staff Loan Aganist Prov. Fund,General
+IE on SME Continuous Loan,31111007,Lease Finance (Monthly) Rental Earned <Penalty>,General
+IE on Misc Demand Loan,31112001,Lease Finance (Qtly) Rental Earned <Penalty>,General
+IE on Misc Demand Loan,31112002,P I E on House Building Loan <Developer>,General
+Penal Interest Earned on RTL,31201001,P I E on House Building Loan <Commercial>,General
+Penal Interest Earned on RTL,31201002,P I E on Term Loan Non-Industrial,General
+Penal Interest Earned on RTL,31201003,P I E on Term Loan Industrial,General
+Penal Interest Earned on RTL,31201004,P I E on MTB Digoon,General
+Penal Interest Earned on RTL,31201005,P I E on Small Business Loan Scheme,General
+Penal Interest Earned on RTL,31201006,P I E on  MTB Life Line,General
+Penal Interest Earned on RTL,31201007,P I E on  MTB Krishi,General
+Penal Interest Earned on RTL,31201008,P I E on MTB Inclusive Finance,General
+Penal Interest Earned on Staff Loans,31202001,P I E on MTB Bhagyaboti <Re-finance>,General
+Penal Interest Earned on Staff Loans,31202002,P I E on MTB Gunaboti <Pre-finance>,General
+Penal Interest Earned on Staff Loans,31202003,P I E on MTB Green Energy,General
+P I E on Corporate Term Loan,31203001,P I E on MTB IT Geniuos,General
+P I E on Corporate Term Loan,31203002,P I E on MTB Krishijat,General
+P I E on Corporate Term Loan,31203003,P I E on MTB Light Engineering,General
+P I E on Corporate Term Loan,31203004,P I E on  MTB Mousumi,General
+P I E on Corporate Term Loan,31203005,P I E on MTB Youth Line,General
+P I E on Corporate Term Loan,31203006,P I E on Microfinance <Agri&Micro-TL>,General
+P I E on SME Term Loan excl Agri & MF,31204001,P I E on Microfinance (Enterprise-TL),General
+P I E on SME Term Loan excl Agri & MF,31204002,P I E on Demand Loan General,General
+P I E on SME Term Loan excl Agri & MF,31204003,P I E on Demand Loan Forced,General
+P I E on SME Term Loan excl Agri & MF,31204004,P I E on Demand Loan Short Term,General
+P I E on SME Term Loan excl Agri & MF,31204005,P I E on Demand Loan Time,General
+P I E on SME Term Loan excl Agri & MF,31204006,P I E on Payment Aganist Document,General
+P I E on SME Term Loan excl Agri & MF,31204007,P I E on Payment Against Document (B-to-B),General
+P I E on SME Term Loan excl Agri & MF,31204008,P I E on Inland Doc. Bill Purchased <Sight>,General
+P I E on SME Term Loan excl Agri & MF,31204009,P I E on Inland Doc. Bill Discounted <Usance> Cust Risk,General
+P I E on SME Term Loan excl Agri & MF,31204010,P I E on Inland Doc. Bill Discounted <Usance> Bank Risk,General
+P I E on SME Term Loan excl Agri & MF,31204011,P I E on Foreign D.B Purchased <Sight>,General
+P I E on SME Term Loan excl Agri & MF,31204012,P I E on Foreign D.B Discounted <Usance> Cust Risk,General
+P I E on SME Term Loan excl Agri & MF,31204013,P I E on Foreign D.B Discounted <Usance> Bank Risk,General
+P I E on SME Term Loan <Agri & MF>,31205001,P I E on Loan Against Trust Receipt ,General
+P I E on SME Term Loan <Agri & MF>,31205002,P I E on Cash Aganist Document DL,General
+P I E on Corporate & SME Demand Loan,31206001,P I E on Demand Loan Garments,General
+P I E on Corporate & SME Demand Loan,31206002,P I E on Packing Credit,General
+P I E on Corporate & SME Demand Loan,31206003,P I E on Advance Against Cash Incentive ,General
+P I E on Corporate & SME Demand Loan,31206004,P I E on EDF Loan <USD>,General
+P I E on Corporate & SME Demand Loan,31206005,P I E on Demand Loans against Rural Credit,General
+P I E on Corporate & SME Demand Loan,31206006,P I E on Secured Overdraft against Bank's own TD,General
+P I E on Corporate & SME Demand Loan,31206007,P I E on Secured Overdraft against other Bank's TD,General
+P I E on Corporate & SME Demand Loan,31206008,P I E on Secured Overdraft against Shares etc.,General
+P I E on Corporate & SME Demand Loan,31206009,P I E on Corp Cash Credit Hypo,General
+P I E on Corporate & SME Demand Loan,31206010,P I E on SOD (Shares & Debentures) C or CS??,General
+P I E on Corporate & SME Demand Loan,31206011,P I E on SOD (FO) WBD Cor CS ??,General
+P I E on Corporate & SME Demand Loan,31206012,P I E on Secured Overdraft Work/ Supply Order C or CS ??,General
+P I E on Corporate & SME Demand Loan,31206013,P I E on Secured Overdraft Pay Order C or CS ??,General
+P I E on Corporate & SME Demand Loan,31206014,P I E on Secured Overdraft Real Estate C or CS ??,General
+P I E on Corporate & SME Demand Loan,31206015,P I E on Secured Overdraft Business C or CS ??,General
+P I E on Corporate & SME Demand Loan,31206016,P I E on Secured Overdraft Garments C or CS ??,General
+P I E on Corporate & SME Demand Loan,31206017,P I E on Export Cash Credit C or CS??,General
+P I E on Corporate & SME Demand Loan FC,31207001,What is Penal Interest Earned on SOD (Others) ?? ,General
+P I E on SME Demand Loan,31208001,P I E on MTB SME Cash Credit Hypo,General
+P I E on Retail Continuous Loan,31209001,P I E on MTB Revolving Loan,General
+P I E on Retail Continuous Loan,31209002,P I E on MTB Microfinance Agri Revolving Loan,General
+P I E on Retail Continuous Loan,31209003,P I E on MTB Microfinance enterprise Revolving Loan,General
+P I E on Corporate &/ or SME Continuous Loan,31210001,P I E on MTB Light Engineering Revolving Loan,General
+P I E on Corporate &/ or SME Continuous Loan,31210002,P I E on MTB IT Genious Revolving Loan,General
+P I E on Corporate &/ or SME Continuous Loan,31210003,P I E on MTB Krishijat Revolving Loan,General
+P I E on SME Continuous Loan,31211002,Treasury Bill,General
+P I E on SME Continuous Loan,31211003,Amortization of HFT Securites Treasury Bill,General
+P I E on SME Continuous Loan,31211004,Revaluation Gain HFT Securites Treasury Bill-MTM,General
+P I E on SME Continuous Loan,31211005,Gain on Sale of Treasury Bill,General
+P I E on SME Continuous Loan,31211006,Gain from Repo (Treasury Bill),General
+P I E on SME Continuous Loan,31211007,Interest on Treasury Bond,General
+Interest on MTB General Account,31301001,Revaluation Gain HFT Securites Treasury Bond -MTM,General
+Interest on Money at Call  and Short Notice,31401001,Gain on Sale of Treasury Bond,General
+Interest on Placement to Off-Shore Banking Unit,31402001,Gain from Repo (Treasury Bond),General
+Interest on Balance with Other Bank,31403001,Coupon Interest of Treasury Bond (Repo),General
+Interest on Balance with Foreign Bank,31404001,Underwriting Commission on Treasury Bill/Bond,General
+Interest on Foreign Currency Lending,31405001,Discount on Bills,General
+Repo Interest Income,31406001,Interest on Reverse REPO,General
+Interest on Bangladesh Bank Foreign Currency Clearing A/c,31407001,Gain from Govt. Securities,General
+Income from Treasury Operations <Govt Sec.>,32101001,Other Approved Securities,General
+Income from Treasury Operations <Govt Sec.>,32101002,Interest on Investment in Commercial Paper,General
+Income from Treasury Operations <Govt Sec.>,32101003,Income from Bond,General
+Income from Treasury Operations <Govt Sec.>,32101004,Capital Gain from Investment in Shares,General
+Income from Treasury Operations <Govt Sec.>,32101005,Dividend Income from Investment in Shares,General
+Income from Treasury Operations <Govt Sec.>,32101006,Capital Gain from Mutual Fund,General
+Income from Treasury Operations <Govt Sec.>,32101007,Income from Debentures,General
+Income from Treasury Operations <Govt Sec.>,32101008,Dividend Income from Mutual Fund,General
+Income from Treasury Operations <Govt Sec.>,32101009,Inland Remittances (DD/TT),General
+Income from Treasury Operations <Govt Sec.>,32101010,Pay Order Issued,General
+Income from Treasury Operations <Govt Sec.>,32101011,Commission on IPO Collection,General
+Income from Treasury Operations <Govt Sec.>,32101012,Foreign Remittance (FDD/TC),General
+Income from Treasury Operations <Govt Sec.>,32101013,Online Service,General
+Income from Treasury Operations <Govt Sec.>,32101014,POS Commission,General
+Income from Treasury Operations <Govt Sec.>,32101015,RTGS Commission,General
+Income from Treasury Operations <other than Govt Sec.>,32201001,Comm. on OBC/IBC <SC> Inland Cheque Collection,General
+Income from Other Investments,32202001,Comm. on FSC <Foreign Cheque Collection>,General
+Income from Other Investments,32202002,Comm. on CP <Inland Cheque Purchased>,General
+Income from Other Investments,32202003,Comm. on FCP <Foreign Cheque Purchased>,General
+Income from Other Investments,32202004,Collection Commission - Import,General
+Income from Other Investments,32202005,Commn on Bills Purchased ,General
+Commission on GB operations,33101001,Commn on Bank Guarantee,General
+Commission on GB operations,33101002,L.C. (Advising/Transfer),General
+Commission on GB operations,33101003,Comm. on Acceptance of Bill _ VAT Applicable,General
+Commission on GB operations,33101004,Comm. on Acceptance of Bill - VAT Not Applicable,General
+Commission on GB operations,33101005,Commission on LC - VAT applicable,General
+Commission on GB operations,33101007,Commission on LC -VAT-Not Applicable ,General
+Commission on GB operations,33101008,Commission on Shipping Guarantee,General
+Commission on GB operations,33101009,Commission on Exchange House,General
+Commission on Trade operations,33102001,Rent on Lockers,General
+Commission on Trade operations,33102002,Rent on Godown,General
+Commission on Trade operations,33102003,Rent on Others,General
+Commission on Trade operations,33102004,Godown Insurance Recoveries,General
+Commission on Trade operations,33102005,Postage Recoveries,General
+Commission on Trade operations,33102006,Telex/TP/Telegram/SMS Recoveries,General
+Commission on Trade operations,33102007,Printing and Stationary Charges Recovery,General
+Commission on Trade operations,33102008,Incidental Charge Recoveries,General
+Commission on Trade operations,33102009,Legal Charge Recoveries,General
+Commission on Trade operations,33102010,SWIFT Charges Recoveries,General
+Commission on NRB operations,33103001,Recovery of NID varification charges,General
+Exchange Gain on Foreign Currency,33201001,Locker Insurance Premium Recoveries,General
+Income on Forex Deal,33202001,CVP Charge Recoveries,General
+Underwriting Commission,33302001,Annual Service Charge <Cards>,General
+Rental Income,34101001,Cards Replacement Charge,General
+Rental Income,34101002,Cheque Processing Fees - Credit Card,General
+Rental Income,34101003,Late Payment Charge - Credit Card,General
+Recoveries of various charges,34102001,Transaction Charge - Credit Card,General
+Recoveries of various charges,34102002,Credit Card Insurance Premium,General
+Recoveries of various charges,34102003,Card Acquiring Income (ATM),General
+Recoveries of various charges,34102004,POS Issuer Fee,General
+Recoveries of various charges,34102005,Early Settlement Fee on MTB Auto Loan,General
+Recoveries of various charges,34102006,Early Settlement Fee - MTB Neer,General
+Recoveries of various charges,34102007,Early Settlement Fee on MTB Personal Loan,General
+Recoveries of various charges,34102008,Early Settlement Fee on MTB Home Equity Loan ,General
+Recoveries of various charges,34102009,Early Settlement Fee on MTB Home Loan ,General
+Recoveries of various charges,34102010,Early Settlement Charge others,General
+Income fm Cards operations,34103001,Loan Processing Fee- MTB Auto loan,General
+Income fm Cards operations,34103003,Loan Processing Fee  - MTB Neer,General
+Income fm Cards operations,34103005,Loan Processing Fee- MTB Personal loan,General
+Income fm Cards operations,34103006,Loan Processing Fee- MTB Home Equity loan,General
+Income fm Cards operations,34103007,Loan Processing Fee- MTB Home loan,General
+Income fm Cards operations,34103013,Loan Processing Fee others,General
+Income fm Cards operations,34103015,Partial Payment Fee- MTB Auto Loan ,General
+Income fm Cards operations,34103016,Partial Payment Fee- MTB Home Loan,General
+Early Settlement Fees,34104001,Partial Payment Fee- MTB Personal Loan ,General
+Early Settlement Fees,34104002,Partial Payment Fee- MTB Home Equity Loan ,General
+Early Settlement Fees,34104003,Partial Payment Fee  - MTB Neer,General
+Early Settlement Fees,34104004,Processing Fees,General
+Early Settlement Fees,34104005,Partial Settlement Fees,General
+Loan Processing Fees,34105001,Loan Application Fees,General
+Loan Processing Fees,34105002,Rescheduling Fees,General
+Loan Processing Fees,34105003,Security Replacement Fees,General
+Loan Processing Fees,34105004,Loan Reduction & Security Partial Release,General
+Loan Processing Fees,34105005,Excess Over Limit (EOL) Charges,General
+Loan Processing Fees,34105006,Guarantor Change Charges,General
+Partial Payment Fees,34106001,Certificate Issuance Charges,General
+Partial Payment Fees,34106002,Documentation Waiver Charges,General
+Partial Payment Fees,34106003,Loan Type Conversion Fees,General
+Partial Payment Fees,34106004,Transfer Charges,General
+Partial Payment Fees,34106005,Standing Instruction Charges,General
+SME Fees & Charges,34107001,Account Closing Fees,General
+SME Fees & Charges,34107002,A/c Maintenance Fees,General
+SME Fees & Charges,34107003,Time Extension Charges,General
+SME Fees & Charges,34107004,CPV Charges,General
+SME Fees & Charges,34107005,Doc. Exception Charges,General
+SME Fees & Charges,34107006,Postage Charges,General
+SME Fees & Charges,34107007,Other Charges,General
+SME Fees & Charges,34107008,Interest Reduction Charges,General
+SME Fees & Charges,34107009,Documentation Deferral Charges,General
+SME Fees & Charges,34107010,Change of Management/Business Title Charges,General
+SME Fees & Charges,34107011,Account Statement Charges,General
+SME Fees & Charges,34107013,Handling Charges,General
+SME Fees & Charges,34107014,Service Charge-Refund Warrant,General
+SME Fees & Charges,34107015,Margin A/C Maintenance Income,General
+SME Fees & Charges,34107016,Syndication Participation Fee,General
+SME Fees & Charges,34107017,Add Confirmation (Management Fee),General
+SME Fees & Charges,34107018,Management Fee (Corporate Finance),General
+SME Fees & Charges,34107021,Miscellaneous Earnings,General
+SME Fees & Charges,34107022,Misc. Income Retail,General
+SME Fees & Charges,34107023,Recovery of Written Off Loans - Corporate,General
+SME Fees & Charges,34107024,Recovery of Written Off Loans - Retail,General
+SME Fees & Charges,34107025,Recovery of Written Off Loans - SME,General
+Service Charges,34108001,Interest Expenses MTB Probaho,General
+Service Charges,34108002,I Expenses MTB Ankur,General
+Service Charges,34108003,I Expenses MTB Ruby,General
+Service Charges,34108004,I Expenses MTB Graduate,General
+Management Fees,34109001,I Expenses MTB Junior,General
+Management Fees,34109002,I Expenses on MTB Shanchay,General
+Management Fees,34109003,I Expenses MTB Senior,General
+Gain on Sale of Fixed Assets,34110001,I Expenses on MTB Inspire,General
+NPSB Acquirer Income,34111001,I Expenses MTB Privilege Saving,General
+Miscellneous Earnings,34112001,I Expenses on MTB Care,General
+Miscellneous Earnings,34112002,I Expenses on Regular Savings  Deposit,General
+Income on account of recovery fm written off loans,34113002,Interest Expenses MTB Buniad,General
+Income on account of recovery fm written off loans,34113003,Interest Expenses NRB Fixed Deposit,General
+Interest Expenses on Current Deposits,41101001,Interest Expenses Term Deposit General,General
+Interest Expenses on Savings Bank Accounts,41102001,Interest Expenses Term Deposit Monthly Benefit Plan,General
+Interest Expenses on Savings Bank Accounts,41102002,Interest Expenses RTD MTB Buniad,General
+Interest Expenses on Savings Bank Accounts,41102003,Interest Expenses Reinvestment Term Deposits General,General
+Interest Expenses on Savings Bank Accounts,41102004,Interest Expenses RTD Double Benefit Scheme,General
+Interest Expenses on Savings Bank Accounts,41102005,Interest Expenses on RD Brick-by-Brick,General
+Interest Expenses on Savings Bank Accounts,41102006,Interest Expenses on RD MTB Educational Plan,General
+Interest Expenses on Savings Bank Accounts,41102007,Interest Expenses on RD Kotipati,General
+Interest Expenses on Savings Bank Accounts,41102008,Interest Expenses on RD Millionnaire Plan,General
+Interest Expenses on Savings Bank Accounts,41102009,Interest Expenses on RD NRB,General
+Interest Expenses on Savings Bank Accounts,41102010,Interest Expenses on NFCD USD,General
+Interest Expenses on Savings Bank Accounts,41102011,Interest Expenses on Borrowings from LTFF (FSSP),General
+Interest Expenses on Savings Bank Accounts FC,41103001,Interest Expenses on Borrowing -IPFF Fund,General
+Interest Expenses on Savings Bank Accounts FC,41103002,Interest Expenses on Borrowings from IPFF,General
+Interest Expenses on Special Notice Deposits,41104001,Interest Expenses on Borrowings from SME Foundation,General
+Interest Expenses on TD Accounts,41201001,Interest Expenses on Borrowing from Bangladesh bank,General
+Interest Expenses on TD Accounts,41201002,Interest Expenses A/c- Repo ,General
+Interest Expenses on TD Accounts,41201003,Interest Expenses on Term Borrowings ,General
+Interest Expenses on TD Accounts,41201004,Interest Expenses on Call Borrowing ,General
+Interest Expenses on Term Deposits Reinvestments,41202001,Interest Expense on 12 Partially Convertible Bond,General
+Interest Expenses on Term Deposits Reinvestments,41202002,Interest Expense on MTB 2nd Subordinate Bond,General
+Interest Expenses on Term Deposits Reinvestments,41202003,Interest Expense on MTB 3rd Subordinate Bond,General
+Interest Expenses on Recurring Deposit,41203001,Interest Expense on Purchase of Treasury Bond,General
+Interest Expenses on Recurring Deposit,41203002,Interest Expense on Purchase of Treasury Bill,General
+Interest Expenses on Recurring Deposit,41203003,Coupon Interest Expenditure,General
+Interest Expenses on Recurring Deposit,41203004,Repo Interest Expenditure,General
+Interest Expenses on Recurring Deposit,41203006,Basic Salaries,General
+Interest Expenses on Term Deposits FC,41204001,Personal Pay  <Basic>,General
+Interest Expenses on Borrowings,41301001,Salary for Contractual Kiosk Staff <Basic Pay>,General
+Interest Expenses on Borrowings,41301002,House  Rent Allowance,General
+Interest Expenses on Borrowings,41301003,Conveyance Allowance,General
+Interest Expenses on Borrowings,41301004,Medical Allowance,General
+Interest Expenses on Borrowings,41301005,Entertainment  Allowance,General
+Interest Expenses on Borrowings,41301006,Washing Allowance,General
+Interest Expenses on Borrowings,41301007,Dearness Allowance,General
+Interest Expenses on Borrowings,41301008,Risk  Allowance,General
+Interest Expenses on Borrowings,41301009,Evening Banking Allowance,General
+Interest Expenses on Bonds,41401001,Discomfort Allowance,General
+Interest Expenses on Bonds,41401002,Technical Allowance,General
+Interest Expenses on Bonds,41401003,House Maintenance Allowance,General
+Interest Expense on Others,41501001,Medical Reimbursement,General
+Interest Expense on Others,41501002,Uniform And Other Apparels,General
+Interest Expense on Others,41501003,Utility Charges,General
+Interest Expense on Others,41501004,Ordinary Bonus,General
+Interest Paid on MTBL General A/c,41601001,Incentive Bonus,General
+Basic Pay Expenses,42101001,Gratuity,General
+Basic Pay Expenses,42101002,Leave Fare Assistance,General
+Allowances Expenses,42102001,Staff  Welfare & Recreation ,General
+Allowances Expenses,42102002,Daily Allowances to Temp. Staff/Drivers Salary (Other Than MD's)// Allowances,General
+Allowances Expenses,42102003,DMD's Remuneration,General
+Allowances Expenses,42102004,AMD's Remuneration,General
+Allowances Expenses,42102005,Project Manager's Remuneration,General
+Allowances Expenses,42102007,Rent,General
+Allowances Expenses,42102008,VAT on Rent,General
+Allowances Expenses,42102009,City Corp./Municipality Taxes,General
+Allowances Expenses,42102010,Trade License Fees,General
+Allowances Expenses,42102011,Excise Duty on Bank's own Deposits with other Banks,General
+Allowances Expenses,42102012,MD/DMD's Income Tax,General
+Allowances Expenses,42102013,VAT/Tax on Other Activities,General
+Allowances Expenses,42102014,Insurance for Cash in Transit,General
+Bonus Expenses,42103001,Insurance for Cash in Safe/Counter,General
+Bonus Expenses,42103002,Group Insurance Premium-Life,General
+Gratuity Expenses,42104001,Insurance for Bank's Property,General
+Leave Fare Assistance Expenses,42105001,"Insurance for Bank's Property at Godown, ATM, Kiosk",General
+Provident Fund Expenses,42106001,Deposit Insurance Premium,General
+Misc. Salary & Allowances,42107002,Insurance Premium on Locker Services,General
+Misc. Salary & Allowances,42107005,Insurance Premium on Motor Vehicles Executives,General
+Misc. Salary & Allowances,42107006,Insurance Premium on Motor Vehicles Pool,General
+Misc. Salary & Allowances,42107008,Electicity Charges,General
+Misc. Salary & Allowances,42107010,Fuel for Generator,General
+Leave Encashment,42108001,WASA Bill,General
+Rent Expenses,42201001,Gas Bill,General
+Rent Expenses,42201002,Fuel for Car Executives,General
+Rates & Taxes Expenses,42202001,Fuel for Car Pool,General
+Rates & Taxes Expenses,42202002,Lease Rent <Car??>,General
+Rates & Taxes Expenses,42202003,Security/Auxiliary Services ,General
+Rates & Taxes Expenses,42202004,Security/Auxiliary Services XX,General
+Rates & Taxes Expenses,42202005,Maintenance of Police Force,General
+Insurance Expenses,42203001,Monthly Wages of Cleaner,General
+Insurance Expenses,42203002,Material Purchase For Upkeep of Bank,General
+Insurance Expenses,42203003,Service Charge of Building Rented ,General
+Insurance Expenses,42203004,Misc exp. On Office Maintenance ,General
+Insurance Expenses,42203005,Tree Plants Expenses,General
+Insurance Expenses,42203006,Drinking Water Expenses,General
+Insurance Expenses,42203007,"Taxes (Token, Fitness) & Registration cost MV Pool",General
+Insurance Expenses,42203008,"Taxes (Token, Fitness)& Registration cost MV Executives",General
+Insurance Expenses,42203009,CNG Conversion Cost MV Executives,General
+Insurance Expenses,42203013,CNG Conversion Cost MV Pool,General
+"Power, Electricity & Utilities",42204001,Car Loan Instalment Expenses <Employees>,General
+"Power, Electricity & Utilities",42204002,Car hiring charges <Rent> for MV Pool,General
+"Power, Electricity & Utilities",42204003,Entertainment Expenses,General
+"Power, Electricity & Utilities",42204006,T.A/D.A (Foreign Travel),General
+Lease Rent Expenses,42205001,T.A/D.A (Domestic Travel),General
+"Security, Auxiliary Services and Other Assitance",42301001,Conveyance for official purpose,General
+"Security, Auxiliary Services and Other Assitance",42301002,Holiday Conveyance,General
+"Security, Auxiliary Services and Other Assitance",42301003,Foreign Bank Charges,General
+Office Cleaning,42302001,Local Bank other than BB Charges,General
+Office Cleaning,42302002,Bangladesh Bank Charges,General
+Office Maintenance,42303001,Local Training Expenses,General
+Office Maintenance,42303101,Foreign Training Expenses,General
+Office Maintenance,42303201,Daily Allowances (Training Institute),General
+Office Maintenance,42303301,Entertainment (Training Institute),General
+Car Expenses <not classified elsewhere>,42304001,Venue Rent (Training Institute),General
+Car Expenses <not classified elsewhere>,42304002,Honorarium (Training Institute),General
+Car Expenses <not classified elsewhere>,42304005,Subscription,General
+Car Expenses <not classified elsewhere>,42304006,Donation,General
+Clearing House Expenses,42307001,Fees Paid to Income Tax Advisor,General
+Travelling & Conveyance Expenses,42308001,Fees for Regis. at Joint Stock Comp.,General
+Travelling & Conveyance Expenses,42308002,All Other Fees,General
+Travelling & Conveyance Expenses,42308004,CSR Activities,General
+Bank charges,42309001,Branch Opening Expenses,General
+Bank charges,42309003,Cash Carrying / Loading Expenses,General
+Training Expenses,42310001,CPV Charge- Payment to Vendor (Retail),General
+Training Expenses,42310002,CPV Charge - Deposit KYC (Retail),General
+Training Expenses,42310004,Connectivity Charge,General
+Professional Fees,42311001,Misc Expenses not classified elsewhere,General
+AGM Expenses,42312001,POS Intercharge Reimbursement Fee Paid for,General
+Subscription & Donation,42313001,Auditor's Fees,General
+Subscription & Donation,42313002,Discount Paid on Bills,General
+Reuter Charges,42314001,Amortization Loss on HFT Securities T Bill,General
+CDBL Charges,42315001,Revaluation Loss on HFT Securities Treasury Bill,General
+Fees & Registrations,42316001,Revaluation Loss on HFT Securities Treasury Bond,General
+Fees & Registrations,42316002,Revaluation Loss on HTM Securities Treasury Bond,General
+Fees & Registrations,42316003,Loss on Sale of Treasury Bond,General
+Business Development Expenses,42317001,Loss from Repo (Treasury Bond),General
+Business Development Expenses,42317002,Loss on Sale of Treasury Bill,General
+Business Development Expenses,42317003,Loss from Repo (Treasury Bill),General
+Contribution to MTB Foundation,42318001,Loss for Exchange,General
+Employees Medical Assistance Fund,42319001,Loss on Forex Deal,General
+Honorarium,42320001,Card Transaction Charges,General
+Cash Carrying/loading expenses,42321011,Operational Loss - Cards,General
+Loss on sale of Fixed Assets,42326001,Depreciation Charges(POS),General
+Misc Expenses <not classified elsewhere>,42327001,Depreciation on Furniture & Fixture,General
+Misc Expenses <not classified elsewhere>,42327002,Depreciation on Office Equipments ,General
+Investment Expenses,42328061,Depreciation on Interior Decoration ,General
+Investment Expenses,42328062,Depreciation on Motor Vehicles Pool,General
+Investment Expenses,42328063,Depreciation on other Assets XXX,General
+Investment Expenses,42328064,Repair & Maintenance for Immovable Property,General
+Investment Expenses,42328065,Repair & Maintenance for Furniture & Fixture ,General
+Investment Expenses,42328066,Repair & Maintenance for Office Equipments ,General
+Investment Expenses,42328067,Repair & Maintenance for Electric Equipments,General
+Investment Expenses,42328068,Repair & Maintenance for Computers,General
+Investment Expenses,42328161,Repair & Maintenance for Interior Decoration ,General
+Investment Expenses,42328162,Repair & Maintenance for Motor Vehicles Pool,General
+Card Charges,42329051,Repair & Maintenance for Motor Vehicles Executives,General
+Card Charges,42329055,Repair & Maintenance for Other assets XXX,General
+Operational Loss,42330001,Repair & Maintenance for POS,General
+Penalty of CRR/SLR,42331001,Software Maintenance,General
+ATM Intercharge Reimbursement Fee Paid for,42332021,Postage,General
+Agent Banking Float Sharing Commission,42333071,Postage/Courier Service Charges,General
+Depreciation on Immovable Property,42401001,Telephone Expenses,General
+Depreciation on POS Items,42401006,Fax/E-Mail,General
+Depreciation on Furniture & Fixture,42402001,Telex/Telegraph,General
+Depreciation on Office Equipments,42403001,Mobile Bill Expenses,General
+Depreciation on Electric Equipments,42404001,xxx,General
+Depreciation on Computers,42405001,Lawyer's Charges,General
+Depreciation on Interior Decoration,42406001,Legal Charges,General
+Depreciation on Motor Vehicles,42407001,Legal Stamps Charges,General
+Depreciation on Other Assets,42408001,Court Fees & Charges,General
+Repair and Maintenance,42409001,Security Stationery,General
+Repair and Maintenance,42409101,Computer Stationery,General
+Repair and Maintenance,42409201,Paper & Table Stationary,General
+Repair and Maintenance,42409301,Petty Stationery,General
+Repair and Maintenance,42409401,Printed Stationery,General
+Repair and Maintenance,42409601,Advertisement & Publicity,General
+Repair and Maintenance,42409602,News Paper Advertisements,General
+Repair and Maintenance,42409701,Broad Casting Advertisements,General
+Repair and Maintenance,42409741,Hoarding/ Neon Signs,General
+Repair and Maintenance,42409801,Souvenir/Magazine,General
+Postage Expenses,42501001,Cut Out Dangler Flex Backdrop etc branding expenses,General
+Postage Expenses,42501002,Director's Fees,General
+Telecommunication expenses,42502001,Parties & Dinner,General
+Telecommunication expenses,42502002,Director's Traveling Expenses,General
+Telecommunication expenses,42502003,MD Basic,General
+Telecommunication expenses,42502004,MD House Rent,General
+Telecommunication expenses,42502005,MD House Maintenance,General
+Stamp Expenses,42503001,MD Entertainment,General
+Legal Expenses,42601001,MD Festival Bonus,General
+Legal Expenses,42601002,MD Incentive Bonus,General
+Legal Expenses,42601003,MD Leave Fare Assistance,General
+Legal Expenses,42601004,MD Security & Personal Wages,General
+Stationery Expenses,42701001,MD Provident Fund,General
+Stationery Expenses,42701002,Provision for Unclassified Loan and Advance,General
+Stationery Expenses,42701003,Provision for Classified Loan and Advance,General
+Stationery Expenses,42701004,Provision for Investment in Share of Quoted Co.,General
+Stationery Expenses,42701005,Provision for Other Assets,General
+Printing Expenses,42702001,Foreign Sight Bills sent for collection,General
+Advertisements Expenses,42703001,Foreign Usance Bills sent for collection,General
+Advertisements Expenses,42703002,Foreign Cheques sent for collection,General
+Advertisements Expenses,42703003,Inland Sight Bills sent for collection,General
+Advertisements Expenses,42703004,Inland Usance Bills sent for collection,General
+Advertisements Expenses,42703005,Inland Cheques sent for collection,General
+Advertisements Expenses,42703006,Foreign Sight Bills recvd. for collection,General
+Director's Expenses,42801001,Foreign Usance Bills recvd. for collection,General
+Director's Expenses,42801002,Foreign Cheques recvd. for collection,General
+Director's Expenses,42801003,Forward Contract Cus. USD,General
+Managing Director's Remuneration,42901001,Bankers Liability on LG Inward (Inland),General
+Managing Director's Remuneration,42901002,Bankers Liability on LG Outward Performance (Inland),General
+Managing Director's Remuneration,42901003,Bankers Liability on LG Outward Bidbond (Inland),General
+Managing Director's Remuneration,42901004,Bankers Liability on LG Outward Financial  (Inland),General
+Managing Director's Remuneration,42901005,Bankers Liability on LG Inward (Foreign),General
+Managing Director's Remuneration,42901006,Bankers Liability on LG Outward  Performance (Foreign),General
+Managing Director's Remuneration,42901007,Bankers Liability on LG Outward  Bid bond  (Foreign),General
+Managing Director's Remuneration,42901008,Bankers Liability on LG Outward  Financial  (Foreign),General
+Managing Director's Remuneration,42901009,Banker's Liability on ILC Sight,General
+Provision for Loans,43101001,Banker's Liability on ILC Usance,General
+Provision for Loans,43101002,Banker's Liability on FLC Sight,General
+Provision for Loans,43101003,Banker's Liability on FLC Usance,General
+Other Provisions,43301001,Bankers Liability for Accepted Bills OBU <Foreign>,General
+Foreign Bills sent for collection,51101001,Bankers Liability for Accepted Bills other Banks <Foreign>,General
+Foreign Bills sent for collection,51101002,Customers' Liability on LG Inward (Inland),General
+Foreign Bills sent for collection,51101003,Customers' Liability on LG Outward Performance (Inland),General
+Inland Bills sent for collection,51102001,Customers' Liability on LG Outward Bidbond (Inland),General
+Inland Bills sent for collection,51102002,Customers' Liability on LG Outward Financial  (Inland),General
+Inland Bills sent for collection,51102003,Customers' Liability on LG Inward (Foreign),General
+Foreign Bills received for collection,51201001,Customers' Liability on LG Outward  Performance (Foreign),General
+Foreign Bills received for collection,51201002,Customers' Liability on LG Outward  Bid bond  (Foreign),General
+Foreign Bills received for collection,51201003,Customers' Liability on LG Outward  Financial  (Foreign),General
+Forward Contract Cust,51301001,Customers' Liability on ILC Sight,General
+Bankers Liability on BG (Inland),52101001,Customers' Liability on ILC Usance,General
+Bankers Liability on BG (Inland),52101002,Customers' Liability on FLC Sight,General
+Bankers Liability on BG (Inland),52101003,Customers' Liability on FLC Usance,General
+Bankers Liability on BG (Foreign),52102001,Customers' Liability for Accepted Bills OBU <Foreign>,General
+Bankers Liability on BG (Foreign),52102002,Customers' Liability for Accepted Bills other Banks <Foreign>,General
