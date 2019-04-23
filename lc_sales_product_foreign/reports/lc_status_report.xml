@@ -71,18 +71,18 @@
                                         <td class="text-left"><span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['lc_date'],'%Y-%m-%d'))"/></td>
                                         <td class="text-left"><span t-esc="data['lst_sp_date']"/></td>
                                         <td class="text-left"><span t-esc="data['lc_expiry_date']"/></td>
-                                        <td class="text-right"><span t-esc="'{:,.2f}'.format(data['lc_qty'])"/></td>
-                                        <td class="text-right"><span t-esc="'{:,.2f}'.format(data['delivery_qty'])"/></td>
-                                        <td class="text-right"><span t-esc="'{:,.2f}'.format(data['product_received_qty'])"/></td>
-                                        <td class="text-right"><t t-esc="'{:,.2f}'.format(data['lc_qty']-data['delivery_qty'])"/></td>
+                                        <td class="text-right"><span t-esc="data['lc_qty']"/></td>
+                                        <td class="text-right"><span t-esc="data['delivery_qty']"/></td>
+                                        <td class="text-right"><span t-esc="data['product_received_qty']"/></td>
+                                        <td class="text-right"><t t-esc="data['lc_qty']-data['delivery_qty']"/></td>
                                         <td class="text-left"><t t-esc="data['product_uom']"/></td>
                                     </tr>
                                 </t>
                                 <td class="text-right" colspan="9">Total</td>
-                                <td class="text-right"><span t-esc="'{:,.2f}'.format(sum(l['lc_qty'] for l in lc_list))"/></td>
-                                <td class="text-right"><span t-esc="'{:,.2f}'.format(sum(l['delivery_qty'] for l in lc_list))"/></td>
-                                <td class="text-right"><span t-esc="'{:,.2f}'.format(sum(l['product_received_qty'] for l in lc_list))"/></td>
-                                <td class="text-right"><span t-esc="'{:,.2f}'.format(sum((l['lc_qty']-l['delivery_qty']) for l in lc_list))"/></td>
+                                <td class="text-right"><span t-esc="sum(l['lc_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['delivery_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['product_received_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum((l['lc_qty']-l['delivery_qty']) for l in lc_list)"/></td>
                                 <td> </td>
                             </tbody>
                         </table>
