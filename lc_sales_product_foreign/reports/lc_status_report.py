@@ -97,6 +97,7 @@ class PurchaseSummaryReport(models.AbstractModel):
                 'lc_expiry_date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(lc[8])),
                 'product_uom': lc[10],
                 'model_type': lc[11],
+                'pending_qty': lc[3]-self.getDeliveryQty(lc[9])
             }
             lc_list.append(list_obj)
 

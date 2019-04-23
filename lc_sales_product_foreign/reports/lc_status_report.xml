@@ -74,7 +74,7 @@
                                         <td class="text-right"><span t-esc="data['lc_qty']"/></td>
                                         <td class="text-right"><span t-esc="data['delivery_qty']"/></td>
                                         <td class="text-right"><span t-esc="data['product_received_qty']"/></td>
-                                        <td class="text-right"><t t-esc="data['lc_qty']-data['delivery_qty']"/></td>
+                                        <td class="text-right"><t t-esc="data['pending_qty']"/></td>
                                         <td class="text-left"><t t-esc="data['product_uom']"/></td>
                                     </tr>
                                 </t>
@@ -82,7 +82,7 @@
                                 <td class="text-right"><span t-esc="sum(l['lc_qty'] for l in lc_list)"/></td>
                                 <td class="text-right"><span t-esc="sum(l['delivery_qty'] for l in lc_list)"/></td>
                                 <td class="text-right"><span t-esc="sum(l['product_received_qty'] for l in lc_list)"/></td>
-                                <td class="text-right"><span t-esc="sum((l['lc_qty']-l['delivery_qty']) for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['pending_qty'] for l in lc_list)"/></td>
                                 <td> </td>
                             </tbody>
                         </table>
