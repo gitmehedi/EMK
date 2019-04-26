@@ -1,8 +1,11 @@
 # from zeep import Client
 import zeep
 import requests
+import urlparse, urllib, os
+
 
 from odoo import exceptions, models, fields, api, _, tools
+# import
 
 import suds
 from datetime import datetime
@@ -20,7 +23,7 @@ class SOAPProcess(models.Model):
     _rec_name = 'name'
     _description = 'SOAP Endpoint'
 
-    name = fields.Char(string='Endpoint Name', required=True)
+    name = fields.Char(string='Endpoint Full Name', required=True)
     endpoint_fullname = fields.Char(string='Endpoint', compute='_compute_endpoint_fullname', store=True)
 
     endpoint_url = fields.Char(string='Host IP', size=24, required=True, track_visibility='onchange')
@@ -59,11 +62,15 @@ class SOAPProcess(models.Model):
 
     @api.model
     def soap_request(self):
-        wsdl = "http://124.109.105.40:9680/GenericTransferAmount/GenericTransferAmountInterfaceHttpService?wsdl"
+        # url = urlparse.urljoin('file:',
+        #                        urllib.pathname2url(os.path.abspath("GenericTransferAmountInterfaceHttpService.wsdl")))
+        url = urlparse.urljoin('file:',"/opt/odoo/custom/10.0/mtbl/file_processing/models/GenericTransferAmountInterfaceHttpService.wsdl")
+        # wsdl = "http://124.109.105.40:9680/GenericTransferAmount/GenericTransferAmountInterfaceHttpService?wsdl"
         # s_url = "http://obiee.banrep.gov.co/analytics/saw.dll?wsdl"
         # o_client = Client(s_url, service="SAWSessionService")
         # s_session_id = o_client.service.logon("publico", "publico")
         # o_client.set_options(service="XmlViewService")
+        # transport.get(address='http://localhost:9680/soap/?wsdl', message=body, headers=headers)
 
         headers = {'content-type': 'text/xml'}
         body = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
@@ -94,13 +101,60 @@ class SOAPProcess(models.Model):
       </v1:genericTransferAmount>
    </soapenv:Body>
 </soapenv:Envelope>"""
+        response_body = """
+        <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns3:genericTransferAmountResponse xmlns:ns2="http://TCS.BANCS.Adapter/BANCSSchema" xmlns:ns3="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1">
+         <GenericAmtXferRs>
+            <ns2:RsHeader>
+               <ns2:Filler1>0</ns2:Filler1>
+               <ns2:MsgLen>0</ns2:MsgLen>
+               <ns2:Filler2>00</ns2:Filler2>
+               <ns2:MsgTyp>0</ns2:MsgTyp>
+               <ns2:Filler3>78</ns2:Filler3>
+               <ns2:CycNum>0</ns2:CycNum>
+               <ns2:MsgNum>0</ns2:MsgNum>
+               <ns2:SegNum>0</ns2:SegNum>
+               <ns2:FrntEndNum>0</ns2:FrntEndNum>
+               <ns2:TermlNum>9047</ns2:TermlNum>
+               <ns2:InstNum>3</ns2:InstNum>
+               <ns2:BrchNum>6</ns2:BrchNum>
+               <ns2:WorkstationNum>48</ns2:WorkstationNum>
+               <ns2:TellerNum>1101</ns2:TellerNum>
+               <ns2:TrnNum>034038</ns2:TrnNum>
+               <ns2:JrnlNum>6421</ns2:JrnlNum>
+               <ns2:RsHdrDt>0804</ns2:RsHdrDt>
+               <ns2:Filler4>2</ns2:Filler4>
+               <ns2:Filler5>0</ns2:Filler5>
+               <ns2:Filler6>19</ns2:Filler6>
+               <ns2:Flag1>0</ns2:Flag1>
+               <ns2:Flag2>2</ns2:Flag2>
+               <ns2:Flag3>0</ns2:Flag3>
+               <ns2:Flag4>0</ns2:Flag4>
+               <ns2:Filler9>00000000        000000000000000000000000000000OGL                                0000</ns2:Filler9>
+               <ns2:OutputType>08</ns2:OutputType>
+            </ns2:RsHeader>
+            <ns2:Stat>
+               <ns2:OkMessage>
+                  <ns2:RcptData>O.K.</ns2:RcptData>
+                  <ns2:Filler2>O.K.</ns2:Filler2>
+                  <ns2:CustNum/>
+                  <ns2:Filler1>0000</ns2:Filler1>
+                  <ns2:AcctNum/>
+               </ns2:OkMessage>
+            </ns2:Stat>
+         </GenericAmtXferRs>
+      </ns3:genericTransferAmountResponse>
+   </soap:Body>
+</soap:Envelope>
+        """
         endpoint = self.search([('name', '=', 'GenericTransfer')], limit=1)
         if len(endpoint) > 0:
-            response = requests.post(endpoint.endpoint_fullname, data=body, headers=headers)
+            response = requests.get(endpoint.endpoint_fullname, data=body, headers=headers)
             print(response.content)
 
             # url = "http://www.soapclient.com/xml/soapresponder.wsdl"
-            # soap_res = Client(wsdl=url)
+            # soap_res = Client(wsdl=endpoint.endpoint_fullname)
             # soap_res.service.Method1('Zeep','is value')
             # print(soap_res.service.Method1('Zeep', 'is value'))
             # print(soap_res.service.Method1('', ''))
