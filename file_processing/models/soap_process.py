@@ -148,7 +148,7 @@ class SOAPProcess(models.Model):
    </soap:Body>
 </soap:Envelope>
         """
-        endpoint = self.search([('name', '=', 'GenericTransfer')], limit=1)
+        endpoint = self.search([('name', '=', 'Generic Transfer')], limit=1)
         if len(endpoint) > 0:
             response = requests.get(endpoint.endpoint_fullname, data=body, headers=headers)
             print(response.content)
