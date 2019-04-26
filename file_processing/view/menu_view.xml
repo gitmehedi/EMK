@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_soap_process_form">
+        <field name="name">SOAP Process</field>
+        <field name="model">soap.process</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="SOAP Process">
+                <sheet>
+                    <label for="endpoint_fullname" string="Endpoint Name"/>
+                    <h4>
+                        <field name="endpoint_fullname" placeholder="Endpoint Name"/>
+                    </h4>
+                    <group>
+                        <field name="name"/>
+                        <field name="endpoint_url"/>
+                        <field name="endpoint_port"/>
+                        <field name="wsdl_name"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_soap_process_tree">
+        <field name="name">SOAP Process</field>
+        <field name="model">soap.process</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="SOAP Process" decoration-success="status==True"
+                  decoration-bf="status==True"
+                  decoration-muted="status==False">
+                <field name='name'/>
+                <field name='endpoint_fullname'/>
+                <field name="endpoint_url"/>
+                <field name="endpoint_port"/>
+                <field name="wsdl_name"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_soap_process_search">
+        <field name="name">SOAP Process</field>
+        <field name="model">soap.process</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search options">
+                <field name='name'/>
+                <field name='endpoint_fullname'/>
+                <field name="endpoint_url"/>
+                <field name="endpoint_port"/>
+                <field name="wsdl_name"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window name="SOAP Process" id="action_soap_process_form" res_model="soap.process"/>
+
+    <menuitem parent="base.next_id_9" action="action_soap_process_form" id="soap_process_menu"/>
+
+</odoo>
