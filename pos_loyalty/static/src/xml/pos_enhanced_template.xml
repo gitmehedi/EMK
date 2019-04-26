@@ -103,13 +103,16 @@
     <t t-extend='PosTicket'>
         <t t-jquery=".pos-sale-ticket" t-operation='replace'>
             <div class="pos-sale-ticket" style="font-family: Arial, Helvetica, sans-serif;">
-
                 <div class="pos-center-align">
                     <strong>
-                        <t t-esc="widget.pos.company.name"/>
+                        <t t-esc="widget.pos.opunits.receipt_title"/>
                     </strong>
                     <br/>
-                    <strong>MARISHIPA OUTFITTERS</strong>
+                    <t t-if="widget.pos.opunits.receipt_company_title">
+                        <strong>
+                            <t t-esc="widget.pos.opunits.pos_receipt_company_title"/>
+                        </strong>
+                    </t>
                     <br/>
                     <t t-esc="widget.pos.opunits.street || ''"/>
                     <t t-esc="widget.pos.opunits.street2 || ''"/>

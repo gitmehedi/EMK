@@ -21,11 +21,14 @@
                         <div class="page-sale-ticket">
                             <div class="page-center-align" style="text-align: center;">
                                 <strong>
-                                    <t t-esc="main_header['company_name']"/>
+                                    <t t-esc="main_header['receipt_title']"/>
                                 </strong>
                                 <br/>
-                                <strong>MARISHIPA OUTFITTERS</strong>
-
+                                <t t-if="main_header['receipt_company_title']">
+                                    <strong>
+                                        <t t-esc="main_header['receipt_company_title']"/>
+                                    </strong>
+                                </t>
                                 <br/>
                                 <t t-esc="main_header['street']"/>
                                 <t t-esc="main_header['street2']"/>

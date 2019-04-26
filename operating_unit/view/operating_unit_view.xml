@@ -6,20 +6,26 @@
             <field name="name">operating.unit.form</field>
             <field name="model">operating.unit</field>
             <field name="arch" type="xml">
-                <form string="Operating Unit" version="7.0">
+                <form string="Operating Unit">
                     <group>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="active"/>
-                        <field name="partner_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <group>
+                            <field name="receipt_title"/>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="receipt_company_title"/>
+                            <field name="partner_id"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
-                    <group>
+                    <group string="Contact Details">
                         <group>
                             <label for="street" string="Address"/>
                             <div>
-                                <field name="street" placeholder="Street..." />
-                                <field name="street2" />
+                                <field name="street" placeholder="Street..."/>
+                                <field name="street2"/>
                                 <div class="address_format">
                                     <field name="city" placeholder="City" style="width: 40%"/>
                                     <field name="zip" placeholder="ZIP" style="width: 20%"/>
@@ -34,7 +40,7 @@
                             <field name="email" widget="email"/>
                         </group>
                     </group>
-                  </form>
+                </form>
             </field>
         </record>
 
@@ -66,15 +72,15 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to start a new Operating Unit.
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Operating Unit.
+                </p>
             </field>
         </record>
 
-       <menuitem action="action_operating_unit_tree"
-                 id="menu_action_operating_unit_tree"
-                 parent="base.menu_res_company_global"
-                 groups="operating_unit.group_multi_operating_unit"/>
+        <menuitem action="action_operating_unit_tree"
+                  id="menu_action_operating_unit_tree"
+                  parent="base.menu_res_company_global"
+                  groups="operating_unit.group_multi_operating_unit"/>
     </data>
 </openerp>

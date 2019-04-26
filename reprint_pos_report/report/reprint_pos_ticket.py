@@ -13,6 +13,8 @@ class ReprintSalePosTicket(models.AbstractModel):
         if pos_order:
             reprint = True if pos_order.pos_reference else False
             main_header = {
+                'receipt_title': pos_order.session_id.config_id.operating_unit_id.receipt_title,
+                'receipt_company_title': pos_order.session_id.config_id.operating_unit_id.receipt_company_title,
                 'company_name': pos_order.company_id.name,
                 'shop_name': pos_order.session_id.config_id.name,
                 'street': pos_order.session_id.config_id.operating_unit_id.street,
