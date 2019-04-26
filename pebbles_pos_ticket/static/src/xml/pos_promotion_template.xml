@@ -1,72 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates id="pebbles_pos_ticket_template" inherit_id="point_of_sale.template">
-    <!--<t t-extend='Orderline'>-->
-        <!--<t t-jquery="li ul.info-list " t-operation='replace'>-->
-            <!--<ul class="info-list">-->
-                <!--<t t-if="line.get_quantity_str() !== '1' || line.selected ">-->
-                    <!--<li class="info">-->
-                        <!--<em>-->
-                            <!--<t t-esc="line.get_quantity_str()"/>-->
-                        <!--</em>-->
-                        <!--<t t-esc="line.get_unit().name"/>-->
-                        <!--at-->
-                        <!--<t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')"/>-->
-                        <!--/-->
-                        <!--<t t-esc="line.get_unit().name"/>-->
-                    <!--</li>-->
-                <!--</t>-->
-                <!--<t t-if="line.get_discount_str() !== '0'">-->
-                    <!--<li class="info">-->
-                        <!--With-->
-                        <!--<em>-->
-                            <!--<t t-esc="line.get_discount_str()"/>-->
-                        <!--</em>-->
-                        <!--discount-->
-                    <!--</li>-->
-                <!--</t>-->
-            <!--</ul>-->
-        <!--</t>-->
-
-    <!--</t>-->
-    <!--<t t-extend='OrderWidget'>-->
-        <!--<t t-jquery=".order-container .order-scroller .order .summary.clearfix" t-operation='replace'>-->
-
-            <!--<div class="summary clearfix">-->
-                <!--<div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">-->
-                    <!--<div class='entry total'>-->
-                        <!--<div>-->
-                            <!--<span class="label ">Subtotal:</span>-->
-                            <!--<span class="value subtotal">0.00 €</span>-->
-                        <!--</div>-->
-
-                        <!--<div>-->
-                            <!--<span class="label ">Total:</span>-->
-                            <!--<span class="total_value total">0.00 €</span>-->
-                        <!--</div>-->
-                        <!--<div class="discount_hide_show" style="display:none;">-->
-                            <!--<span class="label ">Discount:</span>-->
-                            <!--<span class="discount_value discount">0.00 €</span>-->
-                        <!--</div>-->
-
-                        <!--<div class='subentry label'>Taxes:-->
-                            <!--<span class="value taxes">0.00€</span>-->
-                        <!--</div>-->
-
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-
-
-        <!--</t>-->
-    <!--</t>-->
-
     <t t-extend='PosTicket'>
         <t t-jquery=".pos-sale-ticket" t-operation='replace'>
             <div class="pos-sale-ticket">
 
                 <div class="pos-center-align">
-                    <strong><t t-esc="widget.pos.company.name"/></strong><br />
+                    <strong>New Manage</strong><br />
+                    <strong><t t-esc="widget.pos.config.operating_unit.name"/></strong><br />
                     <strong>MARISHIPA OUTFITTERS</strong><br />
                     <t t-esc="widget.pos.company.street || ''"/> <t t-esc="widget.pos.company.street2 || ''"/><br />
                     <t t-esc="widget.pos.company.city || ''"/>-<t t-esc="widget.pos.company.zip || ''"/> , <t t-esc="widget.pos.company.phone|| ''"/><br />
@@ -206,6 +147,4 @@
             </div>
         </t>
     </t>
-
-
 </templates>

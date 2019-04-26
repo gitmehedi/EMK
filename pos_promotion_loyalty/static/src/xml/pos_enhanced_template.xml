@@ -7,7 +7,6 @@
             <div class='paymentline-name'>
                 <t t-esc="line.name"/>
             </div>
-
             <input t-attf-class="paymentline-input #{line.is_redemption ? 'is_redemption' : ''}"
                    t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
                    t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
@@ -18,39 +17,6 @@
         </div>
     </t>
 
-    <!--<t t-name="Orderline">-->
-        <!--<li t-attf-class="orderline #{ line.selected ? 'selected' : '' }">-->
-            <!--<span class="product-name">-->
-                <!--<t t-esc="line.get_product().display_name"/>-->
-            <!--</span>-->
-            <!--<span class="price">-->
-                <!--<t t-esc="widget.format_currency(line.get_display_price())"/>-->
-            <!--</span>-->
-            <!--<ul class="info-list">-->
-                <!--<t t-if="line.get_quantity_str() !== '1' || line.selected ">-->
-                    <!--<li class="info">-->
-                        <!--<em>-->
-                            <!--<t t-esc="line.get_quantity_str()" />-->
-                        <!--</em>-->
-                        <!--<t t-esc="line.get_unit().name" />-->
-                        <!--at-->
-                        <!--<t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />-->
-                        <!--/-->
-                        <!--<t t-esc="line.get_unit().name" />-->
-                    <!--</li>-->
-                <!--</t>-->
-                <!--<t t-if="line.get_discount_str() !== '0'">-->
-                    <!--<li class="info">-->
-                        <!--With a-->
-                        <!--<em>-->
-                            <!--<t t-esc="line.get_discount_str()" />%-->
-                        <!--</em>-->
-                        <!--discount-->
-                    <!--</li>-->
-                <!--</t>-->
-            <!--</ul>-->
-        <!--</li>-->
-    <!--</t>-->
     <t t-extend='Orderline'>
         <t t-jquery="li ul.info-list " t-operation='replace'>
             <ul class="info-list">
@@ -77,13 +43,10 @@
                 </t>
             </ul>
         </t>
-
     </t>
 
     <t t-extend="OrderWidget">
-
         <t t-jquery=".order-container .order-scroller .order .summary.clearfix" t-operation='replace'>
-
             <div class="summary clearfix">
                 <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
                     <div class='entry total'>
@@ -120,9 +83,7 @@
                 </t>
             </div>
         </t>
-
     </t>
-
 
     <t t-extend='ClientLine'>
         <t t-jquery='.client-line td:nth-child(3)' t-operation='after'>
@@ -168,13 +129,9 @@
         </t>
     </t>
 
-
     <t t-extend='PosTicket'>
         <t t-jquery=".pos-sale-ticket" t-operation='replace'>
-
-
             <div class="pos-sale-ticket">
-
                 <div class="pos-center-align">
                     <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
                 Date.CultureInfo.formatPatterns.longTime)"/>
@@ -241,7 +198,6 @@
                             </td>
                         </tr>
                     </t>
-
                     <tr t-attf-class="discount-point #{order.getDiscountAmount() > 0 ? 'display-block' : 'display-none'}">
                         <td>Discount:</td>
                         <td class="pos-right-align">
@@ -294,13 +250,8 @@
                         <t t-esc="widget.pos.config.receipt_footer"/>
                     </div>
                 </t>
-
             </div>
-
-
         </t>
-
-
     </t>
 
     <t t-extend='PaymentScreenWidget'>
@@ -312,8 +263,5 @@
                 </span>
             </div>
         </t>
-
     </t>
-
-
 </templates>
