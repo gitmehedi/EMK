@@ -37,15 +37,15 @@ class InheritResUsers(models.Model):
 
 class InheritResUsersRole(models.Model):
     _name = "res.users.role"
-    _inherit = ['res.users.role', 'mail.thread', 'ir.needaction_mixin']
+    _inherit = ['res.users.role', 'mail.thread']
     _order = "seq asc"
 
-    seq = fields.Integer(string='Sequence', required=True,track_visibility='onchange')
+    seq = fields.Integer(string='Sequence',track_visibility='onchange')
     group_id = fields.Many2one(
         'res.groups', required=True, ondelete='cascade',track_visibility='onchange',
         readonly=True, string="Associated group")
     internal_user_group= fields.Boolean('Internal User Group',default=False,track_visibility='onchange')
-    name = fields.Char(track_visibility='onchange')
+    #name = fields.Char(track_visibility='onchange')
 
     # implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid', track_visibility='onchange',
     #                                string='Inherits', help='Users of this group automatically inherit those groups')

@@ -1,0 +1,67 @@
+<odoo>
+    <data>
+        <report id="report_customer_commission_summary"
+                model="sales.commission.generate"
+                string="Customer Commission Summary"
+                name="gbs_sales_commission.report_customer_commission_view"
+                file="gbs_sales_commission.report_customer_commission_view"
+                paperformat="report_layout.paperformat_backend_portrait"
+                report_type="qweb-pdf"/>
+
+        <template id="report_customer_commission_view">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row">
+                                <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+
+                                <h4 class="report-title">Customer Commission Summary</h4>
+                                <div class="clearfix">
+                                    <div class="row" style="margin-top:25px;">
+                                        <div class="col-xs-9 text-left">
+                                            <h6><strong>Date:</strong>
+                                                <span t-field="doc.till_date" t-field-options='{"format": "Y-MM-dd"}'/></h6>
+                                        </div>
+                                        <div class="col-xs-3 text-right">
+                                            <h6><strong>Total:</strong>
+                                                <strong t-esc="'{:,.2f}'.format(sum(l['total_com_amount'] for l in doc.line_ids))"/></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered table-report-xs table-striped"
+                                                style="margin-bottom: 10px; table-layout: fixed;">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th class="text-center" style="width:4%;">SL</th>
+                                            <th class="text-center">Customer</th>
+                                            <th class="text-center" style="width:15%;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.line_ids" t-as="p">
+                                            <tr style="page-break-inside: avoid">
+                                                <td class="text-center">
+                                                    <span t-esc="p_index+1"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="p.partner_id.name"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'{:,.2f}'.format(p.total_com_amount)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
