@@ -1,15 +1,11 @@
-# from zeep import Client
-import zeep
-import requests
-import urlparse, urllib, os
-
+from zeep import Client, Settings
+import requests,urlparse, urllib, os
 
 from odoo import exceptions, models, fields, api, _, tools
-# import
 
 import suds
 from datetime import datetime
-from suds.client import Client
+# from suds.client import Client as s_client
 
 # url = "http://www.soapclient.com/xml/soapresponder.wsdl"
 url = "http://www.soapclient.com/xml/soapresponder.wsdl"
@@ -62,9 +58,11 @@ class SOAPProcess(models.Model):
 
     @api.model
     def soap_request(self):
+
         # url = urlparse.urljoin('file:',
         #                        urllib.pathname2url(os.path.abspath("GenericTransferAmountInterfaceHttpService.wsdl")))
-        url = urlparse.urljoin('file:',"/opt/odoo/custom/10.0/mtbl/file_processing/models/GenericTransferAmountInterfaceHttpService.wsdl")
+        url = urlparse.urljoin('file:',
+                               "/opt/odoo/custom/10.0/mtbl/file_processing/models/GenericTransferAmountInterfaceHttpService.wsdl")
         # wsdl = "http://124.109.105.40:9680/GenericTransferAmount/GenericTransferAmountInterfaceHttpService?wsdl"
         # s_url = "http://obiee.banrep.gov.co/analytics/saw.dll?wsdl"
         # o_client = Client(s_url, service="SAWSessionService")
@@ -149,6 +147,10 @@ class SOAPProcess(models.Model):
 </soap:Envelope>
         """
         endpoint = self.search([('name', '=', 'Generic Transfer')], limit=1)
+        # settings = Settings(extra_http_headers={'content-type': 'text/xml'})
+        # settings = Settings(extra_http_headers='get')
+        # res = Client(endpoint.endpoint_fullname, settings=settings)
+        # res.service.get_stock_quantity(2)
         if len(endpoint) > 0:
             response = requests.get(endpoint.endpoint_fullname, data=body, headers=headers)
             print(response.content)
