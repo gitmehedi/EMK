@@ -18,7 +18,7 @@ class DateRangeGenerator(models.TransientModel):
     def _default_company(self):
         return self.env['res.company']._company_default_get('date.range')
 
-    name_prefix = fields.Char('Range Name Prefix')
+    name_prefix = fields.Char('Period Name Prefix')
     date_start = fields.Date(strint='Start Date')
     type_id = fields.Many2one(string='Type')
     unit_of_time = fields.Selection([
