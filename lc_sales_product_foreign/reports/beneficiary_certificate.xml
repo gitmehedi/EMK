@@ -195,11 +195,11 @@
                                             </td>
                                         </tr>
                                     </t>
-                                    <t t-if="data['truck_receipt_no']">
+                                    <t t-if="data['vehical_no']">
                                         <tr>
                                             <td>LOADING/CARRYING VESSEL   </td>
                                             <td>
-                                                <strong t-esc="data['truck_receipt_no']"/>
+                                                <strong t-esc="data['vehical_no']"/>
                                             </td>
                                         </tr>
                                     </t>

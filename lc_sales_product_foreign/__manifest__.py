@@ -22,6 +22,7 @@
         'wizard/lc_sales_report_wizard.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/sales_invoice_export_wizard_view.xml',
+        'wizard/lc_status_foreign.xml',
         # 'wizard/lc_sales_report_wizard.xml',
         'wizard/seller_bank_export_wizard_view.xml',
         'wizard/buyer_bank_export_wizard_view.xml',

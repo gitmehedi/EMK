@@ -5,116 +5,85 @@
         <t t-call="report.html_container">
             <t t-call="report_layout.gbs_internal_layout">
                 <div class="page" style="page-break-inside:auto">
-                    <div class="row">
+                    <div class="row" style="margin-top:-13px;">
                         <style type="text/css">
                             .report-title { text-align:center; }
                             .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
                         </style>
                         <div class="clearfix">
-                            <h4 class="report-title">Foreign LC Status Report</h4>
-                            <div class="row" style="padding-top:40px; padding-bottom:5px;">
+                            <h4 class="report-title">Foreign Commercial Status Report</h4>
+                            <div class="row" style="padding-top:15px; padding-bottom:5px;">
                                 <div class="col-xs-6 text-left">
-                                    <t t-if="data['pur_month']">
-                                        <strong>Month :</strong>
-                                        <t t-if="data['pur_month'] == '1'">January</t>
-                                        <t t-if="data['pur_month'] == '2'">February</t>
-                                        <t t-if="data['pur_month'] == '3'">March</t>
-                                        <t t-if="data['pur_month'] == '4'">April</t>
-                                        <t t-if="data['pur_month'] == '5'">May</t>
-                                        <t t-if="data['pur_month'] == '6'">June</t>
-                                        <t t-if="data['pur_month'] == '7'">July</t>
-                                        <t t-if="data['pur_month'] == '8'">August</t>
-                                        <t t-if="data['pur_month'] == '9'">September</t>
-                                        <t t-if="data['pur_month'] == '10'">October</t>
-                                        <t t-if="data['pur_month'] == '11'">November</t>
-                                        <t t-if="data['pur_month'] == '12'">December</t>
-                                    </t>
+                                    <strong>Type :</strong>
+                                    <t t-if="data['status'] == 'product'">Product Wise</t>
+                                    <t t-if="data['status'] == 'variant'">Variant wise</t>
                                     <br/>
-                                    <t t-if="data['pur_year']">
-                                        <strong>Year :</strong>
-                                        <t t-if="data['pur_year'] == '1'">2019</t>
-                                        <t t-if="data['pur_year'] == '2'">2020</t>
-                                        <t t-if="data['pur_year'] == '3'">2021</t>
-                                        <t t-if="data['pur_year'] == '4'">2022</t>
-                                        <t t-if="data['pur_year'] == '5'">2023</t>
-                                        <t t-if="data['pur_year'] == '6'">2024</t>
-                                        <t t-if="data['pur_year'] == '7'">2025</t>
-                                        <t t-if="data['pur_year'] == '8'">2026</t>
-                                        <t t-if="data['pur_year'] == '9'">2027</t>
-                                        <t t-if="data['pur_year'] == '10'">2028</t>
-                                        <t t-if="data['pur_year'] == '11'">2029</t>
-                                        <t t-if="data['pur_year'] == '12'">2030</t>
+                                    <t t-if="data['status'] == 'variant'">
+                                        <strong>Product :</strong>
+                                        <t t-if="not data['product_id']">All</t>
+                                        <t t-if="data['product_name']"><t t-esc="data['product_name']"/></t>
+                                    </t>
+                                    <t t-if="data['status'] == 'product'">
+                                        <strong>Product :</strong>
+                                        <t t-if="not data['product_temp_id']">All</t>
+                                        <t t-if="data['product_temp_name']"><t t-esc="data['product_temp_name']"/></t>
                                     </t>
                                 </div>
                                 <div class="col-xs-6 text-right">
-                                    <strong>Product :</strong>
-                                    <t t-if="not data['product_id']">All</t>
-                                    <t t-foreach="data['product_id']" t-as="unit">
-                                        <t t-esc="unit"/>
-                                    </t>
-                                    <br/>
-                                    <strong>Status :</strong>
-                                    <t t-if="data['status'] == 'active'">Active</t>
-                                    <t t-if="data['status'] == 'done'">Done</t>
-                                    <t t-if="data['status'] == 'cancel'">Cancel</t>
+                                    <p> </p>
+                                    <strong>Current Month &amp; Year : </strong> <span t-esc="month"/>, <span t-esc="year"/>
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-report-xs table-bordered table-striped">
+                        <table class="table table-bordered table-report-xs table-striped"
+                                        style="margin-bottom: 10px; table-layout: fixed;">
                             <thead>
                                 <tr class="odo-bg-gray">
-                                    <th class="text-center">SL</th>
-                                    <th class="text-center">LC NO</th>
-                                    <th class="text-center">LC Date</th>
-                                    <th class="text-center">Party Name</th>
-                                    <th class="text-center">LC Quantity</th>
-                                    <th class="text-center">PI No.</th>
-                                    <th class="text-center">PI Date</th>
-                                    <th class="text-center">Delivery Qty</th>
-                                    <th class="text-center">Pending Qty</th>
-                                    <th class="text-center">Last SP.Date</th>
-                                    <th class="text-center">LC Expiry Date</th>
+                                    <th class="text-center" style="width:2%;">SL</th>
+                                    <th class="text-center" style="width:24%;">Party Name</th>
+                                    <th class="text-center" style="width:13%;">PI No.</th>
+                                    <th class="text-center" style="width:3%;">Type</th>
+                                    <th class="text-center" style="width:13%;">LC/TT/SC No.</th>
+                                    <th class="text-center" style="width:5.5%;">PI Date</th>
+                                    <th class="text-center" style="width:5.5%;">LC/TT/SC Date</th>
+                                    <th class="text-center" style="width:5.5%;">Last SP.Date</th>
+                                    <th class="text-center" style="width:5.5%;">Exp. Date</th>
+                                    <th class="text-center" style="width:5%;">LC/TT/SC Qty</th>
+                                    <th class="text-center" style="width:5%;">Delivery Qty</th>
+                                    <th class="text-center" style="width:5%;">Document Qty</th>
+                                    <th class="text-center" style="width:5%;">Pending Qty</th>
+                                    <th class="text-center" style="width:3%;">UOM</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-foreach="lc_list" t-as="data">
                                     <tr>
-                                        <td>
-                                            <span t-esc="data_index+1"/>
+                                        <td class="text-left"><span t-esc="data_index+1"/></td>
+                                        <td class="text-left"><t t-esc="data['first_party']"/></td>
+                                        <td class="text-left"><span t-esc="data['pi_no']"/></td>
+                                        <td class="text-left">
+                                            <t t-if="data['model_type'] == 'lc'">LC</t>
+                                            <t t-elif="data['model_type'] == 'TT'">TT</t>
+                                            <t t-elif="data['model_type'] == 'SC'">SC</t>
                                         </td>
-                                        <td>
-                                            <span t-esc="data['lc_name']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="data['lc_date']"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="data['first_party']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="data['lc_qty']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="data['pi_no']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="data['pi_date']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="data['delivery_qty']"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="data['pending_qty']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="data['lst_sp_date']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="data['lc_expiry_date']"/>
-                                        </td>
+                                        <td class="text-left"><span t-esc="data['lc_name']"/></td>
+                                        <td class="text-left"><span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['pi_date'],'%Y-%m-%d'))"/></td>
+                                        <td class="text-left"><span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['lc_date'],'%Y-%m-%d'))"/></td>
+                                        <td class="text-left"><span t-esc="data['lst_sp_date']"/></td>
+                                        <td class="text-left"><span t-esc="data['lc_expiry_date']"/></td>
+                                        <td class="text-right"><span t-esc="data['lc_qty']"/></td>
+                                        <td class="text-right"><span t-esc="data['delivery_qty']"/></td>
+                                        <td class="text-right"><span t-esc="data['product_received_qty']"/></td>
+                                        <td class="text-right"><t t-esc="data['pending_qty']"/></td>
+                                        <td class="text-left"><t t-esc="data['product_uom']"/></td>
                                     </tr>
-                                    <td colspan="9">Total</td>
                                 </t>
+                                <td class="text-right" colspan="9">Total</td>
+                                <td class="text-right"><span t-esc="sum(l['lc_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['delivery_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['product_received_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['pending_qty'] for l in lc_list)"/></td>
+                                <td> </td>
                             </tbody>
                         </table>
                     </div>
@@ -124,13 +93,13 @@
     </template>
 
     <report
-            id="action_purchase_summary_template"
+            id="action_sale_price_change_form_viewpurchase_summary_template"
             model="hr.employee"
-            string="Purchase Summary"
+            string="LC Status Summary"
             report_type="qweb-pdf"
             menu="False"
             name="lc_sales_product_foreign.lc_status_foreign_template"
             file="lc_sales_product_foreign.lc_status_foreign_template"
-            paperformat="report_layout.paperformat_backend_portrait"
+            paperformat="report_layout.paperformat_backend_landscape"
     />
 </odoo>

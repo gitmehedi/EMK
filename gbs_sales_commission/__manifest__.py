@@ -21,6 +21,7 @@
         'views/inherited_products_template_view.xml',
         'views/sales_commission_generate_views.xml',
         'report/commission_report.xml',
+        'report/customer_commission_summary.xml',
         'views/inherited_account_invoice_view.xml',
         'report/commission_due_report_view.xml',
     ],
