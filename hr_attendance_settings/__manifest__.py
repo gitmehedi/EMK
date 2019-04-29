@@ -22,9 +22,9 @@ You can manage:
         'hr_attendance',
     ],
     'data': [
+        'data/settings_data.xml',
         'security/ir.model.access.csv',
         'views/hr_attendance_settings_views.xml',
-        'data/settings_data.xml',
     ],
     'installable': True,
     'application': True,
