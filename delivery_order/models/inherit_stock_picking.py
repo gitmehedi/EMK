@@ -5,6 +5,20 @@ import time, datetime
 
 import math
 
+class StockPackOperation(models.Model):
+    _inherit = "stock.pack.operation"
+
+    price_unit = fields.Float( string='Price Unit',compute="_calculate_price_unit", store=False,readonly=True)
+
+    @api.multi
+    def _calculate_price_unit(self):
+        stock_pool = self.env['stock.picking'].search([('id', '=', self.picking_id.id)])
+        for sp in stock_pool:
+            if sp.delivery_order_id:
+                for ol in sp.delivery_order_id.sale_order_id.order_line:
+                    self.price_unit = ol.price_unit
+
+
 
 class InheritStockPicking(models.Model):
     _inherit = 'stock.picking'

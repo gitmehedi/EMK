@@ -17,3 +17,4 @@ class ResPartner(models.Model):
 
     """ Relational Fields """
     supplier_category_id = fields.Many2one('supplier.category',string='Supplier Category')
+    sector_id = fields.Many2one('res.partner.category',string='Sector')
