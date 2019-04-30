@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_bottom_line_wizard_form">
+        <field name="name">view.bottom.line.wizard.form</field>
+        <field name="model">bottom.line.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bottom Line Accounts">
+                <group>
+                    <group>
+                        <field name="top_line_budget_line"/>
+                    </group>
+                    <group>
+                    </group>
+                </group>
+                <group>
+                    <field name="bottom_line_accounts">
+                        <tree>
+                            <field name="top_line_account_id"/>
+                            <field name="bottom_line_account_id"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Generate" name="action_generate" type="object" class="oe_highlight"  />
+                    <button special="cancel" string="Close" type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
