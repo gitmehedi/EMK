@@ -94,10 +94,9 @@
               sequence="1"
               groups="base.group_system"/>
 
-    <!--<menuitem-->
-            <!--id="account.menu_account_config"-->
-            <!--name="Settings" parent="account.menu_finance_configuration"-->
-            <!--sequence="0" groups="base.group_system,mtbl_access.group_mtbl_sys_admin"/>-->
 
+    <record id="account.menu_finance_payables" model="ir.ui.menu">
+        <field name="name">Vendor Operations</field>
+    </record>
 
 </odoo>

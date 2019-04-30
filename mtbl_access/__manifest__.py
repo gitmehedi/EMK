@@ -11,6 +11,7 @@ This application allows you to easily maintain access rights of mtbl process.
     'depends': [
         'base',
         'portal',
+        'account',
         'account_fiscal_year',
         'account_type_menu',
         'account_parent',
