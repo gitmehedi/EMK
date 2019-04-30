@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="bottom_line_budget_temp_tree" model="ir.ui.view">
+        <field name="name">bottom.line.budget.temp.tree</field>
+        <field name="model">bottom.line.budget.temp</field>
+        <field name="arch" type="xml">
+            <tree string="Bottom Line Budgetary Template">
+                <field name="date_create"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="bottom_line_budget_temp_form">
+        <field name="name">bottom.line.budget.temp.form</field>
+        <field name="model">bottom.line.budget.temp</field>
+        <field name="arch" type="xml">
+            <form string="Bottom Line Budgetary Template">
+                <header>
+                    <button string="Generate" name="action_select_accounts" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="date_create"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Accounts">
+                            <field name="bottom_line_budgets">
+                                <tree>
+                                    <field name="top_line_account_id"/>
+                                    <field name="bottom_line_account_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="bottom_line_budget_temp_search" model="ir.ui.view">
+        <field name="name">bottom.line.budget.temp.search</field>
+        <field name="model">bottom.line.budget.temp</field>
+        <field name="arch" type="xml">
+            <search string="Bottom Line Budgetary Template">
+                <field name="name" filter_domain="[('name','ilike',self)]" string="Bottom Line Budgetary"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bottom_line_budget_temp" model="ir.actions.act_window">
+        <field name="name">Bottom Line Template</field>
+        <field name="res_model">bottom.line.budget.temp</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="bottom_line_budget_temp_search"/>
+    </record>
+
+    <menuitem
+            action="action_bottom_line_budget_temp"
+            id="menu_bottom_line_budget_temp"
+            parent="main_menu_account_budget"
+            sequence="3"/>
+</odoo>

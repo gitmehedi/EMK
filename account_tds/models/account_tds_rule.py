@@ -56,7 +56,7 @@ class TDSRules(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
-                raise UserError(_('You cannot delete a record which is not draft state!'))
+                raise UserError(_('You cannot delete a record which is not in draft state!'))
         return super(TDSRules, self).unlink()
 
     @api.multi
