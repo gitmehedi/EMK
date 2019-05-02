@@ -33,7 +33,6 @@
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="sector_id"/>
                     <field name="supplier_type"/>
-                    <field name="property_purchase_currency_id" string="Currency"/>
                 </xpath>
                 <xpath expr="//group[@name='container_row_2']/group[2]" position="after">
                     <group string="CNF Agent" name="cnf">
