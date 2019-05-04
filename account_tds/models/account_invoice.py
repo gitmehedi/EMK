@@ -117,12 +117,16 @@ class AccountInvoiceLine(models.Model):
                     self.tds_amount = self.tds_amount + remaining_pre_tds
             else:
                 for tds_slab_rule_obj in self.account_tds_id.line_ids:
-                    if pro_base_val >= tds_slab_rule_obj.range_from and pro_base_val <= tds_slab_rule_obj.range_to:
+                    if  not pre_invoice_line_list and pro_base_val >= tds_slab_rule_obj.range_from and pro_base_val <= tds_slab_rule_obj.range_to:
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
-                        if pre_invoice_line_list:
-                            remaining_pre_tds = self.previous_tds_value(tds_slab_rule_obj.rate, pre_invoice_line_list)
-                            self.tds_amount = self.tds_amount + remaining_pre_tds
                         break
+                    elif pre_invoice_line_list:
+                        total_amount = pro_base_val + sum(int(i.quantity * i.price_unit) for i in pre_invoice_line_list)
+                        if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
+                            total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
+                            remaining_tds_amount = total_tds_amount -  sum(int(i.tds_amount) for i in pre_invoice_line_list)
+                            self.tds_amount = remaining_tds_amount
+                            break
                     else:
                         self.tds_amount = 0.0
 
@@ -139,6 +143,7 @@ class AccountInvoiceLine(models.Model):
                 remain_tds_amount = ((pre_total_base_amount * current_rate) / 100) - pre_total_tds
 
         return remain_tds_amount
+
 
 
 class AccountInvoiceTax(models.Model):
