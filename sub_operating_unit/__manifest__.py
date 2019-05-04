@@ -9,10 +9,11 @@
     "category": "Generic",
     "depends": [
         "operating_unit",
-        'mail'
+        "mail",
     ],
     "data": [
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
+        'wizard/sub_operating_unit_wizard_view.xml',
         'view/sub_operating_unit_view.xml',
     ],
     'installable': True,
