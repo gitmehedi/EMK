@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="bottom_line_budget_temp_tree" model="ir.ui.view">
-        <field name="name">bottom.line.budget.temp.tree</field>
-        <field name="model">bottom.line.budget.temp</field>
+    <record id="bottom_line_budget_tree" model="ir.ui.view">
+        <field name="name">bottom.line.budget.tree</field>
+        <field name="model">bottom.line.budget</field>
         <field name="arch" type="xml">
-            <tree string="Bottom Line Budgetary Template">
+            <tree string="Bottom Line Budget">
                 <field name="date_create"/>
                 <field name="name"/>
             </tree>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="bottom_line_budget_temp_form">
-        <field name="name">bottom.line.budget.temp.form</field>
-        <field name="model">bottom.line.budget.temp</field>
+    <record model="ir.ui.view" id="bottom_line_budget_form">
+        <field name="name">bottom.line.budget.form</field>
+        <field name="model">bottom.line.budget</field>
         <field name="arch" type="xml">
-            <form string="Bottom Line Budgetary Template">
+            <form string="Bottom Line Budget">
                 <header>
-                    <button string="Generate" name="action_select_accounts" type="object" class="oe_highlight"/>
+                    <!--<button string="Generate" name="action_select_accounts" type="object" class="oe_highlight"/>-->
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="date_create"/>
                         </group>
                         <group>
-                            <field name="date_create"/>
+                            <field name="level_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_id" context="{'show_parent_account':True}"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="planned_amount"/>
                         </group>
                     </group>
                     <notebook>
@@ -34,6 +38,7 @@
                                 <tree>
                                     <field name="top_line_account_id"/>
                                     <field name="bottom_line_account_id"/>
+                                    <field name="planned_amount"/>
                                 </tree>
                             </field>
                         </page>
@@ -47,9 +52,9 @@
         </field>
     </record>
 
-    <record id="bottom_line_budget_temp_search" model="ir.ui.view">
-        <field name="name">bottom.line.budget.temp.search</field>
-        <field name="model">bottom.line.budget.temp</field>
+    <record id="bottom_line_budget_search" model="ir.ui.view">
+        <field name="name">bottom.line.budget.search</field>
+        <field name="model">bottom.line.budget</field>
         <field name="arch" type="xml">
             <search string="Bottom Line Budgetary Template">
                 <field name="name" filter_domain="[('name','ilike',self)]" string="Bottom Line Budgetary"/>
@@ -57,17 +62,17 @@
         </field>
     </record>
 
-    <record id="action_bottom_line_budget_temp" model="ir.actions.act_window">
-        <field name="name">Bottom Line Template</field>
-        <field name="res_model">bottom.line.budget.temp</field>
+    <record id="action_bottom_line_budget" model="ir.actions.act_window">
+        <field name="name">Bottom Line Budget</field>
+        <field name="res_model">bottom.line.budget</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="bottom_line_budget_temp_search"/>
+        <field name="search_view_id" ref="bottom_line_budget_search"/>
     </record>
 
     <menuitem
-            action="action_bottom_line_budget_temp"
-            id="menu_bottom_line_budget_temp"
+            action="action_bottom_line_budget"
+            id="menu_bottom_line_budget"
             parent="main_menu_account_budget"
             sequence="3"/>
 </odoo>

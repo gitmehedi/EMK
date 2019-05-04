@@ -1,0 +1,19 @@
+from odoo import api, fields, models
+
+
+class AccountLevel(models.Model):
+    _name = 'account.account.level'
+    _inherit = ['mail.thread']
+
+    name = fields.Char(string='Level Name', size=50, required=True, track_visibility='onchange')
+    size = fields.Integer(string='Level Size', size=2, required=True, track_visibility='onchange')
+    prefix = fields.Char(string='Prefix', track_visibility='onchange')
+    parent_id = fields.Many2one('account.account.level', ondelete='restrict', string='Parent Name')
+
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            filters_name = [['name', '=ilike', self.name.strip()]]
+            name = self.search(filters_name)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')

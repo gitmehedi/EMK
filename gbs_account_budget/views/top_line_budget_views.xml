@@ -121,16 +121,17 @@ Budgets
                         <page string="Top Line Budget Lines">
                             <field name="top_line_budgets" context="{'default_fiscal_year': fiscal_year}" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                 <tree string="Top Line Budget Lines" editable="bottom">
-                                    <field name="name"/>
+                                    <field name="name" invisible="1"/>
                                     <field name="account_id" context="{'show_parent_account':True}"
                                            options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                     <!--<field name="analytic_account_id" groups="analytic.group_analytic_accounting" required="1"/>-->
-                                    <field name="fiscal_year" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                                    <field name="date_from"/>
-                                    <field name="date_to"/>
+                                    <field name="fiscal_year" invisible="1"
+                                           options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                    <field name="date_from" invisible="1"/>
+                                    <field name="date_to" invisible="1"/>
                                     <field name="planned_amount" sum="Planned Amount" widget="monetary"/>
-                                    <!--<field name="practical_amount" sum="Practical Amount" widget="monetary"/>-->
-                                    <!--<field name="theoritical_amount" sum="Theoretical Amount" widget="monetary"/>-->
+                                    <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                    <field name="theoritical_amount" sum="Theoretical Amount" widget="monetary"/>
                                 </tree>
                             </field>
                         </page>

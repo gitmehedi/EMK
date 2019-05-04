@@ -16,6 +16,7 @@
         'account_operating_unit',
         'account_type_inactive',
         'sub_operating_unit',
+        'gbs_account_level',
     ],
     "data": [
         'views/menu_view.xml',

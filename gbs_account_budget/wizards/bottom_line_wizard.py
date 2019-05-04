@@ -17,7 +17,7 @@ class BottomLineWizard(models.TransientModel):
                 vals.append((0, 0, {'top_line_account_ids': self.top_line_budget_line.account_id.id,
                                     'bottom_line_account_ids': obj.id,
                                     }))
-            self.product_lines = vals
+            self.bottom_line_accounts = vals
 
 class BottomLineAccountsWizard(models.TransientModel):
     _name = 'bottom.line.accounts.wizard'

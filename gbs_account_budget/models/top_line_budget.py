@@ -95,6 +95,8 @@ class TopLineBudgetLines(models.Model):
     date_from = fields.Date(related='fiscal_year.date_start', string='Start Date', readonly=True)
     date_to = fields.Date(related='fiscal_year.date_end', string='End Date', readonly=True)
     planned_amount = fields.Float('Planned Amount', required=True)
+    practical_amount = fields.Float(string='Practical Amount', store=True)
+    theoritical_amount = fields.Float(string='Theoretical Amount',store=True)
     # theoritical_amount = fields.Float(compute='_compute_theoritical_amount', string='Theoretical Amount',store=True)
     #     practical_amount = fields.Float(compute='_compute_practical_amount', string='Practical Amount',store=True)
     #     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account',required=True)
