@@ -25,7 +25,13 @@
         </field>
     </record>
 
-    <record id="date_range.menu_date_range" model="ir.ui.menu">
-        <field name="name">Date Ranges</field>
+    <record id="date_range.date_range_action" model="ir.actions.act_window">
+        <field name="name">Accounting Period</field>
+    </record>
+    <record id="date_range.date_range_type_action" model="ir.actions.act_window">
+        <field name="name">Accounting Period Types</field>
+    </record>
+    <record id="date_range.date_range_generator_action" model="ir.actions.act_window">
+        <field name="name">Generate Accounting Period</field>
     </record>
 </odoo>
