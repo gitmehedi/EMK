@@ -25,9 +25,6 @@
                             <field name="name"/>
                             <field name="code"/>
                             <field name="pending" invisible="True"/>
-                            <field name="company_id"
-                                   groups="base.group_multi_company"
-                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         </group>
                         <group>
                             <field name="operating_unit_id"
@@ -62,12 +59,11 @@
                 <field name="code"/>
                 <field name="name"/>
                 <field name="operating_unit_id"/>
-                <field name="state"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" invisible="True"/>
             </tree>
         </field>
     </record>
-    
+
     <record id="view_sub_operating_unit_search" model="ir.ui.view">
         <field name="name">sub.operating.unit.search</field>
         <field name="model">sub.operating.unit</field>

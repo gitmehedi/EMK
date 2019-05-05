@@ -6,7 +6,7 @@ from odoo.exceptions import Warning, ValidationError
 
 class SubOperatingUnit(models.Model):
     _name = 'sub.operating.unit'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
     _description = 'Sub Operating Unit'
 
@@ -15,17 +15,16 @@ class SubOperatingUnit(models.Model):
     code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
-                       states={'draft': [('readonly', False)]})
+                             states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
-                       states={'draft': [('readonly', False)]})
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange', readonly=True,
-                       states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', 'Company', required=True, track_visibility='onchange',
-                                 default=lambda self: self.env['res.company']._company_default_get('account.account'))
+                            states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange',
+                                        readonly=True,
+                                        states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve')], default='draft')
 
     line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines', readonly=True,
-                       states={'draft': [('readonly', False)]})
+                               states={'draft': [('readonly', False)]})
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -47,6 +46,10 @@ class SubOperatingUnit(models.Model):
                 raise Warning('[Unique Error] Name must be unique!')
             elif len(code) > 1:
                 raise Warning('[Unique Error] Code must be unique!')
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'draft')]
 
     @api.one
     def name_get(self):
