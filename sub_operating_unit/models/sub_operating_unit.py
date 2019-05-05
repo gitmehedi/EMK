@@ -10,16 +10,22 @@ class SubOperatingUnit(models.Model):
     _order = 'id desc'
     _description = 'Sub Operating Unit'
 
-    name = fields.Char('Name', required=True, size=50, track_visibility='onchange')
-    code = fields.Char('Code', required=True, size=3, track_visibility='onchange')
-    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
-    active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange')
+    name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
+                       states={'draft': [('readonly', False)]})
+    code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
+                       states={'draft': [('readonly', False)]})
+    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
+                       states={'draft': [('readonly', False)]})
+    active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
+                       states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange', readonly=True,
+                       states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', required=True, track_visibility='onchange',
                                  default=lambda self: self.env['res.company']._company_default_get('account.account'))
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve')], default='draft')
 
-    line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines')
+    line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines', readonly=True,
+                       states={'draft': [('readonly', False)]})
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
