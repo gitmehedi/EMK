@@ -1,11 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_finance_receivables" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account_type_menu.account_type_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_board_journal_1" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+    <record id="account.account_analytic_tag_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+    <record id="account.menu_action_account_fiscal_position_form" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+
+    <menuitem id="account.menu_finance_receivables" name="Sales" parent="account.menu_finance" sequence="2"
+              groups="base.group_no_one"/>
+    <menuitem action="action_acquiring_channel" groups="mtbl_access.group_mtbl_sys_admin"
+              id="account_mtbl.menu_action_acquiring_channel_tree"
+              sequence="17"
+              parent="account.account_account_menu"/>
+
+    <menuitem action="action_segment" groups="mtbl_access.group_mtbl_sys_admin"
+              id="account_mtbl.menu_action_segment_tree"
+              sequence="15"
+              parent="account.account_account_menu"/>
+
+    <menuitem action="action_servicing_channel" groups="mtbl_access.group_mtbl_sys_admin"
+              id="account_mtbl.menu_action_servicing_channel_tree" sequence="16"
+              parent="account.account_account_menu"/>
+
+    <menuitem action="operating_unit.action_operating_unit_tree"
+              id="operating_unit.menu_action_operating_unit_tree"
+              sequence="13" parent="account.account_account_menu"
+              groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
+
     <record id="account.menu_action_manual_reconciliation" model="ir.ui.menu">
         <field name="action" eval="False"/>
     </record>
+
     <record id="account.menu_action_tax_adjustment" model="ir.ui.menu">
         <field name="action" eval="False"/>
     </record>
+
+    <record id="account.menu_finance_payables" model="ir.ui.menu">
+        <field name="name">Vendor Operations</field>
+    </record>
+
+
+    <menuitem id="account.menu_config_multi_currency" name="Multi-Currencies"
+              parent="account.menu_finance_configuration" sequence="9"
+              groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem id="account.menu_action_currency_form" action="base.action_currency_form" name="Currencies"
+              parent="account.menu_config_multi_currency" sequence="20"
+              groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem action="account.action_account_journal_form" id="account.menu_action_account_journal_form"
+              name="Journal Type" sequence="11" parent="account.account_account_menu"
+              groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem action="base.action_res_bank_form"
+              id="menu_action_res_bank_manu"
+              name="Bank" sequence='2'
+              parent="account.account_account_menu"
+              groups="mtbl_access.group_mtbl_sys_admin"/>
+
+
+    <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
+              parent="account.account_account_menu" sequence="1" groups="mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem id="account.menu_analytic_accounting" name="Cost Centers Accounting"
+              parent="account.menu_finance_configuration"
+              groups="analytic.group_analytic_accounting" sequence="5"/>
+
+    <menuitem action="analytic.action_account_analytic_account_form" id="account.account_analytic_def_account"
+              parent="account.menu_analytic_accounting"
+              groups="analytic.group_analytic_accounting,mtbl_access.group_mtbl_sys_admin" sequence="0"/>
 
 </odoo>
 

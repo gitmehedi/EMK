@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-          <!--- New Product menu for vendor -->
         <record id="product_product_action1" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="res_model">product.product</field>
@@ -23,8 +22,8 @@
             </field>
         </record>
 
-        <menuitem id="product_product_menu_vendor" name="Products" action="product_product_action1"
-            parent="account.menu_finance_payables" sequence="110"/>
+        <menuitem id="product_product_menu_vendor" name="Products/Services" action="product_product_action1"
+            parent="account.menu_finance_configuration" sequence="1"/>
 
     </data>
 </odoo>

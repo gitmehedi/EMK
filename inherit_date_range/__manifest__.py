@@ -10,9 +10,10 @@
     'version': '10.0.0.1',
     "depends": [
         "date_range",
+        "account_fiscal_year",
     ],
     "data": [
-        # "views/assets.xml",
+        "views/menu_view.xml",
         "views/date_range_view.xml",
         "wizard/date_range_generator.xml",
     ],

@@ -10,11 +10,13 @@
     "depends": [
         "operating_unit",
         "mail",
+        "mtbl_access",
     ],
     "data": [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'wizard/sub_operating_unit_wizard_view.xml',
-        'view/sub_operating_unit_view.xml',
+        'views/sub_operating_unit_view.xml',
     ],
     'installable': True,
     'application': True,
