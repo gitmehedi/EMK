@@ -15,7 +15,7 @@
     ],
     "data": [
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
+        # 'security/ir_rule.xml',
         'wizard/sub_operating_unit_wizard_view.xml',
         'views/sub_operating_unit_view.xml',
     ],

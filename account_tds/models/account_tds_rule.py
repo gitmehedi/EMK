@@ -42,8 +42,8 @@ class TDSRules(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -105,7 +105,8 @@ class TDSRules(models.Model):
                         raise ValidationError("Please Check Your TDS Rate!! \n Rate never take more than 100%!")
                 elif rec.type_rate == 'slab':
                     if not rec.line_ids:
-                        raise ValidationError("Please, Add Slab Details!! \n Make sure slab('Range from','Range to')values must be number.")
+                        raise ValidationError(
+                            "Please, Add Slab Details!! \n Make sure slab('Range from','Range to')values must be number.")
                     elif len(rec.line_ids) > 0:
                         for line in rec.line_ids:
                             if line.range_from >= line.range_to:
@@ -193,8 +194,8 @@ class TDSRules(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

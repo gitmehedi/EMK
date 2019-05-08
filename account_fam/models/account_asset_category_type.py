@@ -54,7 +54,8 @@ class AccountAssetCategory(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.search([['name', '=ilike', self.name]])
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -69,4 +70,3 @@ class AccountAssetCategory(models.Model):
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
-

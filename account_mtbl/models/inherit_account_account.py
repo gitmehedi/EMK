@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo import exceptions
 
+
 class AccountAccount(models.Model):
     _name = 'account.account'
     _inherit = ['account.account', 'mail.thread']
@@ -26,8 +27,8 @@ class AccountAccount(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            filters_name = [['name', '=ilike', self.name.strip()]]
-            name = self.search(filters_name)
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise exceptions.Warning(_('[Unique Error] Name must be unique!'))
 
@@ -38,7 +39,7 @@ class AccountAccount(models.Model):
             self.parent_id = 0
             parents = self.search([('level_id', '=', self.level_id.parent_id.id)])
             res['domain'] = {
-                'parent_id': [('id', 'in', parents.ids),('internal_type','=','view')],
+                'parent_id': [('id', 'in', parents.ids), ('internal_type', '=', 'view')],
             }
             return res
 
@@ -67,8 +68,8 @@ class AccountAccountTag(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            filters_name = [['name', '=ilike', self.name.strip()]]
-            name = self.search(filters_name)
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
