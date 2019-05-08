@@ -99,4 +99,11 @@
         <field name="name">Vendor Operations</field>
     </record>
 
+    <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+    </record>
+    <record id="account.account_account_menu" model="ir.ui.menu">
+        <field name="sequence" eval="1"/>
+    </record>
+
 </odoo>

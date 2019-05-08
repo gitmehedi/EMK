@@ -44,13 +44,6 @@ class AccountAssetAsset(models.Model):
         if self.depreciation_year:
             self.method_number = int(12 * self.depreciation_year)
 
-    @api.constrains('name')
-    def _check_unique_constrain(self):
-        if self.name:
-            name = self.search([['name', '=ilike', self.name]])
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
-
     @api.onchange("name")
     def onchange_strips(self):
         if self.name:
@@ -441,7 +434,6 @@ class AccountAssetDepreciationLine(models.Model):
             'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }
