@@ -130,8 +130,6 @@ class TdsVendorChallan(models.Model):
             'name': '/',
             'operating_unit_id': self.operating_unit_id.id,
             'move_id': account_move_id,
-            # 'partner_id': acc_inv_line_obj.partner_id.id,
-            # 'analytic_account_id': acc_inv_line_obj.account_analytic_id.id,
         }
         account_move_line_obj.create(account_move_line_credit)
         return True
