@@ -52,8 +52,9 @@ class AccountAssetAsset(models.Model):
     @api.multi
     def validate(self):
         super(AccountAssetAsset, self).validate()
-        code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
-        self.write({'asset_seq': code})
+        if not self.asset_seq:
+            code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
+            self.write({'asset_seq': code})
 
     def depr_date_format(self, depreciation_date):
         no_of_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
