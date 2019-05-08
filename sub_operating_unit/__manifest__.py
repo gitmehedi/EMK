@@ -8,6 +8,7 @@
     'website': 'http://www.genweb2.com',
     "category": "Generic",
     "depends": [
+        "base",
         "operating_unit",
         "mail",
         "mtbl_access",

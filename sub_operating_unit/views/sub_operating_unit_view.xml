@@ -4,19 +4,19 @@
         <field name="name">sub.operating.unit.form</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <form string="Sub Operating Unit">
+            <form string="Sub Operating Unit" edit="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
-                            groups=""/>
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
-                            groups=""/>
-                    <button name="%(action_sub_operating_unit_wizard)d" string="Change Request" type="action"
-                            class="oe_highlight" groups=""
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                    <button name="%(action_sub_operating_unit_wizard)d" string="Edit" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','=','draft'),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                            groups="" attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            groups="mtbl_access.group_mtbl_sys_admin" attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <button name="act_reject_pending" string="Reject" type="object"
-                            groups="" attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            groups="mtbl_access.group_mtbl_sys_admin" attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>

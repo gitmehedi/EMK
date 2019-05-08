@@ -19,8 +19,7 @@ class SubOperatingUnit(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange',
-                                        readonly=True,
-                                        states={'draft': [('readonly', False)]})
+                                        readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve')], default='draft')
 
     line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines', readonly=True,
