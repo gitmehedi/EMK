@@ -38,7 +38,7 @@ class AccountInvoice(models.Model):
                                         operating_unit_default_get(self._uid),
                                         readonly=True,required=True,
                                         states={'draft': [('readonly',False)]})
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Branch',
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
                                             readonly=True,states={'draft': [('readonly',False)]})
 
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
@@ -219,7 +219,7 @@ class AccountInvoiceLine(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit',string='Sub Branch')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit',string='Sub Operating Unit')
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):

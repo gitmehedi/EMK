@@ -8,7 +8,7 @@
         <field name="priority" eval="30"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='parent_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//field[@name='lang']" position="after">
                 <field name="tax"/>
@@ -16,8 +16,11 @@
                 <field name="bin"/>
                 <field name="tin"/>
             </xpath>
+            <!--<xpath expr="//group[@name='sale']" position="attributes">-->
+            <!--<attribute name="invisible">1</attribute>-->
+            <!--</xpath>-->
             <xpath expr="//page[@name='sales_purchases']" position="replace">
-                <page name="sales_purchases" string="Sales &amp; Purchases" invisible="1">
+                <page name="sales_purchases" string="Purchases" groups="account.group_account_manager">
                     <group name="container_row_2">
                         <group string="Sale" name="sale" invisible="1">
                             <field name="customer"/>
@@ -29,6 +32,17 @@
                         <group string="Misc" invisible="1">
                             <field name="ref"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Payments" name="banks">
+                            <field name="currency_id" invisible="1"/>
+                            <div>
+                                <button type="action" class="btn-link"
+                                        name="%(base.action_res_partner_bank_account_form)d"
+                                        context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
+                                    <field string="Bank account(s)" name="bank_account_count" widget="statinfo"/>
+                                </button>
+                            </div>
+
                         </group>
                     </group>
                 </page>
