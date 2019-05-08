@@ -38,6 +38,37 @@
                 <xpath expr="//page[@name='notes']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
+                <xpath expr="//field[@name='list_price']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='property_account_income_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='categ_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//div[@name='options']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//div[@name='options']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='taxes_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//page[@name='invoicing']/group/group/field[@name='property_account_expense_id']"
+                       position="replace">
+
+                </xpath>
+                <xpath expr="//page[@name='invoicing']/group/group/field[@name='supplier_taxes_id']" position="replace">
+
+                </xpath>
+                <xpath expr="//page[@name='invoicing']/group/group[1]" position="inside">
+                    <field name="property_account_expense_id"
+                           domain="[('internal_type','=','other'),('deprecated','=',False)]"
+                           groups="account.group_account_user"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                </xpath>
             </field>
         </record>
 
