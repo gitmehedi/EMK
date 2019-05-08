@@ -29,14 +29,18 @@ class AccountAssetCategory(models.Model):
                                                 domain=[('deprecated', '=', False)])
     account_depreciation_id = fields.Many2one('account.account', required=True,
                                               domain=[('deprecated', '=', False)],
-                                              string='Depreciation Entries: Asset Account (Accumulated)', )
-
+                                              string='Accumulated Depreciation A/C', )
+    account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
+                                                      required=True, domain=[('internal_type', '=', 'other'),
+                                                                             ('deprecated', '=', False)],
+                                                      oldname='account_income_recognition_id',
+                                                      help="Account used in the periodical entries, to record a part of the asset as expense.")
     account_asset_loss_id = fields.Many2one('account.account', required=True,
                                             domain=[('deprecated', '=', False)],
-                                            string='Asset Loss Account GL')
+                                            string='Asset Loss A/C')
     account_asset_gain_id = fields.Many2one('account.account', required=True,
                                             domain=[('deprecated', '=', False)],
-                                            string='Asset Gain Account GL')
+                                            string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', required=True,
                                                      domain=[('deprecated', '=', False)],
                                                      string='Asset Sales Suspense Account', )
@@ -69,4 +73,3 @@ class AccountAssetCategory(models.Model):
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
-

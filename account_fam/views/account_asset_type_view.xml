@@ -15,18 +15,15 @@
                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     <field name="asset_suspense_account_id" domain="[('company_id', '=', company_id)]"
                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_depreciation_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     <field name="account_depreciation_expense_id" domain="[('company_id', '=', company_id)]"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                    <field name="account_depreciation_id" domain="[('company_id', '=', company_id)]"
                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     <field name="account_asset_loss_id" domain="[('company_id', '=', company_id)]"
                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     <field name="account_asset_gain_id" domain="[('company_id', '=', company_id)]"
                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     <field name="asset_sale_suspense_account_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" required="True"
-                           groups="analytic.group_analytic_accounting"
                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                 </group>
             </xpath>
