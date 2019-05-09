@@ -27,7 +27,7 @@
 
                             <group colspan="2">
                                 <group>
-                                    <field name="name" required="1" readonly="0"/>
+                                    <field name="name" required="1" attrs="{'readonly': [('state', 'in', ('confirmed','amendment','progress','done', 'cancel'))]}"/>
                                     <field name="type" attrs="{'invisible': '1'}" />
                                     <field name="tenure" required="1" />
                                 </group>
