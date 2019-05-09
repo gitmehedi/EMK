@@ -16,6 +16,22 @@
                 <field name="bin"/>
                 <field name="tin"/>
             </xpath>
+
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lang']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='title']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="attributes">
+                    <attribute name="string">Designation</attribute>
+            </xpath>
             <!--<xpath expr="//group[@name='sale']" position="attributes">-->
             <!--<attribute name="invisible">1</attribute>-->
             <!--</xpath>-->

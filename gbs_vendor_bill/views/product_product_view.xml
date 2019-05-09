@@ -23,7 +23,7 @@
             </field>
         </record>
 
-        <menuitem id="product_product_menu_vendor" name="Products" action="product_product_action1"
+        <menuitem id="product_product_menu_vendor" name="Product &amp; Service" action="product_product_action1"
             parent="account.menu_finance_payables" sequence="110"/>
 
     </data>
