@@ -57,9 +57,7 @@
         </record>
 
         <record id="base.action_currency_form" model="ir.actions.act_window">
-            <field name="context">{'active_test': False,
-                'search_default_active': 1
-                }</field>
+            <field name="context">{'active_test': False,'search_default_active': 1}</field>
         </record>
     </data>
 </odoo>

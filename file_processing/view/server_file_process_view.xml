@@ -120,7 +120,7 @@
             res_model="server.file.process"/>
 
     <menuitem
-            parent="base.next_id_9"
+            parent="main_api_interface"
             action="action_server_file_process_form"
             id="server_file_process_menu"/>
 

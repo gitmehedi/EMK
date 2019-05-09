@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem id="main_api_interface" name="API Interface" sequence="2  "
+              web_icon="account_fam,static/description/icon.png" parent="base.menu_custom"
+              groups=""/>
+</odoo>

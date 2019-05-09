@@ -8,12 +8,16 @@
     'website': 'http://www.genweb2.com',
     "category": "Generic",
     "depends": [
+        "base",
         "operating_unit",
-        'mail'
+        "mail",
+        "mtbl_access",
     ],
     "data": [
         'security/ir.model.access.csv',
-        'view/sub_operating_unit_view.xml',
+        # 'security/ir_rule.xml',
+        'wizard/sub_operating_unit_wizard_view.xml',
+        'views/sub_operating_unit_view.xml',
     ],
     'installable': True,
     'application': True,

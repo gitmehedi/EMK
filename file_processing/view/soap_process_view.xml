@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="SOAP Process">
                 <sheet>
-                    <label for="endpoint_fullname" string="Endpoint Name"/>
+                    <label for="endpoint_fullname" string="Endpoint Full Name"/>
                     <h4>
                         <field name="endpoint_fullname" placeholder="Endpoint Name"/>
                     </h4>
@@ -63,6 +63,6 @@
 
     <act_window name="SOAP Process" id="action_soap_process_form" res_model="soap.process"/>
 
-    <menuitem parent="base.next_id_9" action="action_soap_process_form" id="soap_process_menu"/>
+    <menuitem parent="main_api_interface" action="action_soap_process_form" id="soap_process_menu"/>
 
 </odoo>

@@ -14,7 +14,7 @@ class AccountTax(models.Model):
     refund_account_id = fields.Many2one(track_visibility='onchange')
     description = fields.Char(track_visibility='onchange')
     tax_group_id = fields.Many2one(track_visibility='onchange')
-    analytic = fields.Boolean(string='Cost Center',track_visibility='onchange')
+    analytic = fields.Boolean(string='Cost Center', track_visibility='onchange')
     active = fields.Boolean(track_visibility='onchange')
     price_include = fields.Boolean(track_visibility='onchange')
     include_base_amount = fields.Boolean(track_visibility='onchange')
@@ -23,7 +23,8 @@ class AccountTax(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.search([['name', '=ilike', self.name]])
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

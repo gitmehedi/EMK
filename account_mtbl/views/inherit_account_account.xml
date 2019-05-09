@@ -1,34 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <record id="view_account_account_form" model="ir.ui.view">
             <field name="name">view.account.form.view</field>
             <field name="model">account.account</field>
             <field name="inherit_id" ref="account.view_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='parent_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='currency_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                    <attribute name="groups">base.group_system</attribute>
-                </xpath>
-                <xpath expr="//field[@name='tax_ids']" position="attributes">
-                    <attribute name="groups">base.group_system</attribute>
-                </xpath>
-                <xpath expr="//field[@name='tag_ids']" position="attributes">
-                    <attribute name="groups">base.group_system</attribute>
-                </xpath>
-                <xpath expr="//field[@name='deprecated']" position="attributes">
-                    <attribute name="groups">base.group_system</attribute>
+                <xpath expr="//sheet/group/group[1]" position="replace">
+                    <group>
+                        <field name="level_size" invisible="True"/>
+                        <field name="level_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+
+                        <field name="parent_id"
+                               context="{'show_parent_account':True}"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                               attrs="{'invisible': [('level_size','in',[0,1])], 'required':[('level_size','>',1)]}"/>
+
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="user_type_id" widget="selection"/>
+                        <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]"
+                               groups="base.group_system"/>
+                        <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]"
+                               groups="base.group_system"
+                               context="{'default_applicability': 'accounts'}" options="
+                             {'no_create_edit': True}"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="currency_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                               groups="base.group_system,base.group_multi_currency"/>
+                        <field name="internal_type" invisible="1" readonly="1"/>
+                        <label for="reconcile" invisible="True"/>
+                        <div attrs="{'invisible': [('internal_type','=','liquidity')]}" invisible="True">
+                            <field name="reconcile"/>
+                            <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile"
+                                    attrs="{'invisible': [('reconcile', '=', False)]}"/>
+                        </div>
+                        <field name="deprecated" groups="base.group_system"/>
+                    </group>
                 </xpath>
 
-                <xpath expr="//form/sheet/group/group/label" position="attributes">
-                    <attribute name="invisible">True</attribute>
-                </xpath>
-                <xpath expr="//form/sheet/group/group/div" position="attributes">
-                    <attribute name="invisible">True</attribute>
-                </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -50,3 +61,4 @@
         </record>
     </data>
 </odoo>
+
