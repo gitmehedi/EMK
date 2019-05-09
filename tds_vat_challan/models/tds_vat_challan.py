@@ -170,6 +170,7 @@ class TdsVendorChallanLine(models.Model):
 
     supplier_id = fields.Many2one('res.partner', string="Vendor")
     challan_provided = fields.Float(String='Challan Provided')
+    type_name = fields.Char(String='Description')
     total_bill = fields.Float(String='Total Bill')
     undistributed_bill = fields.Float(String='Undistributed Bill')
     parent_id = fields.Many2one('tds.vat.challan')

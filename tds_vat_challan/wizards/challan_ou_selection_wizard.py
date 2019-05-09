@@ -50,6 +50,7 @@ class TDSChallaOUSelectionWizard(models.TransientModel):
                 'parent_id': challan_id,
                 'acc_move_line_id': account_move_line_obj.id,
                 'state': 'draft',
+                'type_name': account_move_line_obj.name,
 
             }
             challan_line_obj.create(line)
