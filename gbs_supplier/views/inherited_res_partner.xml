@@ -35,9 +35,17 @@
                     <field name="supplier_type"/>
                 </xpath>
                 <xpath expr="//group[@name='container_row_2']/group[2]" position="after">
-                    <group string="CNF Agent" name="cnf">
+                    <group string="CNF Agent" name="cnf" attrs="{'invisible':['|',('supplier', '=', True),('customer', '=', True)]}">
                         <field name="is_cnf"/>
                     </group>
+                </xpath>
+
+                 <xpath expr="//group[@name='purchase']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//group[@name='sale']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>
                 </xpath>
             </field>
         </record>
