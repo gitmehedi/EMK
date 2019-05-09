@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form/sheet/group/group/field[@name='category_id']" position="replace">
-                <field name="category_id"
+                <field name="category_id" string="Asset Type"
                        domain="[('type', '=', 'purchase'),('parent_id', '=',False)]"
                        context="{'default_type': 'purchase'}"
                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>

@@ -75,7 +75,6 @@ class AssetAllocationWizard(models.TransientModel):
                 'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
-                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
                 'operating_unit_id': self.operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -86,7 +85,6 @@ class AssetAllocationWizard(models.TransientModel):
                 'credit': 0.0,
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
-                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
                 'operating_unit_id': self.to_operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -111,7 +109,6 @@ class AssetAllocationWizard(models.TransientModel):
                 'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
-                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
                 'operating_unit_id': self.operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -122,7 +119,6 @@ class AssetAllocationWizard(models.TransientModel):
                 'credit': 0.0,
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
-                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
                 'operating_unit_id': self.to_operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -135,7 +131,6 @@ class AssetAllocationWizard(models.TransientModel):
                 'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
-                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
                 'operating_unit_id': self.to_operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -146,7 +141,6 @@ class AssetAllocationWizard(models.TransientModel):
                 'credit': 0.0,
                 'journal_id': asset.category_id.journal_id.id,
                 'partner_id': asset.partner_id.id,
-                'analytic_account_id': asset.category_id.account_analytic_id.id if asset.category_id.type == 'sale' else False,
                 'operating_unit_id': self.operating_unit_id.id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }

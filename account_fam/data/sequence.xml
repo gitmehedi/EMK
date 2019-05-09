@@ -25,5 +25,12 @@
             <field name="number_increment" eval="1"/>
             <field name="company_id" eval="False"/>
         </record>
+        <record id="seq_asset_type" model="ir.sequence">
+            <field name="name">Account Asset Type</field>
+            <field name="code">account.asset.category</field>
+            <field name="padding">4</field>
+            <field name="number_increment" eval="1"/>
+            <field name="company_id" eval="False"/>
+        </record>
     </data>
 </odoo>
