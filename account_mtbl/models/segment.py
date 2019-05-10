@@ -13,7 +13,7 @@ class Segment(models.Model):
 
     name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
-    code = fields.Char('Code', required=True, size=2, track_visibility='onchange', readonly=True,
+    code = fields.Char('Code', required=True, size=1, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
@@ -35,8 +35,8 @@ class Segment(models.Model):
                 raise Warning('[Unique Error] Name must be unique!')
             if len(code) > 1:
                 raise Warning('[Unique Error] Code must be unique!')
-            if len(self.code) != 2 or not self.code.isdigit():
-                raise Warning(_('[Format Error] Code must be numeric with 2 digit!'))
+            if len(self.code) != 1 or not self.code.isdigit():
+                raise Warning(_('[Format Error] Code must be numeric with 1 digit!'))
 
     @api.onchange("name", "code")
     def onchange_strips(self):
