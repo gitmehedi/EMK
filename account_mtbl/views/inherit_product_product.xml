@@ -59,6 +59,7 @@
                 <xpath expr="//page[@name='invoicing']/group/group[1]" position="inside">
                     <field name="property_account_expense_id"
                            domain="[('internal_type','=','other'),('deprecated','=',False)]"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                            groups="account.group_account_user"/>
 
                 </xpath>

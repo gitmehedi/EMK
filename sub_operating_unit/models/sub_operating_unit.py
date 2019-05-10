@@ -23,7 +23,8 @@ class SubOperatingUnit(models.Model):
                             states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange',
                                         readonly=True, states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve')], default='draft')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
+                             track_visibility='onchange', )
 
     line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -41,15 +42,16 @@ class SubOperatingUnit(models.Model):
     def _check_unique_constrain(self):
         if self.name or self.code:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('operating_unit_id', '=', self.operating_unit_id.id), '|',
+                 ('active', '=', True), ('active', '=', False)])
             code = self.search(
                 [('code', '=ilike', self.code.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
+                raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
             if len(code) > 1:
-                raise Warning('[Unique Error] Code must be unique!')
-            if not self.code.isdigit():
-                raise Warning(_('[Format Error] Code must be numeric!'))
+                raise Warning(_('[Unique Error] Code must be unique!'))
+            if len(self.code) == 3 or not self.code.isdigit():
+                raise Warning(_('[Format Error] Code must be numeric with 3 digit!'))
 
     @api.model
     def _needaction_domain_get(self):
@@ -89,7 +91,8 @@ class SubOperatingUnit(models.Model):
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.unlink()
+            self.state = 'reject'
+            self.pending = False
 
     @api.one
     def act_approve_pending(self):
