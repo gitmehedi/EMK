@@ -90,10 +90,17 @@
     <menuitem action="analytic.action_account_analytic_account_form" id="account.account_analytic_def_account"
               parent="account.menu_analytic_accounting"
               groups="analytic.group_analytic_accounting,mtbl_access.group_mtbl_sys_admin" sequence="0"/>
+
     <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
         <field name="action" eval="False"/>
     </record>
+    <record id="payment.root_payment_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
 
+    <record id="account.account_management_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
 </odoo>
 
 

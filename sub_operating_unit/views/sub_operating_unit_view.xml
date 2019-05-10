@@ -4,7 +4,7 @@
         <field name="name">sub.operating.unit.form</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <form string="Sub Operating Unit" edit="0">
+            <form string="Sub Operating Unit" edit="0" duplicate="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
                             groups="mtbl_access.group_mtbl_sys_admin"/>
@@ -12,7 +12,7 @@
                             groups="mtbl_access.group_mtbl_sys_admin"/>
                     <button name="%(action_sub_operating_unit_wizard)d" string="Edit" type="action"
                             class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
-                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', True)]}"/>
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
                             groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
@@ -40,7 +40,7 @@
                             <field name="change_name"/>
                             <field name="change_date"/>
                             <field name="state"/>
-                            <field name="status"/>
+                            <field name="status" invisible="True"/>
                         </tree>
                     </field>
                 </sheet>
@@ -59,8 +59,8 @@
             <tree string="Sub Operating Unit" decoration-info="state=='draft'" decoration-success="state=='approve'"
                   decoration-danger="state=='reject'"
                   decoration-bf="state in ('approve',)">
-                <field name="code"/>
                 <field name="name"/>
+                <field name="code"/>
                 <field name="operating_unit_id"/>
                 <field name="state"/>
             </tree>
@@ -80,7 +80,11 @@
                 </group>
                 <group string="Group By">
                     <filter string="Pending" name="pending" icon="terp-personal"
-                            domain="['|',('active','=',0),('pending','=',1)]"/>
+                            domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                </group>
+                <group string="Group By">
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
                 </group>
             </search>
         </field>
