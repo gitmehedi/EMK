@@ -65,7 +65,6 @@ class AccountAccount(models.Model):
                 code = filter[:self.level_size]
             else:
                 code = self.parent_id.code + filter
-
             self.code = code[:self.level_id.size]
 
     @api.one

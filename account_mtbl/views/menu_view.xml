@@ -27,21 +27,9 @@
     </record>
 
 
+
     <menuitem id="account.menu_finance_receivables" name="Sales" parent="account.menu_finance" sequence="2"
               groups="base.group_no_one"/>
-    <menuitem action="action_acquiring_channel" groups="mtbl_access.group_mtbl_sys_admin"
-              id="account_mtbl.menu_action_acquiring_channel_tree"
-              sequence="17"
-              parent="account.account_account_menu"/>
-
-    <menuitem action="action_segment" groups="mtbl_access.group_mtbl_sys_admin"
-              id="account_mtbl.menu_action_segment_tree"
-              sequence="15"
-              parent="account.account_account_menu"/>
-
-    <menuitem action="action_servicing_channel" groups="mtbl_access.group_mtbl_sys_admin"
-              id="account_mtbl.menu_action_servicing_channel_tree" sequence="16"
-              parent="account.account_account_menu"/>
 
     <menuitem action="operating_unit.action_operating_unit_tree"
               id="operating_unit.menu_action_operating_unit_tree"
@@ -60,7 +48,6 @@
         <field name="name">Vendor Operations</field>
     </record>
 
-
     <menuitem id="account.menu_config_multi_currency" name="Multi-Currencies"
               parent="account.menu_finance_configuration" sequence="9"
               groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
@@ -78,7 +65,6 @@
               name="Bank" sequence='2'
               parent="account.account_account_menu"
               groups="mtbl_access.group_mtbl_sys_admin"/>
-
 
     <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
               parent="account.account_account_menu" sequence="1" groups="mtbl_access.group_mtbl_sys_admin"/>

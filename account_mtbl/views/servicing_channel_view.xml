@@ -100,7 +100,7 @@
         </field>
     </record>
 
-    <menuitem action="action_servicing_channel"
-              id="menu_action_servicing_channel_tree"
-              parent="account.account_account_menu"/>
+    <menuitem action="action_servicing_channel" id="menu_action_servicing_channel_tree"
+              groups="mtbl_access.group_mtbl_sys_admin" parent="account.account_account_menu" sequence="16"/>
+
 </odoo>
