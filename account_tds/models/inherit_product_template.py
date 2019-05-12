@@ -9,7 +9,7 @@ class InheritedProductTemplate(models.Model):
                                      domain="[('active', '=', True),('state', '=','confirm' )]",
                                      track_visibility='onchange')
     type = fields.Selection([
-        ('consu', _('Stockable Product')),
+        ('consu', _('Product')),
         ('service', _('Service'))], string='Product Type', default='consu', required=True,
         help='A stockable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
              'A consumable product, on the other hand, is a product for which stock is not managed.\n'
