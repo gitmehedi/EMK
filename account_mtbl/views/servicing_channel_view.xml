@@ -71,9 +71,6 @@
                 <field name="name" string="Name"/>
                 <field name="code" string="Code"/>
                 <group string="Group By">
-                    <filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>
-                </group>
-                <group string="Group By">
                     <filter string="Pending" name="pending" icon="terp-personal"
                             domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
                 </group>
