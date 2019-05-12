@@ -58,7 +58,8 @@
                                     <field name="line_ids" nolabel="1" readonly="1">
                                         <tree string="List" editable="false" create="false" delete="false">
                                             <field name="supplier_id"/>
-                                            <field name="total_bill" string="TDS/VAT Amount"/>
+                                            <field name="type_name"/>
+                                            <field name="total_bill" string="Amount"/>
                                             <field name="state" invisible="1"/>
                                         </tree>
                                     </field>
@@ -102,13 +103,9 @@
             <field name="search_view_id" ref="tds_vat_challan_filter"/>
         </record>
 
-        <menuitem
-                name="TDS/VAT Challan"
-                parent="account.menu_finance_payables"
-                action="tds_vat_challan_action"
-                id="tds_challan_menu"
-                groups="account_tds.group_tds_manager,account_tds.group_tds_user"
-                sequence="11"/>
+        <menuitem name="TDS/VAT Challan" parent="main_menu_tds_vat"
+                  action="tds_vat_challan_action" id="tds_challan_menu" sequence="11"
+                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <record id="account.action_account_unreconcile" model="ir.actions.act_window">
             <field name="name">Unreconcile Entries</field>

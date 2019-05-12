@@ -4,19 +4,21 @@
         <field name="name">sub.operating.unit.form</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <form string="Sub Operating Unit">
+            <form string="Sub Operating Unit" edit="0" duplicate="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
-                            groups=""/>
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
-                            groups=""/>
-                    <button name="%(action_sub_operating_unit_wizard)d" string="Change Request" type="action"
-                            class="oe_highlight" groups=""
-                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', True)]}"/>
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                    <button name="%(action_sub_operating_unit_wizard)d" string="Edit" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                            groups="" attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <button name="act_reject_pending" string="Reject" type="object"
-                            groups="" attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>
@@ -31,14 +33,14 @@
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         </group>
                     </group>
-                    <field name="line_ids">
+                    <field name="line_ids" states="approve">
                         <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
                             <field name="change_date"/>
                             <field name="state"/>
-                            <field name="status"/>
+                            <field name="status" invisible="True"/>
                         </tree>
                     </field>
                 </sheet>
@@ -55,11 +57,12 @@
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
             <tree string="Sub Operating Unit" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
                   decoration-bf="state in ('approve',)">
-                <field name="code"/>
                 <field name="name"/>
+                <field name="code"/>
                 <field name="operating_unit_id"/>
-                <field name="state" invisible="True"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -68,12 +71,21 @@
         <field name="name">sub.operating.unit.search</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <search string="Search Branch">
+            <search string="Search Sub Operating Unit">
                 <field name="name" string="Sub Operating Unit"/>
-                <field name="operating_unit_id" string="Branch"/>
+                <field name="pending" string="Pending"/>
                 <field name="code" string="Code"/>
-                <filter string="Pending" name="pending" icon="terp-personal"
-                        domain="['|',('active','=',0),('pending','=',1)]"/>
+                <group string="Group By">
+                    <filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>
+                </group>
+                <group string="Group By">
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                </group>
+                <group string="Group By">
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                </group>
             </search>
         </field>
     </record>
@@ -83,7 +95,9 @@
         <field name="res_model">sub.operating.unit</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{"search_default_active":'False',"search_default_pending":'True'}</field>
+        <field name="context">
+            {"search_default_operating_unit_id":1,"search_default_active":'False',"search_default_pending":'True',}
+        </field>
         <field name="search_view_id" ref="view_sub_operating_unit_search"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -92,8 +106,7 @@
         </field>
     </record>
 
-    <menuitem action="action_sub_operating_unit_tree"
-              id="menu_action_sub_operating_unit_tree"
-              parent="base.menu_users"
-              groups="operating_unit.group_multi_operating_unit"/>
+    <menuitem action="action_sub_operating_unit_tree" id="menu_action_sub_operating_unit_tree"
+              parent="account.account_account_menu" sequence="14"
+              groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
 </odoo>

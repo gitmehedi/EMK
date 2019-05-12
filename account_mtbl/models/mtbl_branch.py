@@ -1,4 +1,6 @@
 from odoo import api, fields, models, _
+from psycopg2 import IntegrityError
+from odoo.exceptions import ValidationError
 
 
 class Branch(models.Model):
@@ -15,7 +17,7 @@ class Branch(models.Model):
     partner_id = fields.Many2one('res.partner', 'Partner', required=True, default=lambda self:
     self.env['res.company']._company_default_get('account.account'))
     branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'), ('rural', 'Rural')],
-                                   string='Branch Type', track_visibility='onchange', required=True)
+                                   string='Location of Branch', track_visibility='onchange', required=True)
 
     @api.one
     def name_get(self):
@@ -30,3 +32,12 @@ class Branch(models.Model):
             self.name = self.name.strip()
         if self.code:
             self.code = str(self.code.strip()).upper()
+
+    @api.multi
+    def unlink(self):
+        try:
+            return super(Branch, self).unlink()
+        except IntegrityError:
+            raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+                                    "- deletion: you may be trying to delete a record while other records still reference it"))
+

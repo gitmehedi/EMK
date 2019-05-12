@@ -4,54 +4,99 @@
         <field name="model">account.asset.category</field>
         <field name="inherit_id" ref="account_asset.view_account_asset_category_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//form/group/group[4]" position="attributes">
-                <attribute name="invisible">True</attribute>
+            <xpath expr="//form" position="replace">
+                <form string="Asset Type" duplicate='0'>
+                    <sheet>
+                        <group>
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="code" readonly='True'/>
+                                </h1>
+                                <label for="name" string="Asset Type" class="oe_edit_only"
+                                       attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
+                                       attrs="{'invisible': [('type','==','purchase')]}"/>
+                                <h1>
+                                    <field name="name" placeholder="e.g. Lenovo"/>
+                                </h1>
+                            </div>
+                            <group>
+                                <field name="is_custom_depr" invisible="1"/>
+                                <field name="type" invisible="1"/>
+                                <field name="company_id" options="{'no_create': True}"
+                                       groups="base.group_multi_company"/>
+                            </group>
+                            <group string="Journal Entries">
+                                <field name="journal_id"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}"
+                                       domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="asset_suspense_account_id" domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_depreciation_expense_id" domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_depreciation_id" domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_asset_loss_id" domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_asset_gain_id" domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="asset_sale_suspense_account_id" domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </group>
+                            <group string="Periodicity">
+                                <field name="method_time" string="Time Method Based On" widget="radio"
+                                       attrs="{'invisible': ['|',('type','!=','purchase'),('is_custom_depr','=',True)]}"/>
+                                <label for="depreciation_year" string="Asset Life (In Year)"/>
+                                <div>
+                                    <field name="depreciation_year" nolabel="1" class="oe_inline"
+                                           attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
+                                    years
+                                </div>
+                                <field name="method_number" string="Number of Entries" invisible="1"
+                                       attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)]}"/>
+                                <label for="method_period" string="One Entry Every"/>
+                                <div>
+                                    <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline"/>
+                                    months
+                                </div>
+                                <field name="method_end"
+                                       attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
+                            </group>
+                            <group string="Additional Options" attrs="{'invisible': [('is_custom_depr','=',True)]}">
+                                <field name="open_asset"/>
+                                <field name="group_entries"/>
+                            </group>
+                            <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
+                                <field name="method" widget="radio"/>
+                                <field name="method_progress_factor"
+                                       attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                                <field name="prorata"
+                                       attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
             </xpath>
-            <xpath expr="//form/group/group[2]" position="replace">
-                <group string="Journal Entries">
-                    <field name="journal_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}"
-                           domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="asset_suspense_account_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_depreciation_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_depreciation_expense_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_asset_loss_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_asset_gain_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="asset_sale_suspense_account_id" domain="[('company_id', '=', company_id)]"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" required="True"
-                           groups="analytic.group_analytic_accounting"
-                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                </group>
-            </xpath>
-
-            <xpath expr="//field[@name='method_number']" position="before">
-                <field name="is_custom_depr" invisible="True"/>
-                <label for="depreciation_year" string="Asset Life (In Year)"/>
-                <div>
-                    <field name="depreciation_year" nolabel="1" class="oe_inline"
-                           attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
-                    years
-                </div>
-            </xpath>
-            <xpath expr="//field[@name='prorata']" position="replace">
-                <field name="prorata"
-                       attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
-            </xpath>
-            <xpath expr="//field[@name='method_time']" position="replace">
-                <field name="method_time" string="Time Method Based On" widget="radio"
-                       attrs="{'invisible': ['|',('type','!=','purchase'),('is_custom_depr','=',True)]}"/>
-            </xpath>
-            <xpath expr="//field[@name='method_number']" position="replace">
-                <field name="method_number" string="Number of Entries" invisible="True"
-                       attrs="{'invisible':[('is_custom_depr','=',True),'|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
-            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="account_asset.view_account_asset_category_tree">
+        <field name="name">account.asset.category.tree</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <tree string="Asset category">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="method"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
         </field>
     </record>
 </odoo>

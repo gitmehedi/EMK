@@ -7,10 +7,10 @@ class AccountInvoice(models.Model):
 
     agreement_id = fields.Many2one('agreement', string='Agreement', ondelete='restrict',
                                    readonly=True, states={'draft': [('readonly', False)]},
-                                   track_visibility='onchange',copy=False)
+                                   track_visibility='onchange', copy=False)
 
-    agreement_adjusted_amount = fields.Float('Agreement Adjusted Amount',store=True, readonly=True,
-                                                track_visibility='onchange',copy=False)
+    agreement_adjusted_amount = fields.Float('Agreement Adjusted Amount', store=True, readonly=True,
+                                             track_visibility='onchange', copy=False)
 
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):

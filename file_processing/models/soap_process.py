@@ -1,10 +1,11 @@
 from zeep import Client, Settings
-import requests,urlparse, urllib, os
+import requests, urlparse, urllib, os
 
 from odoo import exceptions, models, fields, api, _, tools
 
 import suds
 from datetime import datetime
+
 # from suds.client import Client as s_client
 
 # url = "http://www.soapclient.com/xml/soapresponder.wsdl"
@@ -30,10 +31,8 @@ class SOAPProcess(models.Model):
     @api.constrains('name', 'endpoint_fullname')
     def _check_unique_constrain(self):
         if self.name or self.endpoint_fullname:
-            name = [['name', '=ilike', self.name]]
-            endpoint_fullname = [['name', '=ilike', self.endpoint_fullname]]
-            name = self.search(name)
-            endpoint_fullname = self.search(endpoint_fullname)
+            name = self.search([('name', '=ilike', self.name.strip())])
+            endpoint_fullname = self.search([('name', '=ilike', self.endpoint_fullname)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
             if len(endpoint_fullname) > 1:

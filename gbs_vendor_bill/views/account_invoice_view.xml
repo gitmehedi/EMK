@@ -140,7 +140,6 @@
     </record>
 
 
-
     <record id="inherited_invoice_supplier_tree" model="ir.ui.view">
         <field name="name">invoice.supplier.tree.form</field>
         <field name="model">account.invoice</field>

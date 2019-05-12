@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_fiscal_year.menu_date_range_accounting" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <record id="account_fiscal_year.menu_date_range_action_accounting" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <record id="account_fiscal_year.menu_date_range_type_action_accounting" model="ir.ui.menu">
+        <field name="name">Accounting Period Types</field>
+        <field name="groups">mtbl_access.group_mtbl_sys_admin</field>
+    </record>
+
+    <menuitem id="menu_date_range_generator_action" action="date_range.date_range_generator_action"
+              parent="account_fiscal_year.menu_date_range_accounting"
+              groups="mtbl_access.group_mtbl_sys_admin"/>
+
+
+    <record id="date_range.menu_date_range" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <record id="date_range.menu_date_range_action" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <record id="date_range.menu_date_range_type_action" model="ir.ui.menu">
+        <field name="name">Accounting Period Types</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+</odoo>
