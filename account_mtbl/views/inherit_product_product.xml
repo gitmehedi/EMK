@@ -63,7 +63,7 @@
 
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="supplier_taxes_id" widget="many2many_tags" string="Vat"
+                    <field name="supplier_taxes_id" widget="many2many_tags" string="VAT"
                            options='{"no_open": True,"no_create": True, "no_create_edit":True}'/>
                 </xpath>
             </field>

@@ -1,4 +1,6 @@
 from odoo import models, fields, api, _
+from psycopg2 import IntegrityError
+from odoo.exceptions import ValidationError
 
 
 class AccountJournal(models.Model):
@@ -30,3 +32,11 @@ class AccountJournal(models.Model):
             self.name = self.name.strip()
         if self.code:
             self.code = str(self.code.strip()).upper()
+
+    @api.multi
+    def unlink(self):
+        try:
+            return super(AccountJournal, self).unlink()
+        except IntegrityError:
+            raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+                                    "- deletion: you may be trying to delete a record while other records still reference it"))
