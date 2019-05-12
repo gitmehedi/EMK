@@ -13,7 +13,6 @@ class AccountLevel(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            name = self.search([('name', '=ilike', self.name.strip())])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')

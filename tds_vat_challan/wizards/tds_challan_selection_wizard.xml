@@ -11,7 +11,8 @@
                         <group>
                             <field name="date_from"/>
                             <field name="type"/>
-                            <field name="supplier_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            <field name="supplier_id" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
+                                   domain="[('supplier', '=', True)]" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
                             <field name="date_to"/>

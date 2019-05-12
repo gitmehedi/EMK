@@ -12,10 +12,10 @@ from odoo.tools import float_compare, float_is_zero
 
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
-    _order = "name desc"
 
     category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
-    parent_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict")
+    parent_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict",
+                                track_visibility='onchange')
 
     @api.onchange('parent_id')
     def onchange_asset_type(self):
@@ -57,6 +57,11 @@ class AccountAssetCategory(models.Model):
 
     @api.one
     def unlink(self):
+        from psycopg2 import IntegrityError
         if self.category_ids:
             raise ValidationError(_("Please delete all asset category related with it."))
-        return super(AccountAssetCategory, self).unlink()
+        try:
+            return super(AccountAssetCategory, self).unlink()
+        except IntegrityError:
+            raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+                                    "- deletion: you may be trying to delete a record while other records still reference it"))

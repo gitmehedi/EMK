@@ -5,6 +5,12 @@
         <field name="model">account.asset.asset</field>
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="duplicate">0</attribute>
+                <attribute name="create">0</attribute>
+                <attribute name="edit">0</attribute>
+                <attribute name="delete">false</attribute>
+            </xpath>
             <xpath expr="//button[@name='set_to_close']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
@@ -116,7 +122,7 @@
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Assets" decoration-info="(state == 'draft')" decoration-bf="(state == 'open')"
+                <tree string="Assets" delete="false" create="false"  decoration-info="(state == 'draft')" decoration-bf="(state == 'open')"
                       decoration-success="(state == 'open')" decoration-muted="(state == 'close')">
                     <field name="asset_seq"/>
                     <field name="name"/>

@@ -2,8 +2,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import Warning
 
 
-class SubOperatingUnitWizard(models.TransientModel):
-    _name = 'sub.operating.unit.wizard'
+class AccountAnalyticAccountWizard(models.TransientModel):
+    _name = 'account.analytic.account.wizard'
 
     @api.model
     def default_name(self):
@@ -21,7 +21,7 @@ class SubOperatingUnitWizard(models.TransientModel):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.env['sub.operating.unit'].search(
+            name = self.env['account.analytic.account'].search(
                 [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
@@ -30,15 +30,16 @@ class SubOperatingUnitWizard(models.TransientModel):
     def act_change_name(self):
         id = self._context['active_id']
 
-        name = self.env['sub.operating.unit'].search([('name', '=ilike', self.name)])
+        name = self.env['account.analytic.account'].search([('name', '=ilike', self.name)])
         if len(name) > 0:
             raise Warning('[Unique Error] Name must be unique!')
 
-        pending = self.env['history.sub.operating.unit'].search([('state', '=', 'pending'), ('line_id', '=', id)])
+        pending = self.env['history.account.analytic.account'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:
             raise Warning('[Warning] You already have a pending request!')
 
-        self.env['history.sub.operating.unit'].create({'change_name': self.name, 'line_id': id, 'status': self.status})
-        record = self.env['sub.operating.unit'].search([('id', '=', id)])
+        self.env['history.account.analytic.account'].create(
+            {'change_name': self.name, 'line_id': id, 'status': self.status})
+        record = self.env['account.analytic.account'].search([('id', '=', id)])
         if record:
             record.pending = True

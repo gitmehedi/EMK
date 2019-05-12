@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_segment_form" model="ir.ui.view">
-        <field name="name">segment.form</field>
-        <field name="model">segment</field>
+    <record id="view_servicing_channel_form" model="ir.ui.view">
+        <field name="name">servicing.channel.form</field>
+        <field name="model">servicing.channel</field>
         <field name="arch" type="xml">
-            <form string="Segment" edit="0" duplicate="0">
+            <form string="Servicing Channel" edit="0" duplicate="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
                             groups="mtbl_access.group_mtbl_sys_admin"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
                             groups="mtbl_access.group_mtbl_sys_admin"/>
-                    <button name="%(action_segment_wizard)d" string="Edit" type="action"
+                    <button name="%(action_servicing_channel_wizard)d" string="Edit" type="action"
                             class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
@@ -50,26 +50,29 @@
         </field>
     </record>
 
-    <record id="view_segment_tree" model="ir.ui.view">
-        <field name="name">segment.tree</field>
-        <field name="model">segment</field>
+    <record id="view_servicing_channel_tree" model="ir.ui.view">
+        <field name="name">servicing.channel.tree</field>
+        <field name="model">servicing.channel</field>
         <field name="arch" type="xml">
-            <tree string="Segment" decoration-info="state=='draft'" decoration-success="state=='approve'"
+            <tree string="Servicing Channel" decoration-info="state=='draft'" decoration-success="state=='approve'"
                   decoration-danger="state=='reject'"
-                  decoration-bf="state in ('approve',)" copy='false'>
+                  decoration-bf="state in ('approve',)">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="state"/>
             </tree>
         </field>
     </record>
-    <record id="view_segment_search" model="ir.ui.view">
-        <field name="name">segment.search</field>
-        <field name="model">segment</field>
+    <record id="view_servicing_channel_search" model="ir.ui.view">
+        <field name="name">servicing.channel.search</field>
+        <field name="model">servicing.channel</field>
         <field name="arch" type="xml">
-            <search string="Segment">
+            <search string="Servicing Channel">
                 <field name="name" string="Name"/>
                 <field name="code" string="Code"/>
+                <group string="Group By">
+                    <filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>
+                </group>
                 <group string="Group By">
                     <filter string="Pending" name="pending" icon="terp-personal"
                             domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
@@ -82,9 +85,9 @@
         </field>
     </record>
 
-    <record id="action_segment" model="ir.actions.act_window">
-        <field name="name">Segment</field>
-        <field name="res_model">segment</field>
+    <record id="action_servicing_channel" model="ir.actions.act_window">
+        <field name="name">Servicing Channel</field>
+        <field name="res_model">servicing.channel</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context">
@@ -92,11 +95,12 @@
         </field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to start a new Segment.
+                Click to start a new servicing channel.
             </p>
         </field>
     </record>
 
-    <menuitem action="action_segment" id="menu_action_segment_tree" parent="account.account_account_menu"
-              groups="mtbl_access.group_mtbl_sys_admin"/>
+    <menuitem action="action_servicing_channel"
+              id="menu_action_servicing_channel_tree"
+              parent="account.account_account_menu"/>
 </odoo>

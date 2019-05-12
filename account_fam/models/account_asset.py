@@ -52,8 +52,9 @@ class AccountAssetAsset(models.Model):
     @api.multi
     def validate(self):
         super(AccountAssetAsset, self).validate()
-        code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
-        self.write({'asset_seq': code})
+        if not self.asset_seq:
+            code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
+            self.write({'asset_seq': code})
 
     def depr_date_format(self, depreciation_date):
         no_of_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
@@ -305,7 +306,6 @@ class AccountAssetDepreciationLine(models.Model):
                                                            precision_digits=prec) > 0 else 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -316,7 +316,6 @@ class AccountAssetDepreciationLine(models.Model):
             'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }
@@ -328,7 +327,6 @@ class AccountAssetDepreciationLine(models.Model):
             'credit': 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -354,7 +352,6 @@ class AccountAssetDepreciationLine(models.Model):
                 'credit': gain if float_compare(gain, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id,
                 'partner_id': line.asset_id.partner_id.id,
-                'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
@@ -367,7 +364,6 @@ class AccountAssetDepreciationLine(models.Model):
                 'credit': 0.0,
                 'journal_id': category_id.journal_id.id,
                 'partner_id': line.asset_id.partner_id.id,
-                'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
@@ -379,7 +375,6 @@ class AccountAssetDepreciationLine(models.Model):
                                                            precision_digits=prec) > 0 else 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -391,7 +386,6 @@ class AccountAssetDepreciationLine(models.Model):
                                                                    precision_digits=prec) > 0 else 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }
@@ -403,7 +397,6 @@ class AccountAssetDepreciationLine(models.Model):
             'credit': 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -423,7 +416,6 @@ class AccountAssetDepreciationLine(models.Model):
             'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -434,7 +426,6 @@ class AccountAssetDepreciationLine(models.Model):
             'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
             'journal_id': category_id.journal_id.id,
             'partner_id': line.asset_id.partner_id.id,
-            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }
