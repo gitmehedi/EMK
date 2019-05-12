@@ -4,11 +4,6 @@ from odoo import api, fields, models, _
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.onchange("reference")
-    def onchange_strips(self):
-        if self.reference:
-            self.reference = self.reference.strip()
-
     @api.one
     @api.depends('invoice_line_ids.tds_amount')
     def _compute_total_tds(self):
@@ -33,11 +28,28 @@ class AccountInvoice(models.Model):
     tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines', oldname='tax_line',
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
+    @api.model
+    def create(self, vals):
+        invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
+        if invoice.is_tds_applicable:
+            invoice._update_tds()
+            invoice._update_tax_line_vals()
+        return invoice
+
+    @api.multi
+    def _write(self, vals):
+        res = super(AccountInvoice, self)._write(vals)
+        if vals.get('invoice_line_ids', False):
+            if self.is_tds_applicable:
+                self._update_tds()
+                self._update_tax_line_vals()
+        return res
+
     @api.multi
     def action_invoice_open(self):
-        if self.is_tds_applicable:
-            self._update_tds()
-            self._update_tax_line_vals()
+        # if self.is_tds_applicable:
+        #     self._update_tds()
+        #     self._update_tax_line_vals()
         res = super(AccountInvoice, self).action_invoice_open()
         self._update_acc_move_line_taxtype()
         return res
@@ -109,7 +121,8 @@ class AccountInvoiceLine(models.Model):
     def _calculate_tds_value(self, pre_invoice_line_list=None):
         # for line in self:
         if self.invoice_id.is_tds_applicable and self.product_id:
-            pro_base_val = self.quantity * self.price_unit
+            # pro_base_val = self.quantity * self.price_unit
+            pro_base_val = self.price_subtotal_signed
             if self.account_tds_id.type_rate == 'flat':
                 self.tds_amount = pro_base_val * self.account_tds_id.flat_rate / 100
                 if pre_invoice_line_list:
@@ -121,7 +134,8 @@ class AccountInvoiceLine(models.Model):
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
                         break
                     elif pre_invoice_line_list:
-                        total_amount = pro_base_val + sum(int(i.quantity * i.price_unit) for i in pre_invoice_line_list)
+                        # total_amount = pro_base_val + sum(int(i.quantity * i.price_unit) for i in pre_invoice_line_list)
+                        total_amount = pro_base_val + sum(int(i.price_subtotal_signed) for i in pre_invoice_line_list)
                         if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
                             remaining_tds_amount = total_tds_amount -  sum(int(i.tds_amount) for i in pre_invoice_line_list)
@@ -136,7 +150,8 @@ class AccountInvoiceLine(models.Model):
             pre_total_tds = pre_total_base_amount = 0.0
             for pre_invoice_line_obj in pre_invoice_line_list:
                 pre_total_tds += pre_invoice_line_obj.tds_amount
-                pre_total_base_amount += (pre_invoice_line_obj.price_unit * pre_invoice_line_obj.quantity)
+                # pre_total_base_amount += (pre_invoice_line_obj.price_unit * pre_invoice_line_obj.quantity)
+                pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_signed)
 
             pre_rate = (pre_total_tds * 100) / pre_total_base_amount
             if current_rate > pre_rate:

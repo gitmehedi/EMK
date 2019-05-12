@@ -50,6 +50,11 @@ class AccountInvoice(models.Model):
         for invoice in self:
             invoice.sub_operating_unit_id = []
 
+    @api.onchange("reference")
+    def onchange_strips(self):
+        if self.reference:
+            self.reference = self.reference.strip()
+
     @api.constrains('reference')
     def _check_unique_reference(self):
         if self.partner_id and self.reference:
