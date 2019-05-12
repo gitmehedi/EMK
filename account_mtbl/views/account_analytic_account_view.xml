@@ -5,15 +5,128 @@
         <field name="model">account.analytic.account</field>
         <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//form/sheet/group/group/field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
+            <xpath expr="//form" position="replace">
+                <form string="Analytic Account" edit="0" duplicate="0">
+                    <header>
+                        <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                                groups="mtbl_access.group_mtbl_sys_admin"/>
+                        <button name="act_reject" string="Reject" type="object" states="draft"
+                                groups="mtbl_access.group_mtbl_sys_admin"/>
+                        <button name="%(action_account_analytic_account_wizard)d" string="Edit" type="action"
+                                class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                        <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                                groups="mtbl_access.group_mtbl_sys_admin"
+                                attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                        <button name="act_reject_pending" string="Reject" type="object"
+                                groups="mtbl_access.group_mtbl_sys_admin"
+                                attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                        <field name="state" widget="statusbar" invisible="True"/>
+                    </header>
+                    <sheet string="Analytic Account">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options='{"terminology": "archive"}'/>
+                            </button>
+                            <button class="oe_stat_button" type="action"
+                                    name="%(analytic.account_analytic_line_action)d"
+                                    icon="fa-usd" string="Cost/Revenue" widget="statinfo"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline" placeholder="e.g. Cost Centre"/>
+                            </h1>
+
+                        </div>
+                        <div name="project"/>
+                        <group name="main">
+                            <group>
+                                <field name="code"/>
+                                <field name="partner_id" invisible="True"/>
+                                <field name="pending" invisible="True"/>
+                            </group>
+                            <group>
+                                <field name="operating_unit_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"
+                                       invisible="True"/>
+                                <field name="currency_id" options="{'no_create': True}"
+                                       groups="base.group_multi_currency"
+                                       invisible="True"/>
+                            </group>
+                        </group>
+                        <field name="line_ids" states="approve">
+                            <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                                  decoration-bf="state in ('pending',)"
+                                  decoration-danger="state=='reject'">
+                                <field name="change_name"/>
+                                <field name="change_date"/>
+                                <field name="state"/>
+                                <field name="status" invisible="True"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
             </xpath>
-            <xpath expr="//form/sheet/group/group/field[@name='company_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
+        </field>
+    </record>
+
+    <record id="inherited_account_analytic_account_tree" model="ir.ui.view">
+        <field name="name">analytic.analytic.account.tree</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Analytic Accounts" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
+                    <field name="display_name"/>
+                    <field name="code"/>
+                    <field name="partner_id"/>
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                    <field name="state"/>
+                </tree>
             </xpath>
-            <xpath expr="//form/sheet/group/group/field[@name='currency_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
+        </field>
+    </record>
+
+    <record id="inherited_account_analytic_account_search" model="ir.ui.view">
+        <field name="name">analytic.analytic.account.search</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search string="Analytic Account">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                           string="Analytic Account"/>
+                    <field name="tag_ids"/>
+                    <field name="partner_id"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                    </group>
+                    <group string="Group By">
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    </group>
+                </search>
             </xpath>
+        </field>
+    </record>
+
+    <record id="analytic.action_analytic_account_form" model="ir.actions.act_window">
+        <field name="context">
+            {"search_default_active":'False',"search_default_pending":'True'}
         </field>
     </record>
 

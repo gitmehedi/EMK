@@ -36,6 +36,8 @@
         "mtbl_access",
         "file_processing",
         "inherit_date_range",
+        "bgl_accounts",
+        "gbs_account_level",
     ],
     'description': 'Install all modules which is related to MTBL Accounting',
     'installable': True,

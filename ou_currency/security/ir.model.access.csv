@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_operating_unit_admin,account_operating_unit_admin,operating_unit.model_operating_unit,group_mtbl_sys_admin,1,1,1,1
+operating_unit.access_account_operating_unit_user,operating_unit user,operating_unit.model_operating_unit,base.group_user,1,0,0,0

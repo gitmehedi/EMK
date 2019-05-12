@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 {
     "name": "Operating Unit Currency",
     "summary": "Added Currency For Operating Unit",
@@ -9,9 +8,12 @@
     "category": "Generic",
     "depends": [
         "operating_unit",
+        "mtbl_access",
     ],
     "data": [
+        # 'security/ir.model.access.csv',
         'views/inherit_operating_unit.xml',
+
     ],
     'installable': True,
     'application': False,

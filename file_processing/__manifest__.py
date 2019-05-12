@@ -13,6 +13,7 @@
     "data": [
         "data/ir_cron.xml",
         "data/mail_message_subtype.xml",
+        "view/menu_view.xml",
         "security/ir.model.access.csv",
         "view/server_file_process_view.xml",
         "view/server_file_error_view.xml",

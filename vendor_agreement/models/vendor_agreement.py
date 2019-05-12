@@ -78,8 +78,6 @@ class VendorAgreement(models.Model):
             else:
                 record.is_remaining = True
 
-
-
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].get('name')
@@ -170,8 +168,8 @@ class VendorAgreement(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

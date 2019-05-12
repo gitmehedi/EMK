@@ -103,13 +103,9 @@
             <field name="search_view_id" ref="tds_vat_challan_filter"/>
         </record>
 
-        <menuitem
-                name="TDS/VAT Challan"
-                parent="account.menu_finance_payables"
-                action="tds_vat_challan_action"
-                id="tds_challan_menu"
-                groups="account_tds.group_tds_manager,account_tds.group_tds_user"
-                sequence="11"/>
+        <menuitem name="TDS/VAT Challan" parent="main_menu_tds_vat"
+                  action="tds_vat_challan_action" id="tds_challan_menu" sequence="11"
+                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <record id="account.action_account_unreconcile" model="ir.actions.act_window">
             <field name="name">Unreconcile Entries</field>

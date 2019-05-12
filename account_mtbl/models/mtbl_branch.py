@@ -8,7 +8,7 @@ class Branch(models.Model):
     _order = 'name desc'
     _inherit = ['operating.unit', 'mail.thread']
 
-    code = fields.Char('Code', required=True, size=4, track_visibility='onchange')
+    code = fields.Char('Code', required=True, size=3, track_visibility='onchange')
     name = fields.Char('Name', required=True, size=50, track_visibility='onchange')
     active = fields.Boolean('Active', default=True, track_visibility='onchange')
     company_id = fields.Many2one(

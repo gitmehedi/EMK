@@ -1,3 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_server_file_process_read,Read db.backup,model_server_file_process,base.group_erp_manager,1,0,0,0
-access_server_file_process_write,Write db.backup,model_server_file_process,base.group_system,1,1,1,1
+
+access_server_file_process_user,server_file_process,model_server_file_process,base.group_erp_manager,1,0,0,0
+access_server_file_process_manager,server_file_process,model_server_file_process,base.group_system,1,1,1,1
+
+access_server_file_error_user,server_file_error,model_server_file_error,base.group_erp_manager,1,0,0,0
+access_server_file_error_manager,server_file_error,model_server_file_error,base.group_system,1,1,1,1
+
+access_soap_process_user,soap_process,model_soap_process,base.group_erp_manager,1,0,0,0
+access_soap_process_manager,soap_process,model_soap_process,base.group_system,1,1,1,1

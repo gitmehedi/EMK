@@ -5,7 +5,7 @@
         <field name="model">server.file.error</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="File Processing Error" >
+            <form string="File Processing Error">
                 <sheet>
                     <h1>
                         <field name="name"/>
@@ -68,7 +68,7 @@
             res_model="server.file.error"/>
 
     <menuitem
-            parent="base.next_id_9"
+            parent="main_api_interface"
             action="action_server_file_error_form"
             id="server_file_error_menu"/>
 
