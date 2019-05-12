@@ -112,7 +112,7 @@ class AcquiringChannel(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approve and Reject record cannot be deleted.'))
+                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
 
             try:
                 return super(AcquiringChannel, rec).unlink()
