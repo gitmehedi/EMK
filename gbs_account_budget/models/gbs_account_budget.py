@@ -86,6 +86,12 @@ class BranchBudget(models.Model):
             for line in self.branch_budget_lines:
                 line.planned_amount = self.planned_amount/len(self.branch_budget_lines)
 
+    @api.constrains('planned_amount')
+    def _check_amount(self):
+        if self.planned_amount!=sum(i.planned_amount for i in self.branch_budget_lines):
+            raise UserError(_('Total amount not matched!'))
+        return True
+
 
 class BudgetBranchDistributionLine(models.Model):
     _name = "branch.budget.line"
