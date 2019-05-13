@@ -216,11 +216,7 @@ class CostCenterBudgetDistributionLine(models.Model):
 
     cost_center_budget_id = fields.Many2one('budget.distribution',string='Budget Distribution')
     account_id = fields.Many2one('account.account',string='Accounts')
-<<<<<<< HEAD
-    analytic_account_id = fields.Many2one('account.analytic.account',required=True,string='Cost Center')
-=======
-    analytic_account_id = fields.Many2one('account.analytic.account',string='Cost Centre')
->>>>>>> f736f30040acc2bcfbe9ba0bbc56d4818fd9a359
+    analytic_account_id = fields.Many2one('account.analytic.account',required=True,string='Cost Centre')
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount', store=True)
     theoritical_amount = fields.Float(string='Theoretical Amount', store=True)
