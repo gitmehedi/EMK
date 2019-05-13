@@ -92,8 +92,9 @@
                           decoration-success="state=='approve'"
                           decoration-danger="state=='reject'"
                           decoration-bf="state in ('approve',)" duplicate="0">
-                        <field name="code"/>
                         <field name="name"/>
+                        <field name="code"/>
+                        <field name="level_id"/>
                         <field name="user_type_id"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"
                                invisible="True"/>
@@ -110,13 +111,17 @@
             <field name="inherit_id" ref="account.view_account_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//search" position="replace">
-                    <search string="Accounts">
+                    <search>
                         <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]"
                                string="Account"/>
                         <filter string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
                         <filter string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
+                        <field name="user_type_id"/>
                         <group string="Group By">
-                            <filter name="user_type_id" string="Type" context="{'group_by': 'user_type_id'}"/>
+                            <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>
+                        </group>
+                        <group string="Group By">
+                            <filter name="level_id" string="Level" context="{'group_by': 'level_id'}"/>
                         </group>
                         <group string="Group By">
                             <filter string="Pending" name="pending" icon="terp-personal"
@@ -130,10 +135,10 @@
                 </xpath>
             </field>
         </record>
-
         <record id="account.action_account_form" model="ir.actions.act_window">
             <field name="context">
-                {"search_default_user_type_id": 1,"search_default_active":'False',"search_default_pending":'True',}
+                {"search_default_level_id":1,
+                "show_parent_account":True,"search_default_active":'False',"search_default_pending":'True'}
             </field>
         </record>
     </data>
