@@ -6,3 +6,4 @@ from . import acquiring_channel_wizard
 from . import account_analytic_account_wizard
 from . import account_account_wizard
 from . import branch_wizard
+from . import account_type_wizard

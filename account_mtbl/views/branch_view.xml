@@ -78,24 +78,13 @@
             </field>
         </record>
 
-        <record id="inherit_view_operating_unit_search" model="ir.ui.view">
-            <field name="name">inherit.operating.unit.search</field>
-            <field name="model">operating.unit</field>
-            <field name="inherit_id" ref="operating_unit.view_operating_unit_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="attributes">
-                    <attribute name="string">Branch</attribute>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_branch_search" model="ir.ui.view">
             <field name="name">inherit.operating.unit.search</field>
             <field name="model">operating.unit</field>
             <field name="inherit_id" ref="operating_unit.view_operating_unit_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//search" position="replace">
-                    <search string="Search Branch">
+                    <search string="Branch">
                         <field name="name" string="Branch"/>
                         <field name="pending" string="Pending"/>
                         <field name="code" string="Code"/>

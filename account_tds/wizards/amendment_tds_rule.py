@@ -18,7 +18,9 @@ class TDSRulesWizard(models.TransientModel):
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
     ], string='TDS Type', required=True,default=lambda self: self.env.context.get('type_rate'))
-    flat_rate = fields.Float(string='Rate',size=50,default=lambda  self: self.env.context.get('flat_rate'))
+    flat_rate = fields.Float(string='Rate',size=3,default=lambda  self: self.env.context.get('flat_rate'))
+    price_include = fields.Boolean(string='Included in Price',default=lambda self: self.env.context.get('price_include'),
+                                   help="Check this if the price you use on the product and invoices includes this TAX.")
 
 
     @api.multi
@@ -34,6 +36,7 @@ class TDSRulesWizard(models.TransientModel):
             'account_id': self.account_id.id,
             'type_rate': self.type_rate,
             'flat_rate': self.flat_rate,
+            'price_include': self.price_include,
             'rel_id': self.id,
         }
         rule_list.version_ids += self.env['tds.rule.version'].create(rule_obj)
