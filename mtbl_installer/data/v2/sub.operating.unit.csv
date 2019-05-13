@@ -1,2 +1,2 @@
-code,active,name,Partner,Company,Operating Unit
-SU1,True,Sub Operating Unit,My Company,My Company,Main Operating Unit
+code,name,Operating Unit,active,pending,state
+SU1,Sub Operating Unit,Main Operating Unit,True,False,approve

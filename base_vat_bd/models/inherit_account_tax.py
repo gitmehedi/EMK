@@ -14,7 +14,7 @@ class AccountTax(models.Model):
     refund_account_id = fields.Many2one(track_visibility='onchange')
     description = fields.Char(track_visibility='onchange')
     tax_group_id = fields.Many2one(track_visibility='onchange')
-    analytic = fields.Boolean(string='Cost Center', track_visibility='onchange')
+    analytic = fields.Boolean(string='Cost Centre', track_visibility='onchange')
     active = fields.Boolean(track_visibility='onchange')
     price_include = fields.Boolean(track_visibility='onchange')
     include_base_amount = fields.Boolean(track_visibility='onchange')

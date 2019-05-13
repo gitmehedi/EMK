@@ -69,7 +69,7 @@
     <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
               parent="account.account_account_menu" sequence="1" groups="mtbl_access.group_mtbl_sys_admin"/>
 
-    <menuitem id="account.menu_analytic_accounting" name="Cost Centers Accounting"
+    <menuitem id="account.menu_analytic_accounting" name="Cost Centres Accounting"
               parent="account.menu_finance_configuration"
               groups="analytic.group_analytic_accounting" sequence="5"/>
 

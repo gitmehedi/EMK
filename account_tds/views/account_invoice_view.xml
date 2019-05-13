@@ -43,7 +43,7 @@
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
                    position="attributes">
-                <attribute name="string">Cost Center</attribute>
+                <attribute name="string">Cost Centre</attribute>
             </xpath>
 
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='analytic_tag_ids']" position="attributes">
