@@ -29,6 +29,8 @@ class ProductProduct(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    property_account_expense_id = fields.Many2one(track_visibility='onchange',required=True)
+
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:

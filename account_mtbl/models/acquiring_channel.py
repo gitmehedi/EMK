@@ -124,7 +124,7 @@ class AcquiringChannel(models.Model):
 
 class HistoryAcquiringChannel(models.Model):
     _name = 'history.acquiring.channel'
-    _description = 'History Sub Operating Unit'
+    _description = 'History Acquiring Channel'
     _order = 'id desc'
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
