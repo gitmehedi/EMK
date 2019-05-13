@@ -17,7 +17,7 @@
     'depends': [
         'date_range',
         'product',
-        'account_operating_unit',
+        'gbs_vendor_bill',
     ],
     'data': [
         'data/tds_version_scheduler.xml',

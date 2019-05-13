@@ -24,6 +24,7 @@
                                            attrs="{'required':[('type_rate', '=','flat')]}"/>
                                     <label string="%" class="oe_inline"/>
                                 </div>
+                                <field name="price_include" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
                             </group>
                             <group>
                                 <field name="account_id"
