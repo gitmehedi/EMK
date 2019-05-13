@@ -46,6 +46,7 @@
                         <group>
                             <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="planned_amount"/>
+                            <field name="remaining_amount"/>
                             <field name="creating_user_id"/>
                             <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
@@ -63,11 +64,12 @@
                     <notebook>
                         <page string="Distribution" >
                             <field name="branch_budget_lines">
-                                <tree>
-                                    <field name="operating_unit_id"/>
+                                <tree editable="bottom">
+                                    <field name="operating_unit_id"
+                                           options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                     <field name="planned_amount"/>
-                                    <field name="practical_amount"/>
-                                    <field name="theoritical_amount"/>
+                                    <field name="practical_amount" readonly="1"/>
+                                    <field name="theoritical_amount" readonly="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -168,11 +170,12 @@
                     <notebook>
                         <page string="Distribution" >
                             <field name="cost_center_budget_lines">
-                                <tree>
-                                    <field name="analytic_account_id"/>
+                                <tree editable="bottom">
+                                    <field name="analytic_account_id"
+                                           options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                     <field name="planned_amount"/>
-                                    <field name="practical_amount"/>
-                                    <field name="theoritical_amount"/>
+                                    <field name="practical_amount" readonly="1"/>
+                                    <field name="theoritical_amount" readonly="1"/>
                                 </tree>
                             </field>
                         </page>
