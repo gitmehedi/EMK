@@ -10,6 +10,7 @@ This application allows you to easily maintain access rights of mtbl process.
 """,
     'depends': [
         'base',
+        'account',
     ],
     'data': [
         'security/ir_security.xml',

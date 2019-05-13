@@ -85,6 +85,7 @@ class SubOperatingUnit(models.Model):
         if self.state == 'draft':
             self.state = 'reject'
             self.pending = False
+            self.active = False
 
     @api.one
     def act_approve_pending(self):
