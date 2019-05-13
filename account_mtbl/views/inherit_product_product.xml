@@ -23,9 +23,6 @@
                 <xpath expr="//field[@name='property_account_income_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 </xpath>
-                <xpath expr="//field[@name='property_account_expense_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                </xpath>
                 <xpath expr="//field[@name='taxes_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                     <attribute name="invisible">True</attribute>
