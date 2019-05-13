@@ -1,0 +1,27 @@
+name,code,active
+Corporate Unit 1,11,True
+Corporate Unit 2,12,True
+Corporate Unit 3,13,True
+Corporate Unit 4,14,True
+Corporate Unit 5,15,True
+SME Unit 1,21,True
+Retail Unit 1,31,True
+Retail RFC,32,True
+Retail Payroll,33,True
+MITS Motijheel,41,True
+MITS Dhaka,42,True
+MITS Chittagong,43,True
+Cards,44,True
+NRB,45,True
+Dhaka Lounge,46,True
+Chittagong Lounge,47,True
+Privilege Centre 1,71,True
+Privilege Centre 2,72,True
+Privilege Centre 3,73,True
+Privilege Centre 4,74,True
+Privilege Centre 5,75,True
+Privilege Centre 6,76,True
+Privilege Centre 7,77,True
+Privilege Centre 8,78,True
+External Agency,98,True
+Branch,99,True
