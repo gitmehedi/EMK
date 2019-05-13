@@ -131,30 +131,30 @@
     </record>
 
     <record id="analytic.action_analytic_account_form" model="ir.actions.act_window">
-        <field name="name">Cost Centers</field>
+        <field name="name">Cost Centres</field>
     </record>
 
     <record id="analytic.account_analytic_tag_action" model="ir.actions.act_window">
-        <field name="name">Cost Center Tags</field>
+        <field name="name">Cost Centre Tags</field>
     </record>
 
     <record id="analytic.account_analytic_line_action_entries" model="ir.actions.act_window">
-        <field name="name">Cost Centers Entries</field>
+        <field name="name">Cost Centres Entries</field>
     </record>
 
     <record id="account.menu_action_analytic_account_tree2" model="ir.ui.menu">
-        <field name="name">Cost Centers</field>
+        <field name="name">Cost Centres</field>
     </record>
 
     <record id="account.menu_action_analytic_lines_tree" model="ir.ui.menu">
-        <field name="name">Cost Centers Entries</field>
+        <field name="name">Cost Centres Entries</field>
     </record>
 
     <record id="account.account_analytic_tag_menu" model="ir.ui.menu">
-        <field name="name">Cost Centers Tags</field>
+        <field name="name">Cost Centres Tags</field>
     </record>
     <record id="account.account_analytic_def_account" model="ir.ui.menu">
-        <field name="name">Cost Centers Tags</field>
+        <field name="name">Cost Centres Tags</field>
     </record>
 
     <record id="view_account_analytic_line_form_inherit_account_cost" model="ir.ui.view">
@@ -165,7 +165,7 @@
             <data>
                 <xpath expr="//field[@name='account_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                    <attribute name="string">Cost Center</attribute>
+                    <attribute name="string">Cost Centre</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">True</attribute>

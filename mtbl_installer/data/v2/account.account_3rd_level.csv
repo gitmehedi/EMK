@@ -1,0 +1,85 @@
+Parent Account,Code,Name,Type
+Capital & Reserve,11100000,Capital ,View Type
+Capital & Reserve,11200000,Reserve ,View Type
+Borrowings,12100000,Borrowings under Bangladesh Bank,View Type
+Borrowings,12500000,Interest Payable on Borrowings,View Type
+Borrowings,12200000,Borrowings from other Banks,View Type
+Borrowings,12300000,Borrowings from other Institutions,View Type
+Borrowings,12400000,OBU Borrowings,View Type
+Deposits,13100000,Customer Deposits -Current & Others,View Type
+Deposits,13200000,"Customer Deposits -SB, FD, RD, SND etc.",View Type
+Deposits,13300000,Bank & NBFI Deposits -Current & Others,View Type
+Deposits,13400000,Bank & NBFI Deposits -FD & Others,View Type
+Deposits,13500000,IP on Customer Deposits -Current & Others,View Type
+Deposits,13600000,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type
+Deposits,13700000,Interest Payable on Bank & NBFI Deposits,View Type
+Deposits,13800000,Customer Deposits -Bills Payable,View Type
+Deposits,13900000,OBU Deposits,View Type
+Bond,14100000,Subordinated Bond,View Type
+Bond,14200000,Other Bond,View Type
+Other Liabilities,15100000,Interest Suspenses Account ,View Type
+Other Liabilities,15200000,Other misc. liabilities,View Type
+Other Liabilities,15300000,Provision,View Type
+Inter Branch Account,16100000,Inter Branch Account 2,View Type
+Income,17100000,Income 3,View Type
+Cash & Bank Balance,21100000,Cash,View Type
+Cash & Bank Balance,21200000,Balance with Bangladesh Bank,View Type
+Cash & Bank Balance,21300000,Balance with Agent Bank,View Type
+Cash & Bank Balance,21400000,Balance with other banks and Fis,View Type
+Money at Call & Short Notice,22100000,Money at Call & Short Notice 2,View Type
+Investments,23100000,Government,View Type
+Investments,23200000,Other Investments,View Type
+Investments,23300000,Inv in Subsidiaries,View Type
+Loans & Advances,24100000,Term Loans,View Type
+Loans & Advances,24200000,Demand Loans,View Type
+Loans & Advances,24300000,Continuous Loans,View Type
+Loans & Advances,24400000,Credit Cards,View Type
+Loans & Advances,24600000,Interest Receivables,View Type
+Loans & Advances,24700000,Penal Interest Receivable,View Type
+Loans & Advances,24800000,OBU Loans & Advances,View Type
+Loans & Advances,24900000,Other Loans & Assets,View Type
+Fixed Assets,25100000,Tangible Fixed Assets,View Type
+Fixed Assets,25200000,Intangible Assets,View Type
+Other Assets,26100000,Adjustment Account,View Type
+Other Assets,26200000,Advances,View Type
+Other Assets,26300000,Coupon Interest Expenditure Account,View Type
+Other Assets,26400000,Placement to Off-Shore Banking Unit,View Type
+Other Assets,26500000,Receivable from Subsidiaries,View Type
+Other Assets,26600000,Suspense Account,View Type
+Other Assets,26700000,Receivable from OBU,View Type
+Other Assets,26900000,Miscellaneous Other Assets,View Type
+Expenditure,28100000,Expenditure1,View Type
+Interest Income,31100000,Interest Earned,View Type
+Interest Income,31200000,Penal Interest Earned,View Type
+Interest Income,31300000,Interest on MTB Branch Account,View Type
+Interest Income,31400000, Income on Money Market/ Placements,View Type
+Income fm Investments,32100000,Income fm Govt Securities,View Type
+Income fm Investments,32200000,Income from Other Investments,View Type
+"Comm, Exch & Brokerage",33100000,Commission,View Type
+"Comm, Exch & Brokerage",33200000,Exchange,View Type
+"Comm, Exch & Brokerage",33300000,Brokerage,View Type
+Other Operating Income,34100000,Other Operating Income 1,View Type
+Interest Expenses,41100000,Interest Expenses on Demand Deposits,View Type
+Interest Expenses,41200000,Interest Expenses on Term Deposits,View Type
+Interest Expenses,41300000,Interest Expenses on Borrowings,View Type
+Interest Expenses,41400000,Interest Expenses on Bonds,View Type
+Interest Expenses,41500000,Interest Expense on Others,View Type
+Interest Expenses,41600000,Interest Expense on Branch A/C,View Type
+Non-Interest Expenses,42100000,Salary & Allowances,View Type
+Non-Interest Expenses,42200000,"Rent, Taxes, Insurance, Electricity etc.",View Type
+Non-Interest Expenses,42300000,Other Expenses,View Type
+Non-Interest Expenses,42400000,Depreciation & Repair & Maintenance of Assets,View Type
+Non-Interest Expenses,42500000,"Postage, Stamps and Telecommunication etc.",View Type
+Non-Interest Expenses,42600000,Legal Expenses,View Type
+Non-Interest Expenses,42700000,"Stationery, Printing and Advertisements etc.",View Type
+Non-Interest Expenses,42800000,Director's Expenses,View Type
+Non-Interest Expenses,42900000,Managing Director's Remuneration,View Type
+Provisions,43100000,Provision for Loans,View Type
+Provisions,43200000,Provision for diminution in value of Invsetments,View Type
+Provisions,43300000,Other Provisions,View Type
+Contra ,51100000,Bills sent for collection,View Type
+Contra ,51200000,Bills received for Collection,View Type
+Contra ,51300000,Forward Contract,View Type
+Contingent,52100000,Bank Guarantee <Contingent>,View Type
+Contingent,52200000,Letter of Credit <Contingent>,View Type
+Contingent,52300000,Accepted Bills under LC <Contingent>,View Type

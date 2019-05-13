@@ -30,7 +30,7 @@
         <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
     </record>
 
-    <menuitem id="menu_date_range_generator_action" action="date_range.date_range_generator_action"
-              parent="account_fiscal_year.menu_date_range_accounting" string="Generate Account Period"
+    <menuitem id="date_range.menu_date_range_generator_action" action="date_range.date_range_generator_action"
+              parent="account_fiscal_year.menu_date_range_accounting" name="Generate Account Period" sequence="30"
               groups="mtbl_access.group_mtbl_sys_admin"/>
 </odoo>

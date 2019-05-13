@@ -10,6 +10,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/level_data.xml",
         "views/account_level_views.xml",
     ],
     "application": False,

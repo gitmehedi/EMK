@@ -106,12 +106,12 @@ class BudgetBranchDistributionLine(models.Model):
 
 
 # ---------------------------------------------------------
-# Cost Center wise Budgets Distribution
+# Cost Centre wise Budgets Distribution
 # ---------------------------------------------------------
 class CostCenterBudget(models.Model):
     _name = "cost.center.budget"
     _inherit = ['mail.thread']
-    _description = "Cost Center Budget"
+    _description = "Cost Centre Budget"
 
     name = fields.Char('Budget Name', required=True, readonly=True,
                        states={'draft': [('readonly', False)]}, track_visibility='onchange')
@@ -192,11 +192,11 @@ class CostCenterBudget(models.Model):
 
 class CostCenterBudgetDistributionLine(models.Model):
     _name = "cost.center.budget.line"
-    _description = "Cost Center Budget Line"
+    _description = "Cost Centre Budget Line"
 
     cost_center_budget_id = fields.Many2one('budget.distribution',string='Budget Distribution')
     account_id = fields.Many2one('account.account',string='Accounts')
-    analytic_account_id = fields.Many2one('account.analytic.account',string='Cost Center')
+    analytic_account_id = fields.Many2one('account.analytic.account',string='Cost Centre')
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount', store=True)
     theoritical_amount = fields.Float(string='Theoretical Amount', store=True)
