@@ -1,0 +1,2 @@
+Name,active,method_number,method,Journal,Asset Account,Asset Suspense Account,Depreciation Entries: Asset Account (Accumulated),Depreciation Entries: Expense Account,Asset Loss Account GL,Asset Gain Account GL,Asset Sales Suspense Account,Analytic Account
+Computers,True,12,Straight Line/Linear,Vendor Bills,Fixed Asset Account,Current Assets,Fixed Asset Account,Stock Valuation Account,Stock Interim Account (Delivered),Reserve and Profit/Loss Account,Stock Interim Account (Delivered),HR

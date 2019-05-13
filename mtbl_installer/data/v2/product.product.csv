@@ -1,0 +1,2 @@
+Product Name,Can be Sold,Can be Purchased ,Product Type,Internal Category ,Sale Price,Cost,TDS Rule,Income Account,Customer Taxes,Expense Account,Vendor Taxes,Asset Type,Asset Category
+Lenevo Thinkpad 3,TRUE,TRUE,Consumable,All,50000,45000,Flat 5%,Opening Income Account,Tax 15.00%,Expenses,Tax 15.00%,Computers,Laptop

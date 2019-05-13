@@ -118,7 +118,7 @@
         <field name="name">cost.center.budget.tree</field>
         <field name="model">cost.center.budget</field>
         <field name="arch" type="xml">
-            <tree string="Cost Center Distribution" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
+            <tree string="Cost Centre Distribution" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
                   decoration-muted="state in ('approve','cancel') "
                   decoration-bf="state in ('confirm','approve') ">
                 <field name="name"/>
@@ -135,7 +135,7 @@
         <field name="name">cost.center.budget.form</field>
         <field name="model">cost.center.budget</field>
         <field name="arch" type="xml">
-            <form string="Cost Center Distribution">
+            <form string="Cost Centre Distribution">
                 <header>
                     <button string="Confirm" name="action_budget_confirm" states="draft" type="object" class="oe_highlight"/>
                     <button string="Approve" name="action_budget_approve" states="confirm" type="object" class="oe_highlight"/>
@@ -193,7 +193,7 @@
         <field name="name">cost.center.budget.search</field>
         <field name="model">cost.center.budget</field>
         <field name="arch" type="xml">
-            <search string="Cost Center Distribution">
+            <search string="Cost Centre Distribution">
                 <field name="name" filter_domain="[('name','ilike',self)]" string="Budget"/>
                 <field name="fiscal_year" filter_domain="[('fiscal_year','ilike',self)]" string="Year"/>
                 <group expand="0" string="Group By">
@@ -205,7 +205,7 @@
     </record>
 
     <record id="action_cost_center_budget" model="ir.actions.act_window">
-        <field name="name">Cost Center Distribution</field>
+        <field name="name">Cost Centre Distribution</field>
         <field name="res_model">cost.center.budget</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
