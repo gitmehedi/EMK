@@ -27,9 +27,11 @@ class TDSRules(models.Model):
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
     ], string='TDS Type', required=True, track_visibility='onchange', states={'confirm': [('readonly', True)]})
-    flat_rate = fields.Float(string='Rate', size=50,
+    flat_rate = fields.Float(string='Rate', size=3,
                              track_visibility='onchange', states={'confirm': [('readonly', True)]})
-
+    price_include = fields.Boolean(string='Included in Price', default=False,
+                                   track_visibility='onchange',
+                                   help="Check this if the price you use on the product and invoices includes this TAX.")
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
@@ -179,6 +181,7 @@ class TDSRules(models.Model):
                         'account_id': self.account_id.id or False,
                         'line_ids': slab_list,
                         'flat_rate': self.flat_rate or False,
+                        'price_include': self.price_include or False,
                         },
         }
         return result

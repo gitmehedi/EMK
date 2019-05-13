@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_round as round
 
 
 class AccountInvoice(models.Model):
@@ -122,20 +123,23 @@ class AccountInvoiceLine(models.Model):
         # for line in self:
         if self.invoice_id.is_tds_applicable and self.product_id:
             # pro_base_val = self.quantity * self.price_unit
-            pro_base_val = self.price_subtotal_signed
+            pro_base_val = self.price_subtotal_without_vat
             if self.account_tds_id.type_rate == 'flat':
-                self.tds_amount = pro_base_val * self.account_tds_id.flat_rate / 100
+                if self.account_tds_id.price_include:
+                    self.tds_amount = pro_base_val-(pro_base_val/(1+self.account_tds_id.flat_rate / 100))
+                else:
+                    self.tds_amount = pro_base_val * self.account_tds_id.flat_rate / 100
                 if pre_invoice_line_list:
                     remaining_pre_tds = self.previous_tds_value(self.account_tds_id.flat_rate, pre_invoice_line_list)
                     self.tds_amount = self.tds_amount + remaining_pre_tds
             else:
                 for tds_slab_rule_obj in self.account_tds_id.line_ids:
-                    if  not pre_invoice_line_list and pro_base_val >= tds_slab_rule_obj.range_from and pro_base_val <= tds_slab_rule_obj.range_to:
+                    if not pre_invoice_line_list and pro_base_val >= tds_slab_rule_obj.range_from and pro_base_val <= tds_slab_rule_obj.range_to:
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
                         break
                     elif pre_invoice_line_list:
                         # total_amount = pro_base_val + sum(int(i.quantity * i.price_unit) for i in pre_invoice_line_list)
-                        total_amount = pro_base_val + sum(int(i.price_subtotal_signed) for i in pre_invoice_line_list)
+                        total_amount = pro_base_val + sum(int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
                         if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
                             remaining_tds_amount = total_tds_amount -  sum(int(i.tds_amount) for i in pre_invoice_line_list)
@@ -151,10 +155,13 @@ class AccountInvoiceLine(models.Model):
             for pre_invoice_line_obj in pre_invoice_line_list:
                 pre_total_tds += pre_invoice_line_obj.tds_amount
                 # pre_total_base_amount += (pre_invoice_line_obj.price_unit * pre_invoice_line_obj.quantity)
-                pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_signed)
+                if pre_invoice_line_obj.account_tds_id.price_include:
+                    pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat-(pre_invoice_line_obj.price_subtotal_without_vat*(self.account_tds_id.flat_rate / 100)))
+                else:
+                    pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat)
 
             pre_rate = (pre_total_tds * 100) / pre_total_base_amount
-            if current_rate > pre_rate:
+            if current_rate > round(pre_rate):
                 remain_tds_amount = ((pre_total_base_amount * current_rate) / 100) - pre_total_tds
 
         return remain_tds_amount
