@@ -44,19 +44,19 @@
                     </div>
                     <group>
                         <group>
-                            <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="planned_amount"/>
-                            <field name="remaining_amount"/>
-                            <field name="creating_user_id"/>
-                            <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
-                        </group>
-                        <group>
                             <label for="fiscal_year" string="Period"/>
                             <div>
                                 <field name="fiscal_year" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                 <field name="date_from" class="oe_inline"/> -
                                 <field name="date_to" class="oe_inline" nolabel="1"/>
                             </div>
+                            <field name="creating_user_id"/>
+                            <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="planned_amount"/>
+                            <field name="remaining_amount"/>
                             <field name="approve_date" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
                             <field name="approved_user_id" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
                         </group>
