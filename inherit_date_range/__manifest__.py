@@ -13,9 +13,10 @@
         "account_fiscal_year",
     ],
     "data": [
+        "wizard/date_range_generator.xml",
+        "wizard/account_period_wizard_view.xml",
         "views/menu_view.xml",
         "views/date_range_view.xml",
-        "wizard/date_range_generator.xml",
     ],
     "qweb": [
         "static/src/xml/date_range.xml",
