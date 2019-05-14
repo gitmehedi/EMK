@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import calendar
-from datetime import date, datetime
-from dateutil.relativedelta import relativedelta
+from psycopg2 import IntegrityError
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from odoo.tools import float_compare, float_is_zero
+from odoo.exceptions import Warning, ValidationError
 
 
 class AccountAssetCategory(models.Model):
@@ -55,7 +51,16 @@ class AccountAssetCategory(models.Model):
                                             string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                                      domain=[('deprecated', '=', False)],
-                                                     string='Asset Sales Suspense Account', )
+                                                     string='Asset Sales Suspense Account')
+
+    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
+                             states={'draft': [('readonly', False)]})
+    active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
+                            states={'draft': [('readonly', False)]})
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
+                             track_visibility='onchange', )
+    line_ids = fields.One2many('history.account.asset.category', 'line_id', string='Lines', readonly=True,
+                               states={'draft': [('readonly', False)]})
 
     @api.model
     def create(self, vals):
@@ -95,3 +100,69 @@ class AccountAssetCategory(models.Model):
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
+
+    @api.one
+    def act_draft(self):
+        if self.state == 'approve':
+            self.state = 'draft'
+
+    @api.one
+    def act_approve(self):
+        if self.state == 'draft':
+            self.active = True
+            self.pending = False
+            self.state = 'approve'
+
+    @api.one
+    def act_reject(self):
+        if self.state == 'draft':
+            self.state = 'reject'
+            self.pending = False
+            self.active = False
+
+    @api.one
+    def act_approve_pending(self):
+        if self.pending == True:
+            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
+                                             limit=1)
+            if requested:
+                self.name = requested.change_name
+                self.active = requested.status
+                self.pending = False
+                requested.state = 'approve'
+                requested.change_date = fields.Datetime.now()
+
+    @api.one
+    def act_reject_pending(self):
+        if self.pending == True:
+            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
+                                             limit=1)
+            if requested:
+                self.pending = False
+                requested.state = 'reject'
+                requested.change_date = fields.Datetime.now()
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('approve', 'reject'):
+                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+
+            try:
+                return super(AccountAssetCategory, rec).unlink()
+            except IntegrityError:
+                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+
+
+class HistoryAccountAssetCategory(models.Model):
+    _name = 'history.account.asset.category'
+    _description = 'History Account Asset Category'
+    _order = 'id desc'
+
+    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    status = fields.Boolean('Active', default=True, track_visibility='onchange')
+    change_date = fields.Datetime(string='Date')
+    line_id = fields.Many2one('account.asset.category', ondelete='restrict')
+    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],
+                             default='pending')

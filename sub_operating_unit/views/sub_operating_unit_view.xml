@@ -10,7 +10,7 @@
                             groups="mtbl_access.group_mtbl_sys_admin"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
                             groups="mtbl_access.group_mtbl_sys_admin"/>
-                    <button name="%(action_sub_operating_unit_wizard)d" string="Edit" type="action"
+                    <button name="%(account_fam.action_sub_operating_unit_wizard)d" string="Edit" type="action"
                             class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"

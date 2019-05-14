@@ -4,7 +4,23 @@
         <field name="name">account.asset.category.form</field>
         <field name="model">account.asset.category</field>
         <field name="arch" type="xml">
-            <form string="Asset Category" duplicate='0'>
+            <form string="Account Asset Category" edit="0" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                    <button name="act_reject" string="Reject" type="object" states="draft"
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                    <button name="%(account_fam.action_account_asset_category_wizard)d" string="Edit" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                    <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_reject_pending" string="Reject" type="object"
+                            groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <field name="state" widget="statusbar" invisible="True"/>
+                </header>
                 <sheet>
                     <group>
                         <div class="oe_title">
@@ -27,6 +43,7 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="pending" invisible="1"/>
                             <field name="is_custom_depr" invisible="1"/>
                             <field name="type" invisible="1"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -81,6 +98,16 @@
                                    attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
                         </group>
                     </group>
+                    <field name="line_ids" states="approve">
+                        <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                              decoration-bf="state in ('pending',)"
+                              decoration-danger="state=='reject'">
+                            <field name="change_name"/>
+                            <field name="change_date"/>
+                            <field name="state"/>
+                            <field name="status" invisible="True"/>
+                        </tree>
+                    </field>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -131,12 +158,16 @@
         <field name="name">account.asset.category.tree</field>
         <field name="model">account.asset.category</field>
         <field name="arch" type="xml">
-            <tree string="Asset category">
+            <tree string="Account Asset Category" decoration-info="state=='draft'"
+                  decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
+                  decoration-bf="state in ('approve',)">
                 <field name="name" string="Asset Category"/>
                 <field name="code"/>
                 <field name="parent_id"/>
                 <field name="journal_id"/>
                 <field name="method"/>
+                <field name="state"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -151,6 +182,17 @@
                 <field name="journal_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="Asset Type" domain="[]" context="{'group_by':'parent_id'}"/>
+                    <group string="Group By">
+                        <filter name="parent_id" string="Branch" context="{'group_by': 'parent_id'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                    </group>
+                    <group string="Group By">
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    </group>
                 </group>
             </search>
         </field>
@@ -189,5 +231,8 @@
 
     <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
         <field name="domain">[('type', '=', 'purchase'),('parent_id','=',False)]</field>
+        <field name="context">
+            {"search_default_parent_id":1,"search_default_active":'False',"search_default_pending":'True',}
+        </field>
     </record>
 </odoo>
