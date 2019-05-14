@@ -1,8 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-access_account_journal_admin,account_account_journal_admin,account.model_account_journal,mtbl_access.group_mtbl_sys_admin,1,1,1,1
-access_account_journal_user,account_account_journal_user,account.model_account_journal,,1,0,0,0
-
 access_res_partner_group_sys_admin,access_res_partner_group_sys_admin,account.model_res_partner,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 
 access_account_account_admin,account_account_account_admin,account.model_account_account,mtbl_access.group_mtbl_sys_admin,1,1,1,1
@@ -60,7 +57,6 @@ access_history_account_account_type_usr,access_history_account_account_type_usr,
 access_account_account_type_wizard_mng,access_account_account_type_wizard_mng,account_mtbl.model_account_account_type_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 access_account_account_type_wizard_usr,access_account_account_type_wizard_usr,account_mtbl.model_account_account_type_wizard,base.group_user,1,0,0,0
 
-
 access_account_account_tag_mng,access_account_account_tag_mng,account_mtbl.model_account_account_tag,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 access_account_account_tag_usr,access_account_account_tag_usr,account_mtbl.model_account_account_tag,base.group_user,1,0,0,0
 
@@ -69,3 +65,12 @@ access_history_account_tag_usr,access_history_account_tag_usr,account_mtbl.model
 
 access_account_tag_wizard_mng,access_account_tag_wizard_mng,account_mtbl.model_account_tag_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 access_account_tag_wizard_usr,access_account_tag_wizard_usr,account_mtbl.model_account_tag_wizard,base.group_user,1,0,0,0
+
+access_account_journal_mng,access_account_journal_mng,account_mtbl.model_account_journal,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_account_journal_tag_usr,access_account_journal_usr,account_mtbl.model_account_journal,base.group_user,1,0,0,0
+
+access_history_account_journal_mng,access_history_account_journal_mng,account_mtbl.model_history_account_journal,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_history_account_journal_usr,access_history_account_journal_usr,account_mtbl.model_history_account_journal,base.group_user,1,0,0,0
+
+access_account_journal_wizard_mng,access_account_journal_wizard_mng,account_mtbl.model_account_journal_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_account_journal_wizard_usr,access_account_journal_wizard_usr,account_mtbl.model_account_journal_wizard,base.group_user,1,0,0,0

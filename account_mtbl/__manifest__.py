@@ -31,6 +31,7 @@
         'wizard/segment_wizard_view.xml',
         'wizard/branch_wizard_view.xml',
         'wizard/account_tag_wizard_view.xml',
+        'wizard/account_journal_wizard_view.xml',
         'wizard/account_type_wizard_view.xml',
         'wizard/sevicing_channel_wizard_view.xml',
         'wizard/acquiring_channel_wizard_view.xml',
