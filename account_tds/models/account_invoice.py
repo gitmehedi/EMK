@@ -161,7 +161,7 @@ class AccountInvoiceLine(models.Model):
                     pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat)
 
             pre_rate = (pre_total_tds * 100) / pre_total_base_amount
-            if current_rate > round(pre_rate):
+            if current_rate > round(pre_rate,False):
                 remain_tds_amount = ((pre_total_base_amount * current_rate) / 100) - pre_total_tds
 
         return remain_tds_amount
