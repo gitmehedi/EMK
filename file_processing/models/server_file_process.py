@@ -290,15 +290,19 @@ class ServerFileProcess(models.Model):
             index = 0
             for worksheet_index in file_ins:
                 index += 1
-                if len(worksheet_index)>2:
+                if len(worksheet_index) > 2:
 
                     rec = self.data_mapping(worksheet_index)
 
                     journal_no = rec['JOURNAL-NBR']
-                    journal = self.env['account.journal'].search([('name', '=', 'Customer Invoices')])
+                    journal_type = 'Customer Invoices'
+                    journal = self.env['account.journal'].search([('name', '=', journal_type)])
+                    if not journal:
+                        raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
                     if journal_no not in moves:
                         moves[journal_no] = {
                             'journal_id': journal.id,
+                            'date': rec['POSTING-DATE'],
                             'date': rec['POSTING-DATE'],
                             'line_ids': [],
                         }
