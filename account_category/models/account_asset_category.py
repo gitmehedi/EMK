@@ -34,6 +34,14 @@ class AccountAssetCategory(models.Model):
             self.method_number = self.parent_id.method_number
             self.method_progress_factor = self.parent_id.method_progress_factor
 
+    @api.model
+    def create(self, vals):
+        if 'parent_id' in vals:
+            if vals.get('code', 'New') == 'New':
+                seq = self.env['ir.sequence']
+                vals['code'] = seq.next_by_code('account.asset.category') or ''
+        return super(AccountAssetCategory, self).create(vals)
+
     @api.one
     def unlink(self):
         if self.category_ids:

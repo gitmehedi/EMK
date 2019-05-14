@@ -62,7 +62,7 @@ class AccountAssetCategory(models.Model):
         if 'parent_id' not in vals:
             if vals.get('code', 'New') == 'New':
                 seq = self.env['ir.sequence']
-                vals['code'] = seq.next_by_code('account.asset.category') or ''
+                vals['code'] = seq.next_by_code('account.asset.type') or ''
         return super(AccountAssetCategory, self).create(vals)
 
     @api.onchange('depreciation_year')

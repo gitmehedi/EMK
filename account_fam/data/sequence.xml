@@ -27,8 +27,8 @@
         </record>
         <record id="seq_asset_type" model="ir.sequence">
             <field name="name">Account Asset Type</field>
-            <field name="code">account.asset.category</field>
-            <field name="padding">4</field>
+            <field name="code">account.asset.type</field>
+            <field name="padding">2</field>
             <field name="number_increment" eval="1"/>
             <field name="company_id" eval="False"/>
         </record>

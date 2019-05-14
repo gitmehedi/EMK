@@ -17,7 +17,7 @@
             <field name="parent_id" eval="data_account_account_level_second"/>
         </record>
         <record model="account.account.level" id="data_account_account_level_fourth">
-            <field name="name">Fourt Level</field>
+            <field name="name">Fourth Level</field>
             <field name="size">5</field>
             <field name="parent_id" eval="data_account_account_level_third"/>
         </record>

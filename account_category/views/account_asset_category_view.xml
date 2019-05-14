@@ -8,6 +8,9 @@
                 <sheet>
                     <group>
                         <div class="oe_title">
+                            <h1>
+                                <field name="code" readonly='True'/>
+                            </h1>
                             <label for="name" string="Asset Category" class="oe_edit_only"
                                    attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
@@ -130,6 +133,7 @@
         <field name="arch" type="xml">
             <tree string="Asset category">
                 <field name="name" string="Asset Category"/>
+                <field name="code"/>
                 <field name="parent_id"/>
                 <field name="journal_id"/>
                 <field name="method"/>

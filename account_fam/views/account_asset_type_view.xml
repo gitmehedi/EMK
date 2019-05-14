@@ -91,8 +91,8 @@
         <field name="model">account.asset.category</field>
         <field name="arch" type="xml">
             <tree string="Asset category">
-                <field name="code"/>
                 <field name="name"/>
+                <field name="code"/>
                 <field name="journal_id"/>
                 <field name="method"/>
                 <field name="company_id" groups="base.group_multi_company"/>
