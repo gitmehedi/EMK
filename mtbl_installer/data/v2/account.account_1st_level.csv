@@ -1,0 +1,7 @@
+Level,Code,Name,Parent Account,Type,active,pending,state
+First Level,1,Liability,,View Type,True,False,approve
+First Level,2,Assets,,View Type,True,False,approve
+First Level,3,Income,,View Type,True,False,approve
+First Level,4,Expenses,,View Type,True,False,approve
+First Level,5,Contra & Contingent <L>,,View Type,True,False,approve
+First Level,6,Contra & Contingent <A>,,View Type,True,False,approve
