@@ -1,320 +1,325 @@
-Parent Account,Code,Name,Type
-Borrowings under Bangladesh Bank,12101000,Borrowings under Bangladesh Bank-others,View Type
-Borrowings under Bangladesh Bank,12102000,Borrowings under BB Pre-finance,View Type
-Borrowings under Bangladesh Bank,12103000,Borrowings under BB Refinance,View Type
-Borrowings under Bangladesh Bank,12104000,Investment Promotion and Financing Facility (IPFF) FC,View Type
-Borrowings under Bangladesh Bank,12105000,Long Term Financing Facility (LTFF),View Type
-Interest Payable on Borrowings,12501000,Interest Payable on Borrowings fm BB,View Type
-Borrowings under Bangladesh Bank,12106000,Borrowing under EDF from Bangladesh Bank,View Type
-Borrowings from other Banks,12201000,Term Borrowing in FC,View Type
-Borrowings from other Banks,12202000,Call Borrowing <BDT>,View Type
-Borrowings from other Banks,12203000,Term Borrowing <BDT>,View Type
-Borrowings from other Banks,12204000,REPO <Borrowings under>,View Type
-Borrowings from other Banks,12205000,Call Borrowing in FC,View Type
-Interest Payable on Borrowings,12502000,Interest Payable on Borrowings from other Banks,View Type
-Borrowings from other Institutions,12301000,Other Institutes,View Type
-Borrowings from other Institutions,12302000,Pre-finance (Other Institute),View Type
-Borrowings from other Institutions,12303000,Borrowings from NBFI,View Type
-Interest Payable on Borrowings,12503000,Interest Payable on Borrowings fm other Institution,View Type
-OBU Borrowings,12401000,OBU Borrowings from foreign country <FC>,View Type
-OBU Borrowings,12402000,OBU Borrowings from Banglades <FC>,View Type
-Customer Deposits -Current & Others,13101000,Current Accounts <BDT>,View Type
-Customer Deposits -Current & Others,13102000,Current Accounts <FC>,View Type
-Customer Deposits -Current & Others,13103000,MiSc Customer Deposit,View Type
-Customer Deposits -Current & Others,13104000,Sundry Deposits <FC>,View Type
-Customer Deposits -Current & Others,13105000,Sundry Deposits,View Type
-"Customer Deposits -SB, FD, RD, SND etc.",13201000,Term Deposits,View Type
-"Customer Deposits -SB, FD, RD, SND etc.",13202000,Term Deposits Reinvestments,View Type
-"Customer Deposits -SB, FD, RD, SND etc.",13203000,Recurring Deposit,View Type
-"Customer Deposits -SB, FD, RD, SND etc.",13204000,Term Deposits FC,View Type
-"Customer Deposits -SB, FD, RD, SND etc.",13205000,Special Notice Deposit,View Type
-"Customer Deposits -SB, FD, RD, SND etc.",13206000,Savings Bank Account,View Type
-"Customer Deposits -SB, FD, RD, SND etc.",13207000,Savings Bank Account <FC>,View Type
-Bank & NBFI Deposits -Current & Others,13301000,Current Deposits from other Bank,View Type
-Bank & NBFI Deposits -Current & Others,13302000,Current Deposits from NBFI,View Type
-Bank & NBFI Deposits -FD & Others,13401000,Bank Deposits -FD ,View Type
-Bank & NBFI Deposits -FD & Others,13402000,NBFI Deposits -FD ,View Type
-IP on Customer Deposits -Current & Others,13501000,Interest Payable on Current Deposits,View Type
-"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13601000,Interest Payable on TD Accounts,View Type
-"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13602000,Interest Payable on Savings Bank Accounts,View Type
-"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13603000,Interest payable on Recurring Deposit,View Type
-"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13604000,Interest Payable on Special Notice Deposits,View Type
-"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13605000,Interest Payable on Term Deposits FC,View Type
-"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13606000,Interest Payable on Savings Bank Accounts FC,View Type
-"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13607000,Interest payable on Term Deposits Reinvestments,View Type
-Interest Payable on Bank & NBFI Deposits,13701000,Interest Payable on Bank Deposits,View Type
-Interest Payable on Bank & NBFI Deposits,13702000,Interest Payable on NBFI Deposits,View Type
-Customer Deposits -Bills Payable,13801000,Bills Payable,View Type
-OBU Deposits,13901000,xx1,View Type
-,,,
-,,,
-,,,
-,,,
-Interest Suspenses Account,15101000,Interest Suspenses Account ,View Type
-Other misc. liabilities,15201000,Clearing House Adjustment,View Type
-Other misc. liabilities,15202000,Reserved for Tax,View Type
-Other misc. liabilities,15203000,Adjusting A/c Credit,View Type
-Other misc. liabilities,15204000,Profit for the Year,View Type
-Other misc. liabilities,15205000,Unearned Income,View Type
-Other misc. liabilities,15206000,Liabilities under Finance Lease,View Type
-Other misc. liabilities,15207000,Deferred Tax Liability,View Type
-Other misc. liabilities,15208000,Staff Fund,View Type
-Other misc. liabilities,15209000,Contribution to MTB Foundation,View Type
-Other misc. liabilities,15210000,Repo Interest Income Account,View Type
-Other misc. liabilities,15211000,Exchange Equalization Fund,View Type
-Other misc. liabilities,15212000,Advance Intt. on Treasury Bill,View Type
-Other misc. liabilities,15213000,NOSTRO A/c Adjustment,View Type
-Other misc. liabilities,15214000,Transit A/c- Reverse Repo,View Type
-Other misc. liabilities,15215000,Revaluation Gain on HFT Securities,View Type
-Other misc. liabilities,15216000,VAT payable,View Type
-Other misc. liabilities,15217000,Excise Duty payable,View Type
-Other misc. liabilities,15218000,Source Tax <TDS> payable,View Type
-Other misc. liabilities,15219000,Card Settlement Account,View Type
-Other misc. liabilities,15220000,Card Settlement Account <FC>,View Type
-Other misc. liabilities,15221000,NPSB Transaction Settlement,View Type
-Other misc. liabilities,15222000,Agent Banking,View Type
-Other misc. liabilities,15223000,Outstanding Expenses,View Type
-Other misc. liabilities,15224000,Bonus Payable,View Type
-Other misc. liabilities,15225000,Gratuity Payable,View Type
-Provision,15301000,Provision for Advances,View Type
-Provision,15302000,Provision for Investments,View Type
-Provision,15303000,Provision for others,View Type
-Inter Branch Account,16101000,Branch Accounts,View Type
-Income,17101000,Income for the period fm 1 Jan to lwd,View Type
-Cash,21101000,Cash in Hand <BDT>,View Type
-Cash,21102000,Cash in Transit,View Type
-Cash,21103000,Cash with Service Provider,View Type
-Cash,21104000,Cash with ATM,View Type
-Cash,21105000,Cash in Booth,View Type
-Cash,21106000,Cash in Hand <FC>,View Type
-Cash,21107000,Cash in Transit <FC>,View Type
-Balance with Bangladesh Bank,21201000,Balance with BB <LCY>,View Type
-Balance with Bangladesh Bank,21202000,Balance with BB  <FCY>,View Type
-Balance with Agent Bank,21301000,Balance with Agent Bank <BDT>,View Type
-Balance with other banks and Fis,21401000,Other Banks & FIs in Bangladesh,View Type
-Balance with other banks and Fis,21402000,Other Banks & FIs in Bangladesh <FC>,View Type
-Balance with other banks and Fis,21403000,Other Banks & FIs outside Bangladesh <FC>,View Type
-Balance with other banks and Fis,21404000,Interest Receivable FC,View Type
-Balance with other banks and Fis,21405000,Interest Receivable BDT,View Type
-Balance with other banks and Fis,21406000,OBU other Banks & FI <FC>,View Type
-Money at Call & Short Notice,22101000,Call Money <BDT>,View Type
-Money at Call & Short Notice,22102000,Call Money <FC>,View Type
-Money at Call & Short Notice,22103000,Interest Receivable on Call Money <BDT>,View Type
-Money at Call & Short Notice,22104000,Interest Receivable on Call Money <FC>,View Type
-Government,23101000,Securities other than Tbill Tbond,View Type
-Government,23103000,Treasury Bills ,View Type
-Government,23104000,T Bond[DUPICATE],View Type
-,,,
-Inv in Subsidiaries,23301000,Investment in Subsidiaries,View Type
-Term Loans,24101000,Retail Term Loans <excl. Staff Loans>,View Type
-Term Loans,24102000,Retail Term Loans <Staff>,View Type
-Term Loans,24103000,Corporate & SME Term Loan,View Type
-Term Loans,24104000,SME Term Loan excl Agri & Micro Fin.,View Type
-Term Loans,24105000,SME Term Loan <Agri Fin.>,View Type
-,,,
-Demand Loans,24201000,Corporate & SME Demand Loan,View Type
-Demand Loans,24202000,Corporate & SME Demand Loan <FC>,View Type
-Demand Loans,24203000,SME Demand Loan,View Type
-Demand Loans,24204000,Misc Demand Loans <C/S/R>,View Type
-Continuous Loans,24301000,Retail Continuous Loans,View Type
-Continuous Loans,24302000,Corporate & SME Continuous Loan,View Type
-Continuous Loans,24303000,SME Continuous Loan[DUPICATE],View Type
-,,,
-Interest Receivables,24601000,Interest Receivable on RTL,View Type
-Interest Receivables,24602000,Interest Receivable on Staff Loans,View Type
-Interest Receivables,24603000,IR on Corporate Term Loan,View Type
-Interest Receivables,24604000,IR on SME Term Loan excl Agri & MF,View Type
-Interest Receivables,24605000,IR on SME Term Loan <Agri & MF>,View Type
-Interest Receivables,24606000,IR on Corporate & SME Demand Loan,View Type
-Interest Receivables,24607000,IR on Corporate & SME Demand Loan FC,View Type
-Interest Receivables,24608000,IR on SME Demand Loan,View Type
-Interest Receivables,24609000,IR on Retail Continuous Loan,View Type
-Interest Receivables,24610000,IR on Corporate &/ or SME Continuous Loan,View Type
-Interest Receivables,24611000,IR on SME Continuous Loan,View Type
-Interest Receivables,24612000,IR on Other Loans and Assets,View Type
-Penal Interest Receivable,24701000,Penal Interest Receivable on RTL,View Type
-Penal Interest Receivable,24702000,Penal Intt Receivable on Staff Loans,View Type
-Penal Interest Receivable,24703000,PIR on Corporate Term Loan,View Type
-Penal Interest Receivable,24704000,PIR on SME Term Loan excl Agri & MF,View Type
-Penal Interest Receivable,24705000,PIR on SME Term Loan <Agri & MF>,View Type
-Penal Interest Receivable,24706000,PIR on Corporate & SME Demand Loan,View Type
-Penal Interest Receivable,24707000,PIR on Corporate & SME Demand Loan FC,View Type
-Penal Interest Receivable,24708000,PIR on SME Demand Loan,View Type
-Penal Interest Receivable,24709000,PIR on Retail Continuous Loan,View Type
-Penal Interest Receivable,24710000,PIR on Corporate &/ or SME Continuous Loan,View Type
-Penal Interest Receivable,24711000,PIR on SME Continuous Loan,View Type
-OBU Loans & Advances,24801000,Bill Discounting,View Type
-OBU Loans & Advances,24802000,UPAS/ Buyer's Credit[DUPICATE],View Type
-,,,
-Tangible Fixed Assets,25101000,Furniture & Fixture,View Type
-Tangible Fixed Assets,25102000,Immovable Property,View Type
-Tangible Fixed Assets,25103000,Interior Decoration,View Type
-Tangible Fixed Assets,25104000,Office Equipments,View Type
-Tangible Fixed Assets,25105000,Electrical Equipments,View Type
-Tangible Fixed Assets,25106000,Computers,View Type
-Tangible Fixed Assets,25107000,Motor Vehicles,View Type
-Tangible Fixed Assets,25108000,Books & Periodicals,View Type
-Tangible Fixed Assets,25109000,Leasehold Assets[DUPICATE],View Type
-,,,
-Adjustment Account,26101000,Adjusting A/C Debit,View Type
-Adjustment Account,26103000,Coupon Interest Adjustment Account,View Type
-Advances,26201000,Advance paid to Employees,View Type
-Advances,26202000,Advance against Suppliers/ Parties,View Type
-Advances,26203000,Advance Deposit,View Type
-Advances,26204000,Advance Income Tax,View Type
-Advances,26205000,Advance Remuneration/Salary,View Type
-Advances,26206000,Advance Rent,View Type
-Advances,26207000,Advance pymt to construction of HO bldg,View Type
-Advances,26208000,Advance against TA/DA,View Type
-Advances,26209000,Advance against POSTAGE,View Type
-Advances,26210000,Advance against  PETTY CASH[DUPICATE],View Type
-Coupon Interest Expenditure Account,26301000,Coupon Interest Expenditure Account[DUPICATE],View Type
-Placement to Off-Shore Banking Unit,26401000,Placement to Off-Shore Banking Unit[DUPICATE],View Type
-,,,
-Suspense Account,26601000,Chargeback Settlement A/c,View Type
-Suspense Account,26602000,Sundry Debtors,View Type
-Suspense Account,26603000,Sanchay Patra,View Type
-Suspense Account,26604000,Legal Expense,View Type
-Suspense Account,26605000,Economic Exchange Centre,View Type
-Suspense Account,26606000,Suspense account for Foreign Banks,View Type
-Suspense Account,26607000,Suspense account for Exchange Houses,View Type
-Suspense Account,26608000,Remittance Payment Account,View Type
-Suspense Account,26610000,DD CANCELLED,View Type
-Suspense Account,26609000,DD Paid Without Advice[DUPICATE],View Type
-,,,
-Miscellaneous Other Assets,26901000,Preliminary Expenses,View Type
-,,,
-Miscellaneous Other Assets,26902000,Prepaid Promotional and Development Expenses,View Type
-,,,
-Miscellaneous Other Assets,26903000,Stock of Commemorative Coins,View Type
-Miscellaneous Other Assets,26904000,Stock of Fixed Assets,View Type
-,,,
-Miscellaneous Other Assets,26906000,Transit Account,View Type
-Inter Branch Account,27101000,Branch Account,View Type
-Expenditure,28101000,Expenditure for the period fm 1st Jan to ..,View Type
-Income on Money Market/ Placements,31401000,Interest on Money at Call  and Short Notice,View Type
-Income on Money Market/ Placements,31402000,Interest on Placement to Off-Shore Banking Unit,View Type
-Income on Money Market/ Placements,31403000,Interest on Balance with Other Bank,View Type
-Income on Money Market/ Placements,31404000,Interest on Balance with Foreign Bank,View Type
-Income on Money Market/ Placements,31405000,Interest on Foreign Currency Lending,View Type
-Income on Money Market/ Placements,31406000,Repo Interest Income,View Type
-Income on Money Market/ Placements,31407000,Interest on Bangladesh Bank Foreign Currency Clearing A/c,View Type
-Income fm Govt Securities,32101000,Income from Treasury Operations <Govt Sec.>,View Type
-Income from Other Investments,32201000,Income from Treasury Operations <other than Govt Sec.>[DUPICATE],View Type
-Income from Other Investments,32202000,Income from Other Investments,View Type
-Commission,33101000,Commission on GB operations,View Type
-Commission,33102000,Commission on Trade operations,View Type
-Commission,33103000,Commission on NRB operations,View Type
-Exchange,33201000,Exchange Gain on Foreign Currency,View Type
-Exchange,33202000,Income on Forex Deal,View Type
-Brokerage,33302000,Underwriting Commission,View Type
-Other Operating Income,34101000,Rental Income,View Type
-Other Operating Income,34102000,Recoveries of various charges,View Type
-Other Operating Income,34103000,Income fm Cards operations,View Type
-Other Operating Income,34104000,Early Settlement Fees,View Type
-Other Operating Income,34105000,Loan Processing Fees,View Type
-Other Operating Income,34106000,Partial Payment Fees,View Type
-Other Operating Income,34107000,SME Fees & Charges,View Type
-Other Operating Income,34108000,Service Charges,View Type
-Other Operating Income,34109000,Management Fees,View Type
-Other Operating Income,34110000,Gain on Sale of Fixed Assets,View Type
-Other Operating Income,34111000,NPSB Acquirer Income,View Type
-Other Operating Income,34112000,Miscellneous Earnings,View Type
-Other Operating Income,34113000,Income on account of recovery fm written off loans,View Type
-Interest Expenses on Demand Deposits,41101000,Interest Expenses on Current Deposits,View Type
-Interest Expenses on Demand Deposits,41102000,Interest Expenses on Savings Bank Accounts,View Type
-Interest Expenses on Demand Deposits,41103000,Interest Expenses on Savings Bank Accounts FC,View Type
-Interest Expenses on Demand Deposits,41104000,Interest Expenses on Special Notice Deposits,View Type
-Interest Expenses on Term Deposits,41201000,Interest Expenses on TD Accounts,View Type
-Interest Expenses on Term Deposits,41202000,Interest Expenses on Term Deposits Reinvestments,View Type
-Interest Expenses on Term Deposits,41203000,Interest Expenses on Recurring Deposit,View Type
-Interest Expenses on Term Deposits,41204000,Interest Expenses on Term Deposits FC[DUPICATE],View Type
-Interest Expenses on Borrowings,41301000,Interest Expenses on Borrowings[DUPICATE],View Type
-Interest Expenses on Bonds,41401000,Interest Expenses on Bonds[DUPICATE],View Type
-,,,
-Interest Expense on Branch A/C,41601000,Interest Paid on MTBL General A/c,View Type
-Salary & Allowances,42101000,Basic Pay Expenses,View Type
-Salary & Allowances,42102000,Allowances Expenses,View Type
-Salary & Allowances,42103000,Bonus Expenses,View Type
-Salary & Allowances,42104000,Gratuity Expenses,View Type
-Salary & Allowances,42105000,Leave Fare Assistance Expenses,View Type
-Salary & Allowances,42106000,Provident Fund Expenses,View Type
-Salary & Allowances,42107000,Misc. Salary & Allowances,View Type
-Salary & Allowances,42108000,Leave Encashment,View Type
-"Rent, Taxes, Insurance, Electricity etc.",42201000,Rent Expenses,View Type
-"Rent, Taxes, Insurance, Electricity etc.",42202000,Rates & Taxes Expenses,View Type
-"Rent, Taxes, Insurance, Electricity etc.",42203000,Insurance Expenses,View Type
-"Rent, Taxes, Insurance, Electricity etc.",42204000,"Power, Electricity & Utilities",View Type
-"Rent, Taxes, Insurance, Electricity etc.",42205000,Lease Rent Expenses,View Type
-Other Expenses,42301000,"Security, Auxiliary Services and Other Assitance",View Type
-Other Expenses,42302000,Office Cleaning,View Type
-Other Expenses,42303000,Office Maintenance,View Type
-Other Expenses,42304000,Car Expenses <not classified elsewhere>,View Type
-Other Expenses,42305000,Entertainment,View Type
-Other Expenses,42306000,News Paper & Periodicals,View Type
-Other Expenses,42307000,Clearing House Expenses,View Type
-Other Expenses,42308000,Travelling & Conveyance Expenses,View Type
-Other Expenses,42309000,Bank charges,View Type
-Other Expenses,42310000,Training Expenses ,View Type
-,,,
-Other Expenses,42311000,Professional Fees,View Type
-Other Expenses,42312000,AGM Expenses,View Type
-Other Expenses,42313000,Subscription & Donation,View Type
-Other Expenses,42314000,Reuter Charges,View Type
-Other Expenses,42315000,CDBL Charges,View Type
-Other Expenses,42316000,Fees & Registrations,View Type
-Other Expenses,42317000,Business Development Expenses,View Type
-Other Expenses,42319000,Employees Medical Assistance Fund,View Type
-Other Expenses,42320000,Honorarium,View Type
-Other Expenses,42321000,Cash Carrying/loading expenses,View Type
-Other Expenses,42322000,Contact Point Verification Charge,View Type
-Other Expenses,42323000,Site Maintenance & Support Service,View Type
-Other Expenses,42324000,On-line & Connectivity charges,View Type
-Other Expenses,42325000,NID Verification Charge,View Type
-Other Expenses,42326000,Loss on sale of Fixed Assets,View Type
-Other Expenses,42327000,Misc Expenses <not classified elsewhere>,View Type
-Other Expenses,42328000,Audit Expenses,View Type
-,,,
-Other Expenses,42329000,Card Charges,View Type
-Other Expenses,42330000,Operational Loss,View Type
-Other Expenses,42331000,Penalty of CRR/SLR,View Type
-Other Expenses,42332000,ATM Intercharge Reimbursement Fee Paid for,View Type
-Other Expenses,42333000,Agent Banking Float Sharing Commission,View Type
-Depreciation & Repair & Maintenance of Assets,42401000,Depreciation on Immovable Property,View Type
-Depreciation & Repair & Maintenance of Assets,42402000,Depreciation on POS Items,View Type
-,,,
-Depreciation & Repair & Maintenance of Assets,42403000,Depreciation on Office Equipments,View Type
-Depreciation & Repair & Maintenance of Assets,42404000,Depreciation on Electric Equipments,View Type
-Depreciation & Repair & Maintenance of Assets,42405000,Depreciation on Computers,View Type
-Depreciation & Repair & Maintenance of Assets,42406000,Depreciation on Interior Decoration,View Type
-Depreciation & Repair & Maintenance of Assets,42407000,Depreciation on Motor Vehicles,View Type
-Depreciation & Repair & Maintenance of Assets,42408000,Depreciation on Other Assets,View Type
-Depreciation & Repair & Maintenance of Assets,42409000,Repair and Maintenance,View Type
-"Postage, Stamps and Telecommunication etc.",42501000,Postage Expenses,View Type
-"Postage, Stamps and Telecommunication etc.",42502000,Telecommunication expenses,View Type
-"Postage, Stamps and Telecommunication etc.",42503000,Stamp Expenses[DUPICATE],View Type
-,,,
-"Stationery, Printing and Advertisements etc.",42701000,Stationery Expenses,View Type
-"Stationery, Printing and Advertisements etc.",42702000,Printing Expenses,View Type
-"Stationery, Printing and Advertisements etc.",42703000,Advertisements Expenses,View Type
-Director's Expenses,42801000,Director's Expenses[DUPICATE],View Type
-Managing Director's Remuneration,42901000,Managing Director's Remuneration[DUPICATE],View Type
-Provision for Loans,43101000,Provision for Loans[DUPICATE],View Type
-Provision for diminution in value of Invsetments,43201000,Provision for diminution in value of Invsetments[DUPICATE],View Type
-,,,
-Bills sent for collection,51101000,Foreign Bills sent for collection,View Type
-Bills sent for collection,51102000,Inland Bills sent for collection,View Type
-Bills received for Collection,51201000,Foreign Bills received for collection,View Type
-Forward Contract,51301000,Forward Contract Cust,View Type
-Bank Guarantee <Contingent>,52101000,Bankers Liability on BG (Inland),View Type
-Bank Guarantee <Contingent>,52102000,Bankers Liability on BG (Foreign),View Type
-Letter of Credit <Contingent>,52201000,Bankers Liability on LC (Inland),View Type
-Letter of Credit <Contingent>,52202000,Bankers Liability on LC (Foreign),View Type
-Accepted Bills under LC <Contingent>,52301000,Bankers Liability for Accepted Bills <Inland>,View Type
-Accepted Bills under LC <Contingent>,52302000,Bankers Liability for Accepted Bills <Foreign>,View Type
-Bank Guarantee <Contingent>,62101000,Customers' Liability on BG (Inland),View Type
-Bank Guarantee <Contingent>,62102000,Customers' Liability on BG (Foreign),View Type
-Letter of Credit <Contingent>,62201000,Customers' Liability on LC (Inland),View Type
-Letter of Credit <Contingent>,62202000,Customers' Liability on LC (Foreign),View Type
-Accepted Bills under LC <Contingent>,62301000,Customers' Liability for Accepted Bills <Inland>,View Type
-Accepted Bills under LC <Contingent>,62302000,Customers' Liability for Accepted Bills <Foreign>,View Type
+Level,Code,Name,Parent Account,Type,active,pending,state
+Fourth Level,11101,Paid up Capital ,Capital ,View Type,True,False,approve
+Fourth Level,11201,General Reserve ,Reserve ,View Type,True,False,approve
+Fourth Level,11202,Statutory Reserve ,Reserve ,View Type,True,False,approve
+Fourth Level,11203,Revaluation Reserve,Reserve ,View Type,True,False,approve
+Fourth Level,11204,Share Premium ,Reserve ,View Type,True,False,approve
+Fourth Level,11205,Retained earnings,Reserve ,View Type,True,False,approve
+Fourth Level,11206,Foreign Currency Translational Gain/ Loss,Reserve ,View Type,True,False,approve
+Fourth Level,12101,Borrowings under Bangladesh Bank-others,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Fourth Level,12102,Borrowings under BB Pre-finance,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Fourth Level,12103,Borrowings under BB Refinance,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Fourth Level,12104,Investment Promotion and Financing Facility (IPFF) FC,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Fourth Level,12105,Long Term Financing Facility (LTFF),Borrowings under Bangladesh Bank,View Type,True,False,approve
+Fourth Level,12501,Interest Payable on Borrowings fm BB,Interest Payable on Borrowings,View Type,True,False,approve
+Fourth Level,12106,Borrowing under EDF from Bangladesh Bank,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Fourth Level,12201,Term Borrowing in FC,Borrowings from other Banks,View Type,True,False,approve
+Fourth Level,12202,Call Borrowing <BDT>,Borrowings from other Banks,View Type,True,False,approve
+Fourth Level,12203,Term Borrowing <BDT>,Borrowings from other Banks,View Type,True,False,approve
+Fourth Level,12204,REPO <Borrowings under>,Borrowings from other Banks,View Type,True,False,approve
+Fourth Level,12205,Call Borrowing in FC,Borrowings from other Banks,View Type,True,False,approve
+Fourth Level,12502,Interest Payable on Borrowings from other Banks,Interest Payable on Borrowings,View Type,True,False,approve
+Fourth Level,12301,Other Institutes,Borrowings from other Institutions,View Type,True,False,approve
+Fourth Level,12302,Pre-finance (Other Institute),Borrowings from other Institutions,View Type,True,False,approve
+Fourth Level,12303,Borrowings from NBFI,Borrowings from other Institutions,View Type,True,False,approve
+Fourth Level,12503,Interest Payable on Borrowings fm other Institution,Interest Payable on Borrowings,View Type,True,False,approve
+Fourth Level,12401,OBU Borrowings from foreign country <FC>,OBU Borrowings,View Type,True,False,approve
+Fourth Level,12402,OBU Borrowings from Bangladesh <FC>,OBU Borrowings,View Type,True,False,approve
+Fourth Level,13101,Current Accounts <BDT>,Customer Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13102,Current Accounts <FC>,Customer Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13103,MiSc Customer Deposit,Customer Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13104,Sundry Deposits <FC>,Customer Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13105,Sundry Deposits,Customer Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13201,Term Deposits,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13202,Term Deposits Reinvestments,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13203,Recurring Deposit,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13204,Term Deposits FC,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13205,Special Notice Deposit,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13206,Savings Bank Account,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13207,Savings Bank Account <FC>,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13301,Current Deposits from other Bank,Bank & NBFI Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13302,Current Deposits from NBFI,Bank & NBFI Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13401,Bank Deposits -FD ,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
+Fourth Level,13402,NBFI Deposits -FD ,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
+Fourth Level,13501,Interest Payable on Current Deposits,IP on Customer Deposits -Current & Others,View Type,True,False,approve
+Fourth Level,13601,Interest Payable on TD Accounts,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13602,Interest Payable on Savings Bank Accounts,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13603,Interest payable on Recurring Deposit,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13604,Interest Payable on Special Notice Deposits,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13605,Interest Payable on Term Deposits FC,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13606,Interest Payable on Savings Bank Accounts FC,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13607,Interest payable on Term Deposits Reinvestments,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Fourth Level,13701,Interest Payable on Bank Deposits,Interest Payable on Bank & NBFI Deposits,View Type,True,False,approve
+Fourth Level,13702,Interest Payable on NBFI Deposits,Interest Payable on Bank & NBFI Deposits,View Type,True,False,approve
+Fourth Level,13801,Bills Payable,Customer Deposits -Bills Payable,View Type,True,False,approve
+Fourth Level,13901,xx,OBU Deposits,View Type,True,False,approve
+Fourth Level,14102,Interest on Subordinated Bond,Subordinated Bond,View Type,True,False,approve
+Fourth Level,14202,Interest on Other Bond,Other Bond,View Type,True,False,approve
+Fourth Level,15101,Interest Suspenses Account ,Interest Suspenses Account ,View Type,True,False,approve
+Fourth Level,15201,Clearing House Adjustment,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15202,Reserved for Tax,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15203,Adjusting A/c Credit,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15204,Profit for the Year,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15205,Unearned Income,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15206,Liabilities under Finance Lease,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15207,Deferred Tax Liability,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15208,Staff Fund,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15209,Contribution to MTB Foundation,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15210,Repo Interest Income Account,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15211,Exchange Equalization Fund,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15212,Advance Intt. on Treasury Bill,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15213,NOSTRO A/c Adjustment,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15214,Transit A/c- Reverse Repo,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15215,Revaluation Gain on HFT Securities,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15216,VAT payable,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15217,Excise Duty payable,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15218,Source Tax <TDS> payable,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15219,Card Settlement Account,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15220,Card Settlement Account <FC>,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15221,NPSB Transaction Settlement,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15222,Agent Banking,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15223,Outstanding Expenses,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15224,Bonus Payable,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15225,Gratuity Payable,Other misc. liabilities,View Type,True,False,approve
+Fourth Level,15301,Provision for Advances,Provision,View Type,True,False,approve
+Fourth Level,15302,Provision for Investments,Provision,View Type,True,False,approve
+Fourth Level,15303,Provision for others,Provision,View Type,True,False,approve
+Fourth Level,16101,Branch Accounts,Inter Branch Account,View Type,True,False,approve
+Fourth Level,17101,Income for the period fm 1 Jan to lwd,Income,View Type,True,False,approve
+Fourth Level,21101,Cash in Hand <BDT>,Cash,View Type,True,False,approve
+Fourth Level,21102,Cash in Transit,Cash,View Type,True,False,approve
+Fourth Level,21103,Cash with Service Provider,Cash,View Type,True,False,approve
+Fourth Level,21104,Cash with ATM,Cash,View Type,True,False,approve
+Fourth Level,21105,Cash in Booth,Cash,View Type,True,False,approve
+Fourth Level,21106,Cash in Hand <FC>,Cash,View Type,True,False,approve
+Fourth Level,21107,Cash in Transit <FC>,Cash,View Type,True,False,approve
+Fourth Level,21201,Balance with BB <LCY>,Balance with Bangladesh Bank,View Type,True,False,approve
+Fourth Level,21202,Balance with BB  <FCY>,Balance with Bangladesh Bank,View Type,True,False,approve
+Fourth Level,21301,Balance with Agent Bank <BDT>,Balance with Agent Bank,View Type,True,False,approve
+Fourth Level,21401,Other Banks & FIs in Bangladesh,Balance with other banks and Fis,View Type,True,False,approve
+Fourth Level,21402,Other Banks & FIs in Bangladesh <FC>,Balance with other banks and Fis,View Type,True,False,approve
+Fourth Level,21403,Other Banks & FIs outside Bangladesh <FC>,Balance with other banks and Fis,View Type,True,False,approve
+Fourth Level,21404,Interest Receivable FC,Balance with other banks and Fis,View Type,True,False,approve
+Fourth Level,21405,Interest Receivable BDT,Balance with other banks and Fis,View Type,True,False,approve
+Fourth Level,21406,OBU other Banks & FI <FC>,Balance with other banks and Fis,View Type,True,False,approve
+Fourth Level,22101,Call Money <BDT>,Money at Call & Short Notice,View Type,True,False,approve
+Fourth Level,22102,Call Money <FC>,Money at Call & Short Notice,View Type,True,False,approve
+Fourth Level,22103,Interest Receivable on Call Money <BDT>,Money at Call & Short Notice,View Type,True,False,approve
+Fourth Level,22104,Interest Receivable on Call Money <FC>,Money at Call & Short Notice,View Type,True,False,approve
+Fourth Level,23101,Securities other than Tbill Tbond,Government,View Type,True,False,approve
+Fourth Level,23103,Treasury Bills ,Government,View Type,True,False,approve
+Fourth Level,23104,T Bond,Government,View Type,True,False,approve
+Fourth Level,23301,Investment in Subsidiaries,Inv in Subsidiaries,View Type,True,False,approve
+Fourth Level,24101,Retail Term Loans <excl. Staff Loans>,Term Loans,View Type,True,False,approve
+Fourth Level,24102,Retail Term Loans <Staff>,Term Loans,View Type,True,False,approve
+Fourth Level,24103,Corporate & SME Term Loan,Term Loans,View Type,True,False,approve
+Fourth Level,24104,SME Term Loan excl Agri & Micro Fin.,Term Loans,View Type,True,False,approve
+Fourth Level,24105,SME Term Loan <Agri Fin.>,Term Loans,View Type,True,False,approve
+Fourth Level,24201,Corporate & SME Demand Loan,Demand Loans,View Type,True,False,approve
+Fourth Level,24202,Corporate & SME Demand Loan <FC>,Demand Loans,View Type,True,False,approve
+Fourth Level,24203,SME Demand Loan,Demand Loans,View Type,True,False,approve
+Fourth Level,24204,Misc Demand Loans <C/S/R>,Demand Loans,View Type,True,False,approve
+Fourth Level,24301,Retail Continuous Loans,Continuous Loans,View Type,True,False,approve
+Fourth Level,24302,Corporate & SME Continuous Loan,Continuous Loans,View Type,True,False,approve
+Fourth Level,24303,SME Continuous Loan,Continuous Loans,View Type,True,False,approve
+Fourth Level,24601,Interest Receivable on RTL,Interest Receivables,View Type,True,False,approve
+Fourth Level,24602,Interest Receivable on Staff Loans,Interest Receivables,View Type,True,False,approve
+Fourth Level,24603,IR on Corporate Term Loan,Interest Receivables,View Type,True,False,approve
+Fourth Level,24604,IR on SME Term Loan excl Agri & MF,Interest Receivables,View Type,True,False,approve
+Fourth Level,24605,IR on SME Term Loan <Agri & MF>,Interest Receivables,View Type,True,False,approve
+Fourth Level,24606,IR on Corporate & SME Demand Loan,Interest Receivables,View Type,True,False,approve
+Fourth Level,24607,IR on Corporate & SME Demand Loan FC,Interest Receivables,View Type,True,False,approve
+Fourth Level,24608,IR on SME Demand Loan,Interest Receivables,View Type,True,False,approve
+Fourth Level,24609,IR on Retail Continuous Loan,Interest Receivables,View Type,True,False,approve
+Fourth Level,24610,IR on Corporate &/ or SME Continuous Loan,Interest Receivables,View Type,True,False,approve
+Fourth Level,24611,IR on SME Continuous Loan,Interest Receivables,View Type,True,False,approve
+Fourth Level,24612,IR on Other Loans and Assets,Interest Receivables,View Type,True,False,approve
+Fourth Level,24701,Penal Interest Receivable on RTL,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24702,Penal Intt Receivable on Staff Loans,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24703,PIR on Corporate Term Loan,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24704,PIR on SME Term Loan excl Agri & MF,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24705,PIR on SME Term Loan <Agri & MF>,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24706,PIR on Corporate & SME Demand Loan,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24707,PIR on Corporate & SME Demand Loan FC,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24708,PIR on SME Demand Loan,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24709,PIR on Retail Continuous Loan,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24710,PIR on Corporate &/ or SME Continuous Loan,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24711,PIR on SME Continuous Loan,Penal Interest Receivable,View Type,True,False,approve
+Fourth Level,24801,Bill Discounting,OBU Loans & Advances,View Type,True,False,approve
+Fourth Level,24802,UPAS/ Buyer's Credit,OBU Loans & Advances,View Type,True,False,approve
+Fourth Level,25101,Furniture & Fixture,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25102,Immovable Property,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25103,Interior Decoration,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25104,Office Equipments,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25105,Electrical Equipments,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25106,Computers,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25107,Motor Vehicles,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25108,Books & Periodicals,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,25109,Leasehold Assets,Tangible Fixed Assets,View Type,True,False,approve
+Fourth Level,26101,Adjusting A/C Debit,Adjustment Account,View Type,True,False,approve
+Fourth Level,26103,Coupon Interest Adjustment Account,Adjustment Account,View Type,True,False,approve
+Fourth Level,26201,Advance paid to Employees,Advances,View Type,True,False,approve
+Fourth Level,26202,Advance against Suppliers/ Parties,Advances,View Type,True,False,approve
+Fourth Level,26203,Advance Deposit,Advances,View Type,True,False,approve
+Fourth Level,26204,Advance Income Tax,Advances,View Type,True,False,approve
+Fourth Level,26205,Advance Remuneration/Salary,Advances,View Type,True,False,approve
+Fourth Level,26206,Advance Rent,Advances,View Type,True,False,approve
+Fourth Level,26207,Advance pymt to construction of HO bldg,Advances,View Type,True,False,approve
+Fourth Level,26208,Advance against TA/DA,Advances,View Type,True,False,approve
+Fourth Level,26209,Advance against POSTAGE,Advances,View Type,True,False,approve
+Fourth Level,26210,Advance against  PETTY CASH,Advances,View Type,True,False,approve
+Fourth Level,26601,Chargeback Settlement A/c,Suspense Account,View Type,True,False,approve
+Fourth Level,26602,Sundry Debtors,Suspense Account,View Type,True,False,approve
+Fourth Level,26603,Sanchay Patra,Suspense Account,View Type,True,False,approve
+Fourth Level,26604,Legal Expense,Suspense Account,View Type,True,False,approve
+Fourth Level,26605,Economic Exchange Centre,Suspense Account,View Type,True,False,approve
+Fourth Level,26606,Suspense account for Foreign Banks,Suspense Account,View Type,True,False,approve
+Fourth Level,26607,Suspense account for Exchange Houses,Suspense Account,View Type,True,False,approve
+Fourth Level,26608,Remittance Payment Account,Suspense Account,View Type,True,False,approve
+Fourth Level,26610,DD CANCELLED,Suspense Account,View Type,True,False,approve
+Fourth Level,26609,DD Paid Without Advice,Suspense Account,View Type,True,False,approve
+Fourth Level,26901,Preliminary Expenses,Miscellaneous Other Assets,View Type,True,False,approve
+Fourth Level,26902,Prepaid Promotional and Development Expenses,Miscellaneous Other Assets,View Type,True,False,approve
+Fourth Level,26903,Stock of Commemorative Coins,Miscellaneous Other Assets,View Type,True,False,approve
+Fourth Level,26904,Stock of Fixed Assets,Miscellaneous Other Assets,View Type,True,False,approve
+Fourth Level,26905,Stock of stationeries,Miscellaneous Other Assets,View Type,True,False,approve
+Fourth Level,26906,Transit Account,Miscellaneous Other Assets,View Type,True,False,approve
+Fourth Level,27101,Branch Account,Inter Branch Account,View Type,True,False,approve
+Fourth Level,28101,Expenditure for the period fm 1st Jan to ..,Expenditure,View Type,True,False,approve
+Fourth Level,31101,Interest Earned on RTL,Interest Earned,View Type,True,False,approve
+Fourth Level,31102,Interest Earned on Staff Loans,Interest Earned,View Type,True,False,approve
+Fourth Level,31103,IE on Corporate Term Loan,Interest Earned,View Type,True,False,approve
+Fourth Level,31104,IE on SME Term Loan excl Agri & MF,Interest Earned,View Type,True,False,approve
+Fourth Level,31105,IE on SME Term Loan <Agri & MF>,Interest Earned,View Type,True,False,approve
+Fourth Level,31106,IE on Corporate & SME Demand Loan,Interest Earned,View Type,True,False,approve
+Fourth Level,31107,IE on Corporate & SME Demand Loan FC,Interest Earned,View Type,True,False,approve
+Fourth Level,31108,IE on SME Demand Loan,Interest Earned,View Type,True,False,approve
+Fourth Level,31109,IE on Retail Continuous Loan,Interest Earned,View Type,True,False,approve
+Fourth Level,31110,IE on Corporate &/ or SME Continuous Loan,Interest Earned,View Type,True,False,approve
+Fourth Level,31111,IE on SME Continuous Loan,Interest Earned,View Type,True,False,approve
+Fourth Level,31112,IE on Misc Demand Loan,Interest Earned,View Type,True,False,approve
+Fourth Level,31201,Penal Interest Earned on RTL,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31202,Penal Interest Earned on Staff Loans,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31203,P I E on Corporate Term Loan,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31204,P I E on SME Term Loan excl Agri & MF,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31205,P I E on SME Term Loan <Agri & MF>,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31206,P I E on Corporate & SME Demand Loan,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31207,P I E on Corporate & SME Demand Loan FC,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31208,P I E on SME Demand Loan,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31209,P I E on Retail Continuous Loan,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31210,P I E on Corporate &/ or SME Continuous Loan,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31211,P I E on SME Continuous Loan,Penal Interest Earned,View Type,True,False,approve
+Fourth Level,31301,Interest on MTB General Account,Interest on MTB Branch Account,View Type,True,False,approve
+Fourth Level,31401,Interest on Money at Call  and Short Notice, Income on Money Market/ Placements,View Type,True,False,approve
+Fourth Level,31402,Interest on Placement to Off-Shore Banking Unit, Income on Money Market/ Placements,View Type,True,False,approve
+Fourth Level,31403,Interest on Balance with Other Bank, Income on Money Market/ Placements,View Type,True,False,approve
+Fourth Level,31404,Interest on Balance with Foreign Bank, Income on Money Market/ Placements,View Type,True,False,approve
+Fourth Level,31405,Interest on Foreign Currency Lending, Income on Money Market/ Placements,View Type,True,False,approve
+Fourth Level,31406,Repo Interest Income, Income on Money Market/ Placements,View Type,True,False,approve
+Fourth Level,31407,Interest on Bangladesh Bank Foreign Currency Clearing A/c, Income on Money Market/ Placements,View Type,True,False,approve
+Fourth Level,32101,Income from Treasury Operations <Govt Sec.>,Income fm Govt Securities,View Type,True,False,approve
+Fourth Level,32201,Income from Treasury Operations <other than Govt Sec.>,Income from Other Investments,View Type,True,False,approve
+Fourth Level,33101,Commission on GB operations,Commission,View Type,True,False,approve
+Fourth Level,33102,Commission on Trade operations,Commission,View Type,True,False,approve
+Fourth Level,33103,Commission on NRB operations,Commission,View Type,True,False,approve
+Fourth Level,33201,Exchange Gain on Foreign Currency,Exchange,View Type,True,False,approve
+Fourth Level,33202,Income on Forex Deal,Exchange,View Type,True,False,approve
+Fourth Level,33302,Underwriting Commission,Brokerage,View Type,True,False,approve
+Fourth Level,34101,Rental Income,Other Operating Income,View Type,True,False,approve
+Fourth Level,34102,Recoveries of various charges,Other Operating Income,View Type,True,False,approve
+Fourth Level,34103,Income fm Cards operations,Other Operating Income,View Type,True,False,approve
+Fourth Level,34104,Early Settlement Fees,Other Operating Income,View Type,True,False,approve
+Fourth Level,34105,Loan Processing Fees,Other Operating Income,View Type,True,False,approve
+Fourth Level,34106,Partial Payment Fees,Other Operating Income,View Type,True,False,approve
+Fourth Level,34107,SME Fees & Charges,Other Operating Income,View Type,True,False,approve
+Fourth Level,34108,Service Charges,Other Operating Income,View Type,True,False,approve
+Fourth Level,34109,Management Fees,Other Operating Income,View Type,True,False,approve
+Fourth Level,34110,Gain on Sale of Fixed Assets,Other Operating Income,View Type,True,False,approve
+Fourth Level,34111,NPSB Acquirer Income,Other Operating Income,View Type,True,False,approve
+Fourth Level,34112,Miscellneous Earnings,Other Operating Income,View Type,True,False,approve
+Fourth Level,34113,Income on account of recovery fm written off loans,Other Operating Income,View Type,True,False,approve
+Fourth Level,41101,Interest Expenses on Current Deposits,Interest Expenses on Demand Deposits,View Type,True,False,approve
+Fourth Level,41102,Interest Expenses on Savings Bank Accounts,Interest Expenses on Demand Deposits,View Type,True,False,approve
+Fourth Level,41103,Interest Expenses on Savings Bank Accounts FC,Interest Expenses on Demand Deposits,View Type,True,False,approve
+Fourth Level,41104,Interest Expenses on Special Notice Deposits,Interest Expenses on Demand Deposits,View Type,True,False,approve
+Fourth Level,41201,Interest Expenses on TD Accounts,Interest Expenses on Term Deposits,View Type,True,False,approve
+Fourth Level,41202,Interest Expenses on Term Deposits Reinvestments,Interest Expenses on Term Deposits,View Type,True,False,approve
+Fourth Level,41203,Interest Expenses on Recurring Deposit,Interest Expenses on Term Deposits,View Type,True,False,approve
+Fourth Level,41204,Interest Expenses on Term Deposits FC,Interest Expenses on Term Deposits,View Type,True,False,approve
+Fourth Level,41601,Interest Paid on MTBL General A/c,Interest Expense on Branch A/C,View Type,True,False,approve
+Fourth Level,42101,Basic Pay Expenses,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42102,Allowances Expenses,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42103,Bonus Expenses,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42104,Gratuity Expenses,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42105,Leave Fare Assistance Expenses,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42106,Provident Fund Expenses,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42107,Misc. Salary & Allowances,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42108,Leave Encashment,Salary & Allowances,View Type,True,False,approve
+Fourth Level,42201,Rent Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Fourth Level,42202,Rates & Taxes Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Fourth Level,42203,Insurance Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Fourth Level,42204,"Power, Electricity & Utilities","Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Fourth Level,42205,Lease Rent Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Fourth Level,42301,"Security, Auxiliary Services and Other Assitance",Other Expenses,View Type,True,False,approve
+Fourth Level,42302,Office Cleaning,Other Expenses,View Type,True,False,approve
+Fourth Level,42303,Office Maintenance,Other Expenses,View Type,True,False,approve
+Fourth Level,42304,Car Expenses <not classified elsewhere>,Other Expenses,View Type,True,False,approve
+Fourth Level,42305,Entertainment,Other Expenses,View Type,True,False,approve
+Fourth Level,42306,News Paper & Periodicals,Other Expenses,View Type,True,False,approve
+Fourth Level,42307,Clearing House Expenses,Other Expenses,View Type,True,False,approve
+Fourth Level,42308,Travelling & Conveyance Expenses,Other Expenses,View Type,True,False,approve
+Fourth Level,42309,Bank charges,Other Expenses,View Type,True,False,approve
+Fourth Level,42310,Training Expenses,Other Expenses,View Type,True,False,approve
+Fourth Level,42311,Professional Fees,Other Expenses,View Type,True,False,approve
+Fourth Level,42312,AGM Expenses,Other Expenses,View Type,True,False,approve
+Fourth Level,42313,Subscription & Donation,Other Expenses,View Type,True,False,approve
+Fourth Level,42314,Reuter Charges,Other Expenses,View Type,True,False,approve
+Fourth Level,42315,CDBL Charges,Other Expenses,View Type,True,False,approve
+Fourth Level,42316,Fees & Registrations,Other Expenses,View Type,True,False,approve
+Fourth Level,42317,Business Development Expenses,Other Expenses,View Type,True,False,approve
+Fourth Level,42319,Employees Medical Assistance Fund,Other Expenses,View Type,True,False,approve
+Fourth Level,42320,Honorarium,Other Expenses,View Type,True,False,approve
+Fourth Level,42321,Cash Carrying/loading expenses,Other Expenses,View Type,True,False,approve
+Fourth Level,42322,Contact Point Verification Charge,Other Expenses,View Type,True,False,approve
+Fourth Level,42323,Site Maintenance & Support Service,Other Expenses,View Type,True,False,approve
+Fourth Level,42324,On-line & Connectivity charges,Other Expenses,View Type,True,False,approve
+Fourth Level,42325,NID Verification Charge,Other Expenses,View Type,True,False,approve
+Fourth Level,42326,Loss on sale of Fixed Assets,Other Expenses,View Type,True,False,approve
+Fourth Level,42327,Misc Expenses <not classified elsewhere>,Other Expenses,View Type,True,False,approve
+Fourth Level,42328,Investment Expenses,Other Expenses,View Type,True,False,approve
+Fourth Level,42329,Card Charges,Other Expenses,View Type,True,False,approve
+Fourth Level,42330,Operational Loss,Other Expenses,View Type,True,False,approve
+Fourth Level,42331,Penalty of CRR/SLR,Other Expenses,View Type,True,False,approve
+Fourth Level,42332,ATM Intercharge Reimbursement Fee Paid for,Other Expenses,View Type,True,False,approve
+Fourth Level,42333,Agent Banking Float Sharing Commission,Other Expenses,View Type,True,False,approve
+Fourth Level,42401,Depreciation on Immovable Property,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42402,Depreciation on POS Items,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42403,Depreciation on Office Equipments,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42404,Depreciation on Electric Equipments,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42405,Depreciation on Computers,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42406,Depreciation on Interior Decoration,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42407,Depreciation on Motor Vehicles,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42408,Depreciation on Other Assets,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42409,Repair and Maintenance,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Fourth Level,42501,Postage Expenses,"Postage, Stamps and Telecommunication etc.",View Type,True,False,approve
+Fourth Level,42502,Telecommunication expenses,"Postage, Stamps and Telecommunication etc.",View Type,True,False,approve
+Fourth Level,42503,Stamp Expenses,"Postage, Stamps and Telecommunication etc.",View Type,True,False,approve
+Fourth Level,42701,Stationery Expenses,"Stationery, Printing and Advertisements etc.",View Type,True,False,approve
+Fourth Level,42702,Printing Expenses,"Stationery, Printing and Advertisements etc.",View Type,True,False,approve
+Fourth Level,42703,Advertisements Expenses,"Stationery, Printing and Advertisements etc.",View Type,True,False,approve
+Fourth Level,51101,Foreign Bills sent for collection,Bills sent for collection,View Type,True,False,approve
+Fourth Level,51102,Inland Bills sent for collection,Bills sent for collection,View Type,True,False,approve
+Fourth Level,51201,Foreign Bills received for collection,Bills received for Collection,View Type,True,False,approve
+Fourth Level,51301,Forward Contract Cust,Forward Contract,View Type,True,False,approve
+Fourth Level,52101,Bankers Liability on BG (Inland),Bank Guarantee <Contingent>,View Type,True,False,approve
+Fourth Level,52102,Bankers Liability on BG (Foreign),Bank Guarantee <Contingent>,View Type,True,False,approve
+Fourth Level,52201,Bankers Liability on LC (Inland),Letter of Credit <Contingent>,View Type,True,False,approve
+Fourth Level,52202,Bankers Liability on LC (Foreign),Letter of Credit <Contingent>,View Type,True,False,approve
+Fourth Level,52301,Bankers Liability for Accepted Bills <Inland>,Accepted Bills under LC <Contingent>,View Type,True,False,approve
+Fourth Level,52302,Bankers Liability for Accepted Bills <Foreign>,Accepted Bills under LC <Contingent>,View Type,True,False,approve
+Fourth Level,62101,Customers' Liability on BG (Inland),Bank Guarantee <Contingent>,View Type,True,False,approve
+Fourth Level,62102,Customers' Liability on BG (Foreign),Bank Guarantee <Contingent>,View Type,True,False,approve
+Fourth Level,62201,Customers' Liability on LC (Inland),Letter of Credit <Contingent>,View Type,True,False,approve
+Fourth Level,62202,Customers' Liability on LC (Foreign),Letter of Credit <Contingent>,View Type,True,False,approve
+Fourth Level,62301,Customers' Liability for Accepted Bills <Inland>,Accepted Bills under LC <Contingent>,View Type,True,False,approve
+Fourth Level,62302,Customers' Liability for Accepted Bills <Foreign>,Accepted Bills under LC <Contingent>,View Type,True,False,approve
