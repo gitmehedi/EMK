@@ -104,9 +104,9 @@ class AccountJournal(models.Model):
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
 
-class HistoryBranch(models.Model):
+class HistoryAccountJournal(models.Model):
     _name = 'history.account.journal'
-    _description = 'History Branch'
+    _description = 'History Account Journal'
     _order = 'id desc'
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
