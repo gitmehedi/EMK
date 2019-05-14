@@ -9,6 +9,7 @@
     "category": "Tools",
     "depends": [
         'mail',
+        'account',
     ],
     "data": [
         "data/ir_cron.xml",

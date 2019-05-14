@@ -303,7 +303,7 @@ class ServerFileProcess(models.Model):
                         moves[journal_no] = {
                             'journal_id': journal.id,
                             'date': rec['POSTING-DATE'],
-                            'date': rec['POSTING-DATE'],
+                            'is_cbs': True,
                             'line_ids': [],
                         }
 
