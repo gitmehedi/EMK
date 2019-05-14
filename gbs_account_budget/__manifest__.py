@@ -19,7 +19,7 @@ planned for this Budget.
     'depends': [
         'account_parent',
         'operating_unit',
-        'date_range',
+        'account_fiscal_year',
         'gbs_account_level',
     ],
     'data': [
