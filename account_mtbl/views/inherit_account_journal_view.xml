@@ -9,6 +9,12 @@
                 <field name="type" position="after">
                     <field name="state"/>
                 </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-info">state == 'draft'</attribute>
+                    <attribute name="decoration-success">state=='approve'</attribute>
+                    <attribute name="decoration-danger">state=='reject'</attribute>
+                    <attribute name="decoration-bf">state in ('approve',)</attribute>
+                </xpath>
             </field>
         </record>
         <record id="view_account_journal_form_inherit" model="ir.ui.view">
