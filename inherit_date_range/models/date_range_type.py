@@ -3,16 +3,16 @@ from odoo.tools.translate import _
 from odoo.exceptions import ValidationError
 
 
-class DateRange(models.Model):
-    _name = "date.range"
+class DateRangeType(models.Model):
+    _name = "date.range.type"
     _order = 'name desc'
-    _inherit = ['date.range', 'mail.thread']
-    _description = 'Account Period'
+    _inherit = ['date.range.type', 'mail.thread']
+    _description = 'Account Period Type'
 
 
     @api.model
     def _default_company(self):
-        return self.env['res.company']._company_default_get('date.range')
+        return self.env['res.company']._company_default_get('date.range.type')
 
     name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]}, translate=True)
@@ -22,11 +22,17 @@ class DateRange(models.Model):
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
                              track_visibility='onchange')
-    date_start = fields.Date(string='Start Date', required=True, readonly=True,
-                            states={'draft': [('readonly', False)]})
-    date_end = fields.Date(string='End Date', required=True, readonly=True,
-                            states={'draft': [('readonly', False)]})
-    line_ids = fields.One2many('history.date.range', 'line_id', string='Lines', readonly=True,
+    allow_overlap = fields.Boolean(string="Allow Overlap", readonly=True,
+                                   states={'draft': [('readonly', False)]})
+    fiscal_year = fields.Boolean(string='Is Fiscal Year?', readonly=True,
+                                 states={'draft': [('readonly', False)]})
+    fiscal_month = fields.Boolean(string="Is Fiscal Month?", readonly=True,
+                                  states={'draft': [('readonly', False)]})
+    tds_year = fields.Boolean(string="Is TDS Year?", default=False, readonly=True,
+                              states={'draft': [('readonly', False)]})
+    parent_type_id = fields.Many2one(string="Parent Type", readonly=True,
+                                     states={'draft': [('readonly', False)]})
+    line_ids = fields.One2many('history.date.range.type', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
     @api.one
@@ -64,17 +70,17 @@ class DateRange(models.Model):
                 requested.state = 'reject'
                 requested.change_date = fields.Datetime.now()
 
-    @api.multi
-    def unlink(self):
-        for rec in self:
-            if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
-
-            try:
-                return super(DateRange, rec).unlink()
-            except DateRange:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+    # @api.multi
+    # def unlink(self):
+    #     for rec in self:
+    #         if rec.state in ('approve', 'reject'):
+    #             raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+    #
+    #         try:
+    #             return super(DateRangeType, rec).unlink()
+    #         except DateRangeType:
+    #             raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+    #                                     "- deletion: you may be trying to delete a record while other records still reference it"))
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -89,21 +95,21 @@ class DateRange(models.Model):
         if self.name:
             self.name = self.name.strip()
 
-    @api.one
-    def name_get(self):
-        name = self.name
-        if self.name and self.date_start and self.date_end:
-            name = '[%s - %s] %s' % (self.date_start, self.date_end, self.name)
-        return (self.id, name)
+    # @api.one
+    # def name_get(self):
+    #     name = self.name
+    #     if self.name and self.date_start and self.date_end:
+    #         name = '[%s - %s] %s' % (self.date_start, self.date_end, self.name)
+    #     return (self.id, name)
 
-class HistoryAccountPeriod(models.Model):
-    _name = 'history.date.range'
-    _description = 'History Account Period'
+class HistoryAccountPeriodType(models.Model):
+    _name = 'history.date.range.type'
+    _description = 'History Account Period Type'
     _order = 'id desc'
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     change_date = fields.Datetime(string='Date')
-    line_id = fields.Many2one('date.range', ondelete='restrict')
+    line_id = fields.Many2one('date.range.type', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],
                              default='pending')

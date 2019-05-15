@@ -15,8 +15,10 @@
     "data": [
         "wizard/date_range_generator.xml",
         "wizard/account_period_wizard_view.xml",
+        "wizard/account_period_type_wizard_view.xml",
         "views/menu_view.xml",
         "views/date_range_view.xml",
+        "views/date_range_type_view.xml",
     ],
     "qweb": [
         "static/src/xml/date_range.xml",
