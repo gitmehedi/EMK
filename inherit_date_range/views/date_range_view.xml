@@ -85,12 +85,8 @@
                 <field name="pending" string="Pending"/>
                 <group string="Group By">
                     <filter name="type_id" string="Type" context="{'group_by': 'type_id'}"/>
-                </group>
-                <group string="Group By">
                     <filter string="Pending" name="pending" icon="terp-personal"
                             domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
-                </group>
-                <group string="Group By">
                     <filter string="Rejected" name="state" icon="terp-personal"
                             domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
                 </group>
@@ -116,7 +112,7 @@
             </p>
         </field>
     </record>
-
+    
     <record id="date_range.date_range_generator_action" model="ir.actions.act_window">
         <field name="name">Generate Accounting Period</field>
     </record>

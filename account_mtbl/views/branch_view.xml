@@ -91,12 +91,8 @@
                         <group string="Group By">
                             <filter name="branch_type" string="Location of Branch"
                                     context="{'group_by': 'branch_type'}"/>
-                        </group>
-                        <group string="Group By">
                             <filter string="Pending" name="pending" icon="terp-personal"
                                     domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
-                        </group>
-                        <group string="Group By">
                             <filter string="Rejected" name="state" icon="terp-personal"
                                     domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
                         </group>

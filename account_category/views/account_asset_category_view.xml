@@ -180,19 +180,12 @@
             <search string="Search Asset Category">
                 <field name="name" string="Category"/>
                 <field name="journal_id"/>
-                <group expand="0" string="Group By...">
-                    <filter string="Asset Type" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <group string="Group By">
-                        <filter name="parent_id" string="Branch" context="{'group_by': 'parent_id'}"/>
-                    </group>
-                    <group string="Group By">
-                        <filter string="Pending" name="pending" icon="terp-personal"
-                                domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
-                    </group>
-                    <group string="Group By">
-                        <filter string="Rejected" name="state" icon="terp-personal"
-                                domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
-                    </group>
+                <group expand='0' string="Group By">
+                    <filter name="parent_id" string="Asset Type" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
                 </group>
             </search>
         </field>
@@ -201,10 +194,13 @@
     <record model="ir.actions.act_window" id="action_account_asset_type">
         <field name="name">Asset Category</field>
         <field name="res_model">account.asset.category</field>
-        <field name="domain">[('type', '=', 'purchase')]</field>
+        <field name="domain">[('type', '=', 'purchase'),('parent_id','!=',False)]</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('parent_id','!=',False)]</field>
+        <field name="search_view_id" ref="view_account_asset_type_search"/>
+        <field name="context">
+            {"search_default_parent_id":1,"search_default_active":'False',"search_default_pending":'True',}
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_account_asset_type_tree">
@@ -231,8 +227,5 @@
 
     <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
         <field name="domain">[('type', '=', 'purchase'),('parent_id','=',False)]</field>
-        <field name="context">
-            {"search_default_parent_id":1,"search_default_active":'False',"search_default_pending":'True',}
-        </field>
     </record>
 </odoo>
