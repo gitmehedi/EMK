@@ -15,8 +15,6 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="parent_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     <field name="state"/>
-                    <field name="active"/>
-                    <field name="pending"/>
                 </tree>
             </xpath>
         </field>
