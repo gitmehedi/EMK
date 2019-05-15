@@ -10,7 +10,7 @@
                             groups="mtbl_access.group_mtbl_sys_admin"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
                             groups="mtbl_access.group_mtbl_sys_admin"/>
-                    <button name="%(account_fam.action_sub_operating_unit_wizard)d" string="Edit" type="action"
+                    <button name="%(action_sub_operating_unit_wizard)d" string="Edit" type="action"
                             class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
@@ -77,12 +77,8 @@
                 <field name="code" string="Code"/>
                 <group string="Group By">
                     <filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>
-                </group>
-                <group string="Group By">
                     <filter string="Pending" name="pending" icon="terp-personal"
                             domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
-                </group>
-                <group string="Group By">
                     <filter string="Rejected" name="state" icon="terp-personal"
                             domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
                 </group>
