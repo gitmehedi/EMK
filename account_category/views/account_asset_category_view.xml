@@ -4,10 +4,29 @@
         <field name="name">account.asset.category.form</field>
         <field name="model">account.asset.category</field>
         <field name="arch" type="xml">
-            <form string="Asset Category" duplicate='0'>
+            <form string="Account Asset Category" edit="0" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                    <button name="act_reject" string="Reject" type="object" states="draft"
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                    <button name="%(account_fam.action_account_asset_category_wizard)d" string="Edit" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                    <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_reject_pending" string="Reject" type="object"
+                            groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <field name="state" widget="statusbar" invisible="True"/>
+                </header>
                 <sheet>
                     <group>
                         <div class="oe_title">
+                            <h1>
+                                <field name="code" readonly='True'/>
+                            </h1>
                             <label for="name" string="Asset Category" class="oe_edit_only"
                                    attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
@@ -24,6 +43,7 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="pending" invisible="1"/>
                             <field name="is_custom_depr" invisible="1"/>
                             <field name="type" invisible="1"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -78,6 +98,16 @@
                                    attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
                         </group>
                     </group>
+                    <field name="line_ids" states="approve">
+                        <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                              decoration-bf="state in ('pending',)"
+                              decoration-danger="state=='reject'">
+                            <field name="change_name"/>
+                            <field name="change_date"/>
+                            <field name="state"/>
+                            <field name="status" invisible="True"/>
+                        </tree>
+                    </field>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -128,11 +158,16 @@
         <field name="name">account.asset.category.tree</field>
         <field name="model">account.asset.category</field>
         <field name="arch" type="xml">
-            <tree string="Asset category">
+            <tree string="Account Asset Category" decoration-info="state=='draft'"
+                  decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
+                  decoration-bf="state in ('approve',)">
                 <field name="name" string="Asset Category"/>
+                <field name="code"/>
                 <field name="parent_id"/>
                 <field name="journal_id"/>
                 <field name="method"/>
+                <field name="state"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -145,8 +180,12 @@
             <search string="Search Asset Category">
                 <field name="name" string="Category"/>
                 <field name="journal_id"/>
-                <group expand="0" string="Group By...">
-                    <filter string="Asset Type" domain="[]" context="{'group_by':'parent_id'}"/>
+                <group expand='0' string="Group By">
+                    <filter name="parent_id" string="Asset Type" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
                 </group>
             </search>
         </field>
@@ -155,10 +194,13 @@
     <record model="ir.actions.act_window" id="action_account_asset_type">
         <field name="name">Asset Category</field>
         <field name="res_model">account.asset.category</field>
-        <field name="domain">[('type', '=', 'purchase')]</field>
+        <field name="domain">[('type', '=', 'purchase'),('parent_id','!=',False)]</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('parent_id','!=',False)]</field>
+        <field name="search_view_id" ref="view_account_asset_type_search"/>
+        <field name="context">
+            {"search_default_parent_id":1,"search_default_active":'False',"search_default_pending":'True',}
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_account_asset_type_tree">

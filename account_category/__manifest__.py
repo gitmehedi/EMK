@@ -11,6 +11,7 @@
         'account_fam',
     ],
     'data': [
+        'data/sequence.xml',
         'views/account_asset_category_view.xml',
         'views/account_asset_views.xml',
         'views/product_template_views.xml',

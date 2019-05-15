@@ -2,8 +2,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import Warning
 
 
-class AccountPeriodWizard(models.TransientModel):
-    _name = 'account.period.wizard'
+class AccountPeriodTypeWizard(models.TransientModel):
+    _name = 'account.period.type.wizard'
 
     @api.model
     def default_name(self):
@@ -21,7 +21,7 @@ class AccountPeriodWizard(models.TransientModel):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.env['date.range'].search(
+            name = self.env['date.range.type'].search(
                 [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
@@ -30,17 +30,16 @@ class AccountPeriodWizard(models.TransientModel):
     def act_change_name(self):
         id = self._context['active_id']
 
-        name = self.env['date.range'].search([('name', '=ilike', self.name)])
+        name = self.env['date.range.type'].search([('name', '=ilike', self.name)])
         if len(name) > 0:
             raise Warning('[Unique Error] Name must be unique!')
 
-        pending = self.env['history.date.range'].search([('state', '=', 'pending'), ('line_id', '=', id)])
+        pending = self.env['history.date.range.type'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:
             raise Warning('[Warning] You already have a pending request!')
 
-        self.env['history.date.range'].create({'change_name': self.name, 'line_id': id, 'status': self.status})
-        record = self.env['date.range'].search([('id', '=', id)])
+        self.env['history.date.range.type'].create({'change_name': self.name, 'line_id': id, 'status': self.status})
+        record = self.env['date.range.type'].search([('id', '=', id)])
         if record:
             record.pending = True
             record.pending = True
-

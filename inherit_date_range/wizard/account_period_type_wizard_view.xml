@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
 <odoo>
     <data>
-        <!--Account Period-->
-        <record id="view_account_period_wizard" model="ir.ui.view">
-            <field name="name">account.period.wizard</field>
-            <field name="model">account.period.wizard</field>
+        <!--Account Period Type-->
+        <record id="view_account_period_type_wizard" model="ir.ui.view">
+            <field name="name">account.period.type.wizard</field>
+            <field name="model">account.period.type.wizard</field>
             <field name="arch" type="xml">
                 <form string="Proposed">
                     <group>
@@ -23,15 +22,14 @@
             </field>
         </record>
 
-        <record id="action_account_period_wizard" model="ir.actions.act_window">
+        <record id="action_account_period_type_wizard" model="ir.actions.act_window">
             <field name="name">Request for Name Change</field>
-            <field name="res_model">account.period.wizard</field>
+            <field name="res_model">account.period.type.wizard</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_period_wizard"/>
+            <field name="view_id" ref="view_account_period_type_wizard"/>
             <field name="target">new</field>
         </record>
-
     </data>
 </odoo>
