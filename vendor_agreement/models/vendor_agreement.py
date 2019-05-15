@@ -17,7 +17,7 @@ class VendorAgreement(models.Model):
                                  domain=[('type', '=', 'service')], track_visibility='onchange',
                                  states={'draft': [('readonly', False)]},
                                  help="Agreement Service.")
-    start_date = fields.Date(string='Start Date', default=fields.Date.today(), required=True, readonly=True,
+    start_date = fields.Date(string='Start Date', default=fields.Date.context_today, required=True, readonly=True,
                              track_visibility='onchange', states={'draft': [('readonly', False)]})
     end_date = fields.Date(string='End Date', required=True, readonly=True, track_visibility='onchange',
                            states={'draft': [('readonly', False)]})

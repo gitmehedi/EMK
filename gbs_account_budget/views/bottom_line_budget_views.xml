@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <menuitem
+            id="main_menu_account_budget"
+            name="Budget"
+            parent="account.menu_finance_configuration"
+            sequence="99"
+            groups="account.group_account_manager"/>
+
     <record id="bottom_line_budget_tree" model="ir.ui.view">
         <field name="name">bottom.line.budget.tree</field>
         <field name="model">bottom.line.budget</field>
         <field name="arch" type="xml">
-            <tree string="Bottom Line Budget">
+            <tree string="GL Budget" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
+                  decoration-muted="state in ('approve','cancel') "
+                  decoration-bf="state in ('confirm','approve') ">
                 <field name="date_create"/>
                 <field name="name"/>
+                <field name="fiscal_year"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -15,30 +26,50 @@
         <field name="name">bottom.line.budget.form</field>
         <field name="model">bottom.line.budget</field>
         <field name="arch" type="xml">
-            <form string="Bottom Line Budget">
+            <form string="GL Budget">
                 <header>
-                    <!--<button string="Generate" name="action_select_accounts" type="object" class="oe_highlight"/>-->
+                    <button string="Confirm" name="action_budget_confirm" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_budget_approve" states="confirm" type="object" class="oe_highlight"/>
+                    <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object" />
+                    <button string="Cancel Budget" name="action_budget_cancel" states="confirm" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
+                    <div class="pull-left">
+                        <h1>
+                            <field name="name" nolabel="1"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="date_create"/>
+                            <label for="fiscal_year" string="Period"/>
+                            <div>
+                                <field name="fiscal_year" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                <field name="date_from" class="oe_inline"/> -
+                                <field name="date_to" class="oe_inline" nolabel="1"/>
+                            </div>
+                            <field name="creating_user_id"/>
+                            <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                         <group>
-                            <field name="level_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="account_id" context="{'show_parent_account':True}"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="planned_amount"/>
+                            <field name="approve_date" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
+                            <field name="approved_user_id" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Accounts">
                             <field name="bottom_line_budgets">
-                                <tree>
-                                    <field name="top_line_account_id"/>
-                                    <field name="bottom_line_account_id"/>
+                                <tree editable="bottom">
+                                    <field name="bottom_line_account_id"
+                                           options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                     <field name="planned_amount"/>
+                                    <field name="state" invisible="1"/>
+                                    <button name="action_branch_distribute"
+                                            attrs="{'invisible' : [('state','!=','approve')]}"
+                                            type="object" string="Branch Distribution" class="oe_highlight"/>
+                                    <button name="action_cost_centre_distribute"
+                                            attrs="{'invisible' : [('state','!=','approve')]}"
+                                            type="object" string="Cost Centre" class="oe_highlight"/>
                                 </tree>
                             </field>
                         </page>
@@ -56,14 +87,19 @@
         <field name="name">bottom.line.budget.search</field>
         <field name="model">bottom.line.budget</field>
         <field name="arch" type="xml">
-            <search string="Bottom Line Budgetary Template">
+            <search string="GL Budget">
                 <field name="name" filter_domain="[('name','ilike',self)]" string="Bottom Line Budgetary"/>
+                <field name="fiscal_year" filter_domain="[('fiscal_year','ilike',self)]" string="Year"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Period" domain="[]"  context="{'group_by':'fiscal_year'}"/>
+                </group>
             </search>
         </field>
     </record>
 
     <record id="action_bottom_line_budget" model="ir.actions.act_window">
-        <field name="name">Bottom Line Budget</field>
+        <field name="name">GL Budget</field>
         <field name="res_model">bottom.line.budget</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -74,5 +110,5 @@
             action="action_bottom_line_budget"
             id="menu_bottom_line_budget"
             parent="main_menu_account_budget"
-            sequence="3"/>
+            sequence="1"/>
 </odoo>
