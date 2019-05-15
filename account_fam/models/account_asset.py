@@ -14,25 +14,33 @@ class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
     _order = "asset_seq desc,id desc"
 
-    asset_seq = fields.Char(string='Asset Code', readonly=True)
-    batch_no = fields.Char(string='Batch No', readonly=True)
-    method_progress_factor = fields.Float('Depreciation Factor', default=0.2)
-    is_custom_depr = fields.Boolean(default=True, required=True)
-    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1)
+    name = fields.Char(readonly=True, track_visibility='onchange')
+    category_id = fields.Many2one(string='Asset Type', required=True, change_default=True, readonly=True)
+    asset_type_id = fields.Many2one(string='Asset Category', required=True, change_default=True, readonly=True)
+
+    asset_seq = fields.Char(string='Asset Code', readonly=True, track_visibility='onchange')
+    batch_no = fields.Char(string='Batch No', readonly=True, track_visibility='onchange')
+    method_progress_factor = fields.Float('Depreciation Factor', default=0.2, track_visibility='onchange')
+    is_custom_depr = fields.Boolean(default=True, required=True, track_visibility='onchange')
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
+                                       track_visibility='onchange')
     method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
+                              track_visibility='onchange',
                               string='Computation Method', required=True, default='linear',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
-    receive_date = fields.Date(string='Receive Date')
-    asset_usage_date = fields.Date(string='Allocation Date', help='Asset Allocation/Usage Date')
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True)
-    invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date')
+    receive_date = fields.Date(string='Receive Date', track_visibility='onchange')
+    date = fields.Date(string='Purchase Date', track_visibility='onchange')
+    asset_usage_date = fields.Date(string='Allocation Date', help='Asset Allocation/Usage Date',
+                                   track_visibility='onchange')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange')
+    invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date', track_visibility='onchange')
     method_period = fields.Integer(string='Number of Months in a Period', required=True, readonly=True, default=1,
-                                   states={'draft': [('readonly', False)]})
-    allocation_status = fields.Boolean(default=False, string='Allocation Status')
-    value = fields.Float(string='Cost Value')
-    value_residual = fields.Float(string='Book Value')
+                                   states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    allocation_status = fields.Boolean(default=False, string='Allocation Status', track_visibility='onchange')
+    value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
+    value_residual = fields.Float(string='Book Value', track_visibility='onchange')
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):

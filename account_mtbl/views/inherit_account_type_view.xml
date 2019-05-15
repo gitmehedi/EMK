@@ -39,14 +39,15 @@
                             </group>
                             <separator string="Description"/>
                             <field name="note"/>
-                            <field name="line_ids" states="approve">
+                            <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
                                 <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
                                       decoration-bf="state in ('pending',)"
                                       decoration-danger="state=='reject'">
                                     <field name="change_name"/>
+                                    <field name="request_date"/>
                                     <field name="change_date"/>
+                                    <field name="status"/>
                                     <field name="state"/>
-                                    <field name="status" invisible="True"/>
                                 </tree>
                             </field>
                         </sheet>
@@ -101,9 +102,11 @@
                             <filter name="type" string="Type"
                                     context="{'group_by': 'type'}"/>
                             <filter string="Pending" name="pending" icon="terp-personal"
-                                    domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                                    domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                             <filter string="Rejected" name="state" icon="terp-personal"
-                                    domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                                    domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                            <filter string="In-Active" name="state" icon="terp-personal"
+                                    domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                         </group>
                     </search>
                 </xpath>

@@ -9,7 +9,6 @@ class Branch(models.Model):
     _inherit = ['operating.unit', 'mail.thread']
     _description = 'Branch'
 
-
     name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
@@ -22,30 +21,42 @@ class Branch(models.Model):
                              track_visibility='onchange')
     company_id = fields.Many2one(
         'res.company', 'Company', required=True, track_visibility='onchange', default=lambda self:
-        self.env['res.company']._company_default_get('account.account'),readonly=True,
-                            states={'draft': [('readonly', False)]})
+        self.env['res.company']._company_default_get('account.account'), readonly=True,
+        states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', 'Partner', required=True, default=lambda self:
-    self.env['res.company']._company_default_get('account.account'),readonly=True,
-                            states={'draft': [('readonly', False)]})
+    self.env['res.company']._company_default_get('account.account'), readonly=True,
+                                 states={'draft': [('readonly', False)]})
     branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'), ('rural', 'Rural')],
-                                   string='Location of Branch', track_visibility='onchange', required=True,readonly=True,
-                            states={'draft': [('readonly', False)]})
+                                   string='Location of Branch', track_visibility='onchange', required=True,
+                                   readonly=True,
+                                   states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('history.operating.unit', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
+    @api.one
+    def act_draft(self):
+        if self.state == 'approve':
+            self.write({
+                'state': 'draft'
+            })
 
     @api.one
     def act_approve(self):
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):
@@ -53,11 +64,15 @@ class Branch(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.name = requested.change_name
-                self.active = requested.status
-                self.pending = False
-                requested.state = 'approve'
-                requested.change_date = fields.Datetime.now()
+                self.write({
+                    'name': self.name if not requested.change_name else requested.change_name,
+                    'pending': False,
+                    'active': requested.status,
+                })
+                requested.write({
+                    'state': 'approve',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.one
     def act_reject_pending(self):
@@ -65,10 +80,13 @@ class Branch(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.pending = False
-                requested.state = 'reject'
-                requested.change_date = fields.Datetime.now()
-
+                self.write({
+                    'pending': False
+                })
+                requested.write({
+                    'state': 'reject',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.one
     def name_get(self):
@@ -104,7 +122,8 @@ class HistoryBranch(models.Model):
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
-    change_date = fields.Datetime(string='Date')
-    line_id = fields.Many2one('operating.unit', ondelete='restrict')
-    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],
+    request_date = fields.Datetime(string='Requested Date')
+    change_date = fields.Datetime(string='Approved Date')
+    line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
+    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')

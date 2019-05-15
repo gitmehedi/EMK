@@ -22,7 +22,7 @@
     </record>
 
     <record id="action_account_analytic_account_wizard" model="ir.actions.act_window">
-        <field name="name">Request for Name Change</field>
+        <field name="name">Request for Change</field>
         <field name="res_model">account.analytic.account.wizard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>

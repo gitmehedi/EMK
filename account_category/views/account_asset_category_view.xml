@@ -98,7 +98,7 @@
                                    attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
                         </group>
                     </group>
-                    <field name="line_ids" states="approve">
+                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
                         <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
@@ -183,9 +183,11 @@
                 <group expand='0' string="Group By">
                     <filter name="parent_id" string="Asset Type" context="{'group_by': 'parent_id'}"/>
                     <filter string="Pending" name="pending" icon="terp-personal"
-                            domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                     <filter string="Rejected" name="state" icon="terp-personal"
-                            domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                 </group>
             </search>
         </field>

@@ -35,10 +35,10 @@
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
                             groups="mtbl_access.group_mtbl_sys_admin"
-                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                     <button name="act_reject_pending" string="Reject" type="object"
                             groups="mtbl_access.group_mtbl_sys_admin"
-                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>
@@ -57,14 +57,15 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
-                    <field name="line_ids" states="approve">
+                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
                         <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
+                            <field name="request_date"/>
                             <field name="change_date"/>
+                            <field name="status"/>
                             <field name="state"/>
-                            <field name="status" invisible="True"/>
                         </tree>
                     </field>
                 </sheet>
@@ -86,9 +87,11 @@
                 <group string="Group By">
                     <filter name="type_id" string="Type" context="{'group_by': 'type_id'}"/>
                     <filter string="Pending" name="pending" icon="terp-personal"
-                            domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                     <filter string="Rejected" name="state" icon="terp-personal"
-                            domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                 </group>
             </search>
         </field>
@@ -161,10 +164,10 @@
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
                             groups="mtbl_access.group_mtbl_sys_admin"
-                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                     <button name="act_reject_pending" string="Reject" type="object"
                             groups="mtbl_access.group_mtbl_sys_admin"
-                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>
@@ -177,19 +180,21 @@
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="parent_type_id" ptions="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="parent_type_id"
+                                   ptions="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="fiscal_month"/>
                             <field name="fiscal_year"/>
                         </group>
                     </group>
-                    <field name="line_ids" states="approve">
+                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
                         <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
+                            <field name="request_date"/>
                             <field name="change_date"/>
+                            <field name="status"/>
                             <field name="state"/>
-                            <field name="status" invisible="True"/>
                         </tree>
                     </field>
                 </sheet>
@@ -211,9 +216,11 @@
                 <group string="Group By">
                     <filter name="company_id" string="Type" context="{'group_by': 'company_id'}"/>
                     <filter string="Pending" name="pending" icon="terp-personal"
-                            domain="['|',('active','=',0),('pending','=',1),('state','in',('draft','approve'))]"/>
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                     <filter string="Rejected" name="state" icon="terp-personal"
-                            domain="['|',('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                 </group>
             </search>
         </field>

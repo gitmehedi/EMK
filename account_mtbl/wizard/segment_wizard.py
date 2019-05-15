@@ -38,7 +38,9 @@ class SegmentWizard(models.TransientModel):
         if len(pending) > 0:
             raise Warning('[Warning] You already have a pending request!')
 
-        self.env['history.segment'].create({'change_name': self.name, 'line_id': id, 'status': self.status})
-        record = self.env['segment'].search([('id', '=', id)])
+        self.env['history.segment'].create(
+            {'change_name': self.name, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+        record = self.env['segment'].search(
+            [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.pending = True
+            record.write({'pending': True})

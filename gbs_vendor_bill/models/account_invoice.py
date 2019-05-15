@@ -7,6 +7,19 @@ class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice','ir.needaction_mixin']
 
+    operating_unit_id = fields.Many2one('operating.unit', 'Branch',
+                                        default=lambda self:
+                                        self.env['res.users'].
+                                        operating_unit_default_get(self._uid),
+                                        readonly=True,required=True,
+                                        states={'draft': [('readonly',False)]})
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
+                                            readonly=True,states={'draft': [('readonly',False)]})
+
+    payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
+    total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
+                                        store=True, readonly=True, track_visibility='onchange',copy=False)
+
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
                  'type')
@@ -31,19 +44,6 @@ class AccountInvoice(models.Model):
     def _compute_payment_amount(self):
         for invoice in self:
             invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
-
-    operating_unit_id = fields.Many2one('operating.unit', 'Branch',
-                                        default=lambda self:
-                                        self.env['res.users'].
-                                        operating_unit_default_get(self._uid),
-                                        readonly=True,required=True,
-                                        states={'draft': [('readonly',False)]})
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
-                                            readonly=True,states={'draft': [('readonly',False)]})
-
-    payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
-    total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
-                                        store=True, readonly=True, track_visibility='onchange',copy=False)
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):

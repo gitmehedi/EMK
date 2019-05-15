@@ -16,10 +16,10 @@
                                 attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                         <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
                                 groups="mtbl_access.group_mtbl_sys_admin"
-                                attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                         <button name="act_reject_pending" string="Reject" type="object"
                                 groups="mtbl_access.group_mtbl_sys_admin"
-                                attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                         <field name="state" widget="statusbar" invisible="True"/>
                     </header>
                     <sheet>
@@ -94,14 +94,15 @@
                                        attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
                             </group>
                         </group>
-                        <field name="line_ids" states="approve">
+                        <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
                             <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
                                   decoration-bf="state in ('pending',)"
                                   decoration-danger="state=='reject'">
                                 <field name="change_name"/>
+                                <field name="request_date"/>
                                 <field name="change_date"/>
+                                <field name="status"/>
                                 <field name="state"/>
-                                <field name="status" invisible="True"/>
                             </tree>
                         </field>
                     </sheet>

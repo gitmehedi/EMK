@@ -21,7 +21,7 @@ class AccountAssetCategory(models.Model):
     prorata = fields.Boolean(string='Prorata Temporis', default=True)
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
                                        track_visibility='onchange')
-    method_number = fields.Integer(string='Number of Depreciations',
+    method_number = fields.Integer(string='Number of Depreciations', default=1,
                                    help="The number of depreciations needed to depreciate your asset")
     method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
                               string='Computation Method', required=True, default='linear', track_visibility='onchange',
@@ -104,21 +104,27 @@ class AccountAssetCategory(models.Model):
     @api.one
     def act_draft(self):
         if self.state == 'approve':
-            self.state = 'draft'
+            self.write({
+                'state': 'draft'
+            })
 
     @api.one
     def act_approve(self):
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
-            self.active = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):
@@ -126,11 +132,15 @@ class AccountAssetCategory(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.name = requested.change_name
-                self.active = requested.status
-                self.pending = False
-                requested.state = 'approve'
-                requested.change_date = fields.Datetime.now()
+                self.write({
+                    'name': self.name if not requested.change_name else requested.change_name,
+                    'pending': False,
+                    'active': requested.status,
+                })
+                requested.write({
+                    'state': 'approve',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.one
     def act_reject_pending(self):
@@ -138,9 +148,13 @@ class AccountAssetCategory(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.pending = False
-                requested.state = 'reject'
-                requested.change_date = fields.Datetime.now()
+                self.write({
+                    'pending': False
+                })
+                requested.write({
+                    'state': 'reject',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.multi
     def unlink(self):
@@ -162,7 +176,8 @@ class HistoryAccountAssetCategory(models.Model):
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
-    change_date = fields.Datetime(string='Date')
-    line_id = fields.Many2one('account.asset.category', ondelete='restrict')
-    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],
+    request_date = fields.Datetime(string='Requested Date')
+    change_date = fields.Datetime(string='Approved Date')
+    line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
+    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')

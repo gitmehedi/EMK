@@ -9,7 +9,6 @@ class DateRange(models.Model):
     _inherit = ['date.range', 'mail.thread']
     _description = 'Account Period'
 
-
     @api.model
     def _default_company(self):
         return self.env['res.company']._company_default_get('date.range')
@@ -23,24 +22,36 @@ class DateRange(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
                              track_visibility='onchange')
     date_start = fields.Date(string='Start Date', required=True, readonly=True,
-                            states={'draft': [('readonly', False)]})
+                             states={'draft': [('readonly', False)]})
     date_end = fields.Date(string='End Date', required=True, readonly=True,
-                            states={'draft': [('readonly', False)]})
+                           states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('history.date.range', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
     @api.one
+    def act_draft(self):
+        if self.state == 'approve':
+            self.write({
+                'state': 'draft'
+            })
+
+    @api.one
     def act_approve(self):
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):
@@ -48,11 +59,15 @@ class DateRange(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.name = requested.change_name
-                self.active = requested.status
-                self.pending = False
-                requested.state = 'approve'
-                requested.change_date = fields.Datetime.now()
+                self.write({
+                    'name': self.name if not requested.change_name else requested.change_name,
+                    'pending': False,
+                    'active': requested.status,
+                })
+                requested.write({
+                    'state': 'approve',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.one
     def act_reject_pending(self):
@@ -60,9 +75,13 @@ class DateRange(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.pending = False
-                requested.state = 'reject'
-                requested.change_date = fields.Datetime.now()
+                self.write({
+                    'pending': False
+                })
+                requested.write({
+                    'state': 'reject',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.multi
     def unlink(self):
@@ -96,6 +115,7 @@ class DateRange(models.Model):
             name = '[%s - %s] %s' % (self.date_start, self.date_end, self.name)
         return (self.id, name)
 
+
 class HistoryAccountPeriod(models.Model):
     _name = 'history.date.range'
     _description = 'History Account Period'
@@ -103,9 +123,10 @@ class HistoryAccountPeriod(models.Model):
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
-    change_date = fields.Datetime(string='Date')
-    line_id = fields.Many2one('date.range', ondelete='restrict')
-    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],
+    request_date = fields.Datetime(string='Requested Date')
+    change_date = fields.Datetime(string='Approved Date')
+    line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
+    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
 
 
@@ -114,7 +135,6 @@ class DateRangeType(models.Model):
     _order = 'name desc'
     _inherit = ['date.range.type', 'mail.thread']
     _description = 'Account Period Type'
-
 
     name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]}, translate=True)
@@ -129,30 +149,42 @@ class DateRangeType(models.Model):
     date_end = fields.Date(string='End Date', required=True, readonly=True,
                            states={'draft': [('readonly', False)]})
     allow_overlap = fields.Boolean(string="Allow Overlap", readonly=True,
-                               states={'draft': [('readonly', False)]})
+                                   states={'draft': [('readonly', False)]})
     fiscal_year = fields.Boolean(string='Is Fiscal Year?', readonly=True,
-                               states={'draft': [('readonly', False)]})
+                                 states={'draft': [('readonly', False)]})
     fiscal_month = fields.Boolean(string="Is Fiscal Month?", readonly=True,
-                               states={'draft': [('readonly', False)]})
-    tds_year = fields.Boolean(string="Is TDS Year?", default=False ,readonly=True,
-                               states={'draft': [('readonly', False)]})
+                                  states={'draft': [('readonly', False)]})
+    tds_year = fields.Boolean(string="Is TDS Year?", default=False, readonly=True,
+                              states={'draft': [('readonly', False)]})
     parent_type_id = fields.Many2one(string="Parent Type", readonly=True,
-                               states={'draft': [('readonly', False)]})
+                                     states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('history.date.range.type', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
     @api.one
+    def act_draft(self):
+        if self.state == 'approve':
+            self.write({
+                'state': 'draft'
+            })
+
+    @api.one
     def act_approve(self):
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):
@@ -160,11 +192,15 @@ class DateRangeType(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.name = requested.change_name
-                self.active = requested.status
-                self.pending = False
-                requested.state = 'approve'
-                requested.change_date = fields.Datetime.now()
+                self.write({
+                    'name': self.name if not requested.change_name else requested.change_name,
+                    'pending': False,
+                    'active': requested.status,
+                })
+                requested.write({
+                    'state': 'approve',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.one
     def act_reject_pending(self):
@@ -172,9 +208,13 @@ class DateRangeType(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.pending = False
-                requested.state = 'reject'
-                requested.change_date = fields.Datetime.now()
+                self.write({
+                    'pending': False
+                })
+                requested.write({
+                    'state': 'reject',
+                    'change_date': fields.Datetime.now()
+                })
 
     @api.multi
     def unlink(self):
@@ -209,7 +249,8 @@ class HistoryAccountPeriodType(models.Model):
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
-    change_date = fields.Datetime(string='Date')
-    line_id = fields.Many2one('date.range.type', ondelete='restrict')
-    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],
+    request_date = fields.Datetime(string='Requested Date')
+    change_date = fields.Datetime(string='Approved Date')
+    line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
+    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
