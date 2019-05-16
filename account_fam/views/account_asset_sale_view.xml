@@ -42,7 +42,7 @@
                         <page string="Assets">
                             <field name="line_ids">
                                 <tree string="Tree Views" editable="bottom">
-                                    <field name="asset_id"
+                                    <field name="asset_id" domain="[('state','=','open')]"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="asset_value"/>
                                     <field name="depreciation_value"/>

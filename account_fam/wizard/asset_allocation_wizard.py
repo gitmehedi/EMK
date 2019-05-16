@@ -20,20 +20,25 @@ class AssetAllocationWizard(models.TransientModel):
             branch = asset.asset_allocation_ids.search([('asset_id', '=', asset_id), ('state', '=', 'active')], limit=1)
             return branch.operating_unit_id
 
+    asset_user = fields.Char("Asset User")
     date = fields.Date(string='Allocation/Transfer Date', required=True, default=fields.Date.today())
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
+    cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre')
 
-    # @api.onchange('operating_unit_id')
-    # def onchange_operating_unit(self):
-    #     if self.operating_unit_id:
-    #         self.sub_operating_unit_id = None
-    #         sub_operating = self.env['sub.operating.unit'].search(
-    #             [('operating_unit_id', '=', self.operating_unit_id.id)])
-    #         return {
-    #             'domain': {'sub_operating_unit_id': [('id', 'in', sub_operating.ids)]}
-    #         }
+    @api.onchange('to_operating_unit_id')
+    def onchange_operating_unit(self):
+        if self.operating_unit_id:
+            res = {}
+            self.sub_operating_unit_id = 0
+            sub_operating = self.env['sub.operating.unit'].search(
+                [('operating_unit_id', '=', self.to_operating_unit_id.id)])
+            res['domain'] = {
+                'sub_operating_unit_id': [('id', 'in', sub_operating.ids)]
+            }
+            return res
 
     @api.multi
     def allocation(self):
@@ -63,6 +68,9 @@ class AssetAllocationWizard(models.TransientModel):
                 'asset_id': asset.id,
                 'from_branch_id': self.operating_unit_id.id,
                 'operating_unit_id': self.to_operating_unit_id.id,
+                'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                'cost_centre_id': self.cost_centre_id.id,
+                'asset_user': self.asset_user,
                 'receive_date': self.date,
                 'state': 'active',
             })
