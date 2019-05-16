@@ -34,7 +34,7 @@
             </xpath>
             <xpath expr="//form/sheet/group/group[1]" position="replace">
                 <group>
-                    <field name="name" readonly="True"/>
+                    <field name="name" />
                     <field name="category_id" readonly="True"
                            domain="[('type', '=', 'purchase')]"
                            context="{'default_type': 'purchase'}"

@@ -14,6 +14,7 @@ This application allows you to easily maintain access rights of mtbl process.
     ],
     'data': [
         'security/ir_security.xml',
+        # 'security/ir_rule.xml',
     ],
     'installable': True,
     'auto_install': False,

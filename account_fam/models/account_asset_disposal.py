@@ -10,27 +10,33 @@ class AccountAssetDisposal(models.Model):
     _order = 'name desc,id desc'
     _rec_name = 'name'
 
-    name = fields.Char(string='Serial No', readonly=True, default='New')
-    total_value = fields.Float(string='Asset Value', compute='_compute_total_value')
-    total_depr_amount = fields.Float(string='Depreciation Value', compute='_compute_total_depr_amount')
+    name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
+    total_value = fields.Float(string='Asset Value', compute='_compute_total_value', track_visibility='onchange')
+    total_depr_amount = fields.Float(string='Depreciation Value', compute='_compute_total_depr_amount',
+                                     track_visibility='onchange')
     request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now(),
-                                   readonly=True, states={'draft': [('readonly', False)]})
-    approve_date = fields.Datetime(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]})
-    dispose_date = fields.Datetime(string='Dispose Date', readonly=True, states={'approve': [('readonly', False)]})
+                                   readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    approve_date = fields.Datetime(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
+                                   track_visibility='onchange')
+    dispose_date = fields.Datetime(string='Dispose Date', readonly=True, states={'approve': [('readonly', False)]},
+                                   track_visibility='onchange')
     request_user_id = fields.Many2one('res.users', string='Request User', readonly=True,
-                                      states={'draft': [('readonly', False)]}, default=lambda self: self.env.user)
+                                      states={'draft': [('readonly', False)]}, default=lambda self: self.env.user,
+                                      track_visibility='onchange')
     approve_user_id = fields.Many2one('res.users', string='Approve User', readonly=True,
-                                      states={'draft': [('readonly', False)]}, )
+                                      states={'draft': [('readonly', False)]}, track_visibility='onchange')
     dispose_user_id = fields.Many2one('res.users', string='Dispose User', readonly=True,
-                                      states={'approve': [('readonly', False)]}, )
+                                      states={'approve': [('readonly', False)]}, track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
                                   default=lambda self: self.env.user.company_id.currency_id.id)
-    note = fields.Text(string='Note', readonly=True, states={'draft': [('readonly', False)]}, )
-    line_ids = fields.One2many('account.asset.disposal.line', 'dispose_id', string='Disposal Line' )
+    note = fields.Text(string='Note', readonly=True, states={'draft': [('readonly', False)]},
+                       track_visibility='onchange')
+    line_ids = fields.One2many('account.asset.disposal.line', 'dispose_id', string='Disposal Line', readonly=True,
+                               states={'draft': [('readonly', False)]}, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('dispose', 'Disposed')], default='draft',
-                             string='State')
+                             string='State', track_visibility='onchange')
 
     @api.depends('line_ids')
     def _compute_total_value(self):
@@ -61,7 +67,9 @@ class AccountAssetDisposal(models.Model):
                 for depr in rec.asset_id.depreciation_line_ids:
                     if depr.move_id.state == 'draft':
                         depr.move_id.post()
-                rec.journal_entry='post'
+                    diff = round(depr.depreciated_value - depr.amount, 2)
+                    if diff == rec.depreciation_value:
+                        rec.write({'journal_entry': 'post', 'move_id': depr.move_id.id})
 
             self.state = 'dispose'
             self.dispose_date = fields.Datetime.now()
@@ -84,11 +92,12 @@ class AccountAssetDisposalLine(models.Model):
     _rec = 'id ASC'
 
     asset_id = fields.Many2one('account.asset.asset', required=True, string='Asset Name')
-    asset_value = fields.Float(string='Asset Value', required=True, digits=(14, 2))
+    asset_value = fields.Float(related='asset_id.value', string='Asset Value', required=True, digits=(14, 2))
     depreciation_value = fields.Float(string='Depreciation Value', required=True, digits=(14, 2))
 
     dispose_id = fields.Many2one('account.asset.disposal', string='Disposal', ondelete='restrict')
     journal_entry = fields.Selection([('unpost', 'Unposted'), ('post', 'Posted')], default='unpost', requried=True)
+    move_id = fields.Many2one('account.move', string='Journal')
 
     @api.onchange('asset_id')
     def onchange_asset(self):

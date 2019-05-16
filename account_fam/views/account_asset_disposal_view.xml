@@ -6,8 +6,6 @@
         <field name="arch" type="xml">
             <form string="Asset Disposal">
                 <header>
-                    <button name="%(action_asset_dispose_wizard)d" string="Asset To Dispose" type="action"
-                            class="oe_highlight" states="draft"/>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft"/>
                     <button name="action_dispose" string="Dispose" type="object" class="oe_highlight"
@@ -45,7 +43,7 @@
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="asset_value"/>
                                     <field name="depreciation_value"/>
-                                    <field name="journal_entry"/>
+                                    <field name="move_id" class="oe_link"/>
                                 </tree>
                             </field>
                         </page>

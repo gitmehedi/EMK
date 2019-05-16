@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 class AssetDisposeWizard(models.TransientModel):
     _name = 'asset.dispose.wizard'
 
-    asset_ids = fields.Many2many('account.asset.asset','asset_dispose_rel','asset_id','dispose_id', required=True, string='Assets', domain="[('state','=','open')]")
+    asset_ids = fields.Many2many('account.asset.asset','asset_dispose_rel','asset_id','dispose_id', required=True, string='Assets')
 
     @api.multi
     def dispose(self):

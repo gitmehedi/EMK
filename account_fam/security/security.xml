@@ -8,6 +8,7 @@
         <record id="grp_fixasset_user" model="res.groups">
             <field name="name">User</field>
             <field name="category_id" ref="module_category_fixed_asset"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="sequence">10</field>
         </record>
         <record id="grp_fixasset_manager" model="res.groups">
