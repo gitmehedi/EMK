@@ -28,8 +28,7 @@ class AccountAssetDisposal(models.Model):
                                   states={'draft': [('readonly', False)]},
                                   default=lambda self: self.env.user.company_id.currency_id.id)
     note = fields.Text(string='Note', readonly=True, states={'draft': [('readonly', False)]}, )
-    line_ids = fields.One2many('account.asset.disposal.line', 'dispose_id', string='Disposal Line', readonly=True,
-                               states={'draft': [('readonly', False)]}, )
+    line_ids = fields.One2many('account.asset.disposal.line', 'dispose_id', string='Disposal Line' )
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('dispose', 'Disposed')], default='draft',
                              string='State')
 
