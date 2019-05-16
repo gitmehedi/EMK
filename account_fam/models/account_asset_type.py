@@ -178,6 +178,6 @@ class HistoryAccountAssetCategory(models.Model):
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
-    line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
+    line_id = fields.Many2one('account.asset.category', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
