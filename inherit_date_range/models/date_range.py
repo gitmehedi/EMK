@@ -128,7 +128,6 @@ class HistoryAccountPeriod(models.Model):
     line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
-<<<<<<< HEAD
 
 
 class DateRangeType(models.Model):
@@ -161,6 +160,19 @@ class DateRangeType(models.Model):
                                      states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('history.date.range.type', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
+
+    @api.onchange("name", )
+    def onchange_strips(self):
+        if self.name:
+            self.name = self.name.strip()
 
     @api.one
     def act_draft(self):
@@ -229,19 +241,6 @@ class DateRangeType(models.Model):
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
 
-    @api.constrains('name')
-    def _check_unique_constrain(self):
-        if self.name:
-            name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
-
-    @api.onchange("name", )
-    def onchange_strips(self):
-        if self.name:
-            self.name = self.name.strip()
-
 
 class HistoryAccountPeriodType(models.Model):
     _name = 'history.date.range.type'
@@ -255,5 +254,3 @@ class HistoryAccountPeriodType(models.Model):
     line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
-=======
->>>>>>> a94f5267e0abb0303c23af89fb7e14ef4d0a6914
