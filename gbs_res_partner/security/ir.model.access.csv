@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_res_partner_mng,access_res_partner_mng,base_vat_bd.model_res_partner,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_res_partner_usr,access_res_partner_usr,base_vat_bd.model_res_partner,base.group_user,1,0,0,0
+
+access_history_res_partner_mng,access_history_res_partner_mng,base_vat_bd.model_history_res_partner,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_history_res_partner_usr,access_history_res_partner_usr,base_vat_bd.model_history_res_partner,base.group_user,1,0,0,0
+
+access_res_partner_wizard_mng,access_res_partner_wizard_mng,base_vat_bd.model_res_partner_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_res_partner_wizard_usr,access_res_partner_wizard_usr,base_vat_bd.model_res_partner_wizard,base.group_user,1,0,0,0

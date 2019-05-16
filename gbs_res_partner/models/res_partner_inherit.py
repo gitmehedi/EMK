@@ -1,4 +1,5 @@
-from odoo import models, fields, api, _
+from odoo import api, fields, models, _
+from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
 
@@ -35,6 +36,75 @@ class ResPartner(models.Model):
     country_id = fields.Many2one(track_visibility='onchange')
     company_id = fields.Many2one(track_visibility='onchange')
 
+    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
+                             states={'draft': [('readonly', False)]})
+    active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
+                            states={'draft': [('readonly', False)]})
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
+                             track_visibility='onchange')
+
+    line_ids = fields.One2many('history.res.partner', 'line_id', string='Lines', readonly=True,
+                               states={'draft': [('readonly', False)]})
+
+    @api.one
+    def act_approve(self):
+        if self.state == 'draft':
+            self.active = True
+            self.pending = False
+            self.state = 'approve'
+
+    @api.one
+    def act_reject(self):
+        if self.state == 'draft':
+            self.state = 'reject'
+            self.pending = False
+
+    @api.one
+    def act_approve_pending(self):
+        if self.pending == True:
+            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
+                                             limit=1)
+            if requested:
+                self.name = requested.change_name
+                self.active = requested.status
+                self.pending = False
+                requested.state = 'approve'
+                requested.change_date = fields.Datetime.now()
+
+    @api.one
+    def act_reject_pending(self):
+        if self.pending == True:
+            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
+                                             limit=1)
+            if requested:
+                self.pending = False
+                requested.state = 'reject'
+                requested.change_date = fields.Datetime.now()
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('approve', 'reject'):
+                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+
+            try:
+                return super(ResPartner, rec).unlink()
+            except IntegrityError:
+                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+
+    @api.onchange("name")
+    def onchange_strips(self):
+        if self.name:
+            self.name = self.name.strip()
+
+    @api.constrains('bin', 'tin')
+    def _check_numeric_constrain(self):
+        if self.bin and not self.bin.isdigit():
+            raise Warning('[Format Error] BIN must be numeric!')
+        if self.tin and not self.tin.isdigit():
+            raise Warning('[Format Error] TIN must be numeric!')
+
 
     """ All functions """
     @api.constrains('name')
@@ -50,3 +120,18 @@ class ResPartner(models.Model):
             else:
                 if len(name) > 1:
                     raise ValidationError('[Unique Error] Name must be unique!')
+
+
+
+class HistoryResPartner(models.Model):
+    _name = 'history.res.partner'
+    _description = 'History Partner'
+    _order = 'id desc'
+
+    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    status = fields.Boolean('Active', default=True, track_visibility='onchange')
+    request_date = fields.Datetime(string='Requested Date')
+    change_date = fields.Datetime(string='Approved Date')
+    line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
+    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
+                             default='pending')
