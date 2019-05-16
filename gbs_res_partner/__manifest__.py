@@ -13,7 +13,10 @@
         'mail'
     ],
     "data": [
-        #'views/inherit_res_partner.xml',
+        'security/ir.model.access.csv',
+        'wizard/res_partner_wizard_view.xml',
+        'views/inherited_res_partner_view.xml',
+        # 'views/inherit_res_partner.xml',
     ],
     'installable': True,
     'application': False,

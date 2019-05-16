@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <odoo>
-    <record id="view_account_period_wizard" model="ir.ui.view">
-        <field name="name">account.period.wizard</field>
-        <field name="model">account.period.wizard</field>
+    <record id="view_res_partner_wizard" model="ir.ui.view">
+        <field name="name">res.partner.wizard</field>
+        <field name="model">res.partner.wizard</field>
         <field name="arch" type="xml">
             <form string="Proposed">
                 <group>
@@ -21,13 +21,13 @@
         </field>
     </record>
 
-    <record id="action_account_period_wizard" model="ir.actions.act_window">
-        <field name="name">Request for Change</field>
-        <field name="res_model">account.period.wizard</field>
+    <record id="action_res_partner_wizard" model="ir.actions.act_window">
+        <field name="name">Request for Name Change</field>
+        <field name="res_model">res.partner.wizard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_account_period_wizard"/>
+        <field name="view_id" ref="view_res_partner_wizard"/>
         <field name="target">new</field>
     </record>
 </odoo>
