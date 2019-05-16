@@ -21,6 +21,7 @@ planned for this Budget.
         'operating_unit',
         'account_fiscal_year',
         'gbs_account_level',
+        'gbs_vendor_bill',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -28,7 +29,7 @@ planned for this Budget.
         # 'security/ir_rule.xml',
         # 'wizards/bottom_line_wizard_views.xml',
         # 'views/top_line_budget_views.xml',
-        # 'views/bottom_line_budget_views.xml',
+        'views/bottom_line_budget_views.xml',
         'views/budget_distribution_views.xml',
     ],
     'installable': True,

@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem
-            id="main_menu_account_budget"
-            name="Budget"
-            parent="account.menu_finance_configuration"
-            sequence="99"
-            groups="account.group_account_manager"/>
+
 
     <record id="branch_budget_tree" model="ir.ui.view">
         <field name="name">branch.budget.tree</field>
         <field name="model">branch.budget</field>
         <field name="arch" type="xml">
-            <tree string="Branch Distribution" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
-                  decoration-muted="state in ('approve','cancel') "
-                  decoration-bf="state in ('confirm','approve') ">
+            <tree create="false" edit="false" string="Branch Distribution" decoration-info="state == 'draft'" decoration-success="state == 'approve'"
+                  decoration-muted="state =='cancel'"
+                  decoration-bf="state in ('approve') ">
                 <field name="name"/>
                 <field name="account_id"/>
                 <field name="creating_user_id"/>
@@ -28,18 +23,18 @@
         <field name="name">branch.budget.form</field>
         <field name="model">branch.budget</field>
         <field name="arch" type="xml">
-            <form string="Branch Distribution">
+            <form string="Branch Distribution" create="false" edit="false">
                 <header>
-                    <button string="Confirm" name="action_budget_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_budget_approve" states="confirm" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_budget_approve" states="draft" type="object" class="oe_highlight"/>
                     <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object" />
-                    <button string="Cancel Budget" name="action_budget_cancel" states="confirm" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    <button string="Cancel Budget" name="action_budget_cancel" states="draft" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
                 </header>
                 <sheet>
                     <div class="pull-left">
                         <h1>
                             <field name="name" nolabel="1"/>
+                            <field name="bottom_line_budget_line" invisible="1"/>
                         </h1>
                     </div>
                     <group>
@@ -51,22 +46,22 @@
                                 <field name="date_to" class="oe_inline" nolabel="1"/>
                             </div>
                             <field name="creating_user_id"/>
-                            <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                         <group>
                             <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="planned_amount"/>
                             <field name="remaining_amount"/>
-                            <field name="approve_date" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
-                            <field name="approved_user_id" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
+                            <field name="approve_date" attrs="{'invisible':[('state','=','draft')]}"/>
+                            <field name="approved_user_id" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Distribution" >
                             <field name="branch_budget_lines">
-                                <tree editable="bottom">
-                                    <field name="operating_unit_id"
-                                           options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                <tree editable="bottom" create="false" delete="false"
+                                      decoration-danger="practical_amount>planned_amount"
+                                      decoration-info="practical_amount>theoritical_amount" >
+                                    <field name="operating_unit_id" readonly="1"/>
                                     <field name="planned_amount"/>
                                     <field name="practical_amount" readonly="1"/>
                                     <field name="theoritical_amount" readonly="1"/>
@@ -111,16 +106,16 @@
             id="menu_branch_budget"
             parent="main_menu_account_budget"
             groups="account.group_account_manager"
-            sequence="1"/>
+            sequence="2"/>
     <!--............................................................................................-->
 
     <record id="cost_center_budget_tree" model="ir.ui.view">
         <field name="name">cost.center.budget.tree</field>
         <field name="model">cost.center.budget</field>
         <field name="arch" type="xml">
-            <tree string="Cost Centre Distribution" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
-                  decoration-muted="state in ('approve','cancel') "
-                  decoration-bf="state in ('confirm','approve') ">
+            <tree string="Cost Centre Distribution" decoration-info="state == 'draft'" decoration-success="state == 'approve'"
+                  decoration-muted="state =='cancel' "
+                  decoration-bf="state in ('approve') ">
                 <field name="name"/>
                 <field name="account_id"/>
                 <field name="creating_user_id"/>
@@ -137,11 +132,10 @@
         <field name="arch" type="xml">
             <form string="Cost Centre Distribution">
                 <header>
-                    <button string="Confirm" name="action_budget_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_budget_approve" states="confirm" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_budget_approve" states="draft" type="object" class="oe_highlight"/>
                     <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object" />
-                    <button string="Cancel Budget" name="action_budget_cancel" states="confirm" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    <button string="Cancel Budget" name="action_budget_cancel" states="draft" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
                 </header>
                 <sheet>
                     <div class="pull-left">
@@ -154,7 +148,6 @@
                             <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="planned_amount"/>
                             <field name="creating_user_id"/>
-                            <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                         <group>
                             <label for="fiscal_year" string="Period"/>
@@ -163,8 +156,8 @@
                                 <field name="date_from" class="oe_inline"/> -
                                 <field name="date_to" class="oe_inline" nolabel="1"/>
                             </div>
-                            <field name="approve_date" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
-                            <field name="approved_user_id" attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
+                            <field name="approve_date" attrs="{'invisible':[('state','=','draft')]}"/>
+                            <field name="approved_user_id" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -217,5 +210,5 @@
             id="menu_cost_center_budget"
             parent="main_menu_account_budget"
             groups="account.group_account_manager"
-            sequence="2"/>
+            sequence="3"/>
 </odoo>

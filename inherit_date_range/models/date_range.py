@@ -128,6 +128,7 @@ class HistoryAccountPeriod(models.Model):
     line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
+<<<<<<< HEAD
 
 
 class DateRangeType(models.Model):
@@ -254,3 +255,5 @@ class HistoryAccountPeriodType(models.Model):
     line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
+=======
+>>>>>>> a94f5267e0abb0303c23af89fb7e14ef4d0a6914

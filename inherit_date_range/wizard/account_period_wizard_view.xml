@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-    <!--Account Period-->
     <record id="view_account_period_wizard" model="ir.ui.view">
         <field name="name">account.period.wizard</field>
         <field name="model">account.period.wizard</field>

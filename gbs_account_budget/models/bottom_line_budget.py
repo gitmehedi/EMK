@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 class BottomLineBudget(models.Model):
     _name = "bottom.line.budget"
@@ -6,47 +7,101 @@ class BottomLineBudget(models.Model):
     _order = "name"
     _description = "Bottom Line Budget"
 
-    name = fields.Char('Name',required=True, size=50, track_visibility='onchange')
+    name = fields.Char('Name',required=True, size=50, track_visibility='onchange',
+                       readonly=True, states={'draft': [('readonly', False)]})
     date_create = fields.Datetime('Date', readonly=True, default=lambda self: fields.Datetime.now())
     bottom_line_budgets = fields.One2many('bottom.line.budget.line', 'bottom_line_budget',
-                                          string='Bottom Lines')
-    planned_amount = fields.Float('Planned Amount', required=True)
-    level_id = fields.Many2one('account.account.level', string='Level', required=True,
-                               track_visibility='onchange')
-    account_id = fields.Many2one('account.account', string='Account',required=True,
-                                 track_visibility='onchange')
+                                          string='Bottom Lines',readonly=True, states={'draft': [('readonly', False)]})
+    fiscal_year = fields.Many2one('date.range', string='Date range', track_visibility='onchange',
+                                  domain="[('type_id.fiscal_year', '=', True)]",
+                                  readonly=True, required=True, states={'draft': [('readonly', False)]})
+    date_from = fields.Date(related='fiscal_year.date_start', string='Start Date', readonly=True)
+    date_to = fields.Date(related='fiscal_year.date_end', string='End Date', readonly=True)
+    confirm_date = fields.Datetime(string='Confirm Date', readonly=True, track_visibility='onchange')
+    approve_date = fields.Datetime(string='Approve Date', readonly=True, track_visibility='onchange')
+    creating_user_id = fields.Many2one('res.users', 'Responsible', readonly=True, track_visibility='onchange',
+                                       default=lambda self: self.env.user)
+    approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange',
+                                       default=lambda self: self.env.user)
 
-    @api.onchange('level_id')
-    def onchange_level_id(self):
-        if self.level_id:
-            res = {}
-            self.account_id = []
-            res['domain'] = {
-                'account_id': [('level_id','=',self.level_id.id)],
-            }
-            return res
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'Confirmed'),
+        ('approve', 'Approved'),
+    ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
 
-    @api.onchange('account_id')
-    def onchange_account_id(self):
-        if self.account_id:
-            self.bottom_line_budgets = []
-            vals = []
-            accounts_pool = self.env['account.account'].search([('parent_id', '=', self.account_id.id)])
-            self.planned_amount = self.env['top.line.budget.lines'].search([('account_id', '=', self.account_id.id)]).planned_amount
-            line_planned_amount = self.planned_amount/len(accounts_pool)
-            for obj in accounts_pool:
-                vals.append((0, 0, {'top_line_account_id': self.account_id.id,
-                                    'bottom_line_account_id': obj.id,
-                                    'planned_amount': line_planned_amount,
-                                    }))
-            self.bottom_line_budgets = vals
+    @api.multi
+    def action_budget_confirm(self):
+        vals = {'state': 'confirm',
+                'confirm_date': fields.Datetime.now(),
+                }
+        self.write(vals)
+        self.bottom_line_budgets.write({'state': 'confirm'})
+
+    @api.multi
+    def action_budget_approve(self):
+        vals = {'state': 'approve',
+                'approve_date': fields.Datetime.now(),
+                'approved_user_id': self.env.user.id
+                }
+        self.write(vals)
+        self.bottom_line_budgets.write({'state': 'approve'})
+
+    @api.multi
+    def action_budget_draft(self):
+        self.write({'state': 'draft'})
+        self.bottom_line_budgets.write({'state': 'draft'})
+
+    @api.multi
+    def action_budget_cancel(self):
+        self.write({'state': 'cancel'})
+        self.bottom_line_budgets.write({'state': 'cancel'})
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not in draft state!'))
+        return super(BottomLineBudget, self).unlink()
+
 
 class BottomLineBudgetLine(models.Model):
     _name = "bottom.line.budget.line"
     _description = "Bottom Line Budget Line"
 
     bottom_line_budget = fields.Many2one('bottom.line.budget',string='Bottom line budget')
-    top_line_account_id = fields.Many2one('account.account',string='Top Line Accounts')
-    bottom_line_account_id = fields.Many2one('account.account',string='Bottom Line Accounts')
+    bottom_line_account_id = fields.Many2one('account.account',string='Bottom Line Accounts',
+                                             domain="[('internal_type', '!=', 'view')]",)
     planned_amount = fields.Float('Planned Amount', required=True)
+    branch_distributed = fields.Boolean(string="Is Branch Distributed?", readonly=True,default=False)
+    cost_centre_distributed = fields.Boolean(string="Is Cost Centre Distributed?", readonly=True,default=False)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'Confirmed'),
+        ('approve', 'Approved'),
+    ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
+
+    @api.multi
+    def action_branch_distribute(self):
+        res = self.env.ref('gbs_account_budget.branch_budget_form')
+        branch_budget_id = self.env['branch.budget'].search([('bottom_line_budget_line','=',self.id)])
+
+        result = {'name': _('Branch Distribution'),
+                  'view_type': 'form',
+                  'view_mode': 'form',
+                  'view_id': res and res.id or False,
+                  'res_model': 'branch.budget',
+                  'res_id': branch_budget_id.id or False,
+                  'type': 'ir.actions.act_window',
+                  'target': 'current',
+                  'nodestroy': True,
+                  'context': {'default_account_id': self.bottom_line_account_id.id,
+                              'default_planned_amount': self.planned_amount,
+                              'default_fiscal_year': self.bottom_line_budget.fiscal_year.id,
+                              },
+                  }
+
+        return result
 
