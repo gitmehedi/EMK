@@ -183,7 +183,7 @@ class BudgetBranchDistributionLine(models.Model):
                  ('date', '<=', date_to),
                  ('state','!=','cancel')]).ids
 
-            if line.operating_unit_id.id:
+            if line.operating_unit_id.id and acc_inv_ids:
                 self.env.cr.execute("""
                     SELECT SUM(price_subtotal_without_vat)
                     FROM account_invoice_line
