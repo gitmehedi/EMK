@@ -38,8 +38,9 @@ class AccountPeriodTypeWizard(models.TransientModel):
         if len(pending) > 0:
             raise Warning('[Warning] You already have a pending request!')
 
-        self.env['history.date.range.type'].create({'change_name': self.name, 'line_id': id, 'status': self.status})
-        record = self.env['date.range.type'].search([('id', '=', id)])
+        self.env['history.date.range.type'].create(
+            {'change_name': self.name, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+        record = self.env['date.range.type'].search(
+            [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.pending = True
-            record.pending = True
+            record.write({'pending': True})
