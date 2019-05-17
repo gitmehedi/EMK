@@ -65,11 +65,6 @@
         </record>
 
 
-        <menuitem
-                id="menu_bgl_accounts"
-                name="BGL Accounts"
-                action="bgl_accounts_action"
-                parent="account.account_account_menu"/>
 
     </data>
 </odoo>

@@ -25,6 +25,4 @@
         </field>
     </record>
 
-    <menuitem id="menu_account_account_lavel" name="Account Level" action="action_account_account_lavel"
-              parent="account.account_account_menu" sequence="1"/>
 </odoo>

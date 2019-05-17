@@ -23,27 +23,30 @@
                         <field name="state" widget="statusbar" invisible="True"/>
                     </header>
                     <sheet>
-                        <group>
-                            <div class="oe_title">
-                                <h1>
-                                    <field name="code" readonly='True'/>
-                                </h1>
-                                <label for="name" string="Asset Type" class="oe_edit_only"
-                                       attrs="{'invisible': [('type','!=','purchase')]}"/>
-                                <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
-                                       attrs="{'invisible': [('type','==','purchase')]}"/>
-                                <h1>
-                                    <field name="name" placeholder="e.g. Lenovo"/>
-                                </h1>
-                            </div>
+                        <div>
+                            <h1 class="mt0">
+                                <field name="code" class="oe_inline" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            </h1>
+                        </div>
+                        <div class="oe_title">
+
+                            <label for="name" string="Asset Type" class="oe_edit_only"
+                                   attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
+                                   attrs="{'invisible': [('type','==','purchase')]}"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Lenovo"/>
+                            </h1>
+                        </div>
+                        <div>
+                            <field name="pending" invisible="1"/>
+                            <field name="is_custom_depr" invisible="1"/>
+                            <field name="type" invisible="1"/>
+                            <field name="company_id" options="{'no_create': True}"
+                                   groups="base.group_multi_company"/>
+                        </div>
+                        <group string="Journal Entries">
                             <group>
-                                <field name="pending" invisible="1"/>
-                                <field name="is_custom_depr" invisible="1"/>
-                                <field name="type" invisible="1"/>
-                                <field name="company_id" options="{'no_create': True}"
-                                       groups="base.group_multi_company"/>
-                            </group>
-                            <group string="Journal Entries">
                                 <field name="journal_id"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}"
@@ -53,6 +56,8 @@
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="account_depreciation_expense_id" domain="[('company_id', '=', company_id)]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </group>
+                            <group>
                                 <field name="account_depreciation_id" domain="[('company_id', '=', company_id)]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="account_asset_loss_id" domain="[('company_id', '=', company_id)]"
@@ -62,6 +67,8 @@
                                 <field name="asset_sale_suspense_account_id" domain="[('company_id', '=', company_id)]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </group>
+                        </group>
+                        <group>
                             <group string="Periodicity">
                                 <field name="method_time" string="Time Method Based On" widget="radio"
                                        attrs="{'invisible': ['|',('type','!=','purchase'),('is_custom_depr','=',True)]}"/>
@@ -69,15 +76,13 @@
                                 <div>
                                     <field name="depreciation_year" nolabel="1" class="oe_inline"
                                            attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
-                                    years
                                 </div>
                                 <field name="method_number" string="Number of Entries" invisible="1"
                                        attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)]}"/>
-                                <label for="method_period" string="One Entry Every"/>
+                                <label for="method_period"/>
                                 <div>
                                     <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}"
                                            class="oe_inline"/>
-                                    months
                                 </div>
                                 <field name="method_end"
                                        attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>

@@ -10,40 +10,20 @@ from odoo.osv.orm import setup_modifiers
 class AssetModify(models.TransientModel):
     _inherit = 'asset.modify'
 
+    method_number = fields.Integer(string='One Entry (In Month)', required=True, default=1, invisible=True)
     method_progress_factor = fields.Float('Degressive Factor')
-    depreciation_year = fields.Integer(string='Total Year', required=True)
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True)
     method = fields.Selection([('linear', 'Straight Line/ Linear'), ('degressive', 'Reducing Method')],
                               string='Computation Method', required=True, default='linear',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
 
-
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
         if self.depreciation_year:
             self.method_number = int(12 * self.depreciation_year)
 
-
-    # @api.model
-    # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-    #     result = super(AssetModify, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=submenu)
-    #     asset_id = self.env.context.get('active_id')
-    #     active_model = self.env.context.get('active_model')
-    #     if active_model == 'account.asset.asset' and asset_id:
-    #         asset = self.env['account.asset.asset'].browse(asset_id)
-    #         doc = etree.XML(result['arch'])
-    #         if asset.method_time == 'number' and doc.xpath("//field[@name='method_end']"):
-    #             node = doc.xpath("//field[@name='method_end']")[0]
-    #             node.set('invisible', '1')
-    #             setup_modifiers(node, result['fields']['method_end'])
-    #         elif asset.method_time == 'end' and doc.xpath("//field[@name='method_number']"):
-    #             node = doc.xpath("//field[@name='method_number']")[0]
-    #             node.set('invisible', '1')
-    #             setup_modifiers(node, result['fields']['method_number'])
-    #         result['arch'] = etree.tostring(doc)
-    #     return result
-    #
     @api.model
     def default_get(self, fields):
         res = super(AssetModify, self).default_get(fields)

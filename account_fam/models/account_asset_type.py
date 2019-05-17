@@ -15,8 +15,9 @@ class AccountAssetCategory(models.Model):
     active = fields.Boolean(default=True, track_visibility='onchange')
     name = fields.Char(required=True, index=True, string="Asset Type", size=50, track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, track_visibility='onchange')
-    method_period = fields.Integer(string='One Entry Every', default=1, track_visibility='onchange',
+    method_period = fields.Integer(string='One Entry (In Month)', default=1, track_visibility='onchange',
                                    help="State here the time between 2 depreciations, in months", required=True)
+
     is_custom_depr = fields.Boolean(default=True, required=True)
     prorata = fields.Boolean(string='Prorata Temporis', default=True)
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
@@ -87,6 +88,14 @@ class AccountAssetCategory(models.Model):
                 [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.onchange('type')
+    def onchange_type(self):
+        if self.type == 'sale':
+            self.prorata = True
+            self.method_period = 1
+        else:
+            self.method_period = 1
 
     @api.one
     def name_get(self):

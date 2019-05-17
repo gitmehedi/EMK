@@ -17,7 +17,6 @@ class AccountAssetAsset(models.Model):
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'close': [('readonly', False)]})
     category_id = fields.Many2one(string='Asset Type', required=True, change_default=True, readonly=True)
     asset_type_id = fields.Many2one(string='Asset Category', required=True, change_default=True, readonly=True)
-
     asset_seq = fields.Char(string='Asset Code', readonly=True, track_visibility='onchange')
     batch_no = fields.Char(string='Batch No', readonly=True, track_visibility='onchange')
     method_progress_factor = fields.Float('Depreciation Factor', default=0.2, track_visibility='onchange')
@@ -37,7 +36,7 @@ class AccountAssetAsset(models.Model):
     model_name = fields.Char(string='Model', track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange')
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date', track_visibility='onchange')
-    method_period = fields.Integer(string='Number of Months in a Period', required=True, readonly=True, default=1,
+    method_period = fields.Integer(string='One Entry (In Month)', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
     allocation_status = fields.Boolean(default=False, string='Allocation Status', track_visibility='onchange')
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)

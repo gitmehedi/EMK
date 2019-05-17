@@ -34,7 +34,7 @@
             </xpath>
             <xpath expr="//form/sheet/group/group[1]" position="replace">
                 <group>
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="category_id" readonly="True"
                            domain="[('type', '=', 'purchase')]"
                            context="{'default_type': 'purchase'}"
@@ -153,5 +153,31 @@
                 </tree>
             </xpath>
         </field>
+    </record>
+
+    <record id="view_account_asset_search" model="ir.ui.view">
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search string="Asset Account">
+                    <field name="name" string="Asset"/>
+                    <field name="date"/>
+                    <field name="category_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    <group string="Group By...">
+                        <filter string="Current" name="state" domain="[('state','in', ('draft','open'))]"
+                                help="Assets in draft and open states"/>
+                        <filter string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
+                        <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_form">
+        <field name="context">{"search_default_state":1}</field>
     </record>
 </odoo>

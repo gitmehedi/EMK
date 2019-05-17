@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import Warning
 
 
 class AccountAssetSale(models.Model):
@@ -11,7 +11,7 @@ class AccountAssetSale(models.Model):
     _rec_name = 'name'
 
     name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
-    total_value = fields.Float(string='Asset Value', compute='_compute_total_value', track_visibility='onchange')
+    total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
     total_sale_amount = fields.Float(string='Sale Value', compute='_compute_total_sale_amount',
                                      track_visibility='onchange')
     request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now(),
@@ -42,7 +42,7 @@ class AccountAssetSale(models.Model):
     @api.depends('line_ids')
     def _compute_total_value(self):
         for rec in self:
-            rec.total_value = sum(rec.asset_value for rec in rec.line_ids)
+            rec.total_value = sum(rec.cost_value for rec in rec.line_ids)
 
     @api.depends('line_ids')
     def _compute_total_sale_amount(self):
@@ -52,7 +52,7 @@ class AccountAssetSale(models.Model):
     @api.one
     def action_approve(self):
         if len(self.line_ids) <= 0:
-            raise ValidationError(_("Sale List should not empty."))
+            raise Warning(_("[Warning] Sale List should not be empty."))
 
         if self.state == 'draft':
             self.state = 'approve'
@@ -68,8 +68,7 @@ class AccountAssetSale(models.Model):
                 for depr in rec.asset_id.depreciation_line_ids:
                     if depr.move_id.state == 'draft':
                         depr.move_id.post()
-                    diff = round(depr.depreciated_value - depr.amount, 2)
-                    if diff == rec.depreciation_value:
+                    if round(depr.amount, 2) == rec.asset_value:
                         rec.write({'journal_entry': 'post', 'move_id': depr.move_id.id})
 
             self.state = 'sale'
@@ -80,7 +79,7 @@ class AccountAssetSale(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'sale'):
-                raise ValidationError(_('Record cannot delete after approval.'))
+                raise Warning(_('[Warning] Approved and Disposed Record cannot deleted.'))
         return super(AccountAssetSale, self).unlink()
 
     @api.model
@@ -93,7 +92,8 @@ class AccountAssetSaleLine(models.Model):
     _rec = 'id ASC'
 
     asset_id = fields.Many2one('account.asset.asset', required=True, string='Asset Name')
-    asset_value = fields.Float(string='Asset Value', required=True, digits=(14, 2))
+    cost_value = fields.Float(related='asset_id.value', string='Cost Value', required=True, digits=(14, 2))
+    asset_value = fields.Float(string='Book Value', required=True, digits=(14, 2))
     depreciation_value = fields.Float(string='Depreciation Value', required=True, digits=(14, 2))
     sale_value = fields.Float(string='Sale Value', required=True, digits=(14, 2))
 

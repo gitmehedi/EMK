@@ -2,6 +2,7 @@ from odoo import api, fields, models, _
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
@@ -70,6 +71,19 @@ class ProductProduct(models.Model):
         if self.code:
             self.code = str(self.code.strip()).upper()
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('approve', 'reject'):
+                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+
+            try:
+                return super(ProductProduct, rec).unlink()
+            except IntegrityError:
+                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+
+
 class HistoryProductProduct(models.Model):
     _name = 'history.product.product'
     _description = 'History Product'
@@ -84,11 +98,10 @@ class HistoryProductProduct(models.Model):
                              default='pending')
 
 
-
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    property_account_expense_id = fields.Many2one(track_visibility='onchange',required=True)
+    property_account_expense_id = fields.Many2one(track_visibility='onchange', required=True)
 
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
@@ -98,6 +111,7 @@ class ProductTemplate(models.Model):
                              track_visibility='onchange')
     line_ids = fields.One2many('history.product.product', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+
     @api.one
     def act_approve(self):
         if self.state == 'draft':
@@ -145,7 +159,6 @@ class ProductTemplate(models.Model):
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
 
-
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
@@ -158,4 +171,3 @@ class ProductTemplate(models.Model):
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
-
