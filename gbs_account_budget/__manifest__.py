@@ -23,7 +23,7 @@ planned for this Budget.
         'gbs_vendor_bill',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         # 'security/ir_security.xml',
         # 'security/ir_rule.xml',
         'views/bottom_line_budget_views.xml',
