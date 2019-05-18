@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 class BottomLineBudget(models.Model):
     _name = "bottom.line.budget"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','ir.needaction_mixin']
     _order = "name"
     _description = "Bottom Line Budget"
 
@@ -65,6 +65,10 @@ class BottomLineBudget(models.Model):
                 raise UserError(_('You cannot delete a record which is not in draft state!'))
         return super(BottomLineBudget, self).unlink()
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'confirm')]
+
 
 class BottomLineBudgetLine(models.Model):
     _name = "bottom.line.budget.line"
@@ -74,8 +78,6 @@ class BottomLineBudgetLine(models.Model):
     bottom_line_account_id = fields.Many2one('account.account',string='Bottom Line Accounts',
                                              domain="[('internal_type', '!=', 'view')]",)
     planned_amount = fields.Float('Planned Amount', required=True)
-    branch_distributed = fields.Boolean(string="Is Branch Distributed?", readonly=True,default=False)
-    cost_centre_distributed = fields.Boolean(string="Is Cost Centre Distributed?", readonly=True,default=False)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('cancel', 'Cancelled'),
@@ -87,7 +89,6 @@ class BottomLineBudgetLine(models.Model):
     def action_branch_distribute(self):
         res = self.env.ref('gbs_account_budget.branch_budget_form')
         branch_budget_id = self.env['branch.budget'].search([('bottom_line_budget_line','=',self.id)])
-
         result = {'name': _('Branch Distribution'),
                   'view_type': 'form',
                   'view_mode': 'form',
@@ -100,8 +101,30 @@ class BottomLineBudgetLine(models.Model):
                   'context': {'default_account_id': self.bottom_line_account_id.id,
                               'default_planned_amount': self.planned_amount,
                               'default_fiscal_year': self.bottom_line_budget.fiscal_year.id,
+                              'default_name': self.bottom_line_budget.fiscal_year.name+'/'+self.bottom_line_account_id.name,
                               },
                   }
 
         return result
 
+    @api.multi
+    def action_cost_centre_distribute(self):
+        res = self.env.ref('gbs_account_budget.cost_center_budget_form')
+        cost_budget_id = self.env['cost.centre.budget'].search([('bottom_line_budget_line', '=', self.id)])
+        result = {'name': _('Branch Distribution'),
+                  'view_type': 'form',
+                  'view_mode': 'form',
+                  'view_id': res and res.id or False,
+                  'res_model': 'cost.centre.budget',
+                  'res_id': cost_budget_id.id or False,
+                  'type': 'ir.actions.act_window',
+                  'target': 'current',
+                  'nodestroy': True,
+                  'context': {'default_account_id': self.bottom_line_account_id.id,
+                              'default_planned_amount': self.planned_amount,
+                              'default_fiscal_year': self.bottom_line_budget.fiscal_year.id,
+                              'default_name': self.bottom_line_budget.fiscal_year.name + '/' + self.bottom_line_account_id.name,
+                              },
+                  }
+
+        return result

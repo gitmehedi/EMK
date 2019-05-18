@@ -14,15 +14,15 @@ class ResPartner(models.Model):
     category_id = fields.Many2many(track_visibility='onchange')
     function = fields.Char(track_visibility='onchange')
     tax = fields.Char(track_visibility='onchange')
-    vat = fields.Char(track_visibility='onchange')
-    bin = fields.Char(track_visibility='onchange')
-    tin = fields.Char(track_visibility='onchange')
+    vat = fields.Char(track_visibility='onchange',size=11)
+    bin = fields.Char(track_visibility='onchange',size=9)
+    tin = fields.Char(track_visibility='onchange',size=12)
     title = fields.Many2one(track_visibility='onchange')
     lang = fields.Selection(track_visibility='onchange')
     customer = fields.Boolean(track_visibility='onchange')
     supplier = fields.Boolean(track_visibility='onchange')
     active = fields.Boolean(track_visibility='onchange')
-    property_account_receivable_id = fields.Many2one(track_visibility='onchange')
+    property_account_receivable_id = fields.Many2one(track_visibility='onchange',required=False)
     property_account_payable_id = fields.Many2one(track_visibility='onchange')
     email = fields.Char(track_visibility='onchange')
     phone = fields.Char(track_visibility='onchange')
@@ -33,7 +33,8 @@ class ResPartner(models.Model):
     zip = fields.Char(track_visibility='onchange')
     city = fields.Char(track_visibility='onchange')
     state_id = fields.Many2one(track_visibility='onchange')
-    country_id = fields.Many2one(track_visibility='onchange')
+    country_id = fields.Many2one(track_visibility='onchange',
+                                 default=lambda self: self.env.user.company_id.country_id.id)
     company_id = fields.Many2one(track_visibility='onchange')
 
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
@@ -98,12 +99,19 @@ class ResPartner(models.Model):
         if self.name:
             self.name = self.name.strip()
 
-    @api.constrains('bin', 'tin')
+    @api.constrains('bin', 'tin','mobile','vat')
     def _check_numeric_constrain(self):
-        if self.bin and not self.bin.isdigit():
-            raise Warning('[Format Error] BIN must be numeric!')
-        if self.tin and not self.tin.isdigit():
-            raise Warning('[Format Error] TIN must be numeric!')
+        if self.bin:
+            if len(self.bin) != 9 or not self.bin.isdigit():
+                raise Warning('[Format Error] BIN must be numeric with 9 digit!')
+        if self.tin:
+            if len(self.tin) != 12 or not self.tin.isdigit():
+                raise Warning('[Format Error] TIN must be numeric with 12 digit!')
+        if self.vat:
+            if len(self.vat) != 11 or not self.vat.isdigit():
+                raise Warning('[Format Error] VAT Registration must be numeric with 11 digit!')
+        if self.mobile and not self.mobile.isdigit():
+            raise Warning('[Format Error] Mobile must be numeric!')
 
 
     """ All functions """
@@ -120,7 +128,6 @@ class ResPartner(models.Model):
             else:
                 if len(name) > 1:
                     raise ValidationError('[Unique Error] Name must be unique!')
-
 
 
 class HistoryResPartner(models.Model):

@@ -38,6 +38,7 @@
         "inherit_date_range",
         "bgl_accounts",
         "gbs_account_level",
+        "gbs_account_budget",
     ],
     'description': 'Install all modules which is related to MTBL Accounting',
     'installable': True,

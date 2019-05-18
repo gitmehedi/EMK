@@ -9,8 +9,9 @@
     "category": "Generic",
     "depends": [
         "base",
+        'mail',
+        'account',
         'base_vat_bd',
-        'mail'
     ],
     "data": [
         'security/ir.model.access.csv',

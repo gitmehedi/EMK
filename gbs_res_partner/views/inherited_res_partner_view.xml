@@ -85,6 +85,17 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="inherit_partner_view_button_contracts">
+        <field name="name">inherit.partner.view.button.contracts</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.partner_view_button_contracts_count" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(account.action_open_partner_analytic_accounts)d']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="base.action_partner_supplier_form" model="ir.actions.act_window">
         <field name="name">Vendors</field>
         <field name="type">ir.actions.act_window</field>
