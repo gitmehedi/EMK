@@ -158,7 +158,7 @@ class CostCentreBudgetLine(models.Model):
                  ('date', '<=', date_to),
                  ('state','!=','cancel')]).ids
 
-            if line.analytic_account_id.id:
+            if line.analytic_account_id.id and acc_inv_ids:
                 self.env.cr.execute("""
                     SELECT SUM(price_subtotal_without_vat)
                     FROM account_invoice_line
