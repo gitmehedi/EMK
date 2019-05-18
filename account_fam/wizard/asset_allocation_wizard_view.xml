@@ -8,11 +8,15 @@
                 <group>
                     <group>
                         <field name="date"/>
+                        <field name="asset_user"/>
+                        <field name="cost_centre_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                     <group>
                         <field name="operating_unit_id"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="to_operating_unit_id"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="sub_operating_unit_id"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                 </group>

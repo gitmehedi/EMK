@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 class AssetSaleWizard(models.TransientModel):
     _name = 'asset.sale.wizard'
 
-    asset_ids = fields.Many2many('account.asset.asset', required=True, string='Assets', domain="[('state','=','open')]")
+    asset_ids = fields.Many2many('account.asset.asset','asset_sale_rel','asset_id','dispose_id', required=True, string='Assets', domain="[('state','=','open')]")
 
     @api.multi
     def sale(self):

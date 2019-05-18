@@ -15,7 +15,7 @@
                         <field name="fiscal_year"/>
                         <field name="tds_year"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                        <field name="parent_type_id"/>
+                        <field name="parent_type_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="state"/>
                     </tree>
                 </xpath>
@@ -54,9 +54,9 @@
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company"
-                                       options="{'no_create': True}"/>
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="parent_type_id"
-                                       ptions="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="fiscal_month"/>
                                 <field name="fiscal_year"/>
                             </group>

@@ -16,7 +16,6 @@
     'data': [
         'data/bill_payment_instruction_scheduler.xml',
         'wizards/bill_payment_instruction_wizard.xml',
-        'views/product_product_view.xml',
         'views/invoice_merge_view.xml',
         'views/account_invoice_view.xml',
 

@@ -14,7 +14,7 @@ class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
     _order = "asset_seq desc,id desc"
 
-    name = fields.Char(readonly=True, track_visibility='onchange')
+    name = fields.Char(string='Asset Name', required=True, readonly=True, states={'close': [('readonly', False)]})
     category_id = fields.Many2one(string='Asset Type', required=True, change_default=True, readonly=True)
     asset_type_id = fields.Many2one(string='Asset Category', required=True, change_default=True, readonly=True)
 
@@ -30,10 +30,11 @@ class AccountAssetAsset(models.Model):
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
-    receive_date = fields.Date(string='Receive Date', track_visibility='onchange')
+    warranty_date = fields.Date(string='Warranty Date', track_visibility='onchange')
     date = fields.Date(string='Purchase Date', track_visibility='onchange')
-    asset_usage_date = fields.Date(string='Allocation Date', help='Asset Allocation/Usage Date',
+    asset_usage_date = fields.Date(string='Asset Usage Date', help='Asset Allocation/Usage Date',
                                    track_visibility='onchange')
+    model_name = fields.Char(string='Model', track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange')
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date', track_visibility='onchange')
     method_period = fields.Integer(string='Number of Months in a Period', required=True, readonly=True, default=1,
