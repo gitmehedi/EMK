@@ -211,3 +211,9 @@ class CostCentreBudgetLine(models.Model):
             self.active = False
         else:
             self.active = True
+
+    @api.one
+    @api.constrains('planned_amount')
+    def _check_planned_amount(self):
+        if self.planned_amount < 0:
+            raise UserError('You can\'t give negative value!!!')
