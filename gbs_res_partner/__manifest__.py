@@ -14,10 +14,10 @@
         'base_vat_bd',
     ],
     "data": [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'wizard/res_partner_wizard_view.xml',
-        # 'views/inherited_res_partner_view.xml',
-        # 'views/inherit_res_partner.xml',
+        'views/inherited_res_partner_view.xml',
+
     ],
     'installable': True,
     'application': False,
