@@ -13,15 +13,10 @@ class Currency(models.Model):
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
                                 string='Symbol Position', track_visibility='onchange',
                                 help="Determines where the currency symbol should be placed after or before the amount.")
-
+    active = fields.Boolean(default=True, track_visibility='onchange')
     code = fields.Char('Code', required=True, size=3, track_visibility='onchange')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01, track_visibility='onchange')
-    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
-                             states={'draft': [('readonly', False)]})
-    active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
-                            states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+
     @api.one
     def name_get(self):
         name = self.name
