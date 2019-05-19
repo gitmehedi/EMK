@@ -140,13 +140,25 @@
         <field name="arch" type="xml">
             <xpath expr="//search" position="replace">
                 <search string="Search Asset Category">
-                    <field name="name" string="Asset Type"/>
+                    <field name="name" string="Category"/>
                     <field name="journal_id"/>
-                    <group string="Group By...">
-                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
+                    <group expand='0' string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                     </group>
                 </search>
             </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
+        <field name="context">
+            {"search_default_active":'False',"search_default_pending":'True','default_type':
+            'purchase'}
         </field>
     </record>
 </odoo>
