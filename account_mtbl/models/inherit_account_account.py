@@ -50,7 +50,10 @@ class AccountAccount(models.Model):
     def onchange_levels(self):
         if self.level_id:
             res = {}
-            self.parent_id = 0
+            self.parent_id = None
+            self.code = None
+            self.name = None
+            self.user_type_id = None
             parents = self.search([('level_id', '=', self.level_id.parent_id.id)])
             res['domain'] = {
                 'parent_id': [('id', 'in', parents.ids), ('internal_type', '=', 'view')],
