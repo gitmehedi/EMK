@@ -11,6 +11,7 @@
         'account_asset',
         'account_fam',
         'account_category',
+        'account_tds',
     ],
     'data': [
         'views/asset_vendor_bills_view.xml',

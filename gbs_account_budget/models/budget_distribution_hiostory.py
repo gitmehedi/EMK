@@ -22,6 +22,7 @@ class BranchBudgetHistory(models.Model):
                                           string='Lines')
     bottom_line_budget_line = fields.Many2one('bottom.line.budget.line',string='Bottom line budget')
     branch_budget_id = fields.Many2one('branch.budget',string='Branch budget distribution')
+    active = fields.Boolean(string='Active')
 
 
 class BudgetBranchHistoryLine(models.Model):
@@ -33,6 +34,7 @@ class BudgetBranchHistoryLine(models.Model):
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount')
     theoritical_amount = fields.Float(string='Theoretical Amount')
+    active = fields.Boolean(string='Active')
 
 
 
@@ -58,6 +60,7 @@ class CostCentreBudgetHistory(models.Model):
                                           string='Lines')
     bottom_line_budget_line = fields.Many2one('bottom.line.budget.line',string='Bottom line budget')
     costcentre_budget_id = fields.Many2one('cost.centre.budget',string='Branch budget distribution')
+    active = fields.Boolean(string='Active')
 
 
 class CostCentreBudgetHistoryLine(models.Model):
@@ -69,3 +72,4 @@ class CostCentreBudgetHistoryLine(models.Model):
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount')
     theoritical_amount = fields.Float(string='Theoretical Amount')
+    active = fields.Boolean(string='Active')

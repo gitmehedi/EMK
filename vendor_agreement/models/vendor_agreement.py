@@ -50,7 +50,11 @@ class VendorAgreement(models.Model):
                                  states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('agreement'))
 
-    state = fields.Selection([('draft', "Draft"), ('confirm', "Confirmed"), ('done', "Done"), ], default='draft',
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirm', "Confirmed"),
+        ('done', "Done"),
+        ('cancel',"Reject")], default='draft',
                              track_visibility='onchange')
 
     agreement_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ], string='Type', required=True,
@@ -63,6 +67,7 @@ class VendorAgreement(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'agreement_id', readonly=True, copy=False)
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
+    active = fields.Boolean(track_visibility='onchange')
 
     @api.one
     @api.depends('payment_line_ids.amount')
@@ -136,6 +141,14 @@ class VendorAgreement(models.Model):
     @api.one
     def action_validate(self):
         self.state = 'done'
+
+    @api.multi
+    def action_draft(self):
+        self.write({'state': 'draft'})
+
+    @api.multi
+    def action_cancel(self):
+        self.write({'state': 'cancel'})
 
     @api.multi
     def unlink(self):

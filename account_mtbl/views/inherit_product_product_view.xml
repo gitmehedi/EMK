@@ -109,6 +109,9 @@
                            groups="account.group_account_user"/>
 
                 </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="supplier_taxes_id" widget="many2many_tags" string="VAT"
                            options='{"no_open": True,"no_create": True, "no_create_edit":True}'/>
