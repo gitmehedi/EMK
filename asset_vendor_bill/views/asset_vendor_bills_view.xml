@@ -47,6 +47,7 @@
                     <group>
                         <group>
                             <field string="Vendor" name="partner_id"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                    context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                                    domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
@@ -55,7 +56,7 @@
                                    attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
                         </group>
                         <group>
-                            <field name="is_asset" default="True"/>
+                            <field name="is_asset" default="True" invisible="True"/>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" string="Bill Date"/>
                             <field name="date_due"/>
@@ -92,7 +93,8 @@
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
-                                    <field name="account_tds_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="account_tds_id"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field name="tds_amount" invisible="1"/>
                                     <field name="discount" groups="base.group_no_one" invisible="1"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags"
@@ -134,7 +136,8 @@
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                     <field name="total_tds_amount" class="oe_subtotal_footer_separator"
-                                           attrs="{'invisible': [('is_tds_applicable', '=', False)]}" widget="monetary"/>
+                                           attrs="{'invisible': [('is_tds_applicable', '=', False)]}"
+                                           widget="monetary"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
