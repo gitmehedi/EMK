@@ -5,7 +5,7 @@
             name="Budget"
             parent="account.menu_finance_configuration"
             sequence="99"
-            groups="account.group_account_manager"/>
+            groups="account.group_account_manager,account.group_account_user"/>
 
     <record id="bottom_line_budget_tree" model="ir.ui.view">
         <field name="name">bottom.line.budget.tree</field>
@@ -28,13 +28,29 @@
         <field name="arch" type="xml">
             <form string="GL Budget">
                 <header>
-                    <button string="Confirm" name="action_budget_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_budget_approve" states="confirm" type="object" class="oe_highlight"/>
-                    <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object" />
-                    <button string="Cancel Budget" name="action_budget_cancel" states="confirm" type="object"/>
+                    <button string="Confirm" name="action_budget_confirm"
+                            groups="account.group_account_manager,account.group_account_user"
+                            states="draft" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_budget_approve"
+                            groups="account.group_account_manager"
+                            states="confirm" type="object" class="oe_highlight"/>
+                    <button string="Reset to Draft" name="action_budget_draft"
+                            groups="account.group_account_manager,account.group_account_user"
+                            states="cancel" type="object" />
+                    <button string="Cancel Budget" name="action_budget_cancel"
+                            groups="account.group_account_manager"
+                            states="confirm" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                                groups="account.group_account_manager"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="pull-left">
                         <h1>
                             <field name="name" nolabel="1"/>
@@ -65,9 +81,11 @@
                                     <field name="planned_amount"/>
                                     <field name="state" invisible="1"/>
                                     <button name="action_branch_distribute"
+                                            groups="account.group_account_manager,account.group_account_user"
                                             attrs="{'invisible' : [('state','!=','approve')]}"
                                             type="object" string="Branch Distribution" class="oe_highlight"/>
                                     <button name="action_cost_centre_distribute"
+                                            groups="account.group_account_manager,account.group_account_user"
                                             attrs="{'invisible' : [('state','!=','approve')]}"
                                             type="object" string="Cost Centre" class="oe_highlight"/>
                                 </tree>
@@ -110,5 +128,6 @@
             action="action_bottom_line_budget"
             id="menu_bottom_line_budget"
             parent="main_menu_account_budget"
+            groups="account.group_account_manager,account.group_account_user"
             sequence="1"/>
 </odoo>

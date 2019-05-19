@@ -9,10 +9,10 @@
                 <header>
                     <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate"
                             class="oe_highlight" groups="account.group_account_invoice"/>
-                    <button name="%(account.action_account_invoice_payment)d" type="action" states="open"
-                            string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
+                    <button name="action_payment_instruction" type="object" states="open"
+                            string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
                     <button name="%(account.action_account_invoice_refund)d" type='action' string='Ask Refund'
-                            groups="account.group_account_invoice"
+                            groups="base.group_system"
                             attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','paid'))]}"/>
                     <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
                             groups="account.group_account_invoice"/>
@@ -50,6 +50,9 @@
                                    context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                                    domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
+                            <field name="is_tds_applicable"/>
+                            <field name="inapplicable_type"
+                                   attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
                         </group>
                         <group>
                             <field name="is_asset" default="True"/>
@@ -68,31 +71,43 @@
                                 <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                            context="{'partner_id': parent.partner_id}"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
-                                    <field name="account_id" groups="account.group_account_user"
+                                    <field name="operating_unit_id" readonly="0"
+                                           options="{'no_create': True}" widget="selection"
+                                           groups="operating_unit.group_multi_operating_unit"/>
+                                    <field name="account_id" groups="account.group_account_user" invisible="1"
                                            domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
-                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                           domain="[('company_id', '=', parent.company_id)]"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting"
-                                           widget="many2many_tags"/>
+                                    <field name="asset_category_id"
+                                           domain="[('type', '=', 'purchase'),('parent_id', '=',False)]"
+                                           context="{'default_type': 'purchase'}"
+                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                    <field name="asset_type_id"
+                                           domain="[('type', '=', 'purchase'),('parent_id', '!=',False)]"
+                                           context="{'default_type': 'purchase'}"
+                                           attrs="{'required': [('asset_category_id','!=',False)]}"
+                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
-                                    <field name="discount" groups="base.group_no_one"/>
+                                    <field name="account_tds_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="tds_amount" invisible="1"/>
+                                    <field name="discount" groups="base.group_no_one" invisible="1"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags"
                                            context="{'type':parent.type}"
                                            domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"
                                            options="{'no_create': True}"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" invisible="1"/>
+                                    <field name="price_subtotal_without_vat"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                             </field>
                             <group>
                                 <group>
                                     <div class="oe_inline">
-                                        <field name="tax_line_ids">
+                                        <field name="tax_line_ids" groups="base.group_system">
                                             <tree editable="bottom" string="Taxes">
                                                 <field name="name"/>
                                                 <!--Need invisible fields for on_change to create all necessary info -->
@@ -100,10 +115,12 @@
                                                 <field name="sequence" invisible="1"/>
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
+                                                <field name="operating_unit_id"/>
                                                 <field name="account_analytic_id"
+                                                       string="Cost Centre"
                                                        domain="[('company_id', '=', parent.company_id)]"
                                                        groups="analytic.group_analytic_accounting"/>
-                                                <field name="amount"/>
+                                                <field name="amount" sum="Total"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </tree>
                                         </field>
@@ -116,6 +133,8 @@
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    <field name="total_tds_amount" class="oe_subtotal_footer_separator"
+                                           attrs="{'invisible': [('is_tds_applicable', '=', False)]}" widget="monetary"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
@@ -129,20 +148,22 @@
                             <group>
                                 <group>
                                     <field name="journal_id" groups="account.group_account_user"
-                                           options="{'no_create': True}"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                            attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id"
                                            invisible="1"/>
-                                    <field name="user_id" string="Responsible"/>
+                                    <field name="user_id" string="Responsible"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
-                                           name="account_id" groups="account.group_account_manager"/>
+                                           name="account_id" groups="account.group_account_manager"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field name="name" invisible="1"/>
                                     <field name="payment_term_id" options="{'no_create': True}"
                                            attrs="{'invisible': [('payment_term_id','=',False)]}"/>
                                 </group>
                                 <group>
                                     <field name="fiscal_position_id" options="{'no_create': True}"
-                                           placeholder="Auto-detect"/>
+                                           placeholder="Auto-detect" groups="base.group_system"/>
                                     <field name="move_id" groups="account.group_account_manager"
                                            attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="date"
@@ -150,6 +171,47 @@
                                            groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}"
                                            groups="base.group_multi_company"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <field name="payment_line_ids" readonly="1">
+                                <tree string="Payment lines">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="instruction_date"/>
+                                    <field name="partner_id"/>
+                                    <field name="default_debit_account_id" invisible="1"/>
+                                    <field name="default_credit_account_id" invisible="1"/>
+                                    <field name="amount"/>
+                                    <field name="currency_id"/>
+                                    <field name="is_sync" invisible="1"/>
+                                    <button name="sync" string="Sync" type="action"
+                                            icon="fa fa-check text-success"
+                                            attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                                    <button name="not_sync" string="Not Sync" type="action"
+                                            icon="fa-times-circle text-danger"
+                                            attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                                </tree>
+                                <form string="Payment">
+                                    <group>
+                                        <group>
+                                            <field name="invoice_id"/>
+                                            <field name="instruction_date"/>
+                                            <field name="partner_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="amount"/>
+                                            <field name="currency_id"/>
+                                            <field name="is_sync" invisible="1"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                            <group>
+                                <group></group>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="total_payment_amount" class="oe_subtotal_footer_separator"
+                                           widget="monetary"/>
                                 </group>
                             </group>
                         </page>
@@ -172,7 +234,12 @@
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="is_asset" invisible="True"/>
             </xpath>
-
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='asset_category_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='asset_type_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -229,7 +296,7 @@
     <record id="action_asset_invoice_refund_out_tree_form" model="ir.actions.act_window.view">
         <field eval="2" name="sequence"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_inherite_invoice_asset_type"/>
+        <field name="view_id" ref="asset_invoice_supplier_form"/>
         <field name="act_window_id" ref="action_asset_vendor_bill"/>
     </record>
 
