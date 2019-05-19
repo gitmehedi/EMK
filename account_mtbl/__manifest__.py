@@ -31,6 +31,7 @@
         'wizard/segment_wizard_view.xml',
         'wizard/branch_wizard_view.xml',
         'wizard/res_partner_bank_wizard_view.xml',
+        'wizard/res_currency_wizard_view.xml',
         'wizard/product_product_wizard_view.xml',
         'wizard/account_tag_wizard_view.xml',
         'wizard/account_journal_wizard_view.xml',
