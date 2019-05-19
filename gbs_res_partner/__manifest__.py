@@ -16,9 +16,10 @@
     "data": [
         'security/ir.model.access.csv',
         'wizard/res_partner_wizard_view.xml',
+        'wizard/vendor_designation_wizard_view.xml',
+        'views/vendor_designation_view.xml',
         'views/inherited_res_partner_view.xml',
-
-    ],
+],
     'installable': True,
     'application': False,
 }
