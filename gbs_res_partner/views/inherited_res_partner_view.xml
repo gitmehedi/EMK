@@ -50,6 +50,9 @@
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
             </xpath>
+            <xpath expr="//field[@name='function']" position="replace">
+                <field name="designation_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+            </xpath>
             <xpath expr="//sheet/notebook" position="after">
                 <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
                     <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
@@ -88,7 +91,7 @@
     <record model="ir.ui.view" id="inherit_partner_view_button_contracts">
         <field name="name">inherit.partner.view.button.contracts</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="account.partner_view_button_contracts_count" />
+        <field name="inherit_id" ref="account.partner_view_button_contracts_count"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(account.action_open_partner_analytic_accounts)d']" position="attributes">
                 <attribute name="invisible">1</attribute>

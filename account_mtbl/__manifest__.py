@@ -37,7 +37,7 @@
         'wizard/account_type_wizard_view.xml',
         'wizard/sevicing_channel_wizard_view.xml',
         'wizard/acquiring_channel_wizard_view.xml',
-        'wizard/account_acalytic_account_wizard_view.xml',
+        'wizard/account_analytic_account_wizard_view.xml',
         'wizard/account_account_wizard_view.xml',
         'views/report_view_access.xml',
         'views/act_window_access.xml',
