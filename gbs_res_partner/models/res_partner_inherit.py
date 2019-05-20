@@ -67,7 +67,18 @@ class ResPartner(models.Model):
                                              limit=1)
             if requested:
                 self.name = requested.change_name
-                self.active = requested.status
+                self.active = requested.status or False
+                self.website = requested.website or False
+                self.phone = requested.phone or False
+                self.mobile = requested.mobile or False
+                self.email = requested.email or False
+                self.street = requested.street or False
+                self.street2 = requested.street2 or False
+                self.zip = requested.zip or False
+                self.city = requested.city or False
+                self.state_id = requested.state_id.id or False
+                self.country_id = requested.country_id.id or False
+                self.bank_ids = [i.acc_number for i in requested.bank_ids if i.acc_number] or False
                 self.pending = False
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()
@@ -98,6 +109,7 @@ class ResPartner(models.Model):
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
+
 
     @api.constrains('bin', 'tin','mobile','vat')
     def _check_numeric_constrain(self):
@@ -139,6 +151,17 @@ class HistoryResPartner(models.Model):
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
+    website = fields.Char(string='Website')
+    phone = fields.Char(string='Phone')
+    mobile = fields.Char(string='Mobile')
+    email = fields.Char(string='Email')
+    street = fields.Char()
+    street2 = fields.Char()
+    zip = fields.Char(change_default=True)
+    city = fields.Char()
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     line_id = fields.Many2one('res.partner', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
