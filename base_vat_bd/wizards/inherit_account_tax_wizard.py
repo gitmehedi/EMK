@@ -2,8 +2,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import Warning
 
 
-class ProductProductWizard(models.TransientModel):
-    _name = 'product.product.wizard'
+class AccountTaxWizard(models.TransientModel):
+    _name = 'account.tax.wizard'
 
     @api.model
     def default_name(self):
@@ -17,40 +17,30 @@ class ProductProductWizard(models.TransientModel):
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
-    standard_price = fields.Float('Cost Price')
-    account_tds_id = fields.Many2one('tds.rule', string='TDS Rule')
-    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
-                                         string='Vendor Taxes')
-    default_code = fields.Char('Internal Reference', index=True)
-
 
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.env['product.product'].search(
+            name = self.env['account.tax'].search(
                 [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
-
-
 
     @api.multi
     def act_change_name(self):
         id = self._context['active_id']
 
-        name = self.env['product.product'].search([('name', '=ilike', self.name)])
+        name = self.env['account.tax'].search([('name', '=ilike', self.name)])
         if len(name) > 0:
             raise Warning('[Unique Error] Name must be unique!')
 
-        pending = self.env['history.product.product'].search([('state', '=', 'pending'), ('line_id', '=', id)])
+        pending = self.env['history.account.tax'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:
             raise Warning('[Warning] You already have a pending request!')
 
-        self.env['history.product.product'].create(
-            {'change_name': self.name, 'status': self.status, 'standard_price': self.standard_price,
-             'account_tds_id': self.account_tds_id.id, 'supplier_taxes_id': self.supplier_taxes_id.id,
-             'default_code': self.default_code, 'request_date': fields.Datetime.now(), 'line_id': id})
-        record = self.env['product.product'].search(
+        self.env['history.account.tax'].create(
+            {'change_name': self.name, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+        record = self.env['account.tax'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
             record.write({'pending': True})

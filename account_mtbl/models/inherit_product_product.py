@@ -42,6 +42,10 @@ class ProductProduct(models.Model):
             if requested:
                 self.name = requested.change_name
                 self.active = requested.status
+                self.standard_price = requested.standard_price
+                self.account_tds_id = requested.account_tds_id.id
+                self.supplier_taxes_id = requested.supplier_taxes_id.id
+                self.default_code = requested.default_code
                 self.pending = False
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()
@@ -93,6 +97,10 @@ class HistoryProductProduct(models.Model):
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
+    standard_price = fields.Float('Cost Price')
+    account_tds_id = fields.Many2one('tds.rule', string='TDS Rule')
+    supplier_taxes_id = fields.Many2many('account.tax', string='Vendor Taxes')
+    default_code = fields.Char('Internal Reference', index=True)
     line_id = fields.Many2one('product.product', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],
                              default='pending')

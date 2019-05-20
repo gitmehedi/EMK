@@ -22,6 +22,7 @@
         'account_fiscal_year',
         'operating_unit',
         'gbs_account_level',
+
     ],
     "data": [
         'security/ir.model.access.csv',

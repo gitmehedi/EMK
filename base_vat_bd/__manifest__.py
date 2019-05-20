@@ -8,9 +8,11 @@
         'account'
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'wizards/inherit_account_tax_wizard_view.xml',
         'views/inherited_res_partner_view.xml',
         'views/inherited_account_tax.xml',
-        ],
+    ],
     'description': 'Customer TAX And VAT Registration Details',
     'installable': True,
     'application': True,
