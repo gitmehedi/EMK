@@ -6,6 +6,9 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="File Processing Error">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <sheet>
                     <h1>
                         <field name="name"/>
@@ -37,12 +40,14 @@
         <field name="model">server.file.error</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="File Processing Error">
+            <tree string="File Processing Error"
+                  decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
                 <field name="name"/>
                 <field name="file_path"/>
                 <field name="ftp_ip"/>
                 <field name="process_date"/>
                 <field name="status"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -54,22 +59,26 @@
         <field name="arch" type="xml">
             <search string="File Processing Error Search">
                 <field name="process_date"/>
-                <field name="file_path"/>
-                <field name="ftp_ip"/>
-                <field name="status"/>
-                <field name="errors"/>
+                <group name="group_by">
+                    <filter string="Issued" name="state" icon="terp-personal"
+                            domain="[('state','=','issued')]"/>
+                    <filter string="Resolved" icon="terp-personal"
+                            domain="[('state','=','resolved')]"/>
+                </group>
             </search>
         </field>
     </record>
 
-    <act_window
-            name="File Processing Error"
-            id="action_server_file_error_form"
-            res_model="server.file.error"/>
+    <record id="action_server_file_error_form" model="ir.actions.act_window">
+        <field name="name">File Processing Error</field>
+        <field name="res_model">server.file.error</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">
+            {"search_default_state":'issued'}
+        </field>
+        <field name="search_view_id" ref="view_server_file_error_search"/>
+    </record>
 
-    <menuitem
-            parent="main_api_interface"
-            action="action_server_file_error_form"
-            id="server_file_error_menu"/>
-
+    <menuitem parent="main_api_interface" action="action_server_file_error_form" id="server_file_error_menu"/>
 </odoo>

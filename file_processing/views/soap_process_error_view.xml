@@ -41,7 +41,7 @@
                 <field name="name"/>
                 <field name="process_date"/>
                 <field name="status"/>
-                <field name="state"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -57,21 +57,23 @@
                 <group name="group_by">
                     <filter string="Issued" name="state" icon="terp-personal"
                             domain="[('state','=','issued')]"/>
-                    <filter string="Resolved" name="state" icon="terp-personal"
+                    <filter string="Resolved" icon="terp-personal"
                             domain="[('state','=','resolved')]"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <act_window
-            name="SOAP Process Error"
-            id="action_soap_process_error_form"
-            res_model="soap.process.error"/>
+    <record id="action_soap_process_error_form" model="ir.actions.act_window">
+        <field name="name">SOAP Process Error</field>
+        <field name="res_model">soap.process.error</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">
+            {"search_default_state":'issued'}
+        </field>
+        <field name="search_view_id" ref="view_soap_process_error_search"/>
+    </record>
 
-    <menuitem
-            parent="main_api_interface"
-            action="action_soap_process_error_form"
-            id="soap_process_error_menu"/>
-
+    <menuitem parent="main_api_interface" action="action_soap_process_error_form" id="soap_process_error_menu"/>
 </odoo>
