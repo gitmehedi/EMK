@@ -5,41 +5,32 @@ from odoo import api, fields, models, _
 from odoo.exceptions import Warning, ValidationError
 
 
-class AccountAnalyticAccount(models.Model):
-    _name = 'account.analytic.account'
-    _inherit = ['account.analytic.account', 'mail.thread', 'ir.needaction_mixin']
+class VendorDesignation(models.Model):
+    _name = 'vendor.designation'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc,state asc'
-    _description = 'Cost Centre'
+    _description = 'Vendor Designation'
 
     name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
-                       states={'draft': [('readonly', False)]})
-    code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    operating_unit_ids = fields.Many2many(string='Branch', track_visibility='onchange',
-                                          readonly=True, states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              track_visibility='onchange', )
 
-    line_ids = fields.One2many('history.account.analytic.account', 'line_id', string='Lines', readonly=True,
+    line_ids = fields.One2many('history.vendor.designation', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
-    @api.constrains('name', 'code')
+    @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name or self.code:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
-            code = self.search(
-                [('code', '=ilike', self.code.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('operating_unit_id', '=', self.operating_unit_id.id), '|',
+                 ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
-            if len(code) > 1:
-                raise Warning('[Unique Error] Code must be unique!')
-            if len(self.code) != 3 or not self.code.isdigit():
-                raise Warning(_('[Format Error] Code must be numeric with 3 digit!'))
+                raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
 
     @api.model
     def _needaction_domain_get(self):
@@ -60,12 +51,10 @@ class AccountAnalyticAccount(models.Model):
             names2 = self.search(domain, limit=limit).name_get()
         return list(set(names1) | set(names2))[:limit]
 
-    @api.onchange("name", "code")
+    @api.onchange("name")
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
-        if self.code:
-            self.code = str(self.code.strip()).upper()
 
     @api.one
     def act_draft(self):
@@ -129,45 +118,21 @@ class AccountAnalyticAccount(models.Model):
                 raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
 
             try:
-                return super(AccountAnalyticAccount, rec).unlink()
+                return super(VendorDesignation, rec).unlink()
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
 
 
-class HistoryAccountAnalyticAccount(models.Model):
-    _name = 'history.account.analytic.account'
-    _description = 'History Cost Centre'
+class HistoryVendorDesignation(models.Model):
+    _name = 'history.vendor.designation'
+    _description = 'History Vendor Designation'
     _order = 'id desc'
 
     change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
-    line_id = fields.Many2one('account.analytic.account', ondelete='restrict')
+    line_id = fields.Many2one('vendor.designation', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
-
-
-
-
-
-class AccountAnalyticLine(models.Model):
-    _name = 'account.analytic.line'
-    _inherit = ['account.analytic.line', 'mail.thread']
-    _order = 'id desc'
-    _description = 'Cost Centre Line'
-
-    name = fields.Char(required=True, size=50, track_visibility='onchange')
-
-    @api.one
-    def name_get(self):
-        name = self.name
-        if self.name:
-            name = '%s' % (self.name)
-        return (self.id, name)
-
-    @api.onchange("name")
-    def onchange_strips(self):
-        if self.name:
-            self.name = self.name.strip()
