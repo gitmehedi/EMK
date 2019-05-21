@@ -44,7 +44,7 @@ class ProductProduct(models.Model):
                 self.active = requested.status
                 self.standard_price = requested.standard_price
                 self.account_tds_id = requested.account_tds_id.id
-                self.supplier_taxes_id = requested.supplier_taxes_id.id
+                self.supplier_taxes_id = [i.id for i in requested.supplier_taxes_id] or False
                 self.default_code = requested.default_code
                 self.pending = False
                 requested.state = 'approve'
@@ -99,7 +99,9 @@ class HistoryProductProduct(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     standard_price = fields.Float('Cost Price')
     account_tds_id = fields.Many2one('tds.rule', string='TDS Rule')
-    supplier_taxes_id = fields.Many2many('account.tax', string='Vendor Taxes')
+    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
+                                         string='Vendor Taxes',
+                                         domain=[('type_tax_use', '=', 'purchase')])
     default_code = fields.Char('Internal Reference', index=True)
     line_id = fields.Many2one('product.product', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approve'), ('reject', 'Reject')],

@@ -79,6 +79,7 @@ class AccountAccountType(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
+                    'type': requested.type,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -124,5 +125,14 @@ class HistoryAccountAccountType(models.Model):
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.account.type', ondelete='restrict')
+    type = fields.Selection([
+        ('other', 'Regular'),
+        ('receivable', 'Receivable'),
+        ('payable', 'Payable'),
+        ('liquidity', 'Liquidity'),
+    ], default='other',
+        help="The 'Internal Type' is used for features available on " \
+             "different types of accounts: liquidity type is for cash or bank accounts" \
+             ", payable/receivable is for vendor/customer accounts.")
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
