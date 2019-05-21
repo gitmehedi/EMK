@@ -81,7 +81,7 @@
     </record>
 
     <record id="action_vendor_designation_tree" model="ir.actions.act_window">
-        <field name="name">Vendor Designation</field>
+        <field name="name">Designations</field>
         <field name="res_model">vendor.designation</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

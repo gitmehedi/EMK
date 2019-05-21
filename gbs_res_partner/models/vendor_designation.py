@@ -25,10 +25,9 @@ class VendorDesignation(models.Model):
 
     @api.constrains('name')
     def _check_unique_constrain(self):
-        if self.name or self.code:
+        if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), ('operating_unit_id', '=', self.operating_unit_id.id), '|',
-                 ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
 
@@ -38,8 +37,8 @@ class VendorDesignation(models.Model):
 
     @api.one
     def name_get(self):
-        if self.name and self.code:
-            name = '[%s] %s' % (self.code, self.name)
+        if self.name:
+            name = '%s' % (self.name)
         return (self.id, name)
 
     @api.model
@@ -136,3 +135,10 @@ class HistoryVendorDesignation(models.Model):
     line_id = fields.Many2one('vendor.designation', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
+
+
+class InheritResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    designation_id = fields.Many2one('vendor.designation', string="Designation")
+
