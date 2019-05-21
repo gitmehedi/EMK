@@ -5,7 +5,8 @@
     'website': 'http://www.genweb2.com',
     'category': 'Accounting & Finance',
     'depends': [
-        'account'
+        'account',
+        'mtbl_access',
     ],
     'data': [
         'security/ir.model.access.csv',
