@@ -26,7 +26,7 @@ class ResPartner(models.Model):
     property_account_payable_id = fields.Many2one(track_visibility='onchange')
     email = fields.Char(track_visibility='onchange')
     phone = fields.Char(track_visibility='onchange')
-    fax = fields.Char(track_visibility='onchange')
+    fax = fields.Char(track_visibility='onchange',size=16)
     mobile = fields.Char(track_visibility='onchange')
     street = fields.Char(track_visibility='onchange')
     street2 = fields.Char(track_visibility='onchange')
@@ -111,7 +111,7 @@ class ResPartner(models.Model):
             self.name = self.name.strip()
 
 
-    @api.constrains('bin', 'tin','mobile','vat')
+    @api.constrains('tax','bin', 'tin','vat','mobile','fax')
     def _check_numeric_constrain(self):
         if self.tin:
             tax = self.search(
@@ -141,6 +141,8 @@ class ResPartner(models.Model):
                 raise Warning(_('[Unique Error] TIN Number must be unique!'))
         if self.mobile and not self.mobile.isdigit():
             raise Warning('[Format Error] Mobile must be numeric!')
+        if self.fax and len(self.fax) != 16:
+            raise Warning('[Format Error] Fax must be 16 character!')
 
 
     """ All functions """
