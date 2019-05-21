@@ -112,6 +112,10 @@
                 <field name="name" filter_domain="[('name','ilike',self)]" string="Bottom Line Budgetary"/>
                 <field name="fiscal_year" filter_domain="[('fiscal_year','ilike',self)]" string="Year"/>
                 <group expand="0" string="Group By">
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','=','confirm')]"/>
+                    <filter string="Distribution" name="distribution" icon="terp-personal"
+                            domain="[('state','=','approve')]"/>
                     <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Period" domain="[]"  context="{'group_by':'fiscal_year'}"/>
                 </group>
@@ -125,6 +129,14 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="bottom_line_budget_search"/>
+        <field name="context">
+            {"search_default_pending":1,"search_default_distribution":1,}
+        </field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to start a new Budget.
+            </p>
+        </field>
     </record>
 
     <menuitem

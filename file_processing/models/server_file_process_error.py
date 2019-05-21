@@ -15,6 +15,11 @@ class ServerFileError(models.Model):
     ftp_ip = fields.Char(string='FTP IP')
     status = fields.Boolean(default=False, string='Status')
     errors = fields.Text(string='Error Details')
+    state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'issued')]
 
     @api.depends('file_path', 'ftp_ip')
     def _compute_name(self):

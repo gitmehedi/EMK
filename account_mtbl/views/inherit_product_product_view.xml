@@ -182,7 +182,7 @@
         </record>
 
         <record id="product_product_action1" model="ir.actions.act_window">
-            <field name="name">Products</field>
+            <field name="name"> Products &amp; Services</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_type">form</field>
