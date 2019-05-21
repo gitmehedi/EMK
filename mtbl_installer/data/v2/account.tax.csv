@@ -1,2 +1,2 @@
-name,active,VAT Scope,VAT Computation,VAT Account,VAT Account on Refunds,Label on Invoices,VAT Group,Include in Analytic Cost,Amount,active,pending,state
-Tax 5.00%,True,Purchases,Percentage of Price,Tax Paid,Tax Paid,5.00%,Taxes,TRUE,5,True,False,approve
+name,active,VAT Scope,VAT Computation,VAT Account,VAT Account on Refunds,Label on Invoices,VAT Group,Cost Centre,Amount,active,pending,state
+VAT 2.00%,True,Purchases,Percentage of Price,VAT/Tax on Other Activities,VAT/Tax on Other Activities,2.00%,Taxes,TRUE,5,True,False,approve
