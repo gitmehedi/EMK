@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions name="SingleDebitMultipleCreditCorrectionInterfaceHttpService" targetNamespace="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1/Binding" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1/Binding" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <import location="SingleDebitMultipleCreditCorrectionInterface.wsdl" namespace="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1"/>
+  <binding name="SingleDebitMultipleCreditCorrectionInterfaceHttpPortBinding" type="ns1:SingleDebitMultipleCreditCorrectionInterface" xmlns:ns1="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="singleDebitMultipleCreditCorrection">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SingleDebitMultipleCreditCorrectionFaultMsg">
+        <soap:fault name="SingleDebitMultipleCreditCorrectionFaultMsg" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="SingleDebitMultipleCreditCorrectionInterfaceHttpService">
+    <port binding="tns:SingleDebitMultipleCreditCorrectionInterfaceHttpPortBinding" name="SingleDebitMultipleCreditCorrectionInterfaceHttpPort">
+      <soap:address location="http://localhost:9084/SingleDebitMultipleCreditCorrection/SingleDebitMultipleCreditCorrectionInterfaceHttpService"/>
+    </port>
+  </service>
+</definitions>

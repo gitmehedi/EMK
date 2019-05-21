@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema targetNamespace="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1" version="1.0" xmlns:ns1="http://TCS.BANCS.Adapter/BANCSSchema" xmlns:tns="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace="http://TCS.BANCS.Adapter/BANCSSchema" schemaLocation="SingleDebitMultipleCreditCorrectionInterface_schema1.xsd"/>
+
+  <xs:element name="singleDebitMultipleCreditCorrection" type="tns:singleDebitMultipleCreditCorrection"/>
+
+  <xs:element name="singleDebitMultipleCreditCorrectionResponse" type="tns:singleDebitMultipleCreditCorrectionResponse"/>
+
+  <xs:element name="string_element" nillable="true" type="xs:string"/>
+
+  <xs:complexType name="singleDebitMultipleCreditCorrection">
+    <xs:sequence>
+      <xs:element minOccurs="1" name="SnglDrMultCrCorrectionRq" type="ns1:SnglDrMultCrCorrectionRq_Type"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="singleDebitMultipleCreditCorrectionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="1" name="SnglDrMultCrCorrectionRs" type="ns1:SnglDrMultCrCorrectionRs_Type"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,113 @@
+request 
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <v1:singleDebitMultipleCreditCorrection>
+         <!--Optional:-->
+         <SnglDrMultCrCorrectionRq>
+            <ban:RqHeader>
+               <ban:InstNum>003</ban:InstNum>
+               <ban:BrchNum>41101</ban:BrchNum>
+               <ban:TellerNum>1101</ban:TellerNum>
+               <ban:Flag4>W</ban:Flag4>
+               <ban:Flag5>Y</ban:Flag5>
+               
+            </ban:RqHeader>
+            <ban:Data>
+               <!--Optional:-->
+               <ban:AcctNum>100009297549</ban:AcctNum>
+               <!--Optional:-->
+               <ban:Amt>3000</ban:Amt>
+               <!--Optional:-->
+               <ban:AcctCur>BDT</ban:AcctCur>
+               <!--Optional:-->
+               <ban:CorrectJrnlNum>554242</ban:CorrectJrnlNum>
+               <!--Optional:-->
+               <ban:Rmrk>SDMC</ban:Rmrk>
+               <!--Zero or more repetitions:-->
+               <ban:Coll>
+                  <!--Optional:-->
+                  <ban:BnfcryAcctNum>99399411013</ban:BnfcryAcctNum>
+                  <!--Optional:-->
+                  <ban:CrAmt>1000</ban:CrAmt>
+                  <!--Optional:-->
+                  <ban:ToAcctCur>BDT</ban:ToAcctCur>
+                  <!--Optional:-->
+                  <ban:Rmrk1>SDMCCorr</ban:Rmrk1>
+               </ban:Coll>
+                <ban:Coll>
+                  <!--Optional:-->
+                  <ban:BnfcryAcctNum>100009297731</ban:BnfcryAcctNum>
+                  <!--Optional:-->
+                  <ban:CrAmt>1000</ban:CrAmt>
+                  <!--Optional:-->
+                  <ban:ToAcctCur>BDT</ban:ToAcctCur>
+                  <!--Optional:-->
+                  <ban:Rmrk1>SDMCCorr</ban:Rmrk1>
+               </ban:Coll>
+                <ban:Coll>
+                  <!--Optional:-->
+                  <ban:BnfcryAcctNum>100009297538</ban:BnfcryAcctNum>
+                  <!--Optional:-->
+                  <ban:CrAmt>1000</ban:CrAmt>
+                  <!--Optional:-->
+                  <ban:ToAcctCur>BDT</ban:ToAcctCur>
+                  <!--Optional:-->
+                  <ban:Rmrk1>SDMCCorr</ban:Rmrk1>
+               </ban:Coll>
+
+            </ban:Data>
+         </SnglDrMultCrCorrectionRq>
+      </v1:singleDebitMultipleCreditCorrection>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+
+response
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns3:singleDebitMultipleCreditCorrectionResponse xmlns:ns2="http://TCS.BANCS.Adapter/BANCSSchema" xmlns:ns3="http://BaNCS.TCS.com/webservice/SingleDebitMultipleCreditCorrectionInterface/v1">
+         <SnglDrMultCrCorrectionRs>
+            <ns2:RsHeader>
+               <ns2:Filler1>0</ns2:Filler1>
+               <ns2:MsgLen>0</ns2:MsgLen>
+               <ns2:Filler2>00</ns2:Filler2>
+               <ns2:MsgTyp>0</ns2:MsgTyp>
+               <ns2:Filler3>78</ns2:Filler3>
+               <ns2:CycNum>0</ns2:CycNum>
+               <ns2:MsgNum>0</ns2:MsgNum>
+               <ns2:SegNum>0</ns2:SegNum>
+               <ns2:FrntEndNum>0</ns2:FrntEndNum>
+               <ns2:TermlNum>2245</ns2:TermlNum>
+               <ns2:InstNum>3</ns2:InstNum>
+               <ns2:BrchNum>41101</ns2:BrchNum>
+               <ns2:WorkstationNum>45</ns2:WorkstationNum>
+               <ns2:TellerNum>1101</ns2:TellerNum>
+               <ns2:TrnNum>034274</ns2:TrnNum>
+               <ns2:JrnlNum>554310</ns2:JrnlNum>
+               <ns2:RsHdrDt>0112</ns2:RsHdrDt>
+               <ns2:Filler4>2</ns2:Filler4>
+               <ns2:Filler5>0</ns2:Filler5>
+               <ns2:Filler6>46</ns2:Filler6>
+               <ns2:Flag1>0</ns2:Flag1>
+               <ns2:Flag2>2</ns2:Flag2>
+               <ns2:Flag3>0</ns2:Flag3>
+               <ns2:Flag4>0</ns2:Flag4>
+               <ns2:Filler9>00000000        000000000000000000000000000000                                   0000</ns2:Filler9>
+               <ns2:OutputType>08</ns2:OutputType>
+            </ns2:RsHeader>
+            <ns2:Stat>
+               <ns2:OkMessage>
+                  <ns2:RcptData>O.K.</ns2:RcptData>
+                  <ns2:Filler2>O.K.</ns2:Filler2>
+                  <ns2:CustNum/>
+                  <ns2:Filler1>0000</ns2:Filler1>
+                  <ns2:AcctNum/>
+               </ns2:OkMessage>
+            </ns2:Stat>
+         </SnglDrMultCrCorrectionRs>
+      </ns3:singleDebitMultipleCreditCorrectionResponse>
+   </soap:Body>
+</soap:Envelope>

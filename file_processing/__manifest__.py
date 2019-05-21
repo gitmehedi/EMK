@@ -19,6 +19,7 @@
         "view/server_file_process_view.xml",
         "view/server_file_error_view.xml",
         "view/soap_process_view.xml",
+        "view/soap_process_error_view.xml",
     ],
     "application": True,
     "installable": True,
