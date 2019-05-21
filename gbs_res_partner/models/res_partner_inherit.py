@@ -113,6 +113,22 @@ class ResPartner(models.Model):
 
     @api.constrains('bin', 'tin','mobile','vat')
     def _check_numeric_constrain(self):
+        tax = self.search(
+            [('tax', '=ilike', self.tax.strip()), '|', ('active', '=', True), ('active', '=', False)])
+        vat = self.search(
+            [('vat', '=ilike', self.vat.strip()), '|', ('active', '=', True), ('active', '=', False)])
+        bin = self.search(
+            [('bin', '=ilike', self.bin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+        tin = self.search(
+            [('tin', '=ilike', self.tin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+        if len(tax) > 1:
+            raise Warning(_('[Unique Error] Trade License must be unique!'))
+        if len(vat) > 1:
+            raise Warning(_('[Unique Error] VAT Registration must be unique!'))
+        if len(bin) > 1:
+            raise Warning(_('[Unique Error] BIN Number must be unique!'))
+        if len(tin) > 1:
+            raise Warning(_('[Unique Error] TIN Number must be unique!'))
         if self.bin:
             if len(self.bin) != 9 or not self.bin.isdigit():
                 raise Warning('[Format Error] BIN must be numeric with 9 digit!')

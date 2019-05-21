@@ -95,7 +95,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context">
-            {"search_default_operating_unit_id":1,"search_default_active":'False',"search_default_pending":'True',}
+            {"search_default_active":'False',"search_default_pending":'True',}
         </field>
         <field name="search_view_id" ref="view_sub_operating_unit_search"/>
         <field name="help" type="html">
@@ -109,3 +109,5 @@
               parent="account.account_account_menu" sequence="14"
               groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
 </odoo>
+
+<!--"search_default_operating_unit_id":1,-->

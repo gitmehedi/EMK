@@ -38,7 +38,7 @@ class AcquiringChannel(models.Model):
             if len(code) > 1:
                 raise Warning(_('[Unique Error] Code must be unique!'))
             if len(self.code) != 2 or not self.code.isdigit():
-                raise Warning(_('[Format Error] Code must be numeric with 3 digit!'))
+                raise Warning(_('[Format Error] Code must be numeric with 2 digit!'))
 
     @api.model
     def _needaction_domain_get(self):
