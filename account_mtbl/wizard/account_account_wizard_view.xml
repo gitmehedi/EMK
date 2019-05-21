@@ -8,9 +8,11 @@
                 <group>
                     <group>
                         <field name="name"/>
+                        <field name="user_type_id"/>
                     </group>
                     <group>
                         <field name="status"/>
+                        <field name="currency_id"/>
                     </group>
                 </group>
                 <footer>
