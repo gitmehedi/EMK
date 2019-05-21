@@ -114,7 +114,6 @@
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
                    position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                <attribute name="required">1</attribute>
                 <attribute name="string">Cost Centre</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
