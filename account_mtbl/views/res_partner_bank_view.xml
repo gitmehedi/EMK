@@ -30,6 +30,9 @@
                                     groups="mtbl_access.group_mtbl_sys_admin"/>
                             <button name="act_reject" string="Reject" type="object" states="draft"
                                     groups="mtbl_access.group_mtbl_sys_admin"/>
+                            <button name="%(action_res_partner_bank_wizard)d" string="Edit" type="action"
+                                    class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                                    attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                             <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
                                     groups="mtbl_access.group_mtbl_sys_admin"
                                     attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
@@ -49,7 +52,7 @@
                                 <group>
                                     <field name="partner_id" domain="[('supplier','=','1')]"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                    <field name="currency_id" groups="base.group_multi_currency"
+                                    <field name="currency_id" groups="base.group_multi_currency" invisible="1"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 </group>
                             </group>
@@ -57,7 +60,7 @@
                                 <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
                                       decoration-bf="state in ('pending',)"
                                       decoration-danger="state=='reject'">
-                                    <field name="change_name"/>
+                                    <field name="acc_number"/>
                                     <field name="request_date"/>
                                     <field name="change_date"/>
                                     <field name="status"/>
@@ -94,7 +97,7 @@
         </record>
 
         <record id="base.action_res_partner_bank_account_form" model="ir.actions.act_window">
-            <field name="name">Bank Accounts</field>
+            <field name="name">Partner Bank Accounts</field>
             <field name="res_model">res.partner.bank</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

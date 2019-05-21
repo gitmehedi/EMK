@@ -50,7 +50,8 @@ class ResPartnerBank(models.Model):
                                              limit=1)
             if requested:
                 self.write({
-                    'name': self.name if not requested.change_name else requested.change_name,
+                    'acc_number': self.acc_number if not requested.acc_number else requested.acc_number,
+                    'bank_id': requested.bank_id.id or False,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -99,10 +100,11 @@ class HistoryPartnerBank(models.Model):
     _description = 'History Partner Bank Account'
     _order = 'id desc'
 
-    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    acc_number = fields.Char('Proposed Account Number', size=50, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('res.partner.bank', ondelete='restrict')
+    bank_id = fields.Many2one('res.bank', string="Bank")
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')

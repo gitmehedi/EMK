@@ -78,7 +78,7 @@ class ResPartner(models.Model):
                 self.city = requested.city or False
                 self.state_id = requested.state_id.id or False
                 self.country_id = requested.country_id.id or False
-                self.bank_ids = [i.acc_number for i in requested.bank_ids if i.acc_number] or False
+                self.bank_ids = [i.id for i in requested.bank_ids] or False
                 self.pending = False
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()

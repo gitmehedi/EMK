@@ -13,6 +13,7 @@
         "account_fiscal_year",
     ],
     "data": [
+        'security/ir.model.access.csv',
         "wizard/date_range_generator.xml",
         "wizard/account_period_wizard_view.xml",
         "wizard/account_period_type_wizard_view.xml",

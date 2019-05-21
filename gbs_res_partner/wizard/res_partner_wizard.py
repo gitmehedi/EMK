@@ -26,7 +26,7 @@ class ResPartnerWizard(models.TransientModel):
     zip = fields.Char(change_default=True)
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
-    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',default=lambda self: self.env.user.company_id.country_id.id)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
 
 

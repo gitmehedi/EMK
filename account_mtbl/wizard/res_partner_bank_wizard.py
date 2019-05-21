@@ -8,7 +8,7 @@ class ResPartnerBAnkWizard(models.TransientModel):
     @api.model
     def default_name(self):
         context = self._context
-        return self.env[context['active_model']].search([('id', '=', context['active_id'])]).name
+        return self.env[context['active_model']].search([('id', '=', context['active_id'])]).acc_number
 
     @api.model
     def default_status(self):
@@ -16,22 +16,23 @@ class ResPartnerBAnkWizard(models.TransientModel):
         return self.env[context['active_model']].search([('id', '=', context['active_id'])]).active
 
     status = fields.Boolean(string='Active', default=default_status)
-    name = fields.Char(string='Requested Name')
+    acc_number = fields.Char(string='Requested Account Number')
+    bank_id = fields.Many2one('res.bank', string="Bank")
 
-    @api.constrains('name')
+    @api.constrains('acc_number')
     def _check_unique_constrain(self):
-        if self.name:
-            name = self.env['res.partner.bank'].search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
-            if len(name) > 1:
+        if self.acc_number:
+            acc_number = self.env['res.partner.bank'].search(
+                [('acc_number', '=ilike', self.acc_number.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(acc_number) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
     @api.multi
     def act_change_name(self):
         id = self._context['active_id']
 
-        name = self.env['res.partner.bank'].search([('name', '=ilike', self.name)])
-        if len(name) > 0:
+        acc_number = self.env['res.partner.bank'].search([('acc_number', '=ilike', self.acc_number)])
+        if len(acc_number) > 0:
             raise Warning('[Unique Error] Name must be unique!')
 
         pending = self.env['history.res.partner.bank'].search([('state', '=', 'pending'), ('line_id', '=', id)])
@@ -39,7 +40,7 @@ class ResPartnerBAnkWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.res.partner.bank'].create(
-            {'change_name': self.name, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+            {'acc_number': self.acc_number, 'bank_id':self.bank_id.id, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
         record = self.env['res.partner.bank'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:

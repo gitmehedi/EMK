@@ -26,8 +26,6 @@ access_servicing_channel_user,account_servicing_channel_user,model_servicing_cha
 access_history_servicing_channel_admin,account_history_servicing_channel_admin,model_history_servicing_channel,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 access_history_servicing_channel_user,account_history_servicing_channel_user,model_history_servicing_channel,,1,0,0,0
 
-access_res_currency_admin,account_res_currency_admin,base.model_res_currency,mtbl_access.group_mtbl_sys_admin,1,1,1,1
-
 access_res_bank_admin,account_res_bank_admin,base.model_res_bank,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 access_res_bank_user,account_res_bank_user,base.model_res_bank,,1,0,0,0
 
@@ -95,3 +93,12 @@ access_history_res_partner_bank_usr,access_res_partner_bank_usr,account_mtbl.mod
 
 access_res_partner_bank_wizard_mng,access_res_partner_bank_wizard_mng,account_mtbl.model_res_partner_bank_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 access_res_partner_bank_wizard_usr,access_res_partner_bank_wizard_usr,account_mtbl.model_res_partner_bank_wizard,base.group_user,1,0,0,0
+
+access_res_currency_mng,access_res_currency_mng,account_mtbl.model_res_currency,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_res_currency_usr,access_res_currency_usr,account_mtbl.model_res_currency,base.group_user,1,0,0,0
+
+access_history_res_currency_mng,access_res_currency_mng,account_mtbl.model_history_res_currency,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_history_res_currency_usr,access_res_currency_usr,account_mtbl.model_history_res_currency,base.group_user,1,0,0,0
+
+access_res_currency_wizard_mng,access_res_currency_wizard_mng,account_mtbl.model_res_currency_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_res_currency_wizard_usr,access_res_currency_wizard_usr,account_mtbl.model_res_currency_wizard,base.group_user,1,0,0,0

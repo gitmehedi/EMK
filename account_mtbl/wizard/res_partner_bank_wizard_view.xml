@@ -7,7 +7,8 @@
             <form string="Proposed">
                 <group>
                     <group>
-                        <field name="name"/>
+                        <field name="acc_number"/>
+                        <field name="bank_id" options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                     <group>
                         <field name="status"/>
