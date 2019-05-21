@@ -16,28 +16,30 @@ class AccountInvoice(models.Model):
             if self.account_id and self.operating_unit_id and self.account_analytic_id and \
                 gl_budget_pool and branch_budget_pool and cost_budget_pool and \
                 self.price_subtotal_without_vat > gl_budget_pool.planned_amount and \
-                self.price_subtotal_without_vat > branch_budget_pool.planned_amount and \
-                self.price_subtotal_without_vat > cost_budget_pool.planned_amount:
+                self.price_subtotal_without_vat > branch_budget_pool.planned_amount-branch_budget_pool.practical_amount and \
+                self.price_subtotal_without_vat > cost_budget_pool.planned_amount-cost_budget_pool.practical_amount:
                 msg = 'The amount for ' + self.product_id.name + ' is crossed planned amount for GL budget and branch wise budget and cost centre wise budget.'
             elif self.account_id and self.price_subtotal_without_vat>gl_budget_pool.planned_amount:
                 msg = 'The amount for '+self.product_id.name+' is crossed planned amount for GL budget.'
             elif self.operating_unit_id and branch_budget_pool and \
                     self.account_analytic_id and cost_budget_pool and \
-                    self.price_subtotal_without_vat > branch_budget_pool.planned_amount and \
-                    self.price_subtotal_without_vat > cost_budget_pool.planned_amount:
+                    self.price_subtotal_without_vat > branch_budget_pool.planned_amount-branch_budget_pool.practical_amount and \
+                    self.price_subtotal_without_vat > cost_budget_pool.planned_amount-cost_budget_pool.practical_amount:
                 msg = 'The amount for ' + self.product_id.name + ' is crossed planned amount for branch wise budget and cost centre wise budget.'
             elif self.operating_unit_id and branch_budget_pool and \
-                    self.price_subtotal_without_vat>branch_budget_pool.planned_amount:
+                    self.price_subtotal_without_vat>branch_budget_pool.planned_amount-branch_budget_pool.practical_amount:
                 msg = 'The amount for '+self.product_id.name+' is crossed planned amount for branch wise budget.'
             elif self.account_analytic_id and cost_budget_pool and \
-                    self.price_subtotal_without_vat > cost_budget_pool.planned_amount:
+                    self.price_subtotal_without_vat > cost_budget_pool.planned_amount-cost_budget_pool.practical_amount:
                 msg = 'The amount for '+self.product_id.name+' is crossed planned amount for cost centre wise budget.'
             else:
                 msg = False
+
             if msg:
                 warning_mess = {
                     'title': _('Cross the budget!'),
                     'message': _(msg)
                 }
                 return {'warning': warning_mess}
+
             return {}
