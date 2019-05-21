@@ -31,6 +31,9 @@
             <xpath expr="//field[@name='email']" position="after">
                 <field name="pending" invisible="True"/>
             </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
             <xpath expr="//sheet" position="before">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft"

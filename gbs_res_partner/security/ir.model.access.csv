@@ -8,3 +8,5 @@ access_history_res_partner_usr,access_history_res_partner_usr,gbs_res_partner.mo
 
 access_res_partner_wizard_mng,access_res_partner_wizard_mng,gbs_res_partner.model_res_partner_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
 access_res_partner_wizard_usr,access_res_partner_wizard_usr,gbs_res_partner.model_res_partner_wizard,base.group_user,1,0,0,0
+
+access_vendor_designation_mng,access_vendor_designation_mng,gbs_res_partner.model_vendor_designation,mtbl_access.group_mtbl_sys_admin,1,1,1,1

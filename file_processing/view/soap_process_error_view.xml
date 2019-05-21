@@ -37,11 +37,11 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="SOAP Process Error"
-                  decoration-danger="'state','=','issued'" decoration-muted="'state','=','issued'">
+                  decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
                 <field name="name"/>
                 <field name="process_date"/>
                 <field name="status"/>
-                <field name="state" invisible="1"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -54,7 +54,12 @@
             <search string="SOAP Process Error Search">
                 <field name="process_date"/>
                 <field name="status"/>
-                <field name="errors"/>
+                <group name="group_by">
+                    <filter string="Issued" name="state" icon="terp-personal"
+                            domain="[('state','=','issued')]"/>
+                    <filter string="Resolved" name="state" icon="terp-personal"
+                            domain="[('state','=','resolved')]"/>
+                </group>
             </search>
         </field>
     </record>

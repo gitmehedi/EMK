@@ -12,6 +12,7 @@
     'version': '10.0.0.1',
     'category': 'Accounting & Finance',
     'depends': ['mail',
+                'account',
                 'account_tds',
                 'sub_operating_unit',
                 ],

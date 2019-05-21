@@ -25,8 +25,8 @@ class AccountAccount(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange', )
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Reject')], default='draft',
+                             track_visibility='onchange',string='Status' )
 
     line_ids = fields.One2many('history.account.account', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
