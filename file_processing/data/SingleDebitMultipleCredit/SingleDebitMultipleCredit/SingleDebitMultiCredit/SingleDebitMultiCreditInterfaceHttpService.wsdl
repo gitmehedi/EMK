@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions name="SingleDebitMultiCreditInterfaceHttpService" targetNamespace="http://BaNCS.TCS.com/webservice/SingleDebitMultiCreditInterface/v1/Binding" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://BaNCS.TCS.com/webservice/SingleDebitMultiCreditInterface/v1/Binding" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <import location="SingleDebitMultiCreditInterface.wsdl" namespace="http://BaNCS.TCS.com/webservice/SingleDebitMultiCreditInterface/v1"/>
+  <binding name="SingleDebitMultiCreditInterfaceHttpPortBinding" type="ns1:SingleDebitMultiCreditInterface" xmlns:ns1="http://BaNCS.TCS.com/webservice/SingleDebitMultiCreditInterface/v1">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="singleDebitMultiCredit">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SingleDebitMultiCreditFaultMsg">
+        <soap:fault name="SingleDebitMultiCreditFaultMsg" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="SingleDebitMultiCreditInterfaceHttpService">
+    <port binding="tns:SingleDebitMultiCreditInterfaceHttpPortBinding" name="SingleDebitMultiCreditInterfaceHttpPort">
+      <soap:address location="http://localhost:9084/SingleDebitMultiCredit/SingleDebitMultiCreditInterfaceHttpService"/>
+    </port>
+  </service>
+</definitions>

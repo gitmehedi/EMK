@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_soap_process_error_form">
+        <field name="name">SOAP Process Error</field>
+        <field name="model">soap.process.error</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="SOAP Process Error">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="name"/>
+                    <group>
+                        <group>
+                            <field name="process_date"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+
+                        </group>
+                    </group>
+                    <separator string="Error Details"/>
+                    <field name="errors"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_soap_process_error_tree">
+        <field name="name">SOAP Process</field>
+        <field name="model">soap.process.error</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="SOAP Process Error"
+                  decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
+                <field name="name"/>
+                <field name="process_date"/>
+                <field name="status"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_soap_process_error_search">
+        <field name="name">SOAP Process</field>
+        <field name="model">soap.process.error</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="SOAP Process Error Search">
+                <field name="process_date"/>
+                <field name="status"/>
+                <group name="group_by">
+                    <filter string="Issued" name="state" icon="terp-personal"
+                            domain="[('state','=','issued')]"/>
+                    <filter string="Resolved" name="state" icon="terp-personal"
+                            domain="[('state','=','resolved')]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <act_window
+            name="SOAP Process Error"
+            id="action_soap_process_error_form"
+            res_model="soap.process.error"/>
+
+    <menuitem
+            parent="main_api_interface"
+            action="action_soap_process_error_form"
+            id="soap_process_error_menu"/>
+
+</odoo>
