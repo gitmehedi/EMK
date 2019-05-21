@@ -24,11 +24,17 @@
         <field name="arch" type="xml">
             <form string="Branch Distribution" create="false">
                 <header>
-                    <button string="Approve" name="action_budget_approve" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object" />
-                    <button string="Cancel Budget" name="action_budget_cancel" type="object"
+                    <button string="Approve" name="action_budget_approve"
+                            groups="account.group_account_manager"
+                            states="draft" type="object" class="oe_highlight"/>
+                    <button string="Reset to Draft" name="action_budget_draft"
+                            groups="account.group_account_manager,account.group_account_user"
+                            states="cancel" type="object" />
+                    <button string="Cancel Budget" name="action_budget_cancel"
+                            type="object" groups="account.group_account_manager"
                             attrs="{'invisible': ['|',('state','!=','draft'),('branch_budget_history_ids','!=', [])]}"/>
                     <button string="Amendment" name="action_amendment" states="approve" type="object"
+                            groups="account.group_account_manager"
                             confirm="Are you sure to Amendment this budget?"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
                 </header>

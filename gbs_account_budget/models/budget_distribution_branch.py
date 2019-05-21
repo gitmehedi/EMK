@@ -41,6 +41,7 @@ class BranchBudget(models.Model):
                                               default=lambda self: self.env.context.get('active_id'))
     branch_budget_history_ids = fields.One2many('branch.budget.history', 'branch_budget_id', readonly=True,
                                                 string='History Lines')
+    active = fields.Boolean(default=True, track_visibility='onchange',compute='_compute_active')
 
     @api.multi
     def action_budget_approve(self):
@@ -140,6 +141,7 @@ class BranchBudget(models.Model):
             'approve_date': self.approve_date,
             'branch_budget_id': self.id,
             'bottom_line_budget_line': self.bottom_line_budget_line.id,
+            'active': self.active,
         }
         history = history_pools.create(res)
         if history:
@@ -152,10 +154,17 @@ class BranchBudget(models.Model):
                 'planned_amount': line.planned_amount,
                 'practical_amount': line.practical_amount,
                 'theoritical_amount': line.practical_amount,
+                'active': self.active,
             }
             history_line_pools.create(lines)
 
         self.write({'state': 'draft'})
+
+    def _compute_active(self):
+        if self.bottom_line_budget_line and self.bottom_line_budget_line.active ==False:
+            self.active = False
+        else:
+            self.active = True
 
     @api.model
     def _needaction_domain_get(self):
@@ -171,6 +180,7 @@ class BudgetBranchDistributionLine(models.Model):
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount',compute='_compute_practical_amount')
     theoritical_amount = fields.Float(string='Theoretical Amount' ,compute='_compute_theoritical_amount')
+    active = fields.Boolean(default=True,compute='_compute_active')
 
     def _compute_practical_amount(self):
         for line in self:
@@ -219,3 +229,10 @@ class BudgetBranchDistributionLine(models.Model):
                 theo_amt = line.planned_amount
 
             line.theoritical_amount = theo_amt
+
+    def _compute_active(self):
+        if self.branch_budget_id.bottom_line_budget_line and \
+                        self.branch_budget_id.bottom_line_budget_line.active ==False:
+            self.active = False
+        else:
+            self.active = True

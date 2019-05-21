@@ -23,6 +23,7 @@ class BottomLineBudget(models.Model):
                                        default=lambda self: self.env.user)
     approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange',
                                        default=lambda self: self.env.user)
+    active = fields.Boolean(default=True,track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -69,6 +70,9 @@ class BottomLineBudget(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'confirm')]
 
+    # @api.onchange('active')
+    # def onchange_active(self):
+    #     self.bottom_line_budgets.write({'active': self.active})
 
 class BottomLineBudgetLine(models.Model):
     _name = "bottom.line.budget.line"
@@ -84,6 +88,14 @@ class BottomLineBudgetLine(models.Model):
         ('confirm', 'Confirmed'),
         ('approve', 'Approved'),
     ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
+    active = fields.Boolean(default=True,compute='_compute_active')
+
+    def _compute_active(self):
+        if self.bottom_line_budget and \
+                        self.bottom_line_budget.active == False:
+            self.active = False
+        else:
+            self.active = True
 
     @api.multi
     def action_branch_distribute(self):

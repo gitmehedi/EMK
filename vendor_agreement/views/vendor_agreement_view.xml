@@ -37,13 +37,19 @@
                                     string="Validate" states="confirm"
                                     groups="vendor_agreement.group_vendor_agreement_manager"
                                     class="oe_highlight"/>
+                            <button name="action_cancel" type="object"
+                                    string="Cancel" states="confirm"
+                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
+                            <button name="action_draft" type="object"
+                                    string="Reset to draft" states="cancel"
+                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Amendment" name="action_amendment" states="done"
                                     type="object" class="oe_read_only"
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Payment" name="action_payment" states="done"
                                     type="object" class="oe_read_only"
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>
-                            <field name="state" widget="statusbar"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                         </header>
                         <sheet>
                             <div class="oe_button_box" name="button_box">
