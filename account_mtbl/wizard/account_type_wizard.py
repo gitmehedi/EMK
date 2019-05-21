@@ -17,6 +17,16 @@ class AccountTypeWizard(models.TransientModel):
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
+    type = fields.Selection([
+        ('other', 'Regular'),
+        ('receivable', 'Receivable'),
+        ('payable', 'Payable'),
+        ('liquidity', 'Liquidity'),
+    ], default='other',
+        help="The 'Internal Type' is used for features available on " \
+             "different types of accounts: liquidity type is for cash or bank accounts" \
+             ", payable/receivable is for vendor/customer accounts.")
+
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -39,7 +49,7 @@ class AccountTypeWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.account.account.type'].create(
-            {'change_name': self.name, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+            {'change_name': self.name,'type':self.type, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
         record = self.env['account.account.type'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:

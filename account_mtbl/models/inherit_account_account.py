@@ -116,6 +116,8 @@ class AccountAccount(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
+                    'user_type_id': requested.user_type_id.id,
+                    'currency_id': requested.currency_id.id,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -161,6 +163,8 @@ class HistoryAccountAccount(models.Model):
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.account', ondelete='restrict')
+    user_type_id = fields.Many2one('account.account.type', string='Type')
+    currency_id = fields.Many2one('res.currency', string='Account Currency')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
 
