@@ -83,7 +83,7 @@
                                     <button name="action_branch_distribute"
                                             groups="account.group_account_manager,account.group_account_user"
                                             attrs="{'invisible' : [('state','!=','approve')]}"
-                                            type="object" string="Branch Distribution" class="oe_highlight"/>
+                                            type="object" string="Branch" class="oe_highlight"/>
                                     <button name="action_cost_centre_distribute"
                                             groups="account.group_account_manager,account.group_account_user"
                                             attrs="{'invisible' : [('state','!=','approve')]}"

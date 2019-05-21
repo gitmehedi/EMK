@@ -32,6 +32,15 @@ class BottomLineBudget(models.Model):
         ('approve', 'Approved'),
     ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
 
+    @api.constrains('name')
+    def _check_unique_constrain(self):
+        if self.name:
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), '|',
+                 ('active', '=', True), ('active', '=', False)])
+            if len(name) > 1:
+                raise Warning(_('[Unique Error] Name must be unique!'))
+
     @api.multi
     def action_budget_confirm(self):
         vals = {'state': 'confirm',
@@ -96,6 +105,12 @@ class BottomLineBudgetLine(models.Model):
             self.active = False
         else:
             self.active = True
+
+    @api.one
+    @api.constrains('planned_amount')
+    def _check_planned_amount(self):
+        if self.planned_amount < 0:
+            raise UserError('You can\'t give negative value!!!')
 
     @api.multi
     def action_branch_distribute(self):
