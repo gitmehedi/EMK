@@ -231,8 +231,8 @@ class BudgetBranchDistributionLine(models.Model):
             line.theoritical_amount = theo_amt
 
     def _compute_active(self):
-        if self.branch_budget_id.bottom_line_budget_line and \
-                        self.branch_budget_id.bottom_line_budget_line.active ==False:
+        if self.branch_budget_id and \
+                        self.branch_budget_id.active ==False:
             self.active = False
         else:
             self.active = True

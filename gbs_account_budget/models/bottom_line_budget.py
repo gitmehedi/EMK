@@ -79,9 +79,22 @@ class BottomLineBudget(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'confirm')]
 
-    # @api.onchange('active')
-    # def onchange_active(self):
-    #     self.bottom_line_budgets.write({'active': self.active})
+
+    def action_select_accounts(self):
+        res = self.env.ref('gbs_account_budget.budget_account_wizard_form')
+        result = {'name': _('Select Accounts for budgeting'),
+                  'view_type': 'form',
+                  'view_mode': 'form',
+                  'view_id': res and res.id or False,
+                  'res_model': 'budget.account.wizard',
+                  'type': 'ir.actions.act_window',
+                  'target': 'new',
+                  'nodestroy': True,
+                  # 'context': {'default_msg': msg,
+                  #             },
+                  }
+        return result
+
 
 class BottomLineBudgetLine(models.Model):
     _name = "bottom.line.budget.line"
@@ -89,7 +102,7 @@ class BottomLineBudgetLine(models.Model):
 
     bottom_line_budget = fields.Many2one('bottom.line.budget',string='Bottom line budget')
     bottom_line_account_id = fields.Many2one('account.account',string='Bottom Line Accounts',
-                                             domain="[('internal_type', '!=', 'view')]",)
+                                             domain="[('internal_type', '!=', 'view')]", required=True)
     planned_amount = fields.Float('Planned Amount', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),

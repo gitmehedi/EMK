@@ -9,7 +9,6 @@
     'depends': [
         'account_invoice_merge_operating_unit',
         'account_invoice_merge_attachment',
-        'account_mtbl',
         'base_suspend_security',
         'gbs_payment_instruction',
     ],

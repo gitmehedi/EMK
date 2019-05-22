@@ -40,6 +40,9 @@
                     <button string="Cancel Budget" name="action_budget_cancel"
                             groups="account.group_account_manager"
                             states="confirm" type="object"/>
+                    <button string="Select Accounts" name="action_select_accounts"
+                            groups="account.group_account_manager,account.group_account_user"
+                            states="draft" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>

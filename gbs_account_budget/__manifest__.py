@@ -26,7 +26,7 @@ planned for this Budget.
         'security/ir.model.access.csv',
         # 'security/ir_security.xml',
         # 'security/ir_rule.xml',
-        # 'wizards/budget_bill_wizard.xml',
+        'wizards/budget_account_wizard.xml',
         'views/bottom_line_budget_views.xml',
         'views/budget_distribution_branch_views.xml',
         'views/budget_distribution_costcentre_views.xml',

@@ -30,6 +30,8 @@
         "tds_vat_challan",
         "gbs_payment_instruction",
         "gbs_vendor_bill",
+        "tds_vendor_bill",
+        "asset_vendor_bill",
         "vendor_agreement",
         "account_provisional",
         "account_mtbl",
@@ -39,6 +41,7 @@
         "bgl_accounts",
         "gbs_account_level",
         "gbs_account_budget",
+
     ],
     'description': 'Install all modules which is related to MTBL Accounting',
     'installable': True,

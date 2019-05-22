@@ -15,9 +15,9 @@
     'version': '10.0.0.1',
     'category': 'Accounting & Finance',
     'depends': [
-        'date_range',
+        'account',
         'product',
-        'gbs_vendor_bill',
+        'date_range',
     ],
     'data': [
         'data/tds_version_scheduler.xml',
@@ -27,7 +27,6 @@
         'wizards/amendment_tds_rule.xml',
         'views/account_tds_rule_view.xml',
         'views/inherit_date_range_view.xml',
-        'views/account_invoice_view.xml',
         'views/inherit_product_template.xml',
     ],
     'installable': True,

@@ -2,5 +2,4 @@
 
 from . import account_tds_rule
 from . import inherit_date_range_type
-from . import account_invoice
 from . import inherit_product_template

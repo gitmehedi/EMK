@@ -19,7 +19,7 @@ class AccountInvoice(models.Model):
                 ('state','=','approve'),
                 ('active','=',True)])
             bottom_line_budget_pool = self.env['bottom.line.budget.line'].search([
-                ('bottom_line_budget', '=', bottom_budget_pool.id),
+                ('bottom_line_budget', 'in', bottom_budget_pool.ids),
                 ('bottom_line_account_id','=',self.account_id.id)])
             branch_budget_pool = self.env['branch.budget.line'].search([
                 ('branch_budget_id.bottom_line_budget_line', '=', bottom_line_budget_pool.id),

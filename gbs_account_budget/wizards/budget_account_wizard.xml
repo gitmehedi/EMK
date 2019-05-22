@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="budget_account_wizard_form" model="ir.ui.view">
+        <field name="name">budget.account.wizard.form</field>
+        <field name="model">budget.account.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Budget Warning">
+                <group>
+                    <field name="account_ids" nolabel="1"
+                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                </group>
+                <footer>
+                    <button name="action_proceed_accounts" string="Proceed" type="object"
+                            class="oe_highlight"/>
+                    or
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
