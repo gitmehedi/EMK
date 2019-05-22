@@ -79,7 +79,7 @@ class AccountAccountType(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
-                    'type': requested.type or False,
+                    'type': self.type if not requested.type else requested.type,
                     'pending': False,
                     'active': requested.status,
                 })

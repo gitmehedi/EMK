@@ -75,6 +75,8 @@ class AccountJournal(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
+                    'default_debit_account_id': self.default_debit_account_id.id if not requested.default_debit_account_id else requested.default_debit_account_id.id,
+                    'default_credit_account_id': self.default_credit_account_id.id if not requested.default_credit_account_id else requested.default_credit_account_id.id,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -133,5 +135,9 @@ class HistoryAccountJournal(models.Model):
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.journal', ondelete='restrict')
+    default_debit_account_id = fields.Many2one('account.account', string='Debit Account',
+                                               help='Default Debit Account of the Payment')
+    default_credit_account_id = fields.Many2one('account.account', string='Credit Account',
+                                                help='Default Credit Account of the Payment')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending',string='Status')

@@ -116,8 +116,8 @@ class AccountAccount(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
-                    'user_type_id': self.user_type_id.id if not requested.user_type_id.id else requested.user_type_id.id,
-                    'currency_id': requested.currency_id.id or False,
+                    'user_type_id': self.user_type_id.id if not requested.user_type_id else requested.user_type_id.id,
+                    'currency_id': self.currency_id.id if not requested.currency_id else requested.currency_id.id,
                     'pending': False,
                     'active': requested.status,
                 })
