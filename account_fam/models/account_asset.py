@@ -29,11 +29,13 @@ class AccountAssetAsset(models.Model):
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
-    warranty_date = fields.Date(string='Warranty Date', track_visibility='onchange')
+    warranty_date = fields.Date(string='Warranty Date', track_visibility='onchange', readonly=True,
+                                states={'draft': [('readonly', False)]})
     date = fields.Date(string='Purchase Date', track_visibility='onchange')
     asset_usage_date = fields.Date(string='Asset Usage Date', help='Asset Allocation/Usage Date',
                                    track_visibility='onchange')
-    model_name = fields.Char(string='Model', track_visibility='onchange')
+    model_name = fields.Char(string='Model', track_visibility='onchange', readonly=True,
+                             states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange')
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date', track_visibility='onchange')
     method_period = fields.Integer(string='One Entry (In Month)', required=True, readonly=True, default=1,
@@ -41,6 +43,8 @@ class AccountAssetAsset(models.Model):
     allocation_status = fields.Boolean(default=False, string='Allocation Status', track_visibility='onchange')
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
     value_residual = fields.Float(string='Book Value', track_visibility='onchange')
+    advance_amount = fields.Char(string='Advance Amount', track_visibility='onchange', readonly=True,
+                             states={'draft': [('readonly', False)]})
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):
