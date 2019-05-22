@@ -144,7 +144,7 @@
             <search string="Branch Distribution">
                 <field name="name" filter_domain="[('name','ilike',self)]" string="Budget"/>
                 <field name="fiscal_year" filter_domain="[('fiscal_year','ilike',self)]" string="Year"/>
-                <filter name="state" string="State" domain="[('state','=', 'draft')]"/>
+                <filter name="state" string="Pending" domain="[('state','=', 'draft')]"/>
                 <group expand="0" string="Group By">
                     <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Period" domain="[]"  context="{'group_by':'fiscal_year'}"/>

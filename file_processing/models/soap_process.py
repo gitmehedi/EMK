@@ -10,7 +10,7 @@ class SOAPProcess(models.Model):
     _rec_name = 'name'
     _description = 'SOAP Endpoint'
 
-    name = fields.Char(string='Endpoint Full Name', required=True)
+    name = fields.Char(string='Endpoint Name', required=True)
     endpoint_fullname = fields.Char(string='Endpoint', compute='_compute_endpoint_fullname', store=True)
 
     endpoint_url = fields.Char(string='Host IP', size=24, required=True, track_visibility='onchange')
@@ -46,31 +46,52 @@ class SOAPProcess(models.Model):
                 rec.endpoint_fullname = rec.endpoint_url + ':' + rec.endpoint_port + rec.wsdl_name
 
     @api.model
+    def apiInterfaceMapping(self, debit, credit):
+        if debit == 1 and credit == 1:
+            endpoint = self.search([('name', '=', 'GenericTransferAmountInterfaceHttpService')], limit=1)
+            if endpoint:
+                return endpoint
+        if debit == 1 and credit > 1:
+            endpoint = self.search([('name', '=', 'SingleDebitMultiCreditInterfaceHttpService')], limit=1)
+            if endpoint:
+                return endpoint
+
+    @api.model
     def soap_request(self):
-        endpoint = self.search([('name', '=', 'GenericTransferAmountInterfaceHttpService')], limit=1)
-        genericTransfer = 'http://124.109.105.40:9680/GenericTransferAmount/GenericTransferAmountInterfaceHttpService?wsdl'
-        headers = {'content-type': 'application/soap+xml'}
+        pending_journal = self.env['account.move'].search([])
+        for record in pending_journal:
+            debit, credit = 0, 0
+            for rec in record.line_ids:
+                if rec.debit > 0:
+                    debit += 1
+                if rec.credit > 0:
+                    credit += 1
+            endpoint = self.apiInterfaceMapping(debit, credit)
 
-        if len(endpoint) > 0:
-            reqBody = self.genGenericTransferAmountInterface(data={})
+            if len(endpoint) > 0:
+                if endpoint.name == 'genGenericTransferAmountInterface':
+                    reqBody = self.genGenericTransferAmountInterface(rec)
+                elif endpoint.name == 'SingleDebitMultiCreditInterfaceHttpService':
+                    reqBody = self.SingleDebitMultiCreditInterfaceHttpService(rec)
 
-            resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, headers=headers)
-            root = ElementTree.fromstring(resBody.content)
-            response = {}
-            for rec in root.iter('*'):
-                key = rec.tag.split("}")
-                text = rec.text
-                if len(key) == 2:
-                    response[key[1]] = text
-                else:
-                    response[key[0]] = text
+                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,
+                                        headers={'content-type': 'application/soap+xml'})
+                root = ElementTree.fromstring(resBody.content)
+                response = {}
+                for rec in root.iter('*'):
+                    key = rec.tag.split("}")
+                    text = rec.text
+                    if len(key) == 2:
+                        response[key[1]] = text
+                    else:
+                        response[key[0]] = text
 
-            if 'ErrorMessage' in response:
-                errors = "ErrorCode: {0}, ErrorMessage: {1}".format(response['ErrorCode'], response['ErrorMessage'],
-                                                                    response['SupOverRide'])
+                if 'ErrorMessage' in response:
+                    errors = "ErrorCode: {0}, ErrorMessage: {1}".format(response['ErrorCode'], response['ErrorMessage'],
+                                                                        response['SupOverRide'])
 
-                self.env['soap.process.error'].create(
-                    {'name': endpoint.endpoint_fullname, 'errors': json.dumps(response)})
+                    self.env['soap.process.error'].create(
+                        {'name': endpoint.endpoint_fullname, 'errors': json.dumps(response)})
 
     @api.model
     def genGenericTransferAmountInterface(self, data):
@@ -120,3 +141,62 @@ class SOAPProcess(models.Model):
                                       reqData['Flag5'], reqData['UUIDSource'], reqData['UUIDNUM'], reqData['UUIDSeqNo'],
                                       reqData['FrmAcct'], reqData['Amt'], reqData['ToAcct'], reqData['StmtNarr'])
         return requestSOAP
+
+    @api.model
+    def SingleDebitMultiCreditInterfaceHttpService(self, data):
+        reqData = {
+            'InstNum': '003',
+            'BrchNum': '41101',
+            'TellerNum': '1101',
+            'Flag4': 'W',
+            'Flag5': 'Y',
+            'UUIDSource': 'OGL',
+            'UUIDNUM': '',
+            'UUIDSeqNo': '',
+            'FrmAcct': '1200000100009301590',
+            'Amt': '111',
+            'ToAcct': '00000009788900065',
+            'StmtNarr': 'TEST OGL TXNF',
+
+        }
+        requests = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/SingleDebitMultiCreditInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+                   <soapenv:Header/>
+                   <soapenv:Body>
+                      <v1:singleDebitMultiCredit>
+                         <!--Optional:-->
+                         <SnglDrMultCrRq>
+                            <ban:RqHeader>
+                               <ban:InstNum>003</ban:InstNum>
+                               <ban:BrchNum>41101</ban:BrchNum>
+                               <ban:TellerNum>1101</ban:TellerNum>
+                               <ban:Flag4>W</ban:Flag4>
+                               <ban:Flag5>Y</ban:Flag5>
+                               <ban:UUIDSource>WS</ban:UUIDSource>
+                               <ban:UUIDNUM>14785</ban:UUIDNUM>
+                               <!--Optional:-->
+                               <ban:UUIDSeqNo>114477</ban:UUIDSeqNo>
+                            </ban:RqHeader>
+                            <ban:Data>
+                               <ban:AcctNum>100009298327</ban:AcctNum>
+                               <ban:Amt>500</ban:Amt>
+                               <!--Optional:-->
+                               <ban:AcctCur>BDT</ban:AcctCur>
+                               <ban:Sys>DEP</ban:Sys>
+                               <!--Optional:-->
+                               <ban:Comsn>0</ban:Comsn>
+                               <!--Zero or more repetitions:-->
+                               <ban:Coll>
+                                  <ban:BnfcryAcctNum>100009297549</ban:BnfcryAcctNum>
+                                  <ban:CrAmt>500</ban:CrAmt>
+                               </ban:Coll>
+                            </ban:Data>
+                         </SnglDrMultCrRq>
+                      </v1:singleDebitMultiCredit>
+                   </soapenv:Body>
+                </soapenv:Envelope>""".format(reqData['InstNum'], reqData['BrchNum'], reqData['TellerNum'],
+                                              reqData['Flag4'], reqData['Flag5'], reqData['UUIDSource'],
+                                              reqData['UUIDNUM'],
+                                              reqData['UUIDSeqNo'], reqData['FrmAcct'], reqData['Amt'],
+                                              reqData['ToAcct'],
+                                              reqData['StmtNarr'])
+        return requests

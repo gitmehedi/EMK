@@ -118,8 +118,6 @@ class ResPartner(models.Model):
                 [('tax', '=ilike', self.tax.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(tax) > 1:
                 raise Warning(_('[Unique Error] Trade License must be unique!'))
-            if len(self.tin) != 12 or not self.tin.isdigit():
-                raise Warning('[Format Error] TIN must be numeric with 12 digit!')
         if self.bin:
             bin = self.search(
                 [('bin', '=ilike', self.bin.strip()), '|', ('active', '=', True), ('active', '=', False)])
@@ -139,6 +137,8 @@ class ResPartner(models.Model):
                 [('tin', '=ilike', self.tin.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(tin) > 1:
                 raise Warning(_('[Unique Error] TIN Number must be unique!'))
+            if len(self.tin) != 12 or not self.tin.isdigit():
+                raise Warning('[Format Error] TIN must be numeric with 12 digit!')
         if self.mobile and not self.mobile.isdigit():
             raise Warning('[Format Error] Mobile must be numeric!')
         if self.fax and len(self.fax) != 16:
@@ -149,7 +149,7 @@ class ResPartner(models.Model):
     @api.constrains('name')
     def _check_unique_name(self):
         if self.name:
-            name = self.env['res.partner'].search([('name', '=ilike', self.name)])
+            name = self.env['res.partner'].search([('name', '=ilike', self.name),'|',('active', '=', True), ('active', '=', False)])
             if self.supplier == True:
                 if len(name) > 1:
                     raise ValidationError('[Unique Error] Vendor Name must be unique!')

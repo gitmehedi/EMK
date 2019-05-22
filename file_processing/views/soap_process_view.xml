@@ -36,7 +36,6 @@
                   decoration-bf="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
-                <field name='endpoint_fullname'/>
                 <field name="endpoint_url"/>
                 <field name="endpoint_port"/>
                 <field name="wsdl_name"/>
