@@ -12,8 +12,8 @@ class ResPartnerBank(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status',track_visibility='onchange')
 
     line_ids = fields.One2many('history.res.partner.bank', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -107,4 +107,4 @@ class HistoryPartnerBank(models.Model):
     line_id = fields.Many2one('res.partner.bank', ondelete='restrict')
     bank_id = fields.Many2one('res.bank', string="Bank")
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')

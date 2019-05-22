@@ -21,8 +21,8 @@ class AccountAnalyticAccount(models.Model):
                             states={'draft': [('readonly', False)]})
     operating_unit_ids = fields.Many2many(string='Branch', track_visibility='onchange',
                                           readonly=True, states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange', )
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status',track_visibility='onchange', )
 
     line_ids = fields.One2many('history.account.analytic.account', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -146,7 +146,7 @@ class HistoryAccountAnalyticAccount(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.analytic.account', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')
 
 
 

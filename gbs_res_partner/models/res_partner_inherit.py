@@ -41,8 +41,8 @@ class ResPartner(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string="Status",track_visibility='onchange')
 
     line_ids = fields.One2many('history.res.partner', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -66,7 +66,7 @@ class ResPartner(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.name = requested.change_name
+                self.name = self.name if not requested.change_name else requested.change_name
                 self.active = requested.status or False
                 self.website = requested.website or False
                 self.phone = requested.phone or False

@@ -39,6 +39,12 @@ class ResPartnerWizard(models.TransientModel):
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
+    @api.constrains('mobile')
+    def _check_numeric_constrain(self):
+        if self.mobile and not self.mobile.isdigit():
+            raise Warning('[Format Error] Mobile must be numeric!')
+
+
 
     @api.multi
     def act_change_name(self):

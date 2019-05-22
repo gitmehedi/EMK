@@ -25,8 +25,8 @@ class AccountAccount(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange',string='Status' )
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             track_visibility='onchange',string='Status')
 
     line_ids = fields.One2many('history.account.account', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -116,8 +116,8 @@ class AccountAccount(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
-                    'user_type_id': requested.user_type_id.id,
-                    'currency_id': requested.currency_id.id,
+                    'user_type_id': requested.user_type_id.id or False,
+                    'currency_id': requested.currency_id.id or False,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -166,7 +166,7 @@ class HistoryAccountAccount(models.Model):
     user_type_id = fields.Many2one('account.account.type', string='Type')
     currency_id = fields.Many2one('res.currency', string='Account Currency')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')
 
 
 class AccountAccountTag(models.Model):
@@ -181,8 +181,8 @@ class AccountAccountTag(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status',track_visibility='onchange')
     line_ids = fields.One2many('history.account.tag', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
@@ -285,4 +285,4 @@ class HistoryAccountTag(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.tag', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')

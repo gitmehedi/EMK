@@ -19,8 +19,8 @@ class DateRangeType(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status',track_visibility='onchange')
     allow_overlap = fields.Boolean(string="Allow Overlap", readonly=True,
                                    states={'draft': [('readonly', False)]})
     fiscal_year = fields.Boolean(string='Is Fiscal Year?', readonly=True,
@@ -127,4 +127,4 @@ class HistoryAccountPeriodType(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('date.range.type', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')

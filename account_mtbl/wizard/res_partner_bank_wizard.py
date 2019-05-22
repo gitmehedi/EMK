@@ -31,9 +31,10 @@ class ResPartnerBAnkWizard(models.TransientModel):
     def act_change_name(self):
         id = self._context['active_id']
 
-        acc_number = self.env['res.partner.bank'].search([('acc_number', '=ilike', self.acc_number)])
-        if len(acc_number) > 0:
-            raise Warning('[Unique Error] Name must be unique!')
+        if self.acc_number:
+            acc_number = self.env['res.partner.bank'].search([('acc_number', '=ilike', self.acc_number)])
+            if len(acc_number) > 0:
+                raise Warning('[Unique Error] Name must be unique!')
 
         pending = self.env['history.res.partner.bank'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:

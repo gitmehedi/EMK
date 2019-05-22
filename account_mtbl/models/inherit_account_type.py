@@ -21,8 +21,8 @@ class AccountAccountType(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status',track_visibility='onchange')
     line_ids = fields.One2many('history.account.account.type', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
@@ -79,7 +79,7 @@ class AccountAccountType(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
-                    'type': requested.type,
+                    'type': requested.type or False,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -135,4 +135,4 @@ class HistoryAccountAccountType(models.Model):
              "different types of accounts: liquidity type is for cash or bank accounts" \
              ", payable/receivable is for vendor/customer accounts.")
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')
