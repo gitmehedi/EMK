@@ -51,9 +51,9 @@ class ResPartnerBank(models.Model):
             if requested:
                 self.write({
                     'acc_number': self.acc_number if not requested.acc_number else requested.acc_number,
-                    'bank_id': requested.bank_id.id or False,
+                    'bank_id': self.bank_id.id if not requested.bank_id else requested.bank_id.id,
                     'pending': False,
-                    'active': requested.status,
+                    'active': requested.status
                 })
                 requested.write({
                     'state': 'approve',
@@ -107,4 +107,4 @@ class HistoryPartnerBank(models.Model):
     line_id = fields.Many2one('res.partner.bank', ondelete='restrict')
     bank_id = fields.Many2one('res.bank', string="Bank")
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending',)
