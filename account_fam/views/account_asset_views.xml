@@ -78,7 +78,7 @@
                 <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="Allocation History">
+                <page string="Allocation &amp; Transfer History">
                     <field name="asset_allocation_ids" string="Allocation History">
                         <tree string="Allocation History" decoration-success="state=='active'"
                               decoration-bf="state=='active'"
@@ -145,7 +145,7 @@
                     <field name="category_id"/>
                     <field name="date"/>
                     <field name="partner_id" string="Vendor"/>
-                    <field name="value"/>
+                    <field name="value"  widget="monetary"/>
                     <field name="value_residual" widget="monetary"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="True"/>
