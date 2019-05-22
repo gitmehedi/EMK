@@ -40,12 +40,19 @@ class ProductProduct(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.name = requested.change_name
-                self.active = requested.status
-                self.standard_price = requested.standard_price
-                self.account_tds_id = requested.account_tds_id.id
-                self.supplier_taxes_id = [i.id for i in requested.supplier_taxes_id] or False
-                self.default_code = requested.default_code
+                if requested.change_name:
+                    self.name = requested.change_name
+                if requested.status:
+                    self.active = requested.status
+                if requested.standard_price:
+                    self.standard_price = requested.standard_price
+                if requested.account_tds_id:
+                    self.account_tds_id = requested.account_tds_id.id
+                if requested.supplier_taxes_id:
+                    self.supplier_taxes_id = [(6, 0, requested.supplier_taxes_id.ids)]
+                if requested.default_code:
+                    self.default_code = requested.default_code
+
                 self.pending = False
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()
@@ -121,6 +128,7 @@ class ProductTemplate(models.Model):
                              track_visibility='onchange')
     line_ids = fields.One2many('history.product.product', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    supplier_taxes_id = fields.Many2many(track_visibility='onchange')
 
     @api.one
     def act_approve(self):

@@ -19,7 +19,7 @@ class ProductProductWizard(models.TransientModel):
     name = fields.Char(string='Requested Name')
     standard_price = fields.Float('Cost Price')
     account_tds_id = fields.Many2one('tds.rule', string='TDS Rule')
-    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
+    supplier_taxes_id = fields.Many2many('account.tax', 'product_wiz_supplier_taxes_rel', 'prod_id', 'tax_id',
                                          string='Vendor Taxes',
                                          domain=[('type_tax_use', '=', 'purchase')])
     default_code = fields.Char('Internal Reference', index=True)
@@ -51,7 +51,7 @@ class ProductProductWizard(models.TransientModel):
             {'change_name': self.name, 'status': self.status,
              'standard_price': self.standard_price,
              'account_tds_id': self.account_tds_id.id,
-             'supplier_taxes_id': self.supplier_taxes_id.ids,
+             'supplier_taxes_id': [(6, 0, self.supplier_taxes_id.ids)],
              'default_code': self.default_code,
              'request_date': fields.Datetime.now(),
              'line_id': id})

@@ -4,7 +4,7 @@ from odoo.exceptions import Warning
 class AccountInvoice(models.Model):
     _inherit = "account.invoice.line"
 
-    @api.onchange('price_subtotal_without_vat')
+    @api.onchange('price_subtotal_without_vat','operating_unit_id','account_analytic_id')
     def _onchange_subtotal_without_vat(self):
         if self.price_subtotal_without_vat:
             date = fields.Date.context_today(self)
