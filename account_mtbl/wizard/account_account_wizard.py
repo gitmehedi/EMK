@@ -13,7 +13,11 @@ class AccountAccountWizard(models.TransientModel):
     @api.model
     def default_status(self):
         context = self._context
-        return self.env[context['active_model']].search([('id', '=', context['active_id'])]).active
+        record = self.env[context['active_model']].search([('id', '=', context['active_id'])])
+        if record:
+            return record.active
+        else:
+            return True
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
@@ -41,8 +45,12 @@ class AccountAccountWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.account.account'].create(
-            {'change_name': self.name,'currency_id':self.currency_id.id,'user_type_id':self.user_type_id.id,'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+            {'change_name': self.name, 'currency_id': self.currency_id.id, 'user_type_id': self.user_type_id.id,
+             'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
         record = self.env['account.account'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
+        if not record:
+            record = self.env['account.account'].with_context({'show_parent_account': True}).search(
+                [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
             record.write({'pending': True})

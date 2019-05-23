@@ -19,8 +19,8 @@ class Segment(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status',track_visibility='onchange')
     line_ids = fields.One2many('history.segment', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
@@ -157,4 +157,4 @@ class HistorySegment(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('segment', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')

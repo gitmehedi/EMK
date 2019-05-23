@@ -41,8 +41,8 @@ class ResPartner(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string="Status",track_visibility='onchange')
 
     line_ids = fields.One2many('history.res.partner', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -66,19 +66,19 @@ class ResPartner(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.name = requested.change_name
-                self.active = requested.status or False
-                self.website = requested.website or False
-                self.phone = requested.phone or False
-                self.mobile = requested.mobile or False
-                self.email = requested.email or False
-                self.street = requested.street or False
-                self.street2 = requested.street2 or False
-                self.zip = requested.zip or False
-                self.city = requested.city or False
-                self.state_id = requested.state_id.id or False
-                self.country_id = requested.country_id.id or False
-                self.bank_ids = [i.id for i in requested.bank_ids] or False
+                self.name = self.name if not requested.change_name else requested.change_name
+                self.active = self.status if not requested.status else requested.status
+                self.website = self.website if not requested.website else requested.website
+                self.phone = self.phone if not requested.phone else requested.phone
+                self.mobile = self.mobile if not requested.mobile else requested.mobile
+                self.email = self.email if not requested.email else requested.email
+                self.street =  self.street if not requested.street else requested.street
+                self.street2 =  self.street2 if not requested.street2 else requested.street2
+                self.zip =  self.zip if not requested.zip else requested.zip
+                self.city = self.city if not requested.city else requested.city
+                self.state_id = self.state_id if not requested.state_id.id else requested.state_id.id
+                self.country_id = self.country_id if not requested.country_id.id else requested.country_id.id
+                self.bank_ids = self.bank_ids if not requested.bank_ids else [i.id for i in requested.bank_ids]
                 self.pending = False
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()

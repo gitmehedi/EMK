@@ -45,7 +45,8 @@
                         <field name="pending" invisible="1"/>
                         <field name="is_custom_depr" invisible="1"/>
                         <field name="type" invisible="1"/>
-                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="company_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                               groups="base.group_multi_company"/>
                     </div>
                     <group string="Journal Entries">
                         <group>
@@ -105,9 +106,10 @@
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
+                            <field name="request_date"/>
                             <field name="change_date"/>
+                            <field name="status"/>
                             <field name="state"/>
-                            <field name="status" invisible="True"/>
                         </tree>
                     </field>
                 </sheet>

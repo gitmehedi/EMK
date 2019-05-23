@@ -8,9 +8,11 @@
                 <group>
                     <group>
                         <field name="name"/>
+                        <field name="default_debit_account_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     </group>
                     <group>
                         <field name="status"/>
+                        <field name="default_credit_account_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     </group>
                 </group>
                 <footer>

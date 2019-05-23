@@ -17,8 +17,8 @@ class Branch(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
-                             track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status',track_visibility='onchange')
     company_id = fields.Many2one(
         'res.company', 'Company', required=True, track_visibility='onchange', default=lambda self:
         self.env['res.company']._company_default_get('account.account'), readonly=True,
@@ -140,4 +140,4 @@ class HistoryBranch(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')

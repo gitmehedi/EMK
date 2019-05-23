@@ -22,7 +22,7 @@ class SubOperatingUnit(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange',
                                         readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             track_visibility='onchange', )
+                             track_visibility='onchange', string='Status')
 
     line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -147,4 +147,4 @@ class HistorySubOperatingUnit(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending')
+                             default='pending',string='Status')

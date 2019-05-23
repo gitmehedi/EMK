@@ -3,8 +3,8 @@
     <menuitem
             id="main_menu_account_budget"
             name="Budget"
-            parent="account.menu_finance_configuration"
-            sequence="99"
+            parent="account.menu_finance"
+            sequence="3"
             groups="account.group_account_manager,account.group_account_user"/>
 
     <record id="bottom_line_budget_tree" model="ir.ui.view">
@@ -36,7 +36,7 @@
                             states="confirm" type="object" class="oe_highlight"/>
                     <button string="Reset to Draft" name="action_budget_draft"
                             groups="account.group_account_manager,account.group_account_user"
-                            states="cancel" type="object" />
+                            states="cancel" type="object"/>
                     <button string="Cancel Budget" name="action_budget_cancel"
                             groups="account.group_account_manager"
                             states="confirm" type="object"/>
@@ -63,16 +63,20 @@
                         <group>
                             <label for="fiscal_year" string="Period"/>
                             <div>
-                                <field name="fiscal_year" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                                <field name="date_from" class="oe_inline"/> -
+                                <field name="fiscal_year"
+                                       options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                <field name="date_from" class="oe_inline"/>
+                                -
                                 <field name="date_to" class="oe_inline" nolabel="1"/>
                             </div>
                             <field name="creating_user_id"/>
                             <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                         <group>
-                            <field name="approve_date" attrs="{'invisible':[('state','in',('draft','confirm','cancel'))]}"/>
-                            <field name="approved_user_id" attrs="{'invisible':[('state','in',('draft','confirm','cancel'))]}"/>
+                            <field name="approve_date"
+                                   attrs="{'invisible':[('state','in',('draft','confirm','cancel'))]}"/>
+                            <field name="approved_user_id"
+                                   attrs="{'invisible':[('state','in',('draft','confirm','cancel'))]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -117,7 +121,7 @@
                     <filter string="Distribution" name="distribution" icon="terp-personal"
                             domain="[('state','=','approve')]"/>
                     <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Period" domain="[]"  context="{'group_by':'fiscal_year'}"/>
+                    <filter string="Period" domain="[]" context="{'group_by':'fiscal_year'}"/>
                 </group>
             </search>
         </field>

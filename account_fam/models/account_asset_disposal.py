@@ -14,7 +14,7 @@ class AccountAssetDisposal(models.Model):
     total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
     total_depr_amount = fields.Float(string='Depreciation Value', compute='_compute_total_depr_amount',
                                      track_visibility='onchange')
-    request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now(),
+    request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now,
                                    readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
     approve_date = fields.Datetime(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
                                    track_visibility='onchange')

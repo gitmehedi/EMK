@@ -8,11 +8,14 @@
                 <group>
                     <group>
                         <field name="name"/>
-                        <field name="user_type_id"/>
+                        <field name="user_type_id"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+
                     </group>
                     <group>
                         <field name="status"/>
-                        <field name="currency_id"/>
+                        <field name="currency_id"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     </group>
                 </group>
                 <footer>
