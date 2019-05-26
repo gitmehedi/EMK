@@ -57,6 +57,11 @@ class SOAPProcess(models.Model):
                 return endpoint
 
     @api.model
+    def prepare_bgl(self, record, rec):
+        sub_operating_unit = rec.sub_operating_unit_id.code if rec.sub_operating_unit_id else '000'
+        return "{0}{1}{2}".format(record.operating_unit_id.code, rec.account_id.code, sub_operating_unit)
+
+    @api.model
     def soap_request(self):
         pending_journal = self.env['account.move'].search([])
         for record in pending_journal:
@@ -69,13 +74,13 @@ class SOAPProcess(models.Model):
             endpoint = self.apiInterfaceMapping(debit, credit)
 
             if len(endpoint) > 0:
-                if endpoint.name == 'genGenericTransferAmountInterface':
-                    reqBody = self.genGenericTransferAmountInterface(rec)
+                if endpoint.name == 'GenericTransferAmountInterfaceHttpService':
+                    reqBody = self.genGenericTransferAmountInterface(record)
                 elif endpoint.name == 'SingleDebitMultiCreditInterfaceHttpService':
-                    reqBody = self.SingleDebitMultiCreditInterfaceHttpService(rec)
+                    reqBody = self.SingleDebitMultiCreditInterfaceHttpService(record)
 
                 resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,
-                                        headers={'content-type': 'application/soap+xml'})
+                                        headers={'content-type': 'application/text'})
                 root = ElementTree.fromstring(resBody.content)
                 response = {}
                 for rec in root.iter('*'):
@@ -87,15 +92,22 @@ class SOAPProcess(models.Model):
                         response[key[0]] = text
 
                 if 'ErrorMessage' in response:
-                    errors = "ErrorCode: {0}, ErrorMessage: {1}".format(response['ErrorCode'], response['ErrorMessage'],
-                                                                        response['SupOverRide'])
-
                     self.env['soap.process.error'].create(
                         {'name': endpoint.endpoint_fullname, 'errors': json.dumps(response)})
 
     @api.model
-    def genGenericTransferAmountInterface(self, data):
-        reqData = {
+    def genGenericTransferAmountInterface(self, record):
+        creStr = ""
+        for rec in record.line_ids:
+            bgl = self.prepare_bgl(record, rec)
+            if rec.credit > 0:
+                creStr = creStr + """<ban:FrmAcct>{0}</ban:FrmAcct>""".format(bgl)
+            elif rec.debit > 0:
+                creStr = """<ban:Amt>{0}</ban:Amt>
+                       <ban:ToAcct>{1}</ban:ToAcct>
+                       <ban:StmtNarr>{2}</ban:StmtNarr>""".format(rec.debit, bgl, 'TEST OGL TXNF') + creStr
+
+        data = {
             'InstNum': '003',
             'BrchNum': '41101',
             'TellerNum': '1101',
@@ -110,93 +122,121 @@ class SOAPProcess(models.Model):
             'StmtNarr': 'TEST OGL TXNF',
 
         }
-        requestSOAP = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
-           <soapenv:Header/>
-           <soapenv:Body>
-              <v1:genericTransferAmount>
-                 <!--Optional:-->
-                 <GenericAmtXferRq>
-                   <ban:RqHeader>
-                     <ban:InstNum>{0}</ban:InstNum>
-                       <ban:BrchNum>{1}</ban:BrchNum>
-                       <ban:TellerNum>{2}</ban:TellerNum>
-                       <ban:Flag4>{0}</ban:Flag4>
-                       <ban:Flag5>{0}</ban:Flag5>
-                       <ban:UUIDSource>{0}</ban:UUIDSource>
-                       <ban:UUIDNUM>{0}</ban:UUIDNUM>
-                       <!--Optional:-->
-                       <ban:UUIDSeqNo>{0}</ban:UUIDSeqNo>
-                    </ban:RqHeader>
-                    <ban:Data>
-                       <ban:FrmAcct>{0}</ban:FrmAcct>
-                       <ban:Amt>{0}</ban:Amt>
-                       <ban:ToAcct>{0}</ban:ToAcct>
-                       <!--Optional:-->
-                       <ban:StmtNarr>{0}</ban:StmtNarr>
-                    </ban:Data>
-                 </GenericAmtXferRq>
-              </v1:genericTransferAmount>
-           </soapenv:Body>
-        </soapenv:Envelope>""".format(reqData['InstNum'], reqData['BrchNum'], reqData['TellerNum'], reqData['Flag4'],
-                                      reqData['Flag5'], reqData['UUIDSource'], reqData['UUIDNUM'], reqData['UUIDSeqNo'],
-                                      reqData['FrmAcct'], reqData['Amt'], reqData['ToAcct'], reqData['StmtNarr'])
-        return requestSOAP
+        request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+               <soapenv:Header/>
+               <soapenv:Body>
+                  <v1:genericTransferAmount>
+                     <!--Optional:-->
+                     <GenericAmtXferRq>
+                       <ban:RqHeader>
+                         <ban:InstNum>{0}</ban:InstNum>
+                           <ban:BrchNum>{1}</ban:BrchNum>
+                           <ban:TellerNum>{2}</ban:TellerNum>
+                           <ban:Flag4>{3}</ban:Flag4>
+                           <ban:Flag5>{4}</ban:Flag5>
+                           <ban:UUIDSource>{5}</ban:UUIDSource>
+                           <ban:UUIDNUM>{6}</ban:UUIDNUM>
+                           <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
+                        </ban:RqHeader>
+                        <ban:Data>
+                           {8}
+                        </ban:Data>
+                     </GenericAmtXferRq>
+                  </v1:genericTransferAmount>
+               </soapenv:Body>
+            </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
+                                          data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
+                                          creStr)
+        return request
 
     @api.model
-    def SingleDebitMultiCreditInterfaceHttpService(self, data):
-        reqData = {
+    def SingleDebitMultiCreditInterfaceHttpService(self, record):
+        creStr = ""
+        for rec in record.line_ids:
+            bgl = self.prepare_bgl(record, rec)
+            if rec.credit > 0:
+                creStr = creStr + """<ban:Coll>
+                                          <ban:BnfcryAcctNum>{0}</ban:BnfcryAcctNum>
+                                          <ban:CrAmt>{1}</ban:CrAmt>
+                                       </ban:Coll>""".format(bgl, rec.credit)
+            elif rec.debit > 0:
+                currency = rec.currency_id.code if rec.currency_id else ''
+                creStr = """<ban:AcctNum>{0}</ban:AcctNum>
+                                   <ban:Amt>{1}</ban:Amt>
+                                   <ban:AcctCur>{2}</ban:AcctCur>
+                                   <ban:Sys>DEP</ban:Sys>
+                                   <ban:Comsn>0</ban:Comsn>""".format(bgl, rec.debit, currency) + creStr
+        data = {
             'InstNum': '003',
-            'BrchNum': '41101',
+            'BrchNum': record.operating_unit_id.code,
             'TellerNum': '1101',
             'Flag4': 'W',
             'Flag5': 'Y',
             'UUIDSource': 'OGL',
             'UUIDNUM': '',
             'UUIDSeqNo': '',
-            'FrmAcct': '1200000100009301590',
-            'Amt': '111',
-            'ToAcct': '00000009788900065',
-            'StmtNarr': 'TEST OGL TXNF',
 
         }
         requests = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/SingleDebitMultiCreditInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
-                   <soapenv:Header/>
-                   <soapenv:Body>
-                      <v1:singleDebitMultiCredit>
-                         <!--Optional:-->
-                         <SnglDrMultCrRq>
-                            <ban:RqHeader>
-                               <ban:InstNum>003</ban:InstNum>
-                               <ban:BrchNum>41101</ban:BrchNum>
-                               <ban:TellerNum>1101</ban:TellerNum>
-                               <ban:Flag4>W</ban:Flag4>
-                               <ban:Flag5>Y</ban:Flag5>
-                               <ban:UUIDSource>WS</ban:UUIDSource>
-                               <ban:UUIDNUM>14785</ban:UUIDNUM>
-                               <!--Optional:-->
-                               <ban:UUIDSeqNo>114477</ban:UUIDSeqNo>
-                            </ban:RqHeader>
-                            <ban:Data>
-                               <ban:AcctNum>100009298327</ban:AcctNum>
-                               <ban:Amt>500</ban:Amt>
-                               <!--Optional:-->
-                               <ban:AcctCur>BDT</ban:AcctCur>
-                               <ban:Sys>DEP</ban:Sys>
-                               <!--Optional:-->
-                               <ban:Comsn>0</ban:Comsn>
-                               <!--Zero or more repetitions:-->
-                               <ban:Coll>
-                                  <ban:BnfcryAcctNum>100009297549</ban:BnfcryAcctNum>
-                                  <ban:CrAmt>500</ban:CrAmt>
-                               </ban:Coll>
-                            </ban:Data>
-                         </SnglDrMultCrRq>
-                      </v1:singleDebitMultiCredit>
-                   </soapenv:Body>
-                </soapenv:Envelope>""".format(reqData['InstNum'], reqData['BrchNum'], reqData['TellerNum'],
-                                              reqData['Flag4'], reqData['Flag5'], reqData['UUIDSource'],
-                                              reqData['UUIDNUM'],
-                                              reqData['UUIDSeqNo'], reqData['FrmAcct'], reqData['Amt'],
-                                              reqData['ToAcct'],
-                                              reqData['StmtNarr'])
-        return requests
+                       <soapenv:Header/>
+                       <soapenv:Body>
+                          <v1:singleDebitMultiCredit>
+                             <!--Optional:-->
+                             <SnglDrMultCrRq>
+                                <ban:RqHeader>
+                                   <ban:InstNum>{0}</ban:InstNum>
+                                   <ban:BrchNum>{1}</ban:BrchNum>
+                                   <ban:TellerNum>{2}</ban:TellerNum>
+                                   <ban:Flag4>{3}</ban:Flag4>
+                                   <ban:Flag5>{4}</ban:Flag5>
+                                   <ban:UUIDSource>{5}</ban:UUIDSource>
+                                   <ban:UUIDNUM>{6}</ban:UUIDNUM>
+                                   <!--Optional:-->
+                                   <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
+                                </ban:RqHeader>
+                                <ban:Data>
+                                   {8}
+                                </ban:Data>
+                             </SnglDrMultCrRq>
+                          </v1:singleDebitMultiCredit>
+                       </soapenv:Body>
+                    </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
+                                                  data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
+                                                  creStr)
+        # return requests
+        return """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/SingleDebitMultiCreditInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <v1:singleDebitMultiCredit>
+         <!--Optional:-->
+         <SnglDrMultCrRq>
+            <ban:RqHeader>
+               
+               <ban:InstNum>003</ban:InstNum>
+               <ban:BrchNum>41101</ban:BrchNum>
+               <ban:TellerNum>1101</ban:TellerNum>
+               <ban:Flag4>W</ban:Flag4>
+               <ban:Flag5>Y</ban:Flag5>
+               <ban:UUIDSource>OGL</ban:UUIDSource>
+               <ban:UUIDNUM></ban:UUIDNUM>
+               <!--Optional:-->
+               <ban:UUIDSeqNo></ban:UUIDSeqNo>
+            </ban:RqHeader>
+            <ban:Data>
+               <ban:AcctNum>100009298327</ban:AcctNum>
+               <ban:Amt>500</ban:Amt>
+               <!--Optional:-->
+               <ban:AcctCur>BDT</ban:AcctCur>
+               <ban:Sys>DEP</ban:Sys>
+               <!--Optional:-->
+               <ban:Comsn>0</ban:Comsn>
+               <!--Zero or more repetitions:-->
+               <ban:Coll>
+                  <ban:BnfcryAcctNum>100009297549</ban:BnfcryAcctNum>
+                  <ban:CrAmt>500</ban:CrAmt>
+               </ban:Coll>
+            </ban:Data>
+         </SnglDrMultCrRq>
+      </v1:singleDebitMultiCredit>
+   </soapenv:Body>
+</soapenv:Envelope>"""

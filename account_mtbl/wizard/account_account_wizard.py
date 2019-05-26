@@ -49,5 +49,8 @@ class AccountAccountWizard(models.TransientModel):
              'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
         record = self.env['account.account'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
+        if not record:
+            record = self.env['account.account'].with_context({'show_parent_account': True}).search(
+                [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
             record.write({'pending': True})

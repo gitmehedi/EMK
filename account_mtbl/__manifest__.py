@@ -58,6 +58,7 @@
         'views/inherit_product_product_view.xml',
         'views/inherit_analytic_account_view.xml',
         'views/account_analytic_account_view.xml',
+        'views/res_users_preferences_view.xml',
     ],
     'installable': True,
     'application': True,

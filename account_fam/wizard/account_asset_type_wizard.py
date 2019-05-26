@@ -39,7 +39,8 @@ class AccountAssetCategoryWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.account.asset.category'].create(
-            {'change_name': self.name, 'line_id': id, 'status': self.status})
-        record = self.env['account.asset.category'].search([('id', '=', id)])
+            {'change_name': self.name, 'request_date': fields.Datetime.now(), 'line_id': id, 'status': self.status})
+        record = self.env['account.asset.category'].search(
+            [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.pending = True
+            record.write({'pending': True})
