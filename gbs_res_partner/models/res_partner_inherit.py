@@ -113,7 +113,7 @@ class ResPartner(models.Model):
 
     @api.constrains('tax','bin', 'tin','vat','mobile','fax')
     def _check_numeric_constrain(self):
-        if self.tin:
+        if self.tax:
             tax = self.search(
                 [('tax', '=ilike', self.tax.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(tax) > 1:
