@@ -27,9 +27,6 @@ class ResPartnerWizard(models.TransientModel):
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',default=lambda self: self.env.user.company_id.country_id.id)
-    bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
-
-
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -62,7 +59,7 @@ class ResPartnerWizard(models.TransientModel):
             {'change_name': self.name,'status': self.status,'website': self.website,'phone': self.phone,
              'mobile': self.mobile,'email': self.email,'street': self.street,'street2': self.street2,
              'zip': self.zip,'city': self.city,'state_id': self.state_id.id,'country_id': self.country_id.id,
-             'bank_ids': [i.acc_number for i in self.bank_ids],'request_date': fields.Datetime.now(),
+             'request_date': fields.Datetime.now(),
              'line_id': id})
         record = self.env['res.partner'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])

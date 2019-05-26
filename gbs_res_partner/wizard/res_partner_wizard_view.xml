@@ -26,9 +26,6 @@
                         <field name="mobile" widget="phone"/>
                         <field name="email"/>
                     </group>
-                    <group string="Bank Accounts">
-                        <field name="bank_ids" widget="many2many_tags" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                    </group>
                 </group>
                 <footer>
                     <button name="act_change_name" string="Change Request" type="object" class="btn-primary"/>
