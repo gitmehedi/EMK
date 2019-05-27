@@ -205,7 +205,7 @@
                                     </t>
                                     <t t-if="data['etd_date']">
                                         <tr>
-                                            <td>ETD <span t-esc="data['landing_port']"/>, <span t-esc="data['discharge_port_country_id']"/>   </td>
+                                            <td>ETD <span t-esc="data['landing_port']"/>, <span t-esc="data['landing_port_country_id']"/>   </td>
                                             <td>
                                                 <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_date'],'%Y-%m-%d'))"/>
                                             </td>
