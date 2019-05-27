@@ -134,6 +134,20 @@ class BottomLineBudgetLine(models.Model):
             raise UserError('You can\'t give negative value!!!')
 
     @api.multi
+    @api.constrains('bottom_line_account_id')
+    def _check_bottom_line_account(self):
+        for rec in self:
+            if rec.bottom_line_account_id:
+                account = self.search(
+                    [('bottom_line_account_id', '=', rec.bottom_line_account_id.id),
+                     ('bottom_line_budget.fiscal_year', '=', rec.bottom_line_budget.fiscal_year.id),
+                     ('bottom_line_budget.active', '=', True)])
+                if len(account)>1:
+                    raise UserError(_('[User error] The %s, account '
+                                  'is already using in another budget.'
+                                  % rec.bottom_line_account_id.name))
+
+    @api.multi
     def action_branch_distribute(self):
         res = self.env.ref('gbs_account_budget.branch_budget_form')
         branch_budget_id = self.env['branch.budget'].search([('bottom_line_budget_line','=',self.id)])
