@@ -73,6 +73,7 @@
                             <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                         <group>
+                            <field name="total_planned_amount" widget="monetary"/>
                             <field name="approve_date"
                                    attrs="{'invisible':[('state','in',('draft','confirm','cancel'))]}"/>
                             <field name="approved_user_id"
