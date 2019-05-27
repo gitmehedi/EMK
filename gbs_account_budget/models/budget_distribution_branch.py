@@ -87,11 +87,8 @@ class BranchBudget(models.Model):
             self.branch_budget_lines = []
             vals = []
             op_pool = self.env['operating.unit'].search([])
-            line_planned_amount = self.planned_amount / len(op_pool)
             for obj in op_pool:
-                vals.append((0, 0, {'operating_unit_id': obj.id,
-                                    # 'planned_amount': line_planned_amount,
-                                    }))
+                vals.append((0, 0, {'operating_unit_id': obj.id,}))
             self.branch_budget_lines = vals
 
 

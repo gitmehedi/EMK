@@ -24,6 +24,8 @@ class BottomLineBudget(models.Model):
     approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange',
                                        default=lambda self: self.env.user)
     active = fields.Boolean(default=True,track_visibility='onchange')
+    total_planned_amount = fields.Float('Total Planned Amount', compute='_compute_planned_amount',
+                                        store=True, readonly=True, track_visibility='onchange', copy=False)
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -31,6 +33,12 @@ class BottomLineBudget(models.Model):
         ('confirm', 'Confirmed'),
         ('approve', 'Approved'),
     ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
+
+    @api.one
+    @api.depends('bottom_line_budgets.planned_amount')
+    def _compute_planned_amount(self):
+        for rec in self:
+            rec.total_planned_amount = sum(line.planned_amount for line in rec.bottom_line_budgets)
 
     @api.constrains('name')
     def _check_unique_constrain(self):
