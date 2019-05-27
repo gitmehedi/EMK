@@ -260,7 +260,7 @@ class ServerFileProcess(models.Model):
     def format_data(self, date):
         if len(date) == 6:
             try:
-                data = "{0}-{1}-{2} {3}:{4}:{5}".format(date[0], date[1], date[2], date[3], date[4], date[5])
+                data = "{0}-{1}-{2} {3}:{4}:{5}".format(date[1], date[0], date[2], date[3], date[4], date[5])
                 date_con = datetime.strptime(data, '%m-%d-%Y %H:%M:%S')
             except Exception:
                 date_con = False
@@ -284,14 +284,13 @@ class ServerFileProcess(models.Model):
         errors, response = [], False
         path = self.get_file_path(file)
         source_path = path['source'] if self.method == 'local' else path['folder']
-
         with open(source_path, 'r') as file_ins:
             moves = {}
             index = 0
             for worksheet_index in file_ins:
                 index += 1
-                if len(worksheet_index) > 2:
 
+                if len(worksheet_index) > 2:
                     rec = self.data_mapping(worksheet_index)
 
                     journal_no = rec['JOURNAL-NBR']
@@ -304,9 +303,9 @@ class ServerFileProcess(models.Model):
                             'journal_id': journal.id,
                             'date': rec['POSTING-DATE'],
                             'is_cbs': True,
+                            'ref': journal_no,
                             'line_ids': [],
                         }
-
                     name = rec['DESC-TEXT-24'].strip()
                     if not name:
                         errors.append(
@@ -359,7 +358,7 @@ class ServerFileProcess(models.Model):
                         errors.append((0, 0, {'line_no': index, 'details': 'SC [{0}]  has invalid value'.format(sc)}))
 
                     cost_centre = rec['GL-CLASS-CODE']['COST_CENTRE']
-                    cost_centre_id = self.env['account.analytic.account'].search([('name', '=', cost_centre)])
+                    cost_centre_id = self.env['account.analytic.account'].search([('code', '=', cost_centre)])
                     if not cost_centre_id:
                         errors.append(
                             (0, 0,

@@ -120,7 +120,7 @@
                         <field name="user_type_id"/>
                         <group string="Group By">
                             <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>
-                            <filter name="level_id" string="Level" context="{'group_by': 'level_id'}"/>
+                            <filter name="level_id" string="Layer" context="{'group_by': 'level_id'}"/>
                             <filter string="Pending" name="pending" icon="terp-personal"
                                     domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                             <filter string="Rejected" name="state" icon="terp-personal"

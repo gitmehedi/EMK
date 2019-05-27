@@ -78,7 +78,6 @@ class ResPartner(models.Model):
                 self.city = self.city if not requested.city else requested.city
                 self.state_id = self.state_id if not requested.state_id.id else requested.state_id.id
                 self.country_id = self.country_id if not requested.country_id.id else requested.country_id.id
-                self.bank_ids = self.bank_ids if not requested.bank_ids else [i.id for i in requested.bank_ids]
                 self.pending = False
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()
@@ -113,7 +112,7 @@ class ResPartner(models.Model):
 
     @api.constrains('tax','bin', 'tin','vat','mobile','fax')
     def _check_numeric_constrain(self):
-        if self.tin:
+        if self.tax:
             tax = self.search(
                 [('tax', '=ilike', self.tax.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(tax) > 1:
@@ -180,7 +179,6 @@ class HistoryResPartner(models.Model):
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
-    bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     line_id = fields.Many2one('res.partner', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
