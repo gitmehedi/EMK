@@ -12,6 +12,7 @@
         'account',
     ],
     "data": [
+        # "data/default_data.xml",
         "data/ir_cron.xml",
         "data/mail_message_subtype.xml",
         "security/ir.model.access.csv",

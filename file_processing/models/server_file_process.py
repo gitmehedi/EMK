@@ -295,7 +295,7 @@ class ServerFileProcess(models.Model):
                     rec = self.data_mapping(worksheet_index)
 
                     journal_no = rec['JOURNAL-NBR']
-                    journal_type = 'Customer Invoices'
+                    journal_type = 'CBS Invoices'
                     journal = self.env['account.journal'].search([('name', '=', journal_type)])
                     if not journal:
                         raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
@@ -310,56 +310,60 @@ class ServerFileProcess(models.Model):
                     name = rec['DESC-TEXT-24'].strip()
                     if not name:
                         errors.append(
-                            {'line_no': index, 'details': 'DESC-TEXT-24 [{0}] has invalid value'.format(name)})
+                            (0, 0, {'line_no': index, 'details': 'DESC-TEXT-24 [{0}] has invalid value'.format(name)}))
 
                     amount = float(rec['LCY-AMT'][:14] + '.' + rec['LCY-AMT'][14:17])
                     if not amount:
                         errors.append(
-                            {'line_no': index, 'details': 'LCY-AMT [{0}] has invalid value'.format(amount)})
+                            (0, 0, {'line_no': index, 'details': 'LCY-AMT [{0}] has invalid value'.format(amount)}))
 
                     posting_date = rec['POSTING-DATE']
                     if not posting_date:
-                        errors.append({'line_no': index, 'details': 'POSTING-DATE or POSTING-TIME has invalid value'})
+                        errors.append(
+                            (0, 0, {'line_no': index, 'details': 'POSTING-DATE or POSTING-TIME has invalid value'}))
 
                     system_date = rec['SYSTEM-DATE']
                     if not system_date:
-                        errors.append({'line_no': index, 'details': 'SYSTEM-DATE has invalid value'})
+                        errors.append((0, 0, {'line_no': index, 'details': 'SYSTEM-DATE has invalid value'}))
 
                     trans_date = rec['TRANS-DATE']
                     if not trans_date:
-                        errors.append({'line_no': index, 'details': 'TRANS-DATE has invalid value'})
+                        errors.append((0, 0, {'line_no': index, 'details': 'TRANS-DATE has invalid value'}))
 
                     branch = rec['GL-CLASS-CODE']['BRANCH']
                     branch_id = self.env['operating.unit'].search([('code', '=', branch)])
                     if not branch_id:
-                        errors.append({'line_no': index, 'details': 'BRANCH [{0}] has invalid value'.format(branch)})
+                        errors.append(
+                            (0, 0, {'line_no': index, 'details': 'BRANCH [{0}] has invalid value'.format(branch)}))
 
                     currency = rec['GL-CLASS-CODE']['CURRENCY']
                     currency_id = self.env['res.currency'].search([('code', '=', currency)])
                     if not currency_id:
                         errors.append(
-                            {'line_no': index, 'details': 'CURRENCY [{0}]  has invalid value'.format(currency)})
+                            (0, 0, {'line_no': index, 'details': 'CURRENCY [{0}]  has invalid value'.format(currency)}))
 
                     segment = rec['GL-CLASS-CODE']['SEGMENT']
                     segment_id = self.env['segment'].search([('code', '=', segment)])
                     if not segment_id:
-                        errors.append({'line_no': index, 'details': 'SEGMENT [{0}]  has invalid value'.format(segment)})
+                        errors.append(
+                            (0, 0, {'line_no': index, 'details': 'SEGMENT [{0}]  has invalid value'.format(segment)}))
 
                     ac = rec['GL-CLASS-CODE']['AC']
                     ac_id = self.env['acquiring.channel'].search([('code', '=', ac)])
                     if not ac_id:
-                        errors.append({'line_no': index, 'details': 'AC [{0}]  has invalid value'.format(ac)})
+                        errors.append((0, 0, {'line_no': index, 'details': 'AC [{0}]  has invalid value'.format(ac)}))
 
                     sc = rec['GL-CLASS-CODE']['SC']
                     sc_id = self.env['servicing.channel'].search([('code', '=', sc)])
                     if not sc_id:
-                        errors.append({'line_no': index, 'details': 'SC [{0}]  has invalid value'.format(sc)})
+                        errors.append((0, 0, {'line_no': index, 'details': 'SC [{0}]  has invalid value'.format(sc)}))
 
                     cost_centre = rec['GL-CLASS-CODE']['COST_CENTRE']
                     cost_centre_id = self.env['account.analytic.account'].search([('name', '=', cost_centre)])
                     if not cost_centre_id:
                         errors.append(
-                            {'line_no': index, 'details': 'COST_CENTRE [{0}]  has invalid value'.format(cost_centre)})
+                            (0, 0,
+                             {'line_no': index, 'details': 'COST_CENTRE [{0}]  has invalid value'.format(cost_centre)}))
 
                     if rec['GL-CLASS-CODE']['COMP_1'] and rec['GL-CLASS-CODE']['COMP_2']:
                         comp_1 = rec['GL-CLASS-CODE']['COMP_1']
@@ -368,9 +372,9 @@ class ServerFileProcess(models.Model):
                         account = comp_1 + comp_2
                         account_id = self.env['account.account'].search([('code', '=', account)])
                         if not account_id:
-                            errors.append({'line_no': index,
-                                           'details': 'Combination of COMP_1 and COMP_2 [{0}] has invalid value'.format(
-                                               account)})
+                            errors.append(
+                                (0, 0, {'line_no': index,
+                                        'details': 'COMP_1 or COMP_2 [{0}] has invalid value'.format(account)}))
 
                     if rec['JOURNAL-SEQ'] == '01':
                         line = {
@@ -407,7 +411,7 @@ class ServerFileProcess(models.Model):
 
             if len(errors) > 0:
                 self.env['server.file.error'].create({'file_path': source_path,
-                                                      'errors': json.dumps(errors),
+                                                      'line_ids': errors,
                                                       'ftp_ip': self.source_sftp_host})
             else:
                 try:

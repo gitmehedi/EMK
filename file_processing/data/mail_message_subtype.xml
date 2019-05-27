@@ -15,5 +15,4 @@
         <field name="res_model">server.file.process</field>
         <field name="default" eval="True" />
     </record>
-
 </odoo>

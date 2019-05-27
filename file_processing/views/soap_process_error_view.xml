@@ -5,7 +5,7 @@
         <field name="model">soap.process.error</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="SOAP Process Error">
+            <form string="SOAP Process Error" edit="0" create="0" delete="0" duplicate="0">
                 <header>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -36,7 +36,7 @@
         <field name="model">soap.process.error</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="SOAP Process Error"
+            <tree string="SOAP Process Error" edit="0" create="0" delete="0" duplicate="0"
                   decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
                 <field name="name"/>
                 <field name="process_date"/>
@@ -75,5 +75,5 @@
         <field name="search_view_id" ref="view_soap_process_error_search"/>
     </record>
 
-    <menuitem parent="main_api_interface" action="action_soap_process_error_form" id="soap_process_error_menu"/>
+    <menuitem parent="main_error_api_interface" action="action_soap_process_error_form" id="soap_process_error_menu"/>
 </odoo>

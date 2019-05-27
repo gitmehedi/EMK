@@ -5,7 +5,7 @@
         <field name="model">server.file.error</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="File Processing Error">
+            <form string="File Processing Error" edit="0" create="0" delete="0" duplicate="0">
                 <header>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -24,7 +24,22 @@
 
                         </group>
                     </group>
-                    <separator string="Error Details"/>
+                    <notebook>
+                        <page string="Error Details">
+                            <field name="line_ids">
+                                <tree>
+                                    <field name="line_no"/>
+                                    <field name="details"/>
+                                    <field name="process_date"/>
+                                </tree>
+                                <form>
+                                    <field name="line_no"/>
+                                    <field name="details"/>
+                                    <field name="process_date"/>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
                     <field name="errors"/>
                 </sheet>
                 <div class="oe_chatter">
@@ -40,7 +55,7 @@
         <field name="model">server.file.error</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="File Processing Error"
+            <tree string="File Processing Error" edit="0" create="0" delete="0" duplicate="0"
                   decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
                 <field name="name"/>
                 <field name="file_path"/>
@@ -80,5 +95,5 @@
         <field name="search_view_id" ref="view_server_file_error_search"/>
     </record>
 
-    <menuitem parent="main_api_interface" action="action_server_file_error_form" id="server_file_error_menu"/>
+    <menuitem parent="main_error_api_interface" action="action_server_file_error_form" id="server_file_error_menu"/>
 </odoo>
