@@ -17,6 +17,10 @@
                     <field name="vat_challan_id" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
+                <xpath expr="//field[@name='pack_operation_product_ids']/tree/field[@name='product_uom_id']" position="after">
+                    <field name="price_unit"/>
+                </xpath>
+
                 <xpath expr="//field[@name='vat_challan_id']" position="after">
                     <field name="pack_type" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                     <field name="delivery_mode" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>

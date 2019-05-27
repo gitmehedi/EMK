@@ -28,7 +28,7 @@
 
                             <group colspan="2">
                                 <group>
-                                    <field name="name" string="LC/TT/SC Number" required="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                    <field name="name" string="LC/TT/SC Number" required="1" attrs="{'readonly': [('state', 'in', ('confirmed','amendment','progress','done', 'cancel'))]}"/>
                                     <field name="type" attrs="{'invisible': '1'}" required="1"/>
                                     <field name="model_type" widget="radio" options="{'horizontal': true}"/>
                                     <field name="sc_type" attrs="{'required': [('model_type', '==', ('sales_contract'))],'invisible': [('model_type', '!=', ('sales_contract'))]}"/>

@@ -2,11 +2,12 @@
     <data>
         <!-- CNF Agent Menu -->
         <record id="action_partner_cnf_supplier_form" model="ir.actions.act_window">
-            <field name="name">Vendors</field>
+            <field name="name">CNF Agent</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('is_cnf','=','1')]</field>
+            <field name="context">{'default_customer':0, 'default_is_cnf':1}</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
@@ -30,11 +31,12 @@
 
         <!-- Local Suppliers Menu-->
         <record id="action_partner_supplier_local_form" model="ir.actions.act_window">
-            <field name="name">Vendors</field>
+            <field name="name">Local Suppliers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('supplier_type','=','local')]</field>
+            <field name="context">{'default_supplier_type':'local','default_customer':0,'default_supplier':1}</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="filter" eval="True"/>
         </record>
@@ -49,11 +51,12 @@
 
         <!-- Foreign Suppliers Menu-->
         <record id="action_partner_supplier_foreign_form" model="ir.actions.act_window">
-            <field name="name">Vendors</field>
+            <field name="name">Foreign Suppliers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('supplier_type','=','foreign')]</field>
+            <field name="context">{'default_supplier_type':'foreign','default_customer':0,'default_supplier':1}</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="filter" eval="True"/>
         </record>
