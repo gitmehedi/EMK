@@ -2,27 +2,27 @@
 <odoo>
     <data noupdate="1">
         <record model="account.account.level" id="data_account_account_level_first">
-            <field name="name">First Level</field>
+            <field name="name">Layer 1</field>
             <field name="size">1</field>
             <field name="parent_id" eval="False"/>
         </record>
         <record model="account.account.level" id="data_account_account_level_second">
-            <field name="name">Second Level</field>
+            <field name="name">Layer 2</field>
             <field name="size">2</field>
             <field name="parent_id" eval="data_account_account_level_first"/>
         </record>
         <record model="account.account.level" id="data_account_account_level_third">
-            <field name="name">Third Level</field>
+            <field name="name">Layer 3</field>
             <field name="size">3</field>
             <field name="parent_id" eval="data_account_account_level_second"/>
         </record>
         <record model="account.account.level" id="data_account_account_level_fourth">
-            <field name="name">Fourth Level</field>
+            <field name="name">Layer 4</field>
             <field name="size">5</field>
             <field name="parent_id" eval="data_account_account_level_third"/>
         </record>
         <record model="account.account.level" id="data_account_account_level_fifth">
-            <field name="name">Fifth Level</field>
+            <field name="name">Layer 5</field>
             <field name="size">8</field>
             <field name="parent_id" eval="data_account_account_level_fourth"/>
         </record>

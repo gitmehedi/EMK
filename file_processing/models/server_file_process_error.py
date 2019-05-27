@@ -6,7 +6,7 @@ from odoo import exceptions, models, fields, api, _, tools
 class ServerFileError(models.Model):
     _name = 'server.file.error'
     _description = "File Processing Error"
-    _inherit = ["mail.thread"]
+    _inherit = ["mail.thread","ir.needaction_mixin"]
     _order = 'id desc'
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)

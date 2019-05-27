@@ -5,7 +5,7 @@ class AccountLevel(models.Model):
     _name = 'account.account.level'
     _inherit = ['mail.thread']
 
-    name = fields.Char(string='Level Name', size=50, required=True, track_visibility='onchange')
+    name = fields.Char(string='Layer Name', size=50, required=True, track_visibility='onchange')
     size = fields.Integer(string='Level Size', size=2, required=True, track_visibility='onchange')
     prefix = fields.Char(string='Prefix', track_visibility='onchange')
     parent_id = fields.Many2one('account.account.level', ondelete='restrict', string='Parent Name')
