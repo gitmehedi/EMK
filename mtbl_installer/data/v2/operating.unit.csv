@@ -113,3 +113,5 @@ Code,Name,Location of Branch,active,pending,state
 515,Mawna Branch,Rural,True,False,approve
 516,Mirpur-2 Branch,Urban,True,False,approve
 517,Rahattarpool Branch,Urban,True,False,approve
+113,Unknown Branch,Urban,True,False,approve
+000,Empty Branch,Urban,True,False,approve

@@ -19,7 +19,7 @@ class AccountAccount(models.Model):
     reconcile = fields.Boolean(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     level_size = fields.Integer(related='level_id.size')
 
-    level_id = fields.Many2one('account.account.level', ondelete='restrict', string='Level', required=True,
+    level_id = fields.Many2one('account.account.level', ondelete='restrict', string='Layer', required=True,
                                track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})

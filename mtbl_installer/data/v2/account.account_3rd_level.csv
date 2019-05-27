@@ -1,85 +1,85 @@
 Level,Code,Name,Parent Account,Type,active,pending,state
-Third Level,111,Capital ,Capital & Reserve,View Type,True,False,approve
-Third Level,112,Reserve ,Capital & Reserve,View Type,True,False,approve
-Third Level,121,Borrowings under Bangladesh Bank,Borrowings,View Type,True,False,approve
-Third Level,125,Interest Payable on Borrowings,Borrowings,View Type,True,False,approve
-Third Level,122,Borrowings from other Banks,Borrowings,View Type,True,False,approve
-Third Level,123,Borrowings from other Institutions,Borrowings,View Type,True,False,approve
-Third Level,124,OBU Borrowings,Borrowings,View Type,True,False,approve
-Third Level,131,Customer Deposits -Current & Others,Deposits,View Type,True,False,approve
-Third Level,132,"Customer Deposits -SB, FD, RD, SND etc.",Deposits,View Type,True,False,approve
-Third Level,133,Bank & NBFI Deposits -Current & Others,Deposits,View Type,True,False,approve
-Third Level,134,Bank & NBFI Deposits -FD & Others,Deposits,View Type,True,False,approve
-Third Level,135,IP on Customer Deposits -Current & Others,Deposits,View Type,True,False,approve
-Third Level,136,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",Deposits,View Type,True,False,approve
-Third Level,137,Interest Payable on Bank & NBFI Deposits,Deposits,View Type,True,False,approve
-Third Level,138,Customer Deposits -Bills Payable,Deposits,View Type,True,False,approve
-Third Level,139,OBU Deposits,Deposits,View Type,True,False,approve
-Third Level,141,Subordinated Bond,Bond,View Type,True,False,approve
-Third Level,142,Other Bond,Bond,View Type,True,False,approve
-Third Level,151,Interest Suspenses Account ,Other Liabilities,View Type,True,False,approve
-Third Level,152,Other misc. liabilities,Other Liabilities,View Type,True,False,approve
-Third Level,153,Provision,Other Liabilities,View Type,True,False,approve
-Third Level,161,Inter Branch Account 2,Inter Branch Account,View Type,True,False,approve
-Third Level,171,Income 3,Income,View Type,True,False,approve
-Third Level,211,Cash,Cash & Bank Balance,View Type,True,False,approve
-Third Level,212,Balance with Bangladesh Bank,Cash & Bank Balance,View Type,True,False,approve
-Third Level,213,Balance with Agent Bank,Cash & Bank Balance,View Type,True,False,approve
-Third Level,214,Balance with other banks and Fis,Cash & Bank Balance,View Type,True,False,approve
-Third Level,221,Money at Call & Short Notice 2,Money at Call & Short Notice,View Type,True,False,approve
-Third Level,231,Government,Investments,View Type,True,False,approve
-Third Level,232,Other Investments,Investments,View Type,True,False,approve
-Third Level,233,Inv in Subsidiaries,Investments,View Type,True,False,approve
-Third Level,241,Term Loans,Loans & Advances,View Type,True,False,approve
-Third Level,242,Demand Loans,Loans & Advances,View Type,True,False,approve
-Third Level,243,Continuous Loans,Loans & Advances,View Type,True,False,approve
-Third Level,244,Credit Cards,Loans & Advances,View Type,True,False,approve
-Third Level,246,Interest Receivables,Loans & Advances,View Type,True,False,approve
-Third Level,247,Penal Interest Receivable,Loans & Advances,View Type,True,False,approve
-Third Level,248,OBU Loans & Advances,Loans & Advances,View Type,True,False,approve
-Third Level,249,Other Loans & Assets,Loans & Advances,View Type,True,False,approve
-Third Level,251,Tangible Fixed Assets,Fixed Assets,View Type,True,False,approve
-Third Level,252,Intangible Assets,Fixed Assets,View Type,True,False,approve
-Third Level,261,Adjustment Account,Other Assets,View Type,True,False,approve
-Third Level,262,Advances,Other Assets,View Type,True,False,approve
-Third Level,263,Coupon Interest Expenditure Account,Other Assets,View Type,True,False,approve
-Third Level,264,Placement to Off-Shore Banking Unit,Other Assets,View Type,True,False,approve
-Third Level,265,Receivable from Subsidiaries,Other Assets,View Type,True,False,approve
-Third Level,266,Suspense Account,Other Assets,View Type,True,False,approve
-Third Level,267,Receivable from OBU,Other Assets,View Type,True,False,approve
-Third Level,269,Miscellaneous Other Assets,Other Assets,View Type,True,False,approve
-Third Level,281,Expenditure1,Expenditure,View Type,True,False,approve
-Third Level,311,Interest Earned,Interest Income,View Type,True,False,approve
-Third Level,312,Penal Interest Earned,Interest Income,View Type,True,False,approve
-Third Level,313,Interest on MTB Branch Account,Interest Income,View Type,True,False,approve
-Third Level,314, Income on Money Market/ Placements,Interest Income,View Type,True,False,approve
-Third Level,321,Income fm Govt Securities,Income fm Investments,View Type,True,False,approve
-Third Level,322,Income from Other Investments,Income fm Investments,View Type,True,False,approve
-Third Level,331,Commission,"Comm, Exch & Brokerage",View Type,True,False,approve
-Third Level,332,Exchange,"Comm, Exch & Brokerage",View Type,True,False,approve
-Third Level,333,Brokerage,"Comm, Exch & Brokerage",View Type,True,False,approve
-Third Level,341,Other Operating Income 1,Other Operating Income,View Type,True,False,approve
-Third Level,411,Interest Expenses on Demand Deposits,Interest Expenses,View Type,True,False,approve
-Third Level,412,Interest Expenses on Term Deposits,Interest Expenses,View Type,True,False,approve
-Third Level,413,Interest Expenses on Borrowings,Interest Expenses,View Type,True,False,approve
-Third Level,414,Interest Expenses on Bonds,Interest Expenses,View Type,True,False,approve
-Third Level,415,Interest Expense on Others,Interest Expenses,View Type,True,False,approve
-Third Level,416,Interest Expense on Branch A/C,Interest Expenses,View Type,True,False,approve
-Third Level,421,Salary & Allowances,Non-Interest Expenses,View Type,True,False,approve
-Third Level,422,"Rent, Taxes, Insurance, Electricity etc.",Non-Interest Expenses,View Type,True,False,approve
-Third Level,423,Other Expenses,Non-Interest Expenses,View Type,True,False,approve
-Third Level,424,Depreciation & Repair & Maintenance of Assets,Non-Interest Expenses,View Type,True,False,approve
-Third Level,425,"Postage, Stamps and Telecommunication etc.",Non-Interest Expenses,View Type,True,False,approve
-Third Level,426,Legal Expenses,Non-Interest Expenses,View Type,True,False,approve
-Third Level,427,"Stationery, Printing and Advertisements etc.",Non-Interest Expenses,View Type,True,False,approve
-Third Level,428,Director's Expenses,Non-Interest Expenses,View Type,True,False,approve
-Third Level,429,Managing Director's Remuneration,Non-Interest Expenses,View Type,True,False,approve
-Third Level,431,Provision for Loans,Provisions,View Type,True,False,approve
-Third Level,432,Provision for diminution in value of Invsetments,Provisions,View Type,True,False,approve
-Third Level,433,Other Provisions,Provisions,View Type,True,False,approve
-Third Level,511,Bills sent for collection,Contra ,View Type,True,False,approve
-Third Level,512,Bills received for Collection,Contra ,View Type,True,False,approve
-Third Level,513,Forward Contract,Contra ,View Type,True,False,approve
-Third Level,521,Bank Guarantee <Contingent>,Contingent,View Type,True,False,approve
-Third Level,522,Letter of Credit <Contingent>,Contingent,View Type,True,False,approve
-Third Level,523,Accepted Bills under LC <Contingent>,Contingent,View Type,True,False,approve
+Leyer 3,111,Capital ,Capital & Reserve,View Type,True,False,approve
+Leyer 3,112,Reserve ,Capital & Reserve,View Type,True,False,approve
+Leyer 3,121,Borrowings under Bangladesh Bank,Borrowings,View Type,True,False,approve
+Leyer 3,125,Interest Payable on Borrowings,Borrowings,View Type,True,False,approve
+Leyer 3,122,Borrowings from other Banks,Borrowings,View Type,True,False,approve
+Leyer 3,123,Borrowings from other Institutions,Borrowings,View Type,True,False,approve
+Leyer 3,124,OBU Borrowings,Borrowings,View Type,True,False,approve
+Leyer 3,131,Customer Deposits -Current & Others,Deposits,View Type,True,False,approve
+Leyer 3,132,"Customer Deposits -SB, FD, RD, SND etc.",Deposits,View Type,True,False,approve
+Leyer 3,133,Bank & NBFI Deposits -Current & Others,Deposits,View Type,True,False,approve
+Leyer 3,134,Bank & NBFI Deposits -FD & Others,Deposits,View Type,True,False,approve
+Leyer 3,135,IP on Customer Deposits -Current & Others,Deposits,View Type,True,False,approve
+Leyer 3,136,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",Deposits,View Type,True,False,approve
+Leyer 3,137,Interest Payable on Bank & NBFI Deposits,Deposits,View Type,True,False,approve
+Leyer 3,138,Customer Deposits -Bills Payable,Deposits,View Type,True,False,approve
+Leyer 3,139,OBU Deposits,Deposits,View Type,True,False,approve
+Leyer 3,141,Subordinated Bond,Bond,View Type,True,False,approve
+Leyer 3,142,Other Bond,Bond,View Type,True,False,approve
+Leyer 3,151,Interest Suspenses Account ,Other Liabilities,View Type,True,False,approve
+Leyer 3,152,Other misc. liabilities,Other Liabilities,View Type,True,False,approve
+Leyer 3,153,Provision,Other Liabilities,View Type,True,False,approve
+Leyer 3,161,Inter Branch Account 2,Inter Branch Account,View Type,True,False,approve
+Leyer 3,171,Income 3,Income,View Type,True,False,approve
+Leyer 3,211,Cash,Cash & Bank Balance,View Type,True,False,approve
+Leyer 3,212,Balance with Bangladesh Bank,Cash & Bank Balance,View Type,True,False,approve
+Leyer 3,213,Balance with Agent Bank,Cash & Bank Balance,View Type,True,False,approve
+Leyer 3,214,Balance with other banks and Fis,Cash & Bank Balance,View Type,True,False,approve
+Leyer 3,221,Money at Call & Short Notice 2,Money at Call & Short Notice,View Type,True,False,approve
+Leyer 3,231,Government,Investments,View Type,True,False,approve
+Leyer 3,232,Other Investments,Investments,View Type,True,False,approve
+Leyer 3,233,Inv in Subsidiaries,Investments,View Type,True,False,approve
+Leyer 3,241,Term Loans,Loans & Advances,View Type,True,False,approve
+Leyer 3,242,Demand Loans,Loans & Advances,View Type,True,False,approve
+Leyer 3,243,Continuous Loans,Loans & Advances,View Type,True,False,approve
+Leyer 3,244,Credit Cards,Loans & Advances,View Type,True,False,approve
+Leyer 3,246,Interest Receivables,Loans & Advances,View Type,True,False,approve
+Leyer 3,247,Penal Interest Receivable,Loans & Advances,View Type,True,False,approve
+Leyer 3,248,OBU Loans & Advances,Loans & Advances,View Type,True,False,approve
+Leyer 3,249,Other Loans & Assets,Loans & Advances,View Type,True,False,approve
+Leyer 3,251,Tangible Fixed Assets,Fixed Assets,View Type,True,False,approve
+Leyer 3,252,Intangible Assets,Fixed Assets,View Type,True,False,approve
+Leyer 3,261,Adjustment Account,Other Assets,View Type,True,False,approve
+Leyer 3,262,Advances,Other Assets,View Type,True,False,approve
+Leyer 3,263,Coupon Interest Expenditure Account,Other Assets,View Type,True,False,approve
+Leyer 3,264,Placement to Off-Shore Banking Unit,Other Assets,View Type,True,False,approve
+Leyer 3,265,Receivable from Subsidiaries,Other Assets,View Type,True,False,approve
+Leyer 3,266,Suspense Account,Other Assets,View Type,True,False,approve
+Leyer 3,267,Receivable from OBU,Other Assets,View Type,True,False,approve
+Leyer 3,269,Miscellaneous Other Assets,Other Assets,View Type,True,False,approve
+Leyer 3,281,Expenditure1,Expenditure,View Type,True,False,approve
+Leyer 3,311,Interest Earned,Interest Income,View Type,True,False,approve
+Leyer 3,312,Penal Interest Earned,Interest Income,View Type,True,False,approve
+Leyer 3,313,Interest on MTB Branch Account,Interest Income,View Type,True,False,approve
+Leyer 3,314, Income on Money Market/ Placements,Interest Income,View Type,True,False,approve
+Leyer 3,321,Income fm Govt Securities,Income fm Investments,View Type,True,False,approve
+Leyer 3,322,Income from Other Investments,Income fm Investments,View Type,True,False,approve
+Leyer 3,331,Commission,"Comm, Exch & Brokerage",View Type,True,False,approve
+Leyer 3,332,Exchange,"Comm, Exch & Brokerage",View Type,True,False,approve
+Leyer 3,333,Brokerage,"Comm, Exch & Brokerage",View Type,True,False,approve
+Leyer 3,341,Other Operating Income 1,Other Operating Income,View Type,True,False,approve
+Leyer 3,411,Interest Expenses on Demand Deposits,Interest Expenses,View Type,True,False,approve
+Leyer 3,412,Interest Expenses on Term Deposits,Interest Expenses,View Type,True,False,approve
+Leyer 3,413,Interest Expenses on Borrowings,Interest Expenses,View Type,True,False,approve
+Leyer 3,414,Interest Expenses on Bonds,Interest Expenses,View Type,True,False,approve
+Leyer 3,415,Interest Expense on Others,Interest Expenses,View Type,True,False,approve
+Leyer 3,416,Interest Expense on Branch A/C,Interest Expenses,View Type,True,False,approve
+Leyer 3,421,Salary & Allowances,Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,422,"Rent, Taxes, Insurance, Electricity etc.",Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,423,Other Expenses,Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,424,Depreciation & Repair & Maintenance of Assets,Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,425,"Postage, Stamps and Telecommunication etc.",Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,426,Legal Expenses,Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,427,"Stationery, Printing and Advertisements etc.",Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,428,Director's Expenses,Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,429,Managing Director's Remuneration,Non-Interest Expenses,View Type,True,False,approve
+Leyer 3,431,Provision for Loans,Provisions,View Type,True,False,approve
+Leyer 3,432,Provision for diminution in value of Invsetments,Provisions,View Type,True,False,approve
+Leyer 3,433,Other Provisions,Provisions,View Type,True,False,approve
+Leyer 3,511,Bills sent for collection,Contra ,View Type,True,False,approve
+Leyer 3,512,Bills received for Collection,Contra ,View Type,True,False,approve
+Leyer 3,513,Forward Contract,Contra ,View Type,True,False,approve
+Leyer 3,521,Bank Guarantee <Contingent>,Contingent,View Type,True,False,approve
+Leyer 3,522,Letter of Credit <Contingent>,Contingent,View Type,True,False,approve
+Leyer 3,523,Accepted Bills under LC <Contingent>,Contingent,View Type,True,False,approve
