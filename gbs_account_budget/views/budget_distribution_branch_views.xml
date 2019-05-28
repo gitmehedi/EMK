@@ -53,12 +53,13 @@
                                 <field name="date_from" class="oe_inline"/> -
                                 <field name="date_to" class="oe_inline" nolabel="1"/>
                             </div>
+                            <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="creating_user_id"/>
                         </group>
                         <group>
-                            <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="planned_amount"/>
                             <field name="remaining_amount"/>
+                            <field name="total_practical_amount"/>
                             <field name="approve_date" attrs="{'invisible':[('state','=','draft')]}"/>
                             <field name="approved_user_id" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
@@ -72,6 +73,7 @@
                                     <field name="operating_unit_id" readonly="1"/>
                                     <field name="planned_amount"/>
                                     <field name="practical_amount" readonly="1"/>
+                                    <field name="remaining_amount" readonly="1"/>
                                     <field name="theoritical_amount" readonly="1"/>
                                 </tree>
                             </field>
