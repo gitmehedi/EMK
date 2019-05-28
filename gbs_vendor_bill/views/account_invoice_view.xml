@@ -96,10 +96,10 @@
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
                 <field name="operating_unit_id" readonly="0"
-                       options="{'no_create': True}" widget="selection"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
                 <field name="sub_operating_unit_id"
-                       options="{'no_create': True}" widget="selection"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
