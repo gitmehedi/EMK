@@ -62,6 +62,7 @@
 
     <act_window name="SOAP Process" id="action_soap_process_form" res_model="soap.process"/>
 
-    <menuitem parent="main_api_interface" action="action_soap_process_form" id="soap_process_menu"/>
+    <menuitem parent="main_api_interface" action="action_soap_process_form" id="soap_process_menu"
+              groups="grp_api_interface_manager"/>
 
 </odoo>

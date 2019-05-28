@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="ir.ui.view" id="view_server_file_error_form">
-        <field name="name">File Processing Error</field>
+        <field name="name">GLIF Process Error</field>
         <field name="model">server.file.error</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="File Processing Error" edit="0" create="0" delete="0" duplicate="0">
+            <form string="GLIF Process Error" edit="0" create="0" delete="0" duplicate="0">
                 <header>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -40,7 +40,6 @@
                             </field>
                         </page>
                     </notebook>
-                    <field name="errors"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -51,11 +50,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_server_file_error_tree">
-        <field name="name">File Processing</field>
+        <field name="name">GLIF Process</field>
         <field name="model">server.file.error</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="File Processing Error" edit="0" create="0" delete="0" duplicate="0"
+            <tree string="GLIF Process Error" edit="0" create="0" delete="0" duplicate="0"
                   decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
                 <field name="name"/>
                 <field name="file_path"/>
@@ -68,11 +67,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_server_file_error_search">
-        <field name="name">File Processing</field>
+        <field name="name">GLIF Process</field>
         <field name="model">server.file.error</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="File Processing Error Search">
+            <search string="GLIF Process Error Search">
                 <field name="process_date"/>
                 <group name="group_by">
                     <filter string="Issued" name="state" icon="terp-personal"
@@ -85,7 +84,7 @@
     </record>
 
     <record id="action_server_file_error_form" model="ir.actions.act_window">
-        <field name="name">File Processing Error</field>
+        <field name="name">GLIF Process Error</field>
         <field name="res_model">server.file.error</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -95,5 +94,6 @@
         <field name="search_view_id" ref="view_server_file_error_search"/>
     </record>
 
-    <menuitem parent="main_error_api_interface" action="action_server_file_error_form" id="server_file_error_menu"/>
+    <menuitem parent="main_error_api_interface" action="action_server_file_error_form" id="server_file_error_menu"
+              sequence="10" groups="grp_api_interface_manager"/>
 </odoo>

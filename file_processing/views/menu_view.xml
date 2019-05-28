@@ -3,10 +3,10 @@
 
     <menuitem id="main_api_interface" name="API Interface" sequence="2"
               web_icon="account_fam,static/description/icon.png" parent="base.menu_custom"
-              groups=""/>
+              groups="grp_api_interface_manager"/>
 
     <menuitem id="main_error_api_interface" name="API Interface" sequence="1"
               web_icon="account_fam,static/description/icon.png" parent="account.menu_finance_configuration"
-              groups=""/>
+              groups="grp_api_interface_manager"/>
 
 </odoo>

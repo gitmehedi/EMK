@@ -75,5 +75,6 @@
         <field name="search_view_id" ref="view_soap_process_error_search"/>
     </record>
 
-    <menuitem parent="main_error_api_interface" action="action_soap_process_error_form" id="soap_process_error_menu"/>
+    <menuitem parent="main_error_api_interface" action="action_soap_process_error_form" id="soap_process_error_menu"
+              sequence="15" groups="grp_api_interface_manager"/>
 </odoo>

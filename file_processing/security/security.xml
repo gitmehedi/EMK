@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_api_interface" model="ir.module.category">
+            <field name="name">API Interface</field>
+            <field name="sequence">100</field>
+        </record>
+        <record id="grp_api_interface_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_api_interface"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="sequence">10</field>
+        </record>
+    </data>
+</odoo>
+
+
+
