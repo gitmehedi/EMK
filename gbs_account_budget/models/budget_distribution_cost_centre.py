@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,Warning, ValidationError
 # ---------------------------------------------------------
@@ -19,8 +19,10 @@ class CostCentreBudget(models.Model):
                                  track_visibility='onchange')
     planned_amount = fields.Float('Planned Amount',default=lambda self: self.env.context.get('default_planned_amount'),
                                   readonly=True,track_visibility='onchange')
-    remaining_amount = fields.Float('Remaining Amount', readonly=True,
+    remaining_amount = fields.Float('Remaining Planned Amount', readonly=True,
                                     compute='_compute_remaining_amount', store=True)
+    total_practical_amount = fields.Float('Total Practical Amount', readonly=True,
+                                          compute='_compute_total_practical_amount')
     fiscal_year = fields.Many2one('date.range', string='Date range', track_visibility='onchange',
                                   default=lambda self: self.env.context.get('default_fiscal_year'),
                                   readonly=True, required=True)
@@ -142,6 +144,12 @@ class CostCentreBudget(models.Model):
         else:
             self.active = True
 
+    @api.one
+    @api.depends('cost_centre_budget_lines.practical_amount')
+    def _compute_total_practical_amount(self):
+        for rec in self:
+            rec.total_practical_amount = sum(line.practical_amount for line in rec.cost_centre_budget_lines)
+
 
 class CostCentreBudgetLine(models.Model):
     _name = "cost.centre.budget.line"
@@ -151,6 +159,7 @@ class CostCentreBudgetLine(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account',required=True,string='Cost Centre')
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount',compute='_compute_practical_amount')
+    remaining_amount = fields.Float(string='Remaining Amount', compute='_compute_remaining_amount')
     theoritical_amount = fields.Float(string='Theoretical Amount',compute='_compute_theoritical_amount')
     active = fields.Boolean(default=True, compute='_compute_active')
 
@@ -201,6 +210,13 @@ class CostCentreBudgetLine(models.Model):
                 theo_amt = line.planned_amount
 
             line.theoritical_amount = theo_amt
+
+    def _compute_remaining_amount(self):
+        for rec in self:
+            if rec.planned_amount>=rec.practical_amount:
+                rec.remaining_amount = rec.planned_amount - rec.practical_amount
+            else:
+                rec.remaining_amount = 0
 
     def _compute_active(self):
         if self.cost_centre_budget_id and \
