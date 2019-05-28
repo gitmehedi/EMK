@@ -51,15 +51,17 @@ class SOAPProcess(models.Model):
             endpoint = self.search([('name', '=', 'GenericTransferAmountInterfaceHttpService')], limit=1)
             if endpoint:
                 return endpoint
-        if debit == 1 and credit > 1:
+        elif debit == 1 and credit > 1:
             endpoint = self.search([('name', '=', 'SingleDebitMultiCreditInterfaceHttpService')], limit=1)
             if endpoint:
                 return endpoint
+        else:
+            return {}
 
     @api.model
     def prepare_bgl(self, record, rec):
-        sub_operating_unit = rec.sub_operating_unit_id.code if rec.sub_operating_unit_id else '000'
-        return "{0}{1}{2}".format(record.operating_unit_id.code, rec.account_id.code, sub_operating_unit)
+        sub_operating_unit = rec.sub_operating_unit_id.code if rec.sub_operating_unit_id else '001'
+        return "{0}{1}00{2}".format(rec.account_id.code,sub_operating_unit,record.operating_unit_id.code)
 
     @api.model
     def soap_request(self):
@@ -100,12 +102,14 @@ class SOAPProcess(models.Model):
         creStr = ""
         for rec in record.line_ids:
             bgl = self.prepare_bgl(record, rec)
+            bgl1 = '1110100100100001'
+            bgl2 = '1120500100100001'
             if rec.credit > 0:
-                creStr = creStr + """<ban:FrmAcct>{0}</ban:FrmAcct>""".format(bgl)
+                creStr = creStr + """<ban:FrmAcct>{0}</ban:FrmAcct>""".format(bgl1)
             elif rec.debit > 0:
                 creStr = """<ban:Amt>{0}</ban:Amt>
                        <ban:ToAcct>{1}</ban:ToAcct>
-                       <ban:StmtNarr>{2}</ban:StmtNarr>""".format(rec.debit, bgl, 'TEST OGL TXNF') + creStr
+                       <ban:StmtNarr>{2}</ban:StmtNarr>""".format(rec.debit, bgl2, 'TEST OGL TXNF') + creStr
 
         data = {
             'InstNum': '003',
