@@ -191,11 +191,17 @@ class ServerFileProcess(models.Model):
                 if os.path.splitext(file)[1] in ['.txt']:
                     source_path = os.path.join(rec.source_path, file)
                     dest_path = os.path.join(rec.dest_path, file)
-
+                    start_date = fields.Datetime.now()
                     journal = rec.create_journal(file)
+                    stop_date = fields.Datetime.now()
                     if journal:
                         if shutil.move(source_path, dest_path):
                             raise ValidationError(_('Please check path configuration.'))
+                        else:
+                            self.env['server.file.success'].create({'name': file,
+                                                                    'start_date': start_date,
+                                                                    'stop_date': stop_date,
+                                                                    'file_name': file})
 
         for rec in self.filtered(lambda r: r.method == "sftp"):
             with self.sftp_connection('source') as source:
@@ -215,6 +221,10 @@ class ServerFileProcess(models.Model):
                             if destination.put(local_path, dest_path):
                                 if not source.unlink(source_path):
                                     os.remove(local_path)
+                                    self.env['server.file.success'].create({'name': file,
+                                                                            'start_date': start_date,
+                                                                            'stop_date': stop_date,
+                                                                            'file_name': file})
                                 else:
                                     raise ValidationError(_('Please check path configuration.'))
                             else:
