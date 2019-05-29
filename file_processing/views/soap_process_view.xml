@@ -33,7 +33,6 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="SOAP Process" decoration-success="status==True"
-                  decoration-bf="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
                 <field name="endpoint_url"/>
