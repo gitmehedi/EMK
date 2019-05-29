@@ -13,5 +13,5 @@ class ServerFileSuccess(models.Model):
     start_date = fields.Datetime(string='Start Datetime', required=True)
     stop_date = fields.Datetime(string='Stop Datetime', required=True)
     file_name = fields.Char(string='File Path', required=True)
-    upload_file = fields.Binary(string="Upload File", attachment=True, required=True)
+    upload_file = fields.Binary(string="Upload File", attachment=True)
     status = fields.Boolean(default=False, string='Status')
