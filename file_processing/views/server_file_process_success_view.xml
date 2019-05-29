@@ -5,7 +5,7 @@
         <field name="model">server.file.success</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="GLIF Process" >
+            <form string="GLIF Process" edit="0" create="0" delete="0" duplicate="0">
                 <sheet>
                     <group>
                         <group>

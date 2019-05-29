@@ -426,7 +426,8 @@ class ServerFileProcess(models.Model):
                         moves[journal_no]['line_ids'].append((0, 0, line))
 
             if len(errors) > 0:
-                self.env['server.file.error'].create({'file_path': source_path,
+                self.env['server.file.error'].create({'name': file,
+                                                      'file_path': source_path,
                                                       'line_ids': errors,
                                                       'ftp_ip': self.source_sftp_host})
             else:
@@ -437,7 +438,8 @@ class ServerFileProcess(models.Model):
                             move_obj.post()
                     return True
                 except Exception:
-                    self.env['server.file.error'].create({'file_path': source_path,
+                    self.env['server.file.error'].create({'name': file,
+                                                          'file_path': source_path,
                                                           'errors': 'Unknown Error. Please check your file.',
                                                           'ftp_ip': 'localhost'})
 
