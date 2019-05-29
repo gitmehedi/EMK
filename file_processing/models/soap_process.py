@@ -75,7 +75,7 @@ class SOAPProcess(models.Model):
                     credit += 1
             endpoint = self.apiInterfaceMapping(debit, credit)
 
-            if len(endpoint) > 0:
+            if endpoint:
                 if endpoint.name == 'GenericTransferAmountInterfaceHttpService':
                     reqBody = self.genGenericTransferAmountInterface(record)
                 elif endpoint.name == 'SingleDebitMultiCreditInterfaceHttpService':
