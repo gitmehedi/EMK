@@ -10,9 +10,13 @@ class ServerFileError(models.Model):
     _order = 'id desc'
 
     name = fields.Char(string='Title', required=True)
-    process_date = fields.Datetime(default=fields.Datetime.now, required=True, readonly=True)
+    process_date = fields.Datetime(string='Process Date', default=fields.Datetime.now, required=True, readonly=True)
     status = fields.Boolean(default=False, string='Status')
-    errors = fields.Text(string='Error Details', required=True)
+    request_body = fields.Text(string='Request Data', required=True)
+    response_body = fields.Text(string='Response Data', required=True)
+    errors = fields.Text(string='Error Code', required=True)
+    error_code = fields.Char(string='Error Code', required=True)
+    error_message = fields.Char(string='Error Details', required=True)
     state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
 
     @api.model

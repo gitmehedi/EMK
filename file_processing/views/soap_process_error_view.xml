@@ -14,14 +14,15 @@
                     <group>
                         <group>
                             <field name="process_date"/>
+                            <field name="status"/>
                         </group>
                         <group>
-                            <field name="status"/>
-
+                            <field name="error_message"/>
+                            <field name="error_code"/>
                         </group>
                     </group>
-                    <separator string="Error Details"/>
-                    <field name="errors"/>
+                    <separator string="Request Details"/>
+                    <field name="request_body"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
