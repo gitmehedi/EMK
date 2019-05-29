@@ -55,13 +55,14 @@
                             </div>
                             <field name="account_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="creating_user_id"/>
+                            <field name="approve_date" attrs="{'invisible':[('state','=','draft')]}"/>
+                            <field name="approved_user_id" attrs="{'invisible':[('state','=','draft')]}"/>
                         </group>
                         <group>
                             <field name="planned_amount"/>
                             <field name="remaining_amount"/>
                             <field name="total_practical_amount"/>
-                            <field name="approve_date" attrs="{'invisible':[('state','=','draft')]}"/>
-                            <field name="approved_user_id" attrs="{'invisible':[('state','=','draft')]}"/>
+                            <field name="rem_exceed_amount"/>
                         </group>
                     </group>
                     <notebook>

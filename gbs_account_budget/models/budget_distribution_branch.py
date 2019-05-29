@@ -24,6 +24,8 @@ class BranchBudget(models.Model):
                                     compute='_compute_remaining_amount',store=True)
     total_practical_amount = fields.Float('Total Practical Amount',readonly=True,
                                     compute='_compute_total_practical_amount')
+    rem_exceed_amount = fields.Float('Remaining/Exceed Amount', readonly=True,
+                                     compute='_compute_rem_exceed_amount')
     fiscal_year = fields.Many2one('date.range', string='Date range', track_visibility='onchange',
                                   default=lambda self: self.env.context.get('default_fiscal_year'),
                                   readonly=True, required=True)
@@ -68,21 +70,6 @@ class BranchBudget(models.Model):
                 raise UserError(_('You cannot delete a record which is not in draft state!'))
         return super(BranchBudget, self).unlink()
 
-    # @api.onchange('fiscal_year')
-    # def _onchange_fiscal_year(self):
-    #     if self.fiscal_year:
-    #         res = {}
-    #         self.account_id = []
-    #         self.branch_budget_lines = []
-    #         self.planned_amount = 0.0
-    #         budget_objs = self.search([('fiscal_year', '=', self.fiscal_year.id)])
-    #         pre_account_ids = [i.account_id.id for i in budget_objs]
-    #         res['domain'] = {
-    #             'account_id': [('id', 'not in', pre_account_ids)],
-    #         }
-    #         return res
-
-
     @api.onchange('account_id')
     def onchange_account_id(self):
         if self.account_id:
@@ -93,15 +80,6 @@ class BranchBudget(models.Model):
                 vals.append((0, 0, {'operating_unit_id': obj.id,}))
             self.branch_budget_lines = vals
 
-
-    # @api.onchange('planned_amount')
-    # def onchange_planned_amount(self):
-    #     if self.planned_amount and self.branch_budget_lines:
-    #         for line in self.branch_budget_lines:
-    #             line.planned_amount = self.planned_amount/len(self.branch_budget_lines)
-    #     elif not self.planned_amount and self.branch_budget_lines:
-    #         for line in self.branch_budget_lines:
-    #             line.planned_amount = 0.0
 
     @api.multi
     @api.depends('planned_amount','branch_budget_lines.planned_amount')
@@ -171,6 +149,12 @@ class BranchBudget(models.Model):
         for rec in self:
             rec.total_practical_amount = sum(line.practical_amount for line in rec.branch_budget_lines)
 
+    @api.one
+    @api.depends('total_practical_amount', 'planned_amount')
+    def _compute_rem_exceed_amount(self):
+        for rec in self:
+            rec.rem_exceed_amount = rec.planned_amount - rec.total_practical_amount
+
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'draft')]
@@ -238,10 +222,8 @@ class BudgetBranchDistributionLine(models.Model):
 
     def _compute_remaining_amount(self):
         for rec in self:
-            if rec.planned_amount>=rec.practical_amount:
-                rec.remaining_amount = rec.planned_amount - rec.practical_amount
-            else:
-                rec.remaining_amount = 0
+            rec.remaining_amount = rec.planned_amount - rec.practical_amount
+
 
     def _compute_active(self):
         if self.branch_budget_id and \
