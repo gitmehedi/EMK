@@ -89,7 +89,8 @@
         <field name="model">server.file.process</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Backups">
+            <tree string="Backups" decoration-success="status==True"
+                  decoration-muted="status==False">
                 <field name='name'/>
                 <field name='folder'/>
                 <field name='method'/>
@@ -97,6 +98,7 @@
                 <field name="source_path"/>
                 <field name="dest_sftp_host"/>
                 <field name="dest_path"/>
+                <field name="status"/>
             </tree>
         </field>
     </record>
@@ -110,6 +112,7 @@
                 <field name='name'/>
                 <field name='folder'/>
                 <field name="source_sftp_host"/>
+                <field name="status"/>
             </search>
         </field>
     </record>

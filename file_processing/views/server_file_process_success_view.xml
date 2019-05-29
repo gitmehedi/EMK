@@ -7,20 +7,16 @@
         <field name="arch" type="xml">
             <form string="GLIF Process" edit="0" create="0" delete="0" duplicate="0">
                 <sheet>
-                    <div>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                    </div>
                     <group>
                         <group>
+                            <field name="upload_file" filename="name"/>
+                            <field name="name" invisible="1"/>
                             <field name="start_date"/>
                             <field name="stop_date"/>
+                            <field name="time"/>
                         </group>
                         <group>
-                            <field name="file_name"/>
-                            <field name="upload_file"/>
-                            <field name="status"/>
+                            <field name="status" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -41,9 +37,9 @@
                 <field name="name"/>
                 <field name="start_date"/>
                 <field name="stop_date"/>
-                <field name="file_name"/>
+                <field name="time"/>
                 <field name="upload_file"/>
-                <field name="status"/>
+                <field name="status" invisible="1"/>
             </tree>
         </field>
     </record>

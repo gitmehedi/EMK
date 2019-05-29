@@ -61,11 +61,11 @@ class SOAPProcess(models.Model):
     @api.model
     def prepare_bgl(self, record, rec):
         sub_operating_unit = rec.sub_operating_unit_id.code if rec.sub_operating_unit_id else '001'
-        return "{0}{1}00{2}".format(rec.account_id.code,sub_operating_unit,record.operating_unit_id.code)
+        return "0{0}{1}00{2}".format(rec.account_id.code, sub_operating_unit, record.operating_unit_id.code)
 
     @api.model
     def soap_request(self):
-        pending_journal = self.env['account.move'].search([])
+        pending_journal = self.env['account.move'].search([('is_sync', '=', False), ('is_cbs', '=', False)])
         for record in pending_journal:
             debit, credit = 0, 0
             for rec in record.line_ids:
@@ -94,37 +94,42 @@ class SOAPProcess(models.Model):
                         response[key[0]] = text
 
                 if 'ErrorMessage' in response:
-                    self.env['soap.process.error'].create(
-                        {'name': endpoint.endpoint_fullname, 'errors': json.dumps(response)})
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['ErrorCode'],
+                        'error_message': response['ErrorMessage'],
+                        'errors': json.dumps(response)
+                    }
+
+                    self.env['soap.process.error'].create(error)
+                else:
+                    record.write({'is_sync': True})
 
     @api.model
     def genGenericTransferAmountInterface(self, record):
         creStr = ""
         for rec in record.line_ids:
             bgl = self.prepare_bgl(record, rec)
-            bgl1 = '1110100100100001'
-            bgl2 = '1120500100100001'
-            if rec.credit > 0:
-                creStr = creStr + """<ban:FrmAcct>{0}</ban:FrmAcct>""".format(bgl1)
-            elif rec.debit > 0:
+            # bgl1 = '01350100100100001'
+            # bgl2 = '01350100100100002'
+            if rec.debit > 0:
+                creStr = creStr + """\n<ban:FrmAcct>{0}</ban:FrmAcct>""".format(bgl)
+            elif rec.credit > 0:
                 creStr = """<ban:Amt>{0}</ban:Amt>
                        <ban:ToAcct>{1}</ban:ToAcct>
-                       <ban:StmtNarr>{2}</ban:StmtNarr>""".format(rec.debit, bgl2, 'TEST OGL TXNF') + creStr
+                       <ban:StmtNarr>{2}</ban:StmtNarr>""".format(rec.debit, bgl, 'TEST OGL TXNF') + creStr
 
         data = {
             'InstNum': '003',
-            'BrchNum': '41101',
-            'TellerNum': '1101',
+            'BrchNum': str(record.operating_unit_id.code),
+            'TellerNum': '1107',
             'Flag4': 'W',
             'Flag5': 'Y',
             'UUIDSource': 'OGL',
-            'UUIDNUM': '',
-            'UUIDSeqNo': '',
-            'FrmAcct': '1200000100009301590',
-            'Amt': '111',
-            'ToAcct': '00000009788900065',
-            'StmtNarr': 'TEST OGL TXNF',
-
+            'UUIDNUM': str(record.name),
+            'UUIDSeqNo': '003',
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                <soapenv:Header/>

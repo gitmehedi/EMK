@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, shutil, xlrd, traceback, logging, json
+import os, shutil, base64, traceback, logging, json
 from datetime import datetime
 from contextlib import contextmanager
 from odoo import exceptions, models, fields, api, _, tools
@@ -31,19 +31,20 @@ class ServerFileProcess(models.Model):
     method = fields.Selection(selection=[("local", "Local disk"), ("sftp", "Remote SFTP Server")], default="local",
                               required=True, track_visibility='onchange')
 
-    source_path = fields.Char(string="Folder Path", required=True, track_visibility='onchange')
+    source_path = fields.Char(string="Source Path", required=True, track_visibility='onchange')
     source_sftp_host = fields.Char(string='SFTP Server', track_visibility='onchange')
     source_sftp_port = fields.Integer(string="SFTP Port", default=22, track_visibility='onchange')
     source_sftp_user = fields.Char(string='Username', track_visibility='onchange')
     source_sftp_password = fields.Char(string="SFTP Password")
     source_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
 
-    dest_path = fields.Char(string="Folder Path", required=True, track_visibility='onchange')
+    dest_path = fields.Char(string="Destination Path", required=True, track_visibility='onchange')
     dest_sftp_host = fields.Char(string='SFTP Server', track_visibility='onchange')
     dest_sftp_port = fields.Integer(string="SFTP Port", default=22, track_visibility='onchange')
     dest_sftp_user = fields.Char(string='Username', track_visibility='onchange')
     dest_sftp_password = fields.Char(string="SFTP Password")
     dest_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
+    status = fields.Boolean(default=True, string='Status')
 
     @api.constrains('source_path', 'dest_path', 'folder')
     def onchange_path(self):
@@ -198,9 +199,12 @@ class ServerFileProcess(models.Model):
                         if shutil.move(source_path, dest_path):
                             raise ValidationError(_('Please check path configuration.'))
                         else:
+                            with open(dest_path, "rb") as glif_file:
+                                encoded_file = base64.b64encode(glif_file.read())
                             self.env['server.file.success'].create({'name': file,
                                                                     'start_date': start_date,
                                                                     'stop_date': stop_date,
+                                                                    'upload_file': encoded_file,
                                                                     'file_name': file})
 
         for rec in self.filtered(lambda r: r.method == "sftp"):
@@ -220,11 +224,14 @@ class ServerFileProcess(models.Model):
                         if journal:
                             if destination.put(local_path, dest_path):
                                 if not source.unlink(source_path):
-                                    os.remove(local_path)
+                                    with open(dest_path, "rb") as glif_file:
+                                        encoded_file = base64.b64encode(glif_file.read())
                                     self.env['server.file.success'].create({'name': file,
                                                                             'start_date': start_date,
                                                                             'stop_date': stop_date,
+                                                                            'upload_file': encoded_file,
                                                                             'file_name': file})
+                                    os.remove(local_path)
                                 else:
                                     raise ValidationError(_('Please check path configuration.'))
                             else:
@@ -419,7 +426,8 @@ class ServerFileProcess(models.Model):
                         moves[journal_no]['line_ids'].append((0, 0, line))
 
             if len(errors) > 0:
-                self.env['server.file.error'].create({'file_path': source_path,
+                self.env['server.file.error'].create({'name': file,
+                                                      'file_path': source_path,
                                                       'line_ids': errors,
                                                       'ftp_ip': self.source_sftp_host})
             else:
@@ -430,7 +438,8 @@ class ServerFileProcess(models.Model):
                             move_obj.post()
                     return True
                 except Exception:
-                    self.env['server.file.error'].create({'file_path': source_path,
+                    self.env['server.file.error'].create({'name': file,
+                                                          'file_path': source_path,
                                                           'errors': 'Unknown Error. Please check your file.',
                                                           'ftp_ip': 'localhost'})
 

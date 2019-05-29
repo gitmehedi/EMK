@@ -9,7 +9,7 @@ class ServerFileError(models.Model):
     _inherit = ["mail.thread", "ir.needaction_mixin"]
     _order = 'id desc'
 
-    name = fields.Char(string='Name', compute='_compute_name', store=True)
+    name = fields.Char(string='Name')
     process_date = fields.Datetime(default=fields.Datetime.now)
     file_path = fields.Char(string='File Path')
     ftp_ip = fields.Char(string='FTP IP')

@@ -57,8 +57,6 @@
             <tree string="GLIF Process Error" edit="0" create="0" delete="0" duplicate="0"
                   decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
                 <field name="name"/>
-                <field name="file_path"/>
-                <field name="ftp_ip"/>
                 <field name="process_date"/>
                 <field name="status"/>
                 <field name="state" invisible="1"/>
