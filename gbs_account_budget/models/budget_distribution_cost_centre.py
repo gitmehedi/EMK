@@ -23,6 +23,8 @@ class CostCentreBudget(models.Model):
                                     compute='_compute_remaining_amount', store=True)
     total_practical_amount = fields.Float('Total Practical Amount', readonly=True,
                                           compute='_compute_total_practical_amount')
+    rem_exceed_amount = fields.Float('Remaining/Exceed Amount', readonly=True,
+                                     compute='_compute_rem_exceed_amount')
     fiscal_year = fields.Many2one('date.range', string='Date range', track_visibility='onchange',
                                   default=lambda self: self.env.context.get('default_fiscal_year'),
                                   readonly=True, required=True)
@@ -148,7 +150,13 @@ class CostCentreBudget(models.Model):
     @api.depends('cost_centre_budget_lines.practical_amount')
     def _compute_total_practical_amount(self):
         for rec in self:
-            rec.total_practical_amount = sum(line.practical_amount for line in rec.cost_centre_budget_lines)
+            rec.total_practical_amount = sum(line.practical_amount for line in rec.cost_centre_budget_lines)\
+
+    @api.one
+    @api.depends('total_practical_amount','planned_amount')
+    def _compute_rem_exceed_amount(self):
+        for rec in self:
+            rec.rem_exceed_amount = rec.planned_amount - rec.total_practical_amount
 
 
 class CostCentreBudgetLine(models.Model):
@@ -213,10 +221,7 @@ class CostCentreBudgetLine(models.Model):
 
     def _compute_remaining_amount(self):
         for rec in self:
-            if rec.planned_amount>=rec.practical_amount:
-                rec.remaining_amount = rec.planned_amount - rec.practical_amount
-            else:
-                rec.remaining_amount = 0
+            rec.remaining_amount = rec.planned_amount - rec.practical_amount
 
     def _compute_active(self):
         if self.cost_centre_budget_id and \
