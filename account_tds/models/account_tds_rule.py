@@ -30,7 +30,7 @@ class TDSRules(models.Model):
     flat_rate = fields.Float(string='Rate', size=3,
                              track_visibility='onchange', states={'confirm': [('readonly', True)]})
     price_include = fields.Boolean(string='Included in Price', default=False,
-                                   track_visibility='onchange',
+                                   track_visibility='onchange', states={'confirm': [('readonly', True)]},
                                    help="Check this if the price you use on the product and invoices includes this TAX.")
     state = fields.Selection([
         ('draft', "Draft"),
