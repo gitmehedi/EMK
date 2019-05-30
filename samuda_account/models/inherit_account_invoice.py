@@ -11,13 +11,17 @@ class AccountInvoice(models.Model):
                 [('product_id', '=', [i.product_id.id for i in self.invoice_line_ids]),
                  ('sale_order_type_id', '=', self.sale_type_id.id)])
 
-            for inv_line in self.invoice_line_ids:
-                if product_acc_list:
+            if product_acc_list:
+                for inv_line in self.invoice_line_ids:
                     for sale_acc_line in product_acc_list:
                         if sale_acc_line.sale_order_type_id.id == self.sale_type_id.id and inv_line.product_id.id == sale_acc_line.product_id.id:
+                            if not sale_acc_line.packing_mode_id:
                                 inv_line.account_id = sale_acc_line.account_id.id
-
-
+                            else:
+                                so_obj = self.env['sale.order'].search([('name', '=', self.origin)])
+                                if so_obj.pack_type == sale_acc_line.packing_mode_id:
+                                    inv_line.account_id = sale_acc_line.account_id.id
+                                    break;
 
 
 class AccountInvoiceLine(models.Model):
@@ -29,10 +33,17 @@ class AccountInvoiceLine(models.Model):
             product_account = self.env['sale.type.product.account'].search(
                 [('product_id', '=', self.product_id.id),
                  ('sale_order_type_id', '=', self.invoice_id.sale_type_id.id)])
-            if self.invoice_id.sale_type_id:
-                if product_account:
-                    self.account_id = product_account.account_id.id
 
+            if product_account:
+                for sale_acc_line in product_account:
+                    if self.invoice_id.sale_type_id:
+                        if not sale_acc_line.packing_mode_id:
+                            self.account_id = sale_acc_line.account_id.id
+                        else:
+                            so_obj = self.env['sale.order'].search([('name', '=', self.invoice_id.origin)])
+                            if so_obj.pack_type == sale_acc_line.packing_mode_id:
+                                self.account_id = sale_acc_line.account_id.id
+                                break;
 
 
 class Picking(models.Model):
@@ -44,12 +55,17 @@ class Picking(models.Model):
         product_acc_list = self.env['sale.type.product.account'].search(
             [('product_id', '=', self.sale_id.product_id.id)])
 
-        for inv in self.sale_id.invoice_ids:
-            for inv_line in inv.invoice_line_ids:
-                if product_acc_list:
+        if product_acc_list:
+            for inv in self.sale_id.invoice_ids:
+                for inv_line in inv.invoice_line_ids:
                     for sale_acc_line in product_acc_list:
                         if sale_acc_line.sale_order_type_id.id == self.sale_id.type_id.id and inv_line.product_id.id == sale_acc_line.product_id.id:
-                            inv_line.account_id = sale_acc_line.account_id.id
+                            if not sale_acc_line.packing_mode_id:
+                                inv_line.account_id = sale_acc_line.account_id.id
+                            else:
+                                so_obj = self.env['sale.order'].search([('name', '=', self.origin)])
+                                if so_obj.pack_type == sale_acc_line.packing_mode_id:
+                                    inv_line.account_id = sale_acc_line.account_id.id
+                                    break;
 
         return res
-
