@@ -207,7 +207,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="product_product_menu_vendor" name="Products &amp; Services" action="product_product_action1"
+        <menuitem id="product_product_menu_vendor" action="product_product_action1"
                   parent="account.menu_finance_configuration" sequence="1"/>
     </data>
 </odoo>

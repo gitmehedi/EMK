@@ -4,7 +4,7 @@
             id="main_menu_account_budget"
             name="Budget"
             parent="account.menu_finance"
-            sequence="3"
+            sequence="15"
             groups="account.group_account_manager,account.group_account_user"/>
 
     <record id="bottom_line_budget_tree" model="ir.ui.view">
