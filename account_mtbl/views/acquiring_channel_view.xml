@@ -100,7 +100,7 @@
 
     <menuitem action="action_acquiring_channel"
               id="menu_action_acquiring_channel_tree"
-              groups="mtbl_access.group_mtbl_sys_admin" sequence="17"
+              groups="mtbl_access.group_mtbl_sys_admin" sequence="35"
               parent="account.account_account_menu"/>
 
 </odoo>

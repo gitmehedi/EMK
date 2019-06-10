@@ -99,5 +99,5 @@
     </record>
 
     <menuitem action="action_segment" id="menu_action_segment_tree" parent="account.account_account_menu"
-              groups="mtbl_access.group_mtbl_sys_admin" sequence="15"/>
+              groups="mtbl_access.group_mtbl_sys_admin" sequence="25"/>
 </odoo>

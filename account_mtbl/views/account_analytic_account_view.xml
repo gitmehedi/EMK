@@ -133,6 +133,7 @@
 
     <record id="analytic.action_analytic_account_form" model="ir.actions.act_window">
         <field name="name">Cost Centres</field>
+        <field name="sequence">20</field>
         <field name="parent_id" eval="ref('account.account_account_menu')"/>
     </record>
 
@@ -148,6 +149,7 @@
 
     <record id="account.menu_action_analytic_account_tree2" model="ir.ui.menu">
         <field name="name">Cost Centres</field>
+        <field name="sequence">20</field>
         <field name="parent_id" eval="ref('account.account_account_menu')"/>
     </record>
 

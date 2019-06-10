@@ -46,7 +46,7 @@
 
     <record id="account.menu_finance_payables" model="ir.ui.menu">
         <field name="name">Vendor Operations</field>
-        <field name="sequence">1</field>
+        <field name="sequence">5</field>
     </record>
 
     <record id="account.menu_finance_entries" model="ir.ui.menu">
@@ -103,7 +103,7 @@
               parent="account.menu_finance_configuration"/>
 
     <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
-              parent="account.account_account_menu" sequence="1" groups="mtbl_access.group_mtbl_sys_admin"/>
+              parent="account.account_account_menu" sequence="5" groups="mtbl_access.group_mtbl_sys_admin"/>
 
     <record id="account.menu_analytic_accounting" model="ir.ui.menu">
         <field name="action" eval="False"/>

@@ -81,7 +81,7 @@
     </record>
 
     <record id="action_vendor_designation_tree" model="ir.actions.act_window">
-        <field name="name">Designations</field>
+        <field name="name">Designation</field>
         <field name="res_model">vendor.designation</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -97,6 +97,6 @@
     </record>
 
     <menuitem action="action_vendor_designation_tree" id="menu_action_vendor_designation_tree"
-              parent="account.account_account_menu" sequence="14"
+              parent="account.account_account_menu" sequence="40"
               groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
 </odoo>

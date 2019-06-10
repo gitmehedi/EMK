@@ -106,7 +106,7 @@
     </record>
 
     <menuitem action="action_sub_operating_unit_tree" id="menu_action_sub_operating_unit_tree"
-              parent="account.account_account_menu" sequence="14"
+              parent="account.account_account_menu" sequence="15"
               groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
 </odoo>
 
