@@ -64,7 +64,7 @@ class SOAPProcess(models.Model):
         return "0{0}{1}00{2}".format(rec.account_id.code, sub_operating_unit, record.operating_unit_id.code)
 
     @api.model
-    def soap_request(self):
+    def action_api_interface(self):
         pending_journal = self.env['account.move'].search([('is_sync', '=', False), ('is_cbs', '=', False)])
         for record in pending_journal:
             debit, credit = 0, 0
@@ -81,6 +81,41 @@ class SOAPProcess(models.Model):
                 elif endpoint.name == 'SingleDebitMultiCreditInterfaceHttpService':
                     reqBody = self.SingleDebitMultiCreditInterfaceHttpService(record)
 
+                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,
+                                        headers={'content-type': 'application/text'})
+                root = ElementTree.fromstring(resBody.content)
+                response = {}
+                for rec in root.iter('*'):
+                    key = rec.tag.split("}")
+                    text = rec.text
+                    if len(key) == 2:
+                        response[key[1]] = text
+                    else:
+                        response[key[0]] = text
+
+                if 'ErrorMessage' in response:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['ErrorCode'],
+                        'error_message': response['ErrorMessage'],
+                        'errors': json.dumps(response)
+                    }
+
+                    self.env['soap.process.error'].create(error)
+                else:
+                    record.write({'is_sync': True})
+
+    @api.model
+    def action_payment_instruction(self):
+        payment_instruction = self.env['payment.instruction'].search([('is_sync', '=', False)])
+        for record in payment_instruction:
+            debit, credit = 1, 1
+            endpoint = self.apiInterfaceMapping(debit, credit)
+
+            if endpoint:
+                reqBody = self.genGenericTransferAmountInterface(record)
                 resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,
                                         headers={'content-type': 'application/text'})
                 root = ElementTree.fromstring(resBody.content)

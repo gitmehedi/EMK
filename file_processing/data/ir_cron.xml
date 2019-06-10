@@ -7,19 +7,34 @@
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
+        <field name="priority">100</field>
         <field name="nextcall"
                eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
         <field name="model">server.file.process</field>
         <field name="function">action_backup_all</field>
     </record>
-    <record id="ir_cron_soap_process_scheduler" model="ir.cron">
+
+    <record id="ir_cron_api_interface_scheduler" model="ir.cron">
         <field name="name">API Interface Scheduler</field>
         <field name="user_id" ref="base.user_root"/>
-        <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
+        <field name="priority">110</field>
         <field name="nextcall" eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
         <field name="model">soap.process</field>
-        <field name="function">soap_request</field>
+        <field name="function">action_api_interface</field>
+    </record>
+
+    <record id="ir_cron_payment_instruction_scheduler" model="ir.cron">
+        <field name="name">Payment Instruction Scheduler</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="priority">120</field>
+        <field name="nextcall" eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
+        <field name="model">soap.process</field>
+        <field name="function">action_payment_instruction</field>
     </record>
 </odoo>
