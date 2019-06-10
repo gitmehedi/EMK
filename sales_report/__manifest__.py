@@ -9,6 +9,7 @@
     'data': [
         'wizard/customer_aging_statement_wizard.xml',
         'reports/customer_aging_statement.xml',
+        'reports/inherited_views.xml',
     ],
 
     'summary': 'Sales Reports Information',
