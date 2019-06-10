@@ -26,8 +26,8 @@ class TdsVendorChallan(models.Model):
         ('draft', "Pending"),
         ('deposited', "Deposited"),
         ('distributed', "Distributed"),
-        ('cancel', "Cancel"),
-    ], default='draft', track_visibility='onchange')
+        ('cancel', "Canceled"),
+    ], default='draft',string="Status", track_visibility='onchange')
 
     ####################################################
     # Business methods

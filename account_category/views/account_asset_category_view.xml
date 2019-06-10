@@ -171,7 +171,7 @@
                 <field name="parent_id"/>
                 <field name="journal_id"/>
                 <field name="method"/>
-                <field name="state"/>
+                <field name="state" string="Status"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>

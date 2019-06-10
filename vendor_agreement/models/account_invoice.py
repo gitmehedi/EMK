@@ -9,25 +9,32 @@ class AccountInvoice(models.Model):
                                    readonly=True, states={'draft': [('readonly', False)]},
                                    track_visibility='onchange', copy=False)
 
-    agreement_adjusted_amount = fields.Float('Agreement Adjusted Amount', store=True, readonly=True,
+    agreement_adjusted_amount = fields.Float('Adjusted Amount', compute='_compute_agreement_adjusted_amount',
+                                             store=True, readonly=True,
                                              track_visibility='onchange', copy=False)
+
+    @api.one
+    @api.depends('invoice_line_ids')
+    def _compute_agreement_adjusted_amount(self):
+        for invoice in self:
+            if invoice.invoice_line_ids and invoice.invoice_line_ids.product_id == invoice.agreement_id.product_id:
+                if invoice.agreement_id.advance_amount > invoice.agreement_id.adjusted_amount:
+                    remaining_amount = invoice.agreement_id.advance_amount - invoice.agreement_id.adjusted_amount
+                    if remaining_amount >= invoice.agreement_id.adjustment_value:
+                        invoice.agreement_adjusted_amount = invoice.agreement_id.adjustment_value
+                    else:
+                        invoice.agreement_adjusted_amount = remaining_amount
+                else:
+                    invoice.agreement_adjusted_amount = 0.0
 
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
         if self.agreement_id and self.agreement_id.active == True \
                 and self.date >= self.agreement_id.start_date and self.date <= self.agreement_id.end_date:
-            self.update_move_lines_with_agreement(move_lines)
+            self.update_move_lines_with_agreement(move_lines,self.agreement_adjusted_amount)
         return move_lines
 
-    def update_move_lines_with_agreement(self, move_lines):
-        if self.agreement_id.advance_amount > self.agreement_id.adjusted_amount:
-            remaining_amount = self.agreement_id.advance_amount - self.agreement_id.adjusted_amount
-            if remaining_amount >= self.agreement_id.adjustment_value:
-                amount = self.agreement_id.adjustment_value
-            else:
-                amount = remaining_amount
-        else:
-            amount = 0.0
+    def update_move_lines_with_agreement(self, move_lines,amount):
         if amount:
             move_lines[-1][2]['credit'] = move_lines[-1][2]['credit'] - amount
             agreement_values = {
@@ -43,7 +50,6 @@ class AccountInvoice(models.Model):
                 'agreement_id': self.agreement_id.id,
             }
             move_lines.append((0, 0, agreement_values))
-            self.agreement_adjusted_amount = amount
 
         self.agreement_id.write({'adjusted_amount': self.agreement_id.adjusted_amount + amount})
 

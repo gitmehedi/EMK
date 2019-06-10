@@ -18,7 +18,7 @@ class VendorDesignation(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             track_visibility='onchange', )
+                             string="Status",track_visibility='onchange', )
 
     line_ids = fields.One2many('history.vendor.designation', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})

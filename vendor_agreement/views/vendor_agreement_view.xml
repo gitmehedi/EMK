@@ -92,6 +92,8 @@
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="adjusted_amount" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
+                                    <field name="outstanding_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
                                     <field name="is_remaining" invisible="1"/>
                                 </group>
                             </group>
