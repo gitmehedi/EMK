@@ -5,7 +5,7 @@
               web_icon="account_fam,static/description/icon.png" parent="base.menu_custom"
               groups="grp_api_interface_manager"/>
 
-    <menuitem id="main_error_api_interface" name="API Interface" sequence="1"
+    <menuitem id="main_error_api_interface" name="API Interface" sequence="100"
               web_icon="account_fam,static/description/icon.png" parent="account.menu_finance_configuration"
               groups="grp_api_interface_manager"/>
 

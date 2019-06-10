@@ -133,22 +133,27 @@
 
     <record id="analytic.action_analytic_account_form" model="ir.actions.act_window">
         <field name="name">Cost Centres</field>
+        <field name="parent_id" eval="ref('account.account_account_menu')"/>
     </record>
 
     <record id="analytic.account_analytic_tag_action" model="ir.actions.act_window">
         <field name="name">Cost Centre Tags</field>
+        <field name="action" eval="False"/>
     </record>
 
     <record id="analytic.account_analytic_line_action_entries" model="ir.actions.act_window">
         <field name="name">Cost Centres Entries</field>
+        <field name="action" eval="False"/>
     </record>
 
     <record id="account.menu_action_analytic_account_tree2" model="ir.ui.menu">
         <field name="name">Cost Centres</field>
+        <field name="parent_id" eval="ref('account.account_account_menu')"/>
     </record>
 
     <record id="account.menu_action_analytic_lines_tree" model="ir.ui.menu">
         <field name="name">Cost Centres Entries</field>
+        <field name="action" eval="False"/>
     </record>
 
     <record id="account.account_analytic_tag_menu" model="ir.ui.menu">

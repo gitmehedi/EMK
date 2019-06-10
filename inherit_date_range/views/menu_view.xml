@@ -3,6 +3,8 @@
     <record id="account_fiscal_year.menu_date_range_accounting" model="ir.ui.menu">
         <field name="name">Accounting Period</field>
         <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+        <field name="parent_id" eval="ref('account.menu_finance_configuration')"/>
+        <field name="sequence">35</field>
     </record>
 
     <record id="account_fiscal_year.menu_date_range_action_accounting" model="ir.ui.menu">

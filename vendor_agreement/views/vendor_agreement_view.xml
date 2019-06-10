@@ -199,9 +199,11 @@
         </record>
 
         <menuitem id="agreement_account.agreement_menu" action="agreement_account.agreement_action"
-                  name="Vendor Agreement"
+                  name="Vendor Agreements"
                   groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
-                  parent="account.menu_finance_payables" sequence="0"/>
+                  parent="account.menu_finance_payables" sequence="2"/>
+
+
 
 
         <!-- inherit 'invoice supplier form' from agreement_account to add domain -->
