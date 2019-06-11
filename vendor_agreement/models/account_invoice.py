@@ -17,7 +17,7 @@ class AccountInvoice(models.Model):
     @api.depends('invoice_line_ids')
     def _compute_agreement_adjusted_amount(self):
         for invoice in self:
-            if invoice.invoice_line_ids and invoice.invoice_line_ids.product_id == invoice.agreement_id.product_id:
+            if invoice.invoice_line_ids and invoice.agreement_id.product_id in [i.product_id for i in invoice.invoice_line_ids]:
                 if invoice.agreement_id.advance_amount > invoice.agreement_id.adjusted_amount:
                     remaining_amount = invoice.agreement_id.advance_amount - invoice.agreement_id.adjusted_amount
                     if remaining_amount >= invoice.agreement_id.adjustment_value:
@@ -54,3 +54,15 @@ class AccountInvoice(models.Model):
         self.agreement_id.write({'adjusted_amount': self.agreement_id.adjusted_amount + amount})
 
         return True
+
+    @api.model
+    def _get_invoice_key_cols(self):
+        res = super(AccountInvoice, self)._get_invoice_key_cols()
+        res.append('agreement_id')
+        return res
+
+    @api.model
+    def _get_first_invoice_fields(self, invoice):
+        res = super(AccountInvoice, self)._get_first_invoice_fields(invoice)
+        res.update({'agreement_id': invoice.agreement_id.id or False})
+        return res

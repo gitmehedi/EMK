@@ -9,6 +9,7 @@
     'category': 'Accounting',
     'depends': [
         'account',
+        'sub_operating_unit',
     ],
     'data': [
         'security/ir.model.access.csv',

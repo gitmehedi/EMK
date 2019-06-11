@@ -13,6 +13,9 @@ class BillPaymentInstructionWizard(models.TransientModel):
                           default=lambda self: self.env.context.get('invoice_amount'))
     instruction_date = fields.Date(string='Date', default=fields.Date.context_today,
                                    required=True, copy=False)
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True)
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit', required=True)
+    # vendor_bank_acc = fields.Many2one('res.partner.bank', string='Vendor Bank Account')
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -21,6 +24,16 @@ class BillPaymentInstructionWizard(models.TransientModel):
             if line.amount > rem_amount:
                 raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "
                                         "Remaining balance is %s")% (rem_amount))
+
+    @api.onchange('invoice_id')
+    def _onchange_invoice_id(self):
+        if self.invoice_id:
+            operating_unit_ids = [i.operating_unit_id.id for i in self.invoice_id.invoice_line_ids]
+            sub_operating_unit_ids = [i.sub_operating_unit_id.id for i in self.invoice_id.invoice_line_ids]
+            return {'domain': {
+                'operating_unit_id': [('id', 'in', operating_unit_ids)],
+                'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
+            }}
 
     @api.multi
     def action_validate(self):
@@ -40,5 +53,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             'default_credit_account_id': self.invoice_id.partner_id.property_account_receivable_id.id,
             'instruction_date': self.instruction_date,
             'amount': self.amount,
+            'operating_unit_id': self.operating_unit_id.id,
+            'sub_operating_unit_id': self.sub_operating_unit_id.id,
         })
         return {'type': 'ir.actions.act_window_close'}

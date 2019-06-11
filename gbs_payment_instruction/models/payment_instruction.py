@@ -18,3 +18,5 @@ class PaymentInstruction(models.Model):
                                                help='Default Debit Account of the Payment')
     default_credit_account_id = fields.Many2one('account.account',string='Credit Account',
                                                 help='Default Credit Account of the Payment')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')

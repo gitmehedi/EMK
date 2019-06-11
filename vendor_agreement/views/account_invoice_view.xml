@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!--<record id="inherit_agreement_supplier_invoice" model="ir.ui.view">-->
+        <!--<field name="name">inherit.agreement.supplier.invoice.form</field>-->
+        <!--<field name="model">account.invoice</field>-->
+        <!--<field name="priority" eval="100"/>-->
+        <!--<field name="inherit_id" ref="agreement_account.invoice_supplier_form"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//field[@name='agreement_id']" position="replace">-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
+
     <record id="invoice_supplier_agreement_form" model="ir.ui.view">
         <field name="name">account.invoice.agreement.form</field>
         <field name="model">account.invoice</field>
+        <!--<field name="priority" eval="101"/>-->
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
+            <!--<xpath expr="//field[@name='currency_id']" position="after">-->
+                <!--<field name="agreement_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'-->
+                       <!--domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase')]"-->
+                       <!--context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>-->
+                <!--<field name="commercial_partner_id" invisible="1"/>-->
+            <!--</xpath>-->
             <xpath expr="//field[@name='residual']" position="after">
                 <field name="agreement_adjusted_amount" class="oe_subtotal_footer_separator"
                        attrs="{'invisible': [('agreement_id', '=', False)]}" widget="monetary"/>
