@@ -1,0 +1,19 @@
+Name,Description,Account Type,Type,active,pending,state
+Receivable,,Receivable,Receivable,True,False,approve
+Payable,,Payable,Payable,True,False,approve
+Bank and Cash,,Bank and Cash,Liquidity,True,False,approve
+Credit Card,,Credit Card,Liquidity,True,False,approve
+Current Assets,,Current Assets,Regular,True,False,approve
+Non-current Assets,,Non-current Assets,Regular,True,False,approve
+Prepayments,,Prepayments,Regular,True,False,approve
+Fixed Assets,,Fixed Assets,Regular,True,False,approve
+Current Liabilities,,Current Liabilities,Regular,True,False,approve
+Non-current Liabilities,,Non-current Liabilities,Regular,True,False,approve
+Equity,,Equity,Regular,True,False,approve
+Current Year Earnings,,Current Year Earnings,Regular,True,False,approve
+Other Income,,Other Income,Regular,True,False,approve
+Income,,Income,Regular,True,False,approve
+Depreciation,,Depreciation,Regular,True,False,approve
+Expenses,,Expenses,Regular,True,False,approve
+Cost of Revenue,,Cost of Revenue,Regular,True,False,approve
+View Type,Used mainly for parent accounts,View Type,View,True,False,approve

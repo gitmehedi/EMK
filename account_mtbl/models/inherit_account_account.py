@@ -11,7 +11,7 @@ class AccountAccount(models.Model):
     _order = 'id desc,state asc'
     _description = 'Chart of Account'
 
-    name = fields.Char(size=50, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    name = fields.Char(size=200, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     code = fields.Char(size=8, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     user_type_id = fields.Many2one(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})

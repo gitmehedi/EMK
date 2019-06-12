@@ -69,6 +69,11 @@
                     </tree>
                 </field>
             </xpath>
+            <xpath expr="//group[@name='banks']" position="inside">
+                <group>
+                    <field name="vendor_bank_acc" class="oe_inline"/>
+                </group>
+            </xpath>
         </field>
     </record>
 

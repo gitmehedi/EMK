@@ -158,6 +158,7 @@ class AccountInvoice(models.Model):
             'target': 'new',
             'context': {'invoice_amount': self.residual or False,
                         'currency_id': self.currency_id.id or False,
+                        'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
                         },
         }
 

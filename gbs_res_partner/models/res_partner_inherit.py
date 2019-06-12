@@ -47,6 +47,11 @@ class ResPartner(models.Model):
     line_ids = fields.One2many('history.res.partner', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
+    vendor_bank_acc = fields.Char('Vendor Bank Account',readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  help="This is the Account number which using "
+                                       "for payments against vendor.")
+
     @api.one
     def act_approve(self):
         if self.state == 'draft':
