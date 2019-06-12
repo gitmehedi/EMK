@@ -19,6 +19,7 @@
         'wizard/vendor_designation_wizard_view.xml',
         'views/vendor_designation_view.xml',
         'views/inherited_res_partner_view.xml',
+        'views/account_config.xml',
 ],
     'installable': True,
     'application': False,

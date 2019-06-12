@@ -11,6 +11,7 @@
         'account_invoice_merge_attachment',
         'base_suspend_security',
         'gbs_payment_instruction',
+        'gbs_res_partner',
     ],
     'data': [
         'data/bill_payment_instruction_scheduler.xml',

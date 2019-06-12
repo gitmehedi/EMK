@@ -15,12 +15,17 @@
     'website': "http://www.genweb2.com",
     'version': '10.0.0.1',
     'category': 'Accounting & Finance',
-    'depends': ['agreement_account','gbs_payment_instruction'],
+    'depends': [
+        'agreement_account',
+        'gbs_payment_instruction',
+        'account_invoice_merge_operating_unit',
+    ],
     'data': [
         'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'wizards/amendment_agreement.xml',
         'wizards/agreement_payment_instruction_wizard.xml',
+        'wizards/invoice_merge_view.xml',
         'views/vendor_agreement_view.xml',
         'views/account_invoice_view.xml',
         ],

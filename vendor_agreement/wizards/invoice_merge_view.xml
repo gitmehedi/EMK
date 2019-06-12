@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="invoice_merge_ou_inherit" model="ir.ui.view">
+        <field name="name">Merger Partner Invoice Inherit</field>
+        <field name="model">invoice.merge</field>
+        <field name="inherit_id" ref="account_invoice_merge_operating_unit.view_invoice_merge_ou"/>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group/p[1]" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//form/group/separator" position="after">
+                <p>
+                    Please note that:
+                    <br/><br/>
+                    Invoices will only be merged if:
+                    <br/>
+                    * Invoices are in draft
+                    <br/>
+                    * Invoices belong to the same partner
+                    <br/>
+                    * Invoices are have same company, branch, vendor,currency, journal, account, type,agreement
+                    <br/><br/>
+                    Lines will only be merged if:
+                    <br/>
+                    * Invoice lines are exactly the same except for the product,branch
+                    <br/>
+                </p>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
