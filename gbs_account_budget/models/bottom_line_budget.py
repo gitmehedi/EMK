@@ -7,7 +7,7 @@ class BottomLineBudget(models.Model):
     _order = "name"
     _description = "Bottom Line Budget"
 
-    name = fields.Char('Name',required=True, size=50, track_visibility='onchange',
+    name = fields.Char('Name',required=True, size=200, track_visibility='onchange',
                        readonly=True, states={'draft': [('readonly', False)]})
     date_create = fields.Datetime('Date', readonly=True, default=lambda self: fields.Datetime.now())
     bottom_line_budgets = fields.One2many('bottom.line.budget.line', 'bottom_line_budget',

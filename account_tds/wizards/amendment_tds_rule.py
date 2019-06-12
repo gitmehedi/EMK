@@ -1,4 +1,4 @@
-from odoo import models, fields, api,_
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -7,21 +7,23 @@ class TDSRulesWizard(models.TransientModel):
     _order = 'name desc'
     _description = 'TDS Rule'
 
-
-    name = fields.Char(string='Name',size=50,readonly=True,default=lambda self: self.env.context.get('name'))
-    active = fields.Boolean(string='Active',default=lambda self: self.env.context.get('active'))
-    current_version = fields.Char('Current Version',readonly=True)
-    account_id = fields.Many2one('account.account',string="TDS Account",required=True,default=lambda  self: self.env.context.get('account_id'))
-    line_ids = fields.One2many('tds.rule.wizard.line','tds_rule_wiz_id',string='Rule Details',default=lambda self: self.env.context.get('line_ids'))
-    effective_from = fields.Date(string='Effective Date', required=True,default=lambda self: self.env.context.get('effective_from'))
+    name = fields.Char(string='Name', size=200, readonly=True, default=lambda self: self.env.context.get('name'))
+    active = fields.Boolean(string='Active', default=lambda self: self.env.context.get('active'))
+    current_version = fields.Char('Current Version', readonly=True)
+    account_id = fields.Many2one('account.account', string="TDS Account", required=True,
+                                 default=lambda self: self.env.context.get('account_id'))
+    line_ids = fields.One2many('tds.rule.wizard.line', 'tds_rule_wiz_id', string='Rule Details',
+                               default=lambda self: self.env.context.get('line_ids'))
+    effective_from = fields.Date(string='Effective Date', required=True,
+                                 default=lambda self: self.env.context.get('effective_from'))
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
-    ], string='TDS Type', required=True,default=lambda self: self.env.context.get('type_rate'))
-    flat_rate = fields.Float(string='Rate',size=3,default=lambda  self: self.env.context.get('flat_rate'))
-    price_include = fields.Boolean(string='Included in Price',default=lambda self: self.env.context.get('price_include'),
+    ], string='TDS Type', required=True, default=lambda self: self.env.context.get('type_rate'))
+    flat_rate = fields.Float(string='Rate', size=3, default=lambda self: self.env.context.get('flat_rate'))
+    price_include = fields.Boolean(string='Included in Price',
+                                   default=lambda self: self.env.context.get('price_include'),
                                    help="Check this if the price you use on the product and invoices includes this TAX.")
-
 
     @api.multi
     def generate_rule(self):
@@ -51,7 +53,6 @@ class TDSRulesWizard(models.TransientModel):
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
         return rule_list.compute_version()
 
-
     @api.constrains('effective_from')
     def _check_effective_from(self):
         date = fields.Date.today()
@@ -59,7 +60,8 @@ class TDSRulesWizard(models.TransientModel):
         if self.effective_from:
             if self.effective_from not in [x.effective_from for x in rule_list.version_ids]:
                 if self.effective_from < date:
-                    raise ValidationError("Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
+                    raise ValidationError(
+                        "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
             else:
                 raise ValidationError(
                     "Please Check Version Details!! \n already have a version on this effective date")
@@ -75,7 +77,8 @@ class TDSRulesWizard(models.TransientModel):
 
             elif rec.type_rate == 'slab':
                 if len(rec.line_ids) <= 0:
-                    raise ValidationError("Please, Add Slab Details!! \n Make sure slab values('Range from','Range to') must be number.")
+                    raise ValidationError(
+                        "Please, Add Slab Details!! \n Make sure slab values('Range from','Range to') must be number.")
                 elif len(rec.line_ids) > 0:
                     for line in rec.line_ids:
                         if line.range_from >= line.range_to:
@@ -98,7 +101,7 @@ class TDSRuleWizardLine(models.TransientModel):
     tds_rule_wiz_id = fields.Many2one('tds.rule.wizard')
     range_from = fields.Integer(string='From Range', required=True)
     range_to = fields.Integer(string='To Range', required=True)
-    rate = fields.Float(string='Rate', required=True, size=50)
+    rate = fields.Float(string='Rate', required=True, digits=(12, 2))
 
     @api.constrains('range_from', 'range_to')
     def _check_time(self):
@@ -117,4 +120,3 @@ class TDSRuleWizardLine(models.TransientModel):
                     " The Range (%s)  and  (%s)  are overlapping with existing Slab ." % (
                         date_time_range_from, date_time_range_to)
                 ))
-

@@ -11,7 +11,7 @@ class AccountAccount(models.Model):
     _order = 'id desc,state asc'
     _description = 'Chart of Account'
 
-    name = fields.Char(size=50, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    name = fields.Char(size=200, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     code = fields.Char(size=8, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     user_type_id = fields.Many2one(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
@@ -26,7 +26,7 @@ class AccountAccount(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             track_visibility='onchange',string='Status')
+                             track_visibility='onchange', string='Status')
 
     line_ids = fields.One2many('history.account.account', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -49,16 +49,20 @@ class AccountAccount(models.Model):
     @api.onchange("level_id")
     def onchange_levels(self):
         if self.level_id:
-            res = {}
-            self.parent_id = None
-            self.code = None
-            self.name = None
-            self.user_type_id = None
-            parents = self.search([('level_id', '=', self.level_id.parent_id.id)])
-            res['domain'] = {
-                'parent_id': [('id', 'in', parents.ids), ('internal_type', '=', 'view')],
-            }
-            return res
+            if self.level_id.name == 'Layer 1':
+                parents = self.search([('level_id', '=', self.level_id.parent_id.id)])
+                self.parent_id = parents.id
+            else:
+                res = {}
+                self.parent_id = None
+                self.code = None
+                self.name = None
+                self.user_type_id = None
+                parents = self.search([('level_id', '=', self.level_id.parent_id.id)])
+                res['domain'] = {
+                    'parent_id': [('id', 'in', parents.ids), ('internal_type', '=', 'view')],
+                }
+                return res
 
     @api.onchange("code", "parent_id")
     def onchange_strips(self):
@@ -158,7 +162,7 @@ class HistoryAccountAccount(models.Model):
     _description = 'History Account Account'
     _order = 'id desc'
 
-    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
@@ -166,7 +170,7 @@ class HistoryAccountAccount(models.Model):
     user_type_id = fields.Many2one('account.account.type', string='Type')
     currency_id = fields.Many2one('res.currency', string='Account Currency')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')
 
 
 class AccountAccountTag(models.Model):
@@ -175,14 +179,14 @@ class AccountAccountTag(models.Model):
     _inherit = ['account.account.tag', 'mail.thread']
     _description = 'Account Tag'
 
-    name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
+    name = fields.Char('Name', required=True, size=200, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             string='Status',track_visibility='onchange')
+                             string='Status', track_visibility='onchange')
     line_ids = fields.One2many('history.account.tag', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
@@ -279,10 +283,10 @@ class HistoryAccountTag(models.Model):
     _description = 'History Account Tag'
     _order = 'id desc'
 
-    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.tag', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')

@@ -13,7 +13,7 @@ class AccountAssetCategory(models.Model):
 
     code = fields.Char(string='Code', size=4)
     active = fields.Boolean(default=True, track_visibility='onchange')
-    name = fields.Char(required=True, index=True, string="Asset Type", size=50, track_visibility='onchange')
+    name = fields.Char(required=True, index=True, string="Asset Type", size=200, track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, track_visibility='onchange')
     method_period = fields.Integer(string='One Entry (In Month)', default=1, track_visibility='onchange',
                                    help="State here the time between 2 depreciations, in months", required=True)
@@ -58,7 +58,7 @@ class AccountAssetCategory(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('reject', 'Reject')], default='draft',
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Reject')], default='draft',
                              track_visibility='onchange', )
     line_ids = fields.One2many('history.account.asset.category', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -183,7 +183,7 @@ class HistoryAccountAssetCategory(models.Model):
     _description = 'History Account Asset Category'
     _order = 'id desc'
 
-    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')

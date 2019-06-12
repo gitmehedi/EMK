@@ -8,7 +8,7 @@ class TDSRules(models.Model):
     _order = 'id desc'
     _description = 'TDS Rule'
 
-    name = fields.Char(string='Name', required=True, size=50,
+    name = fields.Char(string='Name', required=True, size=200,
                        track_visibility='onchange', states={'confirm': [('readonly', True)]})
     active = fields.Boolean(string='Active', default=True,
                             track_visibility='onchange', states={'confirm': [('readonly', True)]})
@@ -215,7 +215,7 @@ class TDSRuleVersion(models.Model):
     _description = 'TDS Rule Version'
 
     emp_code_id = fields.Char(string='Code')
-    name = fields.Char(string='Name', required=True, size=50)
+    name = fields.Char(string='Name', required=True, size=200)
     active = fields.Boolean(string='Active', default=True)
     tds_version_rule_id = fields.Many2one('tds.rule')
     account_id = fields.Many2one('account.account', string="TDS Account", required=True)
@@ -224,7 +224,7 @@ class TDSRuleVersion(models.Model):
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
     ], string='TDS Type', required=True)
-    flat_rate = fields.Float(string='Rate', size=50)
+    flat_rate = fields.Float(string='Rate', digits=(13,2))
     version_line_ids = fields.One2many('tds.rule.version.line', 'tds_version_id', string='Rule Details')
 
 
@@ -234,7 +234,7 @@ class TDSRuleLine(models.Model):
     tds_rule_id = fields.Many2one('tds.rule')
     range_from = fields.Integer(string='From Range', required=True)
     range_to = fields.Integer(string='To Range', required=True)
-    rate = fields.Float(string='Rate', required=True, size=50)
+    rate = fields.Float(string='Rate', required=True, digits=(13,2))
 
     @api.constrains('range_from', 'range_to')
     def _check_time(self):
@@ -261,4 +261,4 @@ class TDSRuleVersionLine(models.Model):
     tds_version_id = fields.Many2one('tds.rule.version')
     range_from = fields.Integer(string='From Range', required=True)
     range_to = fields.Integer(string='To Range', required=True)
-    rate = fields.Float(string='Rate', required=True, size=50)
+    rate = fields.Float(string='Rate', required=True, digits=(12,2))

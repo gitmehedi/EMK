@@ -115,7 +115,7 @@ class SOAPProcess(models.Model):
             endpoint = self.apiInterfaceMapping(debit, credit)
 
             if endpoint:
-                reqBody = self.genGenericTransferAmountInterface(record)
+                reqBody = self.genGenericTransferAmountInterfaceForPayment(record)
                 resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,
                                         headers={'content-type': 'application/text'})
                 root = ElementTree.fromstring(resBody.content)
@@ -153,8 +153,8 @@ class SOAPProcess(models.Model):
                 creStr = creStr + """\n<ban:FrmAcct>{0}</ban:FrmAcct>""".format(bgl)
             elif rec.credit > 0:
                 creStr = """<ban:Amt>{0}</ban:Amt>
-                       <ban:ToAcct>{1}</ban:ToAcct>
-                       <ban:StmtNarr>{2}</ban:StmtNarr>""".format(rec.debit, bgl, 'TEST OGL TXNF') + creStr
+                           <ban:ToAcct>{1}</ban:ToAcct>
+                           <ban:StmtNarr>{2}</ban:StmtNarr>""".format(rec.debit, bgl, 'TEST OGL TXNF') + creStr
 
         data = {
             'InstNum': '003',
@@ -165,6 +165,53 @@ class SOAPProcess(models.Model):
             'UUIDSource': 'OGL',
             'UUIDNUM': str(record.name),
             'UUIDSeqNo': '003',
+        }
+        request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+                   <soapenv:Header/>
+                   <soapenv:Body>
+                      <v1:genericTransferAmount>
+                         <!--Optional:-->
+                         <GenericAmtXferRq>
+                           <ban:RqHeader>
+                             <ban:InstNum>{0}</ban:InstNum>
+                               <ban:BrchNum>{1}</ban:BrchNum>
+                               <ban:TellerNum>{2}</ban:TellerNum>
+                               <ban:Flag4>{3}</ban:Flag4>
+                               <ban:Flag5>{4}</ban:Flag5>
+                               <ban:UUIDSource>{5}</ban:UUIDSource>
+                               <ban:UUIDNUM>{6}</ban:UUIDNUM>
+                               <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
+                            </ban:RqHeader>
+                            <ban:Data>
+                               {8}
+                            </ban:Data>
+                         </GenericAmtXferRq>
+                      </v1:genericTransferAmount>
+                   </soapenv:Body>
+                </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
+                                              data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
+                                              creStr)
+        return request
+
+    @api.model
+    def genGenericTransferAmountInterfaceForPayment(self, record):
+        sub_operating_unit = record.sub_operating_unit_id.code if record.sub_operating_unit_id else '001'
+        from_bgl = "0{0}{1}00{2}".format(record.default_debit_account_id.code, sub_operating_unit, record.operating_unit_id.code)
+        to_bgl = "0{0}{1}00{2}".format(record.default_credit_account_id.code, sub_operating_unit, record.operating_unit_id.code)
+
+        data = {
+            'InstNum': '003',
+            'BrchNum': str(record.operating_unit_id.code),
+            'TellerNum': '1107',
+            'Flag4': 'W',
+            'Flag5': 'Y',
+            'UUIDSource': 'OGL',
+            'UUIDNUM': str(record.name),
+            'UUIDSeqNo': '003',
+            'FrmAcct': from_bgl,
+            'Amt': record.amount,
+            'ToAcct': to_bgl,
+            'StmtNarr': 'TEST OGL TXNF',
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                <soapenv:Header/>
@@ -183,14 +230,17 @@ class SOAPProcess(models.Model):
                            <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
                         </ban:RqHeader>
                         <ban:Data>
-                           {8}
+                           <ban:FrmAcct>{8}</ban:Amt>
+                           <ban:Amt>{9}</ban:Amt>
+                           <ban:ToAcct>{10}</ban:ToAcct>
+                           <ban:StmtNarr>{11}</ban:StmtNarr>
                         </ban:Data>
                      </GenericAmtXferRq>
                   </v1:genericTransferAmount>
                </soapenv:Body>
             </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
                                           data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
-                                          creStr)
+                                          data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
         return request
 
     @api.model

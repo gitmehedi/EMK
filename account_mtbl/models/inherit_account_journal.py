@@ -9,7 +9,7 @@ class AccountJournal(models.Model):
     _order = 'name desc'
     _description = 'Journal Type'
 
-    name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
+    name = fields.Char('Name', required=True, size=200, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     code = fields.Char('Code', required=True, size=10, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
@@ -130,7 +130,7 @@ class HistoryAccountJournal(models.Model):
     _description = 'History Account Journal'
     _order = 'id desc'
 
-    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')

@@ -32,12 +32,13 @@
                     <group>
                         <field name="pending" invisible="True"/>
                         <field name="level_size" invisible="True"/>
-                        <field name="level_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="level_id" domain="[('is_visible','=',1)]"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
 
                         <field name="parent_id"
                                context="{'show_parent_account':True}"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"
-                               attrs="{'invisible': [('level_size','in',[0,1])], 'required':[('level_size','>',1)]}"/>
+                               attrs="{'invisible': [('level_size','in',[0,1])], 'required':[('level_size','>',0)]}"/>
 
                         <field name="code"/>
                         <field name="name"/>
@@ -133,6 +134,7 @@
             </field>
         </record>
         <record id="account.action_account_form" model="ir.actions.act_window">
+            <field name="domain">[('level_id.is_visible', '=', True)]</field>
             <field name="context">
                 {"search_default_level_id":1,
                 "show_parent_account":True,"search_default_active":'False',"search_default_pending":'True'}

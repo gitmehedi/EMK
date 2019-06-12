@@ -7,7 +7,7 @@ class BGLAccounts(models.Model):
     _order = 'id desc'
     _description = 'BGL Accounts'
 
-    name = fields.Char(string='Name', required=True, size=50,
+    name = fields.Char(string='Name', required=True, size=200,
                        track_visibility='onchange')
     code = fields.Char(string='Code', required=True, size=11,
                        track_visibility='onchange')

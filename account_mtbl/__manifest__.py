@@ -27,7 +27,7 @@
     "data": [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        # 'security/menuitems.xml',
+        # 'data/default_data.xml',
         'views/menu_view.xml',
         'wizard/segment_wizard_view.xml',
         'wizard/branch_wizard_view.xml',

@@ -6,7 +6,7 @@ class Banks(models.Model):
     _order = 'name desc'
     _inherit = ['res.bank', 'mail.thread']
 
-    name = fields.Char(track_visibility='onchange', size=50)
+    name = fields.Char(track_visibility='onchange', size=200)
     street = fields.Char(track_visibility='onchange')
     street2 = fields.Char(track_visibility='onchange')
     zip = fields.Char(track_visibility='onchange')

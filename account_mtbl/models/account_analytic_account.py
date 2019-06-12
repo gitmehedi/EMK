@@ -11,7 +11,7 @@ class AccountAnalyticAccount(models.Model):
     _order = 'id desc,state asc'
     _description = 'Cost Centre'
 
-    name = fields.Char('Name', required=True, size=50, track_visibility='onchange', readonly=True,
+    name = fields.Char('Name', required=True, size=200, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
@@ -140,7 +140,7 @@ class HistoryAccountAnalyticAccount(models.Model):
     _description = 'History Cost Centre'
     _order = 'id desc'
 
-    change_name = fields.Char('Proposed Name', size=50, readonly=True, states={'draft': [('readonly', False)]})
+    change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
@@ -158,7 +158,7 @@ class AccountAnalyticLine(models.Model):
     _order = 'id desc'
     _description = 'Cost Centre Line'
 
-    name = fields.Char(required=True, size=50, track_visibility='onchange')
+    name = fields.Char(required=True, size=200, track_visibility='onchange')
 
     @api.one
     def name_get(self):
