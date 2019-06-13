@@ -23,12 +23,13 @@
     'data': [
         'security/ir_rule.xml',
         'security/ir.model.access.csv',
+        'data/data.xml',
         'wizards/amendment_agreement.xml',
         'wizards/agreement_payment_instruction_wizard.xml',
         'wizards/invoice_merge_view.xml',
         'views/vendor_agreement_view.xml',
         'views/account_invoice_view.xml',
-        ],
+    ],
     'installable': True,
     'application': True,
 }
