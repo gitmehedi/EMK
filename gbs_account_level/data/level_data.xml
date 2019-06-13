@@ -3,7 +3,7 @@
     <data noupdate="1">
         <record model="account.account.level" id="data_account_account_level_zero">
             <field name="name">Layer 0</field>
-            <field name="size">12</field>
+            <field name="size">8</field>
             <field name="is_visible">False</field>
             <field name="parent_id" eval="False"/>
         </record>

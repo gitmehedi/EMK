@@ -1,19 +1,15 @@
-Name,Description,Account Type,Type,active,pending,state
-Receivable,,Receivable,Receivable,True,False,approve
-Payable,,Payable,Payable,True,False,approve
-Bank and Cash,,Bank and Cash,Liquidity,True,False,approve
-Credit Card,,Credit Card,Liquidity,True,False,approve
-Current Assets,,Current Assets,Regular,True,False,approve
-Non-current Assets,,Non-current Assets,Regular,True,False,approve
-Prepayments,,Prepayments,Regular,True,False,approve
-Fixed Assets,,Fixed Assets,Regular,True,False,approve
-Current Liabilities,,Current Liabilities,Regular,True,False,approve
-Non-current Liabilities,,Non-current Liabilities,Regular,True,False,approve
-Equity,,Equity,Regular,True,False,approve
-Current Year Earnings,,Current Year Earnings,Regular,True,False,approve
-Other Income,,Other Income,Regular,True,False,approve
-Income,,Income,Regular,True,False,approve
-Depreciation,,Depreciation,Regular,True,False,approve
-Expenses,,Expenses,Regular,True,False,approve
-Cost of Revenue,,Cost of Revenue,Regular,True,False,approve
-View Type,Used mainly for parent accounts,View Type,View,True,False,approve
+Name,Type,include_initial_balance,active,pending,state
+View Type,View,True,True,False,approve
+Liabilities: Office Accounts,Regular,True,True,False,approve
+Treasury Liabilities,Regular,True,True,False,approve
+Liabilities: Customer Accounts,Regular,True,True,False,approve
+Interest Payable Accounts,Regular,True,True,False,approve
+No BGL only CGL,Regular,True,True,False,approve
+Assets: Office Accounts,Regular,True,True,False,approve
+Assets: Customer Accounts,Regular,True,True,False,approve
+Treasury Asset,Regular,True,True,False,approve
+Interest Receivable Accounts,Regular,True,True,False,approve
+Income Accounts,Regular,False,True,False,approve
+Treasury Income,Regular,False,True,False,approve
+Expenditure Accounts,Regular,False,True,False,approve
+Tresury Expenditure,Regular,False,True,False,approve
