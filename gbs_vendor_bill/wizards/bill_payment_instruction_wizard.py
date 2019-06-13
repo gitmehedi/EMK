@@ -36,6 +36,14 @@ class BillPaymentInstructionWizard(models.TransientModel):
                 'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
             }}
 
+    # @api.onchange('operating_unit_id')
+    # def _onchange_operating_unit_id(self):
+    #     if self.operating_unit_id:
+    #         sub_operating_unit_ids = self.env['sub.operating.unit'].search([('operating_unit_id','=',self.operating_unit_id.id)])
+    #         return {'domain': {
+    #             'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
+    #         }}
+
     @api.multi
     def action_validate(self):
         for line in self.invoice_id.suspend_security().move_id.line_ids:

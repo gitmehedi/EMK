@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="branch_budget_tree" model="ir.ui.view">
-        <field name="name">branch.budget.tree</field>
-        <field name="model">branch.budget</field>
+    <record id="budget_distribution_tree" model="ir.ui.view">
+        <field name="name">budget.distribution.tree</field>
+        <field name="model">budget.distribution</field>
         <field name="arch" type="xml">
-            <tree create="false" edit="false" string="Branch Distribution" decoration-info="state == 'draft'" decoration-success="state == 'approve'"
+            <tree create="false" edit="false" string="Budget Distribution" decoration-info="state == 'draft'" decoration-success="state == 'approve'"
                   decoration-muted="state =='cancel'"
                   decoration-bf="state in ('approve') ">
                 <field name="name"/>
@@ -18,11 +18,11 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="branch_budget_form">
-        <field name="name">branch.budget.form</field>
-        <field name="model">branch.budget</field>
+    <record model="ir.ui.view" id="budget_distribution_form">
+        <field name="name">budget.distribution.form</field>
+        <field name="model">budget.distribution</field>
         <field name="arch" type="xml">
-            <form string="Branch Distribution" create="false">
+            <form string="Budget Distribution" create="false">
                 <header>
                     <button string="Approve" name="action_budget_approve"
                             groups="account.group_account_manager"
@@ -32,7 +32,7 @@
                             states="cancel" type="object" />
                     <button string="Cancel Budget" name="action_budget_cancel"
                             type="object" groups="account.group_account_manager"
-                            attrs="{'invisible': ['|',('state','!=','draft'),('branch_budget_history_ids','!=', [])]}"/>
+                            attrs="{'invisible': ['|',('state','!=','draft'),('budget_distribution_history_ids','!=', [])]}"/>
                     <button string="Amendment" name="action_amendment" states="approve" type="object"
                             groups="account.group_account_manager"
                             confirm="Are you sure to Amendment this budget?"/>
@@ -66,7 +66,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Distribution" >
+                        <page string="Branch Distribution" >
                             <field name="branch_budget_lines">
                                 <tree editable="bottom" create="false" delete="false"
                                       decoration-danger="practical_amount>planned_amount"
@@ -79,8 +79,21 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="History" attrs="{'invisible': [('branch_budget_history_ids','=', [])]}">
-                            <field name="branch_budget_history_ids">
+                        <page string="Cost Centre Distribution" >
+                            <field name="cost_centre_budget_lines">
+                                <tree editable="bottom"  create="false" delete="false"
+                                      decoration-danger="practical_amount>planned_amount"
+                                      decoration-info="practical_amount>theoritical_amount">
+                                    <field name="analytic_account_id" readonly="1"/>
+                                    <field name="planned_amount"/>
+                                    <field name="practical_amount" readonly="1"/>
+                                    <field name="remaining_amount" readonly="1"/>
+                                    <field name="theoritical_amount" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="History" attrs="{'invisible': [('budget_distribution_history_ids','=', [])]}">
+                            <field name="budget_distribution_history_ids">
                                 <tree editable="false" create="false" delete="false">
                                     <field name="name"/>
                                     <field name="fiscal_year"/>
@@ -114,12 +127,24 @@
                                         </group>
                                     </group>
                                     <notebook>
-                                        <page string="Distribution" >
+                                        <page string="Branch Distribution" >
                                             <field name="branch_budget_lines">
                                                 <tree editable="bottom" create="false" delete="false"
                                                       decoration-danger="practical_amount>planned_amount"
                                                       decoration-info="practical_amount>theoritical_amount" >
                                                     <field name="operating_unit_id" readonly="1"/>
+                                                    <field name="planned_amount" readonly="1"/>
+                                                    <field name="practical_amount" readonly="1"/>
+                                                    <field name="theoritical_amount" readonly="1"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                        <page string="Cost Centre Distribution" >
+                                            <field name="cost_centre_budget_lines">
+                                                <tree editable="bottom"  create="false" delete="false"
+                                                      decoration-danger="practical_amount>planned_amount"
+                                                      decoration-info="practical_amount>theoritical_amount">
+                                                    <field name="analytic_account_id" readonly="1"/>
                                                     <field name="planned_amount" readonly="1"/>
                                                     <field name="practical_amount" readonly="1"/>
                                                     <field name="theoritical_amount" readonly="1"/>
@@ -140,9 +165,9 @@
         </field>
     </record>
 
-    <record id="branch_budget_search" model="ir.ui.view">
-        <field name="name">branch.budget.search</field>
-        <field name="model">branch.budget</field>
+    <record id="budget_distribution_search" model="ir.ui.view">
+        <field name="name">budget.distribution.search</field>
+        <field name="model">budget.distribution</field>
         <field name="arch" type="xml">
             <search string="Branch Distribution">
                 <field name="name" filter_domain="[('name','ilike',self)]" string="Budget"/>
@@ -156,25 +181,25 @@
         </field>
     </record>
 
-    <record id="action_branch_budget" model="ir.actions.act_window">
-        <field name="name">Branch Distribution</field>
-        <field name="res_model">branch.budget</field>
+    <record id="action_budget_distribution" model="ir.actions.act_window">
+        <field name="name">Budget Distribution</field>
+        <field name="res_model">budget.distribution</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{"search_default_state":1}</field>
-        <field name="search_view_id" ref="branch_budget_search"/>
+        <field name="search_view_id" ref="budget_distribution_search"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 No budget defined
             </p><p>
-                Branch wise budget distribution.
-            </p>
+            Budget distribution.
+        </p>
         </field>
     </record>
 
     <menuitem
-            action="action_branch_budget"
-            id="menu_branch_budget"
+            action="action_budget_distribution"
+            id="menu_budget_distribution"
             parent="main_menu_account_budget"
             groups="account.group_account_manager"
             sequence="2"/>

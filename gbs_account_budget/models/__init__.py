@@ -1,5 +1,4 @@
 import bottom_line_budget
-import budget_distribution_branch
-import budget_distribution_cost_centre
-import budget_distribution_hiostory
+import budget_distribution
+import budget_distribution_history
 import account_invoice
