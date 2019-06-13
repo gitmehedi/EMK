@@ -148,15 +148,15 @@ class BottomLineBudgetLine(models.Model):
                                   % rec.bottom_line_account_id.name))
 
     @api.multi
-    def action_branch_distribute(self):
-        res = self.env.ref('gbs_account_budget.branch_budget_form')
-        branch_budget_id = self.env['branch.budget'].search([('bottom_line_budget_line','=',self.id)])
-        result = {'name': _('Branch Distribution'),
+    def action_budget_distribute(self):
+        res = self.env.ref('gbs_account_budget.budget_distribution_form')
+        budget_distribution_id = self.env['budget.distribution'].search([('bottom_line_budget_line','=',self.id)])
+        result = {'name': _('Budget Distribution'),
                   'view_type': 'form',
                   'view_mode': 'form',
                   'view_id': res and res.id or False,
-                  'res_model': 'branch.budget',
-                  'res_id': branch_budget_id.id or False,
+                  'res_model': 'budget.distribution',
+                  'res_id': budget_distribution_id and budget_distribution_id.id or False,
                   'type': 'ir.actions.act_window',
                   'target': 'current',
                   'nodestroy': True,
@@ -164,28 +164,6 @@ class BottomLineBudgetLine(models.Model):
                               'default_planned_amount': self.planned_amount,
                               'default_fiscal_year': self.bottom_line_budget.fiscal_year.id,
                               'default_name': self.bottom_line_budget.fiscal_year.name+'/'+self.bottom_line_account_id.name,
-                              },
-                  }
-
-        return result
-
-    @api.multi
-    def action_cost_centre_distribute(self):
-        res = self.env.ref('gbs_account_budget.cost_center_budget_form')
-        cost_budget_id = self.env['cost.centre.budget'].search([('bottom_line_budget_line', '=', self.id)])
-        result = {'name': _('Branch Distribution'),
-                  'view_type': 'form',
-                  'view_mode': 'form',
-                  'view_id': res and res.id or False,
-                  'res_model': 'cost.centre.budget',
-                  'res_id': cost_budget_id.id or False,
-                  'type': 'ir.actions.act_window',
-                  'target': 'current',
-                  'nodestroy': True,
-                  'context': {'default_account_id': self.bottom_line_account_id.id,
-                              'default_planned_amount': self.planned_amount,
-                              'default_fiscal_year': self.bottom_line_budget.fiscal_year.id,
-                              'default_name': self.bottom_line_budget.fiscal_year.name + '/' + self.bottom_line_account_id.name,
                               },
                   }
 

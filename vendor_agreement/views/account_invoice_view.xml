@@ -20,6 +20,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="agreement_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                       attrs="{'invisible':[('partner_id','=',False)]}"
                        domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase')]"
                        context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
                 <field name="commercial_partner_id" invisible="1"/>

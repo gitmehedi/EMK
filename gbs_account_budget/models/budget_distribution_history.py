@@ -1,12 +1,12 @@
 from odoo import api, fields, models, _
 
 # ---------------------------------------------------------
-# Branch wise Budgets Distribution History
+# Budgets Distribution History
 # ---------------------------------------------------------
-class BranchBudgetHistory(models.Model):
-    _name = "branch.budget.history"
+class BudgetDistributionHistory(models.Model):
+    _name = "budget.distribution.history"
     _inherit = ['mail.thread']
-    _description = "Branch Budget History"
+    _description = "Budget Distribution History"
 
     name = fields.Char('Budget Name',readonly=True, track_visibility='onchange')
     creating_user_id = fields.Many2one('res.users', 'Responsible', readonly=True, track_visibility='onchange')
@@ -18,13 +18,17 @@ class BranchBudgetHistory(models.Model):
     date_from = fields.Date(string='Start Date', readonly=True)
     date_to = fields.Date(string='End Date', readonly=True)
     approve_date = fields.Datetime(string='Approve Date', readonly=True, track_visibility='onchange')
-    branch_budget_lines = fields.One2many('branch.budget.history.line', 'branch_budget_history_id',readonly=True,
-                                          string='Lines')
+    branch_budget_lines = fields.One2many('branch.budget.history.line', 'branch_budget_history_id',
+                                          readonly=True,string='Lines')
+    cost_centre_budget_lines = fields.One2many('cost.centre.budget.history.line', 'cost_centre_budget_history_id',
+                                               readonly=True,string='Lines')
     bottom_line_budget_line = fields.Many2one('bottom.line.budget.line',string='Bottom line budget')
-    branch_budget_id = fields.Many2one('branch.budget',string='Branch budget distribution')
+    budget_distribution_id = fields.Many2one('budget.distribution',string='budget distribution')
     active = fields.Boolean(string='Active')
 
-
+# ---------------------------------------------------------
+# Branch wise Budgets Distribution History
+# ---------------------------------------------------------
 class BudgetBranchHistoryLine(models.Model):
     _name = "branch.budget.history.line"
     _description = "Branch Budget History Line"
@@ -36,32 +40,9 @@ class BudgetBranchHistoryLine(models.Model):
     theoritical_amount = fields.Float(string='Theoretical Amount')
     active = fields.Boolean(string='Active')
 
-
-
 # ---------------------------------------------------------
 # Cost Centre wise Budgets Distribution History
 # ---------------------------------------------------------
-class CostCentreBudgetHistory(models.Model):
-    _name = "cost.centre.budget.history"
-    _inherit = ['mail.thread']
-    _description = "Branch Budget History"
-
-    name = fields.Char('Budget Name',readonly=True, track_visibility='onchange')
-    creating_user_id = fields.Many2one('res.users', 'Responsible', readonly=True, track_visibility='onchange')
-    approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange')
-    account_id = fields.Many2one('account.account', string='Account',readonly=True,track_visibility='onchange')
-    planned_amount = fields.Float('Planned Amount',readonly=True,track_visibility='onchange')
-    remaining_amount = fields.Float('Remaining Amount',readonly=True)
-    fiscal_year = fields.Many2one('date.range', string='Date range', track_visibility='onchange',readonly=True)
-    date_from = fields.Date(string='Start Date', readonly=True)
-    date_to = fields.Date(string='End Date', readonly=True)
-    approve_date = fields.Datetime(string='Approve Date', readonly=True, track_visibility='onchange')
-    cost_centre_budget_lines = fields.One2many('cost.centre.budget.history.line', 'cost_centre_budget_history_id',readonly=True,
-                                          string='Lines')
-    bottom_line_budget_line = fields.Many2one('bottom.line.budget.line',string='Bottom line budget')
-    costcentre_budget_id = fields.Many2one('cost.centre.budget',string='Branch budget distribution')
-    active = fields.Boolean(string='Active')
-
 
 class CostCentreBudgetHistoryLine(models.Model):
     _name = "cost.centre.budget.history.line"

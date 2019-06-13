@@ -88,14 +88,10 @@
                                            options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                     <field name="planned_amount"/>
                                     <field name="state" invisible="1"/>
-                                    <button name="action_branch_distribute"
+                                    <button name="action_budget_distribute"
                                             groups="account.group_account_manager,account.group_account_user"
                                             attrs="{'invisible' : [('state','!=','approve')]}"
-                                            type="object" string="Branch" class="oe_highlight"/>
-                                    <button name="action_cost_centre_distribute"
-                                            groups="account.group_account_manager,account.group_account_user"
-                                            attrs="{'invisible' : [('state','!=','approve')]}"
-                                            type="object" string="Cost Centre" class="oe_highlight"/>
+                                            type="object" string="Distribution" class="oe_highlight"/>
                                 </tree>
                             </field>
                         </page>
@@ -119,7 +115,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Pending" name="pending" icon="terp-personal"
                             domain="[('state','=','confirm')]"/>
-                    <filter string="Distribution" name="distribution" icon="terp-personal"
+                    <filter string="Distributed" name="distribution" icon="terp-personal"
                             domain="[('state','=','approve')]"/>
                     <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Period" domain="[]" context="{'group_by':'fiscal_year'}"/>
