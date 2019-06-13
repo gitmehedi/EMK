@@ -196,8 +196,10 @@ class SOAPProcess(models.Model):
     @api.model
     def genGenericTransferAmountInterfaceForPayment(self, record):
         sub_operating_unit = record.sub_operating_unit_id.code if record.sub_operating_unit_id else '001'
-        from_bgl = "0{0}{1}00{2}".format(record.default_debit_account_id.code, sub_operating_unit, record.operating_unit_id.code)
-        to_bgl = "0{0}{1}00{2}".format(record.default_credit_account_id.code, sub_operating_unit, record.operating_unit_id.code)
+        from_bgl = "0{0}{1}00{2}".format(record.default_debit_account_id.code, sub_operating_unit,
+                                         record.operating_unit_id.code)
+        to_acct = record.vendor_bank_acc if record.vendor_bank_acc else record.default_credit_account_id.code
+        to_bgl = "0{0}{1}00{2}".format(to_acct, sub_operating_unit, record.operating_unit_id.code)
 
         data = {
             'InstNum': '003',
@@ -206,7 +208,7 @@ class SOAPProcess(models.Model):
             'Flag4': 'W',
             'Flag5': 'Y',
             'UUIDSource': 'OGL',
-            'UUIDNUM': str(record.name),
+            'UUIDNUM': str(record.code),
             'UUIDSeqNo': '003',
             'FrmAcct': from_bgl,
             'Amt': record.amount,
