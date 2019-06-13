@@ -13,6 +13,7 @@ class AccountMove(models.Model):
         acc_inv_line_objs = self.env['account.invoice.line'].search([('product_id.is_provisional_expense','=',True),
                                                                      ('invoice_id.date', '<=', date_range_objs.date_end),
                                                                      ('invoice_id.date', '>=', date_range_objs.date_start),
+                                                                     ('is_pro_expd', '=', False),
                                                                      ], order='operating_unit_id asc')
         acc_journal_objs = self.env['account.journal'].search([('type','=','provisional')])
         account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
@@ -36,6 +37,8 @@ class AccountMove(models.Model):
                 self._generate_credit_move_line(acc_journal_objs,acc_inv_line_obj,date,move_obj.id,account_move_line_obj)
 
             move_obj.post()
+
+        acc_inv_line_objs.write({'is_pro_expd':True})
         return True
 
     def _generate_move(self, journal,acc_inv_line_obj_list,date):
@@ -97,3 +100,7 @@ class AccountMove(models.Model):
         if ac_move_ids:
             return self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
 
+class AccountMove(models.Model):
+    _inherit = "account.invoice.line"
+
+    is_pro_expd = fields.Boolean('Provisional Expended?',default=False)
