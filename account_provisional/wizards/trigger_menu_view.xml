@@ -7,6 +7,10 @@
         <field name="arch" type="xml" >
             <form string="Set Approver" create="false" edit="false">
                 <div>
+                    <h5>Change the date to generate previous month record</h5>
+                    <field name="date_selection"/>
+                </div>
+                <div>
                     <h3>To generate provisional expense journal please trigger the button</h3>
                     <br></br>
                     <button string="Provisional Expense Scheduler" name="action_provisional_scheduler" type="object"

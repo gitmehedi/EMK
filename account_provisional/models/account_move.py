@@ -6,8 +6,11 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
 
-    def action_create_provisional_journal(self):
-        date = fields.Date.context_today(self)
+    def action_create_provisional_journal(self,get_date = None):
+        if get_date is None:
+            date = fields.Date.context_today(self)
+        else:
+            date = get_date
         date_range_objs = self.env['date.range'].search([('date_end', '<', date), ('type_id.fiscal_month', '=', True),('active','=',True)],
                                                         order='id DESC', limit=1)
         acc_inv_line_objs = self.env['account.invoice.line'].search([('product_id.is_provisional_expense','=',True),
@@ -16,6 +19,9 @@ class AccountMove(models.Model):
                                                                      ('is_pro_expd', '=', False),
                                                                      ], order='operating_unit_id asc')
         acc_journal_objs = self.env['account.journal'].search([('type','=','provisional')])
+        if not acc_journal_objs:
+            raise UserError(_('Configuration Error !'),
+                            _('The Provisional journal is not found.'))
         account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         op_unit_list = []
         acc_inv_line_grp_list = []
@@ -91,8 +97,11 @@ class AccountMove(models.Model):
         account_move_line_obj.create(account_move_line_debit)
         return True
 
-    def action_reverse_provisional_journal(self):
-        date = fields.Date.context_today(self)
+    def action_reverse_provisional_journal(self,get_date = None):
+        if get_date is None:
+            date = fields.Date.context_today(self)
+        else:
+            date = get_date
         journal_id = self.env['account.journal'].search([('type','=','provisional')])
         date_range_objs = self.env['date.range'].search([('date_end', '<', date),('type_id.fiscal_month', '=', True),('active','=',True)],order='id DESC',limit=1)
         ac_move_ids = self.search([('date', '<=', date_range_objs.date_end),('date', '>=', date_range_objs.date_start),
