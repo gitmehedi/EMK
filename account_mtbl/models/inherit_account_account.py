@@ -8,7 +8,7 @@ from odoo.exceptions import Warning, ValidationError
 class AccountAccount(models.Model):
     _name = 'account.account'
     _inherit = ['account.account', 'mail.thread', 'ir.needaction_mixin']
-    _order = 'id desc,state asc'
+    _order = 'code,state asc'
     _description = 'Chart of Account'
 
     name = fields.Char(size=200, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
