@@ -9,8 +9,9 @@
                     <sheet>
                         <group>
                             <field name="product_id"/>
-                            <field name="account_id"/>
                             <field name="sale_order_type_id"/>
+                            <field name="packing_mode_id"/>
+                            <field name="account_id"/>
                         </group>
                     </sheet>
                 </form>
@@ -22,8 +23,10 @@
             <field name="arch" type="xml">
                 <tree string="Sale Type Product Account">
                     <field name="product_id"/>
-                    <field name="account_id"/>
                     <field name="sale_order_type_id"/>
+                    <field name="packing_mode_id"/>
+                    <field name="account_id"/>
+
                 </tree>
             </field>
         </record>
@@ -39,6 +42,7 @@
                         <tree string="Sale Type Product Account" editable="bottom">
                             <field name="product_id" options="{'no_open':True,'no_create':True}"/>
                             <field name="sale_order_type_id" options="{'no_open':True,'no_create':True}"/>
+                            <field name="packing_mode_id" options="{'no_open':True,'no_create':True}"/>
                             <field name="account_id" options="{'no_open':True,'no_create':True}"/>
                         </tree>
                     </field>

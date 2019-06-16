@@ -11,6 +11,7 @@
     ],
 
     'data': [
+        'security/ir.model.access.csv',
         'views/sale_type_product_acc.xml',
     ],
     'installable': True,

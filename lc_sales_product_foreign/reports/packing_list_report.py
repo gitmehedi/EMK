@@ -53,7 +53,7 @@ class PackingList(models.AbstractModel):
                 }
 
         for pi_id in shipment_obj.lc_id.pi_ids:
-            pi_id_list.append({'pi_id':pi_id.name,'pack_type':pi_id.pack_type.display_name,'pi_date':report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(pi_id.create_date))})
+            pi_id_list.append({'pi_id':pi_id.name,'pack_type':pi_id.pack_type.display_name,'pi_date':report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(pi_id.invoice_date))})
 
         for revision in shipment_obj.lc_id.old_revision_ids:
             lc_revision_list.append({'no': revision.revision_number + 1, 'date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(revision.amendment_date))})
