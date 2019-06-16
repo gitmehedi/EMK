@@ -80,6 +80,7 @@ class AccountAccountType(models.Model):
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
                     'type': self.type if not requested.type else requested.type,
+                    'include_initial_balance': requested.include_initial_balance,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -122,6 +123,7 @@ class HistoryAccountAccountType(models.Model):
 
     change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
+    include_initial_balance = fields.Boolean(string='Bring Accounts Balance Forward')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.account.type', ondelete='restrict')

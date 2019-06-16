@@ -19,7 +19,7 @@
     ],
     'data': [
         'data/provisional_scheduler.xml',
-        'data/provesional_expenses_journal_data.xml',
+        # 'data/provesional_expenses_journal_data.xml',
         'wizards/trigger_menu_view.xml',
         # 'security/ir_security.xml',
         # 'security/ir.model.access.csv',

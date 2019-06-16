@@ -24,12 +24,24 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
 
     @api.multi
     def action_confirm(self):
+        credit_acc = credit_acc_id = False
+        account_config_pool = self.env['account.config.settings'].sudo().search([], order='id desc', limit=1)
+        if self.agreement_id.partner_id.vendor_bank_acc:
+            credit_acc = self.agreement_id.partner_id.vendor_bank_acc
+        elif account_config_pool and account_config_pool.sundry_account_id:
+            credit_acc_id = account_config_pool.sundry_account_id
+        else:
+            raise UserError(
+                _("Account Settings are not properly set. "
+                  "Please contact your system administrator for assistance."))
+
         self.env['payment.instruction'].create({
             'agreement_id': self.agreement_id.id,
             'partner_id': self.agreement_id.partner_id.id,
             'currency_id': self.currency_id.id,
+            'vendor_bank_acc': credit_acc,
             'default_debit_account_id': self.agreement_id.partner_id.property_account_payable_id.id,
-            'default_credit_account_id': self.agreement_id.partner_id.property_account_receivable_id.id,
+            'default_credit_account_id': credit_acc_id.id if credit_acc_id else None,
             'instruction_date': self.instruction_date,
             'amount': self.amount,
         })
