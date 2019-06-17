@@ -18,7 +18,7 @@ class AccountMove(models.Model):
                                                                      ('invoice_id.date', '>=', date_range_objs.date_start),
                                                                      ('is_pro_expd', '=', False),
                                                                      ], order='operating_unit_id asc')
-        acc_journal_objs = self.env['account.journal'].search([('type','=','provisional')])
+        acc_journal_objs = self.env['account.journal'].search([('type','=','provisional')],order='id DESC', limit=1)
         if not acc_journal_objs:
             raise UserError(_('Configuration Error !'),
                             _('The Provisional journal is not found.'))
