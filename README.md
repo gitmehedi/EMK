@@ -124,7 +124,26 @@ $ systemctl restart restart
 
 2. **Application Server**:
 
+**Step 1:** Update OS and Install nginx web server
 
+_Update OS_  
+```
+$ sudo yum update -y
+```
+_Donwload python2 and install in Redhat 7_ 
+```
+$ yum install gcc openssl-devel bzip2-devel
+$ cd /usr/src
+$ wget https://www.python.org/ftp/python/2.7.16/Python-2.7.16.tgz
+$ tar xzf Python-2.7.16.tgz && cd Python-2.7.16
+$ make altinstall
+ 
+```
+_Download PIP for Python_
+```
+$ curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+python2.7 get-pip.py
+```
 
 
 3. **Data Server**:
