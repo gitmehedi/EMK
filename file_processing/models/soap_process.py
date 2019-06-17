@@ -104,8 +104,18 @@ class SOAPProcess(models.Model):
                     }
 
                     self.env['soap.process.error'].create(error)
-                else:
+                elif 'OkMessage' in response:
                     record.write({'is_sync': True})
+                else:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['faultcode'],
+                        'error_message': response['faultstring'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
 
     @api.model
     def action_payment_instruction(self):
@@ -137,10 +147,19 @@ class SOAPProcess(models.Model):
                         'error_message': response['ErrorMessage'],
                         'errors': json.dumps(response)
                     }
-
                     self.env['soap.process.error'].create(error)
-                else:
+                elif 'OkMessage' in response:
                     record.write({'is_sync': True})
+                else:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['faultcode'],
+                        'error_message': response['faultstring'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
 
     @api.model
     def genGenericTransferAmountInterface(self, record):
@@ -164,7 +183,7 @@ class SOAPProcess(models.Model):
             'Flag5': 'Y',
             'UUIDSource': 'OGL',
             'UUIDNUM': str(record.name),
-            'UUIDSeqNo': '003',
+            'UUIDSeqNo': '',
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                    <soapenv:Header/>
@@ -198,8 +217,11 @@ class SOAPProcess(models.Model):
         sub_operating_unit = record.sub_operating_unit_id.code if record.sub_operating_unit_id else '001'
         from_bgl = "0{0}{1}00{2}".format(record.default_debit_account_id.code, sub_operating_unit,
                                          record.operating_unit_id.code)
-        to_acct = record.vendor_bank_acc if record.vendor_bank_acc else record.default_credit_account_id.code
-        to_bgl = "0{0}{1}00{2}".format(to_acct, sub_operating_unit, record.operating_unit_id.code)
+        if record.vendor_bank_acc:
+            to_bgl = record.vendor_bank_acc
+        else:
+            to_bgl = "0{0}{1}00{2}".format(record.default_credit_account_id.code, sub_operating_unit,
+                                           record.operating_unit_id.code)
 
         data = {
             'InstNum': '003',
@@ -209,7 +231,7 @@ class SOAPProcess(models.Model):
             'Flag5': 'Y',
             'UUIDSource': 'OGL',
             'UUIDNUM': str(record.code),
-            'UUIDSeqNo': '003',
+            'UUIDSeqNo': '',
             'FrmAcct': from_bgl,
             'Amt': record.amount,
             'ToAcct': to_bgl,
@@ -232,7 +254,7 @@ class SOAPProcess(models.Model):
                            <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
                         </ban:RqHeader>
                         <ban:Data>
-                           <ban:FrmAcct>{8}</ban:Amt>
+                           <ban:FrmAcct>{8}</ban:FrmAcct>
                            <ban:Amt>{9}</ban:Amt>
                            <ban:ToAcct>{10}</ban:ToAcct>
                            <ban:StmtNarr>{11}</ban:StmtNarr>
