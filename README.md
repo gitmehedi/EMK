@@ -21,7 +21,7 @@ $ sudo yum update -y
 _Donwload nginx and install in Redhat 7_ 
 ```
 $ wget http://nginx.org/packages/rhel/7/x86_64/RPMS/nginx-1.14.2-1.el7_4.ngx.x86_64.rpm
-$ sudo yum install yum install nginx-1.14.2-1.el7_4.ngx.x86_64.rpm -y 
+$ sudo yum install nginx-1.14.2-1.el7_4.ngx.x86_64.rpm -y 
 ```
 
 **Step 2:** Configure nginx with OS  
