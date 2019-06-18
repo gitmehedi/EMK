@@ -8,9 +8,9 @@ In 3-tier architecture, there is an intermediary level, meaning that the archite
 
 **MTBL** follows 3-tier architecture
 
-### 3-tier Installation:
+## 3-tier Server Installation:
 
-1. **Client/Web Server**:
+### 1. Client/Web Server:
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -122,7 +122,7 @@ $ systemctl restart restart
 
 **Note:** Check firewall if connection is not available.
 
-2. **Application Server**:
+### 2. Application Server:
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -146,7 +146,7 @@ $ python2.7 get-pip.py
 ```
 
 
-3. **Data Server**:  
+### 3. Data Server:  
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -163,7 +163,7 @@ $ sudo yum update -y
 
 _Install Postgresql 10 and install in RedHat 7_ 
 ```
-$ sudo yum install postgresql10-server postgresql10
+$ sudo yum install postgresql10-server postgresql10 postgresql-contrib
 $ sudo /usr/pgsql-10/bin/postgresql-10-setup initdb 
 ```
 
