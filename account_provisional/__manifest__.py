@@ -24,6 +24,7 @@
         # 'security/ir_security.xml',
         # 'security/ir.model.access.csv',
         'views/inherit_product_view.xml',
+        'views/inherit_account_journal_view.xml',
     ],
     'installable': True,
     'application': True,

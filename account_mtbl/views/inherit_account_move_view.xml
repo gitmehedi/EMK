@@ -39,6 +39,15 @@
                 <xpath expr="//sheet/notebook/page/field/tree/field[@name='date_maturity']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
+                <xpath expr="//button[@name='%(account.action_view_account_move_reversal)d']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='open_reconcile_view']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
             </field>
         </record>
 
