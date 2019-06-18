@@ -12,6 +12,7 @@
                           decoration-bf="state in ('confirm','done')" decoration-muted="state=='done'">
                         <field name="name" string="Agreement reference"/>
                         <field name="partner_id" string="Vendor"/>
+                        <field name="product_id" string="Service"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
                         <field name="advance_amount"/>
