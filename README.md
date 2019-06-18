@@ -8,9 +8,9 @@ In 3-tier architecture, there is an intermediary level, meaning that the archite
 
 **MTBL** follows 3-tier architecture
 
-### 3-tier Installtions:
+## 3-tier Server Installation:
 
-1. **Client/Web Server**:
+### 1. Client/Web Server:
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -21,7 +21,7 @@ $ sudo yum update -y
 _Donwload nginx and install in Redhat 7_ 
 ```
 $ wget http://nginx.org/packages/rhel/7/x86_64/RPMS/nginx-1.14.2-1.el7_4.ngx.x86_64.rpm
-$ sudo yum install yum install nginx-1.14.2-1.el7_4.ngx.x86_64.rpm -y 
+$ sudo yum install nginx-1.14.2-1.el7_4.ngx.x86_64.rpm -y 
 ```
 
 **Step 2:** Configure nginx with OS  
@@ -48,12 +48,12 @@ $ sudo systemctl status nginx
 ```
 **Step 3:** Additional configuration of nginx  
 
-**_Open 80 and 442 port using firewall-cmd_**  
+**_Open 80 and 443 port using firewall-cmd_**  
 Install ```firewalld``` OS package with configuration in redhat.  
 ```
-sudo yum install firewalld -y
-sudo systemctl enable firewalld
-sudo systemctl start firewalld
+$ sudo yum install firewalld -y
+$ sudo systemctl enable firewalld
+$ sudo systemctl start firewalld
 ```
 You must open and enable port 80 and 443 using the firewall-cmd command:
 ```
@@ -122,7 +122,7 @@ $ systemctl restart restart
 
 **Note:** Check firewall if connection is not available.
 
-2. **Application Server**:
+### 2. Application Server:
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -142,8 +142,35 @@ $ make altinstall
 _Download PIP for Python_
 ```
 $ curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
-python2.7 get-pip.py
+$ python2.7 get-pip.py
 ```
 
 
-3. **Data Server**:
+### 3. Data Server:  
+
+**Step 1:** Update OS and Install nginx web server
+
+
+_Donwload Postgresql 10 for RedHat 7_ 
+```
+$ sudo rpm -Uvh https://yum.postgresql.org/10/redhat/rhel-6-x86_64/pgdg-redhat10-10-2.noarch.rpm
+```
+
+_Update OS_  
+```
+$ sudo yum update -y
+```
+
+_Install Postgresql 10 and install in RedHat 7_ 
+```
+$ sudo yum install postgresql10-server postgresql10 postgresql-contrib
+$ sudo /usr/pgsql-10/bin/postgresql-10-setup initdb 
+```
+
+_Configure Postgresql 10 in RedHat 7 and Create user odoo_
+
+```
+$ sudo systemctl enable postgresql-10.service
+$ sudo systemctl start postgresql-10.service
+$ sudo su - postgres -c "createuser -s odoo" 2> /dev/null || true
+```
