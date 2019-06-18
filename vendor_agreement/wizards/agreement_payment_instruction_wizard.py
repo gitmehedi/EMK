@@ -25,7 +25,7 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
     @api.multi
     def action_confirm(self):
         credit_acc = credit_acc_id = False
-        account_config_pool = self.env['account.config.settings'].sudo().search([], order='id desc', limit=1)
+        account_config_pool = self.env.user.company_id
         if self.agreement_id.partner_id.vendor_bank_acc:
             credit_acc = self.agreement_id.partner_id.vendor_bank_acc
         elif account_config_pool and account_config_pool.sundry_account_id:

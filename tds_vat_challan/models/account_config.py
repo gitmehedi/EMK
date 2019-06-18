@@ -26,3 +26,14 @@ class AccountConfigSettings(models.TransientModel):
     def set_tds_vat_transfer_journal_id(self):
         return self.env['ir.values'].sudo().set_default(
             'account.config.settings', 'tds_vat_transfer_journal_id', self.tds_vat_transfer_journal_id.id)
+
+    @api.model
+    def create(self, vals):
+        if 'tds_vat_transfer_account_id' in vals or 'tds_vat_transfer_journal_id' in vals:
+            company = self.env['res.company'].browse(vals.get('company_id'))
+            company.write({
+                'tds_vat_transfer_account_id':vals.get('tds_vat_transfer_account_id'),
+                'tds_vat_transfer_journal_id':vals.get('tds_vat_transfer_journal_id'),
+            })
+        res = super(AccountConfigSettings, self).create(vals)
+        return res

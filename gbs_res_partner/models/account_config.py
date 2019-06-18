@@ -13,3 +13,13 @@ class AccountConfigSettings(models.TransientModel):
     def set_default_sundry_account_id(self):
         return self.env['ir.values'].sudo().set_default(
             'account.config.settings', 'sundry_account_id', self.sundry_account_id.id)
+
+    @api.model
+    def create(self, vals):
+        if 'sundry_account_id' in vals:
+            company = self.env['res.company'].browse(vals.get('company_id'))
+            company.write({
+                'sundry_account_id': vals.get('sundry_account_id'),
+            })
+        res = super(AccountConfigSettings, self).create(vals)
+        return res

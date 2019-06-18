@@ -84,8 +84,8 @@ class TdsVendorChallan(models.Model):
     def generate_account_journal(self):
         for rec in self:
             date = fields.Date.context_today(self)
-            account_conf_pool = self.env['account.config.settings'].sudo().search([], order='id desc', limit=1)
-            if not account_conf_pool:
+            account_conf_pool = self.env.user.company_id
+            if not account_conf_pool.tds_vat_transfer_journal_id and not account_conf_pool.tds_vat_transfer_account_id:
                 raise UserError(
                     _(
                         "Account Settings are not properly set. Please contact your system administrator for assistance."))
@@ -97,7 +97,7 @@ class TdsVendorChallan(models.Model):
                 self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
             self._generate_credit_move_line(account_conf_pool.tds_vat_transfer_account_id, date, move_obj.id,
                                             account_move_line_obj)
-            # move_obj.post()
+            move_obj.post()
         return True
 
     def _generate_move(self, journal, account_move_obj, date):
@@ -114,7 +114,7 @@ class TdsVendorChallan(models.Model):
                 'name': name,
                 'date': date,
                 'ref': '',
-                'company_id': self.operating_unit_id.partner_id.id,
+                'company_id': self.operating_unit_id.company_id.id,
                 'journal_id': journal.id,
                 'operating_unit_id': self.operating_unit_id.id,
             }
