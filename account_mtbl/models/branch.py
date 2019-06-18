@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 class Branch(models.Model):
     _name = 'operating.unit'
-    _order = 'name desc'
+    _order = 'code asc'
     _inherit = ['operating.unit', 'mail.thread']
     _description = 'Branch'
 

@@ -8,7 +8,7 @@ from odoo.exceptions import Warning, ValidationError
 class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
     _inherit = ['account.analytic.account', 'mail.thread', 'ir.needaction_mixin']
-    _order = 'id desc,state asc'
+    _order = 'code asc,state asc'
     _description = 'Cost Centre'
 
     name = fields.Char('Name', required=True, size=200, track_visibility='onchange', readonly=True,
