@@ -8,7 +8,7 @@ In 3-tier architecture, there is an intermediary level, meaning that the archite
 
 **MTBL** follows 3-tier architecture
 
-### 3-tier Installtions:
+### 3-tier Installation:
 
 1. **Client/Web Server**:
 
@@ -48,7 +48,7 @@ $ sudo systemctl status nginx
 ```
 **Step 3:** Additional configuration of nginx  
 
-**_Open 80 and 442 port using firewall-cmd_**  
+**_Open 80 and 443 port using firewall-cmd_**  
 Install ```firewalld``` OS package with configuration in redhat.  
 ```
 $ sudo yum install firewalld -y
