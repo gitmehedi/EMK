@@ -221,7 +221,7 @@ class AccountInvoiceLine(models.Model):
                                                  store=True, readonly=True, compute='_compute_price')
 
     operating_unit_id = fields.Many2one('operating.unit',string='Branch',required=True,
-                                        related='',
+                                        related='', readonly=False,
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))

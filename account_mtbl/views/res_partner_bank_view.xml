@@ -112,6 +112,6 @@
             </field>
         </record>
         <menuitem action="base.action_res_partner_bank_account_form" id="menu_action_res_partner_bank"
-                  parent="account.menu_finance_configuration" groups="mtbl_access.group_mtbl_sys_admin" sequence="20"/>
+                  parent="account.menu_finance_configuration" groups="base.group_system" sequence="20"/>
     </data>
 </odoo>
