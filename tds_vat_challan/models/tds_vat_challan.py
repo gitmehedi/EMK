@@ -20,6 +20,7 @@ class TdsVendorChallan(models.Model):
                                           help="who is distributed.", track_visibility='onchange')
     line_ids = fields.One2many('tds.vat.challan.line', 'parent_id', string='Vendor Challan', select=True,
                                track_visibility='onchange')
+    acc_move_line_ids = fields.Many2many('account.move.line','tax_acc_move_line_rel', 'tax_id', 'acc_move_line_id', 'Account Move Lines')
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
 
     state = fields.Selection([
@@ -73,11 +74,12 @@ class TdsVendorChallan(models.Model):
     @api.one
     def action_cancel(self):
         for line in self.line_ids:
-            line.acc_move_line_id.write({'is_deposit': False})
+            # line.acc_move_line_id.write({'is_deposit': False})
             line.write({'state': 'cancel'})
         res = {
             'state': 'cancel',
         }
+        self.acc_move_line_ids.write({'is_deposit': False})
         self.write(res)
 
     @api.multi
@@ -136,12 +138,12 @@ class TdsVendorChallan(models.Model):
 
     def _generate_debit_move_line(self, line, date, account_move_id, account_move_line_obj):
         account_move_line_debit = {
-            'account_id': line.acc_move_line_id.account_id.id,
-            'analytic_account_id': line.acc_move_line_id.analytic_account_id.id,
+            'account_id': self.acc_move_line_ids[0].account_id.id,
+            # 'analytic_account_id': line.acc_move_line_id.analytic_account_id.id,
             'credit': False,
             'date_maturity': date,
             'debit': line.total_bill,
-            'name': 'challan/' + line.acc_move_line_id.name,
+            'name': 'challan/' + self.acc_move_line_ids[0].name,
             'operating_unit_id': self.operating_unit_id.id,
             'move_id': account_move_id,
             # 'partner_id': acc_inv_line_obj.partner_id.id,
@@ -174,7 +176,7 @@ class TdsVendorChallanLine(models.Model):
     total_bill = fields.Float(String='Total Bill')
     undistributed_bill = fields.Float(String='Undistributed Bill')
     parent_id = fields.Many2one('tds.vat.challan')
-    acc_move_line_id = fields.Many2one('account.move.line')
+    # acc_move_line_id = fields.Many2one('account.move.line')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', track_visibility='onchange')
 
     state = fields.Selection([

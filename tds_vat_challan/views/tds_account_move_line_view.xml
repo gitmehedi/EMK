@@ -5,6 +5,7 @@
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" delete="false">
+                    <field name="id"/>
                     <field name="date" string="Bill Date"/>
                     <field name="name" string="TDS/VAT Description"/>
                     <field name="statement_id" invisible="1"/>
