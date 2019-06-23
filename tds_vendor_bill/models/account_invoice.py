@@ -177,5 +177,4 @@ class AccountInvoiceTax(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TDS Type')
-    is_deposit = fields.Boolean('Deposit', default=False)
+    tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')
