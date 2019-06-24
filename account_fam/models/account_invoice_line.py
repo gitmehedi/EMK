@@ -36,6 +36,7 @@ class AccountInvoiceLine(models.Model):
                     'date': self.invoice_id.date_invoice,
                     'invoice_id': self.invoice_id.id,
                     'operating_unit_id': self.invoice_id.operating_unit_id.id,
+                    'current_branch_id': self.invoice_id.operating_unit_id.id,
                     'prorata': True,
                     'batch_no': "{0}-{1}".format(self.invoice_id.number,batch_seq[self.id])
                 }
