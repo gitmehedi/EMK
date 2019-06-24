@@ -124,6 +124,7 @@
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="after">
                 <field name="operating_unit_id"/>
+                <field name="product_id"/>
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="replace">
                 <field name="amount" sum="Total"/>

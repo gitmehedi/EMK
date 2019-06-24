@@ -73,6 +73,13 @@ class AccountInvoice(models.Model):
                 iml.update({'operating_unit_id': inv_line_obj.operating_unit_id.id})
         return res
 
+    def _prepare_tax_line_vals(self, line, tax):
+        res = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
+        if res:
+            res.update({'product_id': line.product_id.id})
+        return res
+
+
     @api.model
     def tax_line_move_line_get(self):
         res = []
@@ -94,6 +101,7 @@ class AccountInvoice(models.Model):
                     'quantity': 1,
                     'price': -tax_line.amount,
                     'account_id': tax_line.account_id.id,
+                    'product_id': tax_line.product_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
                     'operating_unit_id': tax_line.operating_unit_id.id,
@@ -239,6 +247,7 @@ class AccountInvoiceTax(models.Model):
     _inherit = "account.invoice.tax"
 
     operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    product_id = fields.Many2one('product.product', string='Product')
 
 
 class ProductProduct(models.Model):
