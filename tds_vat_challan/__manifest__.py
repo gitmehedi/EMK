@@ -12,9 +12,8 @@
     'version': '10.0.0.1',
     'category': 'Accounting & Finance',
     'depends': ['mail',
-                'account',
-                'account_tds',
                 'sub_operating_unit',
+                'tds_vendor_bill',
                 ],
     'data': [
         'security/ir.model.access.csv',
@@ -24,6 +23,7 @@
         'wizards/challan_deposited_wizard.xml',
         'wizards/challan_distributed_wizard.xml',
         'wizards/challan_ou_selection_wizard.xml',
+        'wizards/tds_vat_move_payment_wizard.xml',
         'views/tds_account_move_line_view.xml',
         'views/tds_vat_challan.xml',
         'views/account_config.xml',
