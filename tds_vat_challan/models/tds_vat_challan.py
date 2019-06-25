@@ -5,18 +5,26 @@ from odoo.exceptions import UserError
 class TdsVendorChallan(models.Model):
     _name = 'tds.vat.challan'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = 'date desc'
+    _order = 'challan_date desc'
     _description = 'TDS Vendor Challan'
 
 
-    challan_date = fields.Date(string='Challan Date',track_visibility='onchange',required=True,
+    name = fields.Char(string='Challan Name',track_visibility='onchange',readonly=True,
+                       default=lambda self: self.env.context.get('name'))
+    challan_date = fields.Date(string='Challan Date',track_visibility='onchange',required=True,readonly=True,
+                               states={'draft': [('readonly', False)]},
                                default=fields.Date.context_today,help="Challan date")
-    challan_no = fields.Char(string='Challan No.',track_visibility='onchange',required=True)
-    deposited_bank = fields.Char(string='Deposited Bank.', track_visibility='onchange', required=True)
-    bank_branch = fields.Char(string='Bank Branch', track_visibility='onchange', required=True)
-    line_ids = fields.One2many('tds.vat.challan.line', 'parent_id', string='Vendor Challan', select=True,
+    challan_no = fields.Char(string='Challan No.',track_visibility='onchange',required=True,readonly=True,
+                             states={'draft': [('readonly', False)]})
+    deposited_bank = fields.Char(string='Deposited Bank', track_visibility='onchange', required=True,readonly=True,
+                                 states={'draft': [('readonly', False)]})
+    bank_branch = fields.Char(string='Bank Branch', track_visibility='onchange', required=True,readonly=True,
+                              states={'draft': [('readonly', False)]})
+    line_ids = fields.One2many('tds.vat.challan.line', 'parent_id', string='Vendor Challan', select=True,readonly=True,
+                               states={'draft': [('readonly', False)]},
                                track_visibility='onchange')
-    note = fields.Text(string='Narration',track_visibility='onchange')
+    note = fields.Text(string='Narration',track_visibility='onchange',readonly=True,
+                       states={'draft': [('readonly', False)]})
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
     acc_move_line_ids = fields.Many2many('account.move.line',string='Account Move Lines',
                                          default=lambda self: self.env.context.get('acc_move_line_ids'))
@@ -51,13 +59,14 @@ class TdsVendorChallan(models.Model):
     def _onchange_acc_move_line_ids(self):
         if self.acc_move_line_ids:
             vals = []
-            for acc_move_line_id in  self.acc_move_line_ids:
+            for acc_move_line_id in self.acc_move_line_ids:
                 vals.append((0, 0, {'supplier_id': acc_move_line_id.partner_id,
                                     'operating_unit_id': acc_move_line_id.operating_unit_id,
                                     'product_id': acc_move_line_id.product_id,
                                     'total_bill': acc_move_line_id.credit,
                                     }))
             self.line_ids = vals
+
 
 
     # @api.multi
@@ -171,9 +180,17 @@ class TdsVendorChallan(models.Model):
     #     account_move_line_obj.create(account_move_line_debit)
     #     return True
 
+
     ####################################################
     # ORM Overrides methods
     ####################################################
+
+    @api.model
+    def create(self, vals):
+        if vals['acc_move_line_ids']:
+            move_objs = self.env['account.move.line'].search([('id', 'in', [i[2] for i in vals['acc_move_line_ids']][0])])
+            move_objs.write({'is_challan':True})
+        return super(TdsVendorChallan, self).create(vals)
 
     @api.multi
     def unlink(self):

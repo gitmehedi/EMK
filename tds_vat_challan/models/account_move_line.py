@@ -5,6 +5,7 @@ from odoo.exceptions import UserError,ValidationError
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
+    is_challan = fields.Boolean('Deposit', default=False)
     is_deposit = fields.Boolean('Deposit', default=False)
     is_pending = fields.Boolean('Pending', default=False)
     is_paid = fields.Boolean('Paid', default=False)

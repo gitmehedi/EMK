@@ -86,6 +86,9 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_open']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="attributes">
                 <attribute name="string">Branch</attribute>
             </xpath>

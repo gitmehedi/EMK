@@ -8,7 +8,7 @@
             <form string="Vendor Bill">
                 <header>
                     <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate"
-                            class="oe_highlight" groups="account.group_account_invoice"/>
+                            class="oe_highlight" groups="account.group_account_manager"/>
                     <button name="action_payment_instruction" type="object" states="open"
                             string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
                     <button name="%(account.action_account_invoice_refund)d" type='action' string='Ask Refund'

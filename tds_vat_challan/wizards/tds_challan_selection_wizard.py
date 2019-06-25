@@ -80,6 +80,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
             'nodestroy': True,
             'target': 'current',
             'context': {'acc_move_line_ids': move_lines.ids,
+                        'name': self.type.upper()+' Challan['+self.date_from+' to '+self.date_to+']',
                         },
         }
         return result
