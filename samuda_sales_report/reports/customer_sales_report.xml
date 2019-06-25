@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_customer_sales"
+                model="res.partner"
+                string="Customer Sales Report"
+                report_type="qweb-pdf"
+                menu="False"
+                name="samuda_sales_report.report_customer_sales"
+                file="samuda_sales_report.report_customer_sales"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+        <template id="report_customer_sales">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Area Wise Customer Sales Report</h4>
+                                <br/>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        <ul class="list-inline">
+                                            <li>
+                                                <Strong>Zone : </Strong>
+                                                <t t-if="data['report_type']=='local'">
+                                                    <span>Local</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>Foreign</span>
+                                                </t>
+                                            </li>
+                                            <li>
+                                                <t t-if="data['report_type'] == 'local'">
+                                                    <strong>Area : </strong>
+                                                    <t t-if="not data['area_name']">All</t>
+                                                    <span t-esc="data['area_name']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong>Country : </strong>
+                                                    <t t-if="not data['country_name']">All</t>
+                                                    <span t-esc="data['country_name']"/>
+                                                </t>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <strong>Date : </strong>
+                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+                                        <strong> To </strong>
+                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <t t-foreach="header" t-as="head">
+                                            <t t-if="len(head_value)>1">
+                                                <th rowspan="2" style="text-align: center;">
+                                                    <t t-esc="head_value"/>
+                                                </th>
+                                            </t>
+                                            <t t-if="len(head_value)==1">
+                                                <t t-foreach="head_value" t-as="dynamic">
+                                                    <th colspan="2" style="text-align: center;">
+                                                        <t t-esc="dynamic"/>
+                                                    </th>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <t t-foreach="range(0,len(header)-1)" t-as="tas">
+                                            <th style="text-align: center;">
+                                                Qty
+                                            </th>
+                                            <th style="text-align: center;">
+                                                Val
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="record_objs" t-as="obj">
+                                        <tr>
+                                            <td class="odo-bg-info" colspan="100%">
+                                                <t t-if="data['report_type'] == 'local'">
+                                                    <strong>Area : <span t-esc="obj_value['area_name']"/></strong>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong>Country : <span t-esc="obj_value['country_name']"/></strong>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="obj_value['customer_objs']" t-as="exc">
+                                            <tr>
+                                                <td>
+                                                    <span class="text-nowrap" t-esc="exc_value['customer_name']"/>
+                                                </td>
+                                                <t t-foreach="exc_value['product_objs']" t-as="prod">
+                                                    <td class="text-right">
+                                                        <span t-esc="int(prod_value['qty'])"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="int(prod_value['value'])"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                        <tr>
+                                            <td>
+                                                <strong><span class="text-nowrap">Total</span></strong>
+                                            </td>
+                                            <t t-foreach="header_data" t-as="tas">
+                                                <td class="text-right">
+                                                    <span t-esc="sum(obj_value['customer_objs'][key]['product_objs'][tas.id]['qty'] for key in obj_value['customer_objs'])"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="sum(obj_value['customer_objs'][key]['product_objs'][tas.id]['value'] for key in obj_value['customer_objs'])"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

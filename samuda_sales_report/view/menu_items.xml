@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem
+                name="Executive Sales"
+                action="action_executive_sales_wizard"
+                id="menu_executive_sales_report"
+                parent="sales_team.menu_sale_report"
+                sequence="25"/>
+
+        <menuitem
+                name="Customer Sales"
+                action="action_customer_sales_wizard"
+                id="menu_customer_sales_report"
+                parent="sales_team.menu_sale_report"
+                sequence="35"/>
+
+    </data>
+</odoo>
