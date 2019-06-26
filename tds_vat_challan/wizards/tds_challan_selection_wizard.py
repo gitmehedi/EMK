@@ -81,6 +81,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
             'target': 'current',
             'context': {'acc_move_line_ids': move_lines.ids,
                         'name': self.type.upper()+' Challan['+self.date_from+' to '+self.date_to+']',
+                        'currency_id': self.env.user.company_id.currency_id.id,
                         },
         }
         return result

@@ -25,6 +25,8 @@ class TdsVendorChallan(models.Model):
                                track_visibility='onchange')
     note = fields.Text(string='Narration',track_visibility='onchange',readonly=True,
                        states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one('res.currency', string='Currency',
+                                  default=lambda self: self.env.context.get('currency_id'))
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
     acc_move_line_ids = fields.Many2many('account.move.line',string='Account Move Lines',
                                          default=lambda self: self.env.context.get('acc_move_line_ids'))
@@ -64,52 +66,50 @@ class TdsVendorChallan(models.Model):
                                     'operating_unit_id': acc_move_line_id.operating_unit_id,
                                     'product_id': acc_move_line_id.product_id,
                                     'total_bill': acc_move_line_id.credit,
+                                    'currency_id': self.currency_id.id or False,
                                     }))
             self.line_ids = vals
 
 
 
-    # @api.multi
-    # def action_deposited(self):
-    #     for record in self:
-    #         if record.state not in ('draft'):
-    #             raise UserError(
-    #                 _("Selected record cannot be deposited as they are not in 'Pending' state."))
-    #         for line in record.line_ids:
-    #             line.write({'state': 'deposited', 'challan_provided': line.undistributed_bill})
-    #         res = {
-    #             'state': 'deposited',
-    #             'deposit_approver': record.env.user.id,
-    #             'deposit_date': fields.Datetime.now(),
-    #         }
-    #         record.write(res)
-    #         record.generate_account_journal()
-    #
-    # @api.multi
-    # def action_distributed(self):
-    #     for record in self:
-    #         if record.state not in ('deposited'):
-    #             raise UserError(
-    #                 _("Selected record cannot be distributed as they are not in 'Deposited' state."))
-    #         for line in record.line_ids:
-    #             line.write({'state': 'distributed', 'undistributed_bill': 0.0})
-    #         res = {
-    #             'state': 'distributed',
-    #             'distribute_approver': record.env.user.id,
-    #             'distribute_date': fields.Datetime.now(),
-    #         }
-    #         record.write(res)
-    #
-    # @api.one
-    # def action_cancel(self):
-    #     for line in self.line_ids:
-    #         # line.acc_move_line_id.write({'is_deposit': False})
-    #         line.write({'state': 'cancel'})
-    #     res = {
-    #         'state': 'cancel',
-    #     }
-    #     self.acc_move_line_ids.write({'is_deposit': False})
-    #     self.write(res)
+    @api.multi
+    def action_confirm(self):
+        for record in self:
+            if record.state not in ('draft'):
+                raise UserError(
+                    _("Selected record cannot be confirm as they are not in 'Draft' state."))
+            record.line_ids.write({'state': 'confirm'})
+            res = {
+                'state': 'confirm',
+                # 'deposit_approver': record.env.user.id,
+                # 'deposit_date': fields.Datetime.now(),
+            }
+            record.write(res)
+
+    @api.multi
+    def action_approve(self):
+        for record in self:
+            if record.state not in ('confirm'):
+                raise UserError(
+                    _("Selected record cannot be approve as they are not in 'Deposited' state."))
+            record.line_ids.write({'state': 'approved'})
+            res = {
+                'state': 'approved',
+                # 'distribute_approver': record.env.user.id,
+                # 'distribute_date': fields.Datetime.now(),
+            }
+            record.write(res)
+
+    @api.one
+    def action_cancel(self):
+        self.line_ids.write({'state': 'cancel'})
+        self.write({'state': 'cancel'})
+
+    @api.one
+    def action_reset_to_draft(self):
+        self.line_ids.write({'state': 'cancel'})
+        self.write({'state': 'draft'})
+
     #
     # @api.multi
     # def generate_account_journal(self):
@@ -197,6 +197,8 @@ class TdsVendorChallan(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(_('You cannot delete a record which is not draft state!'))
+            if rec.acc_move_line_ids:
+                rec.acc_move_line_ids.write({'is_challan': False})
         return super(TdsVendorChallan, self).unlink()
 
     @api.model
@@ -213,6 +215,7 @@ class TdsVendorChallanLine(models.Model):
     type_name = fields.Char(String='Description')
     total_bill = fields.Float(String='Total Bill')
     parent_id = fields.Many2one('tds.vat.challan')
+    currency_id = fields.Many2one('res.currency', string='Currency')
 
     state = fields.Selection([
         ('draft', "Draft"),
