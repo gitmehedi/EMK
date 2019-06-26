@@ -7,7 +7,7 @@
             <form string="Asset Sale" duplicate="0">
                 <header>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
-                            states="draft"/>
+                            states="draft" groups="account.group_account_manager"/>
                     <button name="action_sale" string="Sell" type="object" class="oe_highlight"
                             context="{'sale':True,'sale_id':name}" states="approve"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,sale"/>
