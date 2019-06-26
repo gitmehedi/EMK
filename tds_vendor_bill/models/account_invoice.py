@@ -116,7 +116,8 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     tds_amount = fields.Float('TDS Value', readonly=True, store=True, copy=False)
-    account_tds_id = fields.Many2one('tds.rule', string='TDS Rule')
+    account_tds_id = fields.Many2one('tds.rule', string='TDS Rule',
+                                     domain="[('active', '=', True),('state', '=','confirm' )]",)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
