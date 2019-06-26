@@ -242,6 +242,11 @@ class AccountInvoiceLine(models.Model):
         for line in self:
             line.sub_operating_unit_id = []
 
+    @api.constrains('invoice_line_tax_ids')
+    def _check_supplier_taxes_id(self):
+        if self.invoice_line_tax_ids and len(self.invoice_line_tax_ids) > 1:
+            raise Warning('You can select one VAT!')
+
 
 class AccountInvoiceTax(models.Model):
     _inherit = "account.invoice.tax"

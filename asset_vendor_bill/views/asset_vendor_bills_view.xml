@@ -97,7 +97,7 @@
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field name="tds_amount" invisible="1"/>
                                     <field name="discount" groups="base.group_no_one" invisible="1"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags"
+                                    <field name="invoice_line_tax_ids" string="VAT" widget="many2many_tags"
                                            context="{'type':parent.type}"
                                            domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"
                                            options="{'no_create': True}"/>
@@ -129,8 +129,8 @@
                                     </div>
                                 </group>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="amount_untaxed"/>
-                                    <field name="amount_tax"/>
+                                    <field name="amount_untaxed" string="Without VAT Amount"/>
+                                    <field name="amount_tax" string="VAT"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"

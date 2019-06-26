@@ -189,3 +189,8 @@ class ProductTemplate(models.Model):
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
+
+    @api.constrains('supplier_taxes_id')
+    def _check_supplier_taxes_id(self):
+        if self.supplier_taxes_id and len(self.supplier_taxes_id) > 1:
+            raise Warning('You can select one VAT!')
