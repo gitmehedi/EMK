@@ -9,10 +9,10 @@ class CustomerSalesWizard(models.TransientModel):
     type = fields.Selection([
         ('local', 'Local'),
         ('foreign', 'Foreign')
-    ], string='Type')
+    ], string='Type', default='local')
 
     area_id = fields.Many2one('res.partner.area', string='Area')
-    country_id = fields.Many2one('res.country', string='Country')
+    country_id = fields.Many2one('res.country', string='Country', domain="[('is_sales_country', '=', True)]")
 
     date_from = fields.Date("Date From", required=True)
     date_to = fields.Date("Date To", required=True)

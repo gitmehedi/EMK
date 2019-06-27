@@ -52,7 +52,7 @@
                                     <div class="col-xs-6 text-right">
                                         <strong>Date : </strong>
                                         <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
-                                        <strong> To </strong>
+                                        <strong> to </strong>
                                         <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
                                     </div>
                                 </div>
@@ -61,69 +61,59 @@
                             <table class="table table-report-xs table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <t t-foreach="header" t-as="head">
-                                            <t t-if="len(head_value)>1">
-                                                <th rowspan="2" style="text-align: center;">
-                                                    <t t-esc="head_value"/>
-                                                </th>
-                                            </t>
-                                            <t t-if="len(head_value)==1">
-                                                <t t-foreach="head_value" t-as="dynamic">
-                                                    <th colspan="2" style="text-align: center;">
-                                                        <t t-esc="dynamic"/>
-                                                    </th>
-                                                </t>
-                                            </t>
+                                        <th rowspan="2" style="text-align: center;">
+                                            Executive Name
+                                        </th>
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th colspan="2" style="text-align: center;">
+                                                <t t-esc="head.name"/>
+                                            </th>
                                         </t>
                                     </tr>
                                     <tr class="odo-bg-gray">
-                                        <t t-foreach="range(0,len(header)-1)" t-as="tas">
-                                            <th style="text-align: center;">
-                                                Qty
-                                            </th>
-                                            <th style="text-align: center;">
-                                                Val
-                                            </th>
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th style="text-align: center;">Qty</th>
+                                            <th style="text-align: center;">Val</th>
                                         </t>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="record_objs" t-as="obj">
+                                    <t t-foreach="report_data" t-as="obj">
                                         <tr>
                                             <td class="odo-bg-info" colspan="100%">
                                                 <t t-if="data['report_type'] == 'local'">
-                                                    <strong>Area : <span t-esc="obj_value['area_name']"/></strong>
+                                                    <strong class="text-nowrap" t-esc="obj_value['area_name']"/>
                                                 </t>
                                                 <t t-else="">
-                                                    <strong>Country : <span t-esc="obj_value['country_name']"/></strong>
+                                                    <strong class="text-nowrap" t-esc="obj_value['country_name']"/>
                                                 </t>
                                             </td>
                                         </tr>
-                                        <t t-foreach="obj_value['executive_objs']" t-as="exc">
+                                        <t t-foreach="obj_value['executives']" t-as="exc">
                                             <tr>
                                                 <td>
                                                     <span class="text-nowrap" t-esc="exc_value['executive_name']"/>
                                                 </td>
-                                                <t t-foreach="exc_value['product_objs']" t-as="prod">
+                                                <t t-foreach="header_data" t-as="head">
                                                     <td class="text-right">
-                                                        <span t-esc="int(prod_value['qty'])"/>
+                                                        <span class="text-nowrap" t-esc="formatLang(exc_value['products'][head.id]['qty'])"/>
                                                     </td>
                                                     <td class="text-right">
-                                                        <span t-esc="int(prod_value['value'])"/>
+                                                        <span class="text-nowrap" t-esc="formatLang(exc_value['products'][head.id]['val'])"/>
                                                     </td>
                                                 </t>
                                             </tr>
                                         </t>
                                         <tr>
                                             <td>
-                                                <strong><span class="text-nowrap">Total</span></strong>
+                                                <strong class="text-nowrap">Total</strong>
                                             </td>
-                                            <t t-foreach="header_data" t-as="tas">
+                                            <t t-foreach="header_data" t-as="head">
                                                 <td class="text-right">
-                                                    <span t-esc="sum(obj_value['executive_objs'][key]['product_objs'][tas.id]['qty'] for key in obj_value['executive_objs'])"/>
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(obj_value['executives'][key]['products'][head.id]['qty'] for key in obj_value['executives']))"/>
                                                 </td>
                                                 <td class="text-right">
-                                                    <span t-esc="sum(obj_value['executive_objs'][key]['product_objs'][tas.id]['value'] for key in obj_value['executive_objs'])"/>
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(obj_value['executives'][key]['products'][head.id]['val'] for key in obj_value['executives']))"/>
                                                 </td>
                                             </t>
                                         </tr>
