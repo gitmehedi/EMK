@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<openerp>
+<odoo>
     <data>
         <record id="hr_applicant_form_view_inherit" model="ir.ui.view">
             <field name="name">hr.applicant.form.view.inherit</field>
@@ -16,17 +16,38 @@
                     <field name="gender"/>
                     <field name="marital_status"/>
                 </xpath>
-                <xpath expr="//button[@name='create_employee_from_applicant']" position="replace">
-                    <button string="Create Employee" name="create_employee_from_applicant" type="object"
-                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
-                </xpath>
+
                 <xpath expr="//button[@name='archive_applicant']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//button[@name='create_employee_from_applicant']" position="after">
+                <xpath expr="//button[@name='archive_applicant']" position="before">
                     <button name="generate_appointment_letter" string="Appointment Letter"  type="object" icon='fa-file-text'
                         class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
 
+                </xpath>
+                <xpath expr="//button[1]" position="attributes">
+                    <attribute name="attrs">{'invisible': [('state', '!=', 'approved')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='department_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='medium_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='source_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
             </field>
 		</record>
@@ -36,4 +57,4 @@
             id="hr_recruitment.menu_crm_case_categ0_act_job" action="hr_recruitment.crm_case_categ0_act_job" sequence="2" groups="base.group_no_one,hr.group_hr_user,hr.group_hr_manager"/>
 
     </data>
-</openerp>
+</odoo>

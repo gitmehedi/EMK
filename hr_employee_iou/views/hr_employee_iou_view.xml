@@ -29,7 +29,7 @@
 					</header>
 					<sheet>
 						<group>
-							<field name="employee_id" attrs="{'readonly':[('state','=','confirm')]}"/>
+							<field name="employee_id" attrs="{'readonly':[('state','=','confirm')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             <field name="amount" attrs="{'readonly':[('state','=','confirm')]}"/>
                             <field name="due"/>
 						</group>

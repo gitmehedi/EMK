@@ -26,7 +26,7 @@
 								<group string="Current Shift">
 									<field name="current_shift_id" />
 								</group>
-								<field name="shift_ids">
+								<field name="shift_ids" readonly="1">
 									<tree editable="top">
 										<field name="shift_id" />
 										<field name="effective_from" />

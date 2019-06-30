@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+res_partner_bank_user,res_partner_bank_user,base.model_res_partner_bank,emk_hr.group_acc_creator,1,1,1,1
+access_date_range_access_right,access_date_range_access_right,date_range.model_date_range,hr.group_hr_user,1,1,1,0
+access_date_range_type_access_right,access_date_range_access_right_type,date_range.model_date_range_type,hr.group_hr_user,1,1,1,0

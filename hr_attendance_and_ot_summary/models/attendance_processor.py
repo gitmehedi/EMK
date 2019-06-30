@@ -50,7 +50,7 @@ class AttendanceProcessor(models.Model):
                             SELECT (date_from + interval '6h') AS check_in, 
                                    (date_to + interval '6h') AS check_out, 
                                    0 AS worked_hours, 3 AS att_type      
-                            FROM hr_short_leave 
+                            FROM hr_holiday_hour 
                             WHERE employee_id = %s AND state = 'validate' AND 
                                 date_to > %s AND date_from < %s
                             ORDER BY check_in, att_type ASC"""

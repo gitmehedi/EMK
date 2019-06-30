@@ -11,11 +11,46 @@
                 <field name="coach_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
+                <xpath expr="//field[@name='address_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='department_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='calendar_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
                 <xpath expr="//form/sheet/notebook/page[2]/group/group[2]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>
+
+        <record id="inherit_hr_employee_view_form2" model="ir.ui.view">
+            <field name="name">hr.employee.view.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bank_account_id']" position="replace">
+                    <field name="bank_account_id" context="{'default_partner_id': address_home_id}"
+                           options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="int_hr_emp" model="ir.ui.view">
             <field name="name">hr.employee.from.view</field>
             <field name="model">hr.employee</field>
@@ -26,6 +61,7 @@
                 </field>
             </field>
         </record>
+
         <record id="view_employee_form_inherit" model="ir.ui.view">
             <field name="name">hr.employee.from.view</field>
             <field name="model">hr.employee</field>
@@ -36,18 +72,111 @@
                 </field>
             </field>
         </record>
+
         <record id="hr_emp_view_form2" model="ir.ui.view">
             <field name="name">hr.employee.view.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-            <xpath expr="//group[@name='active_group']" position="after">
-                <group string="Tax Information">
-                    <field name="tax_zone"/>
-                    <field name="tax_circle"/>
-                    <field name="tax_location"/>
-                </group>
-            </xpath>
+                <xpath expr="//group[@name='active_group']" position="after">
+                    <group string="Tax Information">
+                        <field name="tax_zone"/>
+                        <field name="tax_circle"/>
+                        <field name="tax_location"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_res_company_da1" model="ir.ui.view">
+            <field name="name">res.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="l10n_in_hr_payroll.view_res_company_da"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[@name='indian_payroll']" position="replace">
+                        <page name="indian_payroll" string="Indian Payroll" groups="base.group_system">
+                            <group>
+                                <field name="dearness_allowance"/>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_operating_unit_form_inherit1" model="ir.ui.view">
+            <field name="name">operating.unit.form.view</field>
+            <field name="model">operating.unit</field>
+            <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_form_int1" model="ir.ui.view">
+            <field name="name">res.users.form.view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="operating_unit.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_operating_unit_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_form_inherit1" model="ir.ui.view">
+            <field name="name">res.users.form.view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="date_range_tree_inherit1" model="ir.ui.view">
+            <field name="name">date.range.tree.view</field>
+            <field name="model">date.range</field>
+            <field name="inherit_id" ref="date_range.view_date_range_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='type_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="date_range_type_tree_inherit1" model="ir.ui.view">
+            <field name="name">date.range.type.view</field>
+            <field name="model">date.range.type</field>
+            <field name="inherit_id" ref="date_range.view_date_range_type_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_company_form_inherit" model="ir.ui.view">
+            <field name="name">view.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='currency_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -56,17 +185,18 @@
             <field name="model">survey.survey</field>
             <field name="inherit_id" ref="survey.survey_form"/>
             <field name="arch" type="xml">
-            <xpath expr="//page" position="replace">
-                <page string="Edit Pages and Questions">
-                    <field name="page_ids" widget="many2many" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
-                        <tree>
-                            <field name="sequence" widget="handle"/>
-                            <field name="title"/>
-                            <field name="question_ids"/>
-                        </tree>
-                    </field>
-                </page>
-            </xpath>
+                <xpath expr="//page" position="replace">
+                    <page string="Edit Pages and Questions">
+                        <field name="page_ids" widget="many2many" mode="tree" context="{'default_survey_id': active_id}"
+                               nolabel="1">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="title"/>
+                                <field name="question_ids"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
             </field>
         </record>
         <record id="survey_page_view_form2" model="ir.ui.view">
@@ -74,17 +204,281 @@
             <field name="model">survey.page</field>
             <field name="inherit_id" ref="survey.survey_page_form"/>
             <field name="arch" type="xml">
-            <xpath expr="//field[@name='question_ids']" position="replace">
-                <field name="question_ids" nolabel="1" widget="many2many" mode="tree" context="{'default_page_id': active_id}">
-                    <tree>
-                        <field name="sequence" widget="handle"/>
-                        <field name="question"/>
-                        <field name="type"/>
-                        <field name="constr_mandatory"/>
-                    </tree>
-                </field>
-            </xpath>
+                <xpath expr="//field[@name='question_ids']" position="replace">
+                    <field name="question_ids" nolabel="1" widget="many2many" mode="tree"
+                           context="{'default_page_id': active_id}">
+                        <tree>
+                            <field name="sequence" widget="handle"/>
+                            <field name="question"/>
+                            <field name="type"/>
+                            <field name="constr_mandatory"/>
+                        </tree>
+                    </field>
+                </xpath>
             </field>
         </record>
+
+        <record id="inherited_hr_payslip_run_view1" model="ir.ui.view">
+            <field name="name">Inherited HR Payslip Run</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='draft_payslip_run']" position="replace">
+                    <button string="Set to Draft" name="draft_payslip_run" type="object" invisible='1' states="close"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_job_form_website_published_button1" model="ir.ui.view">
+            <field name="name">hr.job.form.inherit.published.button</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='address_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_job_survey_inherit" model="ir.ui.view">
+            <field name="name">hr.job.form.inherit.published.button</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr_recruitment_survey.hr_job_survey_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='survey_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_recruitment_stage_form_inherit" model="ir.ui.view">
+            <field name="name">hr.recruitment.stage</field>
+            <field name="model">hr.recruitment.stage</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='template_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_employee_grade_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payroll.structure</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_employee_grade_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_contribution_register_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contribution.register</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_salary_rule_category_form_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule.category</field>
+            <field name="model">hr.salary.rule.category</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_category_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_salary_rule_form_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='register_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='rules']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//page[3]" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//page[4]" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem
+                id="hr.menu_view_employee_category_form"
+                action="hr.open_view_categ_form"
+                parent="hr.menu_human_resources_configuration"
+                groups="hr.group_hr_user"
+                sequence="1"/>
+        <menuitem
+                id="hr_contract.hr_menu_contract_type"
+                action="hr_contract.action_hr_contract_type"
+                parent="hr.menu_human_resources_configuration"
+                sequence="3"
+                groups="hr.group_hr_user"/>
+
+        <menuitem id="menu_date_ranges"
+                  name="Date ranges"
+                  parent="hr_holidays.menu_hr_holidays_configuration"
+                  sequence="4"
+                  groups="hr.group_hr_user"/>
+        <menuitem action="date_range.date_range_action"
+                  id="menu_date_ranges_action"
+                  parent="menu_date_ranges"
+                  groups="hr.group_hr_user"/>
+        <menuitem action="date_range.date_range_type_action"
+                  id="menu_date_ranges_type_action"
+                  parent="menu_date_ranges"
+                  groups="hr.group_hr_user"/>
+        <menuitem action="date_range.date_range_generator_action"
+                  id="menu_date_range_generators_action"
+                  groups="hr.group_hr_user"
+                  parent="menu_date_ranges"/>
+
+        <menuitem action="base.action_res_partner_bank_account_form"
+                  id="menu_action_res_partner_bank1"
+                  parent="hr.menu_hr_root"
+                  name="Bank Accounts"
+                  groups="emk_hr.group_acc_creator"
+                  sequence="5"/>
+        <menuitem action="base.action_res_bank_form"
+                  id="menu_action_res_bank_form"
+                  parent="hr.menu_hr_root"
+                  name="Bank"
+                  groups="emk_hr.group_acc_creator"
+                  sequence="4"/>
+
+        <menuitem
+                name="Yearly Salary by Head"
+                parent="hr.menu_hr_reporting_timesheet"
+                sequence="200"
+                action="l10n_in_hr_payroll.action_salary_employee_month"
+                id="l10n_in_hr_payroll.menu_salary_employee_month"
+                groups="base.group_system"
+        />
+
+        <menuitem
+                id="hr.menu_hr_reporting_timesheet"
+                name="Reports"
+                parent="hr.menu_hr_root"
+                groups="base.group_system"
+                sequence="99"/>
+        <menuitem name="Reports"
+                  id="l10n_in_hr_payroll.menu_l10n_in_hr_payroll_report"
+                  parent="hr_payroll.menu_hr_payroll_root"
+                  sequence="99"
+                  groups="base.group_system"/>
+        <menuitem action="l10n_in_hr_payroll.action_payment_advice_report_all"
+                  id="l10n_in_hr_payroll.menu_reporting_payment_advice"
+                  parent="l10n_in_hr_payroll.menu_l10n_in_hr_payroll_report"
+                  groups="base.group_system"
+                  sequence="5"/>
+        <menuitem action="l10n_in_hr_payroll.action_payslip_report_all"
+                  id="l10n_in_hr_payroll.menu_reporting_payslip"
+                  parent="l10n_in_hr_payroll.menu_l10n_in_hr_payroll_report"
+                  sequence="5"
+                  groups="base.group_system"/>
+
+        <!-- Survey Configure -->
+        <menuitem name="Configuration"
+                  id="survey.menu_surveys_configuration"
+                  parent="survey.menu_surveys"
+                  groups="hr.group_hr_user"
+                  sequence="100"/>
+        <menuitem name="Pages"
+                  id="survey.menu_survey_page_form1"
+                  action="survey.action_survey_page_form"
+                  parent="survey.menu_surveys_configuration"
+                  sequence="1"
+                  groups="hr.group_hr_user"/>
+        <menuitem name="Questions"
+                  id="survey.menu_survey_question_form1"
+                  action="survey.action_survey_question_form"
+                  parent="survey.menu_surveys_configuration"
+                  sequence="2"
+                  groups="hr.group_hr_user"/>
+        <menuitem name="Labels"
+                  id="survey.menu_survey_label_form1"
+                  action="survey.action_survey_label_form"
+                  parent="survey.menu_surveys_configuration"
+                  sequence="3"
+                  groups="hr.group_hr_user"/>
+        <menuitem name="User Input Lines"
+                  id="survey.menu_survey_response_line_form"
+                  action="survey.action_survey_user_input_line"
+                  parent="survey.menu_surveys_configuration"
+                  sequence="4"
+                  groups="hr.group_hr_user"/>
+
+        <menuitem
+                id="hr_recruitment.hr_applicant_category_menu"
+                parent="hr_recruitment.menu_hr_recruitment_configuration"
+                action="hr_recruitment.hr_applicant_category_action"
+                sequence="2" groups="hr.group_hr_user"/>
+
+        <menuitem
+                id="hr_recruitment.menu_hr_recruitment_degree"
+                name="Degrees"
+                parent="hr_recruitment.menu_hr_recruitment_configuration"
+                action="hr_recruitment.hr_recruitment_degree_action"
+                sequence="5" groups="hr.group_hr_user"/>
+        <!-- Leave Report -->
+        <menuitem
+                id="hr_holidays.menu_open_employee_leave"
+                name="Leave Details"
+                parent="hr_holidays.menu_hr_holidays_report"
+                groups="base.group_system"
+                action="hr_holidays.open_employee_leaves"
+                sequence="4"/>
+        <menuitem
+                name="Leaves by Department"
+                parent="hr_holidays.menu_hr_holidays_report"
+                action="hr_holidays.action_hr_holidays_summary_dept"
+                id="hr_holidays.menu_account_central_journal"
+                groups="base.group_system"/>
+
+
+        <menuitem id="base.menu_translation"
+                  name="Translations"
+                  parent="base.menu_administration"
+                  sequence="7"
+                  groups="base.group_system"/>
+        <menuitem
+                name="Load a Translation"
+                action="base.action_view_base_language_install"
+                id="base.menu_view_base_language_install"
+                parent="base.menu_translation" sequence="2"
+                groups="base.group_system"/>
+
     </data>
 </odoo>

@@ -12,7 +12,8 @@
                 'mail',
                 'hr_employee_seniority',
                 'hr_payroll',
-                'employee_stages'
+                'employee_stages',
+                'hr_employee_number'
                 ],
     'data': [
         'views/hr_exit_menu.xml',

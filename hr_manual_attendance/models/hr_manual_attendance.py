@@ -291,7 +291,7 @@ class HrManualAttendance(models.Model):
 
     @api.constrains('check_in', 'check_out')
     def _check_time(self):
-        sl_pool = self.env["hr.short.leave"]
+        sl_pool = self.env["hr.holiday.hour"]
         att_pool = self.env["hr.attendance"]
         for h in self:
             domain = [

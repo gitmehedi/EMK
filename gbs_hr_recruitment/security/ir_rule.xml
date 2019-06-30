@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
         <record id="hr_employee_requisition_for_dept_manager" model="ir.rule">
             <field name="name">HR Employee Requisition for Department Manager</field>
@@ -10,7 +10,7 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_unlink" eval="True"/>
-            <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager')),(4,ref('gbs_application_group.group_head_of_plant'))]"/>
+            <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
         </record>
 
         <record id="hr_employee_requisition_manager" model="ir.rule">
@@ -21,7 +21,7 @@
             <field name="perm_create" eval="True" />
             <field name="perm_write" eval="True"/>
             <field name="perm_unlink" eval="True"/>
-            <field name="groups" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager')),(4,ref('gbs_application_group.group_cxo'))]"/>
+            <field name="groups" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
         </record>
 
         <record id="hr_employee_requisition_officer" model="ir.rule">
@@ -43,7 +43,7 @@
             <field name="perm_create" eval="True" />
             <field name="perm_write" eval="True"/>
             <field name="perm_unlink" eval="True"/>
-            <field name="groups" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager')),(4,ref('gbs_application_group.group_cxo')),(4,ref('gbs_application_group.group_general_manager'))]"/>
+            <field name="groups" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
         </record>
 
         <record id="hr_department_dept_manager" model="ir.rule">
@@ -58,4 +58,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
