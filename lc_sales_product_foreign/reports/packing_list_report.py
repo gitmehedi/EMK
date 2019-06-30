@@ -38,6 +38,8 @@ class PackingList(models.AbstractModel):
                 'cover_note_no': shipment_obj.lc_id.cover_note_no,
                 'insurance_date': shipment_obj.lc_id.insurance_date,
                 'insurance_number': shipment_obj.lc_id.insurance_number,
+                'invoice_number_dummy': shipment_obj.invoice_number_dummy,
+                'invoice_date_dummy': shipment_obj.invoice_date_dummy,
                 'insurance_policy_date': shipment_obj.lc_id.insurance_policy_date,
                 'truck_receipt_no': shipment_obj.truck_receipt_no,
                 'bl_date': shipment_obj.bl_date,

@@ -11,7 +11,7 @@ from odoo import api, fields, models
 class CustomerAgingStatement(models.AbstractModel):
     """Model of Customer Activity Statement"""
 
-    _name = 'report.sales_report.statement_document'
+    _name = 'report.samuda_sales_report.statement_document'
 
     def _format_date_to_partner_lang(self, str_date, partner_id):
         lang_code = self.env['res.partner'].browse(partner_id).lang
@@ -419,4 +419,4 @@ class CustomerAgingStatement(models.AbstractModel):
             # 'Date': today_display,
         }
         return self.env['report'].render(
-            'sales_report.statement_document', values=docargs)
+            'samuda_sales_report.statement_document', values=docargs)

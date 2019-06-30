@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="sales_report.statement_document">
+    <template id="samuda_sales_report.statement_document">
         <t t-call="report_layout.gbs_internal_layout">
             <div class="page" style="page-break-inside:auto;">
                 <div class="row" style="padding-top:-50px;">
@@ -141,8 +141,8 @@
             report_type="qweb-pdf"
             menu="False"
             string="Customer Aging Statement"
-            name="sales_report.statement_document"
-            file="sales_report.statement_document"
+            name="samuda_sales_report.statement_document"
+            file="samuda_sales_report.statement_document"
             paperformat="report_layout.paperformat_backend_landscape"
     />
 </odoo>

@@ -105,22 +105,13 @@
                                             </tr>
                                             <tr class="odo-bg-gray">
                                                 <td>
-                                                    <p class="mb-5">
-                                                        <t t-if="data['insurance_number']">
-                                                            <u><b>Marine Cargo Policy No:</b></u> <br/>
-                                                            <span t-esc="data['insurance_number']"/><br/>
-                                                        </t>
-                                                        <t t-if="data['insurance_policy_date']">
-                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
-                                                        </t>
-                                                    </p>
                                                     <p class="mb-0">
-                                                        <t t-if="data['cover_note_no']">
-                                                            <u><b>Marine Cover Note No:</b></u> <br/>
-                                                            <span t-esc="data['cover_note_no']"/><br/>
+                                                        <t t-if="data['invoice_number_dummy']">
+                                                            <u><b>Invoice No: </b></u> <br/>
+                                                            <span t-esc="data['invoice_number_dummy']"/><br/>
                                                         </t>
-                                                        <t t-if="data['insurance_date']">
-                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_date'],'%Y-%m-%d'))"/>
+                                                        <t t-if="data['invoice_date_dummy']">
+                                                            Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['invoice_date_dummy'],'%Y-%m-%d'))"/>
                                                         </t>
                                                     </p>
                                                 </td>
@@ -137,6 +128,32 @@
                                                         </t>
                                                 </td>
                                             </tr>
+                                            <t t-if="data['insurance_number'] or data['insurance_policy_date'] or data['cover_note_no'] or data['insurance_date']">
+                                                <tr class="odo-bg-gray">
+                                                    <td>
+                                                        <p class="mb-5">
+                                                            <t t-if="data['insurance_number']">
+                                                                <u><b>Marine Cargo Policy No:</b></u> <br/>
+                                                                <span t-esc="data['insurance_number']"/><br/>
+                                                            </t>
+                                                            <t t-if="data['insurance_policy_date']">
+                                                                Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
+                                                            </t>
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="mb-0">
+                                                            <t t-if="data['cover_note_no']">
+                                                                <u><b>Marine Cover Note No:</b></u> <br/>
+                                                                <span t-esc="data['cover_note_no']"/><br/>
+                                                            </t>
+                                                            <t t-if="data['insurance_date']">
+                                                                Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_date'],'%Y-%m-%d'))"/>
+                                                            </t>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                             </t>
                                         </table>
                                     </td>
                                 </tr>
