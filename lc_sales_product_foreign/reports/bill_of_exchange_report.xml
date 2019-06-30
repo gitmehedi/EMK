@@ -44,9 +44,9 @@
                             <div class="col-xs-6">
                                 <p class="text-right">
                                     <t t-foreach="pi_list" t-as="p">
-                                        No: <u><strong t-esc="p['number']"/></u>
+                                        BOE: <u><strong t-esc="p['number']"/></u>
                                         <br/>
-                                        Date: <strong t-esc="p['date']"/>
+                                        Print Date: <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y')"/>
                                     </t>
                                 </p>
                             </div>
@@ -95,9 +95,9 @@
                                 </t>
                             </div>
 
-                            <div class="para">
+                            <div class="para text-justify">
                                 <t t-if="data['model_type'] != 'sales_contract'">
-                                    <p class="text-justify">DRAWN UNDER THE CONFIRMATION OF
+                                    <p>DRAWN UNDER THE CONFIRMATION OF
                                         <t t-if="data['model_type'] == 'tt'">TT NO: </t>
                                         <t t-elif="data['model_type'] == 'lc'">LC NO: </t>
                                     <strong t-esc="data['lc_id']"/>,
@@ -105,7 +105,7 @@
                                     <strong t-esc="data['issue_date']"/>
                                     <b> (MARINE INSURANCE COVER NOTE NO: <strong t-esc="data['cover_note_no']"/>)
                                     </b>
-                                    <strong>OF </strong>
+                                    <strong>OF</strong>
                                     <strong t-raw="data['second_party_bank']"/>,
                                     GOODS ARE UNDER H.S.CODE NO:
                                     <t t-foreach="lists" t-as="l">

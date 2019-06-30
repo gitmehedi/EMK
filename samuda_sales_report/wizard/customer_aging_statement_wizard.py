@@ -55,4 +55,4 @@ class CustomerAgingStatementWizard(models.TransientModel):
         """Export to PDF."""
         data = self._prepare_activity_statement()
         return self.env['report'].with_context(landscape=True).get_action(
-            self, 'sales_report.statement_document', data=data)
+            self, 'samuda_sales_report.statement_document', data=data)
