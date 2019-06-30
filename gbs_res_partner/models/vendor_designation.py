@@ -41,14 +41,14 @@ class VendorDesignation(models.Model):
             name = '%s' % (self.name)
         return (self.id, name)
 
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
-        names2 = []
-        if name:
-            domain = [('code', '=ilike', name + '%')]
-            names2 = self.search(domain, limit=limit).name_get()
-        return list(set(names1) | set(names2))[:limit]
+    # @api.model
+    # def name_search(self, name, args=None, operator='ilike', limit=100):
+    #     names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
+    #     names2 = []
+    #     if name:
+    #         domain = [('code', '=ilike', name + '%')]
+    #         names2 = self.search(domain, limit=limit).name_get()
+    #     return list(set(names1) | set(names2))[:limit]
 
     @api.onchange("name")
     def onchange_strips(self):
