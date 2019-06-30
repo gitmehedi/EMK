@@ -8,7 +8,6 @@ class TdsVatChallan(models.Model):
     _order = 'challan_date desc'
     _description = 'TDS Vendor Challan'
 
-
     name = fields.Char(string='Challan Name',track_visibility='onchange',readonly=True,
                        default=lambda self: self.env.context.get('name'))
     challan_date = fields.Date(string='Challan Date',track_visibility='onchange',required=True,readonly=True,

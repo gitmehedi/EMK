@@ -134,6 +134,46 @@
                   action="action_tds_vat_paid" id="tds_vat_paid_menu" sequence="3"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
+        <record id="action_open_account_move_pending" model="ir.actions.server">
+            <field name="name">Pending</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="code">action = model.action_do_pending(records)</field>
+        </record>
+
+        <record id="ir_values_open_account_move_pending" model="ir.values">
+            <field name="name">ir_values_open_account_move_pending</field>
+            <field name="action_id" ref="action_open_account_move_pending" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_open_account_move_pending'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_account_move_line" />
+            <field name="model">account.move.line</field>
+            <field name="key2">client_action_multi</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record id="action_account_move_pending_undo" model="ir.actions.server">
+            <field name="name">Undo Pending</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="code">action = model.action_undo_pending(records)</field>
+        </record>
+
+        <record id="ir_values_account_move_pending_undo" model="ir.values">
+            <field name="name">ir_values_account_move_pending_undo</field>
+            <field name="action_id" ref="action_account_move_pending_undo" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_account_move_pending_undo'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_account_move_line" />
+            <field name="model">account.move.line</field>
+            <field name="key2">client_action_multi</field>
+            <field name="multi">True</field>
+        </record>
+
         <record id="action_open_account_move_payment" model="ir.actions.server">
             <field name="name">Payments</field>
             <field name="model_id" ref="model_account_move_line"/>

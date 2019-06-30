@@ -18,11 +18,18 @@
                 <t t-call="report.external_layout">
                     <t t-foreach="docs" t-as="doc">
                         <div class="page" style="page-break-inside:auto">
-                            <div class="row mb32" style="padding-top:2px;">
+                            <div class="row" style="padding-top:2px;">
                                 <div class="col-xs-12">
                                     <h3 class="text-center">TDS/VAT Chalan</h3>
                                 </div>
                                 <hr></hr>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <t t-if="doc.name">
+                                        <strong><span t-field="doc.name"/></strong>
+                                    </t>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-6 text-left">

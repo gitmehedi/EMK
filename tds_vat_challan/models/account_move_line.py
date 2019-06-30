@@ -10,19 +10,41 @@ class AccountMoveLine(models.Model):
     is_pending = fields.Boolean('Pending', default=False)
     is_paid = fields.Boolean('Paid', default=False)
 
-
-    def action_do_pending(self):
-        for rec in self:
-            rec.is_pending = True
+    def action_do_pending(self,records):
+        if self:
+            for rec in self:
+                if rec.is_pending == True or rec.is_paid == True or rec.is_challan == True:
+                    raise ValidationError(_('Without payable you can not make pending records!'))
+                rec.is_pending = True
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }
+        else:
+            for rec in records:
+                if rec.is_pending == True or rec.is_paid == True or rec.is_challan == True:
+                    raise ValidationError(_('Without payable you can not make pending records!'))
+                rec.is_pending = True
             return {
                 'type': 'ir.actions.client',
                 'tag': 'reload',
             }
 
-
-    def action_undo_pending(self):
-        for rec in self:
-            rec.is_pending = False
+    def action_undo_pending(self,records):
+        if self:
+            for rec in self:
+                if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True:
+                    raise ValidationError(_('Without pending you can not make undo this!'))
+                rec.is_pending = False
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }
+        else:
+            for rec in records:
+                if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True:
+                    raise ValidationError(_('Without pending you can not make undo this!'))
+                rec.is_pending = False
             return {
                 'type': 'ir.actions.client',
                 'tag': 'reload',
@@ -64,6 +86,10 @@ class AccountMoveLine(models.Model):
             else:
                 vendor_ids.append(rec.partner_id.id)
                 product_ids.append(rec.product_id.id)
+
+        if False in product_ids:
+            raise ValidationError(_('Those records have no service!'))
+
         tax_type = ''
         tax_type_list = [i.tax_type for i in records]
         if 'tds' in tax_type_list and 'vat' in tax_type_list:
