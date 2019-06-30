@@ -46,7 +46,7 @@ class VendorDesignation(models.Model):
         names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
         names2 = []
         if name:
-            domain = [('code', '=ilike', name + '%')]
+            domain = [('name', '=ilike', name + '%')]
             names2 = self.search(domain, limit=limit).name_get()
         return list(set(names1) | set(names2))[:limit]
 
