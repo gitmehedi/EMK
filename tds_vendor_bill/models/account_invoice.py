@@ -102,6 +102,7 @@ class AccountInvoice(models.Model):
                     'account_id': self.type in ('out_invoice', 'in_invoice') and (line.account_tds_id.account_id.id),
                     'account_analytic_id': line.account_analytic_id.id or False,
                     'operating_unit_id': line.operating_unit_id.id or False,
+                    'product_id': line.product_id.id or False,
                     # 'base': tax['base'],
                     # 'tax_id': line.account_tds_id.id,
 
@@ -115,8 +116,14 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     tds_amount = fields.Float('TDS Value', readonly=True, store=True, copy=False)
-    account_tds_id = fields.Many2one('tds.rule', related='product_id.account_tds_id', string='TDS Rule',
-                                     store=True)
+    account_tds_id = fields.Many2one('tds.rule', string='TDS Rule',
+                                     domain="[('active', '=', True),('state', '=','confirm' )]",)
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.account_tds_id = self.product_id.account_tds_id.id
+        return super(AccountInvoiceLine, self)._onchange_product_id()
 
     @api.multi
     def _calculate_tds_value(self, pre_invoice_line_list=None):
@@ -177,5 +184,4 @@ class AccountInvoiceTax(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TDS Type')
-    is_deposit = fields.Boolean('Deposit', default=False)
+    tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')

@@ -36,7 +36,8 @@ class AccountAssetAsset(models.Model):
                                    track_visibility='onchange')
     model_name = fields.Char(string='Model', track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange')
+    operating_unit_id = fields.Many2one('operating.unit', string='Purchase Branch', required=True,
+                                        track_visibility='onchange')
     invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date', track_visibility='onchange')
     method_period = fields.Integer(string='One Entry (In Month)', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
@@ -44,7 +45,9 @@ class AccountAssetAsset(models.Model):
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
     value_residual = fields.Float(string='Book Value', track_visibility='onchange')
     advance_amount = fields.Char(string='Advance Amount', track_visibility='onchange', readonly=True,
-                             states={'draft': [('readonly', False)]})
+                                 states={'draft': [('readonly', False)]})
+    current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
+                                        track_visibility='onchange')
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):
@@ -282,21 +285,22 @@ class AccountAssetDepreciationLine(models.Model):
             current_currency = line.asset_id.currency_id
             amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
+            current_branch = line.asset_id.current_branch_id
 
             if self.env.context.get('dispose'):
                 move_vals = self.format_dispose_move(amount, asset_name, category_id, prec, line,
                                                      company_currency,
-                                                     current_currency, depreciation_date)
+                                                     current_currency, depreciation_date,current_branch)
                 line.write({'line_type': 'dispose'})
             elif self.env.context.get('sale'):
                 move_vals = self.format_sale_move(amount, asset_name, category_id, prec, line,
                                                   company_currency,
-                                                  current_currency, depreciation_date)
+                                                  current_currency, depreciation_date,current_branch)
                 line.write({'line_type': 'sale'})
             else:
                 move_vals = self.format_depreciation_move(amount, asset_name, category_id, prec, line,
                                                           company_currency,
-                                                          current_currency, depreciation_date)
+                                                          current_currency, depreciation_date,current_branch)
                 line.write({'line_type': 'depreciation'})
 
             move = self.env['account.move'].create(move_vals)
@@ -309,7 +313,7 @@ class AccountAssetDepreciationLine(models.Model):
         return [x.id for x in created_moves]
 
     def format_dispose_move(self, amount, asset_name, category_id, prec, line, company_currency, current_currency,
-                            depreciation_date):
+                            depreciation_date,current_branch):
         depr_credit = {
             'name': asset_name,
             'account_id': category_id.account_asset_id.id,
@@ -346,11 +350,12 @@ class AccountAssetDepreciationLine(models.Model):
             'ref': line.asset_id.code,
             'date': depreciation_date or False,
             'journal_id': category_id.journal_id.id,
+            'operating_unit_id': current_branch.id,
             'line_ids': [(0, 0, depr_credit), (0, 0, depr_debit_1), (0, 0, depr_debit_2)],
         }
 
     def format_sale_move(self, amount, asset_name, category_id, prec, line, company_currency, current_currency,
-                         depreciation_date):
+                         depreciation_date,current_branch):
         sale_id = self.env['account.asset.sale'].search([('name', '=', self.env.context.get('sale_id'))])
         sales = self.env['account.asset.sale.line'].search(
             [('sale_id', '=', sale_id.id), ('asset_id', '=', self.asset_id.id)])
@@ -416,11 +421,12 @@ class AccountAssetDepreciationLine(models.Model):
             'ref': line.asset_id.code,
             'date': depreciation_date or False,
             'journal_id': category_id.journal_id.id,
+            'operating_unit_id': current_branch.id,
             'line_ids': [(0, 0, asset_credit), (0, 0, depr_debit), (0, 0, loss_gain), (0, 0, sale_susp_debit)],
         }
 
     def format_depreciation_move(self, amount, asset_name, category_id, prec, line, company_currency,
-                                 current_currency, depreciation_date):
+                                 current_currency, depreciation_date,current_branch):
         move_line_1 = {
             'name': asset_name,
             'account_id': category_id.account_depreciation_id.id,
@@ -445,5 +451,6 @@ class AccountAssetDepreciationLine(models.Model):
             'ref': line.asset_id.code,
             'date': depreciation_date or False,
             'journal_id': category_id.journal_id.id,
+            'operating_unit_id': current_branch.id,
             'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
         }

@@ -32,7 +32,7 @@
                     <attribute name="string">Designation</attribute>
             </xpath>
             <xpath expr="//page[@name='sales_purchases']" position="replace">
-                <page name="sales_purchases" string="Purchases" groups="account.group_account_manager">
+                <page name="sales_purchases" string="Purchases" groups="account.group_account_user">
                     <group name="container_row_2">
                         <group string="Sale" name="sale" invisible="1">
                             <field name="customer"/>
@@ -84,7 +84,7 @@
                         <group string="Fiscal Information" name="fiscal_information" groups="base.group_system">
                             <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
-                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
+                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_user">
                             <field name="property_account_receivable_id" groups="base.group_system"
                                    options="{'no_create': True, 'no_open': True}"/>
                             <field name="property_account_payable_id" options="{'no_create': True, 'no_open': True}"/>

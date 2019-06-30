@@ -15,8 +15,14 @@ class AccountTypeWizard(models.TransientModel):
         context = self._context
         return self.env[context['active_model']].search([('id', '=', context['active_id'])]).active
 
+    @api.model
+    def default_include_initial(self):
+        context = self._context
+        return self.env[context['active_model']].search([('id', '=', context['active_id'])]).include_initial_balance
+
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
+    include_initial_balance = fields.Boolean(string='Bring Accounts Balance Forward', default=default_include_initial)
     type = fields.Selection([
         ('other', 'Regular'),
         ('receivable', 'Receivable'),
@@ -49,7 +55,12 @@ class AccountTypeWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.account.account.type'].create(
-            {'change_name': self.name,'type':self.type, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+            {'change_name': self.name,
+             'type':self.type,
+             'status': self.status,
+             'include_initial_balance': self.include_initial_balance,
+             'request_date': fields.Datetime.now(),
+             'line_id': id})
         record = self.env['account.account.type'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:

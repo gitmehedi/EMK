@@ -140,6 +140,12 @@
                 "show_parent_account":True,"search_default_active":'False',"search_default_pending":'True'}
             </field>
         </record>
+
+        <record id="account_parent.action_open_account" model="ir.values">
+            <field eval="'account.move.line'" name="model"/>
+        </record>
+
+
     </data>
 </odoo>
 

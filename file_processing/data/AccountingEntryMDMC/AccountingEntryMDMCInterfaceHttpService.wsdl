@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="AccountingEntryMDMCInterfaceHttpService" targetNamespace="http://BaNCS.TCS.com/webservice/AccountingEntryMDMCInterface/v1/Binding" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://BaNCS.TCS.com/webservice/AccountingEntryMDMCInterface/v1/Binding" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <import location="AccountingEntryMDMCInterface.wsdl" namespace="http://BaNCS.TCS.com/webservice/AccountingEntryMDMCInterface/v1"/>
+  <binding name="AccountingEntryMDMCInterfaceHttpPortBinding" type="ns1:AccountingEntryMDMCInterface" xmlns:ns1="http://BaNCS.TCS.com/webservice/AccountingEntryMDMCInterface/v1">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="accountingEntryMDMC">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AccountingEntryMDMCFaultMsg">
+        <soap:fault name="AccountingEntryMDMCFaultMsg" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="AccountingEntryMDMCInterfaceHttpService">
+    <port binding="tns:AccountingEntryMDMCInterfaceHttpPortBinding" name="AccountingEntryMDMCInterfaceHttpPort">
+      <soap:address location="http://localhost:9084/AccountingEntryMDMC/AccountingEntryMDMCInterfaceHttpService"/>
+    </port>
+  </service>
+</definitions>

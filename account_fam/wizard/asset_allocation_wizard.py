@@ -101,13 +101,14 @@ class AssetAllocationWizard(models.TransientModel):
                 'ref': asset.code,
                 'date': self.date or False,
                 'journal_id': asset.category_id.journal_id.id,
+                'operating_unit_id': self.to_operating_unit_id.id,
                 'line_ids': [(0, 0, debit), (0, 0, credit)],
             })
 
             assetmove = asset_move(asset)
             assetmove.write({'move_id': move.id})
             move.post()
-            asset.write({'allocation_status': True})
+            asset.write({'allocation_status': True, 'current_branch_id': self.to_operating_unit_id.id})
 
         if self.env.context.get('transfer'):
             from_total_credit = {
@@ -157,6 +158,7 @@ class AssetAllocationWizard(models.TransientModel):
                 'ref': asset.code,
                 'date': self.date or False,
                 'journal_id': asset.category_id.journal_id.id,
+                'operating_unit_id': self.to_operating_unit_id.id,
                 'line_ids': [(0, 0, from_total_credit), (0, 0, to_total_debit),
                              (0, 0, from_depr_credit), (0, 0, to_depr_debit)],
             })
@@ -164,5 +166,6 @@ class AssetAllocationWizard(models.TransientModel):
             assetmove = asset_move(asset)
             assetmove.write({'move_id': move.id})
             move.post()
+            asset.write({'current_branch_id': self.to_operating_unit_id.id})
 
         return {'type': 'ir.actions.act_window_close'}

@@ -86,6 +86,9 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_open']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="attributes">
                 <attribute name="string">Branch</attribute>
             </xpath>
@@ -124,6 +127,7 @@
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="after">
                 <field name="operating_unit_id"/>
+                <field name="product_id"/>
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="replace">
                 <field name="amount" sum="Total"/>

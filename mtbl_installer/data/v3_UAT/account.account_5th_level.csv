@@ -1,12 +1,12 @@
 Layer,Code,Name,Type,Parent Account,active,pending,state
-Layer 5,11101001,Paid up Capital,Liabilities: Office Accounts,Paid up Capital,True,False,approve
-Layer 5,11201001,General Reserve,Liabilities: Office Accounts,General Reserve,True,False,approve
-Layer 5,11202001,Statutory Reserve,Liabilities: Office Accounts,Statutory Reserve,True,False,approve
+Layer 5,11101001,Paid up Capitals,Liabilities: Office Accounts,Paid up Capital,True,False,approve
+Layer 5,11201001,General Reserves,Liabilities: Office Accounts,General Reserve,True,False,approve
+Layer 5,11202001,Statutory Reserves,Liabilities: Office Accounts,Statutory Reserve,True,False,approve
 Layer 5,11203001,Revaluation gain on HTM Securities,Treasury Liabilities,Revaluation Reserve,True,False,approve
 Layer 5,11203002,Revaluation gain on HFT Securities (T Bill),Treasury Liabilities,Revaluation Reserve,True,False,approve
 Layer 5,11203003,Revaluation gain on HFT Securities (T Bond),Treasury Liabilities,Revaluation Reserve,True,False,approve
-Layer 5,11204001,Share Premium,Liabilities: Office Accounts,Share Premium,True,False,approve
-Layer 5,11205001,Retained earnings,Liabilities: Office Accounts,Retained earnings,True,False,approve
+Layer 5,11204001,Share Premiums,Liabilities: Office Accounts,Share Premium,True,False,approve
+Layer 5,11205001,Retained earning,Liabilities: Office Accounts,Retained earnings,True,False,approve
 Layer 5,12101001,EGBMP Fund,Liabilities: Customer Accounts,Borrowings under Bangladesh Bank-others,True,False,approve
 Layer 5,12101002,Special Repo,Treasury Liabilities,Borrowings under Bangladesh Bank-others,True,False,approve
 Layer 5,12101003,Assured Liquidity Support (ALS-Repo),Treasury Liabilities,Borrowings under Bangladesh Bank-others,True,False,approve
@@ -183,7 +183,6 @@ Layer 5,13207011,FC PRIVATE FOREIGN CURRENCY ACCOUNT (PFC) INCLUDING DFC & RBN_U
 Layer 5,13208001,MTB Gift Cheque,Liabilities: Office Accounts,Other Deposit product,True,False,approve
 Layer 5,13401001,Bank Deposits -FD  <BDT>,Liabilities: Customer Accounts,Bank Deposits -FD,True,False,approve
 Layer 5,13401002,Bank Deposits -SND,Liabilities: Customer Accounts,Bank Deposits -FD,True,False,approve
-Layer 5,13402001,NBFI Deposits -FD,Liabilities: Customer Accounts,NBFI Deposits -FD,True,False,approve
 Layer 5,13501001,Interest Payable MTB Probaho,Interest Payable Accounts,Interest Payable on Current Deposits,True,False,approve
 Layer 5,13601001,Interest Payable on MTB Buniad,Interest Payable Accounts,Interest Payable on TD Accounts,True,False,approve
 Layer 5,13601002,Interest Payable on NRB Fixed Deposit,Interest Payable Accounts,Interest Payable on TD Accounts,True,False,approve
@@ -243,8 +242,8 @@ Layer 5,14102001,Interest Payable on Subordinated Bond,Interest Payable Accounts
 Layer 5,14202001,Interest Payable on Other Bond,Interest Payable Accounts,Interest on Other Bond,True,False,approve
 Layer 5,15201001,Clearing House Adjustment IW,Liabilities: Office Accounts,Clearing House Adjustment,True,False,approve
 Layer 5,15203002,Adjusting A/c Credit USD OBU,Liabilities: Office Accounts,Adjusting A/c Credit,True,False,approve
-Layer 5,15206001,Liabilities under Finance Lease,Liabilities: Office Accounts,Liabilities under Finance Lease,True,False,approve
-Layer 5,15208001,Employees Welfare Fund,Liabilities: Office Accounts,Staff Fund,True,False,approve
+Layer 5,15206001,Liabilities under Finance Leases,Liabilities: Office Accounts,Liabilities under Finance Lease,True,False,approve
+Layer 5,15208001,Employees Welfare Funds,Liabilities: Office Accounts,Staff Fund,True,False,approve
 Layer 5,15208002,Employees Medical Assistance Fund (Liability),Liabilities: Office Accounts,Staff Fund,True,False,approve
 Layer 5,15208003,Employees Provident Fund,Liabilities: Office Accounts,Staff Fund,True,False,approve
 Layer 5,15208004,Employees' Death Benefit  Fund,Liabilities: Office Accounts,Staff Fund,True,False,approve
@@ -345,8 +344,8 @@ Layer 5,22106002,Term Placement GBP,Treasury Asset,Term Placement FC,True,False,
 Layer 5,22107001,Interest Receivable on Term Placement <BDT>,Treasury Asset,Intt receivable on Term Placement BDT,True,False,approve
 Layer 5,22108001,Interest Receivable on Term Placement <USD>,Treasury Asset,Intt receivable on Term Placement FC,True,False,approve
 Layer 5,22108002,Interest Receivable on Term Placement <GBP>,Treasury Asset,Intt receivable on Term Placement FC,True,False,approve
-Layer 5,22109001,Short Term Placement,Treasury Asset,Short Term Placement,True,False,approve
-Layer 5,22110001,Short Term Placement USD,Treasury Asset,Short Term Placement FC,True,False,approve
+Layer 5,22109001,Short Term Placements,Treasury Asset,Short Term Placement,True,False,approve
+Layer 5,22110001,Short Term Placements USD,Treasury Asset,Short Term Placement FC,True,False,approve
 Layer 5,22110002,Short Term Placement GBP,Treasury Asset,Short Term Placement FC,True,False,approve
 Layer 5,22111001,Interest Receivable on Short Term Placement <BDT>,Treasury Asset,Intt receivable on Short Term Placement BDT,True,False,approve
 Layer 5,22112001,Interest Receivable on Short Term Placement <USD>,Treasury Asset,Intt receivable on Short Term Placement FC,True,False,approve
@@ -855,11 +854,8 @@ Layer 5,31214001,Penal Interest Earnedon PAD EDF Loan,Income Accounts,Penal Inte
 Layer 5,31215001,Penal Interest Earnedon Bill Discounting USD (OBU),Income Accounts,Penal Interest Earned on OBU Loans & Advances,True,False,approve
 Layer 5,31215002,Penal Interest Earnedon UPAS/ Buyer's Credit USD (OBU) foreign,Income Accounts,Penal Interest Earned on OBU Loans & Advances,True,False,approve
 Layer 5,31215003,Penal Interest Earnedon Bill Discounting USD (OBU) Inland,Income Accounts,Penal Interest Earned on OBU Loans & Advances,True,False,approve
-Layer 5,31401001,Interest Earned on Call  Money Placement BDT,Treasury Income,Interest Earned on Call  Money Placement BDT,True,False,approve
-Layer 5,31402001,Interest Earned on Call  Money Placement USD,Treasury Income,Interest Earned on Call  Money Placement FC,True,False,approve
-Layer 5,31402002,Interest Earned on Call  Money Placement GBP,Treasury Income,Interest Earned on Call  Money Placement FC,True,False,approve
-Layer 5,31403001,Interest Earned on Term Placement BDT,Treasury Income,Interest Earned on Term Placement BDT,True,False,approve
-Layer 5,31404001,Interest Earned on Term Placement USD,Treasury Income,Interest Earned on Term Placement FC,True,False,approve
+Layer 5,31403001,Interest Earned on Term Placements BDT,Treasury Income,Interest Earned on Term Placement BDT,True,False,approve
+Layer 5,31404001,Interest Earned on Term Placements USD,Treasury Income,Interest Earned on Term Placement FC,True,False,approve
 Layer 5,31404002,Interest Earned on Term Placement GBP,Treasury Income,Interest Earned on Term Placement FC,True,False,approve
 Layer 5,31405001,Interest Earned on Short Term Placement USD,Treasury Income,Interest Earned on Short Term Placement FC,True,False,approve
 Layer 5,31405002,Interest Earned on Short Term Placement GBP,Treasury Income,Interest Earned on Short Term Placement FC,True,False,approve

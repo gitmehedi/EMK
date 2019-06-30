@@ -54,7 +54,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
                 line.write({'amount_residual': ((line.amount_residual) * val) - self.amount})
 
         credit_acc = credit_acc_id = False
-        account_config_pool = self.env['account.config.settings'].sudo().search([], order='id desc', limit=1)
+        account_config_pool = self.env.user.company_id
         if self.invoice_id.partner_id.vendor_bank_acc:
             credit_acc = self.invoice_id.partner_id.vendor_bank_acc
         elif account_config_pool and account_config_pool.sundry_account_id:

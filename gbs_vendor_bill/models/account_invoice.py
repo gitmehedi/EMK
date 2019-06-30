@@ -73,6 +73,13 @@ class AccountInvoice(models.Model):
                 iml.update({'operating_unit_id': inv_line_obj.operating_unit_id.id})
         return res
 
+    def _prepare_tax_line_vals(self, line, tax):
+        res = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
+        if res:
+            res.update({'product_id': line.product_id.id})
+        return res
+
+
     @api.model
     def tax_line_move_line_get(self):
         res = []
@@ -94,6 +101,7 @@ class AccountInvoice(models.Model):
                     'quantity': 1,
                     'price': -tax_line.amount,
                     'account_id': tax_line.account_id.id,
+                    'product_id': tax_line.product_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
                     'operating_unit_id': tax_line.operating_unit_id.id,
@@ -113,8 +121,8 @@ class AccountInvoice(models.Model):
                 val = self._prepare_tax_line_vals(line, tax)
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
 
-                val.update({'operating_unit_id': line.operating_unit_id.id})
-                key = key+'-'+str(line.operating_unit_id.id)
+                val.update({'operating_unit_id': line.operating_unit_id.id,'product_id': line.product_id.id})
+                key = key+'-'+str(line.operating_unit_id.id)+'-'+str(line.product_id.id)
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -221,7 +229,7 @@ class AccountInvoiceLine(models.Model):
                                                  store=True, readonly=True, compute='_compute_price')
 
     operating_unit_id = fields.Many2one('operating.unit',string='Branch',required=True,
-                                        related='',
+                                        related='', readonly=False,
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
@@ -234,11 +242,17 @@ class AccountInvoiceLine(models.Model):
         for line in self:
             line.sub_operating_unit_id = []
 
+    @api.constrains('invoice_line_tax_ids')
+    def _check_supplier_taxes_id(self):
+        if self.invoice_line_tax_ids and len(self.invoice_line_tax_ids) > 1:
+            raise Warning('You can select one VAT!')
+
 
 class AccountInvoiceTax(models.Model):
     _inherit = "account.invoice.tax"
 
     operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    product_id = fields.Many2one('product.product', string='Product')
 
 
 class ProductProduct(models.Model):

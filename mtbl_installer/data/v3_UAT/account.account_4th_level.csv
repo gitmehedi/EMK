@@ -1,9 +1,9 @@
 Layer,Code,Name,Parent Account,Type,active,pending,state
-Layer 4,11101,Paid up Capital ,Capital,View Type,True,False,approve
-Layer 4,11201,General Reserve ,Reserve,View Type,True,False,approve
-Layer 4,11202,Statutory Reserve ,Reserve,View Type,True,False,approve
+Layer 4,11101,Paid up Capital,Capital,View Type,True,False,approve
+Layer 4,11201,General Reserve,Reserve,View Type,True,False,approve
+Layer 4,11202,Statutory Reserve,Reserve,View Type,True,False,approve
 Layer 4,11203,Revaluation Reserve,Reserve,View Type,True,False,approve
-Layer 4,11204,Share Premium ,Reserve,View Type,True,False,approve
+Layer 4,11204,Share Premium,Reserve,View Type,True,False,approve
 Layer 4,11205,Retained earnings,Reserve,View Type,True,False,approve
 Layer 4,11206,Foreign Currency Translational Gain/ Loss,Reserve,View Type,True,False,approve
 Layer 4,12101,Borrowings under Bangladesh Bank-others,Borrowings under Bangladesh Bank,View Type,True,False,approve
@@ -41,8 +41,8 @@ Layer 4,13207,Savings Bank Account <FC>,"Customer Deposits -SB, FD, RD, SND etc.
 Layer 4,13208,Other Deposit product,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
 Layer 4,13301,Current Deposits from other Bank,Bank & NBFI Deposits -Current & Others,View Type,True,False,approve
 Layer 4,13302,Current Deposits from NBFI,Bank & NBFI Deposits -Current & Others,View Type,True,False,approve
-Layer 4,13401,Bank Deposits -FD ,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
-Layer 4,13402,NBFI Deposits -FD ,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
+Layer 4,13401,Bank Deposits -FD,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
+Layer 4,13402,NBFI Deposits -FD,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
 Layer 4,13501,Interest Payable on Current Deposits,IP on Customer Deposits -Current & Others,View Type,True,False,approve
 Layer 4,13601,Interest Payable on TD Accounts,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
 Layer 4,13602,Interest Payable on Savings Bank Accounts,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
@@ -115,7 +115,7 @@ Layer 4,22110,Short Term Placement FC,Money at Call & Short Notice,View Type,Tru
 Layer 4,22111,Intt receivable on Short Term Placement BDT,Money at Call & Short Notice,View Type,True,False,approve
 Layer 4,22112,Intt receivable on Short Term Placement FC,Money at Call & Short Notice,View Type,True,False,approve
 Layer 4,23101,Securities other than Tbill Tbond,Government,View Type,True,False,approve
-Layer 4,23102,Treasury Bills ,Government,View Type,True,False,approve
+Layer 4,23102,Treasury Bills,Government,View Type,True,False,approve
 Layer 4,23103,Treasury Bonds,Government,View Type,True,False,approve
 Layer 4,23301,Investment in Subsidiaries,Inv in Subsidiaries,View Type,True,False,approve
 Layer 4,24101,Retail Term Loans <excl. Staff Loans>,Term Loans,View Type,True,False,approve
@@ -232,7 +232,7 @@ Layer 4,31215,Penal Interest Earned on OBU Loans & Advances,Penal Interest Earne
 Layer 4,31301,Interest on MTB General Account,Interest on MTB Branch Account,View Type,True,False,approve
 Layer 4,31401,Interest Earned on Call  Money Placement BDT , Income on Money Market/ Placements,View Type,True,False,approve
 Layer 4,31402,Interest Earned on Call  Money Placement FC , Income on Money Market/ Placements,View Type,True,False,approve
-Layer 4,31403,Interest Earned on Term Placement BDT , Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31403,Interest Earned on Term Placement BDT, Income on Money Market/ Placements,View Type,True,False,approve
 Layer 4,31404,Interest Earned on Term Placement FC, Income on Money Market/ Placements,View Type,True,False,approve
 Layer 4,31405,Interest Earned on Short Term Placement FC, Income on Money Market/ Placements,View Type,True,False,approve
 Layer 4,31406,Interest Earned on Short Term Placement BDT, Income on Money Market/ Placements,View Type,True,False,approve
@@ -297,7 +297,7 @@ Layer 4,42306,News Paper & Periodicals,Other Expenses,View Type,True,False,appro
 Layer 4,42307,Clearing House Expenses,Other Expenses,View Type,True,False,approve
 Layer 4,42308,Travelling & Conveyance Expenses,Other Expenses,View Type,True,False,approve
 Layer 4,42309,Bank charges,Other Expenses,View Type,True,False,approve
-Layer 4,42310,Training Expenses ,Other Expenses,View Type,True,False,approve
+Layer 4,42310,Training Expenses,Other Expenses,View Type,True,False,approve
 Layer 4,42311,Professional Fees,Other Expenses,View Type,True,False,approve
 Layer 4,42312,AGM Expenses,Other Expenses,View Type,True,False,approve
 Layer 4,42313,Subscription & Donation,Other Expenses,View Type,True,False,approve

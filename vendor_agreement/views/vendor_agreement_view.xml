@@ -12,6 +12,7 @@
                           decoration-bf="state in ('confirm','done')" decoration-muted="state=='done'">
                         <field name="name" string="Agreement reference"/>
                         <field name="partner_id" string="Vendor"/>
+                        <field name="product_id" string="Service"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
                         <field name="advance_amount"/>
@@ -45,7 +46,7 @@
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Amendment" name="action_amendment" states="done"
                                     type="object" class="oe_read_only"
-                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
+                                    groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_invoice"/>
                             <button string="Payment" name="action_payment" states="done"
                                     type="object" class="oe_read_only"
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>

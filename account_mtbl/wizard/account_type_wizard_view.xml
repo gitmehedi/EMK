@@ -12,6 +12,7 @@
                     </group>
                     <group>
                         <field name="status"/>
+                        <field name="include_initial_balance"/>
                     </group>
                 </group>
                 <footer>

@@ -7,7 +7,7 @@
             <form string="Asset Disposal" duplicate="0">
                 <header>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
-                            states="draft"/>
+                            states="draft" groups="account.group_account_manager"/>
                     <button name="action_dispose" string="Dispose" type="object" class="oe_highlight"
                             context="{'dispose':True}" states="approve"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,dispose"/>

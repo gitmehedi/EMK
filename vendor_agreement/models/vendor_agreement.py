@@ -75,7 +75,7 @@ class VendorAgreement(models.Model):
     @api.depends('payment_line_ids.amount')
     def _compute_payment_amount(self):
         for va in self:
-            va.total_payment_amount = sum(line.amount for line in va.payment_line_ids)\
+            va.total_payment_amount = sum(line.amount for line in va.payment_line_ids)
 
     @api.one
     @api.depends('adjusted_amount')

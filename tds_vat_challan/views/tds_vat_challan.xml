@@ -5,13 +5,15 @@
             <field name="name">tds_vat_challan_list</field>
             <field name="model">tds.vat.challan</field>
             <field name="arch" type="xml">
-                <tree delete="false" create="false" edit="false"
-                      decoration-info="state == 'draft'" decoration-success="state == 'deposited'"
-                      decoration-muted="state in ('distributed','cancel') "
-                      decoration-bf="state in ('deposited','distributed') ">
-                    <field name="date" string="Bill Date"/>
-                    <field name="supplier_id" string="Vendor"/>
-                    <field name="operating_unit_id"/>
+                <tree delete="false"
+                      decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
+                      decoration-muted="state in ('approved','cancel') "
+                      decoration-bf="state in ('confirm','approved') " create="false" edit="false">
+                    <field name="challan_date"/>
+                    <field name="challan_no"/>
+                    <field name="deposited_bank"/>
+                    <field name="bank_branch"/>
+                    <field name="total_amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -21,49 +23,67 @@
             <field name="name">tds_vat_challan_from_view</field>
             <field name="model">tds.vat.challan</field>
             <field name="arch" type="xml">
-                <form string="TDS/VAT Vendor Challan" create="false" edit="false">
+                <form string="TDS/VAT Vendor Challan" create="false">
                     <header>
-                        <button string="Deposit" name="action_deposited" type="object"
+                        <button string="Confirm" name="action_confirm" type="object"
+                                groups="account.group_account_user"
                                 states="draft" class="oe_highlight"/>
-                        <button string="Distribute" name="action_distributed" type="object"
-                                states="deposited" class="oe_highlight"/>
+                        <button string="Approve" name="action_approve" type="object"
+                                groups="account.group_account_manager"
+                                states="confirm" class="oe_highlight"/>
                         <button string="Cancel" name="action_cancel" type="object"
-                                states="draft,deposited" class="btn-default"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,deposited,distributed"/>
+                                groups="account.group_account_manager"
+                                states="draft,confirm" class="btn-default"/>
+                        <button string="Reset To Draft" name="action_reset_to_draft" type="object"
+                                groups="account.group_account_user"
+                                states="cancel" class="btn-default"/>
+                        <button string="Print" name="action_print" type="object"
+                                groups="account.group_account_manager"
+                                states="approved" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approved"/>
                     </header>
                     <sheet>
+                        <div class="pull-left">
+                            <h2>
+                                <field name="name" nolabel="1"/>
+                            </h2>
+                        </div>
                         <group>
                             <group>
-                                <field name="supplier_id" readonly="1"
-                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="operating_unit_id" readonly="1"
-                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="deposit_approver"
-                                       attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
-                                <field name="distribute_approver"
-                                       attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
+                                <field name="challan_date"/>
+                                <field name="challan_no"/>
+                                <field name="acc_move_line_ids" invisible="1" widget="many2many_tags"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <field name="deposit_date"
-                                       attrs="{'invisible': [('state', 'in', ('draft','cancel'))]}"/>
-                                <field name="distribute_date"
-                                       attrs="{'invisible': [('state', 'in', ('draft','deposited','cancel'))]}"/>
-                                <field name="total_amount"/>
+                                <field name="deposited_bank"/>
+                                <field name="bank_branch"/>
+                                <field name="currency_id" invisible="1"/>
                             </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Details">
+                                <field name="line_ids" nolabel="1">
+                                    <tree string="List" editable="false" create="false" delete="false">
+                                        <field name="supplier_id"/>
+                                        <field name="product_id" string="Service"/>
+                                        <field name="operating_unit_id"/>
+                                        <field name="type_name" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="total_bill" string="Amount" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                </field>
                                 <group>
-                                    <field name="line_ids" nolabel="1" readonly="1">
-                                        <tree string="List" editable="false" create="false" delete="false">
-                                            <field name="supplier_id"/>
-                                            <field name="type_name"/>
-                                            <field name="total_bill" string="Amount"/>
-                                            <field name="state" invisible="1"/>
-                                        </tree>
-                                    </field>
+                                    <group></group>
+                                    <group class="oe_subtotal_footer oe_right">
+                                        <field name="total_amount" class="oe_subtotal_footer_separator"
+                                               widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    </group>
                                 </group>
+                                <div>
+                                    <field name="note" placeholder="Additional notes..."/>
+                                </div>
                             </page>
                         </notebook>
                     </sheet>
@@ -80,16 +100,12 @@
             <field name="model">tds.vat.challan</field>
             <field name="arch" type="xml">
                 <search string="Search Challan">
-                    <field name="supplier_id"/>
-                    <field name="operating_unit_id"/>
-                    <filter name="deposit" string="To Deposit" domain="[('state','=','draft')]"/>
-                    <filter name="distribute" string="To Distribute" domain="[('state','=','deposited')]"/>
+                    <field name="challan_date"/>
+                    <filter name="approve" string="To Approve" domain="[('state','=','confirm')]"/>
                     <group expand="0" string="Group By">
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
-                        <filter string="Supplier" context="{'group_by':'supplier_id'}"/>
-                        <separator/>
-                        <filter string="Branch" context="{'group_by':'operating_unit_id'}"/>
+                        <filter string="challan_date" context="{'group_by':'challan_date'}"/>
                     </group>
                 </search>
             </field>
@@ -99,7 +115,7 @@
             <field name="name">TDS/VAT Challan</field>
             <field name="res_model">tds.vat.challan</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_deposit':1}</field>
+            <field name="context">{'search_default_approve':1}</field>
             <field name="search_view_id" ref="tds_vat_challan_filter"/>
         </record>
 

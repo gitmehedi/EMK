@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="multi_challan_approve_wizard_view" model="ir.ui.view">
+            <field name="name">multi.challan.approve.wizard.form</field>
+            <field name="model">multi.challan.approve.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Multi Challan Approve">
+                    <p class="oe_grey">
+                        Once challan are Approved, you will not be able
+                        to modify them.
+                    </p>
+                    <footer>
+                        <button string="Confirm" name="action_approve" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_challans_approve"
+                    multi="True"
+                    key2="client_action_multi" name="Approve"
+                    res_model="multi.challan.approve.wizard" src_model="tds.vat.challan"
+                    groups="account.group_account_manager"
+                    view_mode="form" target="new" view_type="form" />
+    </data>
+</odoo>
