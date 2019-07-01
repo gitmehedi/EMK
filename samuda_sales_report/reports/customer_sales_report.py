@@ -25,7 +25,7 @@ class CustomerSalesReport(models.AbstractModel):
                             LEFT JOIN res_partner_area area ON area.id = customer.area_id
                             LEFT JOIN res_country country ON country.id = customer.country_id
                         WHERE 
-                            ml.credit > 0 AND invoice.type = 'out_invoice'
+                            ml.credit > 0 AND invoice.type = 'out_invoice' AND customer.supplier_type = 'local'
     """
     sql_str_foreign = """SELECT 
                             country.id AS country_id,
@@ -47,7 +47,8 @@ class CustomerSalesReport(models.AbstractModel):
                             LEFT JOIN res_partner_area area ON area.id = customer.area_id
                             LEFT JOIN res_country country ON country.id = customer.country_id
                         WHERE 
-                            ml.credit > 0 AND invoice.type = 'out_invoice'
+                            ml.credit > 0 AND invoice.type = 'out_invoice' AND customer.supplier_type = 'foreign'
+                            AND country.code != 'BD'
     """
 
     @api.multi
@@ -95,7 +96,7 @@ class CustomerSalesReport(models.AbstractModel):
 
         # Temporary variable
         temp_location_id = 0
-        temp_executive_id = 0
+        temp_customer_id = 0
 
         # Execute the SQL
         self._cr.execute(self.get_sql(data))
@@ -103,7 +104,7 @@ class CustomerSalesReport(models.AbstractModel):
         for val in self._cr.fetchall():
             if temp_location_id != val[0]:
                 temp_location_id = val[0]
-                temp_executive_id = val[2]
+                temp_customer_id = val[2]
 
                 # Add new area object
                 report_data[val[0]] = dict()
@@ -124,8 +125,8 @@ class CustomerSalesReport(models.AbstractModel):
                 report_data[val[0]]['customers'][val[2]]['products'][val[4]]['val'] = val[7]
 
             else:
-                if temp_executive_id != val[2]:
-                    temp_executive_id = val[2]
+                if temp_customer_id != val[2]:
+                    temp_customer_id = val[2]
 
                     # Add new customer object
                     report_data[val[0]]['customers'][val[2]] = dict()
