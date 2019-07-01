@@ -21,7 +21,12 @@
                                 .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
                             </style>
                             <div class="clearfix">
-                                <h4 class="report-title">Area Wise Customer Sales Report</h4>
+                                <t t-if="data['report_type']=='local'">
+                                    <h4 class="report-title">Area Wise Customer Sales Report</h4>
+                                </t>
+                                <t t-else="">
+                                    <h4 class="report-title">Country Wise Customer Sales Report</h4>
+                                </t>
                                 <br/>
                                 <div class="row" style="padding-bottom:5px;">
                                     <div class="col-xs-6">
