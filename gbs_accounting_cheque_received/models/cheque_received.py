@@ -185,8 +185,8 @@ class ChequeReceived(models.Model):
                 'date': date,
             }
 
-            debit_account_id = cr.partner_id.property_account_receivable_id
-            credit_account_id = cr.company_id.account_receive_clearing_acc
+            debit_account_id = cr.journal_id.default_debit_account_id
+            credit_account_id = cr.partner_id.property_account_receivable_id
 
             if debit_account_id:
 
@@ -234,7 +234,7 @@ class ChequeReceived(models.Model):
 
                 credit_line = (0, 0, {
                     'name': credit_account_id.name,
-                    #'partner_id': cr.partner_id.id,
+                    'partner_id': cr.partner_id.id,
                     'account_id': credit_account_id.id,
                     'journal_id': cr.journal_id.id,
                     'currency_id': currency_id,
