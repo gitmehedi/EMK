@@ -46,7 +46,7 @@
                                     <t t-foreach="pi_list" t-as="p">
                                         BOE: <u><strong t-esc="p['number']"/></u>
                                         <br/>
-                                        Print Date: <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y')"/>
+                                        Date: <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y')"/>
                                     </t>
                                 </p>
                             </div>
