@@ -32,6 +32,8 @@ class AccountTax(models.Model):
                              string="Status",track_visibility='onchange')
     line_ids = fields.One2many('history.account.tax', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    minimum_amount = fields.Float(string='Minimum Amount',track_visibility='onchange',
+                                  help='For Mushok-11')
 
     @api.one
     def act_draft(self):
@@ -107,6 +109,11 @@ class AccountTax(models.Model):
                 [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.constrains('minimum_amount')
+    def _check_minimum_amount(self):
+        if self.minimum_amount and self.amount and self.minimum_amount >= self.amount:
+            raise Warning('Minimum Amount should be less then Rate Amount!')
 
     @api.onchange("name")
     def onchange_strips(self):

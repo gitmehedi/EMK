@@ -20,16 +20,15 @@ class AmendmentAgreementWizard(models.TransientModel):
 
     @api.multi
     def generate(self):
-        agr_obj = self.env['agreement'].browse([self._context['active_id']])
-        agr_obj.write({
+        self.env['agreement.history'].create({
             'end_date': self.end_date,
-            'advance_amount': agr_obj.advance_amount+self.advance_amount_add,
+            'advance_amount_add': self.advance_amount_add,
             'adjustment_value': self.adjustment_value,
             'service_value': self.service_value,
             'account_id': self.account_id.id,
-            'is_amendment': True,
-            'rel_id': self.id,
+            'agreement_id': self._context['active_id'],
         })
+        self.env['agreement'].browse(self._context['active_id']).write({'is_amendment': True})
 
     @api.constrains('end_date')
     def check_end_date(self):

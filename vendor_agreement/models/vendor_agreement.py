@@ -51,7 +51,6 @@ class VendorAgreement(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, track_visibility='onchange',
                                  states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('agreement'))
-
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
@@ -70,6 +69,8 @@ class VendorAgreement(models.Model):
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
     active = fields.Boolean(track_visibility='onchange')
+    history_line_ids = fields.One2many('agreement.history', 'agreement_id', readonly=True, copy=False,
+                                        ondelete='restrict')
 
     @api.one
     @api.depends('payment_line_ids.amount')
@@ -101,8 +102,8 @@ class VendorAgreement(models.Model):
     @api.constrains('start_date', 'end_date')
     def check_date(self):
         date = fields.Date.today()
-        if not self.is_amendment and self.start_date < date:
-            raise ValidationError("Agreement 'Start Date' never be less than 'Current Date'.")
+        # if not self.is_amendment and self.start_date < date:
+        #     raise ValidationError("Agreement 'Start Date' never be less than 'Current Date'.")
         if self.end_date < date:
             raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
         elif self.start_date >= self.end_date:
@@ -167,6 +168,9 @@ class VendorAgreement(models.Model):
 
     @api.multi
     def action_amendment(self):
+        if self.is_amendment == True:
+            raise UserError(_('There is already pending amendment waiting for approval. '
+                              'At first approve that !'))
         res = self.env.ref('vendor_agreement.view_amendment_agreement_form_wizard')
         result = {
             'name': _('Agreement'),
@@ -186,6 +190,24 @@ class VendorAgreement(models.Model):
         }
         return result
 
+    @api.multi
+    def action_approve_amendment(self):
+        if self.is_amendment == True:
+            requested = self.history_line_ids.search([('state', '=', 'pending'),
+                                                      ('agreement_id', '=', self.id)],
+                                                     order='id desc',limit=1)
+            if requested:
+                self.write({
+                    'end_date': requested.end_date,
+                    'advance_amount': self.advance_amount + requested.advance_amount_add,
+                    'adjustment_value': requested.adjustment_value,
+                    'service_value': requested.service_value,
+                    'account_id': requested.account_id.id,
+                    'is_amendment': False,
+                })
+                requested.write({'state':'confirm'})
+
+
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
@@ -203,3 +225,19 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     agreement_id = fields.Many2one('agreement', copy=False)
+
+
+class VendorAgreementHistory(models.Model):
+    _name = "agreement.history"
+    _order = 'id desc'
+
+    name = fields.Char(string='Name', readonly=True)
+    end_date = fields.Date(string='End Date', readonly=True)
+    advance_amount_add = fields.Float(string="Advance Amount Addition", readonly=True)
+    adjustment_value = fields.Float(string="Adjustment Value", readonly=True)
+    service_value = fields.Float(string="Service Value", readonly=True)
+    account_id = fields.Many2one('account.account', string="Agreement Account", readonly=True)
+    agreement_id = fields.Many2one('agreement', string="Agreement Id", readonly=True)
+    state = fields.Selection([
+        ('pending', "Pending"),
+        ('confirm', "Confirmed")], default='pending', string="Status")

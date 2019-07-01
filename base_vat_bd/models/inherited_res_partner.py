@@ -16,5 +16,4 @@ class InheritedResPartner(models.Model):
     bin = fields.Char(string='BIN Number')
     tin = fields.Char(string='TIN Number')
     property_account_payable_id = fields.Many2one(default=default_payable_acc,
-                                                  string='Sundry Account',
                                                   company_dependent=False)
