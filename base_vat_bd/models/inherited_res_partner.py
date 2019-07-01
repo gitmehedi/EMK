@@ -9,10 +9,12 @@ class InheritedResPartner(models.Model):
         return self.env['account.account'].search([
             ('internal_type', '=', 'payable'),
             ('deprecated', '=', False)],
-            order='id DESC', limit=1)
+            order='id ASC', limit=1)
 
     tax = fields.Char(string='Trade License')
     vat = fields.Char(string='VAT Registration')
     bin = fields.Char(string='BIN Number')
     tin = fields.Char(string='TIN Number')
-    property_account_payable_id = fields.Many2one(default = default_payable_acc, company_dependent=False)
+    property_account_payable_id = fields.Many2one(default=default_payable_acc,
+                                                  string='Sundry Account',
+                                                  company_dependent=False)
