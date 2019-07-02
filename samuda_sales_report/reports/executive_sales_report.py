@@ -27,7 +27,7 @@ class ExecutiveSalesReport(models.AbstractModel):
                             LEFT JOIN res_users users ON users.id = invoice.user_id
                             LEFT JOIN res_partner executive ON executive.id = users.partner_id
                         WHERE 
-                            ml.credit > 0 AND invoice.type = 'out_invoice'
+                            ml.credit > 0 AND invoice.type = 'out_invoice' AND partner.supplier_type = 'local'
     """
     sql_str_foreign = """SELECT 
                             country.id AS country_id,
@@ -51,7 +51,8 @@ class ExecutiveSalesReport(models.AbstractModel):
                             LEFT JOIN res_users users ON users.id = invoice.user_id
                             LEFT JOIN res_partner executive ON executive.id = users.partner_id
                         WHERE 
-                            ml.credit > 0 AND invoice.type = 'out_invoice'
+                            ml.credit > 0 AND invoice.type = 'out_invoice' AND partner.supplier_type = 'foreign' 
+                            AND country.code != 'BD'
         """
 
     @api.multi

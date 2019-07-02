@@ -16,5 +16,19 @@
                 parent="sales_team.menu_sale_report"
                 sequence="35"/>
 
+        <menuitem
+                name="Sector Sales"
+                action="action_sector_sales_wizard"
+                id="menu_sector_sales_report"
+                parent="sales_team.menu_sale_report"
+                sequence="45"/>
+
+        <menuitem
+                name="Product Sales"
+                action="action_product_sales_wizard"
+                id="menu_product_sales_report"
+                parent="sales_team.menu_sale_report"
+                sequence="55"/>
+
     </data>
 </odoo>
