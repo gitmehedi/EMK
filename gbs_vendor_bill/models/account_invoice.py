@@ -19,6 +19,8 @@ class AccountInvoice(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange',copy=False)
+    is_mushok_applicable = fields.Boolean(string='Mushok-11 Applicable', default=False,
+                                       readonly=True, states={'draft': [('readonly', False)]})
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
