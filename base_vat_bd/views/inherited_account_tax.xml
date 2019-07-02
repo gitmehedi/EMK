@@ -48,13 +48,13 @@
                                                 <label string="%" class="oe_inline"
                                                        attrs="{'invisible':[('amount_type','=','fixed')]}"/>
                                             </div>
-                                            <label for="minimum_amount"
-                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
-                                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
-                                                <field name="minimum_amount" class="oe_inline"/>
-                                                <label string="%" class="oe_inline"
-                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
-                                            </div>
+                                            <!--<label for="minimum_amount"-->
+                                                   <!--attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>-->
+                                            <!--<div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">-->
+                                                <!--<field name="minimum_amount" class="oe_inline"/>-->
+                                                <!--<label string="%" class="oe_inline"-->
+                                                       <!--attrs="{'invisible':[('amount_type','=','fixed')]}"/>-->
+                                            <!--</div>-->
                                         </group>
                                         <group attrs="{'invisible':[('amount_type','=', 'group')]}">
                                             <field name="account_id" string="VAT Account"
