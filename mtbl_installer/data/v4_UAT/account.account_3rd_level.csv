@@ -72,15 +72,15 @@ Layer 3,429,Managing Director's Remuneration,Non-Interest Expenses,View Type,Tru
 Layer 3,431,Provision for Loans,Provisions,View Type,True,False,approve
 Layer 3,432,Provision for diminution in value of Invsetments,Provisions,View Type,True,False,approve
 Layer 3,433,Other Provisions,Provisions,View Type,True,False,approve
-Layer 3,511,Bills sent for collection,Contra ,View Type,True,False,approve
-Layer 3,512,Bills received for Collection,Contra ,View Type,True,False,approve
-Layer 3,513,Forward Contract,Contra ,View Type,True,False,approve
+Layer 3,511,Bills sent for collection ,Contra ,View Type,True,False,approve
+Layer 3,512,Bills received for Collection ,Contra ,View Type,True,False,approve
+Layer 3,513,Forward Contract ,Contra ,View Type,True,False,approve
 Layer 3,521,Bank Guarantee <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,522,Letter of Credit <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,523,Accepted Bills under LC <Contingent>,Contingent,View Type,True,False,approve
-Layer 3,611,Bills sent for collection,Contra ,View Type,True,False,approve
-Layer 3,612,Bills received for Collection,Contra ,View Type,True,False,approve
-Layer 3,613,Forward Contract,Contra ,View Type,True,False,approve
+Layer 3,611,Bills sent for collection ,Contra ,View Type,True,False,approve
+Layer 3,612,Bills received for Collection ,Contra ,View Type,True,False,approve
+Layer 3,613,Forward Contract ,Contra ,View Type,True,False,approve
 Layer 3,621,Bank Guarantee <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,622,Letter of Credit <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,623,Accepted Bills under LC <Contingent>,Contingent,View Type,True,False,approve
