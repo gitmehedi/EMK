@@ -3,6 +3,7 @@ from odoo import models, fields, api, _
 
 class PaymentInstruction(models.Model):
     _name = 'payment.instruction'
+    _inherit = "mail.thread"
     _order = 'sequence desc'
     _description = 'Payment Instruction'
 

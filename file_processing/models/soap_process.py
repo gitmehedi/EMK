@@ -86,11 +86,10 @@ class SOAPProcess(models.Model):
                         'error_message': response['ErrorMessage'],
                         'errors': json.dumps(response)
                     }
-
                     self.env['soap.process.error'].create(error)
                 elif 'OkMessage' in response:
                     record.write({'is_sync': True})
-                else:
+                elif 'faultcode' in response:
                     error = {
                         'name': endpoint.endpoint_fullname,
                         'request_body': reqBody,
@@ -358,7 +357,7 @@ class SOAPProcess(models.Model):
                     self.env['soap.process.error'].create(error)
                 elif 'OkMessage' in response:
                     record.write({'is_sync': True})
-                else:
+                elif 'faultcode' in response:
                     error = {
                         'name': endpoint.endpoint_fullname,
                         'request_body': reqBody,
