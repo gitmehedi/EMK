@@ -39,12 +39,9 @@ class BranchDistribution(models.Model):
         ('approve', 'Approved'),
     ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
     approve_date = fields.Datetime(string='Approve Date', readonly=True, track_visibility='onchange')
-    branch_budget_lines = fields.One2many('branch.budget.line', 'branch_budget_id',readonly=True,
+    budget_distribution_lines = fields.One2many('budget.distribution.line', 'budget_distribution_id',readonly=True,
                                           states={'draft': [('readonly', False)]},
                                           string='Lines')
-    cost_centre_budget_lines = fields.One2many('cost.centre.budget.line', 'cost_centre_budget_id', readonly=True,
-                                               states={'draft': [('readonly', False)]},
-                                               string='Lines')
     budget_distribution_history_ids = fields.One2many('budget.distribution.history', 'budget_distribution_id', readonly=True,
                                                 string='History Lines')
     bottom_line_budget_line = fields.Many2one('bottom.line.budget.line',
@@ -75,33 +72,32 @@ class BranchDistribution(models.Model):
                 raise UserError(_('You cannot delete a record which is not in draft state!'))
         return super(BranchDistribution, self).unlink()
 
-    @api.onchange('account_id')
-    def onchange_account_id(self):
-        if self.account_id:
-            self.branch_budget_lines = []
-            self.cost_centre_budget_lines = []
-            branch_vals = []
-            cost_vals =  []
-
-            op_pool = self.env['operating.unit'].search([])
-            for obj in op_pool:
-                branch_vals.append((0, 0, {'operating_unit_id': obj.id,}))
-            self.branch_budget_lines = branch_vals
-
-            cost_pool = self.env['account.analytic.account'].search([])
-            for obj in cost_pool:
-                cost_vals.append((0, 0, {'analytic_account_id': obj.id,}))
-            self.cost_centre_budget_lines = cost_vals
+    # @api.onchange('account_id')
+    # def onchange_account_id(self):
+    #     if self.account_id:
+    #         self.branch_budget_lines = []
+    #         self.cost_centre_budget_lines = []
+    #         branch_vals = []
+    #         cost_vals =  []
+    #
+    #         op_pool = self.env['operating.unit'].search([])
+    #         for obj in op_pool:
+    #             branch_vals.append((0, 0, {'operating_unit_id': obj.id,}))
+    #         self.branch_budget_lines = branch_vals
+    #
+    #         cost_pool = self.env['account.analytic.account'].search([])
+    #         for obj in cost_pool:
+    #             cost_vals.append((0, 0, {'analytic_account_id': obj.id,}))
+    #         self.cost_centre_budget_lines = cost_vals
 
 
     @api.multi
-    @api.depends('planned_amount','branch_budget_lines.planned_amount','cost_centre_budget_lines.planned_amount')
+    @api.depends('planned_amount','budget_distribution_lines.planned_amount')
     def _compute_remaining_amount(self):
         for budget in self:
             if budget.planned_amount:
-                branch_line_total_amount = sum(line.planned_amount for line in budget.branch_budget_lines)
-                cost_line_total_amount = sum(line.planned_amount for line in budget.cost_centre_budget_lines)
-                budget.remaining_amount = round(budget.planned_amount) - (round(branch_line_total_amount)+round(cost_line_total_amount))
+                distribution_line_total_amount = sum(line.planned_amount for line in budget.budget_distribution_lines)
+                budget.remaining_amount = round(budget.planned_amount) - (round(distribution_line_total_amount))
             else:
                 budget.remaining_amount = 0
 
@@ -118,8 +114,7 @@ class BranchDistribution(models.Model):
 
     def action_amendment(self):
         history_pools = self.env['budget.distribution.history']
-        branch_history_line_pools = self.env['branch.budget.history.line']
-        cost_history_line_pools = self.env['cost.centre.budget.history.line']
+        history_line_pools = self.env['budget.distribution.history.line']
         res = {
             'name': self.name,
             'creating_user_id': self.creating_user_id.id,
@@ -132,34 +127,24 @@ class BranchDistribution(models.Model):
             'date_to': self.date_to,
             'approve_date': self.approve_date,
             'budget_distribution_id': self.id,
-            'bottom_line_budget_line': self.bottom_line_budget_line.id,
+            'bottom_line_budget_id': self.bottom_line_budget_line.id,
             'active': self.active,
         }
         history = history_pools.create(res)
         if history:
             history_id = history.id
 
-        for line in self.branch_budget_lines:
+        for line in self.budget_distribution_lines:
             lines = {
-                'branch_budget_history_id': history_id,
+                'budget_distribution_history_id': history_id,
                 'operating_unit_id': line.operating_unit_id.id,
+                'analytic_account_id': line.analytic_account_id and line.analytic_account_id.id or False,
                 'planned_amount': line.planned_amount,
                 'practical_amount': line.practical_amount,
                 'theoritical_amount': line.practical_amount,
                 'active': self.active,
             }
-            branch_history_line_pools.create(lines)
-
-        for line in self.cost_centre_budget_lines:
-            lines = {
-                'cost_centre_budget_history_id': history_id,
-                'analytic_account_id': line.analytic_account_id.id,
-                'planned_amount': line.planned_amount,
-                'practical_amount': line.practical_amount,
-                'theoritical_amount': line.practical_amount,
-                'active': self.active,
-            }
-            cost_history_line_pools.create(lines)
+            history_line_pools.create(lines)
 
         self.write({'state': 'draft'})
 
@@ -170,11 +155,10 @@ class BranchDistribution(models.Model):
             self.active = True
 
     @api.one
-    @api.depends('branch_budget_lines.practical_amount','cost_centre_budget_lines.practical_amount')
+    @api.depends('budget_distribution_lines.practical_amount')
     def _compute_total_practical_amount(self):
         for rec in self:
-            rec.total_practical_amount = sum(line.practical_amount for line in rec.branch_budget_lines) + \
-                                         sum(line.practical_amount for line in rec.cost_centre_budget_lines)
+            rec.total_practical_amount = sum(line.practical_amount for line in rec.budget_distribution_lines)
 
     @api.one
     @api.depends('total_practical_amount', 'planned_amount')
@@ -187,14 +171,15 @@ class BranchDistribution(models.Model):
         return [('state', '=', 'draft')]
 
 # ---------------------------------------------------------
-# Branch wise Budgets Distribution
+# Budgets Distribution Line
 # ---------------------------------------------------------
-class BudgetBranchDistributionLine(models.Model):
-    _name = "branch.budget.line"
-    _description = "Branch Budget Line"
+class BudgetDistributionLine(models.Model):
+    _name = "budget.distribution.line"
+    _description = "Budget Distribution Line"
 
-    branch_budget_id = fields.Many2one('budget.distribution',string='Branch Budget')
+    budget_distribution_id = fields.Many2one('budget.distribution',string='Budget Distribution')
     operating_unit_id = fields.Many2one('operating.unit',required=True, string='Branch')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount',compute='_compute_practical_amount')
     remaining_amount = fields.Float(string='Remaining Amount',compute='_compute_remaining_amount')
@@ -204,22 +189,30 @@ class BudgetBranchDistributionLine(models.Model):
     def _compute_practical_amount(self):
         for line in self:
             result = 0.0
-            acc_id = line.branch_budget_id.account_id.id
-            date_to = line.branch_budget_id.date_to
-            date_from = line.branch_budget_id.date_from
+            acc_id = line.budget_distribution_id.account_id.id
+            date_to = line.budget_distribution_id.date_to
+            date_from = line.budget_distribution_id.date_from
             acc_inv_ids = self.env['account.invoice'].search(
                 [('date', '>=', date_from),
                  ('date', '<=', date_to),
                  ('state','!=','cancel')]).ids
 
-            if line.operating_unit_id.id and acc_inv_ids:
-                self.env.cr.execute("""
+            # where clause for operating unit wise and cost centre wise or just operating unit wise
+            if line.operating_unit_id and line.analytic_account_id:
+                where = ' AND operating_unit_id = '+str(line.operating_unit_id.id)+\
+                        ' AND account_analytic_id ='+str(line.analytic_account_id.id)
+            else:
+                where = ' AND operating_unit_id = '+str(line.operating_unit_id.id)+\
+                        ' AND account_analytic_id IS NULL'
+
+            if acc_inv_ids:
+                query = """
                     SELECT SUM(price_subtotal_without_vat)
                     FROM account_invoice_line
                     WHERE account_id=%s
                     AND invoice_id in %s
-                    AND operating_unit_id=%s""",
-                                    (acc_id,(tuple(acc_inv_ids)),line.operating_unit_id.id))
+                    %s""" % (acc_id,(tuple(acc_inv_ids)),where)
+                self.env.cr.execute(query)
                 result = self.env.cr.fetchone()[0] or 0.0
             line.practical_amount = result
 
@@ -230,8 +223,8 @@ class BudgetBranchDistributionLine(models.Model):
         today = fields.Datetime.now()
         theo_amt = 0.00
         for line in self:
-            line_date_to = line.branch_budget_id.date_to
-            line_date_from = line.branch_budget_id.date_from
+            line_date_to = line.budget_distribution_id.date_to
+            line_date_from = line.budget_distribution_id.date_from
             end_today = fields.Datetime.from_string(today) + timedelta(days=1)
             end_date_to = fields.Datetime.from_string(line_date_to) + timedelta(days=1)
 
@@ -255,88 +248,8 @@ class BudgetBranchDistributionLine(models.Model):
 
 
     def _compute_active(self):
-        if self.branch_budget_id and \
-                        self.branch_budget_id.active ==False:
-            self.active = False
-        else:
-            self.active = True
-
-    @api.one
-    @api.constrains('planned_amount')
-    def _check_planned_amount(self):
-        if self.planned_amount < 0:
-            raise UserError('You can\'t give negative value!!!')
-
-# ---------------------------------------------------------
-# Cost Centre wise Budgets Distribution
-# ---------------------------------------------------------
-class CostCentreBudgetLine(models.Model):
-    _name = "cost.centre.budget.line"
-    _description = "Cost Centre Budget Line"
-
-    cost_centre_budget_id = fields.Many2one('budget.distribution',string='Budget Distribution')
-    analytic_account_id = fields.Many2one('account.analytic.account',required=True,string='Cost Centre')
-    planned_amount = fields.Float('Planned Amount', required=True)
-    practical_amount = fields.Float(string='Practical Amount',compute='_compute_practical_amount')
-    remaining_amount = fields.Float(string='Remaining Amount', compute='_compute_remaining_amount')
-    theoritical_amount = fields.Float(string='Theoretical Amount',compute='_compute_theoritical_amount')
-    active = fields.Boolean(default=True, compute='_compute_active')
-
-    def _compute_practical_amount(self):
-        for line in self:
-            result = 0.0
-            acc_id = line.cost_centre_budget_id.account_id.id
-            date_to = line.cost_centre_budget_id.date_to
-            date_from = line.cost_centre_budget_id.date_from
-            acc_inv_ids = self.env['account.invoice'].search(
-                [('date', '>=', date_from),
-                 ('date', '<=', date_to),
-                 ('state','!=','cancel')]).ids
-
-            if line.analytic_account_id.id and acc_inv_ids:
-                self.env.cr.execute("""
-                    SELECT SUM(price_subtotal_without_vat)
-                    FROM account_invoice_line
-                    WHERE account_id=%s
-                    AND invoice_id in %s
-                    AND account_analytic_id=%s""",
-                (acc_id,(tuple(acc_inv_ids)),line.analytic_account_id.id))
-                result = self.env.cr.fetchone()[0] or 0.0
-            line.practical_amount = result
-
-
-    @api.multi
-    @api.depends('planned_amount')
-    def _compute_theoritical_amount(self):
-        today = fields.Datetime.now()
-        theo_amt = 0.00
-        for line in self:
-            line_date_to = line.cost_centre_budget_id.date_to
-            line_date_from = line.cost_centre_budget_id.date_from
-            end_today = fields.Datetime.from_string(today) + timedelta(days=1)
-            end_date_to = fields.Datetime.from_string(line_date_to) + timedelta(days=1)
-
-            line_timedelta = end_date_to - fields.Datetime.from_string(line_date_from)
-            elapsed_timedelta = end_today - fields.Datetime.from_string(line_date_from)
-
-            if elapsed_timedelta.days < 0:
-                # If the budget line has not started yet, theoretical amount should be zero
-                theo_amt = 0.00
-            elif line_timedelta.days > 0 and fields.Datetime.from_string(today) < fields.Datetime.from_string(line_date_to):
-                # If today is between the budget line date_from and date_to
-                theo_amt = ((float(elapsed_timedelta.days) / float(line_timedelta.days))) * line.planned_amount
-            else:
-                theo_amt = line.planned_amount
-
-            line.theoritical_amount = theo_amt
-
-    def _compute_remaining_amount(self):
-        for rec in self:
-            rec.remaining_amount = rec.planned_amount - rec.practical_amount
-
-    def _compute_active(self):
-        if self.cost_centre_budget_id and \
-                        self.cost_centre_budget_id.active == False:
+        if self.budget_distribution_id and \
+                        self.budget_distribution_id.active==False:
             self.active = False
         else:
             self.active = True

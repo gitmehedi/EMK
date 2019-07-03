@@ -14,41 +14,25 @@ class BudgetDistributionHistory(models.Model):
     account_id = fields.Many2one('account.account', string='Account',readonly=True,track_visibility='onchange')
     planned_amount = fields.Float('Planned Amount',readonly=True,track_visibility='onchange')
     remaining_amount = fields.Float('Remaining Amount',readonly=True)
-    fiscal_year = fields.Many2one('date.range', string='Date range', track_visibility='onchange',readonly=True)
+    fiscal_year = fields.Many2one('date.range', string='Period', track_visibility='onchange',readonly=True)
     date_from = fields.Date(string='Start Date', readonly=True)
     date_to = fields.Date(string='End Date', readonly=True)
     approve_date = fields.Datetime(string='Approve Date', readonly=True, track_visibility='onchange')
-    branch_budget_lines = fields.One2many('branch.budget.history.line', 'branch_budget_history_id',
+    budget_distribution_history_lines = fields.One2many('budget.distribution.history.line', 'budget_distribution_history_id',
                                           readonly=True,string='Lines')
-    cost_centre_budget_lines = fields.One2many('cost.centre.budget.history.line', 'cost_centre_budget_history_id',
-                                               readonly=True,string='Lines')
-    bottom_line_budget_line = fields.Many2one('bottom.line.budget.line',string='Bottom line budget')
+    bottom_line_budget_id = fields.Many2one('bottom.line.budget.line',string='Bottom line budget')
     budget_distribution_id = fields.Many2one('budget.distribution',string='budget distribution')
     active = fields.Boolean(string='Active')
 
 # ---------------------------------------------------------
 # Branch wise Budgets Distribution History
 # ---------------------------------------------------------
-class BudgetBranchHistoryLine(models.Model):
-    _name = "branch.budget.history.line"
-    _description = "Branch Budget History Line"
+class BranchDistributionHistoryLine(models.Model):
+    _name = "budget.distribution.history.line"
+    _description = "Budget Distribution History Line"
 
-    branch_budget_history_id = fields.Many2one('branch.budget.history',string='Branch Budget')
-    operating_unit_id = fields.Many2one('operating.unit',required=True, string='Branch')
-    planned_amount = fields.Float('Planned Amount', required=True)
-    practical_amount = fields.Float(string='Practical Amount')
-    theoritical_amount = fields.Float(string='Theoretical Amount')
-    active = fields.Boolean(string='Active')
-
-# ---------------------------------------------------------
-# Cost Centre wise Budgets Distribution History
-# ---------------------------------------------------------
-
-class CostCentreBudgetHistoryLine(models.Model):
-    _name = "cost.centre.budget.history.line"
-    _description = "Cost Centre Budget History Line"
-
-    cost_centre_budget_history_id = fields.Many2one('cost.centre.budget.history',string='Cost Centre Budget')
+    budget_distribution_history_id = fields.Many2one('budget.distribution.history',string='Budget Distribution History')
+    operating_unit_id = fields.Many2one('operating.unit',string='Branch')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount')

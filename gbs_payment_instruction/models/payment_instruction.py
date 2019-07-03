@@ -20,7 +20,8 @@ class PaymentInstruction(models.Model):
     default_credit_account_id = fields.Many2one('account.account', string='Credit Account',
                                                 help='Default Credit Account of the Payment')
     vendor_bank_acc = fields.Char(string='Vendor Bank Account')
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch',required=True,
+                                        default=lambda self: self.env.user.default_operating_unit_id)
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
 
     @api.model

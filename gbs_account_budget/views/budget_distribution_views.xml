@@ -66,25 +66,15 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Branch Distribution" >
-                            <field name="branch_budget_lines">
-                                <tree editable="bottom" create="false" delete="false"
+                        <page string="Distribution" >
+                            <field name="budget_distribution_lines">
+                                <tree editable="bottom"
                                       decoration-danger="practical_amount>planned_amount"
                                       decoration-info="practical_amount>theoritical_amount" >
-                                    <field name="operating_unit_id" readonly="1"/>
-                                    <field name="planned_amount"/>
-                                    <field name="practical_amount" readonly="1"/>
-                                    <field name="remaining_amount" readonly="1"/>
-                                    <field name="theoritical_amount" readonly="1"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Cost Centre Distribution" >
-                            <field name="cost_centre_budget_lines">
-                                <tree editable="bottom"  create="false" delete="false"
-                                      decoration-danger="practical_amount>planned_amount"
-                                      decoration-info="practical_amount>theoritical_amount">
-                                    <field name="analytic_account_id" readonly="1"/>
+                                    <field name="operating_unit_id"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="analytic_account_id"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field name="planned_amount"/>
                                     <field name="practical_amount" readonly="1"/>
                                     <field name="remaining_amount" readonly="1"/>
@@ -105,7 +95,7 @@
                                     <div class="pull-left">
                                         <h1>
                                             <field name="name" nolabel="1"/>
-                                            <field name="bottom_line_budget_line" invisible="1"/>
+                                            <field name="bottom_line_budget_id" invisible="1"/>
                                         </h1>
                                     </div>
                                     <group>
@@ -127,23 +117,12 @@
                                         </group>
                                     </group>
                                     <notebook>
-                                        <page string="Branch Distribution" >
-                                            <field name="branch_budget_lines">
+                                        <page string="Distribution" >
+                                            <field name="budget_distribution_history_lines">
                                                 <tree editable="bottom" create="false" delete="false"
                                                       decoration-danger="practical_amount>planned_amount"
                                                       decoration-info="practical_amount>theoritical_amount" >
                                                     <field name="operating_unit_id" readonly="1"/>
-                                                    <field name="planned_amount" readonly="1"/>
-                                                    <field name="practical_amount" readonly="1"/>
-                                                    <field name="theoritical_amount" readonly="1"/>
-                                                </tree>
-                                            </field>
-                                        </page>
-                                        <page string="Cost Centre Distribution" >
-                                            <field name="cost_centre_budget_lines">
-                                                <tree editable="bottom"  create="false" delete="false"
-                                                      decoration-danger="practical_amount>planned_amount"
-                                                      decoration-info="practical_amount>theoritical_amount">
                                                     <field name="analytic_account_id" readonly="1"/>
                                                     <field name="planned_amount" readonly="1"/>
                                                     <field name="practical_amount" readonly="1"/>
@@ -169,7 +148,7 @@
         <field name="name">budget.distribution.search</field>
         <field name="model">budget.distribution</field>
         <field name="arch" type="xml">
-            <search string="Branch Distribution">
+            <search string="Distribution">
                 <field name="name" filter_domain="[('name','ilike',self)]" string="Budget"/>
                 <field name="fiscal_year" filter_domain="[('fiscal_year','ilike',self)]" string="Year"/>
                 <filter name="state" string="Pending" domain="[('state','=', 'draft')]"/>
