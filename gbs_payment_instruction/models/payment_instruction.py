@@ -11,7 +11,6 @@ class PaymentInstruction(models.Model):
     instruction_date = fields.Date(string='Date')
     is_sync = fields.Boolean(string='Is Synced', default=False)
     amount = fields.Float(string='Amount')
-
     partner_id = fields.Many2one('res.partner', string='Vendor')
     currency_id = fields.Many2one('res.currency', string='Currency')
     default_debit_account_id = fields.Many2one('account.account', string='Debit Account',

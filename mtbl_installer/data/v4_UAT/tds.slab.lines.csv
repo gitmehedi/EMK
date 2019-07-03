@@ -1,0 +1,6 @@
+External ID,Rule Details/From Range,Rule Details/To Range,Rule Details/Rate
+__export__.tds_rule_5,0,100000,2
+,100001,200000,3
+,200001,300000,4
+,300001,1000000,5
+,1000001,2000000,6

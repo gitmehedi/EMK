@@ -1,0 +1,5 @@
+Partner,date,Account,Branch,Journal,reference,Invoice Lines/Product,Invoice Lines/Description,Invoice Lines/Branch,Invoice Lines/Account,Invoice Lines/Quantity,Invoice Lines/Unit Price
+T. K. Group,2019-04-09,Account Payable,Principal Branch,Vendor Bill,TK1234516,ATM Rent,ATM Rent,Main Operating Unit,MD House Rent,2,30000
+,,,,,,Lenevo Thinkpad 3,Lenevo Thinkpad 3,Main Operating Unit,Telephone Expenses,3,35000
+,,,,,,ATM Rent,ATM Rent,Ulipur Branch,MD House Rent,1,40000
+,,,,,,ATM Rent,ATM Rent,Sylhet Branch,MD House Rent,1,50000
