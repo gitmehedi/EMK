@@ -33,7 +33,7 @@ class VendorAgreement(models.Model):
     advance_amount = fields.Float(string="Advance Amount", required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
                                   track_visibility='onchange', help="Finally granted advance amount.")
-    adjusted_amount = fields.Float(string="Adjusted Amount", readonly=True,
+    adjusted_amount = fields.Float(string="Adjusted Amount", readonly=True,states={'draft': [('readonly', False)]},
                                    track_visibility='onchange', help="Total amount which are already adjusted in bill.")
     outstanding_amount = fields.Float(string="Outstanding Amount",compute='_compute_outstanding_amount', readonly=True,
                                       track_visibility='onchange', help="Remaining Amount to adjustment.")
