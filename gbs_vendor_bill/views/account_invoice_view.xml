@@ -139,9 +139,9 @@
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 <attribute name="string">Cost Centre</attribute>
             </xpath>
-            <!--<field name="reference" position="after">-->
-                <!--<field name="is_mushok_applicable"/>-->
-            <!--</field>-->
+            <field name="reference" position="after">
+                <field name="is_mushok_applicable"/>
+            </field>
         </field>
     </record>
 

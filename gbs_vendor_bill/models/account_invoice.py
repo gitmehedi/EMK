@@ -19,8 +19,8 @@ class AccountInvoice(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange',copy=False)
-    is_mushok_applicable = fields.Boolean(string='Mushok-11 Applicable', default=False,
-                                       readonly=True, states={'draft': [('readonly', False)]})
+    is_mushok_applicable = fields.Boolean(string='Mushok-11', default=False,
+                                          readonly=True, states={'draft': [('readonly', False)]})
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -117,8 +117,14 @@ class AccountInvoice(models.Model):
         tax_grouped = {}
         for line in self.invoice_line_ids:
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id,
-                                                          self.partner_id)['taxes']
+            if not self.is_mushok_applicable:
+                taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity,
+                                                              line.product_id,self.partner_id)['taxes']
+            elif self.is_mushok_applicable:
+                taxes = line.invoice_line_tax_ids.compute_all_for_mushok(price_unit, self.currency_id, line.quantity,
+                                                                         line.product_id,self.partner_id)['taxes']
+            else:
+                taxes = False
             for tax in taxes:
                 val = self._prepare_tax_line_vals(line, tax)
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
@@ -174,7 +180,7 @@ class AccountInvoice(models.Model):
 
     def action_paid_invoice(self):
         to_pay_invoices = self.search([('state', '=', 'open')]).filtered(lambda inv: len(inv.payment_line_ids) > 0
-                                                               and inv.residual<=inv.total_payment_amount)
+                                                                                     and inv.residual<=inv.total_payment_amount)
         for to_pay_invoice in to_pay_invoices:
             if len([i.is_sync for i in to_pay_invoice.payment_line_ids if not i.is_sync])>0:
                 pass
@@ -208,14 +214,18 @@ class AccountInvoiceLine(models.Model):
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
                  'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
-                 'invoice_id.date_invoice', 'invoice_id.date')
+                 'invoice_id.date_invoice', 'invoice_id.date', 'invoice_id.is_mushok_applicable')
     def _compute_price(self):
         currency = self.invoice_id and self.invoice_id.currency_id or None
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = False
         if self.invoice_line_tax_ids:
-            taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
-                                                          partner=self.invoice_id.partner_id)
+            if not self.invoice_id.is_mushok_applicable:
+                taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
+                                                              partner=self.invoice_id.partner_id)
+            elif self.invoice_id.is_mushok_applicable:
+                taxes = self.invoice_line_tax_ids.compute_all_for_mushok(price, currency, self.quantity, product=self.product_id,
+                                                                         partner=self.invoice_id.partner_id)
         self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price
         self.price_subtotal_without_vat = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
         if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
@@ -229,7 +239,6 @@ class AccountInvoiceLine(models.Model):
                                      store=True, readonly=True, compute='_compute_price')
     price_subtotal_without_vat = fields.Monetary(string='Amount',
                                                  store=True, readonly=True, compute='_compute_price')
-
     operating_unit_id = fields.Many2one('operating.unit',string='Branch',required=True,
                                         related='', readonly=False,
                                         default=lambda self:
@@ -283,4 +292,3 @@ class AccountMove(models.Model):
                 if op_unit:
                     move.write({'operating_unit_id':op_unit[0]})
         return res
-

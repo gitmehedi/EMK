@@ -4,12 +4,12 @@ Layer 2,12,Borrowings,Liability,View Type,True,False,approve
 Layer 2,13,Deposits,Liability,View Type,True,False,approve
 Layer 2,14,Bond,Liability,View Type,True,False,approve
 Layer 2,15,Other Liabilities,Liability,View Type,True,False,approve
-Layer 2,21,Cash & Bank Balance,Assets,View Type,True,False,approve
-Layer 2,22,Money at Call & Short Notice,Assets,View Type,True,False,approve
-Layer 2,23,Investments,Assets,View Type,True,False,approve
-Layer 2,24,Loans & Advances,Assets,View Type,True,False,approve
-Layer 2,25,Fixed Assets,Assets,View Type,True,False,approve
-Layer 2,26,Other Assets,Assets,View Type,True,False,approve
+Layer 2,21,Cash & Bank Balance,Asset,View Type,True,False,approve
+Layer 2,22,Money at Call & Short Notice,Asset,View Type,True,False,approve
+Layer 2,23,Investments,Asset,View Type,True,False,approve
+Layer 2,24,Loans & Advances,Asset,View Type,True,False,approve
+Layer 2,25,Fixed Assets,Asset,View Type,True,False,approve
+Layer 2,26,Other Assets,Asset,View Type,True,False,approve
 Layer 2,90,System,System,View Type,True,False,approve
 Layer 2,31,Interest Income,Income,View Type,True,False,approve
 Layer 2,32,Income fm Investments,Income,View Type,True,False,approve

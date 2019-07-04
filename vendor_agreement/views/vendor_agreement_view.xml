@@ -119,6 +119,20 @@
                                                 <field name="agreement_adjusted_amount" string="Adjusted"/>
                                                 <field name="state"/>
                                             </tree>
+                                            <from string="Invoice">
+                                                <group>
+                                                    <group>
+                                                        <field name="partner_id"/>
+                                                        <field name="user_id"/>
+                                                        <field name="date_invoice"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="amount_total_signed"/>
+                                                        <field name="residual_signed"/>
+                                                        <field name="agreement_adjusted_amount"/>
+                                                    </group>
+                                                </group>
+                                            </from>
                                         </field>
                                     </group>
                                 </page>

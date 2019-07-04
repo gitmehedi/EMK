@@ -110,10 +110,10 @@ class AccountTax(models.Model):
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
-    # @api.constrains('minimum_amount')
-    # def _check_minimum_amount(self):
-    #     if self.minimum_amount and self.amount and self.minimum_amount >= self.amount:
-    #         raise Warning('Minimum Amount should be less then Rate Amount!')
+    @api.constrains('minimum_amount')
+    def _check_minimum_amount(self):
+        if self.minimum_amount and self.amount and self.minimum_amount >= self.amount:
+            raise Warning('Minimum Amount should be less then Rate Amount!')
 
     @api.onchange("name")
     def onchange_strips(self):

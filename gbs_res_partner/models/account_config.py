@@ -6,7 +6,7 @@ class AccountConfigSettings(models.TransientModel):
     def _get_default_sundry_account_id(self):
         return self.env.user.company_id.sundry_account_id
 
-    sundry_account_id = fields.Many2one('account.account',string='Sundry account',required=True,
+    sundry_account_id = fields.Many2one('account.account',string='Sundry Account',required=True,
                                                   default=lambda self: self._get_default_sundry_account_id(),
                                                   help="Sundry account used for Vendor bill payments")
     @api.multi
