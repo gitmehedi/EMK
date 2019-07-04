@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <menuitem
-                name="Executive Sales"
+                name="Executive (Area/Country)"
                 action="action_executive_sales_wizard"
                 id="menu_executive_sales_report"
                 parent="sales_team.menu_sale_report"
                 sequence="25"/>
 
         <menuitem
-                name="Customer Sales"
+                name="Customer (Area/Country)"
                 action="action_customer_sales_wizard"
                 id="menu_customer_sales_report"
                 parent="sales_team.menu_sale_report"
                 sequence="35"/>
 
         <menuitem
-                name="Sector Sales"
-                action="action_sector_sales_wizard"
-                id="menu_sector_sales_report"
+                name="Customer (Sector Wise)"
+                action="action_customer_sales_sector_wizard"
+                id="menu_customer_sales_sector_report"
                 parent="sales_team.menu_sale_report"
                 sequence="45"/>
 
         <menuitem
-                name="Product Sales"
-                action="action_product_sales_wizard"
-                id="menu_product_sales_report"
+                name="Sector (Product Wise)"
+                action="action_sector_sales_product_wizard"
+                id="menu_sector_sales_product_report"
                 parent="sales_team.menu_sale_report"
                 sequence="55"/>
 

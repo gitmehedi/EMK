@@ -2,8 +2,8 @@ from odoo import api, models, fields
 from odoo.tools.misc import formatLang
 
 
-class ProductSalesReport(models.AbstractModel):
-    _name = "report.samuda_sales_report.report_product_sales"
+class SectorSalesProductReport(models.AbstractModel):
+    _name = "report.samuda_sales_report.report_sector_sales_product"
 
     sql_str = """SELECT 
                     pt.id AS product_id,
@@ -20,9 +20,9 @@ class ProductSalesReport(models.AbstractModel):
                     LEFT JOIN product_uom uom ON uom.id = ml.product_uom_id
                     LEFT JOIN product_uom uom2 ON uom2.id = pt.uom_id
                     LEFT JOIN res_partner partner ON partner.id = invoice.partner_id
-                    LEFT JOIN res_partner_category sector ON sector.id = partner.sector_id
+                    RIGHT JOIN res_partner_category sector ON sector.id = partner.sector_id
                 WHERE 
-                    ml.credit > 0 AND invoice.type = 'out_invoice' AND sector.id != 0
+                    ml.credit > 0 AND invoice.type = 'out_invoice'
     """
 
     @api.multi
@@ -34,7 +34,7 @@ class ProductSalesReport(models.AbstractModel):
             'formatLang': self.format_lang,
         }
 
-        return self.env['report'].render('samuda_sales_report.report_product_sales', docargs)
+        return self.env['report'].render('samuda_sales_report.report_sector_sales_product', docargs)
 
     @api.multi
     def format_lang(self, value):
@@ -43,7 +43,8 @@ class ProductSalesReport(models.AbstractModel):
     @api.model
     def get_sql(self, data):
         # Make SQL
-        self.sql_str += " AND pt.id = '%s'" % (data['product_id']) if data['product_id'] else " AND pt.id !=0"
+        if data['product_id']:
+            self.sql_str += " AND pt.id = '%s'" % (data['product_id'])
         self.sql_str += " AND DATE(invoice.date) BETWEEN '%s' AND '%s'" % (data['date_from'], data['date_to'])
         self.sql_str += " GROUP BY sector.id, sector.name, pt.id, pt.name"
         self.sql_str += " ORDER BY pt.id, sector.id"

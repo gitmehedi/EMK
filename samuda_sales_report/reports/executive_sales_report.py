@@ -22,7 +22,7 @@ class ExecutiveSalesReport(models.AbstractModel):
                             LEFT JOIN product_uom uom ON uom.id = ml.product_uom_id
                             LEFT JOIN product_uom uom2 ON uom2.id = pt.uom_id
                             LEFT JOIN res_partner partner ON partner.id = invoice.partner_id
-                            LEFT JOIN res_partner_area area ON area.id = partner.area_id
+                            RIGHT JOIN res_partner_area area ON area.id = partner.area_id
                             LEFT JOIN res_country country ON country.id = partner.country_id
                             LEFT JOIN res_users users ON users.id = invoice.user_id
                             LEFT JOIN res_partner executive ON executive.id = users.partner_id
@@ -47,7 +47,7 @@ class ExecutiveSalesReport(models.AbstractModel):
                             LEFT JOIN product_uom uom2 ON uom2.id = pt.uom_id
                             LEFT JOIN res_partner partner ON partner.id = invoice.partner_id
                             LEFT JOIN res_partner_area area ON area.id = partner.area_id
-                            LEFT JOIN res_country country ON country.id = partner.country_id
+                            RIGHT JOIN res_country country ON country.id = partner.country_id
                             LEFT JOIN res_users users ON users.id = invoice.user_id
                             LEFT JOIN res_partner executive ON executive.id = users.partner_id
                         WHERE 
@@ -76,15 +76,18 @@ class ExecutiveSalesReport(models.AbstractModel):
     def get_sql(self, data):
         # Make SQL
         if data['report_type'] == 'local':
-            self.sql_str_local += " AND area.id = '%s'" % (data['area_id']) if data['area_id'] else " AND area.id != 0"
+            if data['area_id']:
+                self.sql_str_local += " AND area.id = '%s'" % (data['area_id'])
+
             self.sql_str_local += " AND DATE(invoice.date) BETWEEN '%s' AND '%s'" % (data['date_from'], data['date_to'])
             self.sql_str_local += " GROUP BY executive.id, executive.name, pt.id, pt.name, area.id, area.name"
             self.sql_str_local += " ORDER BY area.id, executive.id, pt.id"
             sql = self.sql_str_local
         else:
             # For foreign report
-            self.sql_str_foreign += " AND country.id = '%s'" % (data['country_id']) if data['country_id'] else \
-                " AND country.id != 0"
+            if data['country_id']:
+                self.sql_str_foreign += " AND country.id = '%s'" % (data['country_id'])
+
             self.sql_str_foreign += " AND DATE(invoice.date) BETWEEN '%s' AND '%s'" % (data['date_from'],
                                                                                        data['date_to'])
             self.sql_str_foreign += " GROUP BY executive.id, executive.name, pt.id, pt.name, country.id, country.name"
