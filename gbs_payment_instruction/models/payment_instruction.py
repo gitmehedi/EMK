@@ -4,7 +4,8 @@ from odoo import models, fields, api, _
 class PaymentInstruction(models.Model):
     _name = 'payment.instruction'
     _inherit = "mail.thread"
-    _order = 'sequence desc'
+    _order = 'id desc'
+    _rec_name = 'code'
     _description = 'Payment Instruction'
 
     sequence = fields.Integer('Sequence', help="Gives the sequence of this line when displaying the invoice.")
@@ -19,7 +20,7 @@ class PaymentInstruction(models.Model):
     default_credit_account_id = fields.Many2one('account.account', string='Credit Account',
                                                 help='Default Credit Account of the Payment')
     vendor_bank_acc = fields.Char(string='Vendor Bank Account')
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch',required=True,
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
 

@@ -47,7 +47,9 @@ class SOAPProcess(models.Model):
 
     @api.model
     def action_api_interface(self):
-        pending_journal = self.env['account.move'].search([('is_sync', '=', False), ('is_cbs', '=', False)])
+        pending_journal = self.env['account.move'].search(
+            [('is_sync', '=', False), ('is_cbs', '=', False), ('state', '=', 'posted')])
+
         for record in pending_journal:
             debit, credit = 0, 0
             for rec in record.line_ids:
@@ -120,8 +122,6 @@ class SOAPProcess(models.Model):
         creStr = ""
         for rec in record.line_ids:
             bgl = self.prepare_bgl(record, rec)
-            # bgl1 = '01350100100100001'
-            # bgl2 = '01350100100100002'
             if rec.debit > 0:
                 creStr = creStr + """\n<ban:FrmAcct>{0}</ban:FrmAcct>""".format(bgl)
             elif rec.credit > 0:
@@ -185,7 +185,7 @@ class SOAPProcess(models.Model):
                            <ban:Rmrk>Testing SDMC</ban:Rmrk>""".format(bgl, rec.debit, currency) + creStr
         data = {
             'InstNum': '003',
-            'BrchNum': str(record.operating_unit_id.code),
+            'BrchNum': str('00' + record.operating_unit_id.code),
             'TellerNum': '1101',
             'Flag4': 'W',
             'Flag5': 'Y',
@@ -294,7 +294,7 @@ class SOAPProcess(models.Model):
                                           line['CostCtr'], line['PromoNum']) + creStr
         data = {
             'InstNum': '003',
-            'BrchNum': str(record.operating_unit_id.code),
+            'BrchNum': str('00' + record.operating_unit_id.code),
             'TellerNum': '1101',
             'TranNum': '1101',
             'Flag4': 'W',
@@ -381,7 +381,7 @@ class SOAPProcess(models.Model):
 
         data = {
             'InstNum': '003',
-            'BrchNum': str(record.operating_unit_id.code),
+            'BrchNum': str('00' + record.operating_unit_id.code),
             'TellerNum': '1107',
             'Flag4': 'W',
             'Flag5': 'Y',
@@ -391,7 +391,7 @@ class SOAPProcess(models.Model):
             'FrmAcct': from_bgl,
             'Amt': record.amount,
             'ToAcct': to_bgl,
-            'StmtNarr': 'TEST OGL TXNF',
+            'StmtNarr': "Payment Instruction",
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                <soapenv:Header/>
