@@ -15,7 +15,7 @@ Layer 3,137,Interest Payable on Bank & NBFI Deposits,Deposits,View Type,True,Fal
 Layer 3,138,Customer Deposits -Bills Payable,Deposits,View Type,True,False,approve
 Layer 3,141,Subordinated Bond,Bond,View Type,True,False,approve
 Layer 3,142,Other Bond,Bond,View Type,True,False,approve
-Layer 3,151,Interest Suspenses Account ,Other Liabilities,View Type,True,False,approve
+Layer 3,151,Interest Suspenses Account,Other Liabilities,View Type,True,False,approve
 Layer 3,152,Other misc. liabilities,Other Liabilities,View Type,True,False,approve
 Layer 3,153,Provision,Other Liabilities,View Type,True,False,approve
 Layer 3,154,Accumulated Depreciation,Other Liabilities,View Type,True,False,approve
@@ -47,7 +47,7 @@ Layer 3,900,System,System,View Type,True,False,approve
 Layer 3,311,Interest Earned,Interest Income,View Type,True,False,approve
 Layer 3,312,Penal Interest Earned,Interest Income,View Type,True,False,approve
 Layer 3,313,Interest on MTB Branch Account,Interest Income,View Type,True,False,approve
-Layer 3,314, Income on Money Market/ Placements,Interest Income,View Type,True,False,approve
+Layer 3,314,Income on Money Market/ Placements,Interest Income,View Type,True,False,approve
 Layer 3,321,Income fm Govt Securities,Income fm Investments,View Type,True,False,approve
 Layer 3,322,Income from Other Investments,Income fm Investments,View Type,True,False,approve
 Layer 3,331,Commission,"Comm, Exch & Brokerage",View Type,True,False,approve
@@ -72,15 +72,15 @@ Layer 3,429,Managing Director's Remuneration,Non-Interest Expenses,View Type,Tru
 Layer 3,431,Provision for Loans,Provisions,View Type,True,False,approve
 Layer 3,432,Provision for diminution in value of Invsetments,Provisions,View Type,True,False,approve
 Layer 3,433,Other Provisions,Provisions,View Type,True,False,approve
-Layer 3,511,Bills sent for collection ,Contra ,View Type,True,False,approve
-Layer 3,512,Bills received for Collection ,Contra ,View Type,True,False,approve
-Layer 3,513,Forward Contract ,Contra ,View Type,True,False,approve
+Layer 3,511,Bills sent for collection,Contra,View Type,True,False,approve
+Layer 3,512,Bills received for Collection,Contra,View Type,True,False,approve
+Layer 3,513,Forward Contract,Contra,View Type,True,False,approve
 Layer 3,521,Bank Guarantee <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,522,Letter of Credit <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,523,Accepted Bills under LC <Contingent>,Contingent,View Type,True,False,approve
-Layer 3,611,Bills sent for collection ,Contra ,View Type,True,False,approve
-Layer 3,612,Bills received for Collection ,Contra ,View Type,True,False,approve
-Layer 3,613,Forward Contract ,Contra ,View Type,True,False,approve
+Layer 3,611,Bills sent for collection,Contra,View Type,True,False,approve
+Layer 3,612,Bills received for Collection,Contra,View Type,True,False,approve
+Layer 3,613,Forward Contract,Contra,View Type,True,False,approve
 Layer 3,621,Bank Guarantee <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,622,Letter of Credit <Contingent>,Contingent,View Type,True,False,approve
 Layer 3,623,Accepted Bills under LC <Contingent>,Contingent,View Type,True,False,approve
