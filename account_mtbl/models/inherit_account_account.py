@@ -31,6 +31,15 @@ class AccountAccount(models.Model):
     line_ids = fields.One2many('history.account.account', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
+        names2 = []
+        if name:
+            domain = ['|', ('code', '=', name), ('name', '=', name + '%')]
+            names2 = self.search(domain, limit=limit).name_get()
+        return list(set(names1) | set(names2))[:limit]
+
     @api.constrains('code')
     def _check_numeric_constrain(self):
         if self.code and not self.code.isdigit():
