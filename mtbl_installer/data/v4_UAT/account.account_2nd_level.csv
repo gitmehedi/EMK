@@ -18,7 +18,7 @@ Layer 2,34,Other Operating Income,Income,View Type,True,False,approve
 Layer 2,41,Interest Expenses,Expenditure,View Type,True,False,approve
 Layer 2,42,Non-Interest Expenses,Expenditure,View Type,True,False,approve
 Layer 2,43,Provisions,Expenditure,View Type,True,False,approve
-Layer 2,51,Contra ,Contra & Contingent <L>,View Type,True,False,approve
+Layer 2,51,Contra,Contra & Contingent <L>,View Type,True,False,approve
 Layer 2,52,Contingent,Contra & Contingent <L>,View Type,True,False,approve
-Layer 2,61,Contra ,Contra & Contingent <A>,View Type,True,False,approve
+Layer 2,61,Contra,Contra & Contingent <A>,View Type,True,False,approve
 Layer 2,62,Contingent,Contra & Contingent <A>,View Type,True,False,approve
