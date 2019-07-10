@@ -54,7 +54,7 @@
                             <field name="is_tds_applicable"/>
                             <field name="inapplicable_type"
                                    attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
-                            <field name="is_mushok_applicable"/>
+                            <field name="vat_selection"/>
                         </group>
                         <group>
                             <field name="is_asset" default="True" invisible="True"/>

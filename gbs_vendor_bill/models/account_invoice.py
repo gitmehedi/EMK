@@ -19,8 +19,10 @@ class AccountInvoice(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange',copy=False)
-    is_mushok_applicable = fields.Boolean(string='Mushok-11', default=False,
-                                          readonly=True, states={'draft': [('readonly', False)]})
+    vat_selection = state = fields.Selection([('normal', 'Normal'),
+                                              ('mushok', 'Mushok-6.3'),
+                                              ('vds_authority', 'VDS Authority'),
+                                              ], string='VAT Selection', default='normal')
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -117,10 +119,10 @@ class AccountInvoice(models.Model):
         tax_grouped = {}
         for line in self.invoice_line_ids:
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            if not self.is_mushok_applicable:
+            if self.vat_selection == 'normal':
                 taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity,
                                                               line.product_id,self.partner_id)['taxes']
-            elif self.is_mushok_applicable:
+            elif self.vat_selection in ['mushok','vds_authority']:
                 taxes = line.invoice_line_tax_ids.compute_all_for_mushok(price_unit, self.currency_id, line.quantity,
                                                                          line.product_id,self.partner_id)['taxes']
             else:
@@ -214,16 +216,16 @@ class AccountInvoiceLine(models.Model):
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
                  'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
-                 'invoice_id.date_invoice', 'invoice_id.date', 'invoice_id.is_mushok_applicable')
+                 'invoice_id.date_invoice', 'invoice_id.date', 'invoice_id.vat_selection')
     def _compute_price(self):
         currency = self.invoice_id and self.invoice_id.currency_id or None
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = False
         if self.invoice_line_tax_ids:
-            if not self.invoice_id.is_mushok_applicable:
+            if self.invoice_id.vat_selection == 'normal':
                 taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
                                                               partner=self.invoice_id.partner_id)
-            elif self.invoice_id.is_mushok_applicable:
+            elif self.invoice_id.vat_selection in ['mushok','vds_authority']:
                 taxes = self.invoice_line_tax_ids.compute_all_for_mushok(price, currency, self.quantity, product=self.product_id,
                                                                          partner=self.invoice_id.partner_id)
         self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price

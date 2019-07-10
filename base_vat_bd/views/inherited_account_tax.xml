@@ -48,10 +48,17 @@
                                                 <label string="%" class="oe_inline"
                                                        attrs="{'invisible':[('amount_type','=','fixed')]}"/>
                                             </div>
-                                            <label for="minimum_amount"
+                                            <label for="mushok_amount"
                                                    attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}"/>
                                             <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}">
-                                                <field name="minimum_amount" class="oe_inline"/>
+                                                <field name="mushok_amount" class="oe_inline"/>
+                                                <label string="%" class="oe_inline"
+                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                                            </div>
+                                            <label for="vds_amount"
+                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}"/>
+                                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}">
+                                                <field name="vds_amount" class="oe_inline"/>
                                                 <label string="%" class="oe_inline"
                                                        attrs="{'invisible':[('amount_type','=','fixed')]}"/>
                                             </div>

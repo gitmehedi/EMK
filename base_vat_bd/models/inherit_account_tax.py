@@ -32,8 +32,10 @@ class AccountTax(models.Model):
                              string="Status",track_visibility='onchange')
     line_ids = fields.One2many('history.account.tax', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
-    minimum_amount = fields.Float(string='Minimum Amount',track_visibility='onchange',
-                                  help='For Mushok-11')
+    mushok_amount = fields.Float(string='Mushok Amount',track_visibility='onchange',
+                                  help='For Mushok-6.3')
+    vds_amount = fields.Float(string='VDS Authority Amount', track_visibility='onchange',
+                                 help='For VDS Authority ')
 
     @api.one
     def act_draft(self):

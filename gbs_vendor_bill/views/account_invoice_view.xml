@@ -140,7 +140,7 @@
                 <attribute name="string">Cost Centre</attribute>
             </xpath>
             <field name="reference" position="after">
-                <field name="is_mushok_applicable"/>
+                <field name="vat_selection"/>
             </field>
         </field>
     </record>
