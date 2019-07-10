@@ -25,7 +25,8 @@ class CustomerSalesReport(models.AbstractModel):
                             RIGHT JOIN res_partner_area area ON area.id = customer.area_id
                             LEFT JOIN res_country country ON country.id = customer.country_id
                         WHERE 
-                            ml.credit > 0 AND invoice.type = 'out_invoice' AND customer.supplier_type = 'local'
+                            ml.credit > 0 AND invoice.type = 'out_invoice' AND pt.active = true
+                            AND customer.supplier_type = 'local'
     """
     sql_str_foreign = """SELECT 
                             country.id AS country_id,
@@ -47,13 +48,13 @@ class CustomerSalesReport(models.AbstractModel):
                             LEFT JOIN res_partner_area area ON area.id = customer.area_id
                             RIGHT JOIN res_country country ON country.id = customer.country_id
                         WHERE 
-                            ml.credit > 0 AND invoice.type = 'out_invoice' AND customer.supplier_type = 'foreign'
-                            AND country.code != 'BD'
+                            ml.credit > 0 AND invoice.type = 'out_invoice' AND pt.active = true
+                            AND customer.supplier_type = 'foreign' AND country.code != 'BD'
     """
 
     @api.multi
     def render_html(self, docids, data=None):
-        header_data = self.env['product.template'].search([('sale_ok', '=', 1)], order='id ASC')
+        header_data = self.env['product.template'].search([('sale_ok', '=', 1), ('active', '=', 1)], order='id ASC')
         report_data = self.get_data(data, header_data)
         docargs = {
             'data': data,

@@ -22,7 +22,7 @@ class SectorSalesProductReport(models.AbstractModel):
                     LEFT JOIN res_partner partner ON partner.id = invoice.partner_id
                     RIGHT JOIN res_partner_category sector ON sector.id = partner.sector_id
                 WHERE 
-                    ml.credit > 0 AND invoice.type = 'out_invoice'
+                    ml.credit > 0 AND invoice.type = 'out_invoice' AND pt.active = true
     """
 
     @api.multi
@@ -76,5 +76,11 @@ class SectorSalesProductReport(models.AbstractModel):
             else:
                 report_data[val[0]]['sectors'].append(
                     {'sector_name': val[3], 'qty': val[4], 'val': val[5], 'ratio': 0})
+
+        # set ratio
+        for key in report_data:
+            total_value = sum(lst['val'] for lst in report_data[key]['sectors'])
+            for index, value in enumerate(report_data[key]['sectors']):
+                report_data[key]['sectors'][index]['ratio'] = (value['val'] / total_value) * 100
 
         return report_data

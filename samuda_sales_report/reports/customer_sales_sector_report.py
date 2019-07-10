@@ -24,12 +24,12 @@ class CustomerSalesSectorReport(models.AbstractModel):
                     LEFT JOIN res_partner customer ON customer.id = invoice.partner_id
                     RIGHT JOIN res_partner_category sector ON sector.id = customer.sector_id
                 WHERE 
-                    ml.credit > 0 AND invoice.type = 'out_invoice'
+                    ml.credit > 0 AND invoice.type = 'out_invoice' AND pt.active = true
     """
 
     @api.multi
     def render_html(self, docids, data=None):
-        header_data = self.env['product.template'].search([('sale_ok', '=', 1)], order='id ASC')
+        header_data = self.env['product.template'].search([('sale_ok', '=', 1), ('active', '=', 1)], order='id ASC')
         report_data = self.get_data(data, header_data)
         docargs = {
             'data': data,

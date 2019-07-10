@@ -29,5 +29,19 @@
                 parent="sales_team.menu_sale_report"
                 sequence="55"/>
 
+        <menuitem
+                name="Outstanding Statement"
+                action="action_outstanding_statement_wizard"
+                id="menu_outstanding_statement_report"
+                parent="sales_team.menu_sale_report"
+                sequence="60"/>
+
+        <menuitem
+                name="Credit Details (Product)"
+                action="action_credit_details_product_wizard"
+                id="menu_credit_details_product_report"
+                parent="sales_team.menu_sale_report"
+                sequence="60"/>
+
     </data>
 </odoo>
