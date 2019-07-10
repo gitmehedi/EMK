@@ -24,7 +24,7 @@ class TDSVATMovePaymentWizard(models.TransientModel):
             sub_operating_unit_ids = self.env['sub.operating.unit'].search([('operating_unit_id','=',self.operating_unit_id.id)])
             if sub_operating_unit_ids:
                 return {'domain': {
-                    'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
+                    'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids.ids)]
                 }}
 
     @api.multi
