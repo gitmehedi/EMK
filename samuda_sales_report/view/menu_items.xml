@@ -41,7 +41,7 @@
                 action="action_credit_details_product_wizard"
                 id="menu_credit_details_product_report"
                 parent="sales_team.menu_sale_report"
-                sequence="60"/>
+                sequence="65"/>
 
     </data>
 </odoo>
