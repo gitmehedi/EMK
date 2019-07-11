@@ -1,5 +1,4 @@
 Name,Type,include_initial_balance,active,pending,state
-View Type,View,True,True,False,approve
 Liabilities: Office Accounts,Regular,Yes,True,False,approve
 Treasury Liabilities,Regular,Yes,True,False,approve
 Liabilities: Customer Accounts,Regular,Yes,True,False,approve
@@ -15,3 +14,6 @@ Expenditure Accounts,Regular,No,True,False,approve
 Tresury Expenditure,Regular,No,True,False,approve
 Contra Accounts,Regular,Yes,True,False,approve
 Contingent Accounts,Regular,Yes,True,False,approve
+View Type,View,No,True,False,approve
+Receivable,Receivable,True,True,False,approve
+Payable,Payable,True,True,False,approve

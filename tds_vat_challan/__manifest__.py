@@ -25,7 +25,7 @@
         'wizards/multi_challan_approve_wizard.xml',
         'views/tds_account_move_line_view.xml',
         'views/tds_vat_challan.xml',
-        'views/account_config.xml',
+        # 'views/account_config.xml',
         'reports/tds_vat_challan_report.xml',
     ],
     'installable': True,
