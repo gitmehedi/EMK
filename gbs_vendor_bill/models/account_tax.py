@@ -5,25 +5,33 @@ class AccountTax(models.Model):
     _inherit = 'account.tax'
 
 
-    def _compute_amount_for_mushok(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+    def _compute_amount_for_mushok(self, base_amount, price_unit, quantity=1.0, product=None, partner=None,vat_selection=None):
         """ Returns the amount of a single tax for mushok 11. base_amount is the actual amount on which the tax is applied, which is
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
         """
         self.ensure_one()
+
+        if vat_selection == 'mushok':
+            vat_amount = self.mushok_amount
+        elif vat_selection == 'vds_authority':
+            vat_amount = self.vds_amount
+        else:
+            vat_amount = 0.0
+
         if self.amount_type == 'fixed':
             if base_amount:
-                return math.copysign(quantity, base_amount) * self.minimum_amount
+                return math.copysign(quantity, base_amount) * vat_amount
             else:
-                return quantity * self.minimum_amount
+                return quantity * vat_amount
         if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
-            return base_amount * self.minimum_amount / 100
+            return base_amount * vat_amount / 100
         if self.amount_type == 'percent' and self.price_include:
-            return base_amount - (base_amount / (1 + self.minimum_amount / 100))
+            return base_amount - (base_amount / (1 + vat_amount / 100))
         if self.amount_type == 'division' and not self.price_include:
-            return base_amount / (1 - self.minimum_amount / 100) - base_amount
+            return base_amount / (1 - vat_amount / 100) - base_amount
 
     @api.multi
-    def compute_all_for_mushok(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+    def compute_all_for_mushok(self, price_unit, currency=None, quantity=1.0, product=None, partner=None,vat_selection=None):
         """ This method only for mushok 11 calculation.
             This method considered price include and exclude.
          """
@@ -62,7 +70,7 @@ class AccountTax(models.Model):
                 taxes += ret['taxes']
                 continue
 
-            tax_amount = tax._compute_amount_for_mushok(base, price_unit, quantity, product, partner)
+            tax_amount = tax._compute_amount_for_mushok(base, price_unit, quantity, product, partner,vat_selection)
             if not round_tax:
                 tax_amount = round(tax_amount, prec)
             else:

@@ -125,7 +125,7 @@ class AccountInvoice(models.Model):
                                                               line.product_id,self.partner_id)['taxes']
             elif self.vat_selection in ['mushok','vds_authority']:
                 taxes = line.invoice_line_tax_ids.compute_all_for_mushok(price_unit, self.currency_id, line.quantity,
-                                                                         line.product_id,self.partner_id)['taxes']
+                                                                         line.product_id,self.partner_id,self.vat_selection)['taxes']
             else:
                 taxes = False
             for tax in taxes:
@@ -228,7 +228,7 @@ class AccountInvoiceLine(models.Model):
                                                               partner=self.invoice_id.partner_id)
             elif self.invoice_id.vat_selection in ['mushok','vds_authority']:
                 taxes = self.invoice_line_tax_ids.compute_all_for_mushok(price, currency, self.quantity, product=self.product_id,
-                                                                         partner=self.invoice_id.partner_id)
+                                                                         partner=self.invoice_id.partner_id,vat_selection=self.invoice_id.vat_selection)
         self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price
         self.price_subtotal_without_vat = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
         if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:

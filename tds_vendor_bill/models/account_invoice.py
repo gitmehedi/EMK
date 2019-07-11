@@ -5,12 +5,6 @@ from odoo.tools.float_utils import float_round as round
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.one
-    @api.depends('invoice_line_ids.tds_amount')
-    def _compute_total_tds(self):
-        for invoice in self:
-            invoice.total_tds_amount = sum(line.tds_amount for line in invoice.invoice_line_ids)
-
     is_tds_applicable = fields.Boolean(string='TDS Applicable', default=True,
                                        readonly=True, states={'draft': [('readonly', False)]},
                                        help="""TDS applicable/not applicable for this bill.
@@ -29,6 +23,13 @@ class AccountInvoice(models.Model):
     tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines', oldname='tax_line',
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
+    @api.one
+    @api.depends('invoice_line_ids.tds_amount', 'is_tds_applicable')
+    def _compute_total_tds(self):
+        for invoice in self:
+            if invoice.is_tds_applicable:
+                invoice.total_tds_amount = sum(line.tds_amount for line in invoice.invoice_line_ids)
+
     @api.model
     def create(self, vals):
         invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
@@ -45,6 +46,13 @@ class AccountInvoice(models.Model):
                 self._update_tds()
                 self._update_tax_line_vals()
         return res
+
+    # @api.onchange('is_tds_applicable')
+    # def _onchange_is_tds_applicable(self):
+    #     if not self.is_tds_applicable and self.tax_line_ids:
+    #         for tax_line_obj in self.tax_line_ids:
+    #             if tax_line_obj.tds_id:
+    #                 tax_line_obj.unlink()
 
     @api.multi
     def action_invoice_open(self):
