@@ -124,7 +124,6 @@ Layer 4,24101,Retail Term Loans <excl. Staff Loans>,241,Term Loans,View Type,Tru
 Layer 4,24102,Retail Term Loans <Staff>,241,Term Loans,View Type,True,False,approve
 Layer 4,24103,Corporate & SME Term Loan,241,Term Loans,View Type,True,False,approve
 Layer 4,24104,SME Term Loan excl Agri & Micro Fin.,241,Term Loans,View Type,True,False,approve
-,,,,,,,,
 Layer 4,24201,Corporate & SME Demand Loan,242,Demand Loans,View Type,True,False,approve
 Layer 4,24202,Corporate & SME Demand Loan <FC>,242,Demand Loans,View Type,True,False,approve
 Layer 4,24203,SME Demand Loan,242,Demand Loans,View Type,True,False,approve
@@ -139,7 +138,6 @@ Layer 4,24501,Interest Receivable on RTL,245,Interest Receivable,View Type,True,
 Layer 4,24502,Interest Receivable on Staff Loans,245,Interest Receivable,View Type,True,False,approve
 Layer 4,24503,Interest Reeceivable on Corporate Term Loan,245,Interest Receivable,View Type,True,False,approve
 Layer 4,24504,Interest Receivable on SME Term Loan excl Agri & MF,245,Interest Receivable,View Type,True,False,approve
-,,,,,,,,
 Layer 4,24506,Interest Receivable on Corporate & SME Demand Loan,245,Interest Receivable,View Type,True,False,approve
 Layer 4,24507,Interest Receivable on Corporate & SME Demand Loan FC,245,Interest Receivable,View Type,True,False,approve
 Layer 4,24508,Interest Receivable on SME Demand Loan,245,Interest Receivable,View Type,True,False,approve
@@ -155,7 +153,6 @@ Layer 4,24601,Penal Interest Receivable on RTL,246,Penal Interest Receivables,Vi
 Layer 4,24602,Penal Interest Receivable on Staff Loans,246,Penal Interest Receivables,View Type,True,False,approve
 Layer 4,24603,Penal Interest Receivable on Corporate Term Loan,246,Penal Interest Receivables,View Type,True,False,approve
 Layer 4,24604,Penal Interest Receivable on SME Term Loan excl Agri & MF,246,Penal Interest Receivables,View Type,True,False,approve
-,,,,,,,,
 Layer 4,24606,Penal Interest Receivable on Corporate & SME Demand Loan,246,Penal Interest Receivables,View Type,True,False,approve
 Layer 4,24607,Penal Interest Receivable on Corporate & SME Demand Loan FC,246,Penal Interest Receivables,View Type,True,False,approve
 Layer 4,24608,Penal Interest Receivable on SME Demand Loan,246,Penal Interest Receivables,View Type,True,False,approve
@@ -216,7 +213,6 @@ Layer 4,31101,Interest Earned on RTL,311,Interest Earned,View Type,True,False,ap
 Layer 4,31102,Interest Earned on Staff Loans,311,Interest Earned,View Type,True,False,approve
 Layer 4,31103,Interest Earnedon Corporate Term Loan,311,Interest Earned,View Type,True,False,approve
 Layer 4,31104,Interest Earned on SME Term Loan excl Agri & MF,311,Interest Earned,View Type,True,False,approve
-,,,,,,,,
 Layer 4,31106,Interest Earned on Corporate & SME Demand Loan,311,Interest Earned,View Type,True,False,approve
 Layer 4,31107,Interest Earned on Corporate & SME Demand Loan FC,311,Interest Earned,View Type,True,False,approve
 Layer 4,31108,Interest Earned on SME Demand Loan,311,Interest Earned,View Type,True,False,approve
@@ -234,7 +230,6 @@ Layer 4,31201,Penal Interest Earned on RTL,312,Penal Interest Earned,View Type,T
 Layer 4,31202,Penal Interest Earned on Staff Loans,312,Penal Interest Earned,View Type,True,False,approve
 Layer 4,31203,Penal Interest Earnedon Corporate Term Loan,312,Penal Interest Earned,View Type,True,False,approve
 Layer 4,31204,Penal Interest Earnedon SME Term Loan excl Agri & MF,312,Penal Interest Earned,View Type,True,False,approve
-,,,,,,,,
 Layer 4,31206,Penal Interest Earnedon Corporate & SME Demand Loan,312,Penal Interest Earned,View Type,True,False,approve
 Layer 4,31207,Penal Interest Earnedon Corporate & SME Demand Loan FC,312,Penal Interest Earned,View Type,True,False,approve
 Layer 4,31208,Penal Interest Earnedon SME Demand Loan,312,Penal Interest Earned,View Type,True,False,approve

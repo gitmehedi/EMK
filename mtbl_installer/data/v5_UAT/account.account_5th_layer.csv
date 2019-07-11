@@ -1421,7 +1421,7 @@ Layer 5,24617001,Penal Interest Receivable on MTB Krishi DL,24617,Penal Interest
 Layer 5,31120001,Interest Earned on MTB Krishi DL,31120,Interest Earned on Agri Demand Loan SME,Income Accounts,TRUE,FALSE,approve
 Layer 5,31217001,Penal Interest Earned on MTB Krishi DL,31217,Penal Interest Earned in Agri Demand Loan,Income Accounts,TRUE,FALSE,approve
 Layer 5,24305001,MTB Microfinance Agri Revolving Loan,24305,Agri Continuous Loan [SME],Assets: Customer Accounts,TRUE,FALSE,approve
-Layer 5,24517001,Interest Receivable on MTB Microfinance Agri Revolving Loan,24517,Interest Receivable on Agri Continuous Loan <SME>,Interest Receivable Accounts,,,
+Layer 5,24517001,Interest Receivable on MTB Microfinance Agri Revolving Loan,24517,Interest Receivable on Agri Continuous Loan <SME>,Interest Receivable Accounts,TRUE,FALSE,approve
 Layer 5,24616001,Penal Interest Receivable on MTB Microfinance Agri Revolving Loan,24616,Penal Interest Receivable on Agri Continuous Loan [SME],Interest Receivable Accounts,TRUE,FALSE,approve
 Layer 5,31119001,Interest Earned on MTB Microfinance Agri Revolving Loan 2,31119,Interest Earned on Agri Continuous Loan <SME>,Income Accounts,TRUE,FALSE,approve
 Layer 5,31216001,Penal Interest Earnedon MTB Microfinance enterprise Revolving Loan,31216,Penal Interest Earnedon SME Continuous Loan,Income Accounts,TRUE,FALSE,approve
