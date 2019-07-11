@@ -389,13 +389,3 @@ Layer 4,62202,622,Customers' Liability on LC (Foreign),Letter of Credit <Conting
 Layer 4,62301,623,Customers' Liability for Accepted Bills <Inland>,Accepted Bills under LC <Contingent>,View Type,True,False,approve
 Layer 4,62302,623,Customers' Liability for Accepted Bills <Fgn>,Accepted Bills under LC <Contingent>,View Type,True,False,approve
 Layer 4,61202,612,Inland Bills received for collection,Bills received for Collection,View Type,True,False,approve
-Layer 4,24205,242,Agri Demand Loan (SME),Demand Loans,View Type,True,False,approve
-Layer 4,24305,243,Agri Continuous Loan [SME],Continuous Loans,View Type,True,False,approve
-Layer 4,24517,245,Interest Receivable on Agri Continuous Loan <SME>,Interest Receivable,View Type,True,False,approve
-Layer 4,24518,245,Interest Reeivable on Agri Demand Loan SME,Interest Receivable,View Type,True,False,approve
-Layer 4,24616,246,Penal Interest Receivable on Agri Continuous Loan [SME],Penal Interest Receivables,View Type,True,False,approve
-Layer 4,24617,246,Penal Interest Receivable on Agri Demand Loan [SME],Penal Interest Receivables,View Type,True,False,approve
-Layer 4,31119,311,Interest Earned on Agri Continuous Loan <SME>,Interest Earned,View Type,True,False,approve
-Layer 4,31120,311,Interest Earned on Agri Demand Loan SME,Interest Earned,View Type,True,False,approve
-Layer 4,31216,312,Penal Interest Earned on Agri Continuous Loan <SME>,Penal Interest Earned,View Type,True,False,approve
-Layer 4,31217,312,Penal Interest Earned in Agri Demand Loan,Penal Interest Earned,View Type,True,False,approve

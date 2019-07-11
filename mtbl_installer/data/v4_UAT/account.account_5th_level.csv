@@ -1422,13 +1422,3 @@ Layer 5,62301001,62301,Customers' Liability for Accepted Bills <Inland>,Continge
 Layer 5,62302002,62302,Customers' Liability for Accepted Bills other Banks <Foreign>,Contingent Accounts,Customers' Liability for Accepted Bills <Fgn>,True,False,approve
 Layer 5,61202002,61202,Inland Cheques received for collection,Contra Accounts,Inland Bills received for collection,True,False,approve
 Layer 5,61202001,61202,Inland Bills received for collection,Contra Accounts,Inland Bills received for collection,True,False,approve
-Layer 5,24205001,24205,MTB Krishi DL,Liabilities: Office Accounts,Agri Demand Loan (SME),True,False,approve
-Layer 5,24305001,24305,MTB Microfinance Agri Revolving Loan,Liabilities: Office Accounts,Agri Continuous Loan [SME],True,False,approve
-Layer 5,24517001,24517,Interest Receivable on MTB Microfinance Agri Revolving Loan,Liabilities: Office Accounts,Interest Receivable on Agri Continuous Loan <SME>,True,False,approve
-Layer 5,24518001,24518,Intersest Receivable on MTB Krishi DL,Liabilities: Office Accounts,Interest Reeivable on Agri Demand Loan SME,True,False,approve
-Layer 5,24616001,24616,Penal Interest Receivable on MTB Microfinance Agri Revolving Loan,Liabilities: Office Accounts,Penal Interest Receivable on Agri Continuous Loan [SME],True,False,approve
-Layer 5,24617001,24617,Penal Interest Receivable on MTB Krishi DL,Liabilities: Office Accounts,Penal Interest Receivable on Agri Demand Loan [SME],True,False,approve
-Layer 5,31119001,31119,Interest Earned on MTB Microfinance Agri Revolving Loan,Liabilities: Office Accounts,Interest Earned on Agri Continuous Loan <SME>,True,False,approve
-Layer 5,31120001,31120,Interest Earned on MTB Krishi DL,Liabilities: Office Accounts,Interest Earned on Agri Demand Loan SME,True,False,approve
-Layer 5,31216001,31216,Penal Interest Earnedon MTB Microfinance Agri Revolving Loan,Liabilities: Office Accounts,Penal Interest Earned on Agri Continuous Loan <SME>,True,False,approve
-Layer 5,31217001,31217,Penal Interest Earned on MTB Krishi DL,Liabilities: Office Accounts,Penal Interest Earned in Agri Demand Loan,True,False,approve
