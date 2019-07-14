@@ -20,7 +20,7 @@
         # 'security/ir_rule.xml',
         'views/menu_view.xml',
         'wizards/tds_vat_move_payment_wizard.xml',
-        'wizards/tds_challan_selection_wizard.xml',
+        # 'wizards/tds_challan_selection_wizard.xml',
         'wizards/multi_challan_confirm_wizard.xml',
         'wizards/multi_challan_approve_wizard.xml',
         'views/tds_account_move_line_view.xml',

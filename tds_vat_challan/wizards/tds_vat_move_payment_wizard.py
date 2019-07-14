@@ -18,14 +18,14 @@ class TDSVATMovePaymentWizard(models.TransientModel):
                                         operating_unit_default_get(self._uid))
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
 
-    @api.onchange('operating_unit_id')
-    def _onchange_operating_unit_id(self):
-        if self.operating_unit_id:
-            sub_operating_unit_ids = self.env['sub.operating.unit'].search([('operating_unit_id','=',self.operating_unit_id.id)])
-            if sub_operating_unit_ids:
-                return {'domain': {
-                    'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids.ids)]
-                }}
+    # @api.onchange('operating_unit_id')
+    # def _onchange_operating_unit_id(self):
+    #     if self.operating_unit_id:
+    #         sub_operating_unit_ids = self.env['sub.operating.unit'].search([('operating_unit_id','=',self.operating_unit_id.id)])
+    #         if sub_operating_unit_ids:
+    #             return {'domain': {
+    #                 'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids.ids)]
+    #             }}
 
     @api.multi
     def action_validate(self):
@@ -44,7 +44,7 @@ class TDSVATMovePaymentWizard(models.TransientModel):
             'instruction_date': self.instruction_date,
             'amount': self.amount,
             'operating_unit_id': self.operating_unit_id.id or None,
-            'sub_operating_unit_id': self.sub_operating_unit_id and self.sub_operating_unit_id.id or False,
+            # 'sub_operating_unit_id': self.sub_operating_unit_id and self.sub_operating_unit_id.id or False,
         })
         if self.env.context.get('records'):
             move_lines = self.env['account.move.line'].search([('id','in',self.env.context.get('records'))])
