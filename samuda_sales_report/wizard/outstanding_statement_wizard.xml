@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 	<data>
-		<record id="sector_sales_product_wizard_view" model="ir.ui.view">
-			<field name="name">sector.sales.product.wizard</field>
-			<field name="model">sector.sales.product.wizard</field>
+		<record id="outstanding_statement_wizard_view" model="ir.ui.view">
+			<field name="name">outstanding.statement.wizard</field>
+			<field name="model">outstanding.statement.wizard</field>
 			<field name="arch" type="xml">
 			    <form>
                     <group>
                         <group>
-                            <field name="product_id" placeholder="All"
+                            <field name="executive_id" placeholder="All"
                                    options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                         </group>
                         <group></group>
@@ -26,10 +26,10 @@
                 </form>
 			</field>
 		</record>
-        <record id="action_sector_sales_product_wizard" model="ir.actions.act_window">
-			<field name="name">Sector Sales Report (Product Wise)</field>
+        <record id="action_outstanding_statement_wizard" model="ir.actions.act_window">
+			<field name="name">Total Outstanding Statement Report</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">sector.sales.product.wizard</field>
+			<field name="res_model">outstanding.statement.wizard</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="target">new</field>
