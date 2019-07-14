@@ -13,62 +13,109 @@
                 menu="False"
 
         />
-
         <template id="report_top_sheet">
             <t t-call="report.html_container">
-                <div class="page" style="page-break-inside: auto">
-                    <div class="row">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">CHALLAN</h4>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-xs-12 text-left">
+                                        Vehicle No: <span t-esc="data['vehicle_no']"/>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        DC No: <span t-esc="data['challan_no']"/>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <strong>Date : </strong>
+                                        <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-left">
+                                        Party Name: <span t-esc="data['partner_name']"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-left">
+                                        Destination: <span t-esc="data['shipping_address']"/>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="bank-letter">
-                            <span t-esc="data['challan_no']"/><br/>
-                             <span t-esc="data['challan_creation_system_date']"/><br/>
-                            <span t-esc="data['vehicle_no']"/><br/>
-                            <span t-esc="data['partner_id']"/><br/>
-                            <span t-esc="data['shipping_address']"/>
-
-                            <br/>
-                            <br/>
-                            <br/>
-
-                            <table class="bank-letter_doclist table table-condensed">
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center" style="width: 20%">S.O. No.</th>
+                                        <th class="text-center" style="width: 15%">Date of SO</th>
+                                        <th class="text-center" style="width: 50%">Product Name</th>
+                                        <th class="text-center" style="width: 15%">Quantity</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <t t-foreach="lists" t-as="l">
-                                        <td>
-                                            <span t-esc="data['do_no']"/>
-                                        </td>
-                                          <td>
-                                            <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>
-                                        </td>
-
-                                        <td>
-                                            <span t-esc="l['product_id']"/>
-                                        </td>
-                                        <td>
-                                            <t t-if="l['jar_count']">
-                                                <span t-esc="l['jar_count']"/>
-                                                Pc(s)
-                                            </t>
-                                            <span t-esc="l['jar_type']"/>
-
-                                            <br/>
-                                            <span t-esc="l['quantity']"/>
-                                            <span t-esc="l['uom']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="l['number_to_words']"/>
-                                            <span t-esc="l['uom']"/>
-                                        </td>
+                                        <tr>
+                                            <td>
+                                                <span t-esc="data['so_name']"/>
+                                            </td>
+                                              <td>
+                                                <span t-esc="data['so_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l['product_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l['qty']"/>
+                                                <span t-esc="l['uom_name']"/>
+                                            </td>
+                                        </tr>
                                     </t>
-
-
+                                    <tr>
+                                        <td colspan="3">
+                                            <strong>Total:</strong>
+                                        </td>
+                                        <td>
+                                            <strong t-esc="sum(l['qty'] for l in lists)"/>
+                                            <strong t-esc="lists[0]['uom_name']"/>
+                                            <t t-if="lists[0]['uom_name'] == 'MT'">
+                                                /
+                                                <span t-esc="sum(l['qty_in_kg'] for l in lists)"/>
+                                                <span>kg</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="100%">
+                                            In Word (Quantity): <span t-esc="amount_to_word(sum(l['qty_in_kg'] for l in lists))"/>
+                                            KG:S
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="100%">
+                                            Others: <span t-esc="data['note']"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            Vat/Challan No: <span t-esc="data['vat_challan_id']"/>
+                                        </td>
+                                        <td colspan="2">
+                                            Date: <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
-                            <span t-esc="data['vat_challan_id']"/>
-                            <span t-esc="data['challan_creation_system_date']"/>
-
                         </div>
                     </div>
-                </div>
+                </t>
             </t>
         </template>
     </data>

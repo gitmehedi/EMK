@@ -2,8 +2,8 @@ from odoo import api, models, fields
 from odoo.tools.misc import formatLang
 
 
-class SectorSalesReport(models.AbstractModel):
-    _name = "report.samuda_sales_report.report_sector_sales"
+class CustomerSalesSectorReport(models.AbstractModel):
+    _name = "report.samuda_sales_report.report_customer_sales_sector"
 
     sql_str = """SELECT 
                     sector.id AS sector_id,
@@ -22,14 +22,14 @@ class SectorSalesReport(models.AbstractModel):
                     LEFT JOIN product_uom uom ON uom.id = ml.product_uom_id
                     LEFT JOIN product_uom uom2 ON uom2.id = pt.uom_id
                     LEFT JOIN res_partner customer ON customer.id = invoice.partner_id
-                    LEFT JOIN res_partner_category sector ON sector.id = customer.sector_id
+                    RIGHT JOIN res_partner_category sector ON sector.id = customer.sector_id
                 WHERE 
-                    ml.credit > 0 AND invoice.type = 'out_invoice'
+                    ml.credit > 0 AND invoice.type = 'out_invoice' AND pt.active = true
     """
 
     @api.multi
     def render_html(self, docids, data=None):
-        header_data = self.env['product.template'].search([('sale_ok', '=', 1)], order='id ASC')
+        header_data = self.env['product.template'].search([('sale_ok', '=', 1), ('active', '=', 1)], order='id ASC')
         report_data = self.get_data(data, header_data)
         docargs = {
             'data': data,
@@ -38,7 +38,7 @@ class SectorSalesReport(models.AbstractModel):
             'formatLang': self.format_lang,
         }
 
-        return self.env['report'].render('samuda_sales_report.report_sector_sales', docargs)
+        return self.env['report'].render('samuda_sales_report.report_customer_sales_sector', docargs)
 
     @api.multi
     def format_lang(self, value):
@@ -47,7 +47,9 @@ class SectorSalesReport(models.AbstractModel):
     @api.model
     def get_sql(self, data):
         # Make SQL
-        self.sql_str += " AND sector.id = '%s'" % (data['sector_id']) if data['sector_id'] else " AND sector.id != 0"
+        if data['sector_id']:
+            self.sql_str += " AND sector.id = '%s'" % (data['sector_id'])
+
         self.sql_str += " AND DATE(invoice.date) BETWEEN '%s' AND '%s'" % (data['date_from'], data['date_to'])
         self.sql_str += " GROUP BY customer.id, customer.name, pt.id, pt.name, sector.id, sector.name"
         self.sql_str += " ORDER BY sector.id, customer.id, pt.id"

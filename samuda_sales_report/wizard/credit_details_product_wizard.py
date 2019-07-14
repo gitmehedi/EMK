@@ -3,10 +3,10 @@ from odoo.exceptions import ValidationError
 from datetime import datetime
 
 
-class SectorSalesWizard(models.TransientModel):
-    _name = "sector.sales.wizard"
+class CreditDetailsProductWizard(models.TransientModel):
+    _name = "credit.details.product.wizard"
 
-    sector_id = fields.Many2one('res.partner.category', string='Sector')
+    product_id = fields.Many2one('product.template', string='Product', domain=[('sale_ok', '=', 1), ('active', '=', 1)])
     date_from = fields.Date("Date From", required=True)
     date_to = fields.Date("Date To", required=True)
 
@@ -20,9 +20,9 @@ class SectorSalesWizard(models.TransientModel):
     @api.multi
     def process_print(self):
         data = dict()
-        data['sector_id'] = self.sector_id.id
-        data['sector_name'] = self.sector_id.name
+        data['product_id'] = self.product_id.id
+        data['product_name'] = self.product_id.name
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
 
-        return self.env['report'].get_action(self, 'samuda_sales_report.report_sector_sales', data=data)
+        return self.env['report'].get_action(self, 'samuda_sales_report.report_credit_details_product', data=data)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 	<data>
-		<record id="product_sales_wizard_view" model="ir.ui.view">
-			<field name="name">product.sales.wizard</field>
-			<field name="model">product.sales.wizard</field>
+		<record id="credit_details_product_wizard_view" model="ir.ui.view">
+			<field name="name">credit.details.product.wizard</field>
+			<field name="model">credit.details.product.wizard</field>
 			<field name="arch" type="xml">
 			    <form>
                     <group>
@@ -26,10 +26,10 @@
                 </form>
 			</field>
 		</record>
-        <record id="action_product_sales_wizard" model="ir.actions.act_window">
-			<field name="name">Product Sales Report</field>
+        <record id="action_credit_details_product_wizard" model="ir.actions.act_window">
+			<field name="name">Credit Details Report (Product Wise)</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">product.sales.wizard</field>
+			<field name="res_model">credit.details.product.wizard</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="target">new</field>
