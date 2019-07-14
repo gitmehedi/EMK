@@ -13,11 +13,11 @@ class TdsVatChallan(models.Model):
     challan_date = fields.Date(string='Challan Date',track_visibility='onchange',required=True,readonly=True,
                                states={'draft': [('readonly', False)]},
                                default=fields.Date.context_today,help="Challan date")
-    challan_no = fields.Char(string='Challan No.',track_visibility='onchange',required=True,readonly=True,
+    challan_no = fields.Char(string='Challan No.',track_visibility='onchange',readonly=True,
                              states={'draft': [('readonly', False)]})
-    deposited_bank = fields.Char(string='Deposited Bank', track_visibility='onchange', required=True,readonly=True,
+    deposited_bank = fields.Char(string='Deposited Bank', track_visibility='onchange', readonly=True,
                                  states={'draft': [('readonly', False)]})
-    bank_branch = fields.Char(string='Bank Branch', track_visibility='onchange', required=True,readonly=True,
+    bank_branch = fields.Char(string='Bank Branch', track_visibility='onchange', readonly=True,
                               states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('tds.vat.challan.line', 'parent_id', string='Vendor Challan', select=True,readonly=True,
                                states={'draft': [('readonly', False)]},
@@ -60,11 +60,22 @@ class TdsVatChallan(models.Model):
     def _onchange_acc_move_line_ids(self):
         if self.acc_move_line_ids:
             vals = []
-            for acc_move_line_id in self.acc_move_line_ids:
-                vals.append((0, 0, {'supplier_id': acc_move_line_id.partner_id,
-                                    'operating_unit_id': acc_move_line_id.operating_unit_id,
-                                    'product_id': acc_move_line_id.product_id,
-                                    'total_bill': acc_move_line_id.credit,
+            if len(self.acc_move_line_ids.ids)>1:
+                move_line_ids = str(tuple(self.acc_move_line_ids.ids))
+            else:
+                move_line_ids = "(" + str(self.acc_move_line_ids.id) + ")"
+            query = """SELECT 
+                       partner_id as supplier,
+                       product_id as product,
+                       sum(credit) as amount from account_move_line 
+                       WHERE id IN %s 
+                       GROUP BY partner_id,product_id""" % (move_line_ids)
+            self.env.cr.execute(query)
+            for acc_move_line_id in self.env.cr.dictfetchall():
+                vals.append((0, 0, {'supplier_id': acc_move_line_id['supplier'],
+                                    # 'operating_unit_id': acc_move_line_id.operating_unit_id,
+                                    'product_id': acc_move_line_id['product'],
+                                    'total_bill': acc_move_line_id['amount'],
                                     'currency_id': self.currency_id.id or False,
                                     }))
             self.line_ids = vals

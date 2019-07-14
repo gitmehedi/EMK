@@ -16,8 +16,8 @@
                             <field name="instruction_date" invisible="1"/>
                             <field name="operating_unit_id"
                                    options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                            <field name="sub_operating_unit_id"
-                                   options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                            <!--<field name="sub_operating_unit_id"-->
+                                   <!--options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>-->
                         </group>
                     </group>
                 <footer>
