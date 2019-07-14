@@ -70,9 +70,11 @@ class SubOperatingUnit(models.Model):
 
     @api.one
     def act_draft(self):
-        if self.state == 'approve':
+        if self.state == 'reject':
             self.write({
-                'state': 'draft'
+                'state': 'draft',
+                'pending': True,
+                'active': False,
             })
 
     @api.one
@@ -147,4 +149,4 @@ class HistorySubOperatingUnit(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')

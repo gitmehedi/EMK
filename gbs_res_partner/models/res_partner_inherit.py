@@ -53,6 +53,15 @@ class ResPartner(models.Model):
                                        "for payments against vendor.")
 
     @api.one
+    def act_draft(self):
+        if self.state == 'reject':
+            self.write({
+                'state': 'draft',
+                'pending': True,
+                'active': False,
+            })
+
+    @api.one
     def act_approve(self):
         if self.state == 'draft':
             self.active = True

@@ -51,6 +51,8 @@
                         <button name="act_reject_pending" string="Reject" type="object"
                                 groups="mtbl_access.group_mtbl_sys_admin"
                                 attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                        <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                                groups="mtbl_access.group_mtbl_sys_admin"/>
                         <field name="state" widget="statusbar" invisible="True"/>
                     </header>
                 </xpath>
@@ -182,7 +184,7 @@
         </record>
 
         <record id="product_product_action1" model="ir.actions.act_window">
-            <field name="name"> Products &amp; Services</field>
+            <field name="name">Products &amp; Services</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_type">form</field>

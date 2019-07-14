@@ -30,9 +30,11 @@ class DateRange(models.Model):
 
     @api.one
     def act_draft(self):
-        if self.state == 'approve':
+        if self.state == 'reject':
             self.write({
-                'state': 'draft'
+                'state': 'draft',
+                'pending': True,
+                'active': False,
             })
 
     @api.one

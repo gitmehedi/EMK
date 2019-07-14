@@ -24,6 +24,8 @@
                             <button name="act_reject_pending" string="Reject" type="object"
                                     groups="mtbl_access.group_mtbl_sys_admin"
                                     attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                                    groups="mtbl_access.group_mtbl_sys_admin"/>
                             <field name="state" widget="statusbar" invisible="True"/>
                         </header>
                         <sheet>
@@ -66,7 +68,8 @@
                                         <group attrs="{'invisible':[('amount_type','=', 'group')]}">
                                             <field name="account_id" string="VAT Account"
                                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                            <field name="refund_account_id" string="VAT Account on Refunds" groups="base.group_system"
+                                            <field name="refund_account_id" string="VAT Account on Refunds"
+                                                   groups="base.group_system"
                                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                         </group>
                                     </group>

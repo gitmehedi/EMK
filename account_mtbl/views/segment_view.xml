@@ -19,6 +19,8 @@
                     <button name="act_reject_pending" string="Reject" type="object"
                             groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
+                    <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                            groups="mtbl_access.group_mtbl_sys_admin"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>

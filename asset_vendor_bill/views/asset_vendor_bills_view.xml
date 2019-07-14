@@ -16,7 +16,7 @@
                             attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','paid'))]}"/>
                     <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
                             groups="account.group_account_invoice"/>
-                    <button name="action_invoice_draft" states="cancel" string="Set to Draft" type="object"
+                    <button name="action_invoice_draft" states="cancel" string="Reject" type="object"
                             groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid"/>
                 </header>

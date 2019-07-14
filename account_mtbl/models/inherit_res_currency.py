@@ -8,7 +8,7 @@ class Currency(models.Model):
     _order = 'name asc'
     _inherit = ['res.currency', 'mail.thread']
 
-    name = fields.Char(string='Currency', minlength=15 , required=True, help="Currency Code (ISO 4217)",
+    name = fields.Char(string='Currency', minlength=15, required=True, help="Currency Code (ISO 4217)",
                        track_visibility='onchange')
     symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True,
                          track_visibility='onchange')
@@ -22,9 +22,10 @@ class Currency(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             track_visibility='onchange',string='Status')
+                             track_visibility='onchange', string='Status')
     line_ids = fields.One2many('history.res.currency', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+
     @api.one
     def name_get(self):
         name = self.name
@@ -41,9 +42,11 @@ class Currency(models.Model):
 
     @api.one
     def act_draft(self):
-        if self.state == 'approve':
+        if self.state == 'reject':
             self.write({
-                'state': 'draft'
+                'state': 'draft',
+                'pending': True,
+                'active': False,
             })
 
     @api.one
@@ -118,4 +121,4 @@ class HistoryCurrency(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('res.currency', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')

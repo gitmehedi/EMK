@@ -18,7 +18,7 @@ class AccountJournal(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             string='Status',track_visibility='onchange')
+                             string='Status', track_visibility='onchange')
     type = fields.Selection(track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one(track_visibility='onchange', readonly=True,
@@ -44,9 +44,11 @@ class AccountJournal(models.Model):
 
     @api.one
     def act_draft(self):
-        if self.state == 'approve':
+        if self.state == 'reject':
             self.write({
-                'state': 'draft'
+                'state': 'draft',
+                'pending': True,
+                'active': False,
             })
 
     @api.one
@@ -140,4 +142,4 @@ class HistoryAccountJournal(models.Model):
     default_credit_account_id = fields.Many2one('account.account', string='Credit Account',
                                                 help='Default Credit Account of the Payment')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')

@@ -17,9 +17,18 @@ class ProductProduct(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             string='Status',track_visibility='onchange')
+                             string='Status', track_visibility='onchange')
     line_ids = fields.One2many('history.product.product', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+
+    @api.one
+    def act_draft(self):
+        if self.state == 'reject':
+            self.write({
+                'state': 'draft',
+                'pending': True,
+                'active': False,
+            })
 
     @api.one
     def act_approve(self):
@@ -112,7 +121,7 @@ class HistoryProductProduct(models.Model):
     default_code = fields.Char('Internal Reference', index=True)
     line_id = fields.Many2one('product.product', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')
 
 
 class ProductTemplate(models.Model):
@@ -125,10 +134,19 @@ class ProductTemplate(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             string='Status',track_visibility='onchange')
+                             string='Status', track_visibility='onchange')
     line_ids = fields.One2many('history.product.product', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
     supplier_taxes_id = fields.Many2many(track_visibility='onchange')
+
+    @api.one
+    def act_draft(self):
+        if self.state == 'reject':
+            self.write({
+                'state': 'draft',
+                'pending': True,
+                'active': False,
+            })
 
     @api.one
     def act_approve(self):

@@ -22,7 +22,7 @@ class AccountAnalyticAccount(models.Model):
     operating_unit_ids = fields.Many2many(string='Branch', track_visibility='onchange',
                                           readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             string='Status',track_visibility='onchange', )
+                             string='Status', track_visibility='onchange', )
 
     line_ids = fields.One2many('history.account.analytic.account', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
@@ -69,9 +69,11 @@ class AccountAnalyticAccount(models.Model):
 
     @api.one
     def act_draft(self):
-        if self.state == 'approve':
+        if self.state == 'reject':
             self.write({
-                'state': 'draft'
+                'state': 'draft',
+                'pending': True,
+                'active': False,
             })
 
     @api.one
@@ -146,10 +148,7 @@ class HistoryAccountAnalyticAccount(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('account.analytic.account', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
-
-
-
+                             default='pending', string='Status')
 
 
 class AccountAnalyticLine(models.Model):
