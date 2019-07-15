@@ -88,6 +88,9 @@ class TdsVatChallan(models.Model):
             if record.state not in ('draft'):
                 raise UserError(
                     _("Selected record cannot be confirm as they are not in 'Draft' state."))
+            if not record.challan_no or not record.deposited_bank or not record.bank_branch:
+                raise UserError(
+                    _("Without Challan No/Deposited Bank/Bank Branch record cannot be confirm. Please fill all those."))
             record.line_ids.write({'state': 'confirm'})
             res = {
                 'state': 'confirm',
