@@ -36,11 +36,38 @@
                             <field name="date" string="Date"/>
                         </group>
                         <group>
-                            <field name="bank_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-                            <field name="bank_acc_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            <field name="bank_id"
+                                   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            <field name="bank_acc_id"
+                                   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             <field name="number"/>
                         </group>
                     </group>
+                </xpath>
+                <xpath expr="//page[1]" position="replace">
+                    <page string="Payment Lines">
+                        <field name="line_ids" colspan="4" nolabel="1">
+                            <tree string="Payment Lines" editable="bottom">
+                                <field name="employee_id"/>
+                                <field name="name"/>
+                                <field name="ifsc" invisible="1"/>
+                                <field name="ifsc_code" invisible="1"/>
+                                <field name="bysal"/>
+                                <field name="debit_credit" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_form_inherit_view" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="l10n_in_hr_payroll.hr_payslip_run_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='create_advice']" position="replace">
+                    <button name="create_advice" string="Create Advice" type="object" states="draft"/>
                 </xpath>
             </field>
         </record>

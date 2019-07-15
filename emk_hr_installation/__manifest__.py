@@ -10,8 +10,8 @@
     'depends': [
         'emk_hr',
         'gbs_hr_payroll',
-        'gbs_hr_payroll_bank_letter',
-        'gbs_hr_payroll_top_sheet',
+        #'gbs_hr_payroll_bank_letter',
+        #'gbs_hr_payroll_top_sheet',
         'gbs_hr_attendance_report',
         'gbs_hr_leave_report',
         'gbs_employee_roster_view',

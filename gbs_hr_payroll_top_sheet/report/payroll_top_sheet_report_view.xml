@@ -5,6 +5,7 @@
             <t t-call="report.html_container">
                 <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto">
+                        <br/>
                         <div class="row">
                             <p>
                                 <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m-%d-%Y')"/>
