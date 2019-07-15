@@ -15,15 +15,17 @@ class AccountInvoice(models.Model):
                                         states={'draft': [('readonly',False)]})
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
                                             readonly=True,states={'draft': [('readonly',False)]})
-
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange',copy=False)
+    total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
+                                          store=True, readonly=True, track_visibility='onchange', copy=False)
     vat_selection = fields.Selection([('normal', 'General'),
-                                              ('mushok', 'Mushok-6.3'),
-                                              ('vds_authority', 'VDS Authority'),
-                                              ], string='VAT Selection', default='normal',
-                                             readonly=True,states={'draft': [('readonly',False)]})
+                                      ('mushok', 'Mushok-6.3'),
+                                      ('vds_authority', 'VDS Authority'),
+                                      ], string='VAT Selection', default='normal',
+                                     readonly=True,states={'draft': [('readonly',False)]})
+    payment_approver = fields.Text('Payment Approved',track_visibility='onchange', help="Log for payment approver")
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -45,10 +47,11 @@ class AccountInvoice(models.Model):
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
     @api.one
-    @api.depends('payment_line_ids.amount')
+    @api.depends('payment_line_ids.amount','payment_line_ids.state')
     def _compute_payment_amount(self):
         for invoice in self:
             invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
+            invoice.total_payment_approved = sum(line.amount for line in invoice.payment_line_ids if line.state=='approved')
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -163,6 +166,10 @@ class AccountInvoice(models.Model):
     def action_payment_instruction(self):
         if self.residual <= 0.0:
             raise ValidationError(_('There is no remaining balance for this Bill!'))
+
+        if self.residual <= self.total_payment_amount:
+            raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
+                                    ' no new payment instruction can possible!'))
 
         res = self.env.ref('gbs_vendor_bill.view_bill_payment_instruction_wizard')
 

@@ -9,11 +9,12 @@ class AccountMoveLine(models.Model):
     is_deposit = fields.Boolean('Deposit', default=False)
     is_pending = fields.Boolean('Pending', default=False)
     is_paid = fields.Boolean('Paid', default=False)
+    pending_for_paid = fields.Boolean('Pending For Paid', default=False)
 
     def action_do_pending(self,records):
         if self:
             for rec in self:
-                if rec.is_pending == True or rec.is_paid == True or rec.is_challan == True:
+                if rec.is_pending == True or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without payable you can not make pending records!'))
                 rec.is_pending = True
             return {
@@ -22,7 +23,7 @@ class AccountMoveLine(models.Model):
             }
         else:
             for rec in records:
-                if rec.is_pending == True or rec.is_paid == True or rec.is_challan == True:
+                if rec.is_pending == True or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without payable you can not make pending records!'))
                 rec.is_pending = True
             return {
@@ -33,7 +34,7 @@ class AccountMoveLine(models.Model):
     def action_undo_pending(self,records):
         if self:
             for rec in self:
-                if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True:
+                if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without pending you can not make undo this!'))
                 rec.is_pending = False
             return {
@@ -42,7 +43,7 @@ class AccountMoveLine(models.Model):
             }
         else:
             for rec in records:
-                if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True:
+                if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without pending you can not make undo this!'))
                 rec.is_pending = False
             return {
@@ -53,7 +54,7 @@ class AccountMoveLine(models.Model):
     @api.multi
     def action_account_move_payment(self,records):
         for rec in records:
-            if rec.is_pending is True or rec.is_paid is True:
+            if rec.is_pending is True or rec.is_paid is True or rec.pending_for_paid == True:
                 raise ValidationError(_('Pending/Paid can not open for payment instruction!'))
 
         res = self.env.ref('tds_vat_challan.tds_vat_move_payment_wizard')

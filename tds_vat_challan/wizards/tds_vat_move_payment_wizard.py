@@ -37,6 +37,11 @@ class TDSVATMovePaymentWizard(models.TransientModel):
                 _("Account Settings are not properly set. "
                   "Please contact your system administrator for assistance."))
 
+        if self.env.context.get('records'):
+            move_lines = self.env['account.move.line'].search([('id','in',self.env.context.get('records'))])
+        else:
+            move_lines = False
+
         self.env['payment.instruction'].create({
             'currency_id': self.currency_id.id,
             'default_debit_account_id': debit_acc_id and debit_acc_id.id or False,
@@ -44,9 +49,10 @@ class TDSVATMovePaymentWizard(models.TransientModel):
             'instruction_date': self.instruction_date,
             'amount': self.amount,
             'operating_unit_id': self.operating_unit_id.id or None,
+            'is_tax': True,
+            'account_move_line_ids':[(6, 0, move_lines.ids)]
             # 'sub_operating_unit_id': self.sub_operating_unit_id and self.sub_operating_unit_id.id or False,
         })
-        if self.env.context.get('records'):
-            move_lines = self.env['account.move.line'].search([('id','in',self.env.context.get('records'))])
-            move_lines.write({'is_paid':True})
+        if move_lines:
+            move_lines.write({'pending_for_paid': True})
         return {'type': 'ir.actions.act_window_close'}

@@ -24,6 +24,13 @@ class PaymentInstruction(models.Model):
                                         default=lambda self: self.env.user.default_operating_unit_id)
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
 
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('approved', "Approved"),
+        ('cancel', "Cancel"),
+    ], default='draft', string="Status", track_visibility='onchange')
+
+
     @api.model
     def create(self, vals):
         if vals.get('code', 'New') == 'New':
