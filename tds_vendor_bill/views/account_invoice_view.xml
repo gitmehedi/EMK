@@ -29,5 +29,16 @@
             </xpath>
         </field>
     </record>
+
+    <record id="inherited_invoice_tds_tree" model="ir.ui.view">
+        <field name="name">inherited.invoice.tds.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="gbs_vendor_bill.inherited_invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_tax']" position="after">
+                <field name="total_tds_amount" string="TDS"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
 

@@ -37,9 +37,9 @@
                         <button string="Reset To Draft" name="action_reset_to_draft" type="object"
                                 groups="account.group_account_user"
                                 states="cancel" class="btn-default"/>
-                        <button string="Print" name="action_print" type="object"
-                                groups="account.group_account_manager"
-                                states="approved" class="oe_highlight"/>
+                        <!--<button string="Print" name="action_print" type="object"-->
+                                <!--groups="account.group_account_manager"-->
+                                <!--states="approved" class="oe_highlight"/>-->
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approved"/>
                     </header>
                     <sheet>

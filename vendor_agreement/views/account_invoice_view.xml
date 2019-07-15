@@ -32,5 +32,16 @@
         </field>
     </record>
 
+    <record id="inherited_invoice_agreement_tree" model="ir.ui.view">
+        <field name="name">inherited.invoice.agreement.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total_signed']" position="after">
+                <field name="agreement_adjusted_amount" string="Advance"/>
+            </xpath>
+        </field>
+    </record>
+
 
 </odoo>
