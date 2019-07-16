@@ -18,8 +18,8 @@ class PaymentInstruction(models.Model):
                         val = 1
                     line.write({'amount_residual': ((line.amount_residual) * val) - self.amount})
             self.invoice_id.write({'payment_approver':self.env.user.name})
-            self.write({'state': 'approved'})
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload',
-            }
+        self.write({'state': 'approved'})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }

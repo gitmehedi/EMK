@@ -169,12 +169,12 @@
                   action="action_tds_vat_pending" id="tds_vat_pending_menu" sequence="2"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
-        <menuitem name="Waiting for Payment Approval" parent="main_menu_tds_vat"
+        <menuitem name="Waiting for Payment" parent="main_menu_tds_vat"
                   action="action_tds_vat_pending_paid" id="tds_vat_pending_paid_menu" sequence="3"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <menuitem name="TDS &amp; VAT Paid" parent="main_menu_tds_vat"
-                  action="action_tds_vat_paid" id="tds_vat_paid_menu" sequence="4"
+                  action="action_tds_vat_paid" id="tds_vat_paid_menu" sequence="5"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <record id="action_open_account_move_pending" model="ir.actions.server">

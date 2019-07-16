@@ -39,7 +39,7 @@
             id="menu_tds_vat_payment"
             name="Payment Instructions"
             parent="main_menu_tds_vat"
-            sequence="5"
+            sequence="4"
             action="action_tds_payment_instruction"
             groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 </odoo>

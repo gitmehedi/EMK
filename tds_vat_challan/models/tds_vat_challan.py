@@ -121,12 +121,57 @@ class TdsVatChallan(models.Model):
     @api.one
     def action_reset_to_draft(self):
         self.line_ids.write({'state': 'cancel'})
-        self.write({'state': 'draft'})\
-
+        self.write({'state': 'draft'})
 
     def action_print(self):
         return self.env['report'].get_action(self, 'tds_vat_challan.report_tds_vat_challan')
 
+
+    ####################################################
+    # ORM Overrides methods
+    ####################################################
+
+    @api.model
+    def create(self, vals):
+        if vals['acc_move_line_ids']:
+            move_objs = self.env['account.move.line'].search([('id', 'in', [i[2] for i in vals['acc_move_line_ids']][0])])
+            move_objs.write({'is_challan':True})
+        return super(TdsVatChallan, self).create(vals)
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not draft state!'))
+            if rec.acc_move_line_ids:
+                rec.acc_move_line_ids.write({'is_challan': False})
+        return super(TdsVatChallan, self).unlink()
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'confirm')]
+
+
+class TdsVatChallanLine(models.Model):
+    _name = 'tds.vat.challan.line'
+
+    supplier_id = fields.Many2one('res.partner', string="Vendor")
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    product_id = fields.Many2one('product.product', string='Product')
+    type_name = fields.Char(String='Description')
+    total_bill = fields.Float(String='Total Bill')
+    parent_id = fields.Many2one('tds.vat.challan')
+    currency_id = fields.Many2one('res.currency', string='Currency')
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirm', "Confirmed"),
+        ('approved', "Approved"),
+        ('cancel', "Cancel"),
+    ], default='draft', track_visibility='onchange')
+
+
+# Accounting treatment previous version
     #
     # @api.multi
     # def generate_account_journal(self):
@@ -196,47 +241,3 @@ class TdsVatChallan(models.Model):
     #     }
     #     account_move_line_obj.create(account_move_line_debit)
     #     return True
-
-
-    ####################################################
-    # ORM Overrides methods
-    ####################################################
-
-    @api.model
-    def create(self, vals):
-        if vals['acc_move_line_ids']:
-            move_objs = self.env['account.move.line'].search([('id', 'in', [i[2] for i in vals['acc_move_line_ids']][0])])
-            move_objs.write({'is_challan':True})
-        return super(TdsVatChallan, self).create(vals)
-
-    @api.multi
-    def unlink(self):
-        for rec in self:
-            if rec.state != 'draft':
-                raise UserError(_('You cannot delete a record which is not draft state!'))
-            if rec.acc_move_line_ids:
-                rec.acc_move_line_ids.write({'is_challan': False})
-        return super(TdsVatChallan, self).unlink()
-
-    @api.model
-    def _needaction_domain_get(self):
-        return [('state', '=', 'confirm')]
-
-
-class TdsVatChallanLine(models.Model):
-    _name = 'tds.vat.challan.line'
-
-    supplier_id = fields.Many2one('res.partner', string="Vendor")
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
-    product_id = fields.Many2one('product.product', string='Product')
-    type_name = fields.Char(String='Description')
-    total_bill = fields.Float(String='Total Bill')
-    parent_id = fields.Many2one('tds.vat.challan')
-    currency_id = fields.Many2one('res.currency', string='Currency')
-
-    state = fields.Selection([
-        ('draft', "Draft"),
-        ('confirm', "Confirmed"),
-        ('approved', "Approved"),
-        ('cancel', "Cancel"),
-    ], default='draft', track_visibility='onchange')

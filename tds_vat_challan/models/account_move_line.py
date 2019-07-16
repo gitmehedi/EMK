@@ -5,7 +5,7 @@ from odoo.exceptions import UserError,ValidationError
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    is_challan = fields.Boolean('Deposit', default=False)
+    is_challan = fields.Boolean('Challan', default=False)
     is_deposit = fields.Boolean('Deposit', default=False)
     is_pending = fields.Boolean('Pending', default=False)
     is_paid = fields.Boolean('Paid', default=False)
@@ -54,7 +54,7 @@ class AccountMoveLine(models.Model):
     @api.multi
     def action_account_move_payment(self,records):
         for rec in records:
-            if rec.is_pending is True or rec.is_paid is True or rec.pending_for_paid == True:
+            if rec.is_pending is True or rec.is_paid is True or rec.pending_for_paid is True:
                 raise ValidationError(_('Pending/Paid can not open for payment instruction!'))
 
         res = self.env.ref('tds_vat_challan.tds_vat_move_payment_wizard')
@@ -81,6 +81,9 @@ class AccountMoveLine(models.Model):
     def action_challan_generate_open(self, records):
         if not records:
             raise ValidationError("No record found.")
+        for rec in records:
+            if not rec.is_paid:
+                raise ValidationError(_('Without Paid can not generate for challan!'))
 
         res_view = self.env.ref('tds_vat_challan.tds_vat_challan_form_view')
 

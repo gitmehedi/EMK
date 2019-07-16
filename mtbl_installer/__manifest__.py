@@ -41,6 +41,7 @@
         "bgl_accounts",
         "gbs_account_level",
         "gbs_account_budget",
+        "web_export_view",
 
     ],
     'description': 'Install all modules which is related to MTBL Accounting',
