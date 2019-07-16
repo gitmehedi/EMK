@@ -20,7 +20,7 @@ class TDSRules(models.Model):
                                   states={'confirm': [('readonly', True)]})
     line_ids = fields.One2many('tds.rule.line', 'tds_rule_id', string='Rule Details',
                                states={'confirm': [('readonly', True)]})
-    effective_from = fields.Date(string='Effective Date', required=True,
+    effective_from = fields.Date(string='Effective Date', required=True,default=fields.Date.today(),
                                  track_visibility='onchange', states={'confirm': [('readonly', True)]})
 
     type_rate = fields.Selection([
