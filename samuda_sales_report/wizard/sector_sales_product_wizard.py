@@ -5,7 +5,7 @@ from datetime import datetime
 
 class SectorSalesProductWizard(models.TransientModel):
     _name = "sector.sales.product.wizard"
-    # domain="[('sale_ok', '=', 1), ('active', '=', 1)]"
+
     product_id = fields.Many2one('product.template', string='Product', domain=[('sale_ok', '=', 1), ('active', '=', 1)])
     date_from = fields.Date("Date From", required=True)
     date_to = fields.Date("Date To", required=True)

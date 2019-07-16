@@ -10,6 +10,12 @@ class OutstandingStatementWizard(models.TransientModel):
     date_from = fields.Date("Date From", required=True)
     date_to = fields.Date("Date To", required=True)
 
+    @api.onchange('executive_id')
+    def _onchange_executive_id(self):
+        user_ids = self.env['res.groups'].search([('name', '=', 'User: All Documents')]).users.ids
+
+        return {'domain': {'executive_id': [('id', 'in', user_ids)]}}
+
     @api.constrains('date_from', 'date_to')
     def _check_date_validation(self):
         if self.date_from > self.date_to:

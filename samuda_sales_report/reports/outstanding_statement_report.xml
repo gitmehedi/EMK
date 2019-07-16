@@ -48,7 +48,7 @@
                                         <th class="text-center" style="width:40%;">Sales Person</th>
                                         <th class="text-center" style="width:20%;">Total Sales Value</th>
                                         <th class="text-center" style="width:20%;">Credit Value</th>
-                                        <th class="text-center" style="width:20%;">Outstanding Percentage</th>
+                                        <th class="text-center" style="width:20%;">Outstanding Percentage (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,20 +68,22 @@
                                             </td>
                                         </tr>
                                     </t>
-                                    <tr>
-                                        <td>
-                                            <strong>Total</strong>
-                                        </td>
-                                        <td class="text-right">
-                                            <span class="text-nowrap" t-esc="formatLang(sum(l['total_sale_value'] for l in report_data))"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span class="text-nowrap" t-esc="formatLang(sum(l['credit_value'] for l in report_data))"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span class="text-nowrap" t-esc="formatLang(sum(l['percentage'] for l in report_data))"/>
-                                        </td>
-                                    </tr>
+                                    <t t-if="report_data">
+                                        <tr>
+                                            <td>
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="text-nowrap" t-esc="formatLang(sum(l['total_sale_value'] for l in report_data))"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="text-nowrap" t-esc="formatLang(sum(l['credit_value'] for l in report_data))"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="text-nowrap" t-esc="formatLang(sum(l['percentage'] for l in report_data))"/>
+                                            </td>
+                                        </tr>
+                                    </t>
                                 </tbody>
                             </table>
                         </div>
