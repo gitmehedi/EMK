@@ -5,6 +5,7 @@
                 name="Executive (Area/Country)"
                 action="action_executive_sales_wizard"
                 id="menu_executive_sales_report"
+                groups="sales_team.group_sale_manager"
                 parent="sales_team.menu_sale_report"
                 sequence="25"/>
 
@@ -12,6 +13,7 @@
                 name="Customer (Area/Country)"
                 action="action_customer_sales_wizard"
                 id="menu_customer_sales_report"
+                groups="sales_team.group_sale_manager"
                 parent="sales_team.menu_sale_report"
                 sequence="35"/>
 
@@ -19,6 +21,7 @@
                 name="Customer (Sector Wise)"
                 action="action_customer_sales_sector_wizard"
                 id="menu_customer_sales_sector_report"
+                groups="sales_team.group_sale_manager"
                 parent="sales_team.menu_sale_report"
                 sequence="45"/>
 
@@ -26,6 +29,7 @@
                 name="Sector (Product Wise)"
                 action="action_sector_sales_product_wizard"
                 id="menu_sector_sales_product_report"
+                groups="sales_team.group_sale_manager"
                 parent="sales_team.menu_sale_report"
                 sequence="55"/>
 
@@ -33,15 +37,23 @@
                 name="Outstanding Statement"
                 action="action_outstanding_statement_wizard"
                 id="menu_outstanding_statement_report"
+                groups="sales_team.group_sale_manager"
                 parent="sales_team.menu_sale_report"
                 sequence="60"/>
 
-        <menuitem
-                name="Credit Details (Product)"
-                action="action_credit_details_product_wizard"
-                id="menu_credit_details_product_report"
-                parent="sales_team.menu_sale_report"
-                sequence="65"/>
+<!--        <menuitem-->
+<!--                name="Credit Details (Product)"-->
+<!--                action="action_credit_details_product_wizard"-->
+<!--                id="menu_credit_details_product_report"-->
+<!--                parent="sales_team.menu_sale_report"-->
+<!--                sequence="65"/>-->
+
+<!--        <menuitem-->
+<!--                name="Yearly Sales Comparison"-->
+<!--                action="action_yearly_sales_comparison_wizard"-->
+<!--                id="menu_yearly_sales_comparison_report"-->
+<!--                parent="sales_team.menu_sale_report"-->
+<!--                sequence="75"/>-->
 
     </data>
 </odoo>
