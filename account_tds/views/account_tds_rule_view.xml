@@ -12,7 +12,10 @@
                                 string="Confirm" states="draft"
                                 class="oe_highlight" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
                         <button string="Amendment" name="action_amendment" type="object" class="oe_read_only"
-                                attrs="{'invisible': [('state', 'in', ('draft'))]}"
+                                attrs="{'invisible': ['|',('state', 'in', ('draft')),('is_amendment', '=', True)]}"
+                                groups="account_tds.group_tds_manager"/>
+                        <button string="Approve" name="action_approve_amendment"
+                                type="object" class="oe_highlight" attrs="{'invisible': [('is_amendment', '=', False)]}"
                                 groups="account_tds.group_tds_manager"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -21,10 +24,11 @@
                             <group>
                                 <field name="name" placeholder="Name"/>
                                 <field name="active"/>
+                                <field name="is_amendment" invisible="1"/>
                             </group>
                             <group>
                                 <field name="effective_from"/>
-                                <field name="current_version" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+                                <field name="current_version" attrs="{'invisible': [('version_ids','=', [])]}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -58,12 +62,13 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Version Details" attrs="{'invisible': [('state', 'in', ('draft'))]}">
+                            <page string="Version Details" attrs="{'invisible': [('version_ids','=', [])]}">
                                 <field name="version_ids" ref="view_tds_rule_version_form">
-                                    <tree string="List">
+                                    <tree string="List" decoration-info="state=='pending'" decoration-success="state=='confirm'">
                                         <field name="name"/>
                                         <field name="effective_from"/>
                                         <field name="type_rate"/>
+                                        <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -131,11 +136,12 @@
                                 <field name="type_rate"/>
                                 <field name="flat_rate"
                                        attrs="{'invisible':[('type_rate', '!=', 'flat')],'required':[('type_rate', '=','flat')]}"/>
+                                <field name="price_include" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
                             </group>
                             <group>
                                 <field name="account_id"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="active"/>
+                                <field name="active" invisible="1"/>
                             </group>
                         </group>
                         <notebook colspan="4" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">

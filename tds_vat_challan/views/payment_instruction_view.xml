@@ -6,7 +6,7 @@
         <field name="model">payment.instruction</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Payment lines">
+            <tree string="Payment lines" create="false" delete="false">
                 <field name="sequence" widget="handle"/>
                 <field name="instruction_date"/>
                 <field name="partner_id"/>

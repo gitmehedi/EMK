@@ -12,8 +12,7 @@ class TDSRules(models.Model):
                        track_visibility='onchange', states={'confirm': [('readonly', True)]})
     active = fields.Boolean(string='Active', default=True,
                             track_visibility='onchange', states={'confirm': [('readonly', True)]})
-    current_version = fields.Char('Current Version', readonly=True, compute='_compute_current_version',
-                                  states={'confirm': [('readonly', True)]})
+    current_version = fields.Char('Current Version', readonly=True, compute='_compute_current_version')
     account_id = fields.Many2one('account.account', string="TDS Account", required=True,
                                  track_visibility='onchange', states={'confirm': [('readonly', True)]})
     version_ids = fields.One2many('tds.rule.version', 'tds_version_rule_id', string="Versions Details",
@@ -36,6 +35,8 @@ class TDSRules(models.Model):
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
     ], default='draft',string="Status",track_visibility='onchange')
+    is_amendment = fields.Boolean(default=False, string="Is Amendment",
+                                  help="Take decision that, this agreement is amendment.")
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
@@ -62,39 +63,13 @@ class TDSRules(models.Model):
         return super(TDSRules, self).unlink()
 
     @api.multi
+    @api.depends('version_ids.state')
     def _compute_current_version(self):
-        date = self._context.get('date') or fields.Date.today()
         for record in self:
-            for rec in record.version_ids:
-                if rec.effective_from == date:
-                    record.current_version = rec.name
-                else:
-                    pass
+            if record.version_ids:
+                record.current_version = self.version_ids.search([('state', '=', 'confirm'),
+                                                                  ('tds_version_rule_id', '=', record.id)],order='id desc', limit=1).name
 
-    @api.model
-    def compute_version(self):
-        today = fields.Date.today()
-        rule = self.env['tds.rule'].search([])
-        for record in rule:
-            for ver in record.version_ids:
-                if today == ver.effective_from:
-                    record.effective_from = ver.effective_from
-                    record.type_rate = ver.type_rate
-                    record.account_id = ver.account_id.id
-                    if ver.type_rate == 'flat':
-                        if ver.flat_rate:
-                            record.flat_rate = ver.flat_rate
-                    else:
-                        if ver.version_line_ids:
-                            vals = []
-                            for ver_line in ver.version_line_ids:
-                                vals.append((0, 0, {'range_from': ver_line.range_from,
-                                                    'range_to': ver_line.range_to,
-                                                    'rate': ver_line.rate,
-                                                    }))
-                            record.line_ids.unlink()
-                            record.line_ids = vals
-        return
 
     @api.constrains('flat_rate', 'line_ids')
     def _check_flat_rate(self):
@@ -142,6 +117,7 @@ class TDSRules(models.Model):
                 'type_rate': rec.type_rate,
                 'flat_rate': rec.flat_rate,
                 'rel_id': rec.id,
+                'state': 'confirm',
             }
             self.version_ids += self.env['tds.rule.version'].create(res)
         if self.type_rate == 'slab':
@@ -186,10 +162,37 @@ class TDSRules(models.Model):
         }
         return result
 
+    @api.multi
+    def action_approve_amendment(self):
+        if self.is_amendment == True:
+            requested = self.version_ids.search([('state', '=', 'pending'),
+                                                 ('tds_version_rule_id', '=', self.id)],
+                                                order='id desc', limit=1)
+            if requested:
+                self.write({
+                    'effective_from': requested.effective_from,
+                    'type_rate': requested.type_rate,
+                    'account_id': requested.account_id.id,
+                })
+                if requested.type_rate == 'flat' and requested.flat_rate:
+                    self.flat_rate = requested.flat_rate
+                    self.price_include = requested.price_include
+                elif requested.type_rate == 'slab' and requested.version_line_ids:
+                    vals = []
+                    for ver_line in requested.version_line_ids:
+                        vals.append((0, 0, {'range_from': ver_line.range_from,
+                                            'range_to': ver_line.range_to,
+                                            'rate': ver_line.rate,
+                                            }))
+                    self.line_ids.unlink()
+                    self.line_ids = vals
+                self.write({'is_amendment': False})
+                requested.write({'state': 'confirm'})
+
     @api.constrains('effective_from')
     def _check_effective_from(self):
         date = fields.Date.today()
-        if self.effective_from:
+        if self.effective_from and not self.is_amendment:
             if self.effective_from < date:
                 raise ValidationError(
                     "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
@@ -226,7 +229,10 @@ class TDSRuleVersion(models.Model):
     ], string='TDS Type', required=True)
     flat_rate = fields.Float(string='Rate', digits=(13,2))
     version_line_ids = fields.One2many('tds.rule.version.line', 'tds_version_id', string='Rule Details')
-
+    state = fields.Selection([
+        ('pending', "Pending"),
+        ('confirm', "Confirmed")], default='pending', string="Status")
+    price_include = fields.Boolean(string='Included in Price', default=False)
 
 class TDSRuleLine(models.Model):
     _name = 'tds.rule.line'
@@ -262,3 +268,41 @@ class TDSRuleVersionLine(models.Model):
     range_from = fields.Integer(string='From Range', required=True)
     range_to = fields.Integer(string='To Range', required=True)
     rate = fields.Float(string='Rate', required=True, digits=(12,2))
+
+
+    # automated version for previous
+    # @api.model
+    # def compute_version(self):
+    #     today = fields.Date.today()
+    #     rule = self.env['tds.rule'].search([])
+    #     for record in rule:
+    #         for ver in record.version_ids:
+    #             if today == ver.effective_from:
+    #                 record.effective_from = ver.effective_from
+    #                 record.type_rate = ver.type_rate
+    #                 record.account_id = ver.account_id.id
+    #                 if ver.type_rate == 'flat':
+    #                     if ver.flat_rate:
+    #                         record.flat_rate = ver.flat_rate
+    #                 else:
+    #                     if ver.version_line_ids:
+    #                         vals = []
+    #                         for ver_line in ver.version_line_ids:
+    #                             vals.append((0, 0, {'range_from': ver_line.range_from,
+    #                                                 'range_to': ver_line.range_to,
+    #                                                 'rate': ver_line.rate,
+    #                                                 }))
+    #                         record.line_ids.unlink()
+    #                         record.line_ids = vals
+    #     return
+
+
+    # @api.multi
+    # def _compute_current_version(self):
+    #     date = self._context.get('date') or fields.Date.today()
+    #     for record in self:
+    #         for rec in record.version_ids:
+    #             if rec.effective_from == date:
+    #                 record.current_version = rec.name
+    #             else:
+    #                 pass

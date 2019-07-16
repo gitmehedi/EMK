@@ -20,7 +20,7 @@
         'date_range',
     ],
     'data': [
-        'data/tds_version_scheduler.xml',
+        # 'data/tds_version_scheduler.xml',
         'data/tds_date_range_type.xml',
         'security/ir_security.xml',
         'security/ir.model.access.csv',

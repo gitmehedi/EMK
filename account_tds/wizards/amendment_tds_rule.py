@@ -51,20 +51,16 @@ class TDSRulesWizard(models.TransientModel):
                     'rel_id': rule.id
                 }
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
-        return rule_list.compute_version()
+        return rule_list.write({'is_amendment':True})
+
 
     @api.constrains('effective_from')
     def _check_effective_from(self):
         date = fields.Date.today()
-        rule_list = self.env['tds.rule'].browse([self._context['active_id']])
         if self.effective_from:
-            if self.effective_from not in [x.effective_from for x in rule_list.version_ids]:
-                if self.effective_from < date:
-                    raise ValidationError(
-                        "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
-            else:
+            if self.effective_from < date:
                 raise ValidationError(
-                    "Please Check Version Details!! \n already have a version on this effective date")
+                    "Please Check Effective Date!! \n 'Effective Date' must be greater than current date")
 
     @api.constrains('flat_rate', 'line_ids')
     def _check_flat_rate(self):
