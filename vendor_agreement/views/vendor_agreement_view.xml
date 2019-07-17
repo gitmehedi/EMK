@@ -78,7 +78,7 @@
                                     <field name="end_date"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="account_id"
+                                    <field name="account_id" domain="[('internal_type','=','other')]"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="is_amendment" invisible="1"/>
                                 </group>
