@@ -57,7 +57,7 @@
                             <page string="Accounting">
                                 <group>
                                     <group>
-                                        <field name="account_id"
+                                        <field name="account_id" domain="[('internal_type','=','other')]"
                                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     </group>
                                 </group>

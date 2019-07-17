@@ -66,7 +66,7 @@
                                             </div>
                                         </group>
                                         <group attrs="{'invisible':[('amount_type','=', 'group')]}">
-                                            <field name="account_id" string="VAT Account"
+                                            <field name="account_id" string="VAT Account" domain="[('internal_type','=','other')]"
                                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                             <field name="refund_account_id" string="VAT Account on Refunds"
                                                    groups="base.group_system"
