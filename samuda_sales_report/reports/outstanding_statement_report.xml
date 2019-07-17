@@ -58,13 +58,13 @@
                                                 <span class="text-nowrap" t-esc="l['sales_person']"/>
                                             </td>
                                             <td class="text-right">
-                                                <span class="text-nowrap" t-esc="l['total_sale_value']"/>
+                                                <span class="text-nowrap" t-esc="formatLang(l['total_sale_value'])"/>
                                             </td>
                                             <td class="text-right">
-                                                <span class="text-nowrap" t-esc="l['credit_value']"/>
+                                                <span class="text-nowrap" t-esc="formatLang(l['credit_value'])"/>
                                             </td>
                                             <td class="text-right">
-                                                <span class="text-nowrap" t-esc="l['percentage']"/>
+                                                <span class="text-nowrap" t-esc="formatLang(l['percentage'])"/>
                                             </td>
                                         </tr>
                                     </t>
@@ -74,13 +74,13 @@
                                                 <strong>Total</strong>
                                             </td>
                                             <td class="text-right">
-                                                <span class="text-nowrap" t-esc="formatLang(sum(l['total_sale_value'] for l in report_data))"/>
+                                                <strong class="text-nowrap" t-esc="formatLang(sum(l['total_sale_value'] for l in report_data))"/>
                                             </td>
                                             <td class="text-right">
-                                                <span class="text-nowrap" t-esc="formatLang(sum(l['credit_value'] for l in report_data))"/>
+                                                <strong class="text-nowrap" t-esc="formatLang(sum(l['credit_value'] for l in report_data))"/>
                                             </td>
                                             <td class="text-right">
-                                                <span class="text-nowrap" t-esc="formatLang(sum(l['percentage'] for l in report_data))"/>
+<!--                                                <span class="text-nowrap" t-esc="formatLang(sum(l['percentage'] for l in report_data))"/>-->
                                             </td>
                                         </tr>
                                     </t>
