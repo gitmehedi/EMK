@@ -42,6 +42,7 @@
         'hr_employee_iou_payroll',
         'hr_employee_number',
         'hr_employee_exit',
+        'hr_short_leave',
         'hr_employee_number',
         'website_hr_recruitment'
 
