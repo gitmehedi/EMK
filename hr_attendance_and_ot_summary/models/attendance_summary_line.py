@@ -14,6 +14,7 @@ class AttendanceSummaryLine(models.Model):
     leave_days = fields.Integer(string='Leave Days')
     holidays_days = fields.Integer(string='Holidays Days')
     late_hrs = fields.Float(string='Off Duty Hrs')
+    tot_work_hours = fields.Float(string='Working Hours')
     schedule_ot_hrs = fields.Float(string='Schedule OT Hrs')
     cal_ot_hrs = fields.Float(string='Cal OT Hrs')
     extra_ot = fields.Float(string='Extra OT Hrs')
@@ -97,7 +98,7 @@ class AttendanceSummaryLine(models.Model):
 
 class TempAttendanceSummaryLine(object):
 
-    def __init__(self, salary_days=0, present_days=0, deduction_days=0, leave_days=0, late_hrs=0,
+    def __init__(self, salary_days=0, present_days=0, deduction_days=0, leave_days=0, late_hrs=0,tot_work_hours=0,
                  schedule_ot_hrs=0, cal_ot_hrs=0, employee_id=0, absent_days=None, late_days=None, weekend_days=None, holidays_days=0, is_entered_rostering=1):
 
         self.salary_days = salary_days
@@ -107,6 +108,7 @@ class TempAttendanceSummaryLine(object):
         self.holidays_days = holidays_days
         self.late_hrs = late_hrs
         self.schedule_ot_hrs = schedule_ot_hrs
+        self.tot_work_hours = tot_work_hours
         self.cal_ot_hrs = cal_ot_hrs
         self.employee_id = employee_id
         self.is_entered_rostering = is_entered_rostering

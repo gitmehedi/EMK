@@ -44,6 +44,7 @@
 										<th>Designation</th>
 										<th>Salary Days</th>
 										<th>Present Days</th>
+										<th>Working Hours</th>
 										<th>Absent Days</th>
 										<th>Absent Deduction Day(s)</th>
 										<th>Late Days</th>
@@ -80,6 +81,9 @@
 													</td>
 													<td>
 														<span t-esc="o['present_days']"></span>
+													</td>
+													<td>
+														<span t-esc="o['tot_work_hours']"></span>
 													</td>
 													<td>
 														<span t-esc="o['absent_days_count']"></span>

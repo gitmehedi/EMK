@@ -151,6 +151,7 @@ class AttendanceProcessor(models.Model):
 
             if employee.is_executive == True:
                 totalPresentTime = self.getDayWorkingMinutesForManagement(attendanceDayList, currentDaydutyTime)
+                tot_work_hours = totalPresentTime
                 off_duty = scheduleTime - totalPresentTime
                 if off_duty < 0:
                     off_duty = 0
@@ -158,13 +159,15 @@ class AttendanceProcessor(models.Model):
                 #Collect date wise in out data
                 for i, attendanceDay in enumerate(attendanceDayList):
                     totalPresentTime = self.getDayWorkingMinutesForNonManagement(attendanceDay, currentDaydutyTime, totalPresentTime)
-
+                tot_work_hours = totalPresentTime
                 off_duty = scheduleTime - (totalPresentTime + currentDaydutyTime.graceTime)
                 if off_duty < 0:
                     off_duty = 0
 
+            attSummaryLine.tot_work_hours = attSummaryLine.tot_work_hours + tot_work_hours / 60
             if off_duty > 0:
                 attSummaryLine.late_hrs = attSummaryLine.late_hrs + off_duty / 60
+
 
             # Check is late or not by checking day first in time.
             # We collect first row because attendance are shorted by check_in time ASC
@@ -333,6 +336,7 @@ class AttendanceProcessor(models.Model):
                 'absent_deduction_days': len(attSummaryLine.absent_days),
                 'deduction_days':   deduction_days,
                 'late_hrs':         attSummaryLine.late_hrs,
+                'tot_work_hours':    attSummaryLine.tot_work_hours,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
                 'cal_ot_hrs':       calOtHours,
                 'extra_ot':         get_extra_ot,

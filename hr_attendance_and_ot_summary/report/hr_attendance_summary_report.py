@@ -27,6 +27,7 @@ class HrAttendanceSummaryReport(models.AbstractModel):
                     att_summary['emp_seq'] = att_sum.employee_id.employee_sequence
                     att_summary['salary_days'] = att_sum.salary_days
                     att_summary['present_days'] = att_sum.present_days
+                    att_summary['tot_work_hours'] = att_sum.tot_work_hours
                     att_summary['absent_days_count'] = att_sum.absent_days_count
                     att_summary['late_days_count'] = att_sum.late_days_count
                     att_summary['leave_days'] = att_sum.leave_days

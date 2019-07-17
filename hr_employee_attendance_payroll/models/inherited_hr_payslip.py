@@ -54,6 +54,15 @@ class InheritedHrAttendancePayslip(models.Model):
                     'name': 'OT Hours',
                 })
 
+            ### Working Hours
+            if summary_line_data.tot_work_hours:
+                worked_days_lines += worked_days_lines.new({
+                    'code': 'WH',
+                    'contract_id': self.contract_id.id,
+                    'number_of_hours': summary_line_data.tot_work_hours,
+                    'name': 'Total Work Hours',
+                })
+
             ### Late Deduction Days
             if summary_line_data.deduction_days >= 0:
                 worked_days_lines += worked_days_lines.new({
