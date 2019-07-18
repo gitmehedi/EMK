@@ -119,6 +119,7 @@
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
                                                 <field name="operating_unit_id"/>
+                                                <field name="product_id"/>
                                                 <field name="account_analytic_id"
                                                        string="Cost Centre"
                                                        domain="[('company_id', '=', parent.company_id)]"

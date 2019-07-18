@@ -86,10 +86,14 @@
                             <field name="default_debit_account_id" invisible="1"/>
                             <field name="default_credit_account_id" invisible="1"/>
                             <field name="amount"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" invisible="1"/>
                             <field name="state" invisible="1"/>
                             <button name="action_approve" string="Approve" type="object"
                                     class="oe_highlight" states="draft"/>
+                            <button name="action_reject" string="Reject" type="object"
+                                    class="oe_highlight" states="draft"/>
+                            <button name="action_reset" string="Reset" type="object"
+                                    class="oe_highlight" states="cancel"/>
                             <field name="is_sync" invisible="1"/>
                             <button name="sync" string="Sync" type="action"
                                     icon="fa fa-check text-success"
@@ -179,3 +183,6 @@
         </field>
     </record>
 </odoo>
+<!--icon="fa fa-thumbs-up text-success"-->
+<!--icon="fa fa-thumbs-down text-danger"-->
+<!--icon="fa fa-undo text-warning"-->

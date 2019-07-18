@@ -25,7 +25,7 @@ class AccountInvoice(models.Model):
                                       ('vds_authority', 'VDS Authority'),
                                       ], string='VAT Selection', default='normal',
                                      readonly=True,states={'draft': [('readonly',False)]})
-    payment_approver = fields.Text('Payment Approved',track_visibility='onchange', help="Log for payment approver")
+    payment_approver = fields.Text('Payment Instruction Responsible',track_visibility='onchange', help="Log for payment approver")
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -50,8 +50,8 @@ class AccountInvoice(models.Model):
     @api.depends('payment_line_ids.amount','payment_line_ids.state')
     def _compute_payment_amount(self):
         for invoice in self:
-            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
-            invoice.total_payment_approved = sum(line.amount for line in invoice.payment_line_ids if line.state=='approved')
+            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids if line.state not in ['cancel'])
+            invoice.total_payment_approved = sum(line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
