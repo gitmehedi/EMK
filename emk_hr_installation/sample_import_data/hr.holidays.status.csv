@@ -1,0 +1,6 @@
+name,active,compensatory_flag,short_leave_flag
+Compensatory Days,True,True,False
+Unpaid,True,False,False
+Annual Leaves 2019,True,False,False
+Sick Leave,True,False,False
+Casual Leaves 2019,True,False,True
