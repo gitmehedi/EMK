@@ -23,6 +23,7 @@
         "sub_operating_unit",
         "account_fiscal_year",
         "account_asset",
+        "gbs_bd_division",
         "gbs_res_partner",
         "account_fam",
         "account_category",
