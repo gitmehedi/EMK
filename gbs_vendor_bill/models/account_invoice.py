@@ -7,6 +7,10 @@ class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice','ir.needaction_mixin']
 
+    entity_service_id = fields.Many2one('entity.service', string='Service', readonly=True,
+                                       states={'draft': [('readonly', False)]},
+                                       track_visibility='onchange')
+
     operating_unit_id = fields.Many2one('operating.unit', 'Branch',
                                         default=lambda self:
                                         self.env['res.users'].

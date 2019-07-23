@@ -69,7 +69,12 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="entity_service_id" string="Service"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('supplier','=',True),('entity_services','=',entity_service_id)]</attribute>
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="replace">
