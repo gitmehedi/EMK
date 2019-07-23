@@ -15,17 +15,6 @@ class InheritedPurchaseOrderLine(models.Model):
     percent_discount = fields.Text(string='Percent Discount')
     cal_discount_amount = fields.Float(string='Discount Amount', default="0.0")
 
-    # def create(self, cr, uid, values, context=None):
-    #     if values.get('session_id'):
-    #         # set name based on the sequence specified on the config
-    #         session = self.pool['pos.session'].browse(cr, uid, values['session_id'], context=context)
-    #         values['name'] = session.config_id.sequence_id._next()
-    #     else:
-    #         # fallback on any pos.order sequence
-    #         values['name'] = self.pool.get('ir.sequence').get_id(cr, uid, 'pos.order', 'code', context=context)
-    #
-    #     return super(InheritedPurchaseOrderLine, self).create(cr, uid, values, context=context)
-
     def _order_fields(self, cr, uid, ui_order, context=None):
         return {
             'name': ui_order['name'],
