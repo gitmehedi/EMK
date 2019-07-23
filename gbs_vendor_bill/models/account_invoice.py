@@ -10,7 +10,6 @@ class AccountInvoice(models.Model):
     entity_service_id = fields.Many2one('entity.service', string='Service', readonly=True,
                                        states={'draft': [('readonly', False)]},
                                        track_visibility='onchange')
-
     operating_unit_id = fields.Many2one('operating.unit', 'Branch',
                                         default=lambda self:
                                         self.env['res.users'].
@@ -172,7 +171,7 @@ class AccountInvoice(models.Model):
         if self.residual <= 0.0:
             raise ValidationError(_('There is no remaining balance for this Bill!'))
 
-        if self.residual <= self.total_payment_amount:
+        if self.residual <= sum(line.amount for line in self.payment_line_ids if line.state == 'draft'):
             raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
                                     ' no new payment instruction can possible!'))
 

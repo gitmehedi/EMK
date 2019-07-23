@@ -5,7 +5,7 @@
                 name="Divisions"
                 id="main_menu_division"
                 parent="account.account_account_menu"
-                sequence="41"
+                sequence="90"
         />
         <record id="view_bd_division_tree" model="ir.ui.view">
             <field name="name">bd.division.tree</field>
@@ -51,6 +51,7 @@
             <field name="arch" type="xml">
                 <tree string="Districts">
                     <field name="name" />
+                    <field name="division_id"/>
                 </tree>
             </field>
         </record>
@@ -93,6 +94,8 @@
             <field name="arch" type="xml">
                 <tree string="Upazila/Thana">
                     <field name="name" />
+                    <field name="division_id"/>
+                    <field name="district_id"/>
                 </tree>
             </field>
         </record>
