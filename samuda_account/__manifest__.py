@@ -13,6 +13,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/sale_type_product_acc.xml',
+        'views/inherit_invoice_lc_view.xml',
     ],
     'installable': True,
     'application': True,
