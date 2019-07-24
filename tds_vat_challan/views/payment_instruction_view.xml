@@ -20,8 +20,8 @@
                         class="btn btn-primary" states="draft"/>
                 <button name="action_reject" string="Reject" type="object"
                         class="oe_highlight" states="draft"/>
-                <button name="action_reset" string="Reset" type="object"
-                        class="oe_highlight" states="cancel"/>
+                <!--<button name="action_reset" string="Reset" type="object"-->
+                        <!--class="oe_highlight" states="cancel"/>-->
             </tree>
         </field>
     </record>
