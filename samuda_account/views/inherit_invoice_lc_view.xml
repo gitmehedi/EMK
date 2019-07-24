@@ -6,7 +6,7 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_form" />
         <field name="arch" type="xml">
-            <field name="currency_id" position="after">
+            <field name="partner_shipping_id" position="after">
                 <field name="lc_id" string="LC No"/>
             </field>
         </field>
