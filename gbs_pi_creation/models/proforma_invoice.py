@@ -58,8 +58,11 @@ class ProformaInvoice(models.Model):
                                states={'draft': [('readonly', False)]},default='By Truck')
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
-    terms_id = fields.Many2one('terms.setup', string='Payment term', store=True, readonly=True,track_visibility='onchange',
-                               states={'draft': [('readonly', False)]})
+    # terms_id = fields.Many2one('terms.setup', string='Payment term', store=True, readonly=True,track_visibility='onchange',
+    #                            states={'draft': [('readonly', False)]})
+
+    account_payment_term_id = fields.Many2one('account.payment.term', string='Payment term', store=True, readonly=True,
+                                              track_visibility='onchange', states={'draft': [('readonly', False)]})
 
     terms_of_delivery = fields.Char(string='Terms of Delivery', readonly=True, track_visibility='onchange',
                                states={'draft': [('readonly', False)]}, default='')
@@ -192,10 +195,10 @@ class ProformaInvoice(models.Model):
         else:
             raise ValidationError("You can't reset this PI!! \n PI is associate with sale order (" +so_obj.name+ ") reference.")
 
-    @api.onchange('terms_id')
-    def onchange_terms_id(self):
-        if self.terms_id:
-            self.terms_condition = self.terms_id.terms_condition
+    @api.onchange('account_payment_term_id')
+    def _account_payment_term_id(self):
+        if self.account_payment_term_id:
+            self.terms_condition = self.account_payment_term_id.terms_condition
 
     @api.model
     def _needaction_domain_get(self):
