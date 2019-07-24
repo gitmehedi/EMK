@@ -6,42 +6,19 @@
         <field name="arch" type="xml">
             <form string="Credit Note">
                 <group>
-                    <group>
-                        <!--<field name="refund_only" invisible="1"/>-->
-                        <!--<field name="filter_refund" attrs="{'invisible': [('refund_only','=',True)]}" widget="radio"/>-->
-                    </group>
-                    <group>
-                        <!--<div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','&lt;&gt;','refund')]}" class="oe_grey" colspan="4">-->
-                        <div class="oe_grey" colspan="4">
-                            You will be able to edit and validate this
-                            credit note directly or keep it draft,
-                            waiting for the document to be issued by
-                            your supplier/customer.
-                        </div>
-                        <!--<div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','&lt;&gt;','cancel')]}" class="oe_grey" colspan="4">-->
-                        <div class="oe_grey" colspan="4">
-                            Use this option if you want to cancel an invoice you should not
-                            have issued. The credit note will be created, validated and reconciled
-                            with the invoice. You will not be able to modify the credit note.
-                        </div>
-                        <!--<div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','&lt;&gt;','modify')]}" class="oe_grey" colspan="4">-->
-                        <div class="oe_grey" colspan="4">
-                            Use this option if you want to cancel an invoice and create a new
-                            one. The credit note will be created, validated and reconciled
-                            with the current invoice. A new, draft, invoice will be created
-                            so that you can edit it.
-                        </div>
-                    </group>
-                    <group>
-                        <!--<field name="description"/>-->
-                    </group>
-                    <group>
-                        <!--<field name="date_invoice"/>-->
-                        <!--<field name="date" groups="base.group_no_one"/>-->
-                    </group>
+                    <field name="reverse_option" invisible="1"/>
+                    <div class="oe_grey" colspan="4">
+                        If you reverse this invoice then reverse journal will be generate.
+                    </div>
+                    <div attrs="{'invisible':[('reverse_option','!=','op2')]}" class="oe_grey" colspan="4">
+                        There are same VAT/TDS has been paid or in payment instruction pending process.
+                        So reverse journal will be generate without those value.
+                    </div>
                 </group>
                 <footer>
-                    <button string='Create Reverse' name="invoice_reverse" type="object" class="btn-primary"/>
+                    <button string='Create Reverse' name="invoice_reverse"
+                            type="object" class="btn-primary"
+                            confirm="Are you sure to reverse this invoice?"/>
                     <button string="Cancel" class="btn-default" special="cancel"/>
                 </footer>
             </form>
@@ -57,3 +34,9 @@
         <field name="target">new</field>
     </record>
 </odoo>
+
+
+<!--<div attrs="{'invisible':[('reverse_option','!=','op3')]}" class="oe_grey" colspan="4">-->
+    <!--There are some payment instruction with this invoice.-->
+    <!--So reverse payment instruction will generate.-->
+<!--</div>-->
