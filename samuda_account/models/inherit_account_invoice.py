@@ -4,6 +4,8 @@ from odoo import models, fields, api
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    so_id = fields.Many2one('sale.order', string='SO No', readonly=True)
+
     @api.onchange('sale_type_id')
     def onchange_sale_type_id(self):
         if self.sale_type_id:
@@ -57,6 +59,9 @@ class Picking(models.Model):
 
         if product_acc_list:
             for inv in self.sale_id.invoice_ids:
+
+                # Set so_id for getting reference SO-> LC
+                inv.so_id = self.sale_id
                 for inv_line in inv.invoice_line_ids:
                     for sale_acc_line in product_acc_list:
                         if sale_acc_line.sale_order_type_id.id == self.sale_id.type_id.id and inv_line.product_id.id == sale_acc_line.product_id.id:
