@@ -58,6 +58,26 @@
             <xpath expr="//field[@name='function']" position="replace">
                 <field name="designation_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
             </xpath>
+            <xpath expr="//field[@name='tin']" position="after">
+                <field name="nid"/>
+            </xpath>
+            <xpath expr="//field[@name='street2']" position="attributes">
+                <attribute name="placeholder">etc.</attribute>
+                <attribute name="widget">text</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="division_id" placeholder="Divisions"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <field name="district_id" placeholder="Districts"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <field name="upazila_id" placeholder="Upazila/Thana"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <field name="postal_code" placeholder="Postal Code"/>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="entity_services" placeholder="Services..." widget="many2many_tags"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+            </xpath>
             <xpath expr="//sheet/notebook" position="after">
                 <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
                     <tree decoration-info="state=='pending'" decoration-success="state=='approve'"

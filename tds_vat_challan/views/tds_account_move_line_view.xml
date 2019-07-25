@@ -93,6 +93,7 @@
             <field name="view_mode">tree</field>
             <field name="context">{'search_default_tax_type':1}</field>
             <field name="domain">[('tax_type', 'in', ['vat','tds']),
+                ('is_tdsvat_payable', '=', True),
                 ('is_pending', '=', False),
                 ('is_challan', '=', False),
                 ('pending_for_paid', '=', False),

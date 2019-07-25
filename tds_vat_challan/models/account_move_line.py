@@ -85,6 +85,11 @@ class AccountMoveLine(models.Model):
             if not rec.is_paid:
                 raise ValidationError(_('Without Paid can not generate for challan!'))
 
+        tax_type_list = [i.tax_type for i in records]
+        if 'tds' in tax_type_list and 'vat' in tax_type_list:
+            raise ValidationError(_('Please select same type("TDS/VAT") records!'))
+
+
         res_view = self.env.ref('tds_vat_challan.tds_vat_challan_form_view')
 
         result = {

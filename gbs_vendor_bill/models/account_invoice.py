@@ -7,6 +7,9 @@ class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice','ir.needaction_mixin']
 
+    entity_service_id = fields.Many2one('entity.service', string='Service', readonly=True,
+                                       states={'draft': [('readonly', False)]},
+                                       track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', 'Branch',
                                         default=lambda self:
                                         self.env['res.users'].
@@ -25,7 +28,7 @@ class AccountInvoice(models.Model):
                                       ('vds_authority', 'VDS Authority'),
                                       ], string='VAT Selection', default='normal',
                                      readonly=True,states={'draft': [('readonly',False)]})
-    payment_approver = fields.Text('Payment Approved',track_visibility='onchange', help="Log for payment approver")
+    payment_approver = fields.Text('Payment Instruction Responsible',track_visibility='onchange', help="Log for payment approver")
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -50,8 +53,8 @@ class AccountInvoice(models.Model):
     @api.depends('payment_line_ids.amount','payment_line_ids.state')
     def _compute_payment_amount(self):
         for invoice in self:
-            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids)
-            invoice.total_payment_approved = sum(line.amount for line in invoice.payment_line_ids if line.state=='approved')
+            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids if line.state not in ['cancel'])
+            invoice.total_payment_approved = sum(line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -113,6 +116,7 @@ class AccountInvoice(models.Model):
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
                     'operating_unit_id': tax_line.operating_unit_id.id,
+                    'is_tdsvat_payable': self.type in ('out_invoice', 'in_invoice') and True,
                     'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
                 })
                 done_taxes.append(tax.id)
@@ -167,7 +171,7 @@ class AccountInvoice(models.Model):
         if self.residual <= 0.0:
             raise ValidationError(_('There is no remaining balance for this Bill!'))
 
-        if self.residual <= self.total_payment_amount:
+        if self.residual <= sum(line.amount for line in self.payment_line_ids if line.state == 'draft'):
             raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
                                     ' no new payment instruction can possible!'))
 
@@ -288,6 +292,8 @@ class ProductProduct(models.Model):
             else:
                 inv_obj = self.env['account.invoice'].search([('id', '=', line['invoice_id'])])
                 res.update({'operating_unit_id': inv_obj.operating_unit_id.id})
+            if line.get('is_tdsvat_payable'):
+                res.update({'is_tdsvat_payable': line.get('is_tdsvat_payable')})
         return res
 
 class AccountMove(models.Model):
@@ -302,3 +308,8 @@ class AccountMove(models.Model):
                 if op_unit:
                     move.write({'operating_unit_id':op_unit[0]})
         return res
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    is_tdsvat_payable = fields.Boolean('TDS/VAT Payable', default=False)

@@ -36,3 +36,27 @@ class PaymentInstruction(models.Model):
         if vals.get('code', 'New') == 'New':
             vals['code'] = self.env['ir.sequence'].next_by_code('payment.instruction.sequence') or ''
         return super(PaymentInstruction, self).create(vals)
+
+    @api.multi
+    def action_approve(self):
+        self.write({'state': 'approved'})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    @api.multi
+    def action_reject(self):
+        self.write({'state': 'cancel'})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    @api.multi
+    def action_reset(self):
+        self.write({'state': 'draft'})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
