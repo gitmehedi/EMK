@@ -69,7 +69,8 @@ class AccountAssetAsset(models.Model):
         super(AccountAssetAsset, self).validate()
         if not self.asset_seq:
             code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
-            self.write({'asset_seq': code})
+            ATAC = '{0}-{1}'.format(self.category_id.code, self.asset_type_id.code)
+            self.write({'asset_seq': code.replace('ATAC', ATAC)})
 
     def depr_date_format(self, depreciation_date):
         no_of_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
@@ -290,17 +291,17 @@ class AccountAssetDepreciationLine(models.Model):
             if self.env.context.get('dispose'):
                 move_vals = self.format_dispose_move(amount, asset_name, category_id, prec, line,
                                                      company_currency,
-                                                     current_currency, depreciation_date,current_branch)
+                                                     current_currency, depreciation_date, current_branch)
                 line.write({'line_type': 'dispose'})
             elif self.env.context.get('sale'):
                 move_vals = self.format_sale_move(amount, asset_name, category_id, prec, line,
                                                   company_currency,
-                                                  current_currency, depreciation_date,current_branch)
+                                                  current_currency, depreciation_date, current_branch)
                 line.write({'line_type': 'sale'})
             else:
                 move_vals = self.format_depreciation_move(amount, asset_name, category_id, prec, line,
                                                           company_currency,
-                                                          current_currency, depreciation_date,current_branch)
+                                                          current_currency, depreciation_date, current_branch)
                 line.write({'line_type': 'depreciation'})
 
             move = self.env['account.move'].create(move_vals)
@@ -313,7 +314,7 @@ class AccountAssetDepreciationLine(models.Model):
         return [x.id for x in created_moves]
 
     def format_dispose_move(self, amount, asset_name, category_id, prec, line, company_currency, current_currency,
-                            depreciation_date,current_branch):
+                            depreciation_date, current_branch):
         depr_credit = {
             'name': asset_name,
             'account_id': category_id.account_asset_id.id,
@@ -355,7 +356,7 @@ class AccountAssetDepreciationLine(models.Model):
         }
 
     def format_sale_move(self, amount, asset_name, category_id, prec, line, company_currency, current_currency,
-                         depreciation_date,current_branch):
+                         depreciation_date, current_branch):
         sale_id = self.env['account.asset.sale'].search([('name', '=', self.env.context.get('sale_id'))])
         sales = self.env['account.asset.sale.line'].search(
             [('sale_id', '=', sale_id.id), ('asset_id', '=', self.asset_id.id)])
@@ -426,7 +427,7 @@ class AccountAssetDepreciationLine(models.Model):
         }
 
     def format_depreciation_move(self, amount, asset_name, category_id, prec, line, company_currency,
-                                 current_currency, depreciation_date,current_branch):
+                                 current_currency, depreciation_date, current_branch):
         move_line_1 = {
             'name': asset_name,
             'account_id': category_id.account_depreciation_id.id,

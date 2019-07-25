@@ -99,9 +99,7 @@ class AccountAssetCategory(models.Model):
 
     @api.one
     def name_get(self):
-        if self.parent_id:
-            name = '%s' % (self.name)
-        else:
+        if self.code:
             name = '[%s] %s' % (self.code, self.name)
         return (self.id, name)
 
