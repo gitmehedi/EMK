@@ -54,21 +54,27 @@
                         <group>
                             <field name="journal_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}"
-                                   domain="[('company_id', '=', company_id)]"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="asset_suspense_account_id" domain="[('company_id', '=', company_id)]"
+                            <field name="asset_suspense_account_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="account_depreciation_expense_id" domain="[('company_id', '=', company_id)]"
+                            <field name="account_depreciation_expense_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                         <group>
-                            <field name="account_depreciation_id" domain="[('company_id', '=', company_id)]"
+                            <field name="account_depreciation_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="account_asset_loss_id" domain="[('company_id', '=', company_id)]"
+                            <field name="account_asset_loss_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="account_asset_gain_id" domain="[('company_id', '=', company_id)]"
+                            <field name="account_asset_gain_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="asset_sale_suspense_account_id" domain="[('company_id', '=', company_id)]"
+                            <field name="asset_sale_suspense_account_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                     </group>
