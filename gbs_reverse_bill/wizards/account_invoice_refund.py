@@ -42,6 +42,7 @@ class AccountInvoiceReverse(models.TransientModel):
             'ref': _('reversal of: ') + move_id.name})
         tax_grouped = {}
         for ac_move_line_id in ac_move_line_ids:
+            # need to change this condition
             if ac_move_line_id.pending_for_paid or ac_move_line_id.is_paid or ac_move_line_id.is_challan:
                 val = ac_move_line_id.credit
                 key = ac_move_line_id.product_id.id
