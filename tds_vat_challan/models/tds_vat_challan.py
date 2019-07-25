@@ -162,6 +162,10 @@ class TdsVatChallanLine(models.Model):
     total_bill = fields.Float(String='Total Bill')
     parent_id = fields.Many2one('tds.vat.challan')
     currency_id = fields.Many2one('res.currency', string='Currency')
+    challan_date = fields.Date(string='Challan Date',related='parent_id.challan_date')
+    challan_no = fields.Char(string='Challan No.',related='parent_id.challan_no')
+    deposited_bank = fields.Char(string='Deposited Bank',related='parent_id.deposited_bank')
+    bank_branch = fields.Char(string='Bank Branch',related='parent_id.bank_branch')
 
     state = fields.Selection([
         ('draft', "Draft"),
