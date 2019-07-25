@@ -32,8 +32,8 @@ class AccountAssetAsset(models.Model):
     warranty_date = fields.Date(string='Warranty Date', track_visibility='onchange', readonly=True,
                                 states={'draft': [('readonly', False)]})
     date = fields.Date(string='Purchase Date', track_visibility='onchange')
-    asset_usage_date = fields.Date(string='Asset Usage Date', help='Asset Allocation/Usage Date',
-                                   track_visibility='onchange')
+    asset_usage_date = fields.Date(string='Usage Date', help='Usage Date/Allocation Date', readonly=True,
+                                   track_visibility='onchange', states={'draft': [('readonly', False)]})
     model_name = fields.Char(string='Model', track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Purchase Branch', required=True,

@@ -46,6 +46,7 @@
                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     <field name="invoice_date" readonly="True"/>
                     <field name="date"/>
+                    <field name="asset_usage_date"/>
                     <field name="code" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="allocation_status" invisible="True"/>
@@ -69,7 +70,7 @@
                     <field name="advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="warranty_date"/>
                     <field name="model_name"/>
-                    <field name="asset_usage_date" readonly="True"/>
+
                 </group>
             </xpath>
 
