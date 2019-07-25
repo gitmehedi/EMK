@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_customer_sales_sector"
+                model="res.partner"
+                string="Customer Sales Report"
+                report_type="qweb-pdf"
+                menu="False"
+                name="samuda_sales_report.report_customer_sales_sector"
+                file="samuda_sales_report.report_customer_sales_sector"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+        <template id="report_customer_sales_sector">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Sector Wise Customer Sales Report</h4>
+                                <br/>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        <ul class="list-inline">
+                                            <li>
+                                                <strong>Sector : </strong>
+                                                <t t-if="not data['sector_name']">All</t>
+                                                <span t-esc="data['sector_name']"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <strong>Date : </strong>
+                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+                                        <strong> to </strong>
+                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th rowspan="2" style="text-align: center;">
+                                            Party Name
+                                        </th>
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th colspan="2" style="text-align: center;">
+                                                <t t-esc="head.name"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th style="text-align: center;">Qty</th>
+                                            <th style="text-align: center;">Val</th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data" t-as="obj">
+                                        <tr>
+                                            <td class="odo-bg-info" colspan="100%">
+                                                <strong class="text-nowrap" t-esc="obj_value['sector_name']"/>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="obj_value['customers']" t-as="cus">
+                                            <tr>
+                                                <td>
+                                                    <span class="text-nowrap" t-esc="cus_value['customer_name']"/>
+                                                </td>
+                                                <t t-foreach="header_data" t-as="head">
+                                                    <td class="text-right">
+                                                        <span class="text-nowrap" t-esc="formatLang(cus_value['products'][head.id]['qty'])"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span class="text-nowrap" t-esc="formatLang(cus_value['products'][head.id]['val'])"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                        <tr>
+                                            <td>
+                                                <strong class="text-nowrap">Total</strong>
+                                            </td>
+                                            <t t-foreach="header_data" t-as="head">
+                                                <td class="text-right">
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(obj_value['customers'][key]['products'][head.id]['qty'] for key in obj_value['customers']))"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(obj_value['customers'][key]['products'][head.id]['val'] for key in obj_value['customers']))"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

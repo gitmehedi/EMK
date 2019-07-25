@@ -1,4 +1,6 @@
 from odoo import api, exceptions, fields, models
+from odoo.tools.misc import formatLang
+
 
 class GbsPurchaseRequisition(models.AbstractModel):
     _name = 'report.gbs_purchase_requisition.report_purchase_requisition'
@@ -24,10 +26,10 @@ class GbsPurchaseRequisition(models.AbstractModel):
                 list_obj['store_code']= line.store_code
                 list_obj['product_ordered_qty']= line.product_ordered_qty
                 list_obj['product_uom_id']= line.product_uom_id.name
-                list_obj['total']= line.product_ordered_qty*line.price_unit
+                list_obj['total']= formatLang(self.env, line.product_ordered_qty*line.price_unit)
                 list_obj['last_purchase_date']= line.last_purchase_date
                 list_obj['last_qty']= line.last_qty
-                list_obj['last_price_unit']= line.last_price_unit
+                list_obj['last_price_unit']= formatLang(self.env, line.last_price_unit)
                 list_obj['product_qty']= line.product_qty
                 list_obj['remark']= line.remark
                 order_list.append(list_obj)

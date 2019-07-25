@@ -30,11 +30,13 @@
         'sales_team_operating_unit',
         'product_sales_pricelist',
         'hidden_admin',
+        'lc_sales_product_local',
     ],
 
 
     # always loaded
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu_items.xml',

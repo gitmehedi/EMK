@@ -48,7 +48,7 @@ class PurchaseOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax + amount_vat - amount_discount
             })
 
-    name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
+    name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New', track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
     region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="Region Type",
@@ -280,9 +280,13 @@ class PurchaseOrder(models.Model):
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             requested_date = datetime.strptime(vals['date_order'], "%Y-%m-%d %H:%M:%S").date()
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date,self.operating_unit_id or None) or '/'
+            op_unit_obj = self.env['operating.unit'].search([('id', '=', vals['operating_unit_id'])])
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date,op_unit_obj) or '/'
         if not vals.get('requisition_id'):
             vals['check_po_action_button'] = True
+        partner_currency_id = self.env['res.partner'].search([('id', '=', vals['partner_id'])]).property_purchase_currency_id
+        if not partner_currency_id:
+            raise UserError(_('Currency not set for this Supplier. Please at first set the currency'))
         return super(PurchaseOrder, self).create(vals)
 
     @api.multi
@@ -306,22 +310,13 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty",
-                                digits=dp.get_precision('Product Unit of Measure'), store=True)
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty",
-                                digits=dp.get_precision('Product Unit of Measure'), store=True)
-
     # relation between PO line and PR line----------------------------------------
     pr_line_ids = fields.Many2many('purchase.requisition.line', 'po_pr_line_rel', 'po_line_id', 'pr_line_id',
                                        string='Purchase Requisition Lines')
-    # ----------------------------------------------------------------------------
+    product_uom_view = fields.Many2one('product.uom',related='product_id.uom_id', string='Product Unit of Measure',
+                                       store=True,readonly=True)
 
-    @api.depends('order_id.state', 'move_ids.state')
-    def _compute_qty_received(self):
-        for line in self:
-            line.qty_received = 0.0
-
-    @api.depends('invoice_lines.invoice_id.state')
-    def _compute_qty_invoiced(self):
-        for line in self:
-            line.qty_invoiced = 0.0
+    # qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty",
+    #                             digits=dp.get_precision('Product Unit of Measure'), store=True)
+    # qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty",
+    #                             digits=dp.get_precision('Product Unit of Measure'), store=True)

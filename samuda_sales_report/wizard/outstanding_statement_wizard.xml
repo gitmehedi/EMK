@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="outstanding_statement_wizard_view" model="ir.ui.view">
+			<field name="name">outstanding.statement.wizard</field>
+			<field name="model">outstanding.statement.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+                        <group>
+                            <field name="executive_id" placeholder="All"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="date_from"/>
+                        </group>
+                        <group>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+        <record id="action_outstanding_statement_wizard" model="ir.actions.act_window">
+			<field name="name">Total Outstanding Statement Report</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">outstanding.statement.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+    </data>
+</odoo>

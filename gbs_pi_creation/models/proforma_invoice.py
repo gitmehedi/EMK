@@ -38,28 +38,34 @@ class ProformaInvoice(models.Model):
 
     name = fields.Char(string='Name', index=True, readonly=True, default="/")
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True),('parent_id', '=', False)], required=True,
-                                 readonly=True, states={'draft': [('readonly', False)]})
-    invoice_date = fields.Date('PI Date', readonly=True, required=True,
+                                 track_visibility='onchange',readonly=True, states={'draft': [('readonly', False)]})
+    invoice_date = fields.Date('PI Date', readonly=True, required=True,track_visibility='onchange',
                                states={'draft': [('readonly', False)]},default=fields.Datetime.now)
     # advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', readonly=True,
     #                                    states={'draft': [('readonly', False)]})
 
-    advising_bank_acc_id = fields.Many2one('res.partner.bank', string='Advising Bank Acc', domain=[('is_company_account', '=', True)],
+    advising_bank_acc_id = fields.Many2one('res.partner.bank', string='Advising Bank Acc', track_visibility='onchange', domain=[('is_company_account', '=', True)],
                                            required=True, readonly=True, states={'draft': [('readonly', False)]})
 
     region_type = fields.Selection([('local', "Local"),('foreign', "Foreign")], readonly=True,)
 
 
-    beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True,
+    beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True,track_visibility='onchange',
                                      default=lambda self: self.env['res.company']._company_default_get(),
                                      states={'draft': [('readonly', False)]})
 
-    transport_by = fields.Char(string='Transport By', required=True, readonly=True,
+    transport_by = fields.Char(string='Transport By', required=True, readonly=True,track_visibility='onchange',
                                states={'draft': [('readonly', False)]},default='By Truck')
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
-    terms_id = fields.Many2one('terms.setup', string='Payment term', store=True, readonly=True,
-                               states={'draft': [('readonly', False)]})
+    # terms_id = fields.Many2one('terms.setup', string='Payment term', store=True, readonly=True,track_visibility='onchange',
+    #                            states={'draft': [('readonly', False)]})
+
+    account_payment_term_id = fields.Many2one('account.payment.term', string='Payment term', store=True, readonly=True,
+                                              track_visibility='onchange', states={'draft': [('readonly', False)]})
+
+    terms_of_delivery = fields.Char(string='Terms of Delivery', readonly=True, track_visibility='onchange',
+                               states={'draft': [('readonly', False)]}, default='')
 
     """ Shipping Address"""
     ship_freight_type = fields.Char(string='Freight Type', readonly=True, states={'draft': [('readonly', False)]})
@@ -71,13 +77,14 @@ class ProformaInvoice(models.Model):
     ship_total_pkg = fields.Char(string='Total Package', readonly=True, states={'draft': [('readonly', False)]})
 
     """ Customer Address"""
-    customer_add = fields.Text(string='Customer Address',store=True, readonly=True,
+    customer_add = fields.Text(string='Customer Address',store=True, readonly=True,track_visibility='onchange',
                                compute='_compute_customer_address')
 
     """ Ship To"""
     terms_condition = fields.Text(string='Terms of Condition', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
-    packing = fields.Char(string='Packing', readonly=True, states={'draft': [('readonly', False)]})
+    packing = fields.Char(string='Packing', readonly=True, track_visibility='onchange',
+                          states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -96,7 +103,7 @@ class ProformaInvoice(models.Model):
     total = fields.Float(string='Total', readonly=True, track_visibility='onchange',compute='_amount_all',store = True)
 
     """ Relational field"""
-    line_ids = fields.One2many('proforma.invoice.line', 'pi_id', string="Products", readonly=True,
+    line_ids = fields.One2many('proforma.invoice.line', 'pi_id', string="Products", track_visibility='onchange',readonly=True,
                                states={'draft': [('readonly', False)]})
 
     def _get_pack_type(self):
@@ -104,10 +111,10 @@ class ProformaInvoice(models.Model):
 
     """New field"""
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type,
-                                readonly=True,
+                                readonly=True, track_visibility='onchange',
                                 states={'draft': [('readonly', False)]}
                                 , required=True)
-    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', domain=[('sale_order_type', '=', 'lc_sales')], readonly=True,
+    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', domain=[('sale_order_type', 'in', ['lc_sales', 'tt_sales', 'contract_sales'])], readonly=True,
                               required=True,track_visibility='onchange',states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one(comodel_name='res.currency',related='type_id.currency_id', store=True,
                                   string='Currency',readonly=True,track_visibility='onchange')
@@ -115,6 +122,8 @@ class ProformaInvoice(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True,related='type_id.sale_order_type')
 
     @api.multi
@@ -177,15 +186,19 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def action_draft(self):
-        res = {
-            'state': 'draft',
-        }
-        self.write(res)
+        so_obj = self.env['sale.order'].search([('pi_id','=',self.id)])
+        if not so_obj:
+            res = {
+                'state': 'draft',
+            }
+            self.write(res)
+        else:
+            raise ValidationError("You can't reset this PI!! \n PI is associate with sale order (" +so_obj.name+ ") reference.")
 
-    @api.onchange('terms_id')
-    def onchange_terms_id(self):
-        if self.terms_id:
-            self.terms_condition = self.terms_id.terms_condition
+    @api.onchange('account_payment_term_id')
+    def _account_payment_term_id(self):
+        if self.account_payment_term_id:
+            self.terms_condition = self.account_payment_term_id.terms_condition
 
     @api.model
     def _needaction_domain_get(self):

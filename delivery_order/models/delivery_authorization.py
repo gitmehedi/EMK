@@ -58,6 +58,8 @@ class DeliveryAuthorization(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True, track_visibility='onchange')
 
     state = fields.Selection([
@@ -279,7 +281,7 @@ class DeliveryAuthorization(models.Model):
                     'price_subtotal': recs.price_subtotal,
                     'tax_id': recs.tax_id.id,
                     'delivery_qty': self.sale_order_id.order_line.product_uom_qty - sum_delivery_qty,
-                    'sale_order_id': self.id,
+                    'sale_order_id': self.sale_order_id.id,
                 }
 
                 self.env['delivery.authorization.line'].create(da_line2)
@@ -302,12 +304,12 @@ class DeliveryAuthorization(models.Model):
 
     @api.multi
     def action_validate(self):
-        if self.so_type == 'cash':
+        if self.so_type == 'cash' or self.so_type == 'tt_sales':
             cash_check = self.payments_amount_checking_with_products_subtotal()
             #self._create_delivery_authorization_back_order()
             return cash_check
 
-        elif self.so_type == 'lc_sales':
+        elif self.so_type == 'lc_sales' or self.so_type == 'contract_sales':
             if self.lc_id and self.pi_id:
                 if self.lc_id.lc_value >= self.total_sub_total_amount():
 
@@ -600,6 +602,7 @@ class DeliveryAuthorization(models.Model):
             ## Update LC No to Stock Picking Obj
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
+
 
 
 class OrderedQty(models.Model):

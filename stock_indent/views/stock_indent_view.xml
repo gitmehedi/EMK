@@ -68,7 +68,8 @@
 								<field name="stock_location_id" options="{'no_create': True,'no_open':True}"/>
 							</group>
 							<group>
-								<field name="indent_date" />
+								<field name="days_of_backdating_indent" invisible="1"/>
+								<field name="indent_date" attrs="{'readonly': [('days_of_backdating_indent','=',0)]}"/>
 								<field name="required_date" />
 								<field name="approve_date" invisible="1"/>
 								<field name="indent_type" options="{'no_create': True,'no_open':True}"
@@ -86,7 +87,7 @@
 										<field name="product_id" domain="[('type','!=','service')]" options="{'no_create': True,'no_open':True}"/>
 										<field name="name" readonly="1" />
 										<field name="qty_available" invisible="1"/>
-										<field name="qty_available_now" readonly="1" groups="stock.group_stock_user" />
+										<field name="qty_available_now" readonly="1" groups="stock.group_stock_user,stock_indent.group_stock_indent_approver"/>
 										<field name="product_uom" string="UOM"/>
 										<field name="product_uom_qty" sum="Total Qty"/>
 										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>

@@ -211,6 +211,7 @@
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="validation" string="To Validate" domain="[('state','=','in_progress')]"/>
                     <filter name="approval" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
+                    <filter name="approval_local_foreign" string="To Approve" domain="[('state','=','done')]"/>
                     <filter name="active" string="Active" domain="[('state', 'in', ('draft','in_progress','approve_head_procurement','done'))]"/>
                 </xpath>
             </field>
@@ -412,6 +413,16 @@
                 parent="purchase.menu_purchase_config"
                 action="purchase_requisition.tender_type_action"
                 groups="base.group_system"/>
+
+
+        <act_window
+            domain="[('requisition_id', '=', active_id)]"
+            context="{'default_requisition_id': active_id}"
+            id="purchase_requisition.act_res_partner_2_purchase_order"
+            name="Purchase orders"
+            res_model="purchase.order"
+            src_model="purchase.requisition"
+            groups="base.group_system"/>
 
     </data>
 </odoo>

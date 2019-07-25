@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_executive_sales"
+                model="res.partner"
+                string="Executive Sales Report"
+                report_type="qweb-pdf"
+                menu="False"
+                name="samuda_sales_report.report_executive_sales"
+                file="samuda_sales_report.report_executive_sales"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+        <template id="report_executive_sales">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <t t-if="data['report_type']=='local'">
+                                    <h4 class="report-title">Area Wise Executive Sales Report</h4>
+                                </t>
+                                <t t-else="">
+                                    <h4 class="report-title">Country Wise Executive Sales Report</h4>
+                                </t>
+                                <br/>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        <ul class="list-inline">
+                                            <li>
+                                                <Strong>Type : </Strong>
+                                                <t t-if="data['report_type']=='local'">
+                                                    <span>Local</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>Foreign</span>
+                                                </t>
+                                            </li>
+                                            <li>
+                                                <t t-if="data['report_type'] == 'local'">
+                                                    <strong>Area : </strong>
+                                                    <t t-if="not data['area_name']">All</t>
+                                                    <span t-esc="data['area_name']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong>Country : </strong>
+                                                    <t t-if="not data['country_name']">All</t>
+                                                    <span t-esc="data['country_name']"/>
+                                                </t>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <strong>Date : </strong>
+                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+                                        <strong> to </strong>
+                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center" rowspan="2">Executive Name</th>
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th class="text-center" colspan="2"><t t-esc="head.name"/></th>
+                                        </t>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th class="text-center">Qty</th>
+                                            <th class="text-center">Val</th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data" t-as="obj">
+                                        <tr>
+                                            <td class="odo-bg-info" colspan="100%">
+                                                <t t-if="data['report_type'] == 'local'">
+                                                    <strong class="text-nowrap" t-esc="obj_value['area_name']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong class="text-nowrap" t-esc="obj_value['country_name']"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="obj_value['executives']" t-as="exc">
+                                            <tr>
+                                                <td>
+                                                    <span class="text-nowrap" t-esc="exc_value['executive_name']"/>
+                                                </td>
+                                                <t t-foreach="header_data" t-as="head">
+                                                    <td class="text-right">
+                                                        <span class="text-nowrap" t-esc="formatLang(exc_value['products'][head.id]['qty'])"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span class="text-nowrap" t-esc="formatLang(exc_value['products'][head.id]['val'])"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                        <tr>
+                                            <td>
+                                                <strong class="text-nowrap">Total</strong>
+                                            </td>
+                                            <t t-foreach="header_data" t-as="head">
+                                                <td class="text-right">
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(obj_value['executives'][key]['products'][head.id]['qty'] for key in obj_value['executives']))"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(obj_value['executives'][key]['products'][head.id]['val'] for key in obj_value['executives']))"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

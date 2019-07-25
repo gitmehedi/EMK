@@ -45,13 +45,19 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
+        ('tt_sales', 'TT'),
+        ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True, related='type_id.sale_order_type')
+
+    delivery_mode = fields.Selection([('cnf','C&F'),('fob','FOB')], string='Delivery Mode')
+    vat_mode = fields.Selection([('vat','VAT'),('non_vat','Non VAT')], string='Is VAT Applicable')
+    bonded_mode = fields.Selection([('bonded','Bonded'),('non_bonded','Non Bonded')], string='Is Bonded Applicable')
 
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
 
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms')
 
     # inherited fields from sale
     partner_id = fields.Many2one('res.partner', string='Customer', required=True,
@@ -111,11 +117,13 @@ class SaleOrder(models.Model):
                                  states={'to_submit': [('readonly', False)]},
                                  help="The analytic account related to a sales order.", copy=False)
 
+    region_type = fields.Selection([('local', "Local"), ('foreign', "Foreign")], readonly=True, required=True)
+
     """ PI and LC """
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
                             readonly=True, states={'to_submit': [('readonly', False)]})
     # domain = [('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')],
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True)
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', track_visibility='onchange', readonly=True)
 
     # remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
@@ -220,6 +228,9 @@ class SaleOrder(models.Model):
     def action_to_submit(self):
         for orders in self:
 
+            if orders.region_type == False:
+                raise UserError('You Cannot Submit this SO due to Region Type is missing.')
+
             # Check seq needs to re-generate or not
             if orders.operating_unit_id.name not in orders.name:
                 new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
@@ -236,20 +247,26 @@ class SaleOrder(models.Model):
             orders.state = 'draft'
 
     @api.onchange('type_id')
-    def onchange_type(self):
+    def _onchange_type_id(self):
         if self.type_id:
             sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
 
-            if self.type_id.sale_order_type != 'lc_sales':
-                self.pi_id = None
+            # if self.type_id.sale_order_type != 'lc_sales' and \
+            #                 self.type_id.sale_order_type != 'tt_sales' and \
+            #                 self.type_id.sale_order_type != 'contract_sales':
+            #     self.pi_id = None
 
-            if self.type_id.sale_order_type == 'lc_sales':
+            self.pi_id = None
+            self.payment_term_id = None
+
+            if self.type_id.sale_order_type == 'lc_sales' or \
+                    self.type_id.sale_order_type == 'tt_sales' or \
+                    self.type_id.sale_order_type == 'contract_sales':
                 existing_lc = self.search([('type_id', '=', self.type_id.id)])
                 return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
-                                             ('credit_sales_or_lc', '=', 'lc_sales'),
-                                             ('state', '=', 'confirm')]}}
+                                             ('type_id', '=', self.type_id.id), ('state', '=', 'confirm')]}}
             else:
                 self.fields_readonly = False
 
@@ -268,7 +285,7 @@ class SaleOrder(models.Model):
 
                 discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
-                if orders.credit_sales_or_lc == 'lc_sales':
+                if orders.credit_sales_or_lc == 'lc_sales' or orders.credit_sales_or_lc == 'tt_sales' or orders.credit_sales_or_lc == 'contract_sales':
 
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         return False  # Single Validation
@@ -562,14 +579,13 @@ class SaleOrder(models.Model):
                     line.update(vals)
 
     @api.onchange('pi_id')
-    def onchange_pi_id(self):
-
-        pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
-
-        if pi_pool:
+    def _onchange_pi_id(self):
+        if self.pi_id:
             val = []
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
             self.partner_id = pi_pool.partner_id
             self.pack_type = pi_pool.pack_type
+            self.payment_term_id = pi_pool.account_payment_term_id.id
 
             for record in pi_pool.line_ids:
                 commission = self.env['customer.commission'].search(

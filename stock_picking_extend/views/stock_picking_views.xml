@@ -389,9 +389,9 @@
             <!--states="draft,partially_available,assigned"-->
             <!--type="object" class="oe_highlight"/>-->
             <!--</xpath>-->
-            <xpath expr="//header/button[@name='force_assign']" position="attributes">
-                <attribute name="groups">base_technical_features.group_technical_features</attribute>
-            </xpath>
+            <!--<xpath expr="//header/button[@name='force_assign']" position="attributes">-->
+                <!--<attribute name="groups">base_technical_features.group_technical_features</attribute>-->
+            <!--</xpath>-->
             <xpath expr="//header/button[@name='action_confirm']" position="attributes">
                 <attribute name="groups">base_technical_features.group_technical_features</attribute>
             </xpath>
@@ -406,10 +406,6 @@
             <!--</xpath>-->
 
             <xpath expr="//header/button[@name='%(stock.action_report_delivery)d']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-
-            <xpath expr="//header/button[@name='do_unreserve']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
 

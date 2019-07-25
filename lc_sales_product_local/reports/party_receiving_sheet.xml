@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_party_receiving"
+                string="Party Receiving"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product_local.report_party_receiving"
+                name="lc_sales_product_local.report_party_receiving"
+                paperformat="report_layout.custom_pad_paperformat"
+                menu="False"
+
+        />
+
+        <template id="report_party_receiving">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .bank-letter_subject { margin:30px 0; }
+                            .bank-letter_body { margin-bottom:30px; }
+                            .bank-letter_doclist { width: 80%; margin-left:30px; }
+                            .bank-letter_doclist > tbody > tr > td {
+                                border:0 none!important; padding: 0px!important;
+                            }
+                            .bank-letter_head p,
+                            .bank-letter_head span,
+                            .bank-letter_head div {
+                                margin:0; padding:0;
+                            }
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
+                        </style>
+                        <div class="bank-letter">
+                            <p> Despatch Date: <span t-esc="data['invoice_date']"/></p>
+                            <br/>
+                            <div class="bank-letter_head">
+                                <p><u>Party Name:</u></p>
+                                <p class="pb-0"><strong t-esc="data['buyer']"/> <br/>
+                                    <span t-esc="data['buyer_address']"/></p>
+                            </div>
+                            <br/>
+                            <div>
+                                <p>PI NO: <t t-foreach="pi_id_list" t-as="r">
+                                        <strong t-esc="r['pi_id']"/>
+                                        Date: <strong t-esc="r['pi_date']"/>
+                                    </t>
+                                </p>
+                                <p>LC NO: <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']"/></p>
+                                <p>Documents Value: <span t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> </p>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div>
+                                <p><b>Encl:</b></p>
+                                <p>1. Bill of Exchange First</p>
+                                <p>2. Bill of Exchange Second</p>
+                                <p>3. Truck Receipt</p>
+                                <p>4. Commercial Invoice</p>
+                                <p>5. Packing List</p>
+                                <p>6. Received Challan</p>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>For and on behalf of <br/>
+                               <span t-esc="data['company']"/>
+                            </p>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p >Authorised Signature</p>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="col-xs-8 text-left">
+                                <p class="auth-signature">Received by party</p>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <p class="auth-signature">Received by sale</p>
+                            </div>
+                        </div> <!-- end bl -->
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

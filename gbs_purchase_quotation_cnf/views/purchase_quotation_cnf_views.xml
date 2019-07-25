@@ -16,6 +16,7 @@
                         <button name="action_rfq_send" string="Send PO by Email" type="object" invisible="1"/>
                         <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                         <button name="button_cancel" states="draft,to approve,sent" string="Cancel" type="object" />
+                        <button name="action_reset_cnf" type="object" string="Reset to Quotation" states="purchase,done" groups="commercial.group_commercial_manager"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,purchase"/>
                     </header>
                     <sheet>

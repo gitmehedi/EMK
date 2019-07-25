@@ -49,6 +49,7 @@
                             <tr style="background-color: #EFECEB;">
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Ref</th>
+                                <th class="text-center">Code</th>
                                 <th class="text-center">Item Name</th>
                                 <th class="text-center">Category</th>
                                 <th class="text-center">Qty</th>
@@ -62,7 +63,7 @@
                                 <t t-foreach="product_lines" t-as="data">
                                     <t t-if="data_value['product']">
                                         <tr style="background-color: #ebebe0; text-align:left;">
-                                            <td colspan="8" style="padding: 0px;">
+                                            <td colspan="9" style="padding: 0px;">
                                                 <strong>
                                                     <t t-esc="data"/>
                                                 </strong>
@@ -77,6 +78,9 @@
                                             </td>
                                             <td>
                                                 <t t-esc="line['reference']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['code']"/>
                                             </td>
                                             <td>
                                                 <t t-esc="line['name']"/>
@@ -108,6 +112,7 @@
                                             </td>
                                             <td></td>
                                             <td></td>
+                                            <td></td>
                                             <td class="text-right">
                                                 <t t-esc="data_value['sub-total']['sub_total_val']"/>
                                             </td>
@@ -123,6 +128,7 @@
                                 <td class="text-right">
                                     <t t-esc="total['total_out_qty']"/>
                                 </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="text-right">

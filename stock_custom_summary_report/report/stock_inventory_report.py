@@ -1,4 +1,5 @@
 from odoo import api, models
+from odoo.tools.misc import formatLang
 
 
 class StockInventoryReport(models.AbstractModel):
@@ -455,14 +456,35 @@ class StockInventoryReport(models.AbstractModel):
                 total = category[vals['category']]['sub-total']
                 total['name'] = vals['category']
 
+                if total['total_in_val']:
+                    total['total_in_val'] = float(total['total_in_val'].replace(',','')) + vals['val_in_tk']
+                else:
+                    total['total_in_val'] = total['total_in_val'] + vals['val_in_tk']
+
+                if total['total_dk_val']:
+                    total['total_dk_val'] = float(total['total_dk_val'].replace(',','')) + vals['val_dk']
+                else:
+                    total['total_dk_val'] = total['total_dk_val'] + vals['val_dk']
+
+                if total['total_out_val']:
+                    total['total_out_val'] = float(total['total_out_val'].replace(',','')) + vals['val_out_tk']
+                else:
+                    total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
+
+                if total['total_ck_val']:
+                    total['total_ck_val'] = float(total['total_ck_val'].replace(',','')) + vals['val_ck']
+                else:
+                    total['total_ck_val'] = total['total_ck_val'] + vals['val_ck']
+
                 total['total_dk_qty'] = total['total_dk_qty'] + vals['qty_dk']
-                total['total_dk_val'] = total['total_dk_val'] + vals['val_dk']
                 total['total_in_qty'] = total['total_in_qty'] + vals['qty_in_tk']
-                total['total_in_val'] = total['total_in_val'] + vals['val_in_tk']
                 total['total_out_qty'] = total['total_out_qty'] + vals['qty_out_tk']
-                total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
                 total['total_ck_qty'] = total['total_ck_qty'] + vals['qty_ck']
-                total['total_ck_val'] = total['total_ck_val'] + vals['val_ck']
+
+                total['total_dk_val'] = formatLang(self.env, total['total_dk_val'])
+                total['total_in_val'] = formatLang(self.env, total['total_in_val'])
+                total['total_out_val'] = formatLang(self.env, total['total_out_val'])
+                total['total_ck_val'] = formatLang(self.env, total['total_ck_val'])
 
                 grand_total['total_dk_qty'] = grand_total['total_dk_qty'] + vals['qty_dk']
                 grand_total['total_dk_val'] = grand_total['total_dk_val'] + vals['val_dk']
@@ -473,4 +495,19 @@ class StockInventoryReport(models.AbstractModel):
                 grand_total['total_ck_qty'] = grand_total['total_ck_qty'] + vals['qty_ck']
                 grand_total['total_ck_val'] = grand_total['total_ck_val'] + vals['val_ck']
 
+                vals['val_dk'] = formatLang(self.env, vals['val_dk'])
+                vals['val_in_tk'] = formatLang(self.env, vals['val_in_tk'])
+                vals['val_out_tk'] = formatLang(self.env, vals['val_out_tk'])
+                vals['val_ck'] = formatLang(self.env, vals['val_ck'])
+
+                vals['rate_dk'] = formatLang(self.env, vals['rate_dk'])
+                vals['rate_in'] = formatLang(self.env, vals['rate_in'])
+                vals['rate_out'] = formatLang(self.env, vals['rate_out'])
+                vals['rate_ck'] = formatLang(self.env, vals['rate_ck'])
+
+
+        grand_total['total_dk_val'] = formatLang(self.env,grand_total['total_dk_val'])
+        grand_total['total_in_val'] = formatLang(self.env,grand_total['total_in_val'])
+        grand_total['total_out_val'] = formatLang(self.env,grand_total['total_out_val'])
+        grand_total['total_ck_val'] = formatLang(self.env,grand_total['total_ck_val'])
         return {'category': category, 'total': grand_total}

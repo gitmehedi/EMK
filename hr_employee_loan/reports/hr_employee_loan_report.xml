@@ -28,7 +28,7 @@
                                         <h6><b>Name: </b><span t-esc="data['employee_name']"/></h6>
                                         <h6><b>Department: </b><span t-esc="data['department_name']"/></h6>
                                         <h6><b>Loan Type: </b><span t-esc="data['loan_type']"/></h6>
-                                        <h6><b>Principle Amount: </b><span t-esc="'%.2f'% data['principal_amount']"/></h6>
+                                        <h6><b>Principle Amount: </b><span t-esc="data['principal_amount']"/></h6>
                                         <t t-if="data['interst_mode']">
                                             <h6><b>Interest Mode: </b><span t-esc="data['interst_mode']"/></h6>
                                         </t>
@@ -54,8 +54,8 @@
                                 </thead>
                                 <tbody>
                                     <tr style="page-break-inside: avoid">
-                                        <td><span t-esc="'%.2f'% data['amount_receive']"/></td>
-                                        <td><span t-esc="'%.2f'% data['amount_due']"/></td>
+                                        <td><span t-esc="data['amount_receive']"/></td>
+                                        <td><span t-esc="data['amount_due']"/></td>
                                     </tr>
                                 </tbody>
 
@@ -75,7 +75,7 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l['num_installment']"/></td>
                                             <td><span t-esc="l['schedule_date']" t-options='{"widget": "date"}'/></td>
-                                            <td><span t-esc=" '%.2f'%l['installment']"/></td>
+                                            <td><span t-esc="l['installment']"/></td>
                                             <td><span t-esc="l['state']"/></td>
                                         </tr>
                                     </t>

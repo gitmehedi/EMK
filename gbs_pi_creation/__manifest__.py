@@ -8,6 +8,7 @@
         'stock',
         'gbs_application_group',
         'sales_team',
+        'account',
         'terms_setup',
         'report_layout',
         'ir_sequence_operating_unit',

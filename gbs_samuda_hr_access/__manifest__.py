@@ -17,10 +17,15 @@
     # any module necessary for this one to work correctly
     'depends': [
         'base',
-        'date_range',
+        'gbs_hr_device_config',
+        'base_user_role',
+        'mass_editing',
+        'google_drive',
     ],
     # always loaded
     'data': [
         'security/ir_rule.xml',
+        'security/ir.model.access.csv',
+        'views/res_users.xml',
     ],
 }

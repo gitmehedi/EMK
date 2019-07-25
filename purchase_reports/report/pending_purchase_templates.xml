@@ -29,14 +29,14 @@
                                 <thead>
                                     <tr class="odo-bg-gray text-center">
                                         <th class="text-center" style="width:18%;">PR.No.</th>
-                                        <th class="text-center" style="width:34%;">Description/Items</th>
-                                        <th class="text-center" style="width:5%;">Req Qty</th>
+                                        <th class="text-center" style="width:30%;">Description/Items</th>
+                                        <th class="text-center" style="width:8%;">Req Qty</th>
                                         <th class="text-center" style="width:5%;">Unit</th>
-                                        <th class="text-center" style="width:5%;">Last Rate</th>
+                                        <th class="text-center" style="width:6%;">Last Rate</th>
                                         <th class="text-center" style="width:18%;">PO.No.</th>
-                                        <th class="text-center" style="width:5%;">PO Qty</th>
-                                        <th class="text-center" style="width:5%;">MRR Qty</th>
-                                        <th class="text-center" style="width:5%;">Rem Qty</th>
+                                        <th class="text-center" style="width:6%;">PO Qty</th>
+                                        <th class="text-center" style="width:6%;">MRR Qty</th>
+                                        <th class="text-center" style="width:8%;">Rem Qty</th>
                                     </tr>
                                 </thead>
                                 <tbody>

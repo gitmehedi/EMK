@@ -10,7 +10,9 @@
                                 <t t-if="report_type == 'cash'">
                                     <h3 class="report-title">Monthly Cash Salary Sheet</h3>
                                 </t>
-                                <h3 class="report-title">Monthly Salary Sheet</h3>
+                                <t t-if="report_type != 'cash'">
+                                    <h3 class="report-title">Monthly Salary Sheet</h3>
+                                </t>
                                 <h4>
                                     <label>Description</label>
                                     :

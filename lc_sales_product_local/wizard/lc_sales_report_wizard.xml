@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="lc_sales_report_wizard_view" model="ir.ui.view">
+            <field name="name">lc.sales.report.wizard</field>
+            <field name="model">lc.sales.report.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Print Reports" create="false" edit="false">
+                    <group>
+                        <group>
+                            <button string="Bank Forwarding" name="process_report" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Commercial Invoice" name="process_commercial_invoice" type="object" class="oe_highlight"/>
+                        </group>
+
+                        <group>
+                            <button string="Packing List" name="process_packing_list" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Measurement List" name="process_measurement_list" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Bill of Exchange(First)" name="process_bill_exchange" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Bill of Exchange(Second)" name="process_bill_exchange_second" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Beneficiary Certificate" name="process_beneficiary_certificate" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Inspection Certificate" name="process_inspection_certificate" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Certificate of Origin" name="process_certificate_origin" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Delivery Challan" name="process_delivery_challan" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Truck Receipt / Delivery Challan" name="process_truck" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Party Receiving" name="process_party_receiving" type="object" class="oe_highlight"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

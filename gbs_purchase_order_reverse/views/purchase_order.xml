@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_po_reverse_view_form" model="ir.ui.view">
+            <field name="name">inherit.po.reverse.view.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='button_unlock']" position="attributes">
+                        <attribute name="groups">base.group_system</attribute>
+                    </xpath>
+                    <xpath expr="//button[@name='button_cancel']" position="after">
+                        <button name="action_reset_quotation" type="object" string="Reset to Quotation"
+                                states="purchase,done" groups="commercial.group_commercial_manager"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

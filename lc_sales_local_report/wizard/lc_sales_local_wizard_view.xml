@@ -46,7 +46,7 @@
         <menuitem action="action_wizard_local_first_acceptance"
                   id="menu_wizard_local_first_acceptance"
                   parent="letter_of_credit.lc_report_menu_root"
-                  groups="commercial.group_commercial_user_export"
+                  groups="gbs_application_group.group_export_local_lc"
                   sequence="2"/>
 
         <!--First Acceptance Wizard end-->
@@ -61,7 +61,7 @@
                     <group>
                         <group>
                             <field name="product_temp_id" String="Select Product"
-                                   options='{"no_create": 1, "no_create_edit":1}'/>
+                                   options='{"no_open": 1, "no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
 
@@ -88,7 +88,7 @@
         <menuitem action="action_wizard_local_second_acceptance"
                   id="menu_wizard_local_second_acceptance"
                   parent="letter_of_credit.lc_report_menu_root"
-                  groups="commercial.group_commercial_user_export"
+                  groups="gbs_application_group.group_export_local_lc"
                   sequence="3"/>
 
         <!--Second Acceptance Wizard end-->
@@ -130,7 +130,7 @@
         <menuitem action="action_wizard_lc_sales_maturity"
                   id="menu_wizard_lc_sales_maturity"
                   parent="letter_of_credit.lc_report_menu_root"
-                  groups="commercial.group_commercial_user_export"
+                  groups="gbs_application_group.group_export_local_lc"
                   sequence="4"/>
 
         <!--Maturity Wizard end-->

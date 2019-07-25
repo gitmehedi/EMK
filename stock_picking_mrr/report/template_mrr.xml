@@ -12,10 +12,22 @@
                 menu = "False"
                 paperformat="report_layout.paperformat_backend_portrait"
         />
+        <template id="report_mrr_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
+            <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
+                <attribute name="t-call">stock_picking_mrr.external_layout_header_po</attribute>
+            </xpath>
+        </template>
+        <template id="external_layout_header_po" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
+            <xpath expr="//div[@class='company-info']" position="after">
+                <div class="w100 text-center" style="position:absolute; bottom:2px; " name="company_address">
+                    <span t-esc="address"/>
+                </div>
+            </xpath>
+        </template>
 
         <template id="report_mrr_doc">
             <t t-call="report.html_container">
-                <t t-call="report_layout.gbs_internal_layout">
+                <t t-call="stock_picking_mrr.report_mrr_temp">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .table-caption {
@@ -69,8 +81,7 @@
                                             <td><span t-esc="l['product_uom_id']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
                                             <td></td>
-                                            <td><span t-esc="l['amount']"/></td>
-
+                                            <td><span t-esc="l['sub_amount']"/></td>
                                         </tr>
                                     </t>
                                     <tr>

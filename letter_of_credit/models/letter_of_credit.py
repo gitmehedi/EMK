@@ -11,7 +11,7 @@ class LetterOfCredit(models.Model):
     # Import -> Applicant(Samuda)
 
     name = fields.Char(string='LC Number', index=True,readonly=True)
-    title = fields.Text(string='Description', required=True)
+    title = fields.Text(string='Description')
 
     type = fields.Selection([
         ('export', 'Export'),
@@ -135,8 +135,10 @@ class LetterOfCredit(models.Model):
         for shipment in self.shipment_ids:
             if shipment.state != 'done' and shipment.state != 'cancel':
                 raise ValidationError(_("This LC has " + str(len(self.shipment_ids)) +
-                                        " shipment(s).Before Cancel LC,Cancel or Done all Shipment(s)."))
+                                        " shipment(s).Before Cancel this LC, need to Cancel or Done all Shipment(s)."))
         self.state = "cancel"
+        self.last_note = "LC Cancel"
+
 
     @api.multi
     def unlink(self):
@@ -182,12 +184,15 @@ class LetterOfCredit(models.Model):
     @api.one
     @api.constrains('name')
     def _check_name(self):
-        domain = ['&','&','|',('name', '=', self.name),
+        if len(self.name) == 0:
+            return True
+
+        domain = ['&','&','&',('name', '=', self.name),
                   ('type','=',self.type),
-                  ('id', '=', False),
+                  ('state', '!=', 'cancel'),
                   ('id', '!=', self.id)]
         if self.search_count(domain):
-            raise UserError('You can\'t create duplicate Number')
+            raise UserError('LC Number must be unique. You can\'t create duplicate Number')
         return True
 
     @api.model
@@ -242,13 +247,3 @@ class LetterOfCredit(models.Model):
                 defaults.update({'name': prev_name, 'revision_number': revno, 'active': False, 'state': 'amendment',
                                  'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
         return super(LetterOfCredit, self).copy(defaults)
-
-    @api.one
-    @api.constrains('name')
-    def _check_unique_constraint(self):
-        if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
-            if len(name) > 1:
-                raise Warning('LC Number must be unique!')
-

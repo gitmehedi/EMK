@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api,_
 from datetime import datetime
+from odoo import models, fields, api,_
+from odoo.exceptions import ValidationError,UserError
 
 class PurchaseCNFQuotation(models.Model):
     _name = 'purchase.order'
@@ -30,3 +31,8 @@ class PurchaseCNFQuotation(models.Model):
         for cnf in self:
             if cnf.cnf_quotation:
                 return super(PurchaseCNFQuotation, self).button_approve()
+
+    def action_reset_cnf(self):
+        if self.shipment_id.state in ['done','cancel']:
+            raise UserError(_('Sorry! Unable to reverse this C&F because the shipment is done.'))
+        self.write({'state': 'draft'})

@@ -1,4 +1,4 @@
-from openerp import models, fields, api
+from odoo import models, fields, api
 import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -26,13 +26,12 @@ class HrLoanRescheduleWizard(models.TransientModel):
         loan_lines.unlink()
 
         ### Generate New Schedule
-        loan_amt = loan.remaining_loan_amount
+        loan_amt = self.remaining_amount
         repayment_date = datetime.datetime.strptime(self.new_repayment_date, '%Y-%m-%d')
         installament_amt = self.new_installment_amount
         loan.installment_amount=installament_amt
         i = 1
         while loan_amt > 0:
-            print i
             vals = {}
             vals['employee_id'] = loan.employee_id.id
             vals['schedule_date'] = repayment_date

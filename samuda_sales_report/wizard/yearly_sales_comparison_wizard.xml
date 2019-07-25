@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="yearly_sales_comparison_wizard_view" model="ir.ui.view">
+			<field name="name">yearly.sales.comparison.wizard</field>
+			<field name="model">yearly.sales.comparison.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+                        <group>
+                            <field name="year_first"/>
+                        </group>
+                        <group>
+                            <field name="year_last"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+        <record id="action_yearly_sales_comparison_wizard" model="ir.actions.act_window">
+			<field name="name">Yearly Sales Comparison Report</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">yearly.sales.comparison.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+    </data>
+</odoo>
