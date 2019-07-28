@@ -26,6 +26,7 @@
                 'account_invoice_merge_operating_unit',
                 #'account_receivable_clearing_operation',
                 'gbs_account',
+                "account_standard_report",
                 ],
 
     'data': [ ],
