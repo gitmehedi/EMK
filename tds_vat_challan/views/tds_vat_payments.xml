@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <tree string="TDS &amp; VAT Payments" create="false" delete="false">
                 <field name="sequence" widget="handle"/>
+                <field name="date"/>
                 <field name="operating_unit_id"/>
                 <field name="credit_account_id"/>
                 <field name="amount"/>
@@ -31,29 +32,45 @@
             <form string="TDS &amp; VAT Payments" create="false" edit="false" delete="false">
                 <sheet>
                     <group>
-                        <field name="credit_account_id"/>
-                        <field name="account_move_line_ids" widget="one2many_list">
-                            <tree string="TDS/VAT Records">
-                                <field name="name" string="TDS/VAT Description"/>
-                                <field name="product_id" string="Service"/>
-                                <field name="statement_id" invisible="1"/>
-                                <field name="partner_id" string="Vendor"/>
-                                <field name="operating_unit_id" string="Branch"/>
-                                <field name="credit" sum="Total Credit" string="Amount"/>
-                            </tree>
-                            <form string="Record">
-                                <field name="name" string="TDS/VAT Description"/>
-                                <field name="product_id" string="Service"/>
-                                <field name="statement_id" invisible="1"/>
-                                <field name="partner_id" string="Vendor"/>
-                                <field name="operating_unit_id" string="Branch"/>
-                                <field name="credit" sum="Total Credit" string="Amount"/>
-                            </form>
-                        </field>
+                        <group>
+                            <field name="credit_account_id"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="operating_unit_id"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="TDS &amp; VAT">
+                                <field name="account_move_line_ids" widget="one2many_list">
+                                    <tree string="TDS &amp; VAT">
+                                        <field name="name" string="TDS &amp; VAT Description"/>
+                                        <field name="product_id" string="Service"/>
+                                        <field name="statement_id" invisible="1"/>
+                                        <field name="partner_id" string="Vendor"/>
+                                        <field name="operating_unit_id" string="Branch"/>
+                                        <field name="credit" sum="Total Credit" string="Amount"/>
+                                    </tree>
+                                    <form string="TDS &amp; VAT">
+                                        <group>
+                                            <group>
+                                                <field name="product_id" string="Service"/>
+                                                <field name="credit" sum="Total Credit" string="Amount"/>
+                                            </group>
+                                            <group>
+                                                <field name="partner_id" string="Vendor"/>
+                                                <field name="operating_unit_id" string="Branch"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+
                     </group>
                 </sheet>
                 <!--<footer>-->
-                    <!--<button string="Cancel" class="btn-default" special="cancel"/>-->
+                <!--<button string="Cancel" class="btn-default" special="cancel"/>-->
                 <!--</footer>-->
             </form>
         </field>

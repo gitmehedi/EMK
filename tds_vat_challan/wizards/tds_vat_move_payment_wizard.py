@@ -30,6 +30,7 @@ class TDSVATMovePaymentWizard(models.TransientModel):
                 'currency_id': self.currency_id.id,
                 'credit_account_id': self.credit_account_id.id,
                 'amount': self.amount,
+                'date': self.instruction_date,
                 'operating_unit_id': self.operating_unit_id.id or None,
                 'account_move_line_ids':[(6, 0, move_lines.ids)],
             })

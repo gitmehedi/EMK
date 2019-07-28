@@ -6,10 +6,13 @@ class TDSVATPayment(models.Model):
     _name = 'tds.vat.payment'
     _order = 'id desc'
     _description = 'TDS & VAT Payments'
+    _rec_name = 'date'
 
     sequence = fields.Integer('Sequence', help="Gives the sequence of this line when displaying the invoice.")
     credit_account_id = fields.Many2one('account.account', string='Credit Account',
                                         help='Credit Account of the Payment')
+    date = fields.Date(string='Date', default=fields.Date.context_today,
+                                   required=True, copy=False)
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
     currency_id = fields.Many2one('res.currency', string='Currency')
