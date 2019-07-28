@@ -20,6 +20,23 @@
             </field>
         </record>
 
+        <record id="view_account_payment_term_tree" model="ir.ui.view">
+            <field name="name">account.payment.term.tree.inherit</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Terms">
+                    <field name="name"/>
+                    <field name="terms_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_payment_term_form" model="ir.actions.act_window">
+            <field name="act_window_id" ref="account.action_payment_term_form" />
+            <field name="res_model">account.payment.term</field>
+            <field name="tree_view_id" ref="view_account_payment_term_tree"/>
+        </record>
+
         <menuitem
                 id="menu_account_payment_term"
                 name="Payment Terms"
