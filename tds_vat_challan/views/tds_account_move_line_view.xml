@@ -143,35 +143,12 @@
             </field>
         </record>
 
-        <record id="action_tds_vat_pending_paid" model="ir.actions.act_window">
-            <field name="name">Waiting for Payment Approval</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="tds_vat_move_paid_tree"/>
-            <field name="search_view_id" ref="tds_move_line_filter"/>
-            <field name="view_mode">tree</field>
-            <field name="context">{'search_default_tax_type':1}</field>
-            <field name="domain">[('tax_type', 'in', ['vat','tds']),
-                ('is_pending', '=', False),
-                ('is_challan', '=', False),
-                ('is_paid', '=', False),
-                ('pending_for_paid', '=', True)]</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Nothing in paid.
-                </p>
-            </field>
-        </record>
-
         <menuitem name="TDS &amp; VAT Payable" parent="main_menu_tds_vat"
                   action="action_tds_vat_payable" id="tds_vat_payable_menu" sequence="1"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <menuitem name="TDS &amp; VAT Pending" parent="main_menu_tds_vat"
                   action="action_tds_vat_pending" id="tds_vat_pending_menu" sequence="2"
-                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
-
-        <menuitem name="Waiting for Payment" parent="main_menu_tds_vat"
-                  action="action_tds_vat_pending_paid" id="tds_vat_pending_paid_menu" sequence="3"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <menuitem name="TDS &amp; VAT Paid" parent="main_menu_tds_vat"

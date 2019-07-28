@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="tds_vat_payment_tree">
+        <field name="name">tds.vat.payment.tree</field>
+        <field name="model">tds.vat.payment</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="TDS &amp; VAT Payments" create="false" delete="false">
+                <field name="sequence" widget="handle"/>
+                <field name="operating_unit_id"/>
+                <field name="credit_account_id"/>
+                <field name="amount"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <button name="action_approve" string="Approve" type="object"
+                        class="btn btn-primary" states="draft"/>
+                <button name="action_reject" string="Reject" type="object"
+                        class="oe_highlight" states="draft"/>
+                <!--<button name="action_reset" string="Reset" type="object"-->
+                <!--class="oe_highlight" states="cancel"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="tds_vat_payment_form">
+        <field name="name">tds.vat.payment.form</field>
+        <field name="model">tds.vat.payment</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="TDS &amp; VAT Payments" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <field name="credit_account_id"/>
+                        <field name="account_move_line_ids" widget="one2many_list">
+                            <tree string="TDS/VAT Records">
+                                <field name="name" string="TDS/VAT Description"/>
+                                <field name="product_id" string="Service"/>
+                                <field name="statement_id" invisible="1"/>
+                                <field name="partner_id" string="Vendor"/>
+                                <field name="operating_unit_id" string="Branch"/>
+                                <field name="credit" sum="Total Credit" string="Amount"/>
+                            </tree>
+                            <form string="Record">
+                                <field name="name" string="TDS/VAT Description"/>
+                                <field name="product_id" string="Service"/>
+                                <field name="statement_id" invisible="1"/>
+                                <field name="partner_id" string="Vendor"/>
+                                <field name="operating_unit_id" string="Branch"/>
+                                <field name="credit" sum="Total Credit" string="Amount"/>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+                <!--<footer>-->
+                    <!--<button string="Cancel" class="btn-default" special="cancel"/>-->
+                <!--</footer>-->
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tds_vat_payments" model="ir.actions.act_window">
+        <field name="name">TDS &amp; VAT Payments</field>
+        <field name="res_model">tds.vat.payment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tds_vat_payment_tree"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Payments is empty.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="menu_tds_vat_payment"
+            name="TDS &amp; VAT Payments"
+            parent="main_menu_tds_vat"
+            sequence="4"
+            action="action_tds_vat_payments"
+            groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+</odoo>
