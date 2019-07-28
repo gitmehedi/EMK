@@ -1,5 +1,4 @@
 Name,Type,include_initial_balance,active,pending,state
-View Type,View,True,True,False,approve
 Liabilities: Office Accounts,Regular,Yes,True,False,approve
 Treasury Liabilities,Regular,Yes,True,False,approve
 Liabilities: Customer Accounts,Regular,Yes,True,False,approve
