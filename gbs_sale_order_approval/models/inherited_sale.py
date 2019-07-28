@@ -585,7 +585,7 @@ class SaleOrder(models.Model):
             pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
             self.partner_id = pi_pool.partner_id
             self.pack_type = pi_pool.pack_type
-            self.payment_term_id = pi_pool.account_payment_term_id.id
+            self.payment_term_id = pi_pool.account_payment_term_id
 
             for record in pi_pool.line_ids:
                 commission = self.env['customer.commission'].search(
@@ -613,6 +613,13 @@ class SaleOrder(models.Model):
             self.order_line = val
             self.fields_readonly = True
 
+    @api.multi
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        super(SaleOrder, self).onchange_partner_id()
+        if self.pi_id:
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
+            self.payment_term_id = pi_pool.account_payment_term_id
 
     @api.model
     def _default_operating_unit(self):
