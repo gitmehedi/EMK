@@ -41,6 +41,14 @@ class HrPayslipRun(models.Model):
     send_email = fields.Boolean('Send Email',default=False)
 
     @api.multi
+    def unlink(self):
+        for a in self:
+            if a.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+
+        return super(HrPayslipRun, self).unlink()
+
+    @api.multi
     def confirm_payslip(self):
         res = super(HrPayslipRun, self).close_payslip_run()
 
