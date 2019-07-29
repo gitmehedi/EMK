@@ -23,7 +23,7 @@
                             <button name="act_reject_pending" string="Reject" type="object"
                                     groups="mtbl_access.group_mtbl_sys_admin"
                                     attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
-                            <button name="66" string="View Rates" type="action"
+                            <button name="%(base.act_view_currency_rates)d" string="View Rates" type="action"
                                     attrs="{'invisible': [('active', '=', False)]}"/>
                             <button name="act_draft" string="Set to Draft" type="object" states="reject"
                                     groups="mtbl_access.group_mtbl_sys_admin"/>
