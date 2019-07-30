@@ -6,9 +6,6 @@ class TDSChallaSelectionWizard(models.TransientModel):
     _name = 'tds.challan.selection.wizard'
     _description = 'TDS Challan Wizard'
 
-
-    date_from = fields.Date(string='From Date', required=True)
-    date_to = fields.Date(string='To Date', required=True)
     type = fields.Selection([
         ('tds', 'TDS'),
         ('vat', 'VAT'),
@@ -33,18 +30,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
                     'message': _('You must first select a Type(TDS/VAT)!'),
                 }
             return {'warning': warning}
-        # if self.product_ids:
-        #     self.supplier_id = []
-        #     self.operating_unit_id = []
-        #     move_lines = self.env['account.move.line'].search(
-        #         [('id', 'in', self.env.context.get('records')),('product_id','in',self.product_ids.ids)])
-        #     if move_lines:
-        #         supplier_ids = [move.partner_id.id for move in move_lines]
-        #         operating_unit_ids = [move.operating_unit_id.id for move in move_lines]
-        #         return {'domain': {
-        #             'supplier_id': [('id', 'in', supplier_ids)],
-        #             'operating_unit_id': [('id', 'in', operating_unit_ids)],
-        #         }}
+
 
     @api.onchange('supplier_ids')
     def _onchange_supplier_ids(self):
@@ -61,8 +47,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
     def generate_action(self):
         vals = [('tax_type', '=', self.type),
                 ('is_paid', '=', True),
-                ('is_challan', '=', False),
-                ('date', '<=', self.date_to),('date', '>=', self.date_from)]
+                ('is_challan', '=', False)]
 
         if self.supplier_ids:
             vals.append(('partner_id','in',self.supplier_ids.ids))
@@ -72,7 +57,6 @@ class TDSChallaSelectionWizard(models.TransientModel):
 
         if self.operating_unit_id:
             vals.append(('operating_unit_id','=',self.operating_unit_id.id))
-
 
         # find final move lines to generate challan
         move_lines = self.env['account.move.line'].search(vals)
@@ -92,9 +76,25 @@ class TDSChallaSelectionWizard(models.TransientModel):
             'nodestroy': True,
             'target': 'current',
             'context': {'acc_move_line_ids': move_lines.ids,
-                        'name': self.type.upper()+' Challan['+self.date_from+' to '+self.date_to+']',
+                        'name': self.type.upper()+' Challan '+ fields.Date.context_today(self),
                         'currency_id': self.env.user.company_id.currency_id.id,
                         },
         }
         return result
 
+
+# date_from = fields.Date(string='From Date', required=True)
+# date_to = fields.Date(string='To Date', required=True)
+# ('date', '<=', self.date_to), ('date', '>=', self.date_from)
+#  if self.product_ids:
+#     self.supplier_id = []
+#     self.operating_unit_id = []
+#     move_lines = self.env['account.move.line'].search(
+#         [('id', 'in', self.env.context.get('records')),('product_id','in',self.product_ids.ids)])
+#     if move_lines:
+#         supplier_ids = [move.partner_id.id for move in move_lines]
+#         operating_unit_ids = [move.operating_unit_id.id for move in move_lines]
+#         return {'domain': {
+#             'supplier_id': [('id', 'in', supplier_ids)],
+#             'operating_unit_id': [('id', 'in', operating_unit_ids)],
+#         }}

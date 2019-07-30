@@ -9,15 +9,13 @@
                 <form string="TDS/VAT Vendor Challan">
                     <group>
                         <group>
-                            <field name="date_from"/>
                             <field name="type"/>
-                            <field name="product_ids" placeholder="All"
+                            <field name="product_ids" placeholder="No selection will consider all"
                                    widget="many2many_tags"
                                    options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
-                            <field name="date_to"/>
-                            <field name="supplier_ids" placeholder="All"
+                            <field name="supplier_ids" placeholder="No selection will consider all"
                                    widget="many2many_tags"
                                    domain="[('supplier', '=', True)]"
                                    context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
@@ -44,7 +42,7 @@
         </record>
 
         <menuitem
-                name="Challan Generate"
+                name="Generate Challan"
                 parent="main_menu_tds_vat"
                 action="tds_challan_selection_wizard_action_view"
                 id="tds_challan_selection_wizard_menu"

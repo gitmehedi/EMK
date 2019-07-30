@@ -80,7 +80,7 @@
                                 groups="account.group_account_user"
                                 states="cancel" class="btn-default"/>
                         <button name="%(act_view_tds_vat_challan_lines)d" string="Details" type="action"
-                                attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
+                                attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         <!--<button string="Print" name="action_print" type="object"-->
                         <!--groups="account.group_account_manager"-->
                         <!--states="approved" class="oe_highlight"/>-->
