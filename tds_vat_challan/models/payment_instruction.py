@@ -13,3 +13,10 @@ class PaymentInstruction(models.Model):
         if self.is_tax:
             self.account_move_line_ids.write({'is_paid':True,'is_pending':False,'is_challan':False,'pending_for_paid':False})
         return super(PaymentInstruction, self).action_approve()
+
+    @api.multi
+    def action_reject(self):
+        if self.is_tax:
+            self.account_move_line_ids.write(
+                {'pending_for_paid': False})
+        return super(PaymentInstruction, self).action_reject()

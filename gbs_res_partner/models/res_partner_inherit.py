@@ -51,6 +51,24 @@ class ResPartner(models.Model):
                                   states={'draft': [('readonly', False)]},
                                   help="This is the Account number which using "
                                        "for payments against vendor.")
+    nid = fields.Char('NID',required=True,readonly=True,states={'draft': [('readonly', False)]},
+                      help="NID which is 17/13/10 digit.",track_visibility='onchange')
+    division_id = fields.Many2one('bd.division',string='Division',readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  track_visibility='onchange')
+    district_id = fields.Many2one('bd.district', string='District', readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  track_visibility='onchange')
+    upazila_id = fields.Many2one('bd.upazila', string='Upazila/Thana', readonly=True,
+                                 states={'draft': [('readonly', False)]},
+                                 track_visibility='onchange')
+    postal_code = fields.Char('Postal Code',readonly=True,size=4,
+                              states={'draft': [('readonly', False)]},
+                              track_visibility='onchange')
+    entity_services = fields.Many2many('entity.service', 'service_partner_rel','service_id','partner_id',
+                                       string='Service', readonly=True,
+                                       states={'draft': [('readonly', False)]},
+                                       track_visibility='onchange')
 
     @api.one
     def act_draft(self):
@@ -123,6 +141,29 @@ class ResPartner(models.Model):
         if self.name:
             self.name = self.name.strip()
 
+    @api.onchange("division_id")
+    def onchange_division(self):
+        if self.division_id:
+            self.district_id = []
+            self.upazila_id = []
+            return {
+                'domain': {'district_id': [('division_id', '=', self.division_id.id)],
+                           'upazila_id': [('division_id', '=', self.division_id.id)]
+                           }
+            }
+
+
+    @api.onchange("district_id")
+    def onchange_district(self):
+        if self.district_id:
+            self.upazila_id = []
+            return {
+                'domain': {'upazila_id': [('district_id', '=', self.district_id.id)]
+                           }
+            }
+
+
+
 
     @api.constrains('tax','bin', 'tin','vat','mobile','fax')
     def _check_numeric_constrain(self):
@@ -156,6 +197,26 @@ class ResPartner(models.Model):
             raise Warning('[Format Error] Mobile must be numeric!')
         if self.fax and len(self.fax) != 16:
             raise Warning('[Format Error] Fax must be 16 character!')
+
+    @api.constrains('nid')
+    def _check_nid_constrain(self):
+        if self.nid:
+            nid = self.search(
+                [('nid', '=ilike', self.nid.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(nid) > 1:
+                raise Warning(_('[Unique Error] NID must be unique!'))
+            if len(self.nid) not in (17,13,10):
+                raise Warning('[Format Error] NID must be 17/13/10 character!')
+            if not self.nid.isdigit():
+                raise Warning('[Format Error] NID must be numeric!')
+
+    @api.constrains('postal_code')
+    def _check_postal_code_constrain(self):
+        if self.postal_code:
+            if len(self.postal_code) != 4:
+                raise Warning('[Format Error] Postal Code  must be 4 digit!')
+            if not self.postal_code.isdigit():
+                raise Warning('[Format Error] Postal Code must be numeric!')
 
 
     """ All functions """

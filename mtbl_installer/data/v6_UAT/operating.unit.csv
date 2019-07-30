@@ -1,0 +1,117 @@
+Code,Name,Location of Branch,active,pending,state
+002,Principal Branch,Urban,True,False,approve
+003,Panthapath Branch,Urban,True,False,approve
+004,Babu Bazar Branch,Urban,True,False,approve
+005,Agrabad Branch,Urban,True,False,approve
+006,Sonargaon Branch,Rural,True,False,approve
+007,Uttara Model Town Branch,Urban,True,False,approve
+008,Progati Sarani Branch,Urban,True,False,approve
+009,CDA Avenue Branch,Urban,True,False,approve
+010,Sreenagar Branch,Rural,True,False,approve
+011,Pallabi Branch,Urban,True,False,approve
+012,Dilkusha Branch,Urban,True,False,approve
+013,Khatungonj Branch,Urban,True,False,approve
+014,Dhanmondi Branch,Urban,True,False,approve
+015,Aman Bazar Branch,Rural,True,False,approve
+016,Bashundhara City Branch,Urban,True,False,approve
+017,Chandra Branch,Urban,True,False,approve
+018,Jubilee Road Branch,Urban,True,False,approve
+019,Nazirhat Branch,Rural,True,False,approve
+020,Chokoria Branch,Urban,True,False,approve
+021,Pabna Branch,Urban,True,False,approve
+022,Gulshan Branch,Urban,True,False,approve
+023,Sylhet Branch,Urban,True,False,approve
+024,Moulvi Bazar Branch,Urban,True,False,approve
+025,Savar Branch,Urban,True,False,approve
+026,Fulbaria Branch,Urban,True,False,approve
+027,Madaripur Branch,Urban,True,False,approve
+028,Dholaikhal Branch,Urban,True,False,approve
+029,Raipur Branch,Urban,True,False,approve
+030,Aganagar Branch,Rural,True,False,approve
+031,Joypurhat Branch,Urban,True,False,approve
+032,Narayanganj Branch,Urban,True,False,approve
+033,Rangpur Branch,Urban,True,False,approve
+034,Banani Branch,Urban,True,False,approve
+035,Kushtia Branch,Urban,True,False,approve
+036,Gournadi Branch,Urban,True,False,approve
+037,Tongi Branch,Urban,True,False,approve
+038,Elephant Road Branch,Urban,True,False,approve
+039,Feni Branch,Urban,True,False,approve
+040,Dania Branch,Urban,True,False,approve
+041,Bogura Branch,Urban,True,False,approve
+042,Dhorkora Bazar Branch,Rural,True,False,approve
+043,Mohammadpur Branch,Urban,True,False,approve
+044,Rajshahi Branch,Urban,True,False,approve
+045,Alankar Mor Branch,Urban,True,False,approve
+046,MTB Centre Corporate Branch,Urban,True,False,approve
+047,Cox's Bazar Branch,Urban,True,False,approve
+048,Chawk Moghaltuli Branch,Urban,True,False,approve
+049,Jashore Branch,Urban,True,False,approve
+050,Gazipur Branch,Urban,True,False,approve
+051,Baridhara Branch,Urban,True,False,approve
+052,Cumilla Branch,Urban,True,False,approve
+053,Oxygen Mor Branch,Urban,True,False,approve
+054,Mymensingh Branch,Urban,True,False,approve
+055,Habiganj Branch,Urban,True,False,approve
+056,Kerani Hat Branch,Rural,True,False,approve
+057,Tejgaon Branch,Urban,True,False,approve
+058,Thakurgaon Branch,Urban,True,False,approve
+059,Shahparan Gate Branch,Rural,True,False,approve
+060,Karnaphuli EPZ Branch,Urban,True,False,approve
+061,Bashundhara Branch,Urban,True,False,approve
+062,Shah Mokhdum Avenue Branch,Urban,True,False,approve
+063,Brahmanbaria Branch,Urban,True,False,approve
+064,Kapasia Branch,Rural,True,False,approve
+065,Meghna Branch,Rural,True,False,approve
+066,Khilpara Branch,Rural,True,False,approve
+067,Kamrangir Char Branch,Urban,True,False,approve
+068,Kakrail Branch,Urban,True,False,approve
+069,Narayanganj BSCIC Branch,Rural,True,False,approve
+070,Naogaon Branch,Urban,True,False,approve
+071,Gobindaganj Branch,Urban,True,False,approve
+072,Dinajpur Branch,Urban,True,False,approve
+073,Chattogram Medical College Branch,Urban,True,False,approve
+074,Mirpur Branch,Urban,True,False,approve
+075,Kadair Bazar Branch,Rural,True,False,approve
+076,Jamirdia Masterbari Branch,Rural,True,False,approve
+077,Kalurghat Industrial Area Branch,Urban,True,False,approve
+078,Ashulia Branch,Rural,True,False,approve
+079,Monipur Bazar Branch,Rural,True,False,approve
+080,Tangail Branch,Urban,True,False,approve
+081,Sirajganj Branch,Urban,True,False,approve
+082,Dumni Branch,Urban,True,False,approve
+083,Baraipara Branch,Rural,True,False,approve
+084,Khulna Branch,Urban,True,False,approve
+085,Abu Torab Bazar Branch,Rural,True,False,approve
+086,Muradpur Branch,Urban,True,False,approve
+087,MTB Tower Branch,Urban,True,False,approve
+088,Bormi Branch,Rural,True,False,approve
+089,Bagher Bazar Branch,Rural,True,False,approve
+090,Barishal Branch,Urban,True,False,approve
+091,Laldighirpar Branch,Urban,True,False,approve
+092,Madhabdi Branch,Urban,True,False,approve
+093,Goalmari Bazar Branch,Rural,True,False,approve
+094,Malibagh Chowdhurypara Branch,Urban,True,False,approve
+095,Faridpur Branch,Urban,True,False,approve
+096,Ulipur Branch,Rural,True,False,approve
+097,Hemayetpur Branch,Rural,True,False,approve
+098,Sarkerhat Branch,Rural,True,False,approve
+501,Haidergonj SME/ Agri Branch,Rural,True,False,approve
+502,Dagon Bhuiyan SME/ Agri Branch,Urban,True,False,approve
+503,Laksam SME/ Agri Branch,Urban,True,False,approve
+504,Naria SME/ Agri Branch,Rural,True,False,approve
+505,Kaliganj SME/ Agri Branch,Rural,True,False,approve
+506,Ramchandrapur Bazar SME/ Agri Branch,Rural,True,False,approve
+507,Gaffargaon SME/ Agri Branch,Urban,True,False,approve
+508,Ishwardi SME/ Agri Branch,Urban,True,False,approve
+509,Belkuchi SME/ Agri Branch,Urban,True,False,approve
+510,Nazumeah Hat SME/ Agri Branch,Rural,True,False,approve
+511,Dhanbari SME/ Agri Branch,Rural,True,False,approve
+512,Hasnabad SME/ Agri Branch,Rural,True,False,approve
+513,Syedpur SME/ Agri Branch,Rural,True,False,approve
+514,Sarulia Bazar SME/ Agri Branch,Urban,True,False,approve
+515,Mawna Branch,Rural,True,False,approve
+516,Mirpur-2 Branch,Urban,True,False,approve
+517,Rahattarpool Branch,Urban,True,False,approve
+113,Unknown Branch,Urban,True,False,approve
+000,Empty Branch,Urban,True,False,approve

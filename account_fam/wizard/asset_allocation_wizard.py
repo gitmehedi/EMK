@@ -56,8 +56,9 @@ class AssetAllocationWizard(models.TransientModel):
                 [('asset_id', '=', asset.id), ('state', '=', 'active'), ('transfer_date', '=', False)])
 
             if last_allocation:
-                if last_allocation.receive_date >= self.date:
-                    raise ValidationError(_("Receive date shouldn\'t less than previous receive date."))
+                if last_allocation.receive_date[:10] > self.date:
+                    raise ValidationError(
+                        _("Asset Allocation/Transfer date shouldn\'t less than previous Allocation/Transfer date."))
 
                 last_allocation.write({
                     'transfer_date': datetime.strptime(self.date, '%Y-%m-%d') + timedelta(days=-1),

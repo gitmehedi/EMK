@@ -8,7 +8,6 @@ class PaymentInstruction(models.Model):
 
     @api.multi
     def action_approve(self):
-        self.ensure_one()
         if self.invoice_id:
             for line in self.invoice_id.suspend_security().move_id.line_ids:
                 if line.account_id.internal_type in ('receivable', 'payable'):
@@ -18,8 +17,17 @@ class PaymentInstruction(models.Model):
                         val = 1
                     line.write({'amount_residual': ((line.amount_residual) * val) - self.amount})
             self.invoice_id.write({'payment_approver':self.env.user.name})
-        self.write({'state': 'approved'})
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
+        return super(PaymentInstruction, self).action_approve()
+
+    @api.multi
+    def action_reject(self):
+        if self.invoice_id:
+            self.invoice_id.write({'payment_approver': self.env.user.name})
+        return super(PaymentInstruction, self).action_reject()
+
+    @api.multi
+    def action_reset(self):
+        if self.invoice_id:
+            self.invoice_id.write({'payment_approver': self.env.user.name})
+        return super(PaymentInstruction, self).action_reset()
+

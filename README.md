@@ -1,5 +1,7 @@
 # Genweb2 Business Solution [GBS]
 ## Mutual Trust Bank Limited [MTBL]
+[TOC]
+
 In 3-tier architecture, there is an intermediary level, meaning that the architecture is generally split up between: 
 1. **The Client or Web server**, i.e. the computer, which requests the resources, equipped with a user interface 
 (usually a web browser) for presentation purposes; 

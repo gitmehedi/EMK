@@ -72,24 +72,6 @@ class BranchDistribution(models.Model):
                 raise UserError(_('You cannot delete a record which is not in draft state!'))
         return super(BranchDistribution, self).unlink()
 
-    # @api.onchange('account_id')
-    # def onchange_account_id(self):
-    #     if self.account_id:
-    #         self.branch_budget_lines = []
-    #         self.cost_centre_budget_lines = []
-    #         branch_vals = []
-    #         cost_vals =  []
-    #
-    #         op_pool = self.env['operating.unit'].search([])
-    #         for obj in op_pool:
-    #             branch_vals.append((0, 0, {'operating_unit_id': obj.id,}))
-    #         self.branch_budget_lines = branch_vals
-    #
-    #         cost_pool = self.env['account.analytic.account'].search([])
-    #         for obj in cost_pool:
-    #             cost_vals.append((0, 0, {'analytic_account_id': obj.id,}))
-    #         self.cost_centre_budget_lines = cost_vals
-
 
     @api.multi
     @api.depends('planned_amount','budget_distribution_lines.planned_amount')
@@ -186,6 +168,18 @@ class BudgetDistributionLine(models.Model):
     theoritical_amount = fields.Float(string='Theoretical Amount' ,compute='_compute_theoritical_amount')
     active = fields.Boolean(default=True,compute='_compute_active')
 
+    @api.one
+    @api.constrains('operating_unit_id','analytic_account_id')
+    def constrains_op_cost(self):
+        if self.budget_distribution_id and self.operating_unit_id and self.analytic_account_id:
+            domain = self.search(
+                [('budget_distribution_id', '=', self.budget_distribution_id.id),
+                 ('operating_unit_id', '=', self.operating_unit_id.id),
+                 ('analytic_account_id', '=', self.analytic_account_id.id)])
+            if len(domain) > 1:
+                raise Warning(' Same branch and same cost centre can not be selected!')
+
+
     def _compute_practical_amount(self):
         for line in self:
             result = 0.0
@@ -259,3 +253,22 @@ class BudgetDistributionLine(models.Model):
     def _check_planned_amount(self):
         if self.planned_amount < 0:
             raise UserError('You can\'t give negative value!!!')
+
+
+    # @api.onchange('account_id')
+    # def onchange_account_id(self):
+    #     if self.account_id:
+    #         self.branch_budget_lines = []
+    #         self.cost_centre_budget_lines = []
+    #         branch_vals = []
+    #         cost_vals =  []
+    #
+    #         op_pool = self.env['operating.unit'].search([])
+    #         for obj in op_pool:
+    #             branch_vals.append((0, 0, {'operating_unit_id': obj.id,}))
+    #         self.branch_budget_lines = branch_vals
+    #
+    #         cost_pool = self.env['account.analytic.account'].search([])
+    #         for obj in cost_pool:
+    #             cost_vals.append((0, 0, {'analytic_account_id': obj.id,}))
+    #         self.cost_centre_budget_lines = cost_vals

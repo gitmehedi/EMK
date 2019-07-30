@@ -29,7 +29,7 @@ class VendorDesignation(models.Model):
             name = self.search(
                 [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
-                raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
+                raise Warning(_('[Unique Error] Name must be unique!'))
 
     @api.model
     def _needaction_domain_get(self):
@@ -116,8 +116,7 @@ class VendorDesignation(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
-
+                raise ValidationError(_('[Warning] Approved and Rejected record cannot be deleted.'))
             try:
                 return super(VendorDesignation, rec).unlink()
             except IntegrityError:

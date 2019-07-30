@@ -18,6 +18,29 @@ class TDSVATMovePaymentWizard(models.TransientModel):
                                         operating_unit_default_get(self._uid))
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
 
+    @api.multi
+    def action_validate(self):
+
+        if self.env.context.get('records'):
+            move_lines = self.env['account.move.line'].search([('id','in',self.env.context.get('records'))])
+        else:
+            move_lines = False
+
+        self.env['tds.vat.payment'].create({
+                'currency_id': self.currency_id.id,
+                'credit_account_id': self.credit_account_id.id,
+                'amount': self.amount,
+                'date': self.instruction_date,
+                'operating_unit_id': self.operating_unit_id.id or None,
+                'account_move_line_ids':[(6, 0, move_lines.ids)],
+            })
+        if move_lines:
+            move_lines.write({'pending_for_paid': True})
+        return {'type': 'ir.actions.act_window_close'}
+
+
+    # -----------------------------------------------------------------------------------
+    #payment instruction
     # @api.onchange('operating_unit_id')
     # def _onchange_operating_unit_id(self):
     #     if self.operating_unit_id:
@@ -27,32 +50,32 @@ class TDSVATMovePaymentWizard(models.TransientModel):
     #                 'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids.ids)]
     #             }}
 
-    @api.multi
-    def action_validate(self):
-        account_config_pool = self.env.user.company_id
-        if account_config_pool and account_config_pool.sundry_account_id:
-            debit_acc_id = account_config_pool.sundry_account_id
-        else:
-            raise UserError(
-                _("Account Settings are not properly set. "
-                  "Please contact your system administrator for assistance."))
-
-        if self.env.context.get('records'):
-            move_lines = self.env['account.move.line'].search([('id','in',self.env.context.get('records'))])
-        else:
-            move_lines = False
-
-        self.env['payment.instruction'].create({
-            'currency_id': self.currency_id.id,
-            'default_debit_account_id': debit_acc_id and debit_acc_id.id or False,
-            'default_credit_account_id': self.credit_account_id.id,
-            'instruction_date': self.instruction_date,
-            'amount': self.amount,
-            'operating_unit_id': self.operating_unit_id.id or None,
-            'is_tax': True,
-            'account_move_line_ids':[(6, 0, move_lines.ids)]
-            # 'sub_operating_unit_id': self.sub_operating_unit_id and self.sub_operating_unit_id.id or False,
-        })
-        if move_lines:
-            move_lines.write({'pending_for_paid': True})
-        return {'type': 'ir.actions.act_window_close'}
+    # @api.multi
+    # def action_validate(self):
+    #     account_config_pool = self.env.user.company_id
+    #     if account_config_pool and account_config_pool.sundry_account_id:
+    #         debit_acc_id = account_config_pool.sundry_account_id
+    #     else:
+    #         raise UserError(
+    #             _("Account Settings are not properly set. "
+    #               "Please contact your system administrator for assistance."))
+    #
+    #     if self.env.context.get('records'):
+    #         move_lines = self.env['account.move.line'].search([('id','in',self.env.context.get('records'))])
+    #     else:
+    #         move_lines = False
+    #
+    #     self.env['payment.instruction'].create({
+    #         'currency_id': self.currency_id.id,
+    #         'default_debit_account_id': debit_acc_id and debit_acc_id.id or False,
+    #         'default_credit_account_id': self.credit_account_id.id,
+    #         'instruction_date': self.instruction_date,
+    #         'amount': self.amount,
+    #         'operating_unit_id': self.operating_unit_id.id or None,
+    #         'is_tax': True,
+    #         'account_move_line_ids':[(6, 0, move_lines.ids)]
+    #         # 'sub_operating_unit_id': self.sub_operating_unit_id and self.sub_operating_unit_id.id or False,
+    #     })
+    #     if move_lines:
+    #         move_lines.write({'pending_for_paid': True})
+    #     return {'type': 'ir.actions.act_window_close'}

@@ -99,7 +99,7 @@ class AccountInvoice(models.Model):
 
     def _update_tax_line_vals(self):
         for line in self.invoice_line_ids:
-            if line.account_tds_id:
+            if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
                 vals = {
                     'invoice_id': self.id,
                     'name': line.account_tds_id.name + '/' + line.product_id.name,
@@ -113,7 +113,6 @@ class AccountInvoice(models.Model):
                     'product_id': line.product_id.id or False,
                     # 'base': tax['base'],
                     # 'tax_id': line.account_tds_id.id,
-
                 }
                 self.env['account.invoice.tax'].create(vals)
 

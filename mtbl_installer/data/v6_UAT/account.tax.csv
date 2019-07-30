@@ -1,0 +1,2 @@
+name,active,VAT Scope,VAT Computation,VAT Account,VAT Account on Refunds,Label on Invoices,VAT Group,Cost Centre,Amount,active,pending,state
+VAT 2.00%,True,Purchases,Percentage of Price,VAT on Expenditure,VAT on Expenditure,2.00%,Taxes,TRUE,5,True,False,approve

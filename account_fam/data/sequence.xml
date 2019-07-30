@@ -4,7 +4,7 @@
         <record id="seq_account_asset_asset" model="ir.sequence">
             <field name="name">Account Asset Asset Code</field>
             <field name="code">account.asset.asset.code</field>
-            <field name="prefix">MTB01-0101-%(year)s-%(month)s-</field>
+            <field name="prefix">%(year)s-%(month)s-MTB-ATAC-</field>
             <field name="padding">4</field>
             <field name="number_increment" eval="1"/>
             <field name="company_id" eval="False"/>

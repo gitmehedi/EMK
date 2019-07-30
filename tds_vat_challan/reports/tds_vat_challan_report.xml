@@ -63,7 +63,6 @@
                                 <thead>
                                     <tr style="background-color: #EFECEB;">
                                         <th class="text-left">Vendor</th>
-                                        <th class="text-left">Branch</th>
                                         <th class="text-left">Service</th>
                                         <th class="text-right">Bill Amount</th>
                                     </tr>
@@ -73,9 +72,6 @@
                                         <tr>
                                             <td class="text-left">
                                                 <span t-field="l.supplier_id"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <span t-field="l.operating_unit_id"/>
                                             </td>
                                             <td class="text-left">
                                                 <span t-field="l.product_id"/>
