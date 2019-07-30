@@ -14,7 +14,7 @@ class AccountTax(models.Model):
     amount_type = fields.Selection(selection=[
         ('fixed', 'Fixed'),
         ('percent', 'Percentage of Price')],track_visibility='onchange')
-    amount = fields.Float(track_visibility='onchange')
+    amount = fields.Float(string='General Value',track_visibility='onchange')
     account_id = fields.Many2one(required=True,track_visibility='onchange')
     refund_account_id = fields.Many2one(required=True,track_visibility='onchange')
     description = fields.Char(track_visibility='onchange')
@@ -32,9 +32,9 @@ class AccountTax(models.Model):
                              string="Status",track_visibility='onchange')
     line_ids = fields.One2many('history.account.tax', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
-    mushok_amount = fields.Float(string='Mushok Amount',track_visibility='onchange',
+    mushok_amount = fields.Float(string='Mushok Value',track_visibility='onchange',
                                   help='For Mushok-6.3')
-    vds_amount = fields.Float(string='VDS Authority Amount', track_visibility='onchange',
+    vds_amount = fields.Float(string='VDS Authority Value', track_visibility='onchange',
                                  help='For VDS Authority ')
 
     @api.one

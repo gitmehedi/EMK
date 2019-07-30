@@ -21,7 +21,6 @@
                 </tree>
             </field>
         </record>
-
         <record model="ir.actions.act_window" id="tds_vat_challan_line_action">
             <field name="name">TDS &amp; VAT Challan</field>
             <field name="res_model">tds.vat.challan.line</field>
@@ -29,7 +28,6 @@
             <!--<field name="context">{'search_default_approve':1}</field>-->
             <!--<field name="search_view_id" ref="tds_vat_challan_filter"/>-->
         </record>
-
         <!--<menuitem name="TDS &amp; VAT Challan Details" parent="main_menu_tds_vat"-->
         <!--action="tds_vat_challan_line_action" id="tds_challan_line_menu" sequence="12"-->
         <!--groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>-->

@@ -8,7 +8,7 @@
             <field name="priority" eval="30"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form string="Account Tax" edit="0" duplicate="0">
+                    <form string="Account VAT" edit="0" duplicate="0">
                         <header>
                             <button name="act_approve" string="Approve" type="object" states="draft"
                                     class="oe_highlight"
@@ -186,7 +186,7 @@
         </record>
 
         <record id="account.action_tax_form" model="ir.actions.act_window">
-            <field name="name">VAT</field>
+            <field name="name">VAT Rule</field>
             <field name="res_model">account.tax</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

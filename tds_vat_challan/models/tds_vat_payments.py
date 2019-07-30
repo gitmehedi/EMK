@@ -65,6 +65,7 @@ class TDSVATPayment(models.Model):
             for line in rec.account_move_line_ids:
                 self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
             self._generate_credit_move_line(date, move_obj.id,account_move_line_obj)
+            move_obj.write({'operating_unit_id': self.operating_unit_id.id,})
             move_obj.post()
         return True
 
@@ -84,7 +85,6 @@ class TDSVATPayment(models.Model):
                 'ref': '',
                 'company_id': self.operating_unit_id.company_id.id,
                 'journal_id': journal.id,
-                'operating_unit_id': self.operating_unit_id.id,
             }
             account_move = account_move_obj.create(account_move_dict)
         return account_move
