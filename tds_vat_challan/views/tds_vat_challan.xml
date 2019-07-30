@@ -9,14 +9,14 @@
                       decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
                       decoration-muted="state in ('approved','cancel') "
                       decoration-bf="state in ('confirm','approved') " create="false" edit="false">
-                    <field name="parent_id"/>
-                    <field name="challan_date"/>
-                    <field name="challan_no"/>
-                    <field name="deposited_bank"/>
-                    <field name="bank_branch"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="challan_date" invisible="1"/>
+                    <field name="challan_no" invisible="1"/>
+                    <field name="deposited_bank" invisible="1"/>
+                    <field name="bank_branch" invisible="1"/>
                     <field name="supplier_id"/>
-                    <field name="product_id"/>
-                    <field name="total_bill"/>
+                    <field name="product_id" string="Product/Service"/>
+                    <field name="total_bill" string="Total Amount"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
