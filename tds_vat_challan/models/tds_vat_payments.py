@@ -4,16 +4,19 @@ from odoo.exceptions import UserError, ValidationError
 
 class TDSVATPayment(models.Model):
     _name = 'tds.vat.payment'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
     _description = 'TDS & VAT Payments'
     _rec_name = 'date'
 
     sequence = fields.Integer('Sequence', help="Gives the sequence of this line when displaying the invoice.")
     credit_account_id = fields.Many2one('account.account', string='Credit Account',
+                                        track_visibility='onchange',
                                         help='Credit Account of the Payment')
-    date = fields.Date(string='Date', default=fields.Date.context_today,
-                                   required=True, copy=False)
+    date = fields.Date(string='Date',default=fields.Date.context_today,
+                       required=True,track_visibility='onchange', copy=False)
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True,
+                                        track_visibility='onchange',
                                         default=lambda self: self.env.user.default_operating_unit_id)
     currency_id = fields.Many2one('res.currency', string='Currency')
     amount = fields.Float(string='Amount')
@@ -107,10 +110,14 @@ class TDSVATPayment(models.Model):
             'date_maturity': date,
             'debit': line.credit,
             'name': 'challan/' + line.name,
-            'operating_unit_id': line.id,
+            'operating_unit_id': line.operating_unit_id.id,
             'move_id': account_move_id,
             'product_id': line.product_id.id or False,
             # 'partner_id': acc_inv_line_obj.partner_id.id,
         }
         account_move_line_obj.create(account_move_line_debit)
         return True
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'draft')]

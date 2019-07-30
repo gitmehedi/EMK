@@ -7,56 +7,68 @@ class TDSChallaSelectionWizard(models.TransientModel):
     _description = 'TDS Challan Wizard'
 
 
-    date_from = fields.Date(string='From Date', required=True,
-                            default=lambda self: self.env.context.get('from_date'))
-    date_to = fields.Date(string='To Date', required=True,
-                          default=lambda self: self.env.context.get('to_date'))
+    date_from = fields.Date(string='From Date', required=True)
+    date_to = fields.Date(string='To Date', required=True)
     type = fields.Selection([
         ('tds', 'TDS'),
         ('vat', 'VAT'),
-    ], string='Type', required=True,readonly=True,default=lambda self: self.env.context.get('tax_type'))
+    ], string='Type', required=True,default='tds')
     operating_unit_id = fields.Many2one('operating.unit', string='Branch')
-    supplier_id = fields.Many2one('res.partner', string="Vendor")
-    product_ids = fields.Many2many('product.product', string='Product', required=True,
-                                   default=lambda self: self.env.context.get('product_ids'))
+    supplier_ids = fields.Many2many('res.partner', string="Vendor")
+    product_ids = fields.Many2many('product.product', string='Product')
 
     @api.constrains('date_from','date_to')
     def _check_date(self):
         if self.date_from > self.date_to:
             raise ValidationError(
                 "Please Check End Date!! \n 'End Date' must be greater than 'From Date'")
-        if self.date_from < self.env.context.get('from_date'):
-            raise ValidationError(
-                "No record found. Please select date after '%'."% self.env.context.get('from_date'))
-        if self.date_to < self.env.context.get('to_date'):
-            raise ValidationError(
-                "No record found. Please select date before '%'." % self.env.context.get('to_date'))
 
 
     @api.onchange('product_ids')
     def _onchange_product_ids(self):
-        if self.product_ids:
-            self.supplier_id = []
-            self.operating_unit_id = []
-            move_lines = self.env['account.move.line'].search(
-                [('id', 'in', self.env.context.get('records')),('product_id','in',self.product_ids.ids)])
-            if move_lines:
-                supplier_ids = [move.partner_id.id for move in move_lines]
-                operating_unit_ids = [move.operating_unit_id.id for move in move_lines]
-                return {'domain': {
-                    'supplier_id': [('id', 'in', supplier_ids)],
-                    'operating_unit_id': [('id', 'in', operating_unit_ids)],
-                }}
+        type = self.type
+        if not type:
+            warning = {
+                    'title': _('Warning!'),
+                    'message': _('You must first select a Type(TDS/VAT)!'),
+                }
+            return {'warning': warning}
+        # if self.product_ids:
+        #     self.supplier_id = []
+        #     self.operating_unit_id = []
+        #     move_lines = self.env['account.move.line'].search(
+        #         [('id', 'in', self.env.context.get('records')),('product_id','in',self.product_ids.ids)])
+        #     if move_lines:
+        #         supplier_ids = [move.partner_id.id for move in move_lines]
+        #         operating_unit_ids = [move.operating_unit_id.id for move in move_lines]
+        #         return {'domain': {
+        #             'supplier_id': [('id', 'in', supplier_ids)],
+        #             'operating_unit_id': [('id', 'in', operating_unit_ids)],
+        #         }}
+
+    @api.onchange('supplier_ids')
+    def _onchange_supplier_ids(self):
+        type = self.type
+        if not type:
+            warning = {
+                'title': _('Warning!'),
+                'message': _('You must first select a Type(TDS/VAT)!'),
+            }
+            return {'warning': warning}
 
 
     @api.multi
     def generate_action(self):
-        vals = [('id','in',self.env.context.get('records')),
-                ('tax_type', '=', self.type),
+        vals = [('tax_type', '=', self.type),
+                ('is_paid', '=', True),
+                ('is_challan', '=', False),
                 ('date', '<=', self.date_to),('date', '>=', self.date_from)]
 
-        if self.supplier_id:
-            vals.append(('partner_id','=',self.supplier_id.id))
+        if self.supplier_ids:
+            vals.append(('partner_id','in',self.supplier_ids.ids))
+
+        if self.product_ids:
+            vals.append(('partner_id','in',self.product_ids.ids))
 
         if self.operating_unit_id:
             vals.append(('operating_unit_id','=',self.operating_unit_id.id))
