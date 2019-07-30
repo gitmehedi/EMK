@@ -79,7 +79,7 @@
                         <button string="Reset To Draft" name="action_reset_to_draft" type="object"
                                 groups="account.group_account_user"
                                 states="cancel" class="btn-default"/>
-                        <button name="%(act_view_tds_vat_challan_lines)d" string="View Details" type="action"
+                        <button name="%(act_view_tds_vat_challan_lines)d" string="Details" type="action"
                                 attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
                         <!--<button string="Print" name="action_print" type="object"-->
                         <!--groups="account.group_account_manager"-->
