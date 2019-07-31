@@ -263,4 +263,38 @@
         <field name="groups" eval="[(4,ref('group_sales_foreign'))]"/>
     </record>
 
+
+    <record id="gbs_payment_term.executive_foreign" model="ir.rule">
+        <field name="name">Sales Executive (Foreign)</field>
+        <field name="model_id" ref="gbs_payment_term.model_account_payment_term"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[('terms_type' ,'=', 'foreign')]</field>
+        <field name="groups" eval="[(4,ref('gbs_samuda_sales_access.group_sales_foreign'))]"/>
+    </record>
+
+    <record id="gbs_payment_term.executive_local" model="ir.rule">
+        <field name="name">Sales Executive (Local)</field>
+        <field name="model_id" ref="gbs_payment_term.model_account_payment_term"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[('terms_type' ,'=', 'local')]</field>
+        <field name="groups" eval="[(4,ref('gbs_samuda_sales_access.group_sales_local'))]"/>
+    </record>
+
+    <record id="gbs_payment_term.account_payment_term_write_permission" model="ir.rule">
+        <field name="name">Account Payment Term Write Permission</field>
+        <field name="model_id" ref="gbs_payment_term.model_account_payment_term"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1 ,'=', 1)]</field>
+        <field name="groups" eval="[(4,ref('account.group_account_manager')),(4,ref('gbs_application_group.group_head_sale'))]"/>
+    </record>
+
 </odoo>
