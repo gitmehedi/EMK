@@ -118,12 +118,27 @@ class AccountInvoice(models.Model):
 
         return True
 
+    @api.model
+    def _get_invoice_line_key_cols(self):
+        res = super(AccountInvoice, self)._get_invoice_line_key_cols()
+        res.append('account_tds_id')
+        res.append('tds_amount')
+        return res
+
+    @api.multi
+    def do_merge(self, keep_references=True, date_invoice=False):
+        res = super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
+        if res:
+            self.browse(res)._update_tds()
+            self.browse(res)._update_tax_line_vals()
+        return res
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     tds_amount = fields.Float('TDS Value', readonly=True, store=True, copy=False)
-    account_tds_id = fields.Many2one('tds.rule', string='TDS Rule',
+    account_tds_id = fields.Many2one('tds.rule', string='TDS',
                                      domain="[('active', '=', True),('state', '=','confirm' )]",)
 
     @api.onchange('product_id')

@@ -72,9 +72,10 @@
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                 <field name="upazila_id" placeholder="Upazila/Thana"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                <field name="postal_code" placeholder="Postal Code"/>
+                <field name="postal_code" placeholder="Postal Code"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
             </xpath>
-            <xpath expr="//field[@name='category_id']" position="after">
+            <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="entity_services" placeholder="Services..." widget="many2many_tags"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
             </xpath>

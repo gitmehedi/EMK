@@ -51,7 +51,7 @@ class ResPartner(models.Model):
                                   states={'draft': [('readonly', False)]},
                                   help="This is the Account number which using "
                                        "for payments against vendor.")
-    nid = fields.Char('NID',required=True,readonly=True,states={'draft': [('readonly', False)]},
+    nid = fields.Char('NID',size=17,readonly=True,states={'draft': [('readonly', False)]},
                       help="NID which is 17/13/10 digit.",track_visibility='onchange')
     division_id = fields.Many2one('bd.division',string='Division',readonly=True,
                                   states={'draft': [('readonly', False)]},
@@ -62,7 +62,7 @@ class ResPartner(models.Model):
     upazila_id = fields.Many2one('bd.upazila', string='Upazila/Thana', readonly=True,
                                  states={'draft': [('readonly', False)]},
                                  track_visibility='onchange')
-    postal_code = fields.Char('Postal Code',readonly=True,size=4,
+    postal_code = fields.Many2one('bd.postal.code','Postal Code',readonly=True,
                               states={'draft': [('readonly', False)]},
                               track_visibility='onchange')
     entity_services = fields.Many2many('entity.service', 'service_partner_rel','service_id','partner_id',

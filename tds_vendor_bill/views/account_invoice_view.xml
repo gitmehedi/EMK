@@ -5,7 +5,7 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
-            <field name="reference" position="after">
+            <field name="date_invoice" position="after">
                 <field name="is_tds_applicable"/>
                 <field name="inapplicable_type"
                        attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
