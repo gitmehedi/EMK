@@ -17,11 +17,11 @@ In 3-tier architecture, there is an intermediary level, meaning that the archite
 **Step 1:** Update OS and Install nginx web server
 
 _Update OS_  
-```
+```sh
 $ sudo yum update -y
 ```
 _Donwload nginx and install in Redhat 7_ 
-```
+```sh
 $ wget http://nginx.org/packages/rhel/7/x86_64/RPMS/nginx-1.14.2-1.el7_4.ngx.x86_64.rpm
 $ sudo yum install nginx-1.14.2-1.el7_4.ngx.x86_64.rpm -y 
 ```
@@ -29,42 +29,42 @@ $ sudo yum install nginx-1.14.2-1.el7_4.ngx.x86_64.rpm -y
 **Step 2:** Configure nginx with OS  
 
 _Create symbolic link for nginx_
-```
+```sh
 $ sudo systemctl enable nginx
 ```
 **_Start of nginx_** 
-```
+```sh
 $ sudo systemctl start nginx
 ```
 **_Stop of nginx_** 
-```
+```sh
 $ sudo systemctl stop nginx
 ```
 **_Retart of nginx_** 
-```
+```sh
 $ sudo systemctl restart nginx
 ```
 **_Status of nginx_** 
-```
+```sh
 $ sudo systemctl status nginx
 ```
 **Step 3:** Additional configuration of nginx  
 
 **_Open 80 and 443 port using firewall-cmd_**  
 Install ```firewalld``` OS package with configuration in redhat.  
-```
+```sh
 $ sudo yum install firewalld -y
 $ sudo systemctl enable firewalld
 $ sudo systemctl start firewalld
 ```
 You must open and enable port 80 and 443 using the firewall-cmd command:
-```
+```sh
 $ sudo firewall-cmd --permanent --zone=public --add-service=http
 $ sudo firewall-cmd --permanent --zone=public --add-service=https
 $ sudo firewall-cmd --reload
 ```
 **Step 5:** Testing nginx configuration
-```
+```sh
 $ sudo ss -tulpn
 ```
 
@@ -72,14 +72,7 @@ $ sudo ss -tulpn
 
 Create a default configuration file in nginx folder /etc/nginx/conf.d/default.conf
 Content of file.
-```
-upstream odoo {
- server 192.168.86.42:8010;
-}
-upstream odoochat {
- server 192.168.86.42:8072;
-}
-
+```sh
 server {
          listen 80;
          server_name appserver.com;
@@ -96,11 +89,11 @@ server {
 
          location / {
            # proxy_redirect off;
-             proxy_pass "http://192.168.86.42:8010";
+             proxy_pass "http://IP_ADDRESS:8010";
              proxy_set_header Host $host;
         }
          location /longpolling {
-            proxy_pass "http://192.168.86.42:8072";
+            proxy_pass "http://IP_ADDRESS:8072";
         }
 
 }
@@ -110,13 +103,13 @@ server {
 Add servername in /etc/hosts file  
 Example: 192.168.86.42  appserver.com appserver
 
-```
+```sh
 192.168.86.42  appserver.com appserver
 ```
 
 Step 7: Reload and Restart server
 Reload server after change on default.conf in nginx
-```
+```sh
 $ systemctl daemon-reload
 $ systemctl restart nginx
 $ systemctl restart restart
@@ -129,11 +122,11 @@ $ systemctl restart restart
 **Step 1:** Update OS and Install nginx web server
 
 _Update OS_  
-```
+```sh
 $ sudo yum update -y
 ```
 _Donwload python2 and install in Redhat 7_ 
-```
+```sh
 $ yum install gcc openssl-devel bzip2-devel
 $ cd /usr/src
 $ wget https://www.python.org/ftp/python/2.7.16/Python-2.7.16.tgz
@@ -142,7 +135,7 @@ $ make altinstall
  
 ```
 _Download PIP for Python_
-```
+```sh
 $ curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
 $ python2.7 get-pip.py
 ```
@@ -154,24 +147,24 @@ $ python2.7 get-pip.py
 
 
 _Donwload Postgresql 10 for RedHat 7_ 
-```
+```sh
 $ sudo rpm -Uvh https://yum.postgresql.org/10/redhat/rhel-6-x86_64/pgdg-redhat10-10-2.noarch.rpm
 ```
 
 _Update OS_  
-```
+```sh
 $ sudo yum update -y
 ```
 
 _Install Postgresql 10 and install in RedHat 7_ 
-```
+```sh
 $ sudo yum install postgresql10-server postgresql10 postgresql-contrib
 $ sudo /usr/pgsql-10/bin/postgresql-10-setup initdb 
 ```
 
 _Configure Postgresql 10 in RedHat 7 and Create user odoo_
 
-```
+```sh
 $ sudo systemctl enable postgresql-10.service
 $ sudo systemctl start postgresql-10.service
 $ sudo su - postgres -c "createuser -s odoo" 2> /dev/null || true
