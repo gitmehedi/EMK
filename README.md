@@ -86,16 +86,14 @@ server {
          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
          proxy_set_header X-Forwarded-Proto $scheme;
          proxy_set_header X-Real-IP $remote_addr;
-
+         
          location / {
-           # proxy_redirect off;
-             proxy_pass "http://IP_ADDRESS:8010";
-             proxy_set_header Host $host;
-        }
+            proxy_set_header Host $host;
+            proxy_pass "http://IP_ADDRESS:8010";
+         }
          location /longpolling {
             proxy_pass "http://IP_ADDRESS:8072";
-        }
-
+         }
 }
 ```
 **_Note_**: Change IP(192.168.86.42) and Port No (8069). 
