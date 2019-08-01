@@ -10,10 +10,6 @@
                     <label for="id" string="Configuration" groups="account.group_account_user"/>
                     <div name="tds_vat_challan">
                         <div>
-                            <label for="tds_vat_transfer_account_id"/>
-                            <field name="tds_vat_transfer_account_id" class="oe_inline"/>
-                        </div>
-                        <div>
                             <label for="tds_vat_transfer_journal_id"/>
                             <field name="tds_vat_transfer_journal_id" class="oe_inline"/>
                         </div>
@@ -23,3 +19,9 @@
         </field>
     </record>
 </odoo>
+
+
+        <!--<div>-->
+        <!--<label for="tds_vat_transfer_account_id"/>-->
+        <!--<field name="tds_vat_transfer_account_id" class="oe_inline"/>-->
+        <!--</div>-->

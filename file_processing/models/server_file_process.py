@@ -219,23 +219,26 @@ class ServerFileProcess(models.Model):
                         local_path = os.path.join(rec.folder, file)
 
                         source.get(source_path, localpath=local_path, preserve_mtime=True)
+                        start_date = fields.Datetime.now()
                         journal = rec.create_journal(file, {'source': source, 'dest': destination})
-
+                        stop_date = fields.Datetime.now()
                         if journal:
                             if destination.put(local_path, dest_path):
+                                with open(local_path, "rb") as glif_file:
+                                    encoded_file = base64.b64encode(glif_file.read())
+                                self.env['server.file.success'].create({'name': file,
+                                                                        'start_date': start_date,
+                                                                        'stop_date': stop_date,
+                                                                        'upload_file': encoded_file,
+                                                                        'file_name': file})
                                 if not source.unlink(source_path):
-                                    with open(dest_path, "rb") as glif_file:
-                                        encoded_file = base64.b64encode(glif_file.read())
-                                    self.env['server.file.success'].create({'name': file,
-                                                                            'start_date': start_date,
-                                                                            'stop_date': stop_date,
-                                                                            'upload_file': encoded_file,
-                                                                            'file_name': file})
                                     os.remove(local_path)
                                 else:
-                                    raise ValidationError(_('Please check path configuration.'))
+                                    continue
                             else:
-                                raise ValidationError(_('Please check path configuration.'))
+                                continue
+                        else:
+                            os.remove(local_path)
 
     def get_file_path(self, file):
         path = {}
@@ -254,24 +257,26 @@ class ServerFileProcess(models.Model):
         filter = data.split('.')
         return filter[0].strip() if len(filter) > 0 else None
 
-    def data_mapping(self, data):
-        data = data.split('|')
+    def data_mapping(self, vals):
+        data = vals.split('|')
         glcc_struc = [3, 3, 1, 5, 3, 2, 2, 3]
         date_struc = [2, 2, 4, 2, 2, 2]
         glcc_name = ['BRANCH', 'CURRENCY', 'SEGMENT', 'COMP_1', 'COMP_2', 'AC', 'SC', 'COST_CENTRE']
-
-        data[9] = dict(zip(glcc_name, self.strslice(data[9], glcc_struc)))
-        data[0] = self.format_data(self.strslice(data[0] + data[2], date_struc))
-        data[1] = self.format_data(self.strslice(data[1] + '000000', date_struc))
-        data[13] = self.format_data(self.strslice(data[13] + '000000', date_struc))
-
         keys = ['POSTING-DATE', 'SYSTEM-DATE', 'POSTING-TIME', 'SOURCE', 'JOURNAL-NBR', 'JOURNAL-SEQ',
                 'SOC', 'BRCH', 'FCY-CODE', 'GL-CLASS-CODE', 'DESC-TRCODE-6', 'DESC-TEXT-24', 'POSTING-IND',
                 'TRANS-DATE', 'LCY-AMT',
                 'FCY-AMT', 'REVERSAL-CODE', 'REVERSAL-DATE', 'REFERENCE', 'SOURCE-APPLN', 'PS-JOURNAL-ID',
                 'PS-JOURNAL-NBR', 'CNTL-CENTRE']
 
-        return dict(zip(keys, data[:len(data)]))
+        if len(data) > 15:
+            data[9] = dict(zip(glcc_name, self.strslice(data[9], glcc_struc)))
+            data[0] = self.format_data(self.strslice(data[0] + data[2], date_struc))
+            data[1] = self.format_data(self.strslice(data[1] + '000000', date_struc))
+            data[13] = self.format_data(self.strslice(data[13] + '000000', date_struc))
+
+            return dict(zip(keys, data[:len(data)]))
+        else:
+            return vals
 
     @api.multi
     def format_data(self, date):
@@ -309,6 +314,9 @@ class ServerFileProcess(models.Model):
 
                 if len(worksheet_index) > 2:
                     rec = self.data_mapping(worksheet_index)
+                    if rec == worksheet_index:
+                        errors.append((0, 0, {'line_no': index, 'details': '{0} has invalid value'.format(rec)}))
+                        continue
 
                     journal_no = rec['JOURNAL-NBR']
                     journal_type = 'CBS Invoices'
@@ -430,6 +438,7 @@ class ServerFileProcess(models.Model):
                                                       'file_path': source_path,
                                                       'line_ids': errors,
                                                       'ftp_ip': self.source_sftp_host})
+
             else:
                 try:
                     for key in moves:

@@ -114,7 +114,7 @@
 
         <menuitem id="menu_tds_rule_item" name="TDS Rule" sequence="18" parent="texes_menu" action="tds_rule_action"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
-        <menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="VAT"
+        <menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="VAT Rule"
                   parent="texes_menu" sequence="1" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <record id="view_tds_rule_version_form" model="ir.ui.view">

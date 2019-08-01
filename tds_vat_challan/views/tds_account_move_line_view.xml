@@ -6,13 +6,13 @@
             <field name="arch" type="xml">
                 <tree string="TDS &amp; VAT Payable" create="false" delete="false">
                     <field name="date" string="Bill Date"/>
-                    <field name="name" string="TDS/VAT Description"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
                     <field name="product_id" string="Service"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="operating_unit_id" string="Branch"/>
                     <field name="credit" sum="Total Credit" string="Amount"/>
-                    <button name="action_do_pending" string="Pending" type="object" icon="fa-minus-square"/>
+                    <button name="action_do_pending" string="Pending" type="object" icon="fa-minus-square text-danger"/>
                 </tree>
             </field>
         </record>
@@ -23,13 +23,13 @@
             <field name="arch" type="xml">
                 <tree string="TDS &amp; VAT Pending" create="false" delete="false">
                     <field name="date" string="Bill Date"/>
-                    <field name="name" string="TDS/VAT Description"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
                     <field name="product_id" string="Service"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="operating_unit_id" string="Branch"/>
                     <field name="credit" sum="Total Credit" string="Amount"/>
-                    <button name="action_undo_pending" string="Undo" type="object" icon="fa-minus-square"/>
+                    <button name="action_undo_pending" string="Undo" type="object" icon="fa-repeat text-success"/>
                 </tree>
             </field>
         </record>
@@ -40,7 +40,7 @@
             <field name="arch" type="xml">
                 <tree string="TDS &amp; VAT Paid" create="false" delete="false">
                     <field name="date" string="Bill Date"/>
-                    <field name="name" string="TDS/VAT Description"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
                     <field name="product_id" string="Service"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" string="Vendor"/>
@@ -56,7 +56,7 @@
             <field name="arch" type="xml">
                 <tree string="Waiting for Payment Approval" create="false" delete="false">
                     <field name="date" string="Bill Date"/>
-                    <field name="name" string="TDS/VAT Description"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
                     <field name="product_id" string="Service"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" string="Vendor"/>
@@ -70,7 +70,7 @@
             <field name="name">tds.move.line.filter</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <search string="Search TDS/VAT">
+                <search string="Search TDS &amp; VAT">
                     <field name="tax_type" string="Type" filter_domain="[('tax_type','ilike',self)]"/>
                     <separator/>
                     <filter name="tax_type" string="Type" context="{'group_by': 'tax_type'}"/>
@@ -143,35 +143,12 @@
             </field>
         </record>
 
-        <record id="action_tds_vat_pending_paid" model="ir.actions.act_window">
-            <field name="name">Waiting for Payment Approval</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="tds_vat_move_paid_tree"/>
-            <field name="search_view_id" ref="tds_move_line_filter"/>
-            <field name="view_mode">tree</field>
-            <field name="context">{'search_default_tax_type':1}</field>
-            <field name="domain">[('tax_type', 'in', ['vat','tds']),
-                ('is_pending', '=', False),
-                ('is_challan', '=', False),
-                ('is_paid', '=', False),
-                ('pending_for_paid', '=', True)]</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Nothing in paid.
-                </p>
-            </field>
-        </record>
-
         <menuitem name="TDS &amp; VAT Payable" parent="main_menu_tds_vat"
                   action="action_tds_vat_payable" id="tds_vat_payable_menu" sequence="1"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <menuitem name="TDS &amp; VAT Pending" parent="main_menu_tds_vat"
-                  action="action_tds_vat_pending" id="tds_vat_pending_menu" sequence="2"
-                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
-
-        <menuitem name="Waiting for Payment" parent="main_menu_tds_vat"
-                  action="action_tds_vat_pending_paid" id="tds_vat_pending_paid_menu" sequence="3"
+                  action="action_tds_vat_pending" id="tds_vat_pending_menu" sequence="101"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <menuitem name="TDS &amp; VAT Paid" parent="main_menu_tds_vat"
@@ -179,7 +156,7 @@
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <record id="action_open_account_move_pending" model="ir.actions.server">
-            <field name="name">Pending</field>
+            <field name="name">Do Pending</field>
             <field name="model_id" ref="model_account_move_line"/>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>

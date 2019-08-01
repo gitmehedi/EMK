@@ -34,7 +34,7 @@ class TdsVatChallan(models.Model):
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
         ('approved', "Approved"),
-        ('cancel', "Cancel"),
+        ('cancel', "Rejected"),
     ], default='draft',string="Status", track_visibility='onchange')
 
 

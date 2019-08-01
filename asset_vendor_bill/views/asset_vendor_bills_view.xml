@@ -16,7 +16,7 @@
                             attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','paid'))]}"/>
                     <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
                             groups="account.group_account_invoice"/>
-                    <button name="action_invoice_draft" states="cancel" string="Reject" type="object"
+                    <button name="action_invoice_draft" states="cancel" string="Set to draft" type="object"
                             groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid"/>
                 </header>
@@ -46,21 +46,24 @@
                     <field name="type" invisible="1"/>
                     <group>
                         <group>
+                            <field name="entity_service_id" string="Service"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                             <field string="Vendor" name="partner_id"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                    context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                                    domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
-                            <field name="is_tds_applicable"/>
-                            <field name="inapplicable_type"
-                                   attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
                             <field name="vat_selection"/>
                         </group>
                         <group>
                             <field name="is_asset" default="True" invisible="True"/>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" string="Bill Date"/>
-                            <field name="date_due"/>
+                            <field name="is_tds_applicable"/>
+                            <field name="inapplicable_type"
+                                   attrs="{'invisible':[('is_tds_applicable','=',True)],
+                                   'required': [('is_tds_applicable', '=', False)]}"/>
+                            <field name="date_due" groups="base.group_system"/>
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}"
                                    groups="base.group_multi_currency"/>
@@ -176,6 +179,8 @@
                                            groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}"
                                            groups="base.group_multi_company"/>
+                                    <field name="provisional_expense"/>
+                                    <field name="merged_bill" groups="base.group_system"/>
                                 </group>
                             </group>
                         </page>
@@ -261,19 +266,21 @@
             <tree decoration-info="state == 'draft'" decoration-success="state == 'open'"
                   decoration-muted="state in('paid','cancel') "
                   decoration-bf="state in ('open','paid')" string="Invoice">
-                <field name="partner_id" groups="base.group_user" string="Customer"/>
-                <field name="date_invoice"/>
+                <field name="partner_id" groups="base.group_user" string="Vendor"/>
+                <field name="date_invoice" string="Bill Date"/>
                 <field name="number"/>
                 <field name="commercial_partner_id" invisible="1"/>
                 <field name="reference" invisible="1"/>
                 <field name="name" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                <field name="user_id"/>
-                <field name="date_due"/>
-                <field name="origin"/>
+                <field name="user_id" invisible="1"/>
+                <field name="date_due" invisible="1"/>
+                <field name="origin" invisible="1"/>
                 <field name="amount_total_signed" string="Total" sum="Total"/>
-                <field name="residual_signed" string="Amount Due" sum="Amount Due"/>
+                <field name="amount_tax" string="VAT" sum="VAT"/>
+                <field name="total_tds_amount" string="TDS" sum="TDS"/>
+                <field name="residual_signed" string="To Pay" sum="To Pay"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="company_currency_id" invisible="1"/>
                 <field name="state"/>

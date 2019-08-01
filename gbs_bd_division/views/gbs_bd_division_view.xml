@@ -132,6 +132,46 @@
             </field>
         </record>
 
+        <record id="view_bd_postal_code_tree" model="ir.ui.view">
+            <field name="name">bd.postal.code.tree</field>
+            <field name="model">bd.postal.code</field>
+            <field name="arch" type="xml">
+                <tree string="Postal Code">
+                    <field name="name" />
+                    <field name="upazila_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_bd_postal_code_form" model="ir.ui.view">
+            <field name="name">bd.postal.code.form</field>
+            <field name="model">bd.postal.code</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Postal Code">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="upazila_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_bd_postal_code" model="ir.actions.act_window">
+            <field name="name">Postal Code</field>
+            <field name="res_model">bd.postal.code</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Postal Code.
+                </p>
+            </field>
+        </record>
+
 
         <menuitem
                 name="Divisions"
@@ -153,5 +193,12 @@
                 id="menu_bd_upazila"
                 sequence="3"
                 action="action_bd_upazila"/>
+
+        <menuitem
+                name="Postal Code"
+                parent="main_menu_division"
+                id="menu_bd_postal_code"
+                sequence="4"
+                action="action_bd_postal_code"/>
     </data>
 </odoo>

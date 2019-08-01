@@ -1,0 +1,30 @@
+code,name,user_type_id/id,reconcile,active,pending,state
+100000,Fixed Asset Account,account.data_account_type_fixed_assets,False,True,False,approve
+101000,Current Assets,account.data_account_type_current_assets,False,True,False,approve
+101110,Stock Valuation Account,account.data_account_type_current_assets,False,True,False,approve
+101120,Stock Interim Account (Received),account.data_account_type_current_assets,False,True,False,approve
+101130,Stock Interim Account (Delivered),account.data_account_type_current_assets,False,True,False,approve
+101200,Account Receivable,account.data_account_type_receivable,True,True,False,approve
+101300,Tax Paid,account.data_account_type_current_assets,False,True,False,approve
+101401,Bank,account.data_account_type_liquidity,False,True,False,approve
+101501,Cash,account.data_account_type_liquidity,False,True,False,approve
+101600,Opening Income Account,account.data_account_type_other_income,False,True,False,approve
+101700,Liquidity Transfers,account.data_account_type_current_assets,True,True,False,approve
+102000,Non-current assets,account.data_account_type_non_current_assets,False,True,False,approve
+103000,Prepayments,account.data_account_type_prepayments,False,True,False,approve
+111000,Current Liabilities,account.data_account_type_current_liabilities,False,True,False,approve
+111100,Account Payable,account.data_account_type_payable,True,True,False,approve
+111200,Tax Received,account.data_account_type_current_liabilities,False,True,False,approve
+111300,Reserve and Profit/Loss Account,account.data_account_type_current_liabilities,True,True,False,approve
+112000,Non-current Liabilities,account.data_account_type_non_current_liabilities,False,True,False,approve
+200000,Product Sales,account.data_account_type_revenue,False,True,False,approve
+201000,Foreign Exchange Gain,account.data_account_type_revenue,False,True,False,approve
+210000,Cost of Revenue,account.data_account_type_direct_costs,False,True,False,approve
+211000,Foreign Exchange Loss,account.data_account_type_expenses,False,True,False,approve
+212100,Salary Expenses,account.data_account_type_expenses,False,True,False,approve
+212200,Purchase of Equipments,account.data_account_type_expenses,False,True,False,approve
+212300,Bank Fees,account.data_account_type_expenses,False,True,False,approve
+220000,Expenses,account.data_account_type_expenses,False,True,False,approve
+300100,Capital,account.data_account_type_equity,False,True,False,approve
+300200,Dividends,account.data_account_type_equity,False,True,False,approve
+999999,Undistributed Profits/Losses,account.data_unaffected_earnings,False,True,False,approve

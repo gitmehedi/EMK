@@ -28,7 +28,14 @@ class AccountInvoice(models.Model):
                                       ('vds_authority', 'VDS Authority'),
                                       ], string='VAT Selection', default='normal',
                                      readonly=True,states={'draft': [('readonly',False)]})
-    payment_approver = fields.Text('Payment Instruction Responsible',track_visibility='onchange', help="Log for payment approver")
+    payment_approver = fields.Text('Payment Instruction Responsible',track_visibility='onchange',
+                                   help="Log for payment approver", copy=False)
+    merged_bill = fields.Boolean(default=False,string='Is Merged Bill',track_visibility='onchange',
+                                   readonly=True, states={'draft': [('readonly', False)]},
+                                   help="Log for payment approver")
+    provisional_expense = fields.Boolean(default=False,string='Is Provisional Expense',track_visibility='onchange',
+                                         readonly=True, states={'draft': [('readonly', False)]},
+                                         help="To manage provisional expense")
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -165,7 +172,10 @@ class AccountInvoice(models.Model):
     def do_merge(self, keep_references=True, date_invoice=False):
         for invoice in self:
             invoice.reference = ''
-        return super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
+        res = super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
+        if res:
+            self.browse(res).write({'merged_bill': True})
+        return res
 
     def action_payment_instruction(self):
         if self.residual <= 0.0:
@@ -220,6 +230,13 @@ class AccountInvoice(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'open')]
+
+    @api.model
+    def _get_invoice_line_key_cols(self):
+        res = super(AccountInvoice, self)._get_invoice_line_key_cols()
+        res.append('operating_unit_id')
+        res.append('sub_operating_unit_id')
+        return res
 
 
 class AccountInvoiceLine(models.Model):

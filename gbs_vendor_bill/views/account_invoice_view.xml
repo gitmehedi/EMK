@@ -154,6 +154,13 @@
             <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="provisional_expense"/>
+                <field name="merged_bill" groups="base.group_system"/>
+            </xpath>
+            <xpath expr="//field[@name='date_due']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
             <!--<xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">-->
                 <!--<attribute name="groups">base.group_system</attribute>-->
             <!--</xpath>-->
