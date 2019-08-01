@@ -92,13 +92,7 @@
                             <field name="default_credit_account_id" invisible="1"/>
                             <field name="amount"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="state" invisible="1"/>
-                            <button name="action_approve" string="Approve" type="object"
-                                    class="oe_highlight" states="draft"/>
-                            <button name="action_reject" string="Reject" type="object"
-                                    class="oe_highlight" states="draft"/>
-                            <button name="action_reset" string="Reset" type="object"
-                                    class="oe_highlight" states="cancel"/>
+                            <field name="state" string="Status"/>
                             <field name="is_sync" invisible="1"/>
                             <button name="sync" string="Sync" type="action"
                                     icon="fa fa-check text-success"

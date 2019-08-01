@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 
 class PaymentInstruction(models.Model):
     _name = 'payment.instruction'
-    _inherit = "mail.thread"
+    _inherit = ["mail.thread",'ir.needaction_mixin']
     _order = 'id desc'
     _rec_name = 'code'
     _description = 'Payment Instruction'
@@ -39,24 +39,20 @@ class PaymentInstruction(models.Model):
 
     @api.multi
     def action_approve(self):
-        self.write({'state': 'approved'})
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
+        return self.write({'state': 'approved'})
 
     @api.multi
     def action_reject(self):
-        self.write({'state': 'cancel'})
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def action_reset(self):
-        self.write({'state': 'draft'})
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
+        return self.write({'state': 'draft'})
+        # return {
+        #     'type': 'ir.actions.client',
+        #     'tag': 'reload',
+        # }
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'draft')]
