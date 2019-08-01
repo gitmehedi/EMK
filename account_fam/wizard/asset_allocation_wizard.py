@@ -109,7 +109,8 @@ class AssetAllocationWizard(models.TransientModel):
             assetmove = asset_move(asset)
             assetmove.write({'move_id': move.id})
             move.post()
-            asset.write({'allocation_status': True, 'current_branch_id': self.to_operating_unit_id.id})
+            asset.write({'allocation_status': True, 'current_branch_id': self.to_operating_unit_id.id,
+                         'asset_usage_date': self.date})
 
         if self.env.context.get('transfer'):
             from_total_credit = {
