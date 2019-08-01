@@ -148,7 +148,7 @@
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <menuitem name="TDS &amp; VAT Pending" parent="main_menu_tds_vat"
-                  action="action_tds_vat_pending" id="tds_vat_pending_menu" sequence="2"
+                  action="action_tds_vat_pending" id="tds_vat_pending_menu" sequence="101"
                   groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
         <menuitem name="TDS &amp; VAT Paid" parent="main_menu_tds_vat"
