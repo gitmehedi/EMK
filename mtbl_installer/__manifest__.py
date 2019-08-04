@@ -10,7 +10,6 @@
         "account_parent",
         "operating_unit",
         "account_operating_unit",
-        "account_invoice_merge_operating_unit",
         "account_invoice_merge_attachment",
         "account_fiscal_month",
         "agreement_account",
@@ -43,6 +42,7 @@
         "gbs_account_level",
         "gbs_account_budget",
         "web_export_view",
+        "gbs_reverse_bill",
 
     ],
     'description': 'Install all modules which is related to MTBL Accounting',

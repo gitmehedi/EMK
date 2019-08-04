@@ -7,7 +7,6 @@
     'version': '10.0.0.1',
     'category': 'Accounting',
     'depends': [
-        'account_invoice_merge_operating_unit',
         'account_invoice_merge_attachment',
         'base_suspend_security',
         'gbs_payment_instruction',

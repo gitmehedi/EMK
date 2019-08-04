@@ -11,15 +11,6 @@
             <xpath expr="//field[@name='date_invoice']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-        </field>
-    </record>
-
-    <record id="inherit_invoice_merge_ou" model="ir.ui.view">
-        <field name="name">inherit.invoice.merge.ou</field>
-        <field name="model">invoice.merge</field>
-        <field name="inherit_id" ref="account_invoice_merge_operating_unit.view_invoice_merge_ou"/>
-        <field name="priority" eval="18"/>
-        <field name="arch" type="xml">
             <xpath expr="//p[1]" position="replace">
                 <p>
                     Please note that:
