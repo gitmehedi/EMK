@@ -29,7 +29,7 @@ class ResPartner(models.Model):
     fax = fields.Char(track_visibility='onchange',size=16)
     mobile = fields.Char(track_visibility='onchange')
     street = fields.Char(track_visibility='onchange')
-    street2 = fields.Char(track_visibility='onchange')
+    street2 = fields.Char(string='etc',track_visibility='onchange')
     zip = fields.Char(track_visibility='onchange')
     city = fields.Char(track_visibility='onchange')
     state_id = fields.Many2one(track_visibility='onchange')
@@ -210,13 +210,13 @@ class ResPartner(models.Model):
             if not self.nid.isdigit():
                 raise Warning('[Format Error] NID must be numeric!')
 
-    @api.constrains('postal_code')
-    def _check_postal_code_constrain(self):
-        if self.postal_code:
-            if len(self.postal_code) != 4:
-                raise Warning('[Format Error] Postal Code  must be 4 digit!')
-            if not self.postal_code.isdigit():
-                raise Warning('[Format Error] Postal Code must be numeric!')
+    # @api.constrains('postal_code')
+    # def _check_postal_code_constrain(self):
+    #     if self.postal_code:
+    #         if len(self.postal_code) != 4:
+    #             raise Warning('[Format Error] Postal Code  must be 4 digit!')
+    #         if not self.postal_code.isdigit():
+    #             raise Warning('[Format Error] Postal Code must be numeric!')
 
 
     """ All functions """
