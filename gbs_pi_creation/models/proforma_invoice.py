@@ -59,6 +59,10 @@ class ProformaInvoice(models.Model):
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
 
+    # terms_id = fields.Many2one('terms.setup', string='Old Payment term', store=True, readonly=True,
+    #                            track_visibility='onchange',
+    #                            states={'draft': [('readonly', False)]})
+
     account_payment_term_id = fields.Many2one('account.payment.term', string='Payment term', store=True, readonly=True,
                                               track_visibility='onchange', states={'draft': [('readonly', False)]})
 

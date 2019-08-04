@@ -9,6 +9,9 @@
             <field name="partner_shipping_id" position="after">
                 <field name="lc_id" string="LC No"/>
             </field>
+            <xpath expr="//page[2]/group/group/field[@name='date_due']" position="replace">
+                <field name="date_due" groups="base.group_user"/>
+            </xpath>
         </field>
     </record>
 

@@ -37,6 +37,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="terms_setup_menu" parent="sales_team.menu_sale_config"
-              action="terms_setup_action" sequence="25"/>
+    <!--<menuitem id="terms_setup_menu" parent="sales_team.menu_sale_config"-->
+              <!--action="terms_setup_action" sequence="25"/>-->
 </odoo>
