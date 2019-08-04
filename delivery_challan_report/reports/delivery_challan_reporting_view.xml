@@ -39,29 +39,25 @@
                         <div class="challan-header clearfix">
                             <div class="row">
                                 <div class="col-xs-12 text-left vehicle-no">
-                                    <!--Vehicle No: <span t-esc="data['vehicle_no']"/>-->
                                     <span t-esc="data['vehicle_no']"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-9 challan-no">
-                                    <!--DC No: <span t-esc="data['challan_no']"/>-->
                                     <span t-esc="data['challan_no']"/>
                                 </div>
                                 <div class="col-xs-3 text-right do-date">
-                                    <!--<strong>Date : </strong>-->
-                                    <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>
+                                    <span t-esc="data['do_date']"
+                                          t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 text-left partner-name">
-                                    <!-- Party Name: -->
                                     <span t-esc="data['partner_name']"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 text-left shipping-address">
-                                    <!-- Destination: -->
                                     <span t-esc="data['shipping_address']"/>
                                 </div>
                             </div>
@@ -75,7 +71,8 @@
                                             <span t-esc="data['so_name']"/>
                                         </td>
                                         <td style="white-space: no-wrap; line-height: 1em;">
-                                            <span t-esc="data['so_date']" t-options='{"widget": "date"}'/>
+                                            <span t-esc="data['so_date']"
+                                                  t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
                                         </td>
                                         <td style="width: 335px; line-height: 1em;">
                                             <span t-esc="l['product_name']"/>
@@ -106,7 +103,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12" style="margin-top: 5px;">
-<!--                                        In Word (Quantity):-->
                                     <div style="margin-left: 165px; height: 32px;">
                                         <span t-esc="amount_to_word(sum(l['qty_in_kg'] for l in lists))"/>  KG:S
                                     </div>
@@ -114,7 +110,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12" style="margin-top: 10px;">
-<!--                                        Others:-->
                                     <div style="margin-left: 85px; height:30px;">
                                         <span t-esc="data['note']"/>
                                     </div>
@@ -122,143 +117,18 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-7" style="margin-top: 12px;">
-<!--                                        Vat/Challan No:-->
                                     <div style="margin-left: 140px;">
                                         <span t-esc="data['vat_challan_id']"/>
                                     </div>
                                 </div>
                                 <div class="col-xs-5" style="margin-top: 13px;">
-<!--                                        Date:-->
                                     <div style="margin-left: 40px;">
-                                        <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>
+                                        <span t-esc="data['do_date']"
+                                              t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
-<!--                        <style type="text/css">-->
-
-<!--                            .page { font-size: 22px; }-->
-<!--                            .odo-bg-gray, .odo-bg-gray > td {  }-->
-<!--                            .challan-header { line-height: 1.5em; }-->
-<!--                            .vehicle-no { padding-left: 170px;}-->
-<!--                            .vehicle-no span { display: block; width: 120px; line-height: 1.25em; }-->
-
-<!--                            .challan-no { padding-left: 170px; margin-top: 16px; }-->
-<!--                            .do-date { margin-top: 16px; }-->
-
-<!--                            .partner-name { padding-left: 170px; margin-top: 32px; }-->
-<!--                            .shipping-address { padding-left: 170px; margin-top: 32px; }-->
-
-<!--                            .challan-table { margin-top: 50px; margin-left: 32px; }-->
-<!--                            .challan-table, .challan-table tbody { height: 285px; min-height: 285px; }-->
-<!--                            .challan-table th, .challan-table td { border: 0 none !important; }-->
-
-
-<!--                            .header-container { line-height: 1.5em; height: 284px; min-height: 284px;}-->
-<!--                            .first-part { margin-top:120px; padding-left: 150px;}-->
-<!--                            .first-part span { display: block; width: 120px; line-height: 1.25em; }-->
-
-<!--                        </style>-->
-<!--                        <div class="challan-header clearfix">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-12 text-left vehicle-no">-->
-<!--                                    &lt;!&ndash;Vehicle No: <span t-esc="data['vehicle_no']"/>&ndash;&gt;-->
-<!--                                    <span t-esc="data['vehicle_no']"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-6 challan-no">-->
-<!--                                    &lt;!&ndash;DC No: <span t-esc="data['challan_no']"/>&ndash;&gt;-->
-<!--                                    <span t-esc="data['challan_no']"/>-->
-<!--                                </div>-->
-<!--                                <div class="col-xs-6 text-right do-date">-->
-<!--                                    &lt;!&ndash;<strong>Date : </strong>&ndash;&gt;-->
-<!--                                    <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-12 text-left partner-name">-->
-<!--                                    &lt;!&ndash; Party Name: &ndash;&gt;-->
-<!--                                    <span t-esc="data['partner_name']"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-12 text-left shipping-address">-->
-<!--                                    &lt;!&ndash; Destination: &ndash;&gt;-->
-<!--                                    <span t-esc="data['shipping_address']"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-<!--                        <table class="table table-report-md challan-table">-->
-<!--                            <tbody>-->
-<!--                                <t t-foreach="lists" t-as="l">-->
-<!--                                    <tr>-->
-<!--                                        <td style="width: 75px">-->
-<!--                                            <span t-esc="data['so_name']"/>-->
-<!--                                        </td>-->
-<!--                                          <td style="width: 95px">-->
-<!--                                            <span t-esc="data['so_date']"/>-->
-<!--                                        </td>-->
-<!--                                        <td style="width: 410px;">-->
-<!--                                            <span t-esc="l['product_name']"/>-->
-<!--                                        </td>-->
-<!--                                        <td>-->
-<!--                                            <span t-esc="l['qty']"/>-->
-<!--                                            <span t-esc="l['uom_name']"/>-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                </t>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                        <div class="clearfix" style="margin-left: 32px;">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-6">-->
-<!--                                    <strong>Total:</strong>-->
-<!--                                </div>-->
-<!--                                <div class="col-xs-6 text-right">-->
-<!--                                    <div style="width: 80px; float: right;">-->
-<!--                                        <strong t-esc="sum(l['qty'] for l in lists)"/>-->
-<!--                                        <strong t-esc="lists[0]['uom_name']"/>-->
-<!--                                        <t t-if="lists[0]['uom_name'] == 'MT'">-->
-<!--                                            /-->
-<!--                                            <span t-esc="sum(l['qty_in_kg'] for l in lists)"/>-->
-<!--                                            <span>kg</span>-->
-<!--                                        </t>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-12" style="margin-top: 15px;">-->
-<!--&lt;!&ndash;                                        In Word (Quantity):&ndash;&gt;-->
-<!--                                    <div style="margin-left: 165px;">-->
-<!--                                        <span t-esc="amount_to_word(sum(l['qty_in_kg'] for l in lists))"/>KG:S-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-12" style="margin-top: 25px;">-->
-<!--&lt;!&ndash;                                        Others:&ndash;&gt;-->
-<!--                                    <div style="margin-left: 85px;"><span t-esc="data['note']"/></div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-7" style="margin-top: 20px;">-->
-<!--&lt;!&ndash;                                        Vat/Challan No:&ndash;&gt;-->
-<!--                                    <div style="margin-left: 140px;">-->
-<!--                                        <span t-esc="data['vat_challan_id']"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="col-xs-5" style="margin-top: 20px;">-->
-<!--&lt;!&ndash;                                        Date:&ndash;&gt;-->
-<!--                                    <div style="margin-left: 40px;">-->
-<!--                                        <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </div>
                 </div>
             </t>
