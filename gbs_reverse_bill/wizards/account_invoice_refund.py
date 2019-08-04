@@ -28,9 +28,17 @@ class AccountInvoiceReverse(models.TransientModel):
         ac_move_ids = self.env['account.move'].search([('id', '=', ac_move_line_ids and ac_move_line_ids[0].move_id.id)])
         acc_invoice = ac_move_line_ids[0].mapped('invoice_id')
         if ac_move_ids:
-            if self.reverse_option == 'op1':
-                return self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
+            if self.reverse_option == 'op1' and not acc_invoice.payment_line_ids:
+                self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
+                return acc_invoice.write({'state': 'cancel', 'move_id': False})
+            elif self.reverse_option == 'op2' and not acc_invoice.payment_line_ids:
+                return self.custom_reverse_move(date, journal_id or False, ac_move_ids, ac_move_line_ids)
+            elif self.reverse_option == 'op1' and acc_invoice.payment_line_ids:
+                self.reverse_payment_instruction(date,acc_invoice)
+                self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
+                return acc_invoice.write({'state': 'cancel', 'move_id': False,'payment_line_ids':[(3, acc_invoice.payment_line_ids.ids)]})
             else:
+                self.reverse_payment_instruction(date,acc_invoice)
                 return self.custom_reverse_move(date, journal_id or False, ac_move_ids, ac_move_line_ids)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -74,19 +82,22 @@ class AccountInvoiceReverse(models.TransientModel):
 
         return reversed_move.post()
 
-# elif self.reverse_option == 'op1' and acc_invoice.payment_line_ids:
-# for payment_line_id in acc_invoice.payment_line_ids:
-#     if payment_line_id.state == 'approved':
-#         self.env['payment.instruction'].create({
-#             'invoice_id': self.acc_invoice.id,
-#             'partner_id': self.acc_invoice.partner_id.id,
-#             'currency_id': self.acc_invoice.currency_id.id,
-#             'default_debit_account_id': payment_line_id.default_credit_account_id and payment_line_id.default_credit_account_id.id,
-#             'default_credit_account_id': payment_line_id.default_debit_account_id and payment_line_id.default_debit_account_id.id,
-#             'vendor_bank_acc': payment_line_id.vendor_bank_acc,
-#             'instruction_date': date,
-#             'amount': payment_line_id.amount,
-#             'operating_unit_id': payment_line_id.operating_unit_id.id or None,
-#             'sub_operating_unit_id': payment_line_id.sub_operating_unit_id.id if payment_line_id.sub_operating_unit_id else None,
-#         })
-# return self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
+    @api.multi
+    def reverse_payment_instruction(self, date=None, acc_invoice=None):
+        for payment_line_id in acc_invoice.payment_line_ids:
+            if payment_line_id.state == 'approved':
+                new_payment_instruction_obj = self.env['payment.instruction'].create({
+                    'invoice_id': acc_invoice.id,
+                    'partner_id': acc_invoice.partner_id.id,
+                    'currency_id': acc_invoice.currency_id.id,
+                    'default_debit_account_id': payment_line_id.default_credit_account_id and payment_line_id.default_credit_account_id.id,
+                    'default_credit_account_id': payment_line_id.default_debit_account_id and payment_line_id.default_debit_account_id.id,
+                    'vendor_bank_acc': payment_line_id.vendor_bank_acc or False,
+                    'instruction_date': date,
+                    'state': 'approved',
+                    'amount': payment_line_id.amount,
+                    'operating_unit_id': payment_line_id.operating_unit_id.id or None,
+                    'sub_operating_unit_id': payment_line_id.sub_operating_unit_id.id if payment_line_id.sub_operating_unit_id else None,
+                })
+                new_payment_instruction_obj.action_invoice_reverse()
+        return True
