@@ -1,2 +1,2 @@
-name,company_type,Account Payable,street,street2,city,zip,country,Phone,Mobile,Fax,Email,Trade License,VAT Registration,BIN Number,TIN Number,active,pending,state
-T. K. Group,company,Sundry Creditors,T. K. Bhaban (2nd Floor),"13, Karwan Bazar",Dhaka,1215,Bangladesh,9114332,19144136,9.14233339142333E+015,info@tkgroupbd.com,417136,32156498701,989811111,646897646897,True,False,approve
+name,Company Type,Service,Account Payable,Vendor Bank Account,street,etc,city,country,Website,Phone,Mobile,Fax,Email,Trade License,VAT Registration,BIN Number,TIN Number,NID,Division,District,Upazila/Thana,Postal Code,active,pending,state,Designation
+T. K. Group,company,Courier Services,Sundry Creditors,1234567891234557,T. K. Bhaban (2nd Floor),"13, Karwan Bazar",Dhaka,Bangladesh,www.tkgroupbd.net,9114332,19144136,9.14233339142333E+015,info@tkgroupbd.com,417159,32156498714,989811142,646897646958,9874573715,Dhaka,Dhaka,Shah Ali,1216,True,False,approve,Manager

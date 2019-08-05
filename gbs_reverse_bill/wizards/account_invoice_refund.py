@@ -39,7 +39,8 @@ class AccountInvoiceReverse(models.TransientModel):
                 return acc_invoice.write({'state': 'cancel', 'move_id': False,'payment_line_ids':[(3, acc_invoice.payment_line_ids.ids)]})
             else:
                 self.reverse_payment_instruction(date,acc_invoice)
-                return self.custom_reverse_move(date, journal_id or False, ac_move_ids, ac_move_line_ids)
+                self.custom_reverse_move(date, journal_id or False, ac_move_ids, ac_move_line_ids)
+                return acc_invoice.write({'state': 'cancel', 'move_id': False,'payment_line_ids':[(3, acc_invoice.payment_line_ids.ids)]})
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
