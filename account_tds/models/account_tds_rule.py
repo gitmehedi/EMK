@@ -21,7 +21,6 @@ class TDSRules(models.Model):
                                states={'confirm': [('readonly', True)]})
     effective_from = fields.Date(string='Effective Date', required=True,default=fields.Date.today(),
                                  track_visibility='onchange', states={'confirm': [('readonly', True)]})
-
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
