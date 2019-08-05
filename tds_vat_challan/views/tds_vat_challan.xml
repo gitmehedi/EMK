@@ -21,16 +21,58 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="tds_vat_challan_line_tree">
+            <field name="name">tds.vat.challan.line.tree</field>
+            <field name="model">tds.vat.challan.line</field>
+            <field name="arch" type="xml">
+                <tree delete="false"
+                      decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
+                      decoration-muted="state in ('approved','cancel') "
+                      decoration-bf="state in ('confirm','approved') " create="false" edit="false">
+                    <field name="parent_id"/>
+                    <field name="supplier_id"/>
+                    <field name="product_id" string="Product/Service"/>
+                    <field name="total_bill" string="Total Amount"/>
+                    <field name="challan_no"/>
+                    <field name="challan_date"/>
+                    <field name="deposited_bank"/>
+                    <field name="bank_branch"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="tds_vat_challan_line_filter" model="ir.ui.view">
+            <field name="name">tds.vat.challan.select</field>
+            <field name="model">tds.vat.challan.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Challan">
+                    <field name="parent_id"/>
+                    <field name="product_id"/>
+                    <field name="challan_date"/>
+                    <field name="challan_no"/>
+                    <field name="deposited_bank"/>
+                    <field name="bank_branch"/>
+                    <field name="supplier_id"/>
+                    <group expand="0" string="Group By">
+                        <filter name="challan" string="Challan" context="{'group_by':'parent_id'}"/>
+                        <filter name="vendor" string="Vendor" context="{'group_by':'supplier_id'}"/>
+                        <filter name="service" string="Service" context="{'group_by':'product_id'}"/>
+                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="tds_vat_challan_line_action">
             <field name="name">TDS &amp; VAT Challan</field>
             <field name="res_model">tds.vat.challan.line</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="tds_vat_challan_line_filter"/>
+            <field name="view_id" ref="tds_vat_challan_line_tree"/>
             <!--<field name="context">{'search_default_approve':1}</field>-->
-            <!--<field name="search_view_id" ref="tds_vat_challan_filter"/>-->
         </record>
-        <!--<menuitem name="TDS &amp; VAT Challan Details" parent="main_menu_tds_vat"-->
-        <!--action="tds_vat_challan_line_action" id="tds_challan_line_menu" sequence="12"-->
-        <!--groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>-->
+        <menuitem name="TDS &amp; VAT Challan Details" parent="main_menu_tds_vat"
+                  action="tds_vat_challan_line_action" id="tds_challan_line_menu" sequence="12"
+                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
         <act_window
                 id="act_view_tds_vat_challan_lines"
                 name="Challan Details"
