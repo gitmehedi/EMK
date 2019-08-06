@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread']
 
-    name = fields.Char(track_visibility='onchange')
+    name = fields.Char(string='Name',track_visibility='onchange')
     parent_id = fields.Many2one(track_visibility='onchange')
     website = fields.Char(track_visibility='onchange')
     company_type = fields.Selection(track_visibility='onchange')
@@ -28,10 +28,10 @@ class ResPartner(models.Model):
     phone = fields.Char(track_visibility='onchange')
     fax = fields.Char(track_visibility='onchange',size=16)
     mobile = fields.Char(track_visibility='onchange')
-    street = fields.Char(track_visibility='onchange')
-    street2 = fields.Char(string='etc',track_visibility='onchange')
+    street = fields.Char(string='Street',track_visibility='onchange')
+    street2 = fields.Char(string='ETC',track_visibility='onchange')
     zip = fields.Char(track_visibility='onchange')
-    city = fields.Char(track_visibility='onchange')
+    city = fields.Char(string='City',track_visibility='onchange')
     state_id = fields.Many2one(track_visibility='onchange')
     country_id = fields.Many2one(track_visibility='onchange',
                                  default=lambda self: self.env.user.company_id.country_id.id)
