@@ -152,6 +152,46 @@ class BranchDistribution(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'draft')]
 
+
+    # def import_file(self, cr, uid, imp_id, context=None):
+    #     """ Will do an asynchronous load of a CSV file.
+    #
+    #     Will generate an success/failure report and generate some
+    #     maile threads. It uses BaseModel.load to lookup CSV.
+    #     If you set bypass_orm to True then the load function
+    #     will use a totally overridden create function that is a lot faster
+    #     but that totally bypass the ORM
+    #
+    #     """
+    #
+    #     if isinstance(imp_id, list):
+    #         imp_id = imp_id[0]
+    #     if context is None:
+    #         context = {}
+    #     current = self.read(cr, uid, imp_id, ['bypass_orm', 'company_id'],
+    #                         load='_classic_write')
+    #     context['company_id'] = current['company_id']
+    #     bypass_orm = current['bypass_orm']
+    #     if bypass_orm:
+    #         # Tells create funtion to bypass orm
+    #         # As we bypass orm we ensure that
+    #         # user is allowed to creat move / move line
+    #         self._check_permissions(cr, uid, context=context)
+    #         context['async_bypass_create'] = True
+    #     head, data = self._parse_csv(cr, uid, imp_id)
+    #     self.write(cr, uid, [imp_id], {'state': 'running',
+    #                                    'report': _('Import is running')})
+    #     self._allows_thread(imp_id)
+    #     db_name = cr.dbname
+    #     local_cr = pooler.get_db(db_name).cursor()
+    #     thread = threading.Thread(target=self._load_data,
+    #                               name='async_move_line_import_%s' % imp_id,
+    #                               args=(local_cr, uid, imp_id, head, data),
+    #                               kwargs={'context': context.copy()})
+    #     thread.start()
+    #
+    #     return {}
+
 # ---------------------------------------------------------
 # Budgets Distribution Line
 # ---------------------------------------------------------

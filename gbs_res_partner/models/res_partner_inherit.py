@@ -162,7 +162,14 @@ class ResPartner(models.Model):
                            }
             }
 
-
+    @api.onchange("upazila_id")
+    def onchange_upazila(self):
+        if self.upazila_id:
+            self.postal_code = []
+            return {
+                'domain': {'postal_code': [('upazila_id', '=', self.upazila_id.id)]
+                           }
+            }
 
 
     @api.constrains('tax','bin', 'tin','vat','mobile','fax')
@@ -217,6 +224,16 @@ class ResPartner(models.Model):
     #             raise Warning('[Format Error] Postal Code  must be 4 digit!')
     #         if not self.postal_code.isdigit():
     #             raise Warning('[Format Error] Postal Code must be numeric!')
+
+    @api.multi
+    def _display_address(self, without_company=False):
+        """
+        Inject a context key to prevent the 'street' name to be
+        deleted from the result of _address_fields when called from
+        the super.
+        """
+        res = super(ResPartner,self).display_address(without_company=without_company)
+        return res
 
 
     """ All functions """
