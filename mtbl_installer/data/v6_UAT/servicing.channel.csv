@@ -1,4 +1,4 @@
-name,code,active,pending,state
+Name,Code,Active,Pending,Status
 Corporate Unit 1,11,True,False,approve
 Corporate Unit 2,12,True,False,approve
 Corporate Unit 3,13,True,False,approve

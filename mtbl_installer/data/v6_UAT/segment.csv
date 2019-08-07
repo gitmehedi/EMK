@@ -1,4 +1,4 @@
-name,code,active,pending,state
+Name,Code,Active,Pending,Status
 Segment 2,2,True,False,approve
 Segment 4,4,True,False,approve
 Segment 6,6,True,False,approve

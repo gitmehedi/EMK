@@ -1,4 +1,4 @@
-Layer,Code,Name,,Type,active,pending,state
+Layer,Code,Name,,Type,Active,Pending,Status
 Layer 1,1,Liability,,View Type,True,False,approve
 Layer 1,2,Asset,,View Type,True,False,approve
 Layer 1,9,System,,View Type,True,False,approve

@@ -1,4 +1,4 @@
-code,name,user_type_id/id,reconcile,active,pending,state
+Code,Name,user_type_id/id,reconcile,active,pending,state
 100000,Fixed Asset Account,account.data_account_type_fixed_assets,False,True,False,approve
 101000,Current Assets,account.data_account_type_current_assets,False,True,False,approve
 101110,Stock Valuation Account,account.data_account_type_current_assets,False,True,False,approve

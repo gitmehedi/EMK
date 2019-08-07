@@ -217,25 +217,6 @@ class ResPartner(models.Model):
             if not self.nid.isdigit():
                 raise Warning('[Format Error] NID must be numeric!')
 
-    # @api.constrains('postal_code')
-    # def _check_postal_code_constrain(self):
-    #     if self.postal_code:
-    #         if len(self.postal_code) != 4:
-    #             raise Warning('[Format Error] Postal Code  must be 4 digit!')
-    #         if not self.postal_code.isdigit():
-    #             raise Warning('[Format Error] Postal Code must be numeric!')
-
-    @api.multi
-    def _display_address(self, without_company=False):
-        """
-        Inject a context key to prevent the 'street' name to be
-        deleted from the result of _address_fields when called from
-        the super.
-        """
-        res = super(ResPartner,self).display_address(without_company=without_company)
-        return res
-
-
     """ All functions """
     @api.constrains('name')
     def _check_unique_name(self):
