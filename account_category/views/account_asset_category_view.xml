@@ -206,7 +206,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_account_asset_type">
-        <field name="name">Asset Category</field>
+        <field name="name">Fixed Assets Category</field>
         <field name="res_model">account.asset.category</field>
         <field name="domain">[('type', '=', 'purchase'),('parent_id','!=',False)]</field>
         <field name="view_type">form</field>

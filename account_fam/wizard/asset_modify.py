@@ -54,30 +54,31 @@ class AssetModify(models.TransientModel):
         """ Modifies the duration of asset for calculating depreciation
         and maintains the history of old values, in the chatter.
         """
-        asset_id = self.env.context.get('active_id', False)
-        asset = self.env['account.asset.asset'].browse(asset_id)
 
-        old_values = {
-            'method_number': asset.method_number,
-            'method_period': asset.method_period,
-            'method_end': asset.method_end,
-            'method_progress_factor': asset.method_progress_factor,
-            'depreciation_year': asset.depreciation_year,
-            'method': asset.method,
-        }
-        asset_vals = {
-            'method_number': self.method_number,
-            'method_period': self.method_period,
-            'method_end': self.method_end,
-            'method_progress_factor': self.method_progress_factor,
-            'depreciation_year': self.depreciation_year,
-            'method': self.method,
-        }
-        asset.write(asset_vals)
-        asset.compute_depreciation_board()
-        tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_period', 'method_end'])
-        changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
-        if changes:
-            asset.message_post(subject=_('Depreciation board modified'), body=self.name,
-                               tracking_value_ids=tracking_value_ids)
+        for rec in self._context['active_ids']:
+            asset = self.env['account.asset.asset'].browse(rec)
+
+            old_values = {
+                'method_number': asset.method_number,
+                'method_period': asset.method_period,
+                'method_end': asset.method_end,
+                'method_progress_factor': asset.method_progress_factor,
+                'depreciation_year': asset.depreciation_year,
+                'method': asset.method,
+            }
+            asset_vals = {
+                'method_number': self.method_number,
+                'method_period': self.method_period,
+                'method_end': self.method_end,
+                'method_progress_factor': self.method_progress_factor,
+                'depreciation_year': self.depreciation_year,
+                'method': self.method,
+            }
+            asset.write(asset_vals)
+
+            tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_period', 'method_end'])
+            changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
+            if changes:
+                asset.message_post(subject=_('Depreciation board modified'), body=self.name,
+                                   tracking_value_ids=tracking_value_ids)
         return {'type': 'ir.actions.act_window_close'}
