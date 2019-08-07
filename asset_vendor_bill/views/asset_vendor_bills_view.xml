@@ -290,7 +290,7 @@
     </record>
 
     <record id="action_asset_vendor_bill" model="ir.actions.act_window">
-        <field name="name">Asset Vendor Bills</field>
+        <field name="name">Assets Vendor Bills</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -302,7 +302,7 @@
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to record a new Asset vendor bill.
+                Click to record a new Assets Vendor Bill.
             </p>
             <p>
                 You can control the invoice from your vendor according to
@@ -325,11 +325,11 @@
         <field name="act_window_id" ref="action_asset_vendor_bill"/>
     </record>
 
-    <menuitem id="sub_assets_vendor_menu" name="Asset Operations" sequence="15"
+    <menuitem id="sub_assets_vendor_menu" name="Fixed Assets Operations" sequence="15"
               parent="account_fam.main_fixed_asset_menu" groups=""/>
 
     <menuitem action="action_asset_vendor_bill" id="menu_asset_action_invoice_tree2"
-              parent="sub_assets_vendor_menu" name="Asset Vendor Bills" sequence="5"/>
+              parent="sub_assets_vendor_menu" name="Assets Vendor Bills" sequence="5"/>
 
     <record id="account.action_invoice_tree2" model="ir.actions.act_window">
         <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',0)]</field>
