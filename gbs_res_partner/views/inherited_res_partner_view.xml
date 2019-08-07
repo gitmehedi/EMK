@@ -66,14 +66,14 @@
                 <attribute name="widget">text</attribute>
             </xpath>
             <xpath expr="//field[@name='country_id']" position="after">
-                <field name="division_id" placeholder="Divisions"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                <field name="district_id" placeholder="Districts"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                <field name="upazila_id" placeholder="Upazila/Thana"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                <field name="postal_code" placeholder="Postal Code"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <field name="division_id" placeholder="Divisions" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
+                <field name="district_id" placeholder="Districts" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
+                <field name="upazila_id" placeholder="Upazila/Thana" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
+                <field name="postal_code" placeholder="Postal Code" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="entity_services" placeholder="Services..." widget="many2many_tags"

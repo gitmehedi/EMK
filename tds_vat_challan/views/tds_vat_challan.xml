@@ -29,7 +29,7 @@
                       decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
                       decoration-muted="state in ('approved','cancel') "
                       decoration-bf="state in ('confirm','approved') " create="false" edit="false">
-                    <field name="parent_id"/>
+                    <field name="parent_id" string="Challan"/>
                     <field name="supplier_id"/>
                     <field name="product_id" string="Product/Service"/>
                     <field name="total_bill" string="Total Amount"/>
