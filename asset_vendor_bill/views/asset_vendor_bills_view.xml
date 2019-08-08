@@ -94,6 +94,8 @@
                                            context="{'default_type': 'purchase'}"
                                            attrs="{'required': [('asset_category_id','!=',False)]}"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                    <field name="account_analytic_id" required="True" string="Cost Centre"
+                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>

@@ -12,7 +12,7 @@ class AccountInvoiceLine(models.Model):
 
     @api.onchange('asset_category_id')
     def onchange_asset_category_id(self):
-        super(AccountInvoiceLine,self).onchange_asset_category_id()
+        super(AccountInvoiceLine, self).onchange_asset_category_id()
         if self.asset_category_id:
             self.asset_type_id = self.product_id.product_tmpl_id.asset_type_id
 
@@ -31,7 +31,7 @@ class AccountInvoiceLine(models.Model):
     def asset_create(self):
         if self.asset_category_id:
             asset_value = self.price_subtotal / self.quantity
-            batch_seq = {val:key for key,val in enumerate(self.invoice_id.invoice_line_ids.ids)}
+            batch_seq = {val: key for key, val in enumerate(self.invoice_id.invoice_line_ids.ids)}
             for rec in range(0, int(self.quantity)):
                 vals = {
                     'name': self.name,
@@ -47,7 +47,8 @@ class AccountInvoiceLine(models.Model):
                     'current_branch_id': self.invoice_id.operating_unit_id.id,
                     'operating_unit_id': self.invoice_id.operating_unit_id.id,
                     'prorata': True,
-                    'batch_no': "{0}-{1}".format(self.invoice_id.number,batch_seq[self.id])
+                    'batch_no': "{0}-{1}".format(self.invoice_id.number, batch_seq[self.id]),
+                    'cost_centre_id': self.account_analytic_id.id if self.account_analytic_id else None,
                 }
                 changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['asset_type_id'])
                 vals.update(changed_vals['value'])

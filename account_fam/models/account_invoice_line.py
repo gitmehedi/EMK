@@ -39,7 +39,7 @@ class AccountInvoiceLine(models.Model):
                     'current_branch_id': self.invoice_id.operating_unit_id.id,
                     'prorata': True,
                     'batch_no': "{0}-{1}".format(self.invoice_id.number, batch_seq[self.id]),
-                    'cost_centre_id': self.invoice_id.account_analytic_id.id if self.invoice_id.account_analytic_id else None,
+                    'cost_centre_id': self.account_analytic_id.id if self.account_analytic_id else None,
                 }
 
                 changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['category_id'])

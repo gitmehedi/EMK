@@ -33,7 +33,7 @@ class AccountAssetAsset(models.Model):
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
-    warranty_date = fields.Date(string='Warranty Date', track_visibility='onchange', readonly=True, required=True,
+    warranty_date = fields.Date(string='Warranty Date', track_visibility='onchange', readonly=True,
                                 states={'draft': [('readonly', False)]})
     date = fields.Date(string='Purchase Date', track_visibility='onchange')
     asset_usage_date = fields.Date(string='Usage Date', help='Usage Date/Allocation Date', readonly=True,
@@ -57,7 +57,7 @@ class AccountAssetAsset(models.Model):
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True,
                                      track_visibility='onchange', readonly=True,
                                      states={'draft': [('readonly', False)]})
-    note = fields.Text(required=True, readonly=True, states={'draft': [('readonly', False)]})
+    note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
     allocation_status = fields.Boolean(string='Allocation Status', track_visibility='onchange', default=False)
     depreciation_flag = fields.Boolean(string='Depreciation Flag', track_visibility='onchange', default=False)
 
