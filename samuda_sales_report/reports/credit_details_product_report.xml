@@ -9,7 +9,7 @@
                 menu="False"
                 name="samuda_sales_report.report_credit_details_product"
                 file="samuda_sales_report.report_credit_details_product"
-                paperformat="report_layout.paperformat_backend_landscape"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
         <template id="report_credit_details_product">
             <t t-call="report.html_container">

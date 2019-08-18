@@ -55,5 +55,21 @@
 <!--                parent="sales_team.menu_sale_report"-->
 <!--                sequence="75"/>-->
 
+<!--        <menuitem-->
+<!--                name="Daily Delivery Statement"-->
+<!--                action="action_daily_delivery_statement_wizard"-->
+<!--                id="menu_daily_delivery_statement_report"-->
+<!--                groups="sales_team.group_sale_manager"-->
+<!--                parent="sales_team.menu_sale_report"-->
+<!--                sequence="80"/>-->
+
+<!--        <menuitem-->
+<!--                name="Daily Undelivered Statement"-->
+<!--                action="action_daily_undelivered_statement_wizard"-->
+<!--                id="menu_daily_undelivered_statement_report"-->
+<!--                groups="sales_team.group_sale_manager"-->
+<!--                parent="sales_team.menu_sale_report"-->
+<!--                sequence="85"/>-->
+
     </data>
 </odoo>
