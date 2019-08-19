@@ -83,6 +83,9 @@
                                     <field name="operating_unit_id" readonly="0"
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                            groups="operating_unit.group_multi_operating_unit"/>
+                                    <field name="sub_operating_unit_id" required="True"
+                                           options="{'no_create': True}" widget="selection"
+                                           groups="operating_unit.group_multi_operating_unit"/>
                                     <field name="account_id" groups="account.group_account_user" invisible="1"
                                            domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
                                     <field name="asset_category_id"
