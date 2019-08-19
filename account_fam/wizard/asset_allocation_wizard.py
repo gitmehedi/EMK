@@ -47,6 +47,7 @@ class AssetAllocationWizard(models.TransientModel):
             prec = self.env['decimal.precision'].precision_get('Account')
             company_currency = asset.company_id.currency_id
             current_currency = asset.currency_id
+            sub_operating_unit = self.sub_operating_unit_id.id if self.sub_operating_unit_id else None
 
             if self.operating_unit_id.id == self.to_operating_unit_id.id:
                 raise ValidationError(_("Same branch transfer shouldn\'t possible."))
@@ -69,7 +70,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'asset_id': asset.id,
                     'from_branch_id': self.operating_unit_id.id,
                     'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'cost_centre_id': self.cost_centre_id.id,
                     'asset_user': self.asset_user,
                     'receive_date': self.date,
@@ -84,7 +85,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.operating_unit_id.id,
-                    'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'analytic_account_id': self.cost_centre_id.id,
                     'currency_id': company_currency != current_currency and current_currency.id or False,
                 }
@@ -95,7 +96,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'credit': 0.0,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'analytic_account_id': self.cost_centre_id.id,
                     'currency_id': company_currency != current_currency and current_currency.id or False,
                 }
@@ -105,6 +106,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'date': self.date or False,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.to_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'line_ids': [(0, 0, debit), (0, 0, credit)],
                 })
 
@@ -112,7 +114,9 @@ class AssetAllocationWizard(models.TransientModel):
                 assetmove.write({'move_id': move.id})
                 if move.state == 'draft':
                     move.post()
-                asset.write({'allocation_status': True, 'current_branch_id': self.to_operating_unit_id.id,
+                asset.write({'allocation_status': True,
+                             'current_branch_id': self.to_operating_unit_id.id,
+                             'sub_operating_unit_id': sub_operating_unit,
                              'asset_usage_date': self.date})
 
             elif not self.env.context.get('allocation') and asset.allocation_status:
@@ -123,7 +127,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.operating_unit_id.id,
-                    'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'analytic_account_id': self.cost_centre_id.id,
                     'currency_id': company_currency != current_currency and current_currency.id or False,
                 }
@@ -134,7 +138,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'credit': 0.0,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'analytic_account_id': self.cost_centre_id.id,
                     'currency_id': company_currency != current_currency and current_currency.id or False,
                 }
@@ -147,7 +151,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'analytic_account_id': self.cost_centre_id.id,
                     'currency_id': company_currency != current_currency and current_currency.id or False,
                 }
@@ -158,7 +162,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'credit': 0.0,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.operating_unit_id.id,
-                    'sub_operating_unit_id': self.sub_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'analytic_account_id': self.cost_centre_id.id,
                     'currency_id': company_currency != current_currency and current_currency.id or False,
                 }
@@ -168,6 +172,7 @@ class AssetAllocationWizard(models.TransientModel):
                     'date': self.date or False,
                     'journal_id': asset.category_id.journal_id.id,
                     'operating_unit_id': self.to_operating_unit_id.id,
+                    'sub_operating_unit_id': sub_operating_unit,
                     'line_ids': [(0, 0, from_total_credit), (0, 0, to_total_debit),
                                  (0, 0, from_depr_credit), (0, 0, to_depr_debit)],
                 })
@@ -176,6 +181,8 @@ class AssetAllocationWizard(models.TransientModel):
                 assetmove.write({'move_id': move.id})
                 if move.state == 'draft':
                     move.post()
-                asset.write({'current_branch_id': self.to_operating_unit_id.id})
+                asset.write({'current_branch_id': self.to_operating_unit_id.id,
+                             'sub_operating_unit_id': sub_operating_unit,
+                             })
 
         return {'type': 'ir.actions.act_window_close'}

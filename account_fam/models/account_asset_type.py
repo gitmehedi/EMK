@@ -11,7 +11,7 @@ class AccountAssetCategory(models.Model):
     _inherit = ['account.asset.category', 'mail.thread']
     _order = 'code ASC'
 
-    code = fields.Char(string='Code', size=4)
+    code = fields.Char(string='Code', size=4, required=True)
     active = fields.Boolean(default=True, track_visibility='onchange')
     name = fields.Char(required=True, index=True, string="Asset Type", size=200, track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, track_visibility='onchange')
@@ -65,10 +65,6 @@ class AccountAssetCategory(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'parent_id' not in vals:
-            if vals.get('code', 'New') == 'New':
-                seq = self.env['ir.sequence']
-                vals['code'] = seq.next_by_code('account.asset.type') or ''
         return super(AccountAssetCategory, self).create(vals)
 
     @api.onchange('depreciation_year')
@@ -81,13 +77,47 @@ class AccountAssetCategory(models.Model):
         if self.depreciation_year < 1:
             raise ValidationError(_('Total year cannot be zero or negative value.'))
 
-    @api.constrains('name')
+    @api.onchange("code")
+    def onchange_code(self):
+        if self.code:
+            filter = str(self.code.strip())
+            if self.parent_id:
+                self.code = self.parent_id.code + filter[2:]
+            elif not self.parent_id:
+                self.code = filter[:2]
+
+    @api.constrains('name','code')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if self.parent_id:
+                name = self.search(
+                    [('name', '=ilike', self.name.strip()), ('parent_id', '!=', None), '|', ('active', '=', True),
+                     ('active', '=', False)], )
+            else:
+                name = self.search(
+                    [('name', '=ilike', self.name.strip()), ('parent_id', '=', None), '|', ('active', '=', True),
+                     ('active', '=', False)])
+
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+        if self.code:
+            if self.parent_id and (len(self.code) != 4 or not self.code.isdigit()):
+                raise Warning(_('[Value Error] Code must be 4 digit!'))
+            elif not self.parent_id and (len(self.code) != 2 or not self.code.isdigit()):
+                raise Warning(_('[Value Error] Code must be 2 digit!'))
+
+            if self.parent_id:
+                code = self.search(
+                    [('code', '=ilike', self.code.strip()), ('parent_id', '!=', None), '|', ('active', '=', True),
+                     ('active', '=', False)], )
+            else:
+                code = self.search(
+                    [('code', '=ilike', self.code.strip()), ('parent_id', '=', None), '|', ('active', '=', True),
+                     ('active', '=', False)])
+
+            if len(code) > 1:
+                raise Warning('[Unique Error] Code must be unique!')
 
     @api.onchange('type')
     def onchange_type(self):

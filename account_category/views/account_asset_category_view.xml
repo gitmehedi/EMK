@@ -25,9 +25,6 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1>
-                            <field name="code" readonly='True'/>
-                        </h1>
                         <label for="name" string="Asset Category" class="oe_edit_only"
                                attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
@@ -41,6 +38,12 @@
                             <field name="parent_id" required="True"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                    domain="[('parent_id','=',False)]"/>
+                        </h1>
+                    </div>
+                    <div class="oe_title pull-left">
+                        <label for="code" string="Code" class="oe_edit_only"/>
+                        <h1>
+                            <field name="code"/>
                         </h1>
                     </div>
                     <div>

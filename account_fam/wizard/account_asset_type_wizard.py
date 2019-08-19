@@ -21,8 +21,15 @@ class AccountAssetCategoryWizard(models.TransientModel):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.env['account.asset.category'].search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if self.parent_id:
+                name = self.search(
+                    [('name', '=ilike', self.name.strip()), ('parent_id', '!=', None), '|', ('active', '=', True),
+                     ('active', '=', False)], )
+            else:
+                name = self.search(
+                    [('name', '=ilike', self.name.strip()), ('parent_id', '=', None), '|', ('active', '=', True),
+                     ('active', '=', False)], )
+
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
