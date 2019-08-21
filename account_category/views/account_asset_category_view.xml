@@ -25,14 +25,14 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" string="Asset Category" class="oe_edit_only"
+                        <label for="name" string="Name"
                                attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
                                attrs="{'invisible': [('type','==','purchase')]}"/>
                         <h1>
                             <field name="name" placeholder="e.g. Lenovo"/>
                         </h1>
-                        <label for="parent_id" string="Asset Type" class="oe_edit_only"
+                        <label for="parent_id" string="Asset Type Name"
                                attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <h1>
                             <field name="parent_id" required="True"
@@ -41,7 +41,7 @@
                         </h1>
                     </div>
                     <div class="oe_title pull-left">
-                        <label for="code" string="Code" class="oe_edit_only"/>
+                        <label for="code" string="Code"/>
                         <h1>
                             <field name="code"/>
                         </h1>

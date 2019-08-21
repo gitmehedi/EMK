@@ -18,26 +18,18 @@ class AccountAssetCategoryWizard(models.TransientModel):
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
 
-    @api.constrains('name')
-    def _check_unique_constrain(self):
-        if self.name:
-            if self.parent_id:
-                name = self.search(
-                    [('name', '=ilike', self.name.strip()), ('parent_id', '!=', None), '|', ('active', '=', True),
-                     ('active', '=', False)], )
-            else:
-                name = self.search(
-                    [('name', '=ilike', self.name.strip()), ('parent_id', '=', None), '|', ('active', '=', True),
-                     ('active', '=', False)], )
-
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
-
     @api.multi
     def act_change_name(self):
         id = self._context['active_id']
+        obj = self.env['account.asset.category']
+        asset = obj.browse(id)
+        if asset.parent_id:
+            name = obj.search([('name', '=ilike', self.name.strip()), ('parent_id', '!=', None),
+                               '|', ('active', '=', True), ('active', '=', False)])
+        elif not asset.parent_id:
+            name = obj.search([('name', '=ilike', self.name.strip()), ('parent_id', '=', None),
+                                '|', ('active', '=', True), ('active', '=', False)])
 
-        name = self.env['account.asset.category'].search([('name', '=ilike', self.name)])
         if len(name) > 0:
             raise Warning('[Unique Error] Name must be unique!')
 

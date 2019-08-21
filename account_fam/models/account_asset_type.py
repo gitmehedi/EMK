@@ -84,7 +84,7 @@ class AccountAssetCategory(models.Model):
             if self.parent_id:
                 self.code = self.parent_id.code + filter[2:]
             elif not self.parent_id:
-                self.code = filter[:2]
+                self.code = filter
 
     @api.constrains('name','code')
     def _check_unique_constrain(self):
@@ -92,7 +92,7 @@ class AccountAssetCategory(models.Model):
             if self.parent_id:
                 name = self.search(
                     [('name', '=ilike', self.name.strip()), ('parent_id', '!=', None), '|', ('active', '=', True),
-                     ('active', '=', False)], )
+                     ('active', '=', False)])
             else:
                 name = self.search(
                     [('name', '=ilike', self.name.strip()), ('parent_id', '=', None), '|', ('active', '=', True),
