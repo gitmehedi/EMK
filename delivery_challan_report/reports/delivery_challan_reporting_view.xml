@@ -16,45 +16,54 @@
         <template id="report_top_sheet">
             <t t-call="report.html_container">
                 <div class="page" style="page-break-inside:auto;">
-                    <div class="row">
+                    <div class="page-content">
                         <style type="text/css">
                             html, body, * {
                                 margin: 0;
                                 padding: 0;
                                 box-sizing: border-box !important;
                             }
+                            .br1 { border: 1px solid #333 !important;}
                             @page { margin: 0; }
                             .page {
-                                font-size: 18px;
+                                font-size: 16px;
                                 font-weight: normal;
                                 font-family: Arial, Helvetica, sans-serif;
                                 margin: 0 !important;
-                                padding: 0 5px 0 18px !important;
+                                padding: 0 5px 0 3px !important;
                                 display: block;
                                 width: 100%;
                                 position: relative;
                             }
 
-                            .challan-header     { line-height: 33px; min-height: 230px; }
-                            .vehicle-no         { padding-left: 130px; padding-top: 30px; }
-                            .vehicle-no span    { display: block; width: 135px; line-height: 1em; }
+                            .challan-header     { height: 220px; }
+                            .vehicle-no         { padding-left: 130px; margin-top: 30px; height: 40px; }
+                            .vehicle-no span    { display: block; width: 130px; line-height: 1.1em; }
+                            .challan-no         { padding-left: 130px; margin-top: 12px; height: 28px; }
+                            .do-date            { padding-right: 10px; margin-top: 12px; height: 28px; }
+                            .partner-name       { padding-left: 130px; margin-top: 11px; height: 40px; }
+                            .shipping-address   { padding-left: 130px; margin-top: 7px; height: 40px; }
+                            .partner-name span,
+                            .shipping-address span { line-height: 1.1em; }
 
-                            .challan-no         { padding-left: 130px; margin-top: 12px;}
-                            .do-date            { padding-right: 15px; margin-top: 12px; white-space:nowrap; }
-
-                            .partner-name       { padding-left: 130px; margin-top: 8px; line-height: 27.5px; }
-                            .shipping-address   { padding-left: 130px; margin-top: 12px; }
-
-                            .challan-table      { margin-left: 15px; margin-top: 30px; }
+                            .challan-table      { margin: 35px 0 0 15px; max-width: 100%; }
                             .challan-table,
-                            .challan-table tbody { height: 275px; min-height: 275px; }
+                            .challan-table tbody { height: 285px; min-height: 285px; }
                             .challan-table th,
-                            .challan-table td   { border: 0 none !important; font-size: 16px; }
+                            .challan-table td   { border: 0 none !important; }
                             .challan-footer     { margin-left: 0px; }
+
+                            .lbl-total { height:40px; }
+                            .qty-in-kg { width: 150px; float: right; line-height: 1em; height:40px; }
+                            .amount-in-word { padding: 7px 0 0 156px; height:40px; }
+                            .note { padding: 6px 0 0 75px; height:40px; }
+                            .vat-challan-id { padding: 5px 0 0 130px; height:40px; }
+                            .challan-date { padding: 5px 0 0 25px; height:40px; }
                         </style>
+
                         <div class="challan-header">
                             <div class="clearfix">
-                                <div class="text-left vehicle-no">
+                                <div class="col-xs-12 text-left vehicle-no">
                                     <span t-esc="data['vehicle_no']"/>
                                 </div>
                             </div>
@@ -103,42 +112,46 @@
                         </table>
 
                         <div class="clearfix challan-footer">
-                            <div class="clearfix" style="min-height:30px;">
+                            <div class="clearfix">
                                 <div class="col-xs-6">
-                                    <span style="padding-left:10px">Total:</span>
+                                    <div class="lbl-total">
+                                        <span style="padding-left:10px">Total:</span>
+                                    </div>
                                 </div>
-                                <div class="col-xs-6 text-right" style="width: 140px; float: right; line-height: 1em;">
-                                    <span t-esc="sum(l['qty'] for l in lists)"/>
-                                    <span t-esc="lists[0]['uom_name']"/>
-                                    <t t-if="lists[0]['uom_name'] == 'MT'">
-                                        /
-                                        <span t-esc="sum(l['qty_in_kg'] for l in lists)"/>
-                                        <span>kg</span>
-                                    </t>
+                                <div class="col-xs-6 text-right">
+                                    <div class="qty-in-kg">
+                                        <span t-esc="sum(l['qty'] for l in lists)"/>
+                                        <span t-esc="lists[0]['uom_name']"/>
+                                        <t t-if="lists[0]['uom_name'] == 'MT'">
+                                            /
+                                            <span t-esc="sum(l['qty_in_kg'] for l in lists)"/>
+                                            <span>kg</span>
+                                        </t>
+                                    </div>
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <div class="col-xs-12" style="margin-top: 5px;">
-                                    <div style="margin-left: 160px; height: 32px;">
+                                <div class="col-xs-12">
+                                    <div class="amount-in-word">
                                         <span t-esc="amount_to_word(sum(l['qty_in_kg'] for l in lists))"/>  KG:S
                                     </div>
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <div class="col-xs-12" style="margin-top: 10px;">
-                                    <div style="margin-left: 75px; height:30px;">
+                                <div class="col-xs-12">
+                                    <div class="note">
                                         <span t-esc="data['note']"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <div class="col-xs-7" style="margin-top: 8px;">
-                                    <div style="margin-left: 130px;">
+                                <div class="col-xs-7">
+                                    <div class="vat-challan-id">
                                         <span t-esc="data['vat_challan_id']"/>
                                     </div>
                                 </div>
-                                <div class="col-xs-5" style="margin-top: 8px;">
-                                    <div style="margin-left: 20px;">
+                                <div class="col-xs-5" >
+                                    <div class="challan-date">
                                         <span t-esc="data['do_date']"
                                               t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
                                     </div>
