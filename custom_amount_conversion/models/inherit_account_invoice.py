@@ -30,6 +30,19 @@ class InheritAccountInvoice(models.Model):
             self.conversion_rate = to_currency.rate / from_currency.rate
         return res
 
+    @api.model
+    def create(self, vals):
+        if not vals.get('conversion_rate'):
+            currency = self.env['res.currency'].search([('id','=',vals.get('currency_id'))])
+            to_currency = self.env.user.company_id.currency_id
+            from_currency = currency.with_context(
+                date=self._get_currency_rate_date() or fields.Date.context_today(self))
+            vals['conversion_rate'] = to_currency.rate / from_currency.rate
+        # else:
+        #     vals['firstname'] = self.split_name(vals['name'])['firstname']
+        res = super(InheritAccountInvoice, self).create(vals)
+        return res
+
 
     @api.depends('currency_id')
     def _get_fields_invisible(self):
