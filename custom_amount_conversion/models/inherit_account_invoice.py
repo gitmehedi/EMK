@@ -4,19 +4,6 @@ from odoo import models, fields, api
 class InheritAccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    # This should be a computed field so that value won't store to DB.
-    # This value will have to fetch from Sale Order section
-
-    # @api.multi
-    # @api.depends('currency_id')
-    # def _get_default_conversion_rate(self):
-    #     if self.conversion_rate <= 0:
-    #         from_currency = self.currency_id.with_context(date=self._get_currency_rate_date() or fields.Date.context_today(self))
-    #         to_currency = self.company_id.currency_id
-    #         self.conversion_rate = from_currency._get_conversion_rate(from_currency, to_currency)
-    #
-    # conversion_rate = fields.Float(string='Conversion Rate', compute='_get_default_conversion_rate', store=True)
-
     conversion_rate = fields.Float(string='Conversion Rate')
 
 
@@ -38,8 +25,6 @@ class InheritAccountInvoice(models.Model):
             from_currency = currency.with_context(
                 date=self._get_currency_rate_date() or fields.Date.context_today(self))
             vals['conversion_rate'] = to_currency.rate / from_currency.rate
-        # else:
-        #     vals['firstname'] = self.split_name(vals['name'])['firstname']
         res = super(InheritAccountInvoice, self).create(vals)
         return res
 
