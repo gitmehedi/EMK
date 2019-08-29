@@ -12,7 +12,6 @@
                     <field name="product_qty" type="measure"/>
                     <field name="price_total" type="measure"/>
                     <field name="price_average" type="measure"/>
-                    <field name="sector" type="row"/>
                 </pivot>
             </field>
         </record>
