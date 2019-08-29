@@ -72,7 +72,7 @@
 <!--                sequence="85"/>-->
 
         <menuitem
-                name="Monthly Delivery (Exc.)"
+                name="Monthly Delivery (Exe.)"
                 action="action_monthly_delivery_executive_wizard"
                 id="menu_monthly_delivery_executive_report"
                 groups="sales_team.group_sale_manager"
@@ -80,7 +80,7 @@
                 sequence="90"/>
 
         <menuitem
-                name="Monthly Delivery (product)"
+                name="Monthly Delivery (Product)"
                 action="action_monthly_delivery_product_wizard"
                 id="menu_monthly_delivery_product_report"
                 groups="sales_team.group_sale_manager"
