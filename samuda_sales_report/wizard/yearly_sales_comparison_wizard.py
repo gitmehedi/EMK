@@ -6,9 +6,9 @@ from datetime import datetime
 class YearlySalesComparisonWizard(models.TransientModel):
     _name = "yearly.sales.comparison.wizard"
 
-    year_first = fields.Selection([(str(num), str(num)) for num in reversed(range(1900, datetime.now().year + 1))],
+    year_first = fields.Selection([(str(num), str(num)) for num in reversed(range(2018, datetime.now().year + 1))],
                                   'First Year', required=True)
-    year_last = fields.Selection([(str(num), str(num)) for num in reversed(range(1900, datetime.now().year + 1))],
+    year_last = fields.Selection([(str(num), str(num)) for num in reversed(range(2018, datetime.now().year + 1))],
                                  'Last Year', required=True)
 
     @api.constrains('year_first', 'year_last')

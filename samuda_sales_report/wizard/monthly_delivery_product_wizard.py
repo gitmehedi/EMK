@@ -14,7 +14,7 @@ class MonthlyDeliveryProductWizard(models.TransientModel):
     product_id = fields.Many2one('product.template', string='Product', domain=[('sale_ok', '=', 1), ('active', '=', 1)],
                                  required=True)
     month = fields.Selection([(m, calendar.month_name[m]) for m in range(1, 13)], 'Month', required=True)
-    year = fields.Selection([(int(num), int(num)) for num in reversed(range(1980, datetime.now().year + 1))],
+    year = fields.Selection([(int(num), int(num)) for num in reversed(range(2018, datetime.now().year + 1))],
                             'Year', required=True)
 
     @api.multi
