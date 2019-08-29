@@ -33,12 +33,12 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="col-xs-6 text-right">
-                                        <strong>Date : </strong>
-                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
-                                        <strong> to </strong>
-                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
-                                    </div>
+<!--                                    <div class="col-xs-6 text-right">-->
+<!--                                        <strong>Date : </strong>-->
+<!--                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>-->
+<!--                                        <strong> to </strong>-->
+<!--                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>-->
+<!--                                    </div>-->
                                 </div>
                             </div>
 

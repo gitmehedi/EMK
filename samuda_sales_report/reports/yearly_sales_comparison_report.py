@@ -6,10 +6,10 @@ class YearlySalesComparisonReport(models.AbstractModel):
     _name = "report.samuda_sales_report.report_yearly_sales_comparison"
 
     sql_str = """SELECT
-                    to_char(invoice.create_date, 'YYYY') AS sales_year, 
+                    to_char(invoice.date_invoice, 'YYYY') AS sales_year, 
                     pt.id AS product_id,
                     pt.name AS product_name,
-                    to_char(invoice.create_date, 'MM') AS sales_month,
+                    to_char(invoice.date_invoice, 'MM') AS sales_month,
                     SUM(ml.quantity / uom.factor * uom2.factor) AS qty,
                     SUM(ml.credit) AS value
                 FROM 
@@ -20,7 +20,7 @@ class YearlySalesComparisonReport(models.AbstractModel):
                     LEFT JOIN product_uom uom ON uom.id = ml.product_uom_id
                     LEFT JOIN product_uom uom2 ON uom2.id = pt.uom_id
                 WHERE 
-                    ml.credit > 0 AND pt.active = true AND to_char(invoice.create_date, 'YYYY') IN (%s, %s)
+                    ml.credit > 0 AND pt.active = true AND to_char(invoice.date_invoice, 'YYYY') IN (%s, %s)
                 GROUP BY pt.id, pt.name, sales_year, sales_month
                 ORDER BY sales_year, pt.name, sales_month
     """
@@ -43,6 +43,8 @@ class YearlySalesComparisonReport(models.AbstractModel):
 
     @api.multi
     def format_lang(self, value):
+        if value == 0:
+            return value
         return formatLang(self.env, value)
 
     @api.model

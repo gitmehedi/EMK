@@ -11,13 +11,13 @@
                             <field name="product_id" placeholder="All"
                                    options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                         </group>
-                        <group></group>
-                        <group>
-                            <field name="date_from"/>
-                        </group>
-                        <group>
-                            <field name="date_to"/>
-                        </group>
+<!--                        <group></group>-->
+<!--                        <group>-->
+<!--                            <field name="date_from"/>-->
+<!--                        </group>-->
+<!--                        <group>-->
+<!--                            <field name="date_to"/>-->
+<!--                        </group>-->
                     </group>
                     <footer>
                         <button name ="process_print" string="Print" type="object" class="oe_highlight"  />

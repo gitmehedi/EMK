@@ -8,3 +8,5 @@ from . import credit_details_product_wizard
 from . import yearly_sales_comparison_wizard
 from . import daily_delivery_statement_wizard
 from . import daily_undelivered_statement_wizard
+from . import monthly_delivery_executive_wizard
+from . import monthly_delivery_product_wizard
