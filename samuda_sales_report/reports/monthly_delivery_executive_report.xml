@@ -90,7 +90,7 @@
                                         <td rowspan="2"><strong class="text-nowrap">Grand Total</strong></td>
                                         <td>Qty (MT)</td>
                                         <t t-foreach="header_data" t-as="head">
-                                            <td>
+                                            <td class="text-right">
                                                 <strong class="text-nowrap" t-esc="formatLang(sum(report_data[key]['qty'][head] for key in report_data))"/>
                                             </td>
                                         </t>
@@ -99,7 +99,7 @@
                                     <tr>
                                         <td>Val</td>
                                         <t t-foreach="header_data" t-as="head">
-                                            <td>
+                                            <td class="text-right">
                                                 <strong class="text-nowrap" t-esc="formatLang(sum(report_data[key]['val'][head] for key in report_data))"/>
                                             </td>
                                         </t>
