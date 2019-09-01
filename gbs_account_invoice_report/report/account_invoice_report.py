@@ -1,4 +1,4 @@
-from dateutil.relativedelta import relativedelta
+import calendar
 from odoo import tools
 from odoo import models, fields, api
 
@@ -10,7 +10,7 @@ class GBSAccountInvoiceReport(models.Model):
     _rec_name = 'date'
 
     @api.multi
-    @api.depends('currency_id', 'date', 'price_total', 'price_average', 'residual')
+    @api.depends('currency_id', 'date', 'price_total', 'price_average')
     def _compute_amounts_in_user_currency(self):
         """Compute the amounts in the currency of the user
         """
@@ -25,27 +25,42 @@ class GBSAccountInvoiceReport(models.Model):
             ctx['date'] = record.date
             record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
             record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
-            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
+
 
     date = fields.Date(readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_qty = fields.Float(string='Product Quantity', readonly=True)
-    uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', readonly=True)
+    product_qty = fields.Float(string='Quantity', readonly=True)
+    country_id = fields.Many2one('res.country', string='Country')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
-    journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
+    sector = fields.Many2one('res.partner.category', string='Sector', readonly=True)
+    supplier_type = fields.Char(string='Region', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
-    price_total = fields.Float(string='Total Without Tax', readonly=True)
-    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
-    price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
+    price_total = fields.Float(string='Value', readonly=True)
+    user_currency_price_total = fields.Float(string="Value", compute='_compute_amounts_in_user_currency', digits=0)
+    price_average = fields.Float(string='Avg Price', readonly=True, group_operator="avg")
+    user_currency_price_average = fields.Float(string="Avg Price", compute='_compute_amounts_in_user_currency',digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg")
-    nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    uom_name = fields.Char(string='UOM', readonly=True)
+    so_name = fields.Char(string='SO Number', readonly=True)
+
+    # categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
+    # journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
+    # payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', readonly=True)
+    # fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', readonly=True)
+    # commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
+    # nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    # date_due = fields.Date(string='Due Date', readonly=True)
+    # account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
+    # account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True, domain=[('deprecated', '=', False)])
+    # partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
+    # residual = fields.Float(string='Total Residual', readonly=True)
+    # user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
+    # weight = fields.Float(string='Gross Weight', readonly=True)
+    # volume = fields.Float(string='Volume', readonly=True)
+
+
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
@@ -59,18 +74,7 @@ class GBSAccountInvoiceReport(models.Model):
         ('open', 'Open'),
         ('paid', 'Done'),
         ('cancel', 'Cancelled')
-    ], string='Invoice Status', readonly=True)
-    date_due = fields.Date(string='Due Date', readonly=True)
-    account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
-    account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True, domain=[('deprecated', '=', False)])
-    partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
-    residual = fields.Float(string='Total Residual', readonly=True)
-    user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
-    country_id = fields.Many2one('res.country', string='Country of the Partner Company')
-    weight = fields.Float(string='Gross Weight', readonly=True)
-    volume = fields.Float(string='Volume', readonly=True)
-    sector = fields.Many2one('res.partner.category', string='Sector', readonly=True)
-    supplier_type = fields.Char(string='Region', readonly=True)
+    ], string='Status', readonly=True)
 
     _order = 'date desc'
 
@@ -94,26 +98,20 @@ class GBSAccountInvoiceReport(models.Model):
 
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id, sub.account_analytic_id,
-                sub.payment_term_id, sub.uom_name, sub.currency_id, sub.journal_id,
-                sub.fiscal_position_id, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
-                sub.weight, sub.volume,sub.supplier_type,sub.sector,
-                sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
-                sub.product_qty, sub.price_total as price_total, sub.price_average as price_average,
-                COALESCE(cr.rate, 1) as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
+            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,sub.uom_name,
+                sub.currency_id,sub.user_id, sub.company_id, sub.type, sub.state,sub.so_name,
+                sub.supplier_type,sub.sector,sub.product_qty, sub.price_total as price_total, 
+                sub.price_average as price_average,COALESCE(cr.rate, 1) as currency_rate
         """
         return select_str
 
     def _sub_select(self):
         select_str = """
                 SELECT ail.id AS id,
-                    ai.date_invoice AS date,
-                    ail.product_id, ai.partner_id, ai.payment_term_id, ail.account_analytic_id,
-                    u2.name AS uom_name,
-                    ai.currency_id, ai.journal_id, ai.fiscal_position_id, ai.user_id, ai.company_id,
-                    1 AS nbr,
-                    ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
-                    ai.partner_bank_id,
+                    ai.date_invoice AS date,u2.name AS uom_name,
+                    ail.product_id, ai.partner_id,ai.origin as so_name,
+                    ai.currency_id, ai.user_id, 
+                    ai.company_id,ai.type, ai.state,
                     SUM ((invoice_type.sign * ail.quantity) / u.factor * u2.factor) AS product_qty,
                     SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
@@ -121,12 +119,7 @@ class GBSAccountInvoiceReport(models.Model):
                                THEN SUM(ail.quantity / u.factor * u2.factor)
                                ELSE 1::numeric
                             END AS price_average,
-                    ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
-                    count(*) * invoice_type.sign AS residual,
-                    ai.commercial_partner_id as commercial_partner_id,
                     partner.country_id,
-                    SUM(pr.weight * (invoice_type.sign*ail.quantity) / u.factor * u2.factor) AS weight,
-                    SUM(pr.volume * (invoice_type.sign*ail.quantity) / u.factor * u2.factor) AS volume,
                     partner.supplier_type AS supplier_type,
                     rpc.id AS sector
         """
@@ -138,7 +131,7 @@ class GBSAccountInvoiceReport(models.Model):
                 JOIN account_invoice ai ON ai.id = ail.invoice_id
                 JOIN res_partner partner ON ai.commercial_partner_id = partner.id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
-                left JOIN product_template pt ON pt.id = pr.product_tmpl_id
+                LEFT JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uom_id
                 LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
                 JOIN res_partner_category rpc ON partner.sector_id = rpc.id
@@ -156,11 +149,12 @@ class GBSAccountInvoiceReport(models.Model):
 
     def _where(self):
         date_now = fields.Date.today()
-        year_now = str(fields.Date.from_string(date_now).year)
-        to_month_num = str(fields.Date.from_string(date_now).month)
-        from_month_num = str(fields.Date.from_string(date_now).month - 2)
-        to_month_format = year_now+'-'+to_month_num+'-31'
-        from_month_format = year_now+'-'+from_month_num+'-01'
+        year_now = fields.Date.from_string(date_now).year
+        to_month_num = fields.Date.from_string(date_now).month
+        from_month_num = fields.Date.from_string(date_now).month - 2
+        last_day = calendar.monthrange(year_now, to_month_num)
+        to_month_format = str(year_now)+'-'+str(to_month_num)+'-'+str(last_day[1])
+        from_month_format = str(year_now)+'-'+str(from_month_num)+'-01'
         where_str = """
                where ai.state in ('open','paid') and ai.date_invoice BETWEEN '%s' and '%s'
         """% (from_month_format, to_month_format)
@@ -169,11 +163,10 @@ class GBSAccountInvoiceReport(models.Model):
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.id, ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
-                    ai.partner_id, ai.payment_term_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
-                    ai.fiscal_position_id, ai.user_id, ai.company_id, ai.type, invoice_type.sign, ai.state, pt.categ_id,
-                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_company_signed,
-                    ai.amount_total_company_signed, ai.commercial_partner_id, partner.country_id,rpc.id,partner.supplier_type
+                GROUP BY ail.id, ail.product_id, ai.date_invoice, ai.id,u2.name,
+                    ai.partner_id, ai.currency_id,ai.origin,
+                    ai.user_id, ai.company_id, ai.type, invoice_type.sign, ai.state,
+                    partner.country_id,rpc.id,partner.supplier_type
         """
         return group_by_str
 
