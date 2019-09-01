@@ -6,3 +6,4 @@ from . import server_file_process_success
 from . import soap_process
 from . import soap_process_error
 from . import account_move
+import generate_cbs_journal

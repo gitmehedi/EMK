@@ -11,3 +11,5 @@ acc_soap_process_manager,soap_process_manager,model_soap_process,grp_api_interfa
 
 acc_soap_process_error_manager,soap_process_error_manager,model_soap_process_error,grp_api_interface_manager,1,1,1,1
 
+acc_generate_cbs_journal_manager,generate_cbs_journal_manager,model_generate_cbs_journal,grp_api_interface_manager,1,1,1,1
+
