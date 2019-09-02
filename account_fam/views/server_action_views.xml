@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<odoo>
+    <act_window id="action_asset_multi_allocation_wizard"
+                name="Allocate Assets"
+                src_model="account.asset.asset"
+                res_model="asset.allocation.wizard"
+                view_type="form"
+                view_mode="form"
+                context="{'allocation' : True}"
+                key2="client_action_multi"
+                target="new"
+                groups=""/>
+
+    <act_window id="action_asset_multi_transfer_wizard"
+                name="Transfer Assets"
+                src_model="account.asset.asset"
+                res_model="asset.allocation.wizard"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                context="{'allocation' : False}"
+                groups=""/>
+
+    <act_window id="action_asset_depreciation_wizard"
+                name="Depreciate Assets"
+                src_model="account.asset.asset"
+                res_model="asset.depreciation.wizard"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                groups=""/>
+
+    <act_window id="action_asset_modify_wizard"
+                name="Modify Depreciation"
+                src_model="account.asset.asset"
+                res_model="asset.modify"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                groups=""/>
+
+    <act_window id="action_depreciation_flag"
+                name="Depreciation Flag"
+                src_model="account.asset.asset"
+                res_model="asset.depreciation.flag.wizard"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                groups=""/>
+</odoo>

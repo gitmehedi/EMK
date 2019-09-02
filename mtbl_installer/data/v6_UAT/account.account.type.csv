@@ -1,4 +1,4 @@
-Name,Type,include_initial_balance,active,pending,state
+Name,Type,Bring Accounts Balance Forward,Active,Pending,Status
 Liabilities: Office Accounts,Regular,Yes,True,False,approve
 Treasury Liabilities,Regular,Yes,True,False,approve
 Liabilities: Customer Accounts,Regular,Yes,True,False,approve

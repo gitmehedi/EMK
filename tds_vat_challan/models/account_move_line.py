@@ -37,6 +37,7 @@ class AccountMoveLine(models.Model):
                 if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without pending you can not make undo this!'))
                 rec.is_pending = False
+                rec.is_tdsvat_payable = True
             return {
                 'type': 'ir.actions.client',
                 'tag': 'reload',
@@ -46,6 +47,7 @@ class AccountMoveLine(models.Model):
                 if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without pending you can not make undo this!'))
                 rec.is_pending = False
+                rec.is_tdsvat_payable = True
             return {
                 'type': 'ir.actions.client',
                 'tag': 'reload',

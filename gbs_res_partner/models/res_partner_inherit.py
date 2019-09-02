@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread']
 
-    name = fields.Char(track_visibility='onchange')
+    name = fields.Char(string='Name',track_visibility='onchange')
     parent_id = fields.Many2one(track_visibility='onchange')
     website = fields.Char(track_visibility='onchange')
     company_type = fields.Selection(track_visibility='onchange')
@@ -28,10 +28,10 @@ class ResPartner(models.Model):
     phone = fields.Char(track_visibility='onchange')
     fax = fields.Char(track_visibility='onchange',size=16)
     mobile = fields.Char(track_visibility='onchange')
-    street = fields.Char(track_visibility='onchange')
-    street2 = fields.Char(track_visibility='onchange')
+    street = fields.Char(string='Street',track_visibility='onchange')
+    street2 = fields.Char(string='ETC',track_visibility='onchange')
     zip = fields.Char(track_visibility='onchange')
-    city = fields.Char(track_visibility='onchange')
+    city = fields.Char(string='City',track_visibility='onchange')
     state_id = fields.Many2one(track_visibility='onchange')
     country_id = fields.Many2one(track_visibility='onchange',
                                  default=lambda self: self.env.user.company_id.country_id.id)
@@ -162,7 +162,14 @@ class ResPartner(models.Model):
                            }
             }
 
-
+    @api.onchange("upazila_id")
+    def onchange_upazila(self):
+        if self.upazila_id:
+            self.postal_code = []
+            return {
+                'domain': {'postal_code': [('upazila_id', '=', self.upazila_id.id)]
+                           }
+            }
 
 
     @api.constrains('tax','bin', 'tin','vat','mobile','fax')
@@ -209,15 +216,6 @@ class ResPartner(models.Model):
                 raise Warning('[Format Error] NID must be 17/13/10 character!')
             if not self.nid.isdigit():
                 raise Warning('[Format Error] NID must be numeric!')
-
-    @api.constrains('postal_code')
-    def _check_postal_code_constrain(self):
-        if self.postal_code:
-            if len(self.postal_code) != 4:
-                raise Warning('[Format Error] Postal Code  must be 4 digit!')
-            if not self.postal_code.isdigit():
-                raise Warning('[Format Error] Postal Code must be numeric!')
-
 
     """ All functions """
     @api.constrains('name')

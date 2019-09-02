@@ -52,6 +52,8 @@
         'views/inherit_res_currency_view.xml',
         'views/inherit_account_journal_view.xml',
         'views/inherit_res_bank_view.xml',
+        'views/inherit_account_move_cbs_view.xml',
+        'views/inherit_account_move_ogl_view.xml',
         'views/inherit_account_move_view.xml',
         'views/branch_view.xml',
         'views/inherit_account_account_view.xml',

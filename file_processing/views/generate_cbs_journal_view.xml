@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_generate_cbs_journal_form">
+        <field name="name">Generate CBS Journal</field>
+        <field name="model">generate.cbs.journal</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label class="oe_edit_only" for="name" string="Name"/>
+                    <h1>
+                        <field name="name" placeholder="Name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="method"/>
+                        </group>
+                    </group>
+                    <group string="Source and Destination Settings">
+                        <group string="Source Settings">
+                            <field name="source_path" placeholder="/var/source"/>
+                        </group>
+                        <group string="Destination Settings">
+                            <field name="dest_path" placeholder="/var/destination"/>
+                            <field name="dest_sftp_host" placeholder="sftp.example.com"
+                                   attrs="{'invisible': [('method', '!=', 'sftp')],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="dest_sftp_port"
+                                   attrs="{'invisible': [('method', '!=', 'sftp')],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="dest_sftp_user" placeholder="john"
+                                   attrs="{'invisible': [('method', '!=', 'sftp')],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="dest_sftp_password" password="True"
+                                   attrs="{'invisible': [('method', '!=', 'sftp')],'required': [('method', '=', 'sftp')]}"/>
+                            <br/>
+                            <br/>
+                            <button
+                                    name="action_sftp_test_connection"
+                                    type="object" context="{'target':'destination'}"
+                                    string="Test Destination SFTP"
+                                    icon="fa-television" attrs="{'invisible': [('method', '!=', 'sftp')]}"/>
+                        </group>
+                    </group>
+
+                    <separator string="Help" colspan="2"/>
+                    <div class="bg-warning text-warning">
+                        <h3>Warning:</h3>
+                        Use SFTP with caution! This writes files to external servers under the path you specify.
+                    </div>
+                    <div>
+                        Generate CBS Journal of the database can be scheduled as follows:
+                        <ol>
+                            <li>Go to Settings --> Technical --> Automation --> Scheduled Actions.</li>
+                            <li>Search the action named 'Generate CBS Journal Scheduler'.</li>
+                            <li>Set the scheduler to active and fill in how often you want process.</li>
+                        </ol>
+                    </div>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_generate_cbs_journal_tree">
+        <field name="name">Generate CBS Journal</field>
+        <field name="model">generate.cbs.journal</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Generate CBS Journal" decoration-success="status==True"
+                  decoration-muted="status==False">
+                <field name='name'/>
+                <field name='folder'/>
+                <field name='method'/>
+                <field name="source_sftp_host"/>
+                <field name="source_path"/>
+                <field name="dest_sftp_host"/>
+                <field name="dest_path"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_generate_cbs_journal_search">
+        <field name="name">Generate CBS Journal</field>
+        <field name="model">generate.cbs.journal</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search options">
+                <field name='name'/>
+                <field name='folder'/>
+                <field name="source_sftp_host"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window
+            name="Generate CBS Journal"
+            id="action_generate_cbs_journal_form"
+            res_model="generate.cbs.journal"/>
+
+    <menuitem
+            parent="main_api_interface"
+            action="action_generate_cbs_journal_form"
+            id="generate_cbs_journal_menu"/>
+</odoo>

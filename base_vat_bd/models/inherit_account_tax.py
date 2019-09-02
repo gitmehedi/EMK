@@ -9,22 +9,22 @@ class AccountTax(models.Model):
     _order = 'name desc'
     _inherit = ['account.tax', 'mail.thread']
 
-    name = fields.Char(track_visibility='onchange')
-    type_tax_use = fields.Selection(default='purchase',track_visibility='onchange')
+    name = fields.Char(string="VAT Name",track_visibility='onchange')
+    type_tax_use = fields.Selection(string="VAT Scope",default='purchase',track_visibility='onchange')
     amount_type = fields.Selection(selection=[
         ('fixed', 'Fixed'),
-        ('percent', 'Percentage of Price')],track_visibility='onchange')
+        ('percent', 'Percentage of Price')], string="VAT Computation",track_visibility='onchange')
     amount = fields.Float(string='General Value',track_visibility='onchange')
-    account_id = fields.Many2one(required=True,track_visibility='onchange')
-    refund_account_id = fields.Many2one(required=True,track_visibility='onchange')
+    account_id = fields.Many2one(string="VAT Account",required=True,track_visibility='onchange')
+    refund_account_id = fields.Many2one(string="VAT Account on Refunds",required=True,track_visibility='onchange')
     description = fields.Char(track_visibility='onchange')
-    tax_group_id = fields.Many2one(track_visibility='onchange')
+    tax_group_id = fields.Many2one(string="VAT Group",track_visibility='onchange')
     analytic = fields.Boolean(string='Cost Centre', track_visibility='onchange')
     active = fields.Boolean(track_visibility='onchange')
     price_include = fields.Boolean(track_visibility='onchange')
     include_base_amount = fields.Boolean(track_visibility='onchange')
-    tax_adjustment = fields.Boolean(track_visibility='onchange')
-    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
+    tax_adjustment = fields.Boolean(string="VAT Adjustment",track_visibility='onchange')
+    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange',
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})

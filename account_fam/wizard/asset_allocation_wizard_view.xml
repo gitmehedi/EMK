@@ -4,7 +4,7 @@
         <field name="name">asset.allocation.wizard</field>
         <field name="model">asset.allocation.wizard</field>
         <field name="arch" type="xml">
-            <form string="Asset Allocation">
+            <form string="Fixed Assets Allocation">
                 <group>
                     <group>
                         <field name="date"/>
@@ -21,7 +21,8 @@
                     </group>
                 </group>
                 <footer>
-                    <button name="allocation" string="Allocate" type="object" class="btn-primary"/>
+                    <button name="allocation" string="Process" type="object"
+                            context="{'allocation': context.get('allocation')}" class="btn-primary"/>
                     <button string="Cancel" class="btn-default" special="cancel"/>
                 </footer>
             </form>
@@ -29,7 +30,7 @@
     </record>
 
     <record id="action_asset_allocation_wizard" model="ir.actions.act_window">
-        <field name="name">Asset Allocation/Transfer</field>
+        <field name="name">Fixed Assets Allocation/Transfer</field>
         <field name="res_model">asset.allocation.wizard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>

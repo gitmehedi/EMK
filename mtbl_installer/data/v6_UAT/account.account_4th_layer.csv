@@ -1,4 +1,4 @@
-Layer,Code,Name,Parent Account,,Type,active,pending,state
+Layer,Code,Name,Parent Account,,Type,Active,Pending,Status
 Layer 4,11101,Paid up Capital,111,Capital,View Type,1,0,approve
 Layer 4,11201,General Reserve,112,Reserve,View Type,1,0,approve
 Layer 4,11202,Statutory Reserve,112,Reserve,View Type,1,0,approve

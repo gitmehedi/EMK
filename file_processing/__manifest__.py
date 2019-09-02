@@ -23,6 +23,8 @@
         "views/server_file_process_success_view.xml",
         "views/soap_process_view.xml",
         "views/soap_process_error_view.xml",
+        "views/generate_cbs_journal_success_view.xml",
+        "views/generate_cbs_journal_view.xml",
     ],
     "application": True,
     "installable": True,

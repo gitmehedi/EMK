@@ -1,4 +1,4 @@
-Layer,Code,Name,Parent Account,Type,active,pending,state
+Layer,Code,Name,Parent Account,Type,Active,Pending,Status
 Layer 2,11,Capital & Reserve,Liability,View Type,True,False,approve
 Layer 2,12,Borrowings,Liability,View Type,True,False,approve
 Layer 2,13,Deposits,Liability,View Type,True,False,approve

@@ -4,7 +4,7 @@
         <field name="name">asset.dispose.wizard</field>
         <field name="model">asset.dispose.wizard</field>
         <field name="arch" type="xml">
-            <form string="Asset Dispose">
+            <form string="Fixed Assets Write-off">
                 <field name="asset_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
                     <tree string="Budget Items" editable="top">
                         <field name="name"/>
@@ -20,7 +20,7 @@
     </record>
 
     <record id="action_asset_dispose_wizard" model="ir.actions.act_window">
-        <field name="name">Asset Dispose</field>
+        <field name="name">Fixed Assets Write-Off</field>
         <field name="res_model">asset.dispose.wizard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>

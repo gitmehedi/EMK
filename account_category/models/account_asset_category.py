@@ -33,6 +33,7 @@ class AccountAssetCategory(models.Model):
             self.method_period = self.parent_id.method_period
             self.method_number = self.parent_id.method_number
             self.method_progress_factor = self.parent_id.method_progress_factor
+            self.code = self.parent_id.code
 
     @api.model
     def create(self, vals):

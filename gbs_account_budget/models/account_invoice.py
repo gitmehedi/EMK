@@ -24,7 +24,7 @@ class AccountInvoice(models.Model):
                 order='id DESC', limit=1)
 
 
-            vals = [('budget_distribution_id.bottom_line_budget_line', '=', bottom_line_budget_pool.id),
+            vals = [('budget_distribution_id.bottom_line_budget_line','=', bottom_line_budget_pool.id),
                     ('budget_distribution_id.state','=','approve')]
 
             if self.operating_unit_id:
@@ -32,19 +32,22 @@ class AccountInvoice(models.Model):
 
             if self.account_analytic_id:
                 vals.append(('analytic_account_id', '=', self.account_analytic_id.id))
-            else:
-                vals.append(('analytic_account_id', '=', False))
 
-            budget_distribution_line_pool = self.env['budget.distribution.line'].search(vals,order='id ASC', limit=1)
+            budget_distribution_line_pool = self.env['budget.distribution.line'].search(vals,order='id ASC')
+
+            if len(budget_distribution_line_pool) > 1:
+                budget_amount = sum([i.planned_amount - i.practical_amount for i in budget_distribution_line_pool])
+            else:
+                budget_amount = budget_distribution_line_pool.planned_amount - budget_distribution_line_pool.practical_amount
 
             if self.account_id and bottom_line_budget_pool and \
-                            self.price_subtotal_without_vat>bottom_line_budget_pool.planned_amount:
-                msg = 'The amount for '+self.product_id.name+' is crossed planned amount for GL budget.'
+                            self.price_subtotal_without_vat > bottom_line_budget_pool.planned_amount:
+                msg = 'The amount for ' + self.product_id.name + ' is crossed planned amount for GL budget.'
             elif self.operating_unit_id and self.account_analytic_id and budget_distribution_line_pool and \
-                            self.price_subtotal_without_vat > budget_distribution_line_pool.planned_amount-budget_distribution_line_pool.practical_amount:
+                            self.price_subtotal_without_vat > budget_amount:
                 msg = 'The amount for ' + self.product_id.name + ' is crossed planned amount for branch wise budget and cost centre wise budget.'
             elif self.operating_unit_id and budget_distribution_line_pool and \
-                            self.price_subtotal_without_vat>budget_distribution_line_pool.planned_amount-budget_distribution_line_pool.practical_amount:
+                            self.price_subtotal_without_vat > budget_amount:
                 msg = 'The amount for '+self.product_id.name+' is crossed planned amount for branch wise budget.'
             else:
                 msg = False

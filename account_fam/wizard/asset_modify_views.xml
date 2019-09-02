@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="account_asset.asset_modify_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="replace">
-                <form string="Modify Asset">
+                <form string="Modify Assets">
                     <group string="Asset Durations to Modify">
                         <group>
                             <field name="asset_method_time" invisible="1"/>
