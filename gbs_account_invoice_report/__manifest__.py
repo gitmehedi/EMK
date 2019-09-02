@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name' : 'GBS Account Invoice Report',
     'version' : '10.0.0.1',
@@ -13,8 +11,9 @@ The specific and easy-to-view report of account invoice.This is custom analytic 
     'category': 'Accounting',
     'website': 'www.genweb2.com',
     'author': 'Genweb2 Limited',
-    'depends' : ['account'],
+    'depends' : ['account','sale'],
     'data': [
+        'security/ir.model.access.csv',
         'report/account_invoice_report_view.xml',
     ],
     'installable': True,
