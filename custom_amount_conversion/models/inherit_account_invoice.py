@@ -23,7 +23,7 @@ class InheritAccountInvoice(models.Model):
             currency = self.env['res.currency'].search([('id','=',vals.get('currency_id'))])
             to_currency = self.env.user.company_id.currency_id
             from_currency = currency.with_context(
-                date=self._get_currency_rate_date() or fields.Date.context_today(self))
+                date=fields.Date.context_today(self))
             vals['conversion_rate'] = to_currency.rate / from_currency.rate
         res = super(InheritAccountInvoice, self).create(vals)
         return res
