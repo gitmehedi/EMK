@@ -1,0 +1,5 @@
+External ID,Invoice Lines/Product,Invoice Lines/Description,Invoice Lines/Branch,Invoice Lines/Account,Invoice Lines/Quantity,Invoice Lines/Unit Price
+__export__.account_invoice_32,ATM Rent,ATM Rent,Main Operating Unit,MD House Rent,2,30000
+,Iphone 7,Iphone 7,Main Operating Unit,Telephone Expenses,3,35000
+,ATM Rent,ATM Rent,Ulipur Branch,MD House Rent,1,40000
+,ATM Rent,ATM Rent,Sylhet Branch,MD House Rent,1,50000
