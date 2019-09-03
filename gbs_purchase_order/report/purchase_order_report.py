@@ -23,7 +23,8 @@ class GbsPurchaseOrder(models.AbstractModel):
         data['partner_ref'] = docs.partner_ref
         data['requisition_id'] = docs.requisition_id.name
         data['requisition_date'] = requisition_date
-        data['company'] = docs.operating_unit_id.partner_id.name
+        # data['company'] = docs.operating_unit_id.partner_id.name
+        data['company'] = docs.company_id.partner_id.name
         data['notes'] = docs.notes
         data['company_address'] = report_utility_pool.getCoustomerAddress(docs.operating_unit_id.partner_id)
         data['region_type'] = docs.region_type
@@ -35,6 +36,16 @@ class GbsPurchaseOrder(models.AbstractModel):
         data['total_discount'] = docs.amount_untaxed * (docs.amount_discount / 100)
         data['total_vat'] = docs.amount_after_discount * (docs.amount_vat / 100)
         data['contact_person'] = docs.contact_person_txt
+
+        # Supplier
+        data['partner_vat_no'] = docs.partner_id.vat
+        data['partner_bin_no'] = docs.partner_id.bin
+        data['partner_tin_no'] = docs.partner_id.tin
+
+        # Consignee
+        data['company_vat_no'] = docs.company_id.partner_id.vat
+        data['company_bin_no'] = docs.company_id.partner_id.bin
+        data['company_tin_no'] = docs.company_id.partner_id.tin
 
 
         if docs.partner_id.child_ids:

@@ -71,6 +71,8 @@ class ExecutiveSalesReport(models.AbstractModel):
 
     @api.multi
     def format_lang(self, value):
+        if value == 0:
+            return value
         return formatLang(self.env, value)
 
     @api.model

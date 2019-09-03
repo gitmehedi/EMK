@@ -1,4 +1,5 @@
 
+
 .unit-header {
     border: 1px solid #ddd;
     border-bottom: none;
@@ -18,6 +19,16 @@
 .table-report > tfoot > tr > td {
     padding: 2px 3px !important;
     font-size: 12px !important;
+}
+
+.table-report-md > thead > tr > th,
+.table-report-md > tbody > tr > th,
+.table-report-md > tfoot > tr > th,
+.table-report-md > thead > tr > td,
+.table-report-md > tbody > tr > td,
+.table-report-md > tfoot > tr > td {
+    padding: 2px 3px !important;
+    border: none !important;
 }
 
 .table-report-sm > thead > tr > th,

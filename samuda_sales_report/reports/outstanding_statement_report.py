@@ -22,7 +22,7 @@ class OutstandingStatementReport(models.AbstractModel):
                         JOIN res_users users ON users.id = invoice.user_id
                         JOIN res_partner executive ON executive.id = users.partner_id
                     WHERE 
-                        ml.credit > 0 AND DATE(invoice.date) BETWEEN %s AND %s
+                        ml.credit > 0 AND DATE(invoice.date_invoice) BETWEEN %s AND %s
                     GROUP BY users.id, executive.name
                     ORDER BY executive.name) AS first_set
                 LEFT JOIN 
@@ -38,7 +38,7 @@ class OutstandingStatementReport(models.AbstractModel):
                         JOIN res_users users ON users.id = invoice.user_id
                         JOIN res_partner executive ON executive.id = users.partner_id
                     WHERE 
-                        ml.credit > 0 AND DATE(invoice.date) BETWEEN %s AND %s
+                        ml.credit > 0 AND DATE(invoice.date_invoice) BETWEEN %s AND %s
                     GROUP BY users.id, executive.name
                     ORDER BY executive.name) AS second_set 
                                                            ON first_set.user_id = second_set.user_id
@@ -59,6 +59,8 @@ class OutstandingStatementReport(models.AbstractModel):
 
     @api.multi
     def format_lang(self, value):
+        if value == 0:
+            return value
         return formatLang(self.env, value)
 
     @api.model
