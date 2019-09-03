@@ -68,12 +68,12 @@ class CreditDetailsProductReport(models.AbstractModel):
                 report_data[val[0]]['product_name'] = val[1]
                 report_data[val[0]]['customers'] = list()
                 report_data[val[0]]['customers'].append({'customer_name': val[2], 'delivery_date': val[3],
-                                                         'qty': int(val[4]), 'val': int(val[5]),
+                                                         'qty': float(val[4]), 'val': float(val[5]),
                                                          'credit_tenure': val[6], 'maturity_date': val[7]})
 
             else:
                 report_data[val[0]]['customers'].append({'customer_name': val[2], 'delivery_date': val[3],
-                                                         'qty': int(val[4]), 'val': int(val[5]),
+                                                         'qty': float(val[4]), 'val': float(val[5]),
                                                          'credit_tenure': val[6], 'maturity_date': val[7]})
 
         return report_data
