@@ -212,8 +212,8 @@ Layer 4,26803,Prepaid Promotional and Development Expenses,268,Miscellaneous Oth
 Layer 4,26804,Stamps in Hand,268,Miscellaneous Other Assets,View Type,1,0,approve
 Layer 4,26805,Stock of Commemorative Coins,268,Miscellaneous Other Assets,View Type,1,0,approve
 Layer 4,26806,Stock of Fixed Assets,268,Miscellaneous Other Assets,View Type,1,0,approve
-Layer 4,26807,Stock of stationerie,268,Miscellaneous Other Assets,View Type,1,0,approve
-Layer 4,26812,Stock of stationeries,268,Miscellaneous Other Assets,View Type,1,0,approve
+Layer 4,26807,Stock of stationeries,268,Miscellaneous Other Assets,View Type,1,0,approve
+Layer 4,26812,Other Fixed Assets,268,Miscellaneous Other Assets,View Type,1,0,approve
 Layer 4,26808,Transit Account,268,Miscellaneous Other Assets,View Type,1,0,approve
 Layer 4,26809,Deferred Tax Asset,268,Miscellaneous Other Assets,View Type,1,0,approve
 Layer 4,26811,Miscellaneous Other Assets,268,Miscellaneous Other Assets,View Type,1,0,approve
@@ -390,7 +390,7 @@ Layer 4,61301,Forward Contract Cust Purchase,613,Forward Contract,View Type,1,0,
 Layer 4,61302,Forward Contract Cust Sale,613,Forward Contract,View Type,1,0,approve
 Layer 4,62101,Customers' Liability on BG (Inland),621,Bank Guarantee <Contingent>,View Type,1,0,approve
 Layer 4,62102,Customers' Liability on BG (Foreign),621,Bank Guarantee <Contingent>,View Type,1,0,approve
-Layer 4,62103,Customers  Liability on BG (Foreign),621,Bank Guarantee <Contingent>,View Type,1,0,approve
+Layer 4,62103,Customers' Liability on BG (Foreign) <OBU>,621,Bank Guarantee <Contingent>,View Type,1,0,approve
 Layer 4,62201,Customers' Liability on LC (Inland),622,Letter of Credit <Contingent>,View Type,1,0,approve
 Layer 4,62202,Customers' Liability on LC (Foreign),622,Letter of Credit <Contingent>,View Type,1,0,approve
 Layer 4,62301,Customers' Liability for Accepted Bills <Inland>,623,Accepted Bills under LC <Contingent>,View Type,1,0,approve
