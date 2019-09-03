@@ -34,6 +34,12 @@
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
+            <xpath expr="//field[@name='zip']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
             <xpath expr="//sheet" position="before">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft"
@@ -92,7 +98,7 @@
                     </tree>
                 </field>
             </xpath>
-            <xpath expr="//group[@name='banks']" position="inside">
+            <xpath expr="//page[@name='accounting']" position="inside">
                 <group>
                     <field name="vendor_bank_acc" class="oe_inline"/>
                 </group>
