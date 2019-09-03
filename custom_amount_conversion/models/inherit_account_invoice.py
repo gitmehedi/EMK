@@ -7,7 +7,6 @@ class InheritAccountInvoice(models.Model):
 
     conversion_rate = fields.Float(string='Conversion Rate')
 
-
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
         res = super(InheritAccountInvoice, self)._onchange_currency_id()
@@ -15,7 +14,7 @@ class InheritAccountInvoice(models.Model):
             to_currency = self.company_id.currency_id
             from_currency = self.currency_id.with_context(
                 date=self._get_currency_rate_date() or fields.Date.context_today(self))
-            self.conversion_rate = to_currency.rate / from_currency.rate
+            self.conversion_rate = to_currency.round(to_currency.rate / from_currency.rate)
         return res
 
     @api.model
@@ -25,7 +24,7 @@ class InheritAccountInvoice(models.Model):
             to_currency = self.env.user.company_id.currency_id
             from_currency = currency.with_context(
                 date=fields.Date.context_today(self))
-            vals['conversion_rate'] = to_currency.rate / from_currency.rate
+            vals['conversion_rate'] = to_currency.round(to_currency.rate / from_currency.rate)
         res = super(InheritAccountInvoice, self).create(vals)
         return res
 
