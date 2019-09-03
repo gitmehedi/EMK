@@ -36,11 +36,19 @@ class MonthlyDeliveryProductReport(models.AbstractModel):
         header_data = [d for d in range(1, data['month_days'] + 1)]
         # list
         report_data = self.get_data(data, header_data)
+        # calculate total qty and val for each customer
+        total = dict()
+        for key in report_data:
+            temp_dict = dict()
+            temp_dict['qty'] = sum(report_data[key]['qty'][k] for k in report_data[key]['qty'])
+            temp_dict['val'] = sum(report_data[key]['val'][k] for k in report_data[key]['val'])
+            total[key] = temp_dict
 
         docargs = {
             'data': data,
             'header_data': header_data,
             'report_data': report_data,
+            'total': total,
             'formatLang': self.format_lang,
         }
 

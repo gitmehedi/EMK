@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class InheritAccountInvoice(models.Model):
@@ -40,6 +41,9 @@ class InheritAccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_open(self):
+        if self.currency_id.id != self.company_id.currency_id.id and self.conversion_rate < 60:
+            raise ValidationError(_("Give the proper conversion rate."))
+
         res = super(InheritAccountInvoice, self).action_invoice_open()
         if self.currency_id.id != self.company_id.currency_id.id:
             converted_amount = self.amount_total * self.conversion_rate

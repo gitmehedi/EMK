@@ -8,8 +8,6 @@
 			    <form>
                     <group>
                         <group>
-                            <field name="type" widget="radio"
-                                   options="{'horizontal': true}"/>
                             <field name="executive_id"
                                    options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                         </group>

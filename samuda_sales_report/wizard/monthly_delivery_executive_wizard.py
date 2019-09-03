@@ -6,11 +6,6 @@ import calendar
 class MonthlyDeliveryExecutiveWizard(models.TransientModel):
     _name = "monthly.delivery.executive.wizard"
 
-    type = fields.Selection([
-        ('local', 'Local'),
-        ('foreign', 'Foreign')
-    ], string='Type', default='local')
-
     # here executive_id is user_id
     executive_id = fields.Many2one('res.users', string='Executive', required=True)
     month = fields.Selection([(m, calendar.month_name[m]) for m in range(1, 13)], 'Month', required=True)
@@ -26,7 +21,6 @@ class MonthlyDeliveryExecutiveWizard(models.TransientModel):
     @api.multi
     def process_print(self):
         data = dict()
-        data['type'] = self.type
         data['executive_id'] = self.executive_id.id
         data['executive_name'] = self.executive_id.name
         data['month'] = self.month

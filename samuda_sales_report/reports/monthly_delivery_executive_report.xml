@@ -25,16 +25,8 @@
                                 <br/>
                                 <div class="row" style="padding-bottom:5px;">
                                     <div class="col-xs-6">
-                                        <ul class="list-inline">
-                                            <li>
-                                                <strong>Type : </strong>
-                                                <span t-esc="data['type']"/>
-                                            </li>
-                                            <li>
-                                                <strong>Executive : </strong>
-                                                <span t-esc="data['executive_name']"/>
-                                            </li>
-                                        </ul>
+                                        <strong>Executive : </strong>
+                                        <span t-esc="data['executive_name']"/>
                                     </div>
                                     <div class="col-xs-6 text-right">
                                         <strong>Month : </strong>
@@ -69,7 +61,7 @@
                                                 </td>
                                             </t>
                                             <td class="text-right">
-                                                <strong class="text-nowrap" t-esc="formatLang(sum(dic_value['qty'][key] for key in dic_value['qty']))"/>
+                                                <strong class="text-nowrap" t-esc="formatLang(total[dic]['qty'])"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -80,7 +72,7 @@
                                                 </td>
                                             </t>
                                             <td class="text-right">
-                                                <strong class="text-nowrap" t-esc="formatLang(sum(dic_value['val'][key] for key in dic_value['val']))"/>
+                                                <strong class="text-nowrap" t-esc="formatLang(total[dic]['val'])"/>
                                             </td>
                                         </tr>
                                     </t>
@@ -95,7 +87,9 @@
                                                     <strong class="text-nowrap" t-esc="formatLang(sum(report_data[key]['qty'][head] for key in report_data))"/>
                                                 </td>
                                             </t>
-                                            <td></td>
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="formatLang(sum(total[key]['qty'] for key in total))"/>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Val (BDT)</td>
@@ -104,7 +98,9 @@
                                                     <strong class="text-nowrap" t-esc="formatLang(sum(report_data[key]['val'][head] for key in report_data))"/>
                                                 </td>
                                             </t>
-                                            <td></td>
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="formatLang(sum(total[key]['val'] for key in total))"/>
+                                            </td>
                                         </tr>
                                     </t>
                                     <!-- Grand Total -->
