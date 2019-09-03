@@ -44,6 +44,8 @@
         'gbs_account_receivable_auto_set',
         'samuda_sales_country',
         'gbs_payment_term',
+        'gbs_res_partner',
+        'gbs_account_invoice_report',
     ],
     'data': [],
     'description': 'Install all modules which is related with sales',
