@@ -1,0 +1,493 @@
+Division,District,Upazila
+Dhaka,Dhaka,Dhaka
+Dhaka,Dhaka,Dhamrai
+Dhaka,Dhaka,Dhanmondi
+Dhaka,Dhaka,Gulshan
+Dhaka,Dhaka,Jatrabari
+Dhaka,Dhaka,Joypara
+Dhaka,Dhaka,Keraniganj
+Dhaka,Dhaka,Khilgaon
+Dhaka,Dhaka,Khilkhet
+Dhaka,Dhaka,Lalbag
+Dhaka,Dhaka,Mirpur
+Dhaka,Dhaka,Mohammadpur
+Dhaka,Dhaka,Motijheel
+Dhaka,Dhaka,Nawabganj
+Dhaka,Dhaka,New market
+Dhaka,Dhaka,Palton
+Dhaka,Dhaka,Ramna
+Dhaka,Dhaka,Sabujbag
+Dhaka,Dhaka,Savar
+Dhaka,Dhaka,Sutrapur
+Dhaka,Dhaka,Tejgaon
+Dhaka,Dhaka,Tejgaon Industrial Area
+Dhaka,Dhaka,Uttara
+Dhaka,Faridpur,Alfadanga
+Dhaka,Faridpur,Bhanga
+Dhaka,Faridpur,Boalmari
+Dhaka,Faridpur,Charbhadrasan
+Dhaka,Faridpur,Faridpur Sadar
+Dhaka,Faridpur,Madukhali
+Dhaka,Faridpur,Nagarkanda
+Dhaka,Faridpur,Sadarpur
+Dhaka,Faridpur,Shriangan
+Dhaka,Gazipur,Gazipur Sadar
+Dhaka,Gazipur,Kaliakaar
+Dhaka,Gazipur,Kaliganj
+Dhaka,Gazipur,Kapashia
+Dhaka,Gazipur,Monnunagar
+Dhaka,Gazipur,Sreepur
+Dhaka,Gazipur,Sripur
+Dhaka,Gopalganj,Gopalganj Sadar
+Dhaka,Gopalganj,Kashiani
+Dhaka,Gopalganj,Kotalipara
+Dhaka,Gopalganj,Maksudpur
+Dhaka,Gopalganj,Tungipara
+Dhaka,Kishoreganj,Bajitpur
+Dhaka,Kishoreganj,Bhairob
+Dhaka,Kishoreganj,Hossenpur
+Dhaka,Kishoreganj,Itna
+Dhaka,Kishoreganj,Karimganj
+Dhaka,Kishoreganj,Katiadi
+Dhaka,Kishoreganj,Kishoreganj Sadar
+Dhaka,Kishoreganj,Kuliarchar
+Dhaka,Kishoreganj,Mithamoin
+Dhaka,Kishoreganj,Nikli
+Dhaka,Kishoreganj,Ostagram
+Dhaka,Kishoreganj,Pakundia
+Dhaka,Kishoreganj,Tarial
+Dhaka,Madaripur,Barhamganj
+Dhaka,Madaripur,kalkini
+Dhaka,Madaripur,Madaripur Sadar
+Dhaka,Madaripur,Rajoir
+Dhaka,Manikganj,Doulatpur
+Dhaka,Manikganj,Gheor
+Dhaka,Manikganj,Lechhraganj
+Dhaka,Manikganj,Manikganj Sadar
+Dhaka,Manikganj,Saturia
+Dhaka,Manikganj,Shibloya
+Dhaka,Manikganj,Singari
+Dhaka,Munshiganj,Gajaria
+Dhaka,Munshiganj,Lohajong
+Dhaka,Munshiganj,Munshiganj Sadar
+Dhaka,Munshiganj,Sirajdikhan
+Dhaka,Munshiganj,Sreenagar
+Dhaka,Munshiganj,Tangibari
+Dhaka,Narayanganj,Araihazar
+Dhaka,Narayanganj,Baidder Bazar
+Dhaka,Narayanganj,Bandar
+Dhaka,Narayanganj,Fatullah
+Dhaka,Narayanganj,Narayanganj Sadar
+Dhaka,Narayanganj,Rupganj
+Dhaka,Narayanganj,Siddirganj
+Dhaka,Narsingdi,Belabo
+Dhaka,Narsingdi,Monohordi
+Dhaka,Narsingdi,Narsingdi Sadar
+Dhaka,Narsingdi,Palash
+Dhaka,Narsingdi,Raypura
+Dhaka,Narsingdi,Shibpur
+Dhaka,Rajbari,Baliakandi
+Dhaka,Rajbari,Pangsha
+Dhaka,Rajbari,Rajbari Sadar
+Dhaka,Shariatpur,Bhedorganj
+Dhaka,Shariatpur,Damudhya
+Dhaka,Shariatpur,Gosairhat
+Dhaka,Shariatpur,Jajira
+Dhaka,Shariatpur,Naria
+Dhaka,Shariatpur,Shariatpur Sadar
+Dhaka,Tangail,Basail
+Dhaka,Tangail,Bhuapur
+Dhaka,Tangail,Delduar
+Dhaka,Tangail,Ghatail
+Dhaka,Tangail,Gopalpur
+Dhaka,Tangail,Kalihati
+Dhaka,Tangail,Kashkaolia
+Dhaka,Tangail,Madhupur
+Dhaka,Tangail,Mirzapur
+Dhaka,Tangail,Nagarpur
+Dhaka,Tangail,Sakhipur
+Dhaka,Tangail,Tangail Sadar
+Mymensingh,Jamalpur,Dewangonj
+Mymensingh,Jamalpur,Islampur
+Mymensingh,Jamalpur,Jamalpur
+Mymensingh,Jamalpur,Malandah
+Mymensingh,Jamalpur,Madarganj
+Mymensingh,Jamalpur,Sharishabari
+Mymensingh,Mymensingh,Bhaluka
+Mymensingh,Mymensingh,Fulbaria
+Mymensingh,Mymensingh,Gaforgaon
+Mymensingh,Mymensingh,Gouripur
+Mymensingh,Mymensingh,Haluaghat
+Mymensingh,Mymensingh,Isshwargonj
+Mymensingh,Mymensingh,Muktagachha
+Mymensingh,Mymensingh,Mymensingh Sadar
+Mymensingh,Mymensingh,Nandail
+Mymensingh,Mymensingh,Phulpur
+Mymensingh,Mymensingh,Trishal
+Mymensingh,Netrakona,Susung Durgapur
+Mymensingh,Netrakona,Atpara
+Mymensingh,Netrakona,Barhatta
+Mymensingh,Netrakona,Dharmapasha
+Mymensingh,Netrakona,Dhobaura
+Mymensingh,Netrakona,Kalmakanda
+Mymensingh,Netrakona,Kendua
+Mymensingh,Netrakona,Khaliajuri
+Mymensingh,Netrakona,Madan
+Mymensingh,Netrakona,Moddhynagar
+Mymensingh,Netrakona,Mohanganj
+Mymensingh,Netrakona,Netrakona Sadar
+Mymensingh,Netrakona,Purbadhola
+Mymensingh,Sherpur,Bakshigonj
+Mymensingh,Sherpur,Jhinaigati
+Mymensingh,Sherpur,Nakla
+Mymensingh,Sherpur,Nalitabari
+Mymensingh,Sherpur,Sherpur Shadar
+Mymensingh,Sherpur,Shribardi
+Sylhet,Habiganj,Azmireeganj
+Sylhet,Habiganj,Bahubal
+Sylhet,Habiganj,Baniachang
+Sylhet,Habiganj,Chunarughat
+Sylhet,Habiganj,Habiganj Sadar
+Sylhet,Habiganj,Kalauk
+Sylhet,Habiganj,Madhabpur
+Sylhet,Habiganj,Nabiganj
+Sylhet,Moulvibazar,Baralekha
+Sylhet,Moulvibazar,Kamalganj
+Sylhet,Moulvibazar,Kulaura
+Sylhet,Moulvibazar,Moulvibazar Sadar
+Sylhet,Moulvibazar,Rajnagar
+Sylhet,Moulvibazar,Srimangal
+Sylhet,Sunamganj,Bishamsarpur
+Sylhet,Sunamganj,Chhatak
+Sylhet,Sunamganj,Dhirai Chandpur
+Sylhet,Sunamganj,Duara bazar
+Sylhet,Sunamganj,Ghungiar
+Sylhet,Sunamganj,Jagnnathpur
+Sylhet,Sunamganj,Sachna
+Sylhet,Sunamganj,Sunamganj Sadar
+Sylhet,Sunamganj,Tahirpur
+Sylhet,Sylhet,Balaganj
+Sylhet,Sylhet,Balaganjgfhfghj
+Sylhet,Sylhet,Bianibazar
+Sylhet,Sylhet,Bishwanath
+Sylhet,Sylhet,Fenchuganj
+Sylhet,Sylhet,Gopalganj Sadar
+Sylhet,Sylhet,Goainhat
+Sylhet,Sylhet,Gopalganj
+Sylhet,Sylhet,Jaintapur
+Sylhet,Sylhet,Jakiganj
+Sylhet,Sylhet,Kanaighat
+Sylhet,Sylhet,Kompanyganj
+Sylhet,Sylhet,Sylhet Sadar
+Chattogram,Feni,Thana SONAGAZI
+Chattogram,Bandarban,Alikadam
+Chattogram,Bandarban,Bandarban Sadar
+Chattogram,Bandarban,Naikhong
+Chattogram,Bandarban,Roanchhari
+Chattogram,Bandarban,Ruma
+Chattogram,Bandarban,Thanchi
+Chattogram,Brahmanbaria,Akhaura
+Chattogram,Brahmanbaria,Banchharampur
+Chattogram,Brahmanbaria,Brahamanbaria Sadar
+Chattogram,Brahmanbaria,Kasba
+Chattogram,Brahmanbaria,Nabinagar
+Chattogram,Brahmanbaria,Nasirnagar
+Chattogram,Brahmanbaria,Sarail
+Chattogram,Chandpur,Chandpur Sadar
+Chattogram,Chandpur,Faridganj
+Chattogram,Chandpur,Hajiganj
+Chattogram,Chandpur,Hayemchar
+Chattogram,Chandpur,Kachua
+Chattogram,Chandpur,Matlobganj
+Chattogram,Chandpur,Shahrasti
+Chattogram,Chattogram,Anawara
+Chattogram,Chattogram,Boalkhali
+Chattogram,Chattogram,Chattogram Sadar
+Chattogram,Chattogram,Gopalganj Sadar
+Chattogram,Chattogram,East Joara
+Chattogram,Chattogram,Fatikchhari
+Chattogram,Chattogram,Hathazari
+Chattogram,Chattogram,Jaldi
+Chattogram,Chattogram,Lohagara
+Chattogram,Chattogram,Mirsharai
+Chattogram,Chattogram,Patiya
+Chattogram,Chattogram,Rangunia
+Chattogram,Chattogram,Rouzan
+Chattogram,Chattogram,Sandwip
+Chattogram,Chattogram,Satkania
+Chattogram,Chattogram,Sitakunda
+Chattogram,Comilla,Barura
+Chattogram,Comilla,Brahmanpara
+Chattogram,Comilla,Burichang
+Chattogram,Comilla,Chandina
+Chattogram,Comilla,Chouddagram
+Chattogram,Comilla,Comilla Sadar
+Chattogram,Comilla,Daudkandi
+Chattogram,Comilla,Davidhar
+Chattogram,Comilla,Homna
+Chattogram,Comilla,Laksam
+Chattogram,Comilla,Langalkot
+Chattogram,Comilla,Muradnagar
+Chattogram,Cox's Bazar,Chiringga
+Chattogram,Cox's Bazar,Coxs Bazar Sadar
+Chattogram,Cox's Bazar,Gorakghat
+Chattogram,Cox's Bazar,Kutubdia
+Chattogram,Cox's Bazar,Ramu
+Chattogram,Cox's Bazar,Teknaf
+Chattogram,Cox's Bazar,Ukhia
+Chattogram,Feni,Chhagalnaia
+Chattogram,Feni,Dagonbhuia
+Chattogram,Feni,Feni Sadar
+Chattogram,Feni,Pashurampur
+Chattogram,Feni,Sonagazi
+Chattogram,Khagrachari,Diginala
+Chattogram,Khagrachari,Khagrachari Sadar
+Chattogram,Khagrachari,Laxmichhari
+Chattogram,Khagrachari,Mahalchhari
+Chattogram,Khagrachari,Manikchhari
+Chattogram,Khagrachari,Matiranga
+Chattogram,Khagrachari,Panchhari
+Chattogram,Khagrachari,Ramghar Head Office
+Chattogram,Lakshmipur,Char Alexgander
+Chattogram,Lakshmipur,Lakshimpur Sadar
+Chattogram,Lakshmipur,Ramganj
+Chattogram,Lakshmipur,Raypur
+Chattogram,Noakhali,Basurhat
+Chattogram,Noakhali,Begumganj
+Chattogram,Noakhali,Chatkhil
+Chattogram,Noakhali,Hatiya
+Chattogram,Noakhali,Noakhali Sadar
+Chattogram,Noakhali,Senbag
+Chattogram,Rangamati,Barakal
+Chattogram,Rangamati,Bilaichhari
+Chattogram,Rangamati,Jarachhari
+Chattogram,Rangamati,Kalampati
+Chattogram,Rangamati,kaptai
+Chattogram,Rangamati,Longachh
+Chattogram,Rangamati,Marishya
+Chattogram,Rangamati,Naniachhar
+Chattogram,Rangamati,Rajsthali
+Chattogram,Rangamati,Rangamati Sadar
+Rangpur,Dinajpur,Bangla Hili
+Rangpur,Dinajpur,Biral
+Rangpur,Dinajpur,Birampur
+Rangpur,Dinajpur,Birganj
+Rangpur,Dinajpur,Chirirbandar
+Rangpur,Dinajpur,Dinajpur Sadar
+Rangpur,Dinajpur,Khansama
+Rangpur,Dinajpur,Maharajganj
+Rangpur,Dinajpur,Nawabganj
+Rangpur,Dinajpur,Ghoraghat
+Rangpur,Dinajpur,Parbatipur
+Rangpur,Dinajpur,Phulbari
+Rangpur,Dinajpur,Setabganj
+Rangpur,Gaibandha,Bonarpara
+Rangpur,Gaibandha,Gaibandha Sadar
+Rangpur,Gaibandha,Gobindaganj
+Rangpur,Gaibandha,Palashbari
+Rangpur,Gaibandha,Phulchhari
+Rangpur,Gaibandha,Saadullapur
+Rangpur,Gaibandha,Sundarganj
+Rangpur,Kurigram,Bhurungamari
+Rangpur,Kurigram,Chilmari
+Rangpur,Kurigram,Kurigram Sadar
+Rangpur,Kurigram,Nageshwar
+Rangpur,Kurigram,Rajarhat
+Rangpur,Kurigram,Rajibpur
+Rangpur,Kurigram,Roumari
+Rangpur,Kurigram,Ulipur
+Rangpur,Lalmonirhat,Aditmari
+Rangpur,Lalmonirhat,Hatibandha
+Rangpur,Lalmonirhat,Lalmonirhat Sadar
+Rangpur,Lalmonirhat,Patgram
+Rangpur,Lalmonirhat,Tushbhandar
+Rangpur,Nilphamari,Dimla
+Rangpur,Nilphamari,Domar
+Rangpur,Nilphamari,Jaldhaka
+Rangpur,Nilphamari,Kishoriganj
+Rangpur,Nilphamari,Nilphamari Sadar
+Rangpur,Nilphamari,Saidpur
+Rangpur,Panchagarh,Boda
+Rangpur,Panchagarh,Chotto Dab
+Rangpur,Panchagarh,Dabiganj
+Rangpur,Panchagarh,Panchagra Sadar
+Rangpur,Panchagarh,Tetulia
+Rangpur,Rangpur,Taraganj
+Rangpur,Rangpur,Badarganj
+Rangpur,Rangpur,Gangachara
+Rangpur,Rangpur,Kaunia
+Rangpur,Rangpur,Mithapukur
+Rangpur,Rangpur,Pirgachha
+Rangpur,Rangpur,Rangpur Sadar
+Rangpur,Thakurgaon,Baliadangi
+Rangpur,Thakurgaon,Jibanpur
+Rangpur,Thakurgaon,Pirganj
+Rangpur,Rangpur,Pirganj
+Rangpur,Thakurgaon,Rani Sankail
+Rangpur,Thakurgaon,Thakurgaon Sadar
+Rajshahi,Bogura,Adamdighi
+Rajshahi,Bogura,Bogura Sadar
+Rajshahi,Bogura,Dhunat
+Rajshahi,Bogura,Dupchanchia
+Rajshahi,Bogura,Dupchachia
+Rajshahi,Bogura,Gabtoli
+Rajshahi,Bogura,Kahalu
+Rajshahi,Bogura,Nandigram
+Rajshahi,Bogura,Sariakandi
+Rajshahi,Bogura,Sherpur
+Rajshahi,Bogura,Shibganj
+Rajshahi,Bogura,Sonatola
+Rajshahi,Chapai Nawabganj,Bholahat
+Rajshahi,Chapai Nawabganj,Chapai Nawabganj Sadar
+Rajshahi,Chapai Nawabganj,Nachol
+Rajshahi,Chapai Nawabganj,Rohanpur
+Rajshahi,Chapai Nawabganj,Shibganj U.P.O
+Rajshahi,Joypurhat,Akkelpur
+Rajshahi,Joypurhat,Joypurhat Sadar
+Rajshahi,Joypurhat,kalai
+Rajshahi,Joypurhat,Khetlal
+Rajshahi,Joypurhat,panchbibi
+Rajshahi,Naogaon,Ahsanganj
+Rajshahi,Naogaon,Badalgachhi
+Rajshahi,Naogaon,Dhamuirhat
+Rajshahi,Naogaon,Mahadebpur
+Rajshahi,Naogaon,Naogaon Sadar
+Rajshahi,Naogaon,Niamatpur
+Rajshahi,Naogaon,Nitpur
+Rajshahi,Naogaon,Patnitala
+Rajshahi,Naogaon,Prasadpur
+Rajshahi,Naogaon,Raninagar
+Rajshahi,Naogaon,Sapahar
+Rajshahi,Natore,Gopalpur UPO
+Rajshahi,Natore,Harua
+Rajshahi,Natore,Hatgurudaspur
+Rajshahi,Natore,Laxman
+Rajshahi,Natore,Natore Sadar
+Rajshahi,Natore,Singra
+Rajshahi,Pabna,Banwarinagar
+Rajshahi,Pabna,Bera
+Rajshahi,Pabna,Bhangura
+Rajshahi,Pabna,Chatmohar
+Rajshahi,Pabna,Atghoria
+Rajshahi,Pabna,Ishwardi
+Rajshahi,Pabna,Pabna Sadar
+Rajshahi,Pabna,Sathia
+Rajshahi,Pabna,Sujanagar
+Rajshahi,Rajshahi,Bagha
+Rajshahi,Rajshahi,Bagmara
+Rajshahi,Rajshahi,Charghat
+Rajshahi,Rajshahi,Durgapur
+Rajshahi,Rajshahi,Godagari
+Rajshahi,Rajshahi,Gopalganj Sadar
+Rajshahi,Rajshahi,Lalitganj
+Rajshahi,Rajshahi,Putia
+Rajshahi,Rajshahi,Rajshahi Sadar
+Rajshahi,Rajshahi,Tanor
+Rajshahi,Sirajganj,Baiddya Jam Toil
+Rajshahi,Sirajganj,Belkuchi
+Rajshahi,Sirajganj,Dhangora
+Rajshahi,Sirajganj,Kazipur
+Rajshahi,Sirajganj,Shahjadpur
+Rajshahi,Sirajganj,Sirajganj Sadar
+Rajshahi,Sirajganj,Tarash
+Rajshahi,Sirajganj,Ullapara
+Barishal,Barguna,Amtali
+Barishal,Barguna,Bamna
+Barishal,Barguna,Barguna Sadar
+Barishal,Barguna,Betagi
+Barishal,Barguna,Patharghata
+Barishal,Barishal,Agailzhara
+Barishal,Barishal,Babuganj
+Barishal,Barishal,Barajalia
+Barishal,Barishal,Barishal Sadar
+Barishal,Barishal,Gouranadi
+Barishal,Barishal,Mahendiganj
+Barishal,Barishal,Muladi
+Barishal,Barishal,Bakerganj
+Barishal,Barishal,Uzirpur
+Barishal,Bhola,Bhola Sadar
+Barishal,Bhola,Borhanuddin UPO
+Barishal,Bhola,Charfashion
+Barishal,Bhola,Doulatkhan
+Barishal,Bhola,Hajirhat
+Barishal,Bhola,Hatshoshiganj
+Barishal,Bhola,Lalmohan UPO
+Barishal,Jhalokati,Jhalokati Sadar
+Barishal,Jhalokati,Kathalia
+Barishal,Jhalokati,Nalchhiti
+Barishal,Jhalokati,Rajapur
+Barishal,Patuakhali,Bauphal
+Barishal,Patuakhali,Dashmina
+Barishal,Patuakhali,Galachipa
+Barishal,Patuakhali,Khepupara
+Barishal,Patuakhali,Patuakhali Sadar
+Barishal,Patuakhali,Subidkhali
+Barishal,Pirojpur,Banaripara
+Barishal,Pirojpur,Bhandaria
+Barishal,Pirojpur,kaukhali
+Barishal,Pirojpur,Gopalganj Sadar
+Barishal,Pirojpur,Mathbaria
+Barishal,Pirojpur,Nazirpur
+Barishal,Pirojpur,Pirojpur Sadar
+Barishal,Pirojpur,Swarupkathi
+Khulna,Bagerhat,Bagerhat Sadar
+Khulna,Bagerhat,Chalna Ankorage
+Khulna,Bagerhat,Chitalmari
+Khulna,Bagerhat,Fakirhat
+Khulna,Bagerhat,Kachua UPO
+Khulna,Bagerhat,Mollahat
+Khulna,Bagerhat,Morelganj
+Khulna,Bagerhat,Rampal
+Khulna,Bagerhat,Rayenda
+Khulna,Chuadanga,Alamdanga
+Khulna,Chuadanga,Chuadanga Sadar
+Khulna,Chuadanga,Damurhuda
+Khulna,Chuadanga,Doulatganj
+Khulna,Jashore,Bagharpara
+Khulna,Jashore,Chaugachha
+Khulna,Jashore,Jashore Sadar
+Khulna,Jashore,Jhikargachha
+Khulna,Jashore,Keshabpur
+Khulna,Jashore,Monirampur
+Khulna,Jashore,Noapara
+Khulna,Jashore,Sarsa
+Khulna,Jhenaidah,Harinakundu
+Khulna,Jhenaidah,Jhenaidah Sadar
+Khulna,Jhenaidah,Kotchandpur
+Khulna,Jhenaidah,Maheshpur
+Khulna,Jhenaidah,Naldanga
+Khulna,Jhenaidah,Shailakupa
+Khulna,Khulna,Alaipur
+Khulna,Khulna,Batiaghat
+Khulna,Khulna,Chalna Bazar
+Khulna,Khulna,Digalia
+Khulna,Khulna,Khulna Sadar
+Khulna,Khulna,Koyra
+Khulna,Khulna,Paikgachha
+Khulna,Khulna,Phultala
+Khulna,Khulna,Gopalganj Sadar
+Khulna,Khulna,Sajiara
+Khulna,Khulna,Terakhada
+Khulna,Kushtia,Bheramara
+Khulna,Kushtia,Janipur
+Khulna,Kushtia,Kumarkhali
+Khulna,Kushtia,Kushtia Sadar
+Khulna,Kushtia,Mirpur
+Khulna,Kushtia,Rafayetpur
+Khulna,Magura,Arpara
+Khulna,Magura,Magura Sadar
+Khulna,Magura,Mohammadpur
+Khulna,Magura,Shripur
+Khulna,Meherpur,Gangni
+Khulna,Meherpur,Meherpur Sadar
+Khulna,Narail,Kalia
+Khulna,Narail,Laxmipasha
+Khulna,Narail,Mohajan
+Khulna,Narail,Narail Sadar
+Khulna,Satkhira,Ashashuni
+Khulna,Satkhira,Debbhata
+Khulna,Satkhira,kalaroa
+Khulna,Satkhira,Kaliganj UPO
+Khulna,Satkhira,Nakipur
+Khulna,Satkhira,Satkhira Sadar
+Khulna,Satkhira,Taala
