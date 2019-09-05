@@ -1,4 +1,5 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
+from odoo.exceptions import ValidationError
 
 
 class GBSFileImport(models.Model):
@@ -14,6 +15,10 @@ class GBSFileImport(models.Model):
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Cannot duplicate the name !')
     ]
+
+    def action_process(self):
+        raise ValidationError(_('Work on process.'))
+
 
 
 class GBSFileImportLine(models.Model):
