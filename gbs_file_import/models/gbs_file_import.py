@@ -1,22 +1,25 @@
-from datetime import date
 from odoo import api, models, fields
+
 
 class GBSFileImport(models.Model):
     _name = 'gbs.file.import'
+    _inherit = ['mail.thread']
     
-    name = fields.Char(string='Title', required=True)
-    import_creation_date_time = fields.Datetime(string='Date',default=fields.Datetime.now)
+    name = fields.Char(string='Title', required=True,track_visibility='onchange')
+    import_creation_date_time = fields.Datetime(string='Date',default=fields.Datetime.now,track_visibility='onchange')
 
     """ Relational fields"""
     import_lines = fields.One2many('gbs.file.import.line', 'import_id')
 
-
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', 'Cannot duplicate the name !')
+    ]
 
 
 class GBSFileImportLine(models.Model):
     _name = 'gbs.file.import.line'
 
-    name = fields.Char(string='Description')
+    name = fields.Char(string='Account Name')
     state = fields.Char(string='Status')
     type = fields.Char(string='Type')
 

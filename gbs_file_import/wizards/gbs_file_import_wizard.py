@@ -24,6 +24,7 @@ class GBSFileImportWizard(models.TransientModel):
         compute='_compute_dialect', string='Dialect')
     csv_separator = fields.Selection(
         [(',', ', (comma)'), (';', '; (semicolon)')],
+        default=',',
         string='CSV Separator', required=True)
     decimal_separator = fields.Selection(
         [('.', '. (dot)'), (',', ', (comma)')],

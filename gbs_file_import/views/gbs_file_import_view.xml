@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
-		<!-- Tree View -->
-		<record id="gbs_file_import_tree" model="ir.ui.view">
-			<field name="name">gbs.file.import.tree</field>
-			<field name="model">gbs.file.import</field>
-			<field name="arch" type="xml">
-				<tree string="Import Data">
-					<field name="name"/>
-					<field name="import_creation_date_time" />
-				</tree>
-			</field>
-		</record>
+    <data>
+        <!-- Tree View -->
+        <record id="gbs_file_import_tree" model="ir.ui.view">
+            <field name="name">gbs.file.import.tree</field>
+            <field name="model">gbs.file.import</field>
+            <field name="arch" type="xml">
+                <tree string="Import Data">
+                    <field name="name"/>
+                    <field name="import_creation_date_time" />
+                </tree>
+            </field>
+        </record>
 
-		<!-- Form View -->
-		<record id="gbs_file_import_form" model="ir.ui.view">
-			<field name="name">gbs.file.import.form</field>
-			<field name="model">gbs.file.import</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Import Data">
-					<header>
-						<button name="gbs_file_import.action_gbs_file_import_wizard"
-								groups="mtbl_access.group_mtbl_sys_admin"
-								type="action" string="Browse" class="oe_highlight"/>
-					</header>
-					<sheet>
-						<group>
-							<group>
-								<field name="name" />
-								<field name="import_creation_date_time" readonly="1"/>
-							</group>
-						</group>
-						<notebook>
-							<page string="Imported Data">
-								<field name="import_lines">
-									<tree string="List" editable="bottom">
-										<field name="name"/>
-										<field name="type"/>
-										<field name="state"/>
-									</tree>
-								</field>
-							</page>
-						</notebook>
-					</sheet>
-				</form>
-			</field>
-		</record>
+        <!-- Form View -->
+        <record id="gbs_file_import_form" model="ir.ui.view">
+            <field name="name">gbs.file.import.form</field>
+            <field name="model">gbs.file.import</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import Data">
+                    <header>
+                        <button name="gbs_file_import.action_gbs_file_import_wizard"
+                                groups="mtbl_access.group_mtbl_sys_admin"
+                                type="action" string="Browse" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="import_creation_date_time" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Imported Data">
+                                <field name="import_lines">
+                                    <tree string="List" editable="bottom">
+                                        <field name="type"/>
+                                        <field name="name"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
-		<record id="action_gbs_file_import" model="ir.actions.act_window">
-			<field name="name">Import Data</field>
-			<field name="res_model">gbs.file.import</field>
-			<field name="view_mode">tree,form</field>
-		</record>
+        <record id="action_gbs_file_import" model="ir.actions.act_window">
+            <field name="name">Import Data</field>
+            <field name="res_model">gbs.file.import</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-		<menuitem id="menu_gbs_file_import" name="Import Data"
-				  parent="account.menu_finance_configuration" sequence="88"
-				  action="action_gbs_file_import"
-				  groups="mtbl_access.group_mtbl_sys_admin"
-		/>
+        <menuitem id="menu_gbs_file_import" name="Import Data"
+                  parent="account.menu_finance_configuration" sequence="88"
+                  action="action_gbs_file_import"
+                  groups="mtbl_access.group_mtbl_sys_admin"
+        />
 
-	</data>
+    </data>
 </odoo>
