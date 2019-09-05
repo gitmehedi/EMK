@@ -40,7 +40,13 @@
                                 <field name="import_lines">
                                     <tree string="List" editable="bottom">
                                         <field name="type"/>
-                                        <field name="name"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="account_no"/>
+                                        <field name="amount"/>
+                                        <field name="narration"/>
+                                        <field name="reference_no"/>
+                                        <field name="value"/>
+                                        <field name="date"/>
                                         <field name="state"/>
                                     </tree>
                                 </field>

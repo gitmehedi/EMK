@@ -141,7 +141,12 @@ class GBSFileImportWizard(models.TransientModel):
 
         for line in reader:
             temp_vals = {}
-            temp_vals['name'] = line['name']
+            temp_vals['account_no'] = line['account no']
+            temp_vals['amount'] = line['amount']
+            temp_vals['narration'] = line['narration']
+            temp_vals['reference_no'] = line['reference no']
+            temp_vals['value'] = line['value']
+            temp_vals['date'] = line['date']
             temp_vals['type'] = line['type']
             temp_vals['state'] = 'imported'
             temp_vals['import_id'] = move.id
