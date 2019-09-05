@@ -96,6 +96,24 @@ Code,Name,Location of Branch,Active,Pending,Status
 096,Ulipur Branch,Rural,True,False,approve
 097,Hemayetpur Branch,Rural,True,False,approve
 098,Sarkerhat Branch,Rural,True,False,approve
+099,099,Rural,True,False,approve
+100,100,Rural,True,False,approve
+101,101,Rural,True,False,approve
+102,102,Rural,True,False,approve
+103,103,Rural,True,False,approve
+104,104,Rural,True,False,approve
+105,105,Rural,True,False,approve
+106,106,Rural,True,False,approve
+107,107,Rural,True,False,approve
+108,108,Rural,True,False,approve
+109,109,Rural,True,False,approve
+110,110,Rural,True,False,approve
+111,111,Rural,True,False,approve
+112,112,Rural,True,False,approve
+113,113,Rural,True,False,approve
+114,114,Rural,True,False,approve
+115,115,Rural,True,False,approve
+116,116,Rural,True,False,approve
 501,Haidergonj SME/ Agri Branch,Rural,True,False,approve
 502,Dagon Bhuiyan SME/ Agri Branch,Urban,True,False,approve
 503,Laksam SME/ Agri Branch,Urban,True,False,approve
@@ -113,5 +131,6 @@ Code,Name,Location of Branch,Active,Pending,Status
 515,Mawna Branch,Rural,True,False,approve
 516,Mirpur-2 Branch,Urban,True,False,approve
 517,Rahattarpool Branch,Urban,True,False,approve
-113,Unknown Branch,Urban,True,False,approve
-000,Empty Branch,Urban,True,False,approve
+601,601,Urban,True,False,approve
+701,701,Urban,True,False,approve
+901,901,Urban,True,False,approve
