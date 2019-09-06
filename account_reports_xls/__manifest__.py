@@ -13,8 +13,8 @@
         'report',
     ],
     'data': [
-        'wizard/trial_balance_wizard_view.xml',
         'view/reports.xml',
+        'wizard/trial_balance_wizard_view.xml',
     ],
     'installable': True,
     'application': False,
