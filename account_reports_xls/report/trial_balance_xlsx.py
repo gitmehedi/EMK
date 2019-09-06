@@ -11,7 +11,16 @@ class TrialBalanceXLSX(ReportXlsx):
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = docs['display_account']
         accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
-        account_res = self.env['report.account.report_trialbalance'].with_context(self.env.context)._get_accounts(
+        used_context = {
+            'lang': self.env.context['lang'],
+            'operating_unit_ids': docs['operating_unit_ids'].ids,
+            'date_from': docs['date_from'],
+            'date_to': docs['date_to'],
+            'journal_ids': docs['journal_ids'].ids,
+            'state': 'all',
+            'strict_range': True,
+        }
+        account_res = self.env['report.account.report_trialbalance'].with_context(used_context)._get_accounts(
             accounts, display_account)
 
         header_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
