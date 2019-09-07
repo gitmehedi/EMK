@@ -1,4 +1,5 @@
 Code,Name,Location of Branch,Active,Pending,Status
+001,Main Branch,True,False,approve
 002,Principal Branch,Urban,True,False,approve
 003,Panthapath Branch,Urban,True,False,approve
 004,Babu Bazar Branch,Urban,True,False,approve
