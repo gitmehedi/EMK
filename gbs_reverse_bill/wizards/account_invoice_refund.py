@@ -99,6 +99,7 @@ class AccountInvoiceReverse(models.TransientModel):
                     'amount': payment_line_id.amount,
                     'operating_unit_id': payment_line_id.operating_unit_id.id or None,
                     'sub_operating_unit_id': payment_line_id.sub_operating_unit_id.id if payment_line_id.sub_operating_unit_id else None,
+                    'origin':payment_line_id.id or False,
                 })
                 new_payment_instruction_obj.action_invoice_reverse()
         return True
