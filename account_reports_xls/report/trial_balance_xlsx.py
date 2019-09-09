@@ -26,7 +26,7 @@ class TrialBalanceXLSX(ReportXlsx):
         header_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         format = workbook.add_format({'align': 'left', 'valign': 'top'})
         bold = workbook.add_format({'align': 'left', 'bold': True})
-        no_format = workbook.add_format({'num_format': '#,###0.000'})
+        no_format = workbook.add_format({'num_format': '#,###0.00'})
 
         worksheet = workbook.add_worksheet('Trial Balance')
         worksheet.set_column('A:A', 10)
@@ -68,17 +68,19 @@ class TrialBalanceXLSX(ReportXlsx):
 
         worksheet.write(row, col, 'Code', header_format)
         worksheet.write(row, col + 1, 'Account', header_format)
-        worksheet.write(row, col + 2, 'Debit', header_format)
-        worksheet.write(row, col + 3, 'Credit', header_format)
-        worksheet.write(row, col + 4, 'Balance', header_format)
+        worksheet.write(row, col + 2, 'Initial Balance', header_format)
+        worksheet.write(row, col + 3, 'Debit', header_format)
+        worksheet.write(row, col + 4, 'Credit', header_format)
+        worksheet.write(row, col + 5, 'Balance', header_format)
 
         row += 1
         for rec in account_res:
             worksheet.write(row, col, rec['code'])
             worksheet.write(row, col + 1, rec['name'])
-            worksheet.write(row, col + 2, rec['debit'], no_format)
-            worksheet.write(row, col + 3, rec['credit'], no_format)
-            worksheet.write(row, col + 4, (rec['debit'] - rec['credit']), no_format)
+            worksheet.write(row, col + 2, rec['init_bal'], no_format)
+            worksheet.write(row, col + 3, rec['debit'], no_format)
+            worksheet.write(row, col + 4, rec['credit'], no_format)
+            worksheet.write(row, col + 5, (rec['debit'] - rec['credit']), no_format)
             row += 1
 
 
