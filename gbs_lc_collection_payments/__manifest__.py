@@ -9,6 +9,7 @@
     "depends": ["account","com_shipment","lc_sales_product"],
     'data': [
         "security/ir.model.access.csv",
+        "data/data.xml",
         "views/lc_receivable_payments_view.xml",
     ],
     'installable': True,
