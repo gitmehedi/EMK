@@ -326,12 +326,6 @@
                                attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
-                    <xpath expr="//field[@name='payment_term_id']" position="replace">
-                        <field name="payment_term_id"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"
-                               options="{'no_create': True}"/>
-                    </xpath>
-
                     <xpath expr="//field[@name='partner_id']" position="replace">
                         <field name="partner_id"
                                attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale')),('fields_readonly','=', True)]}"
@@ -388,11 +382,6 @@
                         <field name="state" widget="statusbar" statusbar_visible="to_submit,draft,sent,done"/>
                     </xpath>
 
-                    <xpath expr="//field[@name='payment_term_id']" position="replace">
-                        <field name="payment_term_id"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"
-                               options="{'no_open': True, 'no_create': True}"/>
-                    </xpath>
 
                     <xpath expr="//field[@name='confirmation_date']" position="replace">
                         <field name="confirmation_date" invisible="1"/>
@@ -441,7 +430,12 @@
                     <!--</xpath>-->
 
                     <xpath expr="//field[@name='payment_term_id']" position="replace">
-                        <field name="payment_term_id" invisible="0"/>
+
+                        <field name="payment_term_id"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))],
+                               'required':[('credit_sales_or_lc', 'in', ['lc_sales','credit_sales','contract_sales'])]}"
+                               options="{'no_open': True, 'no_create': True}"/>
+
                         <field name="region_type" widget="radio" options="{'horizontal': true}" required="1"/>
                     </xpath>
 

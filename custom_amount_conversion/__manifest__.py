@@ -5,7 +5,7 @@
     'category': 'account',
     'version':'10.1.1.1',
     'depends': [
-        'account',
+        'account','purchase',
     ],
 
     'data': [

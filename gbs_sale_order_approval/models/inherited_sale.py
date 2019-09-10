@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
 
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms')
 
     # inherited fields from sale
     partner_id = fields.Many2one('res.partner', string='Customer', required=True,
@@ -247,24 +247,26 @@ class SaleOrder(models.Model):
             orders.state = 'draft'
 
     @api.onchange('type_id')
-    def onchange_type(self):
+    def _onchange_type_id(self):
         if self.type_id:
             sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
 
-            if self.type_id.sale_order_type != 'lc_sales' and \
-                            self.type_id.sale_order_type != 'tt_sales' and \
-                            self.type_id.sale_order_type != 'contract_sales':
-                self.pi_id = None
+            # if self.type_id.sale_order_type != 'lc_sales' and \
+            #                 self.type_id.sale_order_type != 'tt_sales' and \
+            #                 self.type_id.sale_order_type != 'contract_sales':
+            #     self.pi_id = None
+
+            self.pi_id = None
+            self.payment_term_id = None
 
             if self.type_id.sale_order_type == 'lc_sales' or \
-                            self.type_id.sale_order_type == 'tt_sales' or \
-                            self.type_id.sale_order_type == 'contract_sales':
+                    self.type_id.sale_order_type == 'tt_sales' or \
+                    self.type_id.sale_order_type == 'contract_sales':
                 existing_lc = self.search([('type_id', '=', self.type_id.id)])
                 return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
-                                             ('credit_sales_or_lc', '=', self.type_id.sale_order_type),
-                                             ('state', '=', 'confirm')]}}
+                                             ('type_id', '=', self.type_id.id), ('state', '=', 'confirm')]}}
             else:
                 self.fields_readonly = False
 
@@ -577,14 +579,13 @@ class SaleOrder(models.Model):
                     line.update(vals)
 
     @api.onchange('pi_id')
-    def onchange_pi_id(self):
-
-        pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
-
-        if pi_pool:
+    def _onchange_pi_id(self):
+        if self.pi_id:
             val = []
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
             self.partner_id = pi_pool.partner_id
             self.pack_type = pi_pool.pack_type
+            self.payment_term_id = pi_pool.account_payment_term_id
 
             for record in pi_pool.line_ids:
                 commission = self.env['customer.commission'].search(
@@ -612,6 +613,13 @@ class SaleOrder(models.Model):
             self.order_line = val
             self.fields_readonly = True
 
+    @api.multi
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        super(SaleOrder, self).onchange_partner_id()
+        if self.pi_id:
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
+            self.payment_term_id = pi_pool.account_payment_term_id
 
     @api.model
     def _default_operating_unit(self):
