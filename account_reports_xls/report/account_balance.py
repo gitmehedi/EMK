@@ -19,20 +19,47 @@ class ReportTrialBalance(models.AbstractModel):
         if where_clause.strip():
             wheres.append(where_clause.strip())
         filters = " AND ".join(wheres)
-        filters_init = filters
-        where_params_init = where_params
+        filters_init = filters[:]
+        where_params_init = where_params[:]
         context = self.env.context
         if context['date_to']:
-            filters_init = filters_init.replace('("account_move_line"."date" <= %s)  AND  ', '')
-            del where_params_init[0]
+            if context['operating_unit_ids']:
+                filters_init = filters_init.replace('AND  ("account_move_line"."date" <= %s)', '')
+            else:
+                filters_init = filters_init.replace('("account_move_line"."date" <= %s)  AND  ', '')
+
+            index = where_params_init.index(context['date_to'])
+            del where_params_init[index]
+        if context['date_from']:
+            filters_init = filters_init.replace('>', '<')
 
         # compute the balance, debit and credit for the provided accounts
         if context['date_from']:
-            request = "SELECT account_move_line.account_id AS id, SUM(account_move_line.debit) AS debit, SUM(account_move_line.credit) AS credit, (SUM(account_move_line.debit) - SUM(account_move_line.credit) + init.balance) AS balance," + \
-                      "COALESCE(init.balance , 0) AS init_bal FROM " + tables + " account_move_line " + \
-                      "JOIN ( SELECT account_id AS id,(SUM(debit) - SUM(credit)) AS balance FROM " + \
-                      tables + " WHERE account_id IN %s " + filters_init + " GROUP BY account_id) init ON init.id= account_move_line.id " + \
-                      "WHERE account_id IN %s " + filters + " GROUP BY account_id, init.balance"
+            request = "SELECT aa.id," + \
+                      "COALESCE(trial.credit,0) AS credit," + \
+                      "COALESCE(trial.debit,0) AS debit," + \
+                      "COALESCE((trial.credit - trial.debit + init.balance),0) AS balance," + \
+                      "COALESCE(init.balance,0) AS init_bal " + \
+                      "FROM account_account aa " + \
+                      "LEFT JOIN (SELECT account_id AS id," + \
+                      "COALESCE(SUM(debit),0) AS debit," + \
+                      "COALESCE(SUM(credit),0) AS credit," + \
+                      "COALESCE((SUM(credit)-SUM(debit)),0) AS balance " + \
+                      "FROM " + tables + " " + \
+                      "WHERE account_id IN %s " + filters + " " + \
+                      "GROUP BY account_id) trial " + \
+                      "ON (trial.id = aa.id) " + \
+                      "LEFT JOIN (SELECT account_id AS id," + \
+                      "COALESCE(SUM(debit),0) AS debit," + \
+                      "COALESCE(SUM(credit),0) AS credit," + \
+                      "COALESCE((SUM(credit)-SUM(debit)),0) AS balance " + \
+                      "FROM " + tables + " " + \
+                      "WHERE account_id IN %s " + filters_init + " " + \
+                      "GROUP BY account_id) init " + \
+                      "ON (init.id = aa.id) " + \
+                      "LEFT JOIN account_account_level aal " + \
+                      "ON (aal.id = aa.level_id) " + \
+                      "WHERE aal.name='Layer 5'"
             params = (tuple(accounts.ids),) + tuple(where_params) + (tuple(accounts.ids),) + tuple(where_params_init)
         else:
             request = (
@@ -60,7 +87,8 @@ class ReportTrialBalance(models.AbstractModel):
             if display_account == 'not_zero' and not currency.is_zero(res['balance']):
                 account_res.append(res)
             if display_account == 'movement' and (
-                    not currency.is_zero(res['debit']) or not currency.is_zero(res['credit'])):
+                    not currency.is_zero(res['debit']) or not currency.is_zero(res['credit']) or not currency.is_zero(
+                res['init_bal'])):
                 account_res.append(res)
         return account_res
 

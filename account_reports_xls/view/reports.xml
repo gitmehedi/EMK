@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="inherit_report_trialbalance" inherit_id="account.report_trialbalance">
+        <xpath expr="//table/thead/tr/th[2]" position="after">
+            <th class="text-right">Initial Balance</th>
+        </xpath>
+        <xpath expr="//table/tbody/tr/td[2]" position="after">
+            <td class="text-right">
+                <span t-att-style="style" t-esc="account['init_bal']"
+                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+            </td>
+        </xpath>
+    </template>
+
     <record id="action_report_trial_balance_xlsx" model="ir.actions.report.xml">
         <field name="name">Trial Balance</field>
         <field name="model">account.balance.report</field>
