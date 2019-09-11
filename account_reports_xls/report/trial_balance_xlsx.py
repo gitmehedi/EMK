@@ -34,8 +34,8 @@ class TrialBalanceXLSX(ReportXlsx):
         worksheet.set_column('C:C', 20)
         worksheet.set_column('D:D', 20)
         worksheet.set_column('E:E', 20)
-        worksheet.set_column('F:F', 15)
-        worksheet.merge_range('A1:E2', self.env.user.company_id.name + ': ' + self.title, header_format)
+        worksheet.set_column('F:F', 20)
+        worksheet.merge_range('A1:F2', self.env.user.company_id.name + ': ' + self.title, header_format)
 
         if docs['display_account']:
             worksheet.write('B5', 'Display Accounts:', bold)
