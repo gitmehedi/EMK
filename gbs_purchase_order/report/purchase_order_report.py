@@ -50,7 +50,16 @@ class GbsPurchaseOrder(models.AbstractModel):
 
         if docs.partner_id.child_ids:
             for con in docs.partner_id.child_ids[0]:
-                data['sup_con'] = con.name
+                if con.name and con.email and con.phone:
+                    data['sup_con'] = con.name + ', ' + con.email + ', ' + con.phone
+                elif con.name and con.email:
+                    data['sup_con'] = con.name + ', ' + con.email
+                elif con.name and con.phone:
+                    data['sup_con'] = con.name + ', ' + con.phone
+                elif con.email and con.phone:
+                    data['sup_con'] = con.email + ', ' + con.phone
+                else:
+                    data['sup_con'] = con.name or con.email or con.phone
         else:
             data['sup_con']= ''
 

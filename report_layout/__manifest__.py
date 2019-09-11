@@ -14,6 +14,7 @@
         'views/external_layout_address.xml',
         'views/gbs_custom_pad_report_template.xml',
         'views/gbs_custom_pad_report_with_system_sig_template.xml',
+        'views/gbs_po_layout.xml',
     ],
     'installable': True,
     'auto_install': True,
