@@ -1,9 +1,9 @@
 {
     'name': 'GBS Collection Batch',
+    'version': '10.0.1.0.0',
     'author': 'Genweb2 Limited',
-    'website': 'www.genweb2.com',
-    'category': '',
-    'version':'1.0.0',
+    'website': 'http://www.genweb2.com',
+    'category': 'sales',
     'depends': [
         'account',
         'delivery_order',
