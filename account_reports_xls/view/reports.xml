@@ -4,11 +4,24 @@
         <xpath expr="//table/thead/tr/th[2]" position="after">
             <th class="text-right">Initial Balance</th>
         </xpath>
+        <xpath expr="//table/thead/tr/th[6]" position="replace">
+            <th class="text-right">Closing Balance</th>
+        </xpath>
         <xpath expr="//table/tbody/tr/td[2]" position="after">
             <td class="text-right">
                 <span t-att-style="style" t-esc="account['init_bal']"
                       t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
             </td>
+        </xpath>
+    </template>
+
+    <template inherit_id="account_operating_unit.report_trialbalance_operating_units"
+              id="account_operating_unit_report_trialbalance_">
+        <xpath expr="//div[@class='row mt32']/div[4]" position="replace">
+            <div class="col-xs-4" t-if="data['operating_units']">
+                <strong>Branch:</strong>
+                <p t-esc="data['operating_units']"/>
+            </div>
         </xpath>
     </template>
 

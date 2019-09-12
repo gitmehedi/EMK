@@ -11,6 +11,7 @@
         'account',
         'report_xlsx',
         'report',
+        'account_operating_unit',
     ],
     'data': [
         'view/reports.xml',

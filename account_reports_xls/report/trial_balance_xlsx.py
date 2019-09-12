@@ -61,7 +61,7 @@ class TrialBalanceXLSX(ReportXlsx):
             worksheet.write('E6', target)
 
         if docs['operating_unit_ids']:
-            worksheet.write('E8', 'Operating Units:', bold)
+            worksheet.write('E8', 'Branch:', bold)
             worksheet.merge_range('E9:E10', ', '.join([val.name for val in docs['operating_unit_ids']]), format)
 
         row, col = 11, 0
@@ -71,7 +71,7 @@ class TrialBalanceXLSX(ReportXlsx):
         worksheet.write(row, col + 2, 'Initial Balance', header_format)
         worksheet.write(row, col + 3, 'Debit', header_format)
         worksheet.write(row, col + 4, 'Credit', header_format)
-        worksheet.write(row, col + 5, 'Balance', header_format)
+        worksheet.write(row, col + 5, 'Closing Balance', header_format)
 
         row += 1
         for rec in account_res:
