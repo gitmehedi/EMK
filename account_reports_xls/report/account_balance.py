@@ -38,21 +38,18 @@ class ReportTrialBalance(models.AbstractModel):
             request = "SELECT aa.id," + \
                       "COALESCE(trial.credit,0) AS credit," + \
                       "COALESCE(trial.debit,0) AS debit," + \
-                      "COALESCE((trial.credit - trial.debit + init.balance),0) AS balance," + \
+                      "COALESCE((trial.debit - trial.credit + init.balance),0) AS balance," + \
                       "COALESCE(init.balance,0) AS init_bal " + \
                       "FROM account_account aa " + \
                       "LEFT JOIN (SELECT account_id AS id," + \
                       "COALESCE(SUM(debit),0) AS debit," + \
-                      "COALESCE(SUM(credit),0) AS credit," + \
-                      "COALESCE((SUM(credit)-SUM(debit)),0) AS balance " + \
+                      "COALESCE(SUM(credit),0) AS credit " + \
                       "FROM " + tables + " " + \
                       "WHERE account_id IN %s " + filters + " " + \
                       "GROUP BY account_id) trial " + \
                       "ON (trial.id = aa.id) " + \
                       "LEFT JOIN (SELECT account_id AS id," + \
-                      "COALESCE(SUM(debit),0) AS debit," + \
-                      "COALESCE(SUM(credit),0) AS credit," + \
-                      "COALESCE((SUM(credit)-SUM(debit)),0) AS balance " + \
+                      "COALESCE((SUM(debit)-SUM(credit)),0) AS balance " + \
                       "FROM " + tables + " " + \
                       "WHERE account_id IN %s " + filters_init + " " + \
                       "GROUP BY account_id) init " + \
