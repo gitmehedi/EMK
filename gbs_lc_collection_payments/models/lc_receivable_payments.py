@@ -37,7 +37,7 @@ class LCReceivablePayment(models.Model):
                            track_visibility = 'onchange')
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirmed'),
-                              ('approve', 'Approved'),
+                              ('approve', 'Posted'),
                               ('cancel', 'Cancelled')], string='Status', default='draft',
                              track_visibility='onchange')
     invoice_ids = fields.Many2many('account.invoice',
@@ -59,6 +59,8 @@ class LCReceivablePayment(models.Model):
     journal_id = fields.Many2one('account.journal', string='Account Journal', ondelete="cascade",
                                  required=True,readonly=True,states={'draft': [('readonly', False)]},
                                  track_visibility='onchange')
+    reference = fields.Text(string='Reference', compute='_compute_reference', readonly=True, store=False)
+
     """ Relational Fields """
     lc_receivable_collection_ids = fields.One2many('lc.receivable.collection', 'collection_parent_id',
                                                    string="Collections",readonly=True,
@@ -114,7 +116,6 @@ class LCReceivablePayment(models.Model):
                 record.currency_id = record.lc_id.currency_id.id
                 record.invoice_amount = sum(rec.residual for rec in record.invoice_ids)
                 record.currency_rate = record.invoice_ids[0].conversion_rate
-                # [(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
                 record.amount_in_company_currency = sum(line.amount_residual for rec in record.invoice_ids for line in rec.move_id.line_ids)
 
     @api.multi
@@ -139,6 +140,12 @@ class LCReceivablePayment(models.Model):
             else:
                 rec.currency_loss_gain_type = 'margin'
 
+    @api.depends('shipment_id')
+    def _compute_reference(self):
+        for res in self:
+            if res.shipment_id:
+                res.reference = res.shipment_id.comment
+
     @api.multi
     def action_confirm(self):
         if not self.analytic_account_id:
@@ -161,8 +168,9 @@ class LCReceivablePayment(models.Model):
             move_obj = self._generate_move(account_move_obj)
             account_move_id = move_obj.id
             credit_amount = sum(i.amount_in_company_currency for i in acc_move_line_list)
+            amount_currency = sum(i.amount_in_currency for i in acc_move_line_list)
             move_line_vals = []
-            credit_move_obj = self._generate_credit_move_line(account_move_id,credit_amount)
+            credit_move_obj = self._generate_credit_move_line(account_move_id,credit_amount,amount_currency)
             move_line_vals.append(credit_move_obj)
             for line in acc_move_line_list:
                 debit_move_obj = self._generate_debit_move_line(account_move_id,line)
@@ -170,19 +178,16 @@ class LCReceivablePayment(models.Model):
 
             move_obj.line_ids = move_line_vals
             move_obj.post()
-            self.lc_pay_and_reconcile(self.journal_id,credit_amount)
+            self.lc_pay_and_reconcile(self.journal_id,move_obj,credit_amount)
         # if self.currency_loss_gain_type != 'margin':
             # todo currency difference loss gain journal
             # return
 
-        for invoice_id in self.invoice_ids:
-            for line in invoice_id.move_id.line_ids:
-                if line.account_id.internal_type in ('receivable', 'payable'):
-                    if line.amount_residual < 0:
-                        val = -1
-                    else:
-                        val = 1
-                    line.write({'amount_residual': ((line.amount_residual) * val) - credit_amount})
+        # for invoice_id in self.invoice_ids:
+        #     for line in invoice_id.move_id.line_ids:
+        #         if line.account_id.internal_type in ('receivable', 'payable'):
+        #             line.write({'amount_residual': 0.0})
+        #     invoice_id.action_invoice_paid()
         self.write({'state': 'approve'})
 
     @api.multi
@@ -223,12 +228,13 @@ class LCReceivablePayment(models.Model):
             account_move = account_move_obj.create(account_move_dict)
         return account_move
 
-    def _generate_credit_move_line(self,account_move_id,credit_amount):
+    def _generate_credit_move_line(self,account_move_id,credit_amount,amount_currency):
         date = self.date
         account_move_line_credit = 0, 0, {
             'account_id': self.invoice_ids[0].account_id.id,
             'analytic_account_id': self.analytic_account_id.id,
             'credit': credit_amount,
+            'amount_currency': -amount_currency,
             'date_maturity': date,
             'debit':  False,
             'name': 'Customer Payment',
@@ -236,6 +242,7 @@ class LCReceivablePayment(models.Model):
             'partner_id': self.invoice_ids[0].partner_id.id,
             'move_id': account_move_id,
             'company_id': self.company_id.id,
+            'currency_id': self.currency_id.id,
         }
         # account_move_line_obj.create(account_move_line_credit)
         return account_move_line_credit
@@ -264,7 +271,7 @@ class LCReceivablePayment(models.Model):
         return account_move_line_debit
 
     @api.multi
-    def lc_pay_and_reconcile(self, pay_journal, pay_amount=None):
+    def lc_pay_and_reconcile(self, pay_journal,move_obj, pay_amount=None):
         payment_type = self.invoice_ids[0].type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
         if payment_type == 'inbound':
             payment_method = self.env.ref('account.account_payment_method_manual_in')
@@ -274,10 +281,6 @@ class LCReceivablePayment(models.Model):
             journal_payment_methods = pay_journal.outbound_payment_method_ids
         if payment_method not in journal_payment_methods:
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
-
-        # communication = self.invoice_ids[0].type in ('in_invoice', 'in_refund') and self.reference or self.number
-        # if self.origin:
-        #     communication = '%s (%s)' % (communication, self.invoice_ids[0].origin)
 
         communication = ','.join([i.number for i in self.invoice_ids])
 
@@ -298,9 +301,9 @@ class LCReceivablePayment(models.Model):
         #     payment_vals['currency_id'] = self.env.context.get('tx_currency_id')
 
         payment = self.env['account.payment'].create(payment_vals)
-        payment.write({'state': 'posted', 'move_name': pay_journal.name})
+        payment.write({'state': 'posted', 'move_name': move_obj.name})
 
-        return True
+        return payment
 
 
     @api.multi
@@ -339,12 +342,17 @@ class LCReceivableCollection(models.Model):
             }
             return {'warning': warning}
 
-        self.currency_id = self.collection_parent_id.currency_id
-        self.currency_rate = self.collection_parent_id.currency_rate
-        self.amount_in_currency = self.collection_parent_id.invoice_amount
+        if self.account_journal_id:
+            self.currency_id = self.account_journal_id.currency_id
 
-        domain['currency_id'] = [('id', '=', self.collection_parent_id.currency_id.id)]
+        domain['currency_id'] = [('id', 'in', (self.collection_parent_id.currency_id.id,
+                                               self.collection_parent_id.company_id.currency_id.id))]
         return {'domain': domain}
+
+    # @api.onchange('currency_id')
+    # def _onchange_currency_id(self):
+    #     if self.currency_id:
+    #         self.currency_rate = self.collection_parent_id.company_id.currency_id.rate / self.currency_id.with_context(fields.Date.context_today(self)).rate
 
     @api.one
     @api.depends('currency_rate','amount_in_currency')
@@ -388,7 +396,6 @@ class LCReceivableCharges(models.Model):
 
         self.currency_id = self.charges_parent_id.currency_id
         self.currency_rate = self.charges_parent_id.currency_rate
-        self.amount_in_currency = self.charges_parent_id.invoice_amount
 
         domain['currency_id'] = [('id', '=', self.charges_parent_id.currency_id.id)]
         return {'domain': domain}
