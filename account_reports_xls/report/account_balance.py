@@ -38,7 +38,7 @@ class ReportTrialBalance(models.AbstractModel):
             request = "SELECT aa.id," + \
                       "COALESCE(trial.credit,0) AS credit," + \
                       "COALESCE(trial.debit,0) AS debit," + \
-                      "COALESCE((trial.debit - trial.credit + init.balance),0) AS balance," + \
+                      "(COALESCE(trial.debit,0) - COALESCE(trial.credit,0) + COALESCE(init.balance,0)) AS balance," + \
                       "COALESCE(init.balance,0) AS init_bal " + \
                       "FROM account_account aa " + \
                       "LEFT JOIN (SELECT account_id AS id," + \
