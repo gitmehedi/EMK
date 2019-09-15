@@ -25,7 +25,7 @@
 
         <template id="report_purchase_order">
             <t t-call="report.html_container">
-                <t t-call="report_layout.gbs_internal_layout">
+                <t t-call="report_layout.gbs_po_layout">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
@@ -58,13 +58,13 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <t t-if="data['region_type'] == 'foreign'">
-                                        <p><b>Suplier : </b><span t-esc="data['partner_id']"/></p>
+                                        <p><b>Supplier : </b><span t-esc="data['partner_id']"/></p>
                                     </t>
                                     <t t-elif="data['region_type'] == 'local'">
                                         <p><b>Order To : </b><span t-esc="data['partner_id']"/></p>
                                     </t>
                                     <t t-elif="data['region_type'] != 'local' or data['region_type'] == 'foreign'">
-                                        <p><b>Suplier / Order To : </b><span t-esc="data['partner_id']"/></p>
+                                        <p><b>Supplier / Order To : </b><span t-esc="data['partner_id']"/></p>
                                     </t>
                                     <p>
                                         <b>Address: </b>
@@ -79,11 +79,10 @@
                                         </t>
                                     </p>
                                     <p><b>TIN : </b><span t-esc="data['partner_tin_no']"/></p>
-                                    <p><b>Contract Parson : </b>
+                                    <p><b>Contact Person : </b>
                                         <span t-esc="data['sup_con']"/></p>
-                                    <p><b>Ref No : </b><span t-esc="data['partner_ref']"/></p><br/>
-<!--                                    <p><b>Order Ref No : </b><span t-esc="data['partner_ref']"/></p><br/>-->
-<!--                                    <p><b>Date : </b><span t-esc="data['requisition_date']"></span></p>-->
+                                    <p><b>Ref No : </b><span t-esc="data['partner_ref']"/></p>
+                                    <p><b>Date : </b><span t-esc="data['requisition_date']"></span></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <t t-if="data['region_type'] == 'foreign'">
@@ -109,7 +108,7 @@
                                     </p>
                                     <p><b>TIN : </b><span t-esc="data['company_tin_no']"/></p>
                                     <p>
-                                        <b>Contract Parson : </b>
+                                        <b>Contact Person : </b>
                                         <span t-esc="data['contact_person']"/>
                                     </p>
                                 </div>
@@ -144,7 +143,7 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="3" rowspan="5"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
+                                        <td colspan="3" rowspan="5"><strong>Amount in words : </strong><span t-esc="amt_to_word"/> Only</td>
                                         <td><strong>Sub Total</strong></td><td class="text-right"><span t-esc="total_amount" /></td>
                                     </tr>
                                     <t t-if="data['amount_discount']">
@@ -163,7 +162,7 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td><strong>Grand Total</strong></td><td class="text-right"><span t-esc="data['amount_total']" /></td>
+                                        <td><strong>Grand Total</strong></td><td class="text-right"><strong t-esc="data['amount_total']" /></td>
                                     </tr>
                                 </tbody>
                             </table>
