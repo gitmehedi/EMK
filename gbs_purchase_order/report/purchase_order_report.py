@@ -76,7 +76,7 @@ class GbsPurchaseOrder(models.AbstractModel):
                 order_list.append(list_obj)
 
         total = sum(total_amount)
-        amt_to_word = self.env['res.currency'].amount_to_word(float(total))
+        amt_to_word = self.env['res.currency'].amount_to_word(float(total), True, docs.currency_id.name)
 
         docargs = {
             'lists': order_list,
