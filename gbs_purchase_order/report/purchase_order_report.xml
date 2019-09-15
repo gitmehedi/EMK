@@ -81,7 +81,7 @@
                                     <p><b>TIN : </b><span t-esc="data['partner_tin_no']"/></p>
                                     <p><b>Contact Person : </b>
                                         <span t-esc="data['sup_con']"/></p>
-                                    <p><b>Ref No : </b><span t-esc="data['partner_ref']"/></p><br/>
+                                    <p><b>Ref No : </b><span t-esc="data['partner_ref']"/></p>
                                     <p><b>Date : </b><span t-esc="data['requisition_date']"></span></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
