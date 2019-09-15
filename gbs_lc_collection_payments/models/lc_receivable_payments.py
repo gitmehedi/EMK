@@ -23,7 +23,7 @@ class LCReceivablePayment(models.Model):
                                   track_visibility='onchange',compute='_compute_rate_amounts')
     currency_rate = fields.Float(string='Currency Rate',readonly=True,store=True,
                                  track_visibility='onchange',compute='_compute_rate_amounts')
-    amount_in_company_currency = fields.Float(string='Amount',readonly=True,store=True,
+    amount_in_company_currency = fields.Float(string='Base Amount',readonly=True,store=True,
                                               track_visibility='onchange',compute='_compute_rate_amounts')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre', ondelete="cascade",
                                           readonly=True, states={'draft': [('readonly', False)]},
@@ -37,34 +37,31 @@ class LCReceivablePayment(models.Model):
                            track_visibility = 'onchange')
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirmed'),
-                              ('approve', 'Approved'),
+                              ('approve', 'Posted'),
                               ('cancel', 'Cancelled')], string='Status', default='draft',
                              track_visibility='onchange')
-
     invoice_ids = fields.Many2many('account.invoice',
                                    'lc_collection_invoice_rel',
                                    'lc_collection_id',
                                    'invoice_id',
                                    'Invoices',readonly=True,required=True,
                                    states={'draft': [('readonly', False)]})
-
-    currency_loss_gain_amount = fields.Float(string='Loss/Gain Amount',compute='_compute_currency_gain_loss_amount',
+    currency_loss_gain_amount = fields.Float(string='Loss/Gain Amount',compute='_compute_currency_loss_gain',
                                              track_visibility='onchange')
     currency_loss_gain_type = fields.Selection([('margin', 'Margin'),
                                                 ('loss', 'Loss'),
                                                 ('gain', 'Gain'),], string='Loss/Gain Type', default='margin',
-                                               compute='_compute_currency_gain_loss_amount',
+                                               compute='_compute_currency_loss_gain',
                                                track_visibility='onchange')
     particular = fields.Char(string='Particular', readonly=True, states={'draft': [('readonly', False)]},
                              track_visibility='onchange')
     analytic_acc_create = fields.Boolean('Need to create Analytic Account',default=False)
-
     journal_id = fields.Many2one('account.journal', string='Account Journal', ondelete="cascade",
                                  required=True,readonly=True,states={'draft': [('readonly', False)]},
                                  track_visibility='onchange')
+    reference = fields.Text(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     """ Relational Fields """
-
     lc_receivable_collection_ids = fields.One2many('lc.receivable.collection', 'collection_parent_id',
                                                    string="Collections",readonly=True,
                                                    states={'draft': [('readonly', False)]})
@@ -118,14 +115,13 @@ class LCReceivablePayment(models.Model):
             if record.lc_id and record.invoice_ids:
                 record.currency_id = record.lc_id.currency_id.id
                 record.invoice_amount = sum(rec.residual for rec in record.invoice_ids)
-                record.currency_rate = \
-                    record.company_id.currency_id.rate / record.currency_id.with_context(date=record.date).rate
-                record.amount_in_company_currency = record.invoice_amount * record.currency_rate
+                record.currency_rate = record.invoice_ids[0].conversion_rate
+                record.amount_in_company_currency = sum(line.amount_residual for rec in record.invoice_ids for line in rec.move_id.line_ids)
 
     @api.multi
     @api.depends('lc_receivable_collection_ids.amount_in_company_currency',
                  'lc_receivable_charges_ids.amount_in_company_currency')
-    def _compute_currency_gain_loss_amount(self):
+    def _compute_currency_loss_gain(self):
         for rec in self:
             total_collection_amount = 0.0
             total_charges_amount = 0.0
@@ -134,41 +130,64 @@ class LCReceivablePayment(models.Model):
             if rec.lc_receivable_charges_ids:
                 total_charges_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_charges_ids)
 
-            rec.currency_gain_loss_amount = rec.amount_in_company_currency - (total_collection_amount + total_charges_amount)
-            if rec.currency_gain_loss_amount >= rec.amount_in_company_currency:
-                rec.currency_gain_loss_amount = 0.0
-            if rec.currency_gain_loss_amount < 0:
+            rec.currency_loss_gain_amount = rec.amount_in_company_currency - (total_collection_amount + total_charges_amount)
+            if rec.currency_loss_gain_amount >= rec.amount_in_company_currency:
+                rec.currency_loss_gain_amount = 0.0
+            if rec.currency_loss_gain_amount < 0:
                 rec.currency_loss_gain_type = 'loss'
-            elif rec.currency_gain_loss_amount > 0:
+            elif rec.currency_loss_gain_amount > 0:
                 rec.currency_loss_gain_type = 'gain'
             else:
                 rec.currency_loss_gain_type = 'margin'
+
+    @api.depends('shipment_id')
+    def _compute_reference(self):
+        for res in self:
+            if res.shipment_id:
+                res.reference = res.shipment_id.comment
 
     @api.multi
     def action_confirm(self):
         if not self.analytic_account_id:
             raise UserError(_('Without Analytic Account can not be confirmed!'))
-        if self.name == 'draft':
+        if self.name == 'Draft':
             new_seq = self.env['ir.sequence'].next_by_code('lc.collection.sequence')
             self.name = new_seq
         self.write({'state': 'confirm'})
 
     @api.multi
     def action_approve(self):
-        # account_move_obj = self.env['account.move']
+        account_move_obj = self.env['account.move']
         # account_move_line_obj = self.env['account.move.line']
-        # journal_id =
-        # move_obj = self._generate_move(journal_id, self.date, account_move_obj)
-        # account_move_id = move_obj.id
-        # if self.lc_receivable_collection_ids:
-        #     for line in self.lc_receivable_collection_ids:
-        #
-        #         self._generate_credit_move_line(line,self.date,account_move_id)
-        #         self._generate_debit_move_line(line,self.date,account_move_id)
-        # if self.lc_receivable_charges_ids:
-        #     return
+        acc_move_line_list = []
+        for collection_line in self.lc_receivable_collection_ids:
+            acc_move_line_list.append(collection_line)
+        for charge_line in self.lc_receivable_charges_ids:
+            acc_move_line_list.append(charge_line)
+        if acc_move_line_list:
+            move_obj = self._generate_move(account_move_obj)
+            account_move_id = move_obj.id
+            credit_amount = sum(i.amount_in_company_currency for i in acc_move_line_list)
+            amount_currency = sum(i.amount_in_currency for i in acc_move_line_list)
+            move_line_vals = []
+            credit_move_obj = self._generate_credit_move_line(account_move_id,credit_amount,amount_currency)
+            move_line_vals.append(credit_move_obj)
+            for line in acc_move_line_list:
+                debit_move_obj = self._generate_debit_move_line(account_move_id,line)
+                move_line_vals.append(debit_move_obj)
+
+            move_obj.line_ids = move_line_vals
+            move_obj.post()
+            self.lc_pay_and_reconcile(self.journal_id,move_obj,credit_amount)
         # if self.currency_loss_gain_type != 'margin':
-        #     return
+            # todo currency difference loss gain journal
+            # return
+
+        # for invoice_id in self.invoice_ids:
+        #     for line in invoice_id.move_id.line_ids:
+        #         if line.account_id.internal_type in ('receivable', 'payable'):
+        #             line.write({'amount_residual': 0.0})
+        #     invoice_id.action_invoice_paid()
         self.write({'state': 'approve'})
 
     @api.multi
@@ -187,9 +206,9 @@ class LCReceivablePayment(models.Model):
         self.lc_id.analytic_account_id = analytic_account.id
         self.analytic_acc_create = False
 
-
-    def _generate_move(self, line,date,account_move_obj):
-        journal = line.account_journal_id
+    def _generate_move(self,account_move_obj):
+        journal = self.journal_id
+        date = self.date[0:10]
         if not journal.sequence_id:
             raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
@@ -209,35 +228,82 @@ class LCReceivablePayment(models.Model):
             account_move = account_move_obj.create(account_move_dict)
         return account_move
 
-    def _generate_credit_move_line(self,line,date,account_move_id,account_move_line_obj):
-        account_move_line_credit = {
-            'account_id': self.invoice_ids[0].account_id,
-            'analytic_account_id': self.account_analytic_id.id,
-            'credit': line.amount_in_currency,
+    def _generate_credit_move_line(self,account_move_id,credit_amount,amount_currency):
+        date = self.date
+        account_move_line_credit = 0, 0, {
+            'account_id': self.invoice_ids[0].account_id.id,
+            'analytic_account_id': self.analytic_account_id.id,
+            'credit': credit_amount,
+            'amount_currency': -amount_currency,
             'date_maturity': date,
             'debit':  False,
             'name': 'Customer Payment',
             'operating_unit_id':  self.operating_unit_id.id,
-            # 'partner_id': acc_inv_line_obj.partner_id.id,
+            'partner_id': self.invoice_ids[0].partner_id.id,
             'move_id': account_move_id,
+            'company_id': self.company_id.id,
+            'currency_id': self.currency_id.id,
         }
-        account_move_line_obj.create(account_move_line_credit)
-        return True
+        # account_move_line_obj.create(account_move_line_credit)
+        return account_move_line_credit
 
-    def _generate_debit_move_line(self,journal,acc_inv_line_obj,date,account_move_id,account_move_line_obj):
-        account_move_line_debit = {
-            'account_id': journal.default_debit_account_id.id,
-            'analytic_account_id': acc_inv_line_obj.account_analytic_id.id,
+    def _generate_debit_move_line(self,account_move_id,line):
+        date = self.date
+        if 'account_journal_id' in line._fields:
+            account_id = line.account_journal_id.default_debit_account_id.id
+            name = line.account_journal_id.name
+        else:
+            account_id = line.account_id.id
+            name = line.product_id.name
+        account_move_line_debit = 0, 0, {
+            'account_id': account_id,
+            'analytic_account_id': self.analytic_account_id.id,
             'credit': False,
             'date_maturity': date,
-            'debit':  acc_inv_line_obj.price_subtotal,
-            'name': acc_inv_line_obj.name,
-            'operating_unit_id':  acc_inv_line_obj.operating_unit_id.id,
+            'debit':  line.amount_in_company_currency,
+            'name': name,
+            'operating_unit_id':  self.operating_unit_id.id,
             # 'partner_id': acc_inv_line_obj.partner_id.id,
             'move_id': account_move_id,
+            'company_id': self.company_id.id,
         }
-        account_move_line_obj.create(account_move_line_debit)
-        return True
+        # account_move_line_obj.create(account_move_line_debit)
+        return account_move_line_debit
+
+    @api.multi
+    def lc_pay_and_reconcile(self, pay_journal,move_obj, pay_amount=None):
+        payment_type = self.invoice_ids[0].type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
+        if payment_type == 'inbound':
+            payment_method = self.env.ref('account.account_payment_method_manual_in')
+            journal_payment_methods = pay_journal.inbound_payment_method_ids
+        else:
+            payment_method = self.env.ref('account.account_payment_method_manual_out')
+            journal_payment_methods = pay_journal.outbound_payment_method_ids
+        if payment_method not in journal_payment_methods:
+            raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
+
+        communication = ','.join([i.number for i in self.invoice_ids])
+
+        payment_vals = {
+            'invoice_ids': [(6, 0, self.invoice_ids.ids)],
+            'amount': pay_amount,
+            'payment_date': fields.Date.context_today(self),
+            'communication': communication,
+            'partner_id': self.invoice_ids[0].partner_id.id,
+            'partner_type': self.invoice_ids[0].type in ('out_invoice', 'out_refund') and 'customer' or 'supplier',
+            'journal_id': pay_journal.id,
+            'payment_type': payment_type,
+            'payment_method_id': payment_method.id,
+            # 'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
+            # 'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
+        }
+        # if self.env.context.get('tx_currency_id'):
+        #     payment_vals['currency_id'] = self.env.context.get('tx_currency_id')
+
+        payment = self.env['account.payment'].create(payment_vals)
+        payment.write({'state': 'posted', 'move_name': move_obj.name})
+
+        return payment
 
 
     @api.multi
@@ -276,12 +342,17 @@ class LCReceivableCollection(models.Model):
             }
             return {'warning': warning}
 
-        self.currency_id = self.collection_parent_id.currency_id
-        self.currency_rate = self.collection_parent_id.currency_rate
-        self.amount_in_currency = self.collection_parent_id.invoice_amount
+        if self.account_journal_id:
+            self.currency_id = self.account_journal_id.currency_id
 
-        domain['currency_id'] = [('id', '=', self.collection_parent_id.currency_id.id)]
+        domain['currency_id'] = [('id', 'in', (self.collection_parent_id.currency_id.id,
+                                               self.collection_parent_id.company_id.currency_id.id))]
         return {'domain': domain}
+
+    # @api.onchange('currency_id')
+    # def _onchange_currency_id(self):
+    #     if self.currency_id:
+    #         self.currency_rate = self.collection_parent_id.company_id.currency_id.rate / self.currency_id.with_context(fields.Date.context_today(self)).rate
 
     @api.one
     @api.depends('currency_rate','amount_in_currency')
@@ -319,11 +390,12 @@ class LCReceivableCharges(models.Model):
             return {'warning': warning}
 
         if self.product_id:
-            self.account_id = self.product_id.property_account_income_id
+            if not self.product_id.property_account_expense_id:
+                raise UserError(_('This service have no expense account. Please set an expense account!'))
+            self.account_id = self.product_id.property_account_expense_id
 
         self.currency_id = self.charges_parent_id.currency_id
         self.currency_rate = self.charges_parent_id.currency_rate
-        self.amount_in_currency = self.charges_parent_id.invoice_amount
 
         domain['currency_id'] = [('id', '=', self.charges_parent_id.currency_id.id)]
         return {'domain': domain}

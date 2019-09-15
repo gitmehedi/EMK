@@ -4,7 +4,7 @@
         <record id="lc_collection_seq" model="ir.sequence">
             <field name="name">LC Collection Sequence</field>
             <field name="code">lc.collection.sequence</field>
-            <field name="prefix">LC-COLLECTION-</field>
+            <field name="prefix">LC-PAY-</field>
             <field name="padding">12</field>
             <field name="number_increment" eval="1"/>
             <field name="company_id" eval="False"/>
