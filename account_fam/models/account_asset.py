@@ -24,7 +24,7 @@ class AccountAssetAsset(models.Model):
                            track_visibility='onchange', states={'draft': [('readonly', False)]})
     method_progress_factor = fields.Float('Depreciation Factor', default=0.2, track_visibility='onchange')
     is_custom_depr = fields.Boolean(default=True, required=True, track_visibility='onchange')
-    partner_id = fields.Char(string="Vendor", track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
                                        track_visibility='onchange')
     method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
@@ -48,7 +48,7 @@ class AccountAssetAsset(models.Model):
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
     value_residual = fields.Float(string='Book Value', track_visibility='onchange')
     advance_amount = fields.Float(string='Adjusted Amount', track_visibility='onchange', readonly=True,
-                                 states={'draft': [('readonly', False)]})
+                                  states={'draft': [('readonly', False)]})
     current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
                                         track_visibility='onchange')
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Current Sub Operating Unit',
