@@ -96,10 +96,12 @@
                         <page string="Charges">
                             <field name="lc_receivable_charges_ids" string="Charges">
                                 <tree string="Tree Views" editable="bottom">
-                                    <field name="product_id"/>
+                                    <field name="product_id"
+                                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="account_id" invisible="1"/>
                                     <field name="amount_in_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="currency_id"
+                                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="currency_rate"/>
                                     <field name="amount_in_company_currency" readonly="True"/>
                                 </tree>

@@ -10,6 +10,7 @@
     'data': [
         "security/ir.model.access.csv",
         "data/data.xml",
+        "data/lc_journal_data.xml",
         "views/lc_receivable_payments_view.xml",
     ],
     'installable': True,
