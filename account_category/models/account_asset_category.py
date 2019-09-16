@@ -14,7 +14,7 @@ class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
 
     category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
-    parent_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict",
+    parent_id = fields.Many2one('account.asset.category', string="Asset Type Name", ondelete="restrict",
                                 track_visibility='onchange')
 
     @api.onchange('parent_id')

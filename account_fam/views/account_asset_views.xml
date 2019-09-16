@@ -7,7 +7,6 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
                 <attribute name="duplicate">0</attribute>
-                <attribute name="create">0</attribute>
                 <attribute name="delete">false</attribute>
             </xpath>
 
@@ -190,7 +189,7 @@
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Assets" delete="false" create="false"
+                <tree string="Assets" delete="false"
                       decoration-bf="(state == 'open')"
                       decoration-info="(state == 'open') and (allocation_status == False)"
                       decoration-success="(state == 'open') and (allocation_status == True)"

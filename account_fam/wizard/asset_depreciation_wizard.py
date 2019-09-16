@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 class AssetDepreciationWizard(models.TransientModel):
     _name = 'asset.depreciation.wizard'
 
-    date = fields.Date(string='Date', required=True, default=fields.Date.today())
+    date = fields.Date(string='Date', required=True, default=fields.Datetime.now)
 
     @api.multi
     def depreciate(self):

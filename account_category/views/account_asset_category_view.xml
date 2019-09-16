@@ -32,8 +32,7 @@
                         <h1>
                             <field name="name" placeholder="e.g. Lenovo"/>
                         </h1>
-                        <label for="parent_id" string="Asset Type Name"
-                               attrs="{'invisible': [('type','!=','purchase')]}"/>
+                        <label for="parent_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <h1>
                             <field name="parent_id" required="True"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"

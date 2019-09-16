@@ -21,7 +21,7 @@ class AssetAllocationWizard(models.TransientModel):
             return branch.operating_unit_id
 
     asset_user = fields.Char("Asset User")
-    date = fields.Date(string='Allocation/Transfer Date', required=True, default=fields.Date.today())
+    date = fields.Date(string='Allocation/Transfer Date', required=True, default=fields.Datetime.now)
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
@@ -49,7 +49,7 @@ class AssetAllocationWizard(models.TransientModel):
             current_currency = asset.currency_id
             sub_operating_unit = self.sub_operating_unit_id.id if self.sub_operating_unit_id else None
 
-            if self.operating_unit_id.id == self.to_operating_unit_id.id:
+            if asset.sub_operating_unit_id.id == sub_operating_unit:
                 raise ValidationError(_("Same branch transfer shouldn\'t possible."))
 
             def asset_move(asset):
