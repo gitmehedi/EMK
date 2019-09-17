@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 class LCReceivablePayment(models.Model):
@@ -57,8 +57,8 @@ class LCReceivablePayment(models.Model):
                              track_visibility='onchange')
     analytic_acc_create = fields.Boolean('Need to create Analytic Account',default=False)
     journal_id = fields.Many2one('account.journal', string='Account Journal', ondelete="cascade",
-                                 required=True,readonly=True,states={'draft': [('readonly', False)]},
-                                 track_visibility='onchange')
+                                 domain=[('type', '=', 'lc')],required=True,readonly=True,
+                                 states={'draft': [('readonly', False)]},track_visibility='onchange')
     reference = fields.Text(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     """ Relational Fields """
@@ -252,12 +252,14 @@ class LCReceivablePayment(models.Model):
         if 'account_journal_id' in line._fields:
             account_id = line.account_journal_id.default_debit_account_id.id
             name = line.account_journal_id.name
+            analytic_account_id = False
         else:
             account_id = line.account_id.id
             name = line.product_id.name
+            analytic_account_id = self.analytic_account_id.id
         account_move_line_debit = 0, 0, {
             'account_id': account_id,
-            'analytic_account_id': self.analytic_account_id.id,
+            'analytic_account_id': analytic_account_id,
             'credit': False,
             'date_maturity': date,
             'debit':  line.amount_in_company_currency,
@@ -294,6 +296,7 @@ class LCReceivablePayment(models.Model):
             'journal_id': pay_journal.id,
             'payment_type': payment_type,
             'payment_method_id': payment_method.id,
+            'name': 'LC Payment',
             # 'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
             # 'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         }
@@ -349,10 +352,11 @@ class LCReceivableCollection(models.Model):
                                                self.collection_parent_id.company_id.currency_id.id))]
         return {'domain': domain}
 
-    # @api.onchange('currency_id')
-    # def _onchange_currency_id(self):
-    #     if self.currency_id:
-    #         self.currency_rate = self.collection_parent_id.company_id.currency_id.rate / self.currency_id.with_context(fields.Date.context_today(self)).rate
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
+            self.currency_rate = self.collection_parent_id.company_id.currency_id.rate/\
+                                 self.currency_id.with_context(date=fields.Date.context_today(self)).rate
 
     @api.one
     @api.depends('currency_rate','amount_in_currency')
@@ -395,10 +399,15 @@ class LCReceivableCharges(models.Model):
             self.account_id = self.product_id.property_account_expense_id
 
         self.currency_id = self.charges_parent_id.currency_id
-        self.currency_rate = self.charges_parent_id.currency_rate
 
-        domain['currency_id'] = [('id', '=', self.charges_parent_id.currency_id.id)]
+        domain['currency_id'] = [('active', '=', True)]
         return {'domain': domain}
+
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
+            self.currency_rate = self.charges_parent_id.company_id.currency_id.rate / \
+                                 self.currency_id.with_context(date=fields.Date.context_today(self)).rate
 
     @api.one
     @api.depends('currency_rate', 'amount_in_currency')
