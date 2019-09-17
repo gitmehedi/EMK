@@ -79,9 +79,11 @@ class InheritAccountPayment2(models.Model):
 
     @api.multi
     def get_invoices(self):
-        invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                                 ('state', '=', 'open')])
+
         if self.sale_order_id.ids:
             invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
                                                                     ('state', '=', 'open')])
+        else:
+            invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
+                                                                     ('state', '=', 'open')])
         return invoice_ids
