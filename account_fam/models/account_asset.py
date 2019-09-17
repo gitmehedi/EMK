@@ -27,7 +27,7 @@ class AccountAssetAsset(models.Model):
     partner_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
                                        track_visibility='onchange')
-    method = fields.Selection([('degressive', 'Reducing Method'),('linear', 'Straight Line/Linear')],
+    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
                               track_visibility='onchange',
                               string='Computation Method', required=True, default='degressive',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
@@ -63,6 +63,7 @@ class AccountAssetAsset(models.Model):
     note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
     allocation_status = fields.Boolean(string='Allocation Status', track_visibility='onchange', default=False)
     depreciation_flag = fields.Boolean(string='Depreciation Flag', track_visibility='onchange', default=False)
+    lst_depr_date = fields.Date(string='Last Depr. Date', readonly=True, track_visibility='onchange')
 
     @api.model
     def create(self, vals):
@@ -233,6 +234,7 @@ class AccountAssetAsset(models.Model):
                 depreciation = asset.depreciation_line_ids.create(vals)
                 if depreciation:
                     asset.create_move(depreciation)
+                    asset.write({'lst_depr_date': curr_depr_date.date()})
 
     @api.multi
     def create_move(self, line):

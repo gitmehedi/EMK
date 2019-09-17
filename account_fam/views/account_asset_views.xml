@@ -46,6 +46,7 @@
                     <field name="invoice_date" readonly="True"/>
                     <field name="date"/>
                     <field name="asset_usage_date"/>
+                    <field name="lst_depr_date"/>
                     <field name="cost_centre_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     <field name="code" invisible="1"/>
                     <field name="type" invisible="1"/>

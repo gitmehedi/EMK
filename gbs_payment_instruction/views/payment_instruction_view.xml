@@ -98,5 +98,6 @@
         </field>
     </record>
 
-    <menuitem parent="base.menu_custom" action="action_payment_instruction_form" id="payment_instruction_menu"/>
+    <menuitem parent="account.menu_action_move_journal_line_form" action="action_payment_instruction_form"
+              id="payment_instruction_menu" sequence="50"/>
 </odoo>
