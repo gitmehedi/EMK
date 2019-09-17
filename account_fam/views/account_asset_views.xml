@@ -102,7 +102,7 @@
                             <field name="days"/>
                             <field name="amount" widget="monetary" string="Depreciation"/>
                             <field name="depreciated_value" readonly="1"/>
-                            <field name="remaining_value" readonly="1" widget="monetary" string="Book Value at Date"/>
+                            <field name="remaining_value" readonly="1" widget="monetary" string="WDV at Date"/>
                             <field name="move_check" invisible="1"/>
                             <field name="move_posted_check" invisible="1"/>
                             <field name="parent_state" invisible="1"/>

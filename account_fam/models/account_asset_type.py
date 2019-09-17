@@ -24,8 +24,8 @@ class AccountAssetCategory(models.Model):
                                        track_visibility='onchange')
     method_number = fields.Integer(string='Number of Depreciations', default=1,
                                    help="The number of depreciations needed to depreciate your asset")
-    method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
-                              string='Computation Method', required=True, default='linear', track_visibility='onchange',
+    method = fields.Selection([('degressive', 'Reducing Method'),('linear', 'Straight Line/Linear')],
+                              string='Computation Method', required=True, default='degressive', track_visibility='onchange',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
@@ -33,7 +33,7 @@ class AccountAssetCategory(models.Model):
                                        track_visibility='onchange',
                                        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
                                        help="Account used to record the purchase of the asset at its original price.")
-    asset_suspense_account_id = fields.Many2one('account.account', string='Asset Suspense Account', required=True,
+    asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation', required=True,
                                                 domain=[('deprecated', '=', False)], track_visibility='onchange')
     account_depreciation_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                               domain=[('deprecated', '=', False)],
@@ -52,7 +52,7 @@ class AccountAssetCategory(models.Model):
                                             string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                                      domain=[('deprecated', '=', False)],
-                                                     string='Asset Sales Suspense Account')
+                                                     string='Asset Awaiting Disposal')
 
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})

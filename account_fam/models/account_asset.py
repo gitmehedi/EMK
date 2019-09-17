@@ -27,9 +27,9 @@ class AccountAssetAsset(models.Model):
     partner_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
                                        track_visibility='onchange')
-    method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
+    method = fields.Selection([('degressive', 'Reducing Method'),('linear', 'Straight Line/Linear')],
                               track_visibility='onchange',
-                              string='Computation Method', required=True, default='linear',
+                              string='Computation Method', required=True, default='degressive',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
@@ -46,12 +46,12 @@ class AccountAssetAsset(models.Model):
     method_period = fields.Integer(string='One Entry (In Month)', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
-    value_residual = fields.Float(string='Book Value', track_visibility='onchange')
+    value_residual = fields.Float(string='WDV', track_visibility='onchange')
     advance_amount = fields.Float(string='Adjusted Amount', track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)]})
     current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
                                         track_visibility='onchange')
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Current Sub Operating Unit',
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
     accumulated_value = fields.Float(string='Accumulated Depreciation', track_visibility='onchange', readonly=True,

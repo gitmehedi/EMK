@@ -92,7 +92,7 @@ class AccountAssetDisposalLine(models.Model):
 
     asset_id = fields.Many2one('account.asset.asset', required=True, string='Asset Name')
     cost_value = fields.Float(related='asset_id.value', string='Cost Value', required=True, digits=(14, 2))
-    asset_value = fields.Float(string='Book Value', required=True, digits=(14, 2))
+    asset_value = fields.Float(string='WDV', required=True, digits=(14, 2))
     depreciation_value = fields.Float(string='Depreciation Value', required=True, digits=(14, 2))
 
     dispose_id = fields.Many2one('account.asset.disposal', string='Disposal', ondelete='restrict')
