@@ -16,12 +16,6 @@ class AccountPaymentBatch(models.Model):
 
     is_batch_model = fields.Boolean(store=False, compute='_check_is_batch_model')
 
-    @api.model
-    def create(self, vals):
-        """ create function """
-        account_payment_batch = super(AccountPaymentBatch, self).create(vals)
-        return account_payment_batch
-
     @api.multi
     def unlink(self):
         """ delete function """
@@ -40,6 +34,7 @@ class AccountPaymentBatch(models.Model):
             else:
                 for ap in rec.payment_ids:
                     if ap.state != 'posted':
+                        ap.invoice_ids = ap.get_invoices()
                         ap.post()
 
                 rec.write({'state': 'posted'})
@@ -81,3 +76,12 @@ class InheritAccountPayment2(models.Model):
                 raise UserError(_("You must select a payment journal."))
 
         return res
+
+    @api.multi
+    def get_invoices(self):
+        invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
+                                                                 ('state', '=', 'open')])
+        if self.sale_order_id.ids:
+            invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
+                                                                    ('state', '=', 'open')])
+        return invoice_ids
