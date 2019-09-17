@@ -18,7 +18,7 @@ TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 class GenerateCBSJournal(models.Model):
     _name = 'generate.cbs.journal'
-    _description = "CBS Journal"
+    _description = "CBS Batch Process"
     _inherit = ["mail.thread", "ir.needaction_mixin"]
     _order = 'id desc'
 
@@ -278,7 +278,7 @@ class GenerateCBSJournal(models.Model):
                     _("Database backup failed."),
                     escaped_tb),
                 subtype=self.env.ref(
-                    "file_processing.mail_message_subtype_failure"
+                    "gbs_ogl_cbs_interface.mail_message_subtype_failure"
                 ),
             )
         else:
@@ -301,7 +301,7 @@ class GenerateCBSJournal(models.Model):
                 "<p>%s</p><pre>%s</pre>" % (
                     _("Cleanup of old database backups failed."),
                     escaped_tb),
-                subtype=self.env.ref("file_processing.failure"))
+                subtype=self.env.ref("gbs_ogl_cbs_interface.failure"))
         else:
             _logger.info("Cleanup of old database backups succeeded: %s",
                          self.name)
@@ -329,20 +329,26 @@ class GenerateCBSJournal(models.Model):
 
 class GenerateCBSJournalSuccess(models.Model):
     _name = 'generate.cbs.journal.success'
-    _description = "GLIF File Success"
+    _description = "CBS Batch Process Success"
     _inherit = ["mail.thread", "ir.needaction_mixin"]
-    _order = 'id desc'
+    _order = 'date desc'
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
+    date = fields.Datetime(string='Date', default=fields.Datetime.now, required=True)
     start_date = fields.Datetime(string='Start Datetime', required=True)
     stop_date = fields.Datetime(string='Stop Datetime', required=True)
     file_name = fields.Char(string='File Path', required=True)
     upload_file = fields.Binary(string="Upload File", attachment=True)
     time = fields.Text(string='Time', compute="_compute_time")
     status = fields.Boolean(default=False, string='Status')
+    state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
 
     @api.depends('start_date', 'stop_date')
     def _compute_time(self):
         for rec in self:
             diff = datetime.strptime(rec.stop_date, TIME_FORMAT) - datetime.strptime(rec.start_date, TIME_FORMAT)
             rec.time = str(diff)
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'issued')]
