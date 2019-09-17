@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="ir.ui.view" id="view_soap_process_form">
-        <field name="name">SOAP Process</field>
+        <field name="name">API Process</field>
         <field name="model">soap.process</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="SOAP Process">
+            <form string="API Process">
                 <sheet>
                     <label for="endpoint_fullname" string="Endpoint Full Name"/>
                     <h4>
@@ -28,11 +28,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_soap_process_tree">
-        <field name="name">SOAP Process</field>
+        <field name="name">API Process</field>
         <field name="model">soap.process</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="SOAP Process" decoration-success="status==True"
+            <tree string="API Process" decoration-success="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
                 <field name="endpoint_url"/>
@@ -44,7 +44,7 @@
     </record>
 
     <record model="ir.ui.view" id="view_soap_process_search">
-        <field name="name">SOAP Process</field>
+        <field name="name">API Process</field>
         <field name="model">soap.process</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
@@ -59,7 +59,7 @@
         </field>
     </record>
 
-    <act_window name="SOAP Process" id="action_soap_process_form" res_model="soap.process"/>
+    <act_window name="API Process" id="action_soap_process_form" res_model="soap.process"/>
 
     <menuitem parent="main_api_interface" action="action_soap_process_form" id="soap_process_menu"
               groups="grp_api_interface_manager"/>

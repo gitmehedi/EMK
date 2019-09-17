@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="ir.ui.view" id="view_server_file_process_form">
-        <field name="name">File Processing</field>
+        <field name="name">GLIF Process</field>
         <field name="model">server.file.process</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
@@ -68,10 +68,10 @@
                         Use SFTP with caution! This writes files to external servers under the path you specify.
                     </div>
                     <div>
-                        File Processing of the database can be scheduled as follows:
+                        GLIF Process of the database can be scheduled as follows:
                         <ol>
                             <li>Go to Settings --> Technical --> Automation --> Scheduled Actions.</li>
-                            <li>Search the action named 'File Processing Scheduler'.</li>
+                            <li>Search the action named 'GLIF Process Scheduler'.</li>
                             <li>Set the scheduler to active and fill in how often you want process.</li>
                         </ol>
                     </div>
@@ -85,7 +85,7 @@
     </record>
 
     <record model="ir.ui.view" id="view_server_file_process_tree">
-        <field name="name">File Processing</field>
+        <field name="name">GLIF Process</field>
         <field name="model">server.file.process</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
@@ -104,7 +104,7 @@
     </record>
 
     <record model="ir.ui.view" id="view_server_file_process_search">
-        <field name="name">File Processing</field>
+        <field name="name">GLIF Process</field>
         <field name="model">server.file.process</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
@@ -118,7 +118,7 @@
     </record>
 
     <act_window
-            name="File Processing"
+            name="GLIF Process"
             id="action_server_file_process_form"
             res_model="server.file.process"/>
 

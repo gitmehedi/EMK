@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="ir.ui.view" id="view_generate_cbs_journal_form">
-        <field name="name">Generate CBS Journal</field>
+        <field name="name">CBS Batch Process</field>
         <field name="model">generate.cbs.journal</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
@@ -46,10 +46,10 @@
                         Use SFTP with caution! This writes files to external servers under the path you specify.
                     </div>
                     <div>
-                        Generate CBS Journal of the database can be scheduled as follows:
+                        CBS Batch Process of the database can be scheduled as follows:
                         <ol>
                             <li>Go to Settings --> Technical --> Automation --> Scheduled Actions.</li>
-                            <li>Search the action named 'Generate CBS Journal Scheduler'.</li>
+                            <li>Search the action named 'CBS Batch Process Scheduler'.</li>
                             <li>Set the scheduler to active and fill in how often you want process.</li>
                         </ol>
                     </div>
@@ -63,11 +63,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_generate_cbs_journal_tree">
-        <field name="name">Generate CBS Journal</field>
+        <field name="name">CBS Batch Process</field>
         <field name="model">generate.cbs.journal</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Generate CBS Journal" decoration-success="status==True"
+            <tree string="CBS Batch Process" decoration-success="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
                 <field name='folder'/>
@@ -82,7 +82,7 @@
     </record>
 
     <record model="ir.ui.view" id="view_generate_cbs_journal_search">
-        <field name="name">Generate CBS Journal</field>
+        <field name="name">CBS Batch Process</field>
         <field name="model">generate.cbs.journal</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
@@ -96,7 +96,7 @@
     </record>
 
     <act_window
-            name="Generate CBS Journal"
+            name="CBS Batch Process"
             id="action_generate_cbs_journal_form"
             res_model="generate.cbs.journal"/>
 

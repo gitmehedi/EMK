@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import calendar
-from datetime import date, datetime
+from datetime import datetime
+from datetime import date as DT
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools import float_compare, float_is_zero
 
 DATE_FORMAT = "%Y-%m-%d"
@@ -201,7 +201,7 @@ class AccountAssetAsset(models.Model):
                 daily_depr = (asset.value - asset.salvage_value) / date_delta
             elif asset.method == 'degressive':
                 year = self.date_str_format(asset.date).year
-                date_delta = (date(year, 12, 31) - date(year, 01, 01)).days + 1
+                date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
                 daily_depr = ((asset.value - asset.salvage_value) * asset.method_progress_factor) / date_delta
 
             if not asset.depreciation_line_ids:

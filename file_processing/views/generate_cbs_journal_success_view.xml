@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="ir.ui.view" id="view_generate_cbs_journal_success_form">
-        <field name="name">CBS Journals</field>
+        <field name="name">CBS Batch Success</field>
         <field name="model">generate.cbs.journal.success</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="CBS Journals" edit="0" create="0" delete="0" duplicate="0">
+            <form string="CBS Batch Success" edit="0" create="0" delete="0" duplicate="0">
                 <sheet>
                     <group>
                         <group>
@@ -29,11 +29,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_generate_cbs_journal_success_tree">
-        <field name="name">CBS Journals</field>
+        <field name="name">CBS Batch Success</field>
         <field name="model">generate.cbs.journal.success</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="CBS Journals" edit="0" create="0" delete="0" duplicate="0">
+            <tree string="CBS Batch Success" edit="0" create="0" delete="0" duplicate="0">
                 <field name="name"/>
                 <field name="start_date"/>
                 <field name="stop_date"/>
@@ -45,11 +45,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_generate_cbs_journal_success_search">
-        <field name="name">CBS Journals</field>
+        <field name="name">CBS Batch Success</field>
         <field name="model">generate.cbs.journal.success</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="CBS Journals Search">
+            <search string="CBS Batch Success Search">
                 <field name="start_date"/>
                 <field name="stop_date"/>
                 <field name="file_name"/>
@@ -58,7 +58,7 @@
     </record>
 
     <record id="action_generate_cbs_journal_success_form" model="ir.actions.act_window">
-        <field name="name">CBS Journals</field>
+        <field name="name">CBS Batch Success</field>
         <field name="res_model">generate.cbs.journal.success</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -66,5 +66,5 @@
     </record>
 
     <menuitem parent="main_error_api_interface" action="action_generate_cbs_journal_success_form"
-              id="generate_cbs_journal_success_menu" sequence="5" groups="grp_api_interface_manager"/>
+              id="generate_cbs_journal_success_menu" sequence="20" groups="grp_api_interface_manager"/>
 </odoo>

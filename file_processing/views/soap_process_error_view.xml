@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="ir.ui.view" id="view_soap_process_error_form">
-        <field name="name">SOAP Process Error</field>
+        <field name="name">API Error</field>
         <field name="model">soap.process.error</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="SOAP Process Error" edit="0" create="0" delete="0" duplicate="0">
+            <form string="API Error" edit="0" create="0" delete="0" duplicate="0">
                 <header>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -33,11 +33,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_soap_process_error_tree">
-        <field name="name">SOAP Process</field>
+        <field name="name">API Process</field>
         <field name="model">soap.process.error</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="SOAP Process Error" edit="0" create="0" delete="0" duplicate="0"
+            <tree string="API Error" edit="0" create="0" delete="0" duplicate="0"
                   decoration-danger="state=='issued'" decoration-muted="state=='resolved'">
                 <field name="name"/>
                 <field name="process_date"/>
@@ -48,11 +48,11 @@
     </record>
 
     <record model="ir.ui.view" id="view_soap_process_error_search">
-        <field name="name">SOAP Process</field>
+        <field name="name">API Process</field>
         <field name="model">soap.process.error</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="SOAP Process Error Search">
+            <search string="API Error Search">
                 <field name="process_date"/>
                 <field name="status"/>
                 <group name="group_by">
@@ -66,7 +66,7 @@
     </record>
 
     <record id="action_soap_process_error_form" model="ir.actions.act_window">
-        <field name="name">SOAP Process Error</field>
+        <field name="name">API Error</field>
         <field name="res_model">soap.process.error</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
