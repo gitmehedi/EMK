@@ -23,12 +23,19 @@ class AccountAssetCategoryWizard(models.TransientModel):
         id = self._context['active_id']
         obj = self.env['account.asset.category']
         asset = obj.browse(id)
+        condition = [('parent_id', '!=', None),
+                     '|',
+                     ('active', '=', True),
+                     ('active', '=', False)]
+
+        condition[0] = ('name', '=ilike', self.name.strip()) if self.name else ('name', '=ilike', None)
+
         if asset.parent_id:
-            name = obj.search([('name', '=ilike', self.name.strip()), ('parent_id', '!=', None),
-                               '|', ('active', '=', True), ('active', '=', False)])
+            condition[1] = ('parent_id', '!=', None)
+            name = obj.search(condition)
         elif not asset.parent_id:
-            name = obj.search([('name', '=ilike', self.name.strip()), ('parent_id', '=', None),
-                                '|', ('active', '=', True), ('active', '=', False)])
+            condition[1] = ('parent_id', '=', None)
+            name = obj.search(condition)
 
         if len(name) > 0:
             raise Warning('[Unique Error] Name must be unique!')
@@ -38,7 +45,10 @@ class AccountAssetCategoryWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.account.asset.category'].create(
-            {'change_name': self.name, 'request_date': fields.Datetime.now(), 'line_id': id, 'status': self.status})
+            {'change_name': self.name,
+             'request_date': fields.Datetime.now(),
+             'line_id': id,
+             'status': self.status})
         record = self.env['account.asset.category'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
