@@ -15,7 +15,7 @@
     </record>
 
     <record id="ir_cron_payment_instruction_scheduler" model="ir.cron">
-        <field name="name">Payment Instruction Scheduler</field>
+        <field name="name">API Processing Scheduler</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">5</field>
         <field name="interval_type">minutes</field>
@@ -27,12 +27,12 @@
     </record>
 
     <record id="ir_cron_generate_cbs_journal_scheduler" model="ir.cron">
-        <field name="name">CBS Journal Processing Scheduler</field>
+        <field name="name">CBS Batch Processing Scheduler</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
-        <field name="priority">130</field>
+        <field name="priority">110</field>
         <field name="nextcall"
                eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
         <field name="model">generate.cbs.journal</field>
