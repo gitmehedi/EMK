@@ -34,7 +34,6 @@ class AccountPaymentBatch(models.Model):
             else:
                 for ap in rec.payment_ids:
                     if ap.state != 'posted':
-                        ap.invoice_ids = ap.get_invoices()
                         ap.post()
 
                 rec.write({'state': 'posted'})
@@ -60,7 +59,7 @@ class AccountPaymentBatch(models.Model):
         }
 
 
-class InheritAccountPayment2(models.Model):
+class InheritAccountPayment(models.Model):
     _inherit = "account.payment"
 
     """ Relational field"""
@@ -68,7 +67,7 @@ class InheritAccountPayment2(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        res = super(InheritAccountPayment2, self).onchange_partner_id()
+        res = super(InheritAccountPayment, self).onchange_partner_id()
         if self.batch_id.is_batch_model:
             if self.batch_id.journal_id.id:
                 self.journal_id = self.batch_id.journal_id
@@ -79,9 +78,18 @@ class InheritAccountPayment2(models.Model):
 
     @api.multi
     def get_invoices(self):
-        invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                                 ('state', '=', 'open')])
         if self.sale_order_id.ids:
             invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
                                                                     ('state', '=', 'open')])
+        else:
+            invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
+                                                                     ('state', '=', 'open')])
         return invoice_ids
+
+    @api.multi
+    def post(self):
+        if not self.invoice_ids.ids:
+            self.invoice_ids = self.get_invoices()
+
+        result = super(InheritAccountPayment, self).post()
+        return result

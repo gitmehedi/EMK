@@ -141,6 +141,8 @@
                                     <field name="company_id"/>
                                 </group>
                                 <group>
+                                    <field name="account_move_id"
+                                           attrs="{'invisible': [('state', '!=', 'approve')]}"/>
                                 </group>
                             </group>
                         </page>

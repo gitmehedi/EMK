@@ -31,10 +31,11 @@ class InheritAccountInvoice(models.Model):
 
     @api.depends('currency_id')
     def _get_fields_invisible(self):
-        if self.currency_id.id != self.company_id.currency_id.id:
-            self.fields_invisible = False
-        else:
-            self.fields_invisible = True
+        for rec in self:
+            if rec.currency_id.id != rec.company_id.currency_id.id:
+                rec.fields_invisible = False
+            else:
+                rec.fields_invisible = True
 
     fields_invisible = fields.Boolean(compute='_get_fields_invisible', store=False)
 
