@@ -28,43 +28,32 @@ class InheritAccountPayment(models.Model):
 
     is_entry_receivable_cleared_payments = fields.Boolean(string='Is this payments cleared receivable?')
 
-
     @api.multi
     def post(self):
         res = super(InheritAccountPayment, self).post()
-
         for s_id in self.sale_order_id:
             so_objs = self.env['sale.order'].search([('id', '=', s_id.id)])
 
             for so_id in so_objs:
                 so_id.write({'is_this_so_payment_check': True})
 
-
         return res
-
-
 
     @api.onchange('partner_type')
     def _onchange_partner_type(self):
         res = super(InheritAccountPayment, self)._onchange_partner_type()
-
         if self.partner_type:
             return {'domain': {'partner_id': [(self.partner_type, '=', True),('parent_id', '=', False)]}}
 
-
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        for ds in self:
-            so_id_list = []
-            if ds.partner_id:
-                so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
-                                                                ('state', '=', 'done'),
-                                                                ('type_id.sale_order_type', 'in', ['cash', 'credit_sales'])])
-                if so_objs:
-                    for so_obj in so_objs:
-                        so_id_list.append(so_obj.id)
+        for rec in self:
+            so_ids = set()
+            if rec.partner_id:
+                invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', rec.partner_id.id),
+                                                                        ('state', '=', 'open'), ('so_id', '!=', False),
+                                                                        ('sale_type_id.sale_order_type', 'in', ['cash', 'credit_sales'])])
+                for inv in invoice_ids:
+                    so_ids.add(inv.so_id.id)
 
-
-                return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
-
-
+                return {'domain': {'sale_order_id': [('id', 'in', list(so_ids))]}}
