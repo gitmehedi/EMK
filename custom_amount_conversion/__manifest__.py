@@ -5,11 +5,16 @@
     'category': 'account',
     'version':'10.1.1.1',
     'depends': [
-        'account','purchase',
+        'base',
+        'account',
+        'purchase',
+        'gbs_collection_batch',
     ],
 
     'data': [
         'views/inherit_account_invoice_view.xml',
+        'views/inherit_account_payment_view.xml',
+        'views/inherit_account_payment_batch_view.xml',
     ],
 
     'summary': 'Convert foreign currencies on a given conversion rate',

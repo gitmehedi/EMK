@@ -6,7 +6,7 @@
     'category': 'sales',
     'depends': [
         'account',
-        'delivery_order',
+        'gbs_collection',
     ],
 
     'data': [

@@ -28,13 +28,13 @@ class InheritAccountInvoice(models.Model):
         res = super(InheritAccountInvoice, self).create(vals)
         return res
 
-
     @api.depends('currency_id')
     def _get_fields_invisible(self):
-        if self.currency_id.id != self.company_id.currency_id.id:
-            self.fields_invisible = False
-        else:
-            self.fields_invisible = True
+        for rec in self:
+            if rec.currency_id.id != rec.company_id.currency_id.id:
+                rec.fields_invisible = False
+            else:
+                rec.fields_invisible = True
 
     fields_invisible = fields.Boolean(compute='_get_fields_invisible', store=False)
 
@@ -43,32 +43,9 @@ class InheritAccountInvoice(models.Model):
         if self.currency_id.id != self.company_id.currency_id.id and self.conversion_rate < 60:
             raise ValidationError(_("Give the proper conversion rate."))
 
-        res = super(InheritAccountInvoice, self).action_invoice_open()
-        if self.currency_id.id != self.company_id.currency_id.id:
-            converted_amount = self.amount_total * self.conversion_rate
+        rec = self.with_context(payment_conversion_rate=self.conversion_rate) \
+            if self.currency_id.id != self.company_id.currency_id.id else self
 
-            # field of account.invoice
-            self.amount_total_company_signed = converted_amount
-            self.amount_untaxed_signed = converted_amount
-            self.residual_company_signed = converted_amount
+        res = super(InheritAccountInvoice, rec).action_invoice_open()
 
-            # field of account.invoice.line
-            self.invoice_line_ids.price_subtotal_signed = converted_amount
-
-            # field of account.move
-            self.move_id.amount = converted_amount
-
-            for aml in self.move_id.line_ids:
-                # separate two account move line based on balance
-                # set amount_residual, balance, debit if balance is positive
-                if aml.balance >= 0:
-                    self._cr.execute("""UPDATE      account_move_line
-                                        SET         amount_residual=%s, balance=%s, debit=%s
-                                        WHERE       id=%s
-                                        """, (converted_amount, converted_amount, converted_amount, aml.id))
-                else:
-                    # set balance, credit if balance is negative
-                    self._cr.execute("""UPDATE      account_move_line
-                                        SET         balance=%s, credit=%s
-                                        WHERE       id=%s
-                                        """, (-converted_amount, converted_amount, aml.id))
+        return res

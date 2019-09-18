@@ -1,5 +1,5 @@
 {
-    "name": "GBS LC Collection Payments",
+    "name": "GBS Collection LC",
     "version": "10.0.0.1",
     "category": "Accounting",
     "author": "Genweb2 Limited",
@@ -10,6 +10,7 @@
     'data': [
         "security/ir.model.access.csv",
         "data/data.xml",
+        "data/lc_journal_data.xml",
         "views/lc_receivable_payments_view.xml",
     ],
     'installable': True,
