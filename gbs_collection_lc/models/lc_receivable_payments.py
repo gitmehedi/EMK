@@ -206,6 +206,7 @@ class LCReceivablePayment(models.Model):
                 exchange_move_obj.line_ids = move_line_vals
                 exchange_move_obj.post()
             elif self.currency_loss_gain_type == 'loss':
+                self.currency_loss_gain_amount = self.currency_loss_gain_amount*(-1)
                 credit_amount = self.currency_loss_gain_amount
                 amount_currency = self.currency_loss_gain_amount * self.currency_id.rate
                 account_id = self.invoice_ids[0].account_id.id,
