@@ -34,7 +34,6 @@ class AccountPaymentBatch(models.Model):
             else:
                 for ap in rec.payment_ids:
                     if ap.state != 'posted':
-                        # ap.invoice_ids = ap.get_invoices()
                         ap.post()
 
                 rec.write({'state': 'posted'})

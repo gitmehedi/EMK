@@ -51,9 +51,6 @@
                                         <field name="payment_date"/>
                                         <field name="communication"/>
                                         <field name="payment_transaction_id"/>
-                                        <field name="hide_conversion_rate_field" invisible="1"/>
-                                        <field name="conversion_rate"
-                                               attrs="{'invisible':[('hide_conversion_rate_field', '==', True)]}" required="True"/>
                                         <field name="amount"/>
                                         <field name="state" invisible="1"/>
                                         <field name="payment_type" invisible="1"/>

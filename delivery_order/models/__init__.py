@@ -4,7 +4,6 @@ import cash_payment_line
 import cheque_payment_line
 import tt_payment_line
 import lc_payment_line
-import inherit_account_payment
 import delivery_order
 import delivery_order_line
 import cash_payment_line_layer
