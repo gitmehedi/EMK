@@ -1,5 +1,5 @@
 {
-    'name': 'GBS Accounting Installer',
+    'name': 'MTB OGL Installer',
     'version': '10.0.1.0.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
@@ -36,16 +36,15 @@
         "vendor_agreement",
         "account_provisional",
         "account_mtbl",
-        "file_processing",
+        "gbs_ogl_cbs_interface",
         "inherit_date_range",
         "bgl_accounts",
         "gbs_account_level",
         "gbs_account_budget",
         "web_export_view",
         "gbs_reverse_bill",
-
     ],
-    'description': 'Install all modules which is related to MTBL Accounting',
+    'description': 'Install all modules which is related to MTBL OGL System',
     'installable': True,
     'application': True,
 }

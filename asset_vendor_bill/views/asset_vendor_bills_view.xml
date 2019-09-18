@@ -88,11 +88,11 @@
                                            groups="operating_unit.group_multi_operating_unit"/>
                                     <field name="account_id" groups="account.group_account_user" invisible="1"
                                            domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
-                                    <field name="asset_category_id"
+                                    <field name="asset_category_id" required="1"
                                            domain="[('type', '=', 'purchase'),('parent_id', '=',False)]"
                                            context="{'default_type': 'purchase'}"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                    <field name="asset_type_id"
+                                    <field name="asset_type_id" required="1"
                                            domain="[('type', '=', 'purchase'),('parent_id', '!=',False)]"
                                            context="{'default_type': 'purchase'}"
                                            attrs="{'required': [('asset_category_id','!=',False)]}"

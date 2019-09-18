@@ -326,8 +326,8 @@ class SOAPProcess(models.Model):
 
     @api.model
     def action_payment_instruction(self):
-        payment_instruction = self.env['payment.instruction'].search([('is_sync', '=', False),('state', '=', 'approve')])
-        for record in payment_instruction:
+        payment_ids = self.env['payment.instruction'].search([('is_sync', '=', False), ('state', '=', 'approved')])
+        for record in payment_ids:
             debit, credit = 1, 1
             endpoint = self.apiInterfaceMapping(debit, credit)
 

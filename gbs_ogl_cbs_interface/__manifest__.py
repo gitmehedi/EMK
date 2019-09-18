@@ -11,6 +11,8 @@
     "depends": [
         'mail',
         'account',
+        'gbs_payment_instruction',
+        'gbs_vendor_bill',
     ],
     "data": [
         "security/security.xml",
@@ -26,6 +28,7 @@
         "views/api_process_error_view.xml",
         "views/cbs_batch_process_success_view.xml",
         "views/cbs_batch_process_view.xml",
+        "views/payment_instruction_view.xml",
     ],
     "application": True,
     "installable": True,

@@ -23,9 +23,7 @@ class PaymentInstruction(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
-
     origin = fields.Char('Origin')
-
     state = fields.Selection([
         ('draft', "Draft"),
         ('approved', "Approved"),
