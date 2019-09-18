@@ -20,7 +20,7 @@
                 name="gbs_purchase_order.report_purchase_order"
                 file="gbs_purchase_order.report_purchase_order"
                 menu = "True"
-                paperformat="report_layout.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_po"
         />
 
         <template id="report_purchase_order">
