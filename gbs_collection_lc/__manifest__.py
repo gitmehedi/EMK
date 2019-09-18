@@ -1,5 +1,5 @@
 {
-    "name": "GBS LC Collection Payments",
+    "name": "GBS Collection LC",
     "version": "10.0.0.1",
     "category": "Accounting",
     "author": "Genweb2 Limited",
