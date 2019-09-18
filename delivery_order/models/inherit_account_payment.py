@@ -58,7 +58,8 @@ class InheritAccountPayment(models.Model):
             so_id_list = []
             if ds.partner_id:
                 so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
-                                                                    ('state', '=', 'done')])
+                                                                ('state', '=', 'done'),
+                                                                ('type_id.sale_order_type', 'in', ['cash', 'credit_sales'])])
                 if so_objs:
                     for so_obj in so_objs:
                         so_id_list.append(so_obj.id)
