@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
 
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms')
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', track_visibility='onchange')
 
     # inherited fields from sale
     partner_id = fields.Many2one('res.partner', string='Customer', required=True,
