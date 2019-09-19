@@ -19,6 +19,8 @@ class AccountInvoice(models.Model):
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
                                             readonly=True,states={'draft': [('readonly',False)]})
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
+    security_deposit = fields.Float('Security Deposit',track_visibility='onchange', copy=False,
+                                    readonly=True, states={'draft': [('readonly', False)]})
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange',copy=False)
     total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
@@ -39,12 +41,12 @@ class AccountInvoice(models.Model):
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
-                 'type')
+                 'type','security_deposit')
     def _compute_amount(self):
         round_curr = self.currency_id.round
         self.amount_untaxed = sum(line.price_subtotal_without_vat for line in self.invoice_line_ids)
         self.amount_tax = sum(round_curr(line.amount) for line in self.tax_line_ids if line.tax_id)
-        self.amount_total = self.amount_untaxed + self.amount_tax
+        self.amount_total = self.amount_untaxed + self.amount_tax - self.security_deposit
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.company_id and self.currency_id != self.company_id.currency_id:
@@ -72,6 +74,16 @@ class AccountInvoice(models.Model):
     def onchange_strips(self):
         if self.reference:
             self.reference = self.reference.strip()
+
+    @api.onchange("entity_service_id")
+    def onchange_entity_service_id(self):
+        if self.entity_service_id:
+            domain = {'partner_id': [('entity_services', 'in', self.entity_service_id.id)]}
+        else:
+            domain = {'partner_id': [('supplier', '=', True)]}
+        return {
+            'domain': domain
+        }
 
     @api.constrains('reference')
     def _check_unique_reference(self):

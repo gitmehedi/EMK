@@ -103,6 +103,7 @@ class SubOperatingUnit(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
+                    'operating_unit_id': self.operating_unit_id.id if not requested.operating_unit_id.id else requested.operating_unit_id.id,
                     'pending': False,
                     'active': requested.status,
                 })
@@ -144,6 +145,7 @@ class HistorySubOperatingUnit(models.Model):
     _order = 'id desc'
 
     change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')

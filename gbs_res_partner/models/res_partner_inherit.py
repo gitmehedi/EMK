@@ -15,7 +15,7 @@ class ResPartner(models.Model):
     function = fields.Char(track_visibility='onchange')
     tax = fields.Char(track_visibility='onchange')
     vat = fields.Char(track_visibility='onchange',size=11)
-    bin = fields.Char(track_visibility='onchange',size=9)
+    bin = fields.Char(track_visibility='onchange',size=13)
     tin = fields.Char(track_visibility='onchange',size=12)
     title = fields.Many2one(track_visibility='onchange')
     lang = fields.Selection(track_visibility='onchange')
@@ -184,8 +184,8 @@ class ResPartner(models.Model):
                 [('bin', '=ilike', self.bin.strip()), '|', ('active', '=', True), ('active', '=', False)])
             if len(bin) > 1:
                 raise Warning(_('[Unique Error] BIN Number must be unique!'))
-            if len(self.bin) != 9 or not self.bin.isdigit():
-                raise Warning('[Format Error] BIN must be numeric with 9 digit!')
+            if len(self.bin) != 13 or not self.bin.isdigit():
+                raise Warning('[Format Error] BIN must be numeric with 13 digit!')
         if self.vat:
             vat = self.search(
                 [('vat', '=ilike', self.vat.strip()), '|', ('active', '=', True), ('active', '=', False)])
