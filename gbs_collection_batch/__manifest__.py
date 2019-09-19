@@ -5,13 +5,13 @@
     'website': 'http://www.genweb2.com',
     'category': 'sales',
     'depends': [
-        'account',
         'gbs_collection',
     ],
 
     'data': [
         'views/account_payment_batch_view.xml',
         'views/menu_items_view.xml',
+        'security/ir.model.access.csv',
     ],
 
     'summary': 'GBS Collection Batch',

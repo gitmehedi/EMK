@@ -12,7 +12,7 @@ class AccountPaymentBatch(models.Model):
                                  domain=[('type', 'in', ('bank', 'cash'))])
 
     """ Relational field"""
-    payment_ids = fields.One2many('account.payment', 'batch_id', string='Customer Payments')
+    payment_ids = fields.One2many('account.payment', 'batch_id', string='Customer Collection')
 
     is_batch_model = fields.Boolean(store=False, compute='_check_is_batch_model')
 

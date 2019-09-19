@@ -40,9 +40,9 @@
                             </group>
                         </group>
                         <notebook colspan="4">
-                            <page string="Customer Payments">
+                            <page string="Customer Collection">
                                 <field name="payment_ids" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}">
-                                    <tree string="Customer Payments" editable="bottom">
+                                    <tree string="Customer Collection" editable="bottom">
                                         <field name="partner_id" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))]}" string="Customer"/>
                                         <field name="journal_id" invisible="1"/>
                                         <field name="deposited_bank" options="{'no_open': True, 'no_create': True}"/>
@@ -75,9 +75,9 @@
 			</field>
 		</record>
 
-        <!--Action of "Customer Payments Batch" menu-->
+        <!--Action of "Customer Collection Batch" menu-->
         <record id="action_account_payment_batch" model="ir.actions.act_window">
-			<field name="name">Customer Payments Batch</field>
+			<field name="name">Customer Collection Batch</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.payment.batch</field>
 			<field name="view_type">form</field>
