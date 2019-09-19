@@ -76,7 +76,7 @@
 
         <!-- Newly added action-->
         <record id="action_account_payments_new" model="ir.actions.act_window">
-            <field name="name">Customer Payments</field>
+            <field name="name">Customer Collection</field>
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
