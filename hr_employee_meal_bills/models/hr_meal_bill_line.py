@@ -1,16 +1,16 @@
-from openerp import api, fields, models, exceptions,_
-from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models, exceptions,_
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrMealBillLine(models.Model):
     _name = 'hr.meal.bill.line'
     _description = 'HR meal bill line'    
     
-    bill_amount = fields.Integer(string="Amount", required=True)
+    bill_amount = fields.Integer(string="Amount", required=True ,readonly= True,states={'draft': [('readonly', False)]})
     
     """ Relational Fields """
     parent_id = fields.Many2one(comodel_name='hr.meal.bill',ondelete='cascade')
-    employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade',readonly= True, states={'draft': [('readonly', False)]})
 
 
     _sql_constraints = [
@@ -22,12 +22,13 @@ class HrMealBillLine(models.Model):
         ('draft', "Draft"),
         ('applied', "Applied"),
         ('approved', "Approved"),
+        ('adjusted', "Adjusted")
     ], default='draft')
 
 # Show a msg for minus value
     @api.onchange('bill_amount')
     def _onchange_bill(self):
         if self.bill_amount < 0:
-            raise UserError(_('Amount naver take negative value!'))
+            raise UserError(_('Amount never take negative value!'))
 
 

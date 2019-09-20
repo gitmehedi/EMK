@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="property_rule_hr_leave_forward_encash" model="ir.rule">
+            <field name="name">HR Officer Leave Forward Encash</field>
+            <field name="model_id" ref="model_hr_leave_forward_encash"/>
+            <field name="domain_force">[('operating_unit_id','in',user.operating_unit_ids.ids)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
+    </record>
+
+</odoo>

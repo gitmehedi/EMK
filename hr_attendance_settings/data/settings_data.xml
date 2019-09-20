@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- For example, if we have a file with demo datas and we use noupdate="1", if we delete a demo record and update the module, the deleted data not will be imported again. With noupdate="0", instead, the record will be reimported again if it doesn't exist in the db. -->
+        <record id="attendance_settings_data" model="hr.attendance.config.settings">
+            <field name="late_salary_deduction_rule">3</field>
+            <field name="time_duration">300</field>
+            <field name="server_url">http://52.221.157.78:8010</field>
+        </record>
+
+    </data>
+</odoo>

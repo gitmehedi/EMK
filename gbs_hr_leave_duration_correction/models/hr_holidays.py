@@ -1,9 +1,9 @@
-from openerp import fields, models, api
+from odoo import fields, models, api
 from datetime import date
 from datetime import datetime
 import math
 from datetime import timedelta
-from openerp.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, AccessError, ValidationError
 
 HOURS_PER_DAY = 8
 
@@ -31,39 +31,43 @@ class HRHolidays(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
                             default=_default_employee)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
+    check_hour = fields.Boolean(string='Half Leave',default= False)
 
     @api.model
     def create(self, values):
-        if (values.get('date_from') is not False and values.get('date_to') is not False):
+        if (values.get('type') == 'remove'
+            and values.get('date_from') is not False and values.get('check_hour') is not True
+            and values.get('date_to') is not False):
             date_from = values.get('date_from')
             date_to = values.get('date_to')
-            d1 = datetime.strptime(str(date_from), "%Y-%m-%d")
-            d2 = datetime.strptime(str(date_to), "%Y-%m-%d")
+            d1 = fields.Datetime.from_string(date_from)
+            d2 = fields.Datetime.from_string(date_to)
             duration = (d2 - d1).days + 1
             values['number_of_days_temp'] = duration
-
         return super(HRHolidays, self).create(values)
 
     @api.multi
     def write(self, values):
-        for holiday in self:
-            if (holiday.type == 'remove'):
-                start_date = holiday.date_from
-                end_date = holiday.date_to
+        # if values.get('check_hour') is False:
+            for holiday in self:
+                if (holiday.type == 'remove'):
+                    start_date = holiday.date_from
+                    end_date = holiday.date_to
 
-                if (values.get('date_from', False) != False):
-                    start_date = values.get('date_from')
+                    if (values.get('date_from', False) != False):
+                        start_date = values.get('date_from')
 
-                if (values.get('date_to', False) != False):
-                    end_date = values.get('date_to')
+                    if (values.get('date_to', False) != False):
+                        end_date = values.get('date_to')
 
-                d1 = datetime.strptime(str(start_date), "%Y-%m-%d")
-                d2 = datetime.strptime(str(end_date), "%Y-%m-%d")
+                    d1 = fields.Datetime.from_string(start_date)
+                    d2 = fields.Datetime.from_string(end_date)
 
-                duration = (d2 - d1).days + 1
-                values['number_of_days_temp'] = duration
-
-        return super(HRHolidays, self).write(values)
+                    duration = (d2 - d1).days + 1
+                    values['number_of_days_temp'] = duration
+            return super(HRHolidays, self).write(values)
+        # else:
+        #     return super(HRHolidays, self).write(values)
 
     """
        As we removed Datetime data type so we have added 1d with date difference
@@ -73,16 +77,16 @@ class HRHolidays(models.Model):
         from_dt = fields.Datetime.from_string(date_from)
         to_dt = fields.Datetime.from_string(date_to)
 
-        if employee_id:
-            employee = self.env['hr.employee'].browse(employee_id)
-            resource = employee.resource_id.sudo()
-            if resource and resource.calendar_id:
-                hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id,
-                                                               compute_leaves=True)
-                uom_hour = resource.calendar_id.uom_id
-                uom_day = self.env.ref('product.product_uom_day')
-                if uom_hour and uom_day:
-                    return uom_hour._compute_quantity(hours, uom_day)
+        # if employee_id:
+        #     employee = self.env['hr.employee'].browse(employee_id)
+        #     resource = employee.resource_id.sudo()
+        #     if resource and resource.calendar_id:
+        #         hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id,
+        #                                                        compute_leaves=True)
+        #         uom_hour = resource.calendar_id.uom_id
+        #         uom_day = self.env.ref('product.product_uom_day')
+        #         if uom_hour and uom_day:
+        #             return uom_hour._compute_quantity(hours, uom_day)
 
         time_delta = (to_dt - from_dt) + timedelta(hours=24)
         return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
@@ -124,7 +128,7 @@ class HRHolidays(models.Model):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+                or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise ValidationError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -139,8 +143,7 @@ class HRHolidays(models.Model):
 
     @api.multi
     def action_validate(self):
-        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')):
             raise UserError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -148,7 +151,7 @@ class HRHolidays(models.Model):
             if holiday.state not in ['confirm', 'validate1']:
                 raise ValidationError(('Leave request must be confirmed in order to approve it.'))
             if holiday.state == 'validate1' and not ((holiday.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                                                     or holiday.env.user.has_group('gbs_base_package.group_dept_manager'))):
+                                                     or holiday.env.user.has_group('gbs_application_group.group_dept_manager'))):
                 raise ValidationError(('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
@@ -189,7 +192,6 @@ class HRHolidays(models.Model):
         return True
 
     def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
-                                                                                              or self.env['res.users'].has_group('gbs_base_package.group_dept_manager')):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')):
             return False
         return True

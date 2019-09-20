@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="proforma_invoice_form_view" model="ir.ui.view">
+            <field name="name">proforma.invoice.form</field>
+            <field name="model">proforma.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Proforma Invoice" delete="false" copy='0'>
+                    <header>
+                        <button name="action_confirm" type="object" states="draft"
+                                string="Confirm" class="oe_highlight"/>
+                        <button string="Reset To Draft" name="action_draft"
+                                states="confirm" type="object"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+	                    <h1>
+	                        <field name="name"/>
+	                    </h1>
+                        <group>
+                            <group>
+                                <field name="beneficiary_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="invoice_date"/>
+                                <field name="advising_bank_acc_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="account_payment_term_id" string="Payment term"/>
+                                <field name="transport_by"/>
+                                <field name="terms_of_delivery"/>
+                            </group>
+                            <group>
+                                <field name="partner_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="customer_add"/>
+                                <field name="pack_type"/>
+                                <field name="type_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="operating_unit_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            </group>
+
+                            <notebook colspan="4">
+                                <page string="Products">
+                                    <field name="line_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="product_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="description"/>
+                                            <field name="quantity"/>
+                                            <field name="uom_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="price_unit"/>
+                                            <field name="tax"/>
+                                            <field name="price_tax" invisible="1"/>
+                                            <field name="price_subtotal"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Terms &amp; Condition">
+                                    <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
+                                </page>
+                                <!--<page string="Shipping Details">-->
+                                    <!--<group>-->
+                                        <!--<group>-->
+                                            <!--<field name="ship_freight_type"/>-->
+                                            <!--<field name="ship_exp_date"/>-->
+                                            <!--<field name="ship_exp_good_weight"/>-->
+                                        <!--</group>-->
+                                        <!--<group>-->
+                                            <!--<field name="ship_exp_cubic_weight"/>-->
+                                            <!--<field name="ship_total_pkg"/>-->
+                                        <!--</group>-->
+                                    <!--</group>-->
+                                <!--</page>-->
+                                <page string="Other Information">
+                                    <group>
+                                        <group>
+                                           <field name="credit_sales_or_lc" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                           <field name="currency_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                           <field name="region_type" widget="radio" options="{'horizontal': true}"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <field name="sales_team_id" invisible="1"/>
+                                    </group>
+                                </page>
+
+                            </notebook>
+                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="sub_total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="untaxaed_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="taxed_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="freight_charge" class="oe_right" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="total" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                         </group>
+
+                        </group>
+
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="pi_tree_view" model="ir.ui.view">
+            <field name="name">proforma.invoice.tree</field>
+            <field name="model">proforma.invoice</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="PI">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="search_pi_view" model="ir.ui.view">
+            <field name="name">proforma.invoice.search</field>
+            <field name="model">proforma.invoice</field>
+            <field name="arch" type="xml">
+                <search string="PI">
+                    <filter name="draft" string="To Confirm" domain="[('state','=','draft')]"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="pi_creation_action">
+            <field name="name">Proforma Invoice</field>
+            <field name="res_model">proforma.invoice</field>
+            <field name="context">{'search_default_draft':1}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('region_type','=','local')]</field>
+            <field name="context">{'default_region_type': 'local'}</field>
+        </record>
+
+        <!--<menuitem id="pi_creation_submenu" name="Proforma Invoice (Local)" parent="sales_team.menu_sales"-->
+                  <!--groups="gbs_application_group.group_cxo,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale"-->
+                  <!--action="pi_creation_action"/>-->
+        <menuitem id="pi_creation_submenu" name="Proforma Invoice (Local)"
+                  parent="sales_team.menu_sales"
+                  action="pi_creation_action"/>
+
+
+        <record model="ir.actions.act_window" id="pi_creation_action_foreign">
+            <field name="name">Proforma Invoice</field>
+            <field name="res_model">proforma.invoice</field>
+            <field name="context">{'search_default_draft':1}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('region_type','=','foreign')]</field>
+            <field name="context">{'default_region_type': 'foreign'}</field>
+        </record>
+
+        <menuitem id="pi_creation_submenu_foreign" name="Proforma Invoice (Foreign)"
+                  parent="sales_team.menu_sales"
+                  action="pi_creation_action_foreign"/>
+    </data>
+</odoo>

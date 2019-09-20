@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_iou_user,access_hr_employee_iou_user,model_hr_employee_iou,base.group_user,0,0,0,0
+access_hr_employee_iou_line_user,access_hr_employee_iou_line_user,model_hr_employee_iou_line,base.group_user,0,0,0,0
+access_hr_employee_iou_hr_user,access_hr_employee_iou_hr_user,model_hr_employee_iou,hr.group_hr_user,1,1,1,1
+access_hr_employee_iou_line_hr_user,access_hr_employee_iou_line_hr_user,model_hr_employee_iou_line,hr.group_hr_user,1,1,1,1
+access_hr_employee_iou_manager_user,access_hr_employee_iou_hr_user,model_hr_employee_iou,hr.group_hr_manager,1,1,1,1
+access_hr_employee_iou_line_manager_user,access_hr_employee_iou_line_hr_user,model_hr_employee_iou_line,hr.group_hr_manager,1,1,1,1

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_stock_indent_SCCL_HO" model="ir.sequence">
+            <field name="name">Indent SCCL HO</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SCCL_DF" model="ir.sequence">
+            <field name="name">Indent SCCL DF</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SCCL_CTG" model="ir.sequence">
+            <field name="name">Indent SCCL CTG</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SPL_HO" model="ir.sequence">
+            <field name="name">Indent SPL HO</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SPL_DF" model="ir.sequence">
+            <field name="name">Indent SPL DF</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SPL_CTG" model="ir.sequence">
+            <field name="name">Indent SPL CTG</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SSCL_HO" model="ir.sequence">
+            <field name="name">Indent SSCL_HO</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SSCL_CTG" model="ir.sequence">
+            <field name="name">Indent SSCL CTG</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SPPL_HO" model="ir.sequence">
+            <field name="name">Indent SPPL HO</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_indent_SPPL_CTG" model="ir.sequence">
+            <field name="name">Indent SPPL CTG</field>
+            <field name="code">stock.indent</field>
+            <field name="prefix">Indent-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        
+    </data>
+</odoo>

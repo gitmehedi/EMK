@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="evaluation_hr_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluation.hr.comment.wizard</field>
+            <field name="model">evaluation.hr.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="HR Evaluation" create="false" edit="false">
+                    <div>
+                        <group>
+                            <field name="given_reward"/>
+                            <field name="disciplinary_action"/>
+                        </group>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_record" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="evaluation_employee_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluation.employee.comment.wizard</field>
+            <field name="model">evaluation.employee.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Employee Comment" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comment by Employee"/>
+                        <field name="emp_comment" placeholder="I do hereby acknowledge that i have reviewed the above information about me which is correct. "/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_record" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_hr_manager_comment_wizard" model="ir.ui.view">
+            <field name="name">hr.manager.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by HR Manager"/>
+                        <field name="hr_manager_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_hr_manager_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_cxo_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.cxo.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Chief Officer"/>
+                        <field name="cxo_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_cxo_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_supervisor_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.supervisor.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Supervisor"/>
+                        <field name="supervisor_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_supervisor_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_judgement_wizard" model="ir.ui.view">
+            <field name="name">evaluating.judgement.wizard</field>
+            <field name="model">evaluating.judgement.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="HR Evaluation">
+                    <group colspan="4">
+                        <separator string="Evaluation Criteria" colspan="4"/>
+                        <newline/>
+                        <field name="criteria_line_ids" nolabel="1">
+                            <tree string="Evaluation Criteria Line" create="false" delete="false" editable="bottom">
+                                <field name="seq" readonly="1"/>
+                                <field name="name" readonly="1"/>
+                                <field name="marks" readonly="1"/>
+                                <field name="obtain_marks"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <separator string="Judgement of evaluating person"/>
+                    <group colspan="4">
+                        <group>
+                            <field name="judgment_promotion"/>
+                            <field name="judgment_observation"/>
+                        </group>
+                        <group>
+                            <field name="judgment_increment"/>
+                            <field name="judgment_training_requirement"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Save" name="save_evaluating_judgement" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_supervisor_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.supervisor.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Supervisor"/>
+                        <field name="supervisor_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_supervisor_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_hod_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.hod.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Head Of department"/>
+                        <field name="hod_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_hod_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_plant_incharge_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.plant.incharge.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Plant Incharge"/>
+                        <field name="plant_incharge_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_plant_incharge_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--<record id="action_performance_evaluation_wizard" model="ir.actions.act_window">-->
+        <!--<field name="name">Performance Evaluation</field>-->
+        <!--<field name="res_model">hr.performance.evaluation</field>-->
+        <!--<field name="view_type">form</field>-->
+        <!--<field name="view_mode">tree,form</field>-->
+        <!--<field name="view_id" ref="hr_performance_evaluation_wizard"/>-->
+        <!--<field name="target">new</field>-->
+        <!--</record>-->
+    </data>
+</odoo>

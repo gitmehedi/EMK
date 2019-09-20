@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<openerp>
+<odoo>
 	<data>
 		<record id="leave_carry_forward_tree" model="ir.ui.view">
 			<field name="name">hr.leave.carry.forward.tree</field>
@@ -60,4 +60,4 @@
 			parent="menu_hr_leave_carry_forward"
 			action="hr_holidays_leave_carry_forward" />
 	</data>
-</openerp>
+</odoo>

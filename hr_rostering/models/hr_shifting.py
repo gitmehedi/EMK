@@ -1,4 +1,4 @@
-from openerp import api, fields, models, _
+from openerp import api, fields, models, _,SUPERUSER_ID
 from openerp.exceptions import UserError, ValidationError
 
 
@@ -18,8 +18,8 @@ class HrShifting(models.Model):
     #         raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
 
 class HrResourceCal(models.Model):
-
-    _inherit = ['resource.calendar']
+    _name = "resource.calendar"
+    _inherit = ['resource.calendar','mail.thread']
 
     name = fields.Char(required=True,states={'applied': [('readonly', True)],'approved': [('readonly', True)]})
     manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid,
@@ -50,6 +50,16 @@ class HrResourceCal(models.Model):
     @api.multi
     def action_done(self):
         self.state = 'approved'
+
+    @api.multi
+    def action_reset(self):
+        if self.state=='approved':
+            if SUPERUSER_ID == self.env.user.id:
+                self.write({'state': 'draft'})
+            else:
+                raise UserError(_('Only Admin can reset in this stage.'))
+        else:
+            self.write({'state': 'draft'})
 
     @api.multi
     def unlink(self):

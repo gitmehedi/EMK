@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<openerp>
+<odoo>
 	<data>
 	
 		<record id="inherit_hr_payslip_run_form" model="ir.ui.view">
@@ -11,10 +11,12 @@
                     <xpath expr="//header/button[@name='draft_payslip_run']" position="after">
                          <button string="Print Bank Letter" type="action"
                          		name="%(action_hr_bank_selection_wizard)d"/>
+
+
                     </xpath>
                 </data>
             </field>
         </record>
 		
 	</data>
-</openerp>
+</odoo>

@@ -1,5 +1,5 @@
-from openerp import models, fields
-from openerp import api
+from odoo import models, fields
+from odoo import api
 
 
 class HrEarnedLeave(models.Model):

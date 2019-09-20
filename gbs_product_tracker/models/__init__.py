@@ -1,0 +1,3 @@
+import inherit_product_category
+import inherit_product
+import inherit_unit_measure

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main template -->
+    <template id="lc_status_foreign_template">
+        <t t-call="report.html_container">
+            <t t-call="report_layout.gbs_internal_layout">
+                <div class="page" style="page-break-inside:auto">
+                    <div class="row" style="margin-top:-13px;">
+                        <style type="text/css">
+                            .report-title { text-align:center; }
+                            .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                        </style>
+                        <div class="clearfix">
+                            <h4 class="report-title">Foreign Commercial Status Report</h4>
+                            <div class="row" style="padding-top:15px; padding-bottom:5px;">
+                                <div class="col-xs-6 text-left">
+                                    <strong>Type :</strong>
+                                    <t t-if="data['status'] == 'product'">Product Wise</t>
+                                    <t t-if="data['status'] == 'variant'">Variant wise</t>
+                                    <br/>
+                                    <t t-if="data['status'] == 'variant'">
+                                        <strong>Product :</strong>
+                                        <t t-if="not data['product_id']">All</t>
+                                        <t t-if="data['product_name']"><t t-esc="data['product_name']"/></t>
+                                    </t>
+                                    <t t-if="data['status'] == 'product'">
+                                        <strong>Product :</strong>
+                                        <t t-if="not data['product_temp_id']">All</t>
+                                        <t t-if="data['product_temp_name']"><t t-esc="data['product_temp_name']"/></t>
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <p> </p>
+                                    <strong>Current Month &amp; Year : </strong> <span t-esc="month"/>, <span t-esc="year"/>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-report-xs table-striped"
+                                        style="margin-bottom: 10px; table-layout: fixed;">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th class="text-center" style="width:2%;">SL</th>
+                                    <th class="text-center" style="width:24%;">Party Name</th>
+                                    <th class="text-center" style="width:13%;">PI No.</th>
+                                    <th class="text-center" style="width:3%;">Type</th>
+                                    <th class="text-center" style="width:13%;">LC/TT/SC No.</th>
+                                    <th class="text-center" style="width:5.5%;">PI Date</th>
+                                    <th class="text-center" style="width:5.5%;">LC/TT/SC Date</th>
+                                    <th class="text-center" style="width:5.5%;">Last SP.Date</th>
+                                    <th class="text-center" style="width:5.5%;">Exp. Date</th>
+                                    <th class="text-center" style="width:5%;">LC/TT/SC Qty</th>
+                                    <th class="text-center" style="width:5%;">Delivery Qty</th>
+                                    <th class="text-center" style="width:5%;">Document Qty</th>
+                                    <th class="text-center" style="width:5%;">Pending Qty</th>
+                                    <th class="text-center" style="width:3%;">UOM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lc_list" t-as="data">
+                                    <tr>
+                                        <td class="text-left"><span t-esc="data_index+1"/></td>
+                                        <td class="text-left"><t t-esc="data['first_party']"/></td>
+                                        <td class="text-left"><span t-esc="data['pi_no']"/></td>
+                                        <td class="text-left">
+                                            <t t-if="data['model_type'] == 'lc'">LC</t>
+                                            <t t-elif="data['model_type'] == 'TT'">TT</t>
+                                            <t t-elif="data['model_type'] == 'SC'">SC</t>
+                                        </td>
+                                        <td class="text-left"><span t-esc="data['lc_name']"/></td>
+                                        <td class="text-left"><span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['pi_date'],'%Y-%m-%d'))"/></td>
+                                        <td class="text-left"><span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['lc_date'],'%Y-%m-%d'))"/></td>
+                                        <td class="text-left"><span t-esc="data['lst_sp_date']"/></td>
+                                        <td class="text-left"><span t-esc="data['lc_expiry_date']"/></td>
+                                        <td class="text-right"><span t-esc="data['lc_qty']"/></td>
+                                        <td class="text-right"><span t-esc="data['delivery_qty']"/></td>
+                                        <td class="text-right"><span t-esc="data['product_received_qty']"/></td>
+                                        <td class="text-right"><t t-esc="data['pending_qty']"/></td>
+                                        <td class="text-left"><t t-esc="data['product_uom']"/></td>
+                                    </tr>
+                                </t>
+                                <td class="text-right" colspan="9">Total</td>
+                                <td class="text-right"><span t-esc="sum(l['lc_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['delivery_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['product_received_qty'] for l in lc_list)"/></td>
+                                <td class="text-right"><span t-esc="sum(l['pending_qty'] for l in lc_list)"/></td>
+                                <td> </td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <report
+            id="action_sale_price_change_form_viewpurchase_summary_template"
+            model="hr.employee"
+            string="LC Status Summary"
+            report_type="qweb-pdf"
+            menu="False"
+            name="lc_sales_product_foreign.lc_status_foreign_template"
+            file="lc_sales_product_foreign.lc_status_foreign_template"
+            paperformat="report_layout.paperformat_backend_landscape"
+    />
+</odoo>

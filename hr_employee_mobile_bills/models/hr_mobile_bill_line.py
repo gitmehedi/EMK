@@ -1,6 +1,6 @@
-from openerp import models, fields,_
-from openerp import api
-from openerp.exceptions import UserError, ValidationError
+from odoo import models, fields,_
+from odoo import api
+from odoo.exceptions import UserError, ValidationError
 
 
 
@@ -8,18 +8,29 @@ class HrEmpMobileBillLine(models.Model):
     _name = 'hr.mobile.bill.line'
     _description = 'HR mobile bill line'    
 
-    bill_amount = fields.Float(string="Bill Amount", required=True)
-    amount = fields.Float(string="Exceed Amount", required=True)
-    emp_mobile_phone = fields.Char('Mobile Number', required=True)
+    bill_amount = fields.Float(string="Bill Amount", required=True,
+                               readonly= True, states={'draft': [('readonly', False)]})
+    amount = fields.Float(string="Exceed Amount", required=True, readonly= True, states={'draft': [('readonly', False)]})
+    emp_mobile_phone = fields.Char('Mobile Number', required=True, readonly= True, states={'draft': [('readonly', False)]})
 
     """ Relational Fields """
 
     
     parent_id = fields.Many2one(comodel_name='hr.mobile.bill',ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True,ondelete='cascade',
-                                  compute='onchange_emp_mobile_phone')
-    
-    
+                                  compute='onchange_emp_mobile_phone',readonly= True, states={'draft': [('readonly', False)]})
+
+    """ All Selection fields """
+
+    """ All Selection fields """
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('applied', "Applied"),
+        ('approved', "Approved"),
+        ('adjusted',"Adjusted")
+    ], default='draft')
+
     _sql_constraints = [
         ('unique_mobile_number', 'unique(parent_id, emp_mobile_phone)',
          'Mobile Number must be unique per bill!'),
@@ -46,4 +57,4 @@ class HrEmpMobileBillLine(models.Model):
     @api.onchange('bill_amount','amount')
     def _onchange_bill(self):
         if self.bill_amount < 0 or self.amount < 0:
-            raise UserError(_('Amount or Exceed Amount naver take negative value!'))
+            raise UserError(_('Amount or Exceed Amount never take negative value!'))

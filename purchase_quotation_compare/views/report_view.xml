@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <report id="report_purchase_quatation_compare"
+            model="purchase.requisition"
+            string="Comparative Bid Analysis"
+            name="purchase_quotation_compare.template_purchaserequisitions_doc"
+            file="purchase_quotation_compare.template_purchaserequisitions_doc"
+            paperformat="report_layout.paperformat_backend_landscape"
+            report_type="qweb-pdf"/>
+
+</odoo>

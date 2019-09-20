@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="action_commercial_pr_local">
+            <field name="name">Purchase Requisition</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
+            <field name="context">{
+                'search_default_approval_local_foreign':1,
+                }
+            </field>
+            <field name="domain">[('purchase_by','in',('cash','credit', False)),('state','in',('done','close','cancel'))]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_commercial_pr_foreign">
+            <field name="name">Purchase Requisition</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{
+                'search_default_approval_local_foreign':1,
+                }
+            </field>
+            <field name="domain">[('purchase_by','in',('lc','tt',False)),('state','in',('done','close','cancel'))]</field>
+        </record>
+
+        <menuitem id="menu_pr_commercial" parent="commercial.menu_commercial_root"
+            sequence="0" name="Purchase Requisition" />
+
+        <menuitem id="submenu_commercial_pr_local" name="Approved PR(Local)" parent="menu_pr_commercial"
+                sequence="1" action="action_commercial_pr_local"/>
+
+        <menuitem id="submenu_commercial_pr_foreign" name="Approved PR(Foreign)" parent="menu_pr_commercial"
+                sequence="2" action="action_commercial_pr_foreign"/>
+
+        <menuitem id="submenu_commercial_pi" name="Proforma Information(PI)" parent="menu_pr_commercial"
+                sequence="5"/>
+
+
+        <menuitem id="menu_commercial_configuration" parent="commercial.menu_commercial_root"
+            sequence="100" name="Configuration" />
+
+        <menuitem id="submenu_commercial_customer" name="Customers" parent="menu_commercial_configuration"
+                sequence="1" action="base.action_partner_customer_form"/>
+
+        <menuitem id="submenu_commercial_supplier" name="Suppliers" parent="menu_commercial_configuration"
+                sequence="2" action="base.action_partner_supplier_form"/>
+
+        <menuitem id="submenu_commercial_products_sell" name="Products Sellable" parent="menu_commercial_configuration"
+                sequence="3" action="product.product_template_action"/>
+
+        <menuitem id="submenu_commercial_products_purchase" name="Products Purchaseable" parent="menu_commercial_configuration"
+                sequence="4" action="purchase.product_normal_action_puchased"/>
+
+    </data>
+</odoo>

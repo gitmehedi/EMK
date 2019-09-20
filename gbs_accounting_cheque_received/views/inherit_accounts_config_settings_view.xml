@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="inherit_acc_conf_sett_form">
+            <field name="name">account.config.settings.view</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="after">
+                    <group string="Cheque Received">
+                        <field name="money_receipt_seq_id" class="oe_inline" string="Money Receipt Seq"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

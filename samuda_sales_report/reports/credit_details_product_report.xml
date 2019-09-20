@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_credit_details_product"
+                model="res.partner"
+                string="Credit Details Report"
+                report_type="qweb-pdf"
+                menu="False"
+                name="samuda_sales_report.report_credit_details_product"
+                file="samuda_sales_report.report_credit_details_product"
+                paperformat="report_layout.paperformat_backend_portrait"
+        />
+        <template id="report_credit_details_product">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Product Wise Credit Details Report</h4>
+                                <br/>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        <ul class="list-inline">
+                                            <li>
+                                                <strong>Product : </strong>
+                                                <t t-if="not data['product_name']">All</t>
+                                                <span t-esc="data['product_name']"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+<!--                                    <div class="col-xs-6 text-right">-->
+<!--                                        <strong>Date : </strong>-->
+<!--                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>-->
+<!--                                        <strong> to </strong>-->
+<!--                                        <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>-->
+<!--                                    </div>-->
+                                </div>
+                            </div>
+
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center" style="width:25%;">Customer Name</th>
+                                        <th class="text-center" style="width:15%;">Delivery Date</th>
+                                        <th class="text-center" style="width:15%;">Qty (MT)</th>
+                                        <th class="text-center" style="width:20%;">Value</th>
+                                        <th class="text-center" style="width:10%;">Credit Tenure</th>
+                                        <th class="text-center" style="width:15%;">Maturity Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data" t-as="obj">
+                                        <tr>
+                                            <td class="odo-bg-info" colspan="100%" style="font-size: 50%;">
+                                                <strong class="text-nowrap" t-esc="obj_value['product_name']"/>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="obj_value['customers']" t-as="cus">
+                                            <tr>
+                                                <td>
+                                                    <span class="text-nowrap" t-esc="cus['customer_name']"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="text-nowrap" t-esc="cus['delivery_date']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="formatLang(cus['qty'])"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="formatLang(cus['val'])"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="cus['credit_tenure']"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="text-nowrap" t-esc="cus['maturity_date']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

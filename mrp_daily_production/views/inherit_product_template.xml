@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="product_template_inherit_view" model="ir.ui.view">
+            <field name="name">product.template.inherit.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="after">
+                    <div name="new_options">
+                        <div>
+                            <field name="finish_good"/>
+                            <label for="finish_good"/>
+                            <field name="consumable"/>
+                            <label for="consumable"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <!--<record id="product_template_inherit_view" model="ir.ui.view">-->
+            <!--<field name="name">product.template.inherit.view</field>-->
+            <!--<field name="model">product.template</field>-->
+            <!--<field name="inherit_id" ref="product.product_template_form_view"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//div[@name='options']/div" position="inside">-->
+                    <!--<field name="finish_good"/>-->
+                    <!--<label for="finish_good"/>-->
+                <!--</xpath>-->
+                <!--<xpath expr="//div[@name='options']/div[2]" position="inside">-->
+                    <!--<field name="consumable"/>-->
+                    <!--<label for="consumable"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+    </data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="delivery_schedule_date_wizard_view" model="ir.ui.view">
+            <field name="name">delivery.schedule.date.wizard.name</field>
+            <field name="model">delivery.schedule.date.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="schedule_date"/>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button name="process_schedule_date" string="Submit" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_delivery_schedule_date" model="ir.actions.act_window">
+            <field name="name">Daily Delivery Schedule</field>
+            <field name="res_model">delivery.schedule.date.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="delivery_schedule_date_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Daily Delivery Schedule"
+                  groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+                  action="action_delivery_schedule_date"
+                  id="delivery_schedule_date_id"
+                  parent="delivery_order.delivery_menu" sequence="20"/>
+
+    </data>
+</odoo>

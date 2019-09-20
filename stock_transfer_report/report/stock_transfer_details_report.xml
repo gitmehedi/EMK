@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_transfer_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
+        <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
+            <attribute name="t-call">stock_transfer_report.internal_layout_header_stdr</attribute>
+        </xpath>
+    </template>
+    <template id="internal_layout_header_stdr" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
+        <xpath expr="//div[@class='company-info']" position="after">
+            <div name="company_address">
+                <h5><span t-esc="address"/></h5>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Main template -->
+    <template id="std_report_temp">
+        <t t-call="report.html_container">
+            <t t-call="stock_transfer_report.report_transfer_temp">
+                <div class="page" style="page-break-inside:auto">
+                    <div class="row mb32" style="padding-top:25px;">
+                        <div class="col-xs-12">
+                            <h3 class="text-center">Stock Transfer Report</h3>
+                        </div>
+                        <hr></hr>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6" style="padding-bottom:10px;">
+                            <t t-if="record['date_from']">
+                                <strong>Period From : </strong>
+                                <span t-esc="time.strftime('%d-%m-%Y',time.strptime(record['date_from'],'%Y-%m-%d'))"/>
+                            </t>
+                            <t t-if="record['date_to']">
+                                <strong style="padding-left:5px;"> To :</strong>
+                                <span t-esc="time.strftime('%d-%m-%Y',time.strptime(record['date_to'],'%Y-%m-%d'))"/>
+                            </t>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <t t-if="record['operating_unit_name']">
+                                <strong>Operating Unit : </strong>
+                                <span t-esc="record['operating_unit_name']"/>
+                            </t>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
+                        <thead>
+                            <tr style="background-color: #EFECEB;">
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Ref</th>
+                                <th class="text-center">Code</th>
+                                <th class="text-center">Item Name</th>
+                                <th class="text-center">Category</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-center">Unit</th>
+                                <th class="text-center">Rate</th>
+                                <th class="text-center">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="product_lines">
+                                <t t-foreach="product_lines" t-as="data">
+                                    <t t-if="data_value['product']">
+                                        <tr style="background-color: #ebebe0; text-align:left;">
+                                            <td colspan="9" style="padding: 0px;">
+                                                <strong>
+                                                    <t t-esc="data"/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="data_value['product']" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <!--<t t-esc="line['m_date']"/>-->
+                                                <t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['m_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['reference']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['code']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['category']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['qty_out_tk']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['uom_name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['rate_out']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['val_out_tk']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data_value['product']">
+                                        <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
+                                            <td colspan="4" class="text-left">
+                                                <t t-esc="data_value['sub-total']['title']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="data_value['sub-total']['sub_total_qty']"/>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-right">
+                                                <t t-esc="data_value['sub-total']['sub_total_val']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                </t>
+                            </t>
+                            <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                <td colspan="4" class="text-left">
+                                    <t t-esc="total['title']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="total['total_out_qty']"/>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right">
+                                    <t t-esc="total['total_out_val']"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <t t-call="report_layout.report_signing"></t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <report id="report_stock_transfer_details"
+            model="stock.move"
+            string="Stock Transfer Report"
+            name="stock_transfer_report.std_report_temp"
+            file="stock_transfer_report.std_report_temp"
+            multi="True"
+            menu="False"
+            report_type="qweb-pdf"/>
+
+    <record id="report_stock_transfer_details" model="ir.actions.report.xml">
+        <field name="paperformat_id" ref="report_layout.paperformat_backend_landscape"/>
+    </record>
+</odoo>

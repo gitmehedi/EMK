@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_sales" model="ir.module.category" >
+        <field name="name">Sales</field>
+        <field name="sequence">500</field>
+    </record>
+
+    <record id="group_sales_local" model="res.groups">
+        <field name="name">Sales (Local)</field>
+        <field name="category_id" ref="module_category_sales"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="group_sales_foreign" model="res.groups">
+        <field name="name">Sales (Foreign)</field>
+        <field name="category_id" ref="module_category_sales"/>
+         <field name="sequence">20</field>
+    </record>
+
+</odoo>
+

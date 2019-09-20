@@ -5,11 +5,12 @@
 {
     "name": "GBS HR Department Sequence",
     "version": "1.0.0",
+    'sequence': 99,
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
     "license": "AGPL-3",
     "category": "Human Resources",
-    "depends": ["hr","hr_holidays"],
+    "depends": ["hr"],
     "data": [
         "security/ir.model.access.csv",
         "views/hr_department_view.xml",

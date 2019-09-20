@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="template_purchaserequisitions_doc">
+        <style type="text/css">
+            .total { border-top: 5px double darkgrey !important; }
+            .subtotal { border-top: 2px solid darkgrey !important; }
+            .col-separator { border-right: 3px solid lightgrey !important; }
+            .large-text { min-height: 50px !important;}
+        </style>
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <t t-as="batch_start">
+                            <div class="clearfix">
+                                <h3 class="report-title">Comparative Bid analysis</h3>
+                            </div>
+                            <t>
+                                <t t-set="bid_batch" t-value="o.purchase_ids"/>
+                            </t>
+                            <div class=" text-left">
+                                <div>
+                                    <strong>Requisition Date : </strong>
+                                    <span t-field="o.requisition_date"  t-field-options='{"format": "d-MMM-y"}'/>
+                                </div>
+                                <div>
+                                    <strong>PR No :</strong>
+                                    <span t-field="o.name"/>
+                                </div>
+                            </div>
+                            <small>
+                                <small>
+                                    <small>
+                                        <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
+                                            <thead>
+                                                <tr>
+                                                    <t t-foreach="bid_batch" t-as="bid">
+                                                        <t t-if="bid_first">
+                                                            <th colspan="2" class="col-xs-3 info text-center col-separator">
+                                                                Informations
+                                                            </th>
+                                                        </t>
+                                                        <t t-if="any(l.state == 'confirmed' for l in bid.order_line)">
+                                                            <th colspan="5" class="col-xs-3 bg-primary text-center col-separator">
+                                                                <span t-field="bid.partner_id"/> of bid <span t-field="bid.name"/>
+                                                            </th>
+                                                        </t>
+                                                        <t t-if="not any(l.state == 'confirmed' for l in bid.order_line)">
+                                                            <th colspan="5" class="col-xs-3 info text-center col-separator">
+                                                                <span t-field="bid.partner_id"/> of bid <span t-field="bid.name"/>
+                                                            </th>
+                                                        </t>
+                                                        <t t-if="bid_last">
+                                                            <th colspan="2" class="col-xs-3 info text-center col-separator">
+                                                                Approved
+                                                            </th>
+                                                        </t>
+                                                    </t>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <t t-foreach="bid_batch" t-as="bid">
+                                                        <t t-if="bid_first">
+                                                            <td colspan="2" class="col-xs-3 col-separator">
+                                                                Quotations reference and date
+                                                            </td>
+                                                        </t>
+                                                        <td colspan="5" class="text-center col-separator">
+                                                            Bid <span t-field="bid.name"/> / Quotation Date : <span t-field="bid.date_order" t-field-options='{"format": "d-MMM-y"}'/>
+                                                        </td>
+                                                        <t t-if="bid_last">
+                                                            <t t-if="bid.state in ['purchase','done']">
+                                                                <td colspan="2" class="col-xs-3 info text-center col-separator">
+                                                                    Bid <span t-field="bid.name"/> / Quotation Date : <span t-field="bid.date_order" t-field-options='{"format": "d-MMM-y"}'/>
+                                                                </td>
+                                                            </t>
+
+                                                        </t>
+                                                    </t>
+                                                </tr>
+                                                <tr>
+                                                    <t t-foreach="bid_batch" t-as="bid">
+                                                        <t t-if="bid_first">
+                                                            <td colspan="2" class="col-xs-3 col-separator">
+                                                                Source Document
+                                                            </td>
+                                                        </t>
+                                                        <td colspan="5" class="text-center col-separator">
+                                                            <span t-field="bid.origin"/>
+                                                        </td>
+                                                        <t t-if="bid_last">
+                                                            <th colspan="2" class="col-xs-3 info text-center col-separator">
+                                                            </th>
+                                                        </t>
+                                                    </t>
+                                                </tr>
+                                                <tr>
+                                                    <t t-foreach="bid_batch" t-as="bid">
+                                                        <t t-if="bid_first">
+                                                            <th class="info">Description of item</th>
+                                                            <th class="info text-center col-separator">Quantity</th>
+                                                        </t>
+                                                        <t t-if="any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                            <td class="bg-primary text-center">Quantity</td>
+                                                        </t>
+                                                        <t t-if="not any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                            <td class="info text-center">Quantity</td>
+                                                        </t>
+                                                        <t t-if="any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                            <td class="bg-primary text-center">Unit Price</td>
+                                                        </t>
+                                                        <t t-if="not any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                            <td class="info text-center">Unit Price</td>
+                                                        </t>
+                                                        <!--<td class="info text-center">Unit Price</td>-->
+                                                        <th class="info text-center">TOTAL</th>
+                                                        <th class="info text-center"> <span t-field="o.company_id.currency_id"/> Unit price </th>
+                                                        <th class="info text-center col-separator"> <span t-field="o.company_id.currency_id"/> Total </th>
+
+                                                        <t t-if="bid_last">
+                                                            <th class="info text-center">Unit Price</th>
+                                                            <th class="info text-center">Total</th>
+                                                        </t>
+                                                    </t>
+                                                </tr>
+                                                <t t-foreach="o.line_ids" t-as="req_line">
+                                                    <!-- Exclude services as they will appear in incoterms -->
+                                                    <t t-if="req_line.product_id.type != 'service'">
+                                                        <tr>
+                                                            <t t-foreach="bid_batch" t-as="bid">
+                                                                <t t-set="bid_conversion_rate" t-value="bid.currency_id._get_conversion_rate(bid.currency_id, bid.partner_id.currency_id)"/>
+                                                                <t t-if="bid_first">
+                                                                    <td><span t-field="req_line.product_id"/></td>
+                                                                    <td class="text-right col-separator"><span t-esc="'{:,.2f}'.format(req_line.product_ordered_qty)"/></td>
+                                                                </t>
+                                                                <t t-set="bid_line" t-value="[l for l in bid.order_line if l.product_id == req_line.product_id]"/>
+                                                                <t t-if="bid_line">
+                                                                    <t t-set="bid_line" t-value="bid_line[0]"/>
+                                                                    <!--Selected-->
+                                                                    <t t-if="bid_line.state in ['confirmed','purchase']">
+                                                                        <td class="text-right bg-success">
+                                                                            <span t-esc="'{:,.2f}'.format(bid_line.product_qty)"/>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-if="bid_line.state not in ['confirmed','purchase']">
+                                                                        <td class="text-right">
+                                                                            <span t-esc="'{:,.2f}'.format(bid_line.product_qty)"/>
+                                                                        </td>
+                                                                    </t>
+                                                                    <!--Unit Price-->
+                                                                    <t t-if="bid_line.state in ['confirmed','purchase']">
+                                                                        <td class="text-right bg-success">
+                                                                            <span t-esc="'{:,.2f}'.format(bid_line.price_unit)"/>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-if="bid_line.state not in ['confirmed','purchase']">
+                                                                        <td class="text-right">
+                                                                            <span t-esc="'{:,.2f}'.format(bid_line.price_unit)"/>
+                                                                        </td>
+                                                                    </t>
+                                                                    <td class="text-right">
+                                                                        <!--TOTAL-->
+                                                                        <span t-field="bid_line.price_subtotal"/>
+                                                                    </td>
+                                                                    <td class="text-right">
+                                                                        <!--Company Currency Unit Price-->
+                                                                        <span t-esc="'{:,.2f}'.format(bid_line.price_unit * bid_conversion_rate)"/>
+                                                                    </td>
+                                                                    <td class="text-right col-separator">
+                                                                        <!--Company Currency total-->
+                                                                        <span t-esc="'{:,.2f}'.format(bid_line.price_subtotal * bid_conversion_rate)"/>
+                                                                    </td>
+                                                                </t>
+                                                                <t t-if="bid_last">
+                                                                    <t t-foreach="bid_batch" t-as="last_bid">
+                                                                        <t t-set="last_bid_line" t-value="[l for l in last_bid.order_line if l.product_id == req_line.product_id]"/>
+                                                                        <t t-if="last_bid_line">
+                                                                            <t t-foreach="last_bid_line" t-as="last_bid_pro">
+                                                                                <t t-if="last_bid_pro.state in ['purchase','done']">
+                                                                                    <td class="text-right bg-success">
+                                                                                        <span t-esc="'{:,.2f}'.format(last_bid_pro.price_unit)"/>
+                                                                                    </td>
+                                                                                    <td class="text-right bg-success">
+                                                                                        <span t-esc="'{:,.2f}'.format(last_bid_pro.price_subtotal)"/>
+                                                                                    </td>
+                                                                                </t>
+                                                                            </t>
+                                                                        </t>
+                                                                        <t t-if="not last_bid_line">
+                                                                            <td>-</td>
+                                                                            <td>-</td>
+                                                                        </t>
+                                                                    </t>
+                                                                </t>
+                                                                <t t-if="not bid_line">
+                                                                    <td colspan="5" class="col-separator"/>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <!--<t t-set="all_requested_products" t-value="[l.product_id for l in o.line_ids]"/>-->
+                                                <!--<t t-set="non_requested_products" t-value="set(l.product_id for bid in bid_batch for l in bid.order_line if l.product_id.type != 'service')"/>-->
+                                                <!--<t t-if="non_requested_products">-->
+                                                <!--<t t-foreach="non_requested_products" t-as="non_req_product">-->
+                                                <!--<t t-if="non_req_product not in all_requested_products">-->
+                                                <!--<tr class="active">-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-set="bid_conversion_rate" t-value="bid.currency_id._get_conversion_rate(bid.currency_id, o.company_id.currency_id)"/>-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td><span t-field="non_req_product.name"/></td>-->
+                                                <!--<td class="col-separator text-center">N/A</td>-->
+                                                <!--</t>-->
+                                                <!--<t t-set="bid_line" t-value="[l for l in bid.order_line if l.product_id == non_req_product]"/>-->
+                                                <!--<t t-if="bid_line">-->
+                                                <!--<t t-set="bid_line" t-value="bid_line[0]"/>-->
+                                                <!--&lt;!&ndash;Selected&ndash;&gt;-->
+                                                <!--<t t-if="bid_line.state == 'confirmed'">-->
+                                                <!--<td class="text-right bg-success">-->
+                                                <!--<span t-esc="'{:,.2f}'.format(bid_line.quantity_bid)"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--<t t-if="bid_line.state != 'confirmed'">-->
+                                                <!--<td class="text-right">-->
+                                                <!-- - -->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--<td class="text-right">-->
+                                                <!--&lt;!&ndash;Unit Price&ndash;&gt;-->
+                                                <!--<span t-field="bid_line.price_unit"/>-->
+                                                <!--</td>-->
+                                                <!--<td class="text-right">-->
+                                                <!--&lt;!&ndash;TOTAL&ndash;&gt;-->
+                                                <!--<span t-field="bid_line.price_subtotal"/>-->
+                                                <!--</td>-->
+                                                <!--<td class="text-right">-->
+                                                <!--&lt;!&ndash;Company Currency Unit Price&ndash;&gt;-->
+                                                <!--<span t-esc="'{:,.2f}'.format(bid_line.price_unit * bid_conversion_rate)"/>-->
+                                                <!--</td>-->
+                                                <!--<td class="text-right col-separator">-->
+                                                <!--&lt;!&ndash;Company Currency total&ndash;&gt;-->
+                                                <!--<span t-esc="'{:,.2f}'.format(bid_line.price_subtotal * bid_conversion_rate)"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--<t t-if="not bid_line">-->
+                                                <!--<td colspan="5" class="col-separator"/>-->
+                                                <!--</t>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--</t>-->
+                                                <!--</t>-->
+                                                <!--</t>-->
+                                                <!--<tr class="subtotal">-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-set="bid_conversion_rate" t-value="bid.currency_id._get_conversion_rate(bid.currency_id, o.company_id.currency_id)"/>-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator"/>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="2"/>-->
+                                                <!--<td class="text-right">-->
+                                                <!--<t t-esc="'{:,.2f}'.format(sum(l.price_subtotal for l in bid.order_line if l.product_id.type != 'service'))"/>-->
+                                                <!--</td>-->
+                                                <!--<td/>-->
+                                                <!--<td class="text-right col-separator">-->
+                                                <!--<t t-esc="'{:,.2f}'.format(sum(l.price_subtotal for l in bid.order_line if l.product_id.type != 'service') * bid_conversion_rate)"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<t t-set="service_products" t-value="set(l.product_id for bid in bid_batch for l in bid.order_line if l.product_id.type == 'service')"/>-->
+                                                <!--<t t-foreach="service_products" t-as="service">-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-set="bid_conversion_rate" t-value="bid.currency_id._get_conversion_rate(bid.currency_id, o.company_id.currency_id)"/>-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator"><span t-esc="service.name"/></td>-->
+                                                <!--</t>-->
+                                                <!--<t t-set="service_line" t-value="[l for l in bid.order_line if l.product_id == service]"/>-->
+                                                <!--<t t-if="service_line">-->
+                                                <!--<t t-set="service_line" t-value="service_line[0]"/>-->
+                                                <!--&lt;!&ndash;Selected&ndash;&gt;-->
+                                                <!--<t t-if="service_line.state == 'confirmed'">-->
+                                                <!--<td class="text-right bg-success">-->
+                                                <!--<span t-esc="'{:,.2f}'.format(service_line.qty_ordered)"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--<t t-if="service_line.state != 'confirmed'">-->
+                                                <!--<td class="text-right">-->
+                                                <!-- - -->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="1"/>-->
+                                                <!--<td colspan="1" class="text-right">-->
+                                                <!--<span t-field="service_line.price_unit"/>-->
+                                                <!--</td>-->
+                                                <!--<td colspan="1"/>-->
+                                                <!--<td colspan="1" class="text-right col-separator">-->
+                                                <!--<span t-esc="'{:,.2f}'.format(service_line.price_unit * bid_conversion_rate)"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--<t t-if="not service_line">-->
+                                                <!--<td colspan="5" class="col-separator"/>-->
+                                                <!--</t>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--</t>-->
+                                                <!--<tr class="subtotal">-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-set="bid_conversion_rate" t-value="bid.currency_id._get_conversion_rate(bid.currency_id, o.company_id.currency_id)"/>-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<th colspan="2" class="col-separator">-->
+                                                <!--Sub-total services-->
+                                                <!--</th>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="2"/>-->
+                                                <!--<td class="text-right">-->
+                                                <!--<t t-esc="'{:,.2f}'.format(sum(l.price_subtotal for l in bid.order_line if l.product_id.type == 'service'))"/>-->
+                                                <!--</td>-->
+                                                <!--<td/>-->
+                                                <!--<td class="text-right col-separator">-->
+                                                <!--<t t-esc="'{:,.2f}'.format(sum(l.price_subtotal for l in bid.order_line if l.product_id.type == 'service') * bid_conversion_rate)"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <tr class="total">
+                                                    <t t-foreach="bid_batch" t-as="bid">
+                                                        <t t-set="bid_conversion_rate" t-value="bid.currency_id._get_conversion_rate(bid.currency_id, o.company_id.currency_id)"/>
+                                                        <t t-if="bid_first">
+                                                            <th colspan="2" class="col-separator">
+                                                                GRAND TOTAL
+                                                            </th>
+                                                        </t>
+                                                        <td/>
+                                                        <td class="text-center">
+                                                            <span t-field="bid.currency_id"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <span t-field="bid.amount_total"/>
+                                                        </td>
+                                                        <th class="text-center">
+                                                            <span t-field="o.company_id.currency_id"/>
+                                                        </th>
+                                                        <td class="text-right col-separator">
+                                                            <span t-esc="'{:,.2f}'.format(sum(l.price_subtotal for l in bid.order_line) * bid_conversion_rate)"/>
+                                                        </td>
+                                                        <t t-if="bid_last">
+                                                            <th colspan="2" class="col-xs-3 col-separator">
+                                                            </th>
+                                                        </t>
+                                                    </t>
+                                                </tr>
+                                                <!--<tr>-->
+                                                <!--<td t-att-colspan="2 + 5 * len(bid_batch)"/>-->
+                                                <!--</tr>-->
+                                                <!--done-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Country of origin</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.partner_id.country_id"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Weight estimated</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.weight_estimated"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Volume estimated</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.volume_estimated"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Delivery promised (Incoterms + destination)</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.incoterm_id.code"/> / <span t-field="bid.incoterm_address"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Estimated arrival date</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.minimum_planned_date"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Terms of payment</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.terms_of_payment"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Paymet terms</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.payment_term_id"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Bid validity date</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.bid_validity"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Meets required specifications</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<t t-if="bid.meets_specifications">-->
+                                                <!--Yes-->
+                                                <!--</t>-->
+                                                <!--<t t-if="not bid.meets_specifications">-->
+                                                <!--No-->
+                                                <!--</t>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                                <!--<tr>-->
+                                                <!--<t t-foreach="bid_batch" t-as="bid">-->
+                                                <!--<t t-if="bid_first">-->
+                                                <!--<td colspan="2" class="col-separator">Internal remarks</td>-->
+                                                <!--</t>-->
+                                                <!--<td colspan="5" class="col-separator">-->
+                                                <!--<span t-field="bid.bid_internal_remark"/>-->
+                                                <!--</td>-->
+                                                <!--</t>-->
+                                                <!--</tr>-->
+                                            </tbody>
+                                        </table>
+                                        <!--<t t-if="batch_start_last">-->
+                                        <!--<t t-set="non_eligible_bids" t-value="[bid for bid in o.bid_ids if not bid.bid_eligible and bid.state in ('draftbid', 'bid')]"/>-->
+                                        <!--<t t-if="non_eligible_bids">-->
+                                        <!--<h3>Non eligible bids</h3>-->
+                                        <!--<table id="bids-non-eligible" class="table table-condensed table-bordered" width="100%">-->
+                                        <!--<tbody>-->
+                                        <!--<tr>-->
+                                        <!--<th class="col-xs-2 info">-->
+                                        <!--Supplier name-->
+                                        <!--</th>-->
+                                        <!--<th class="col-xs-1 info">-->
+                                        <!--Bid Date-->
+                                        <!--</th>-->
+                                        <!--<th class="col-xs-2 info">-->
+                                        <!--Bid number-->
+                                        <!--</th>-->
+                                        <!--<th class="col-xs-2 info">-->
+                                        <!--Supplier reference-->
+                                        <!--</th>-->
+                                        <!--<th class="col-xs-5 info">-->
+                                        <!--Internal remark-->
+                                        <!--</th>-->
+                                        <!--</tr>-->
+                                        <!--<t t-foreach="non_eligible_bids" t-as="bid">-->
+                                        <!--<tr>-->
+                                        <!--<td><span t-field="bid.partner_id"/></td>-->
+                                        <!--<td><span t-field="bid.bid_date"/></td>-->
+                                        <!--<td><span t-field="bid.name"/></td>-->
+                                        <!--<td><span t-field="bid.partner_ref"/></td>-->
+                                        <!--&lt;!&ndash;<td><span t-field="bid.bid_internal_remark"/></td>&ndash;&gt;-->
+                                        <!--</tr>-->
+                                        <!--</t>-->
+                                        <!--</tbody>-->
+                                        <!--</table>-->
+                                        <!--</t>-->
+                                        <!--<t t-set="canceled_bids" t-value="[bid for bid in o.bid_ids if bid.state == 'cancel']"/>-->
+                                        <!--<t t-if="canceled_bids">-->
+                                        <!--<h3>Canceled bids</h3>-->
+                                        <!--<table id="bids-canceled" class="table table-condensed table-bordered" width="100%">-->
+                                        <!--<tbody>-->
+                                        <!--<tr>-->
+                                        <!--<th class="col-xs-8 info">-->
+                                        <!--Supplier name-->
+                                        <!--</th>-->
+                                        <!--<th class="col-xs-4 info">-->
+                                        <!--Internal remark-->
+                                        <!--</th>-->
+                                        <!--</tr>-->
+                                        <!--<t t-foreach="canceled_bids" t-as="bid">-->
+                                        <!--<tr>-->
+                                        <!--<td><span t-field="bid.partner_id"/></td>-->
+                                        <!--<td><span t-field="bid.bid_internal_remark"/></td>-->
+                                        <!--</tr>-->
+                                        <!--</t>-->
+                                        <!--</tbody>-->
+                                        <!--</table>-->
+                                        <!--</t>-->
+                                        <!--</t>-->
+                                    </small>
+                                </small>
+                                <!--<t t-if="batch_start_last">-->
+                                <!--<div class="row mt32">-->
+                                <!--<div class="col-xs-6">-->
+                                <!--<strong class="col-xs-4">Recommended Supplier(s)</strong>-->
+                                <!--<t t-set="recommended_suppliers" t-value="', '.join(bid.partner_id.name for bid in o.eligible_bid_ids if any(l.state == 'confirmed' for l in bid.order_line))"/>-->
+                                <!--<t t-if="recommended_suppliers">-->
+                                <!--<span class="col-xs-8 bg-info text-center" t-esc="recommended_suppliers"/>-->
+                                <!--</t>-->
+                                <!--<t t-if="not recommended_suppliers">-->
+                                <!--<span class="col-xs-8 text-center">N/A</span>-->
+                                <!--</t>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-6">-->
+                                <!--<strong class="col-xs-4 ">Prepared and submited by</strong>-->
+                                <!--<span class="col-xs-8 bg-info text-center" t-field="o.user_id"/>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row mt8">-->
+                                <!--<div class="col-xs-6">-->
+                                <!--<strong class="col-xs-4">Reason</strong>-->
+                                <!--<span class="col-xs-8 bg-info text-center large-text" t-field="o.selection_reasons"/>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-6">-->
+                                <!--<strong class="col-xs-4">Approved by</strong>-->
+                                <!--<span class="col-xs-8 bg-info text-center large-text"><br/></span>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--</t>-->
+                            </small>
+                            <div/>
+                        </t>
+                        <t t-call="report_layout.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

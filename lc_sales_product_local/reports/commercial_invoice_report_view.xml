@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_commercial_invoice"
+                string="Commercial Invoice"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product_local.report_commercial_invoice"
+                name="lc_sales_product_local.report_commercial_invoice"
+                paperformat="report_layout.custom_pad_paperformat"
+                menu="False"
+
+        />
+
+        <template id="report_commercial_invoice">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
+                        </style>
+                        <div class="commercial-invo">
+                            <div class="report-title">
+                                <h3 class="mt-0"><b>Commercial Invoice</b></h3>
+                            </div>
+                            <table class="table table-bordered mb-0">
+                                <tr>
+                                    <td class="w50">
+                                        <p><strong><u>Exporter</u></strong></p>
+                                        <p><strong t-esc="data['company_id']"/> <br/>
+                                            <span t-esc="data['factory']"/></p>
+                                        <br/>
+                                        <p><strong><u>Buyer</u></strong></p>
+                                        <p><strong t-esc="data['buyer']"/> <br/>
+                                           <span t-esc="data['buyer_address']"/></p>
+                                    </td>
+
+                                    <td class="w50 p-0">
+                                        <table class="table table-bordered mb-0">
+                                            <tr class="odo-bg-gray">
+                                                <td class="w50 bt-0">
+                                                    Invoice No: <strong t-esc="data['invoice_id']"/>
+                                                </td>
+                                                <td class="w50 bt-0">
+                                                    Date: <strong t-esc="data['invoice_date']"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="odo-bg-gray">
+                                                <td>
+                                                    <p><b><u>Terms of Delivery:</u></b> <br/>
+                                                        As per Proforma Invoice No:
+                                                        <t t-foreach="pi_id_list" t-as="r">
+                                                            <strong t-esc="r['pi_id']"/>
+                                                            Date: <strong t-esc="r['pi_date']"/>
+                                                        </t>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p><b><u>Packing:</u></b> <br/>
+                                                        Export Standard
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr class="odo-bg-gray">
+                                                <td>
+                                                    <p><u><b>Loading</b></u> <br/>
+                                                        <span t-esc="data['factory']"/>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p><u><b>Destination</b></u> <br/>
+                                                        Applicant's Factory</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <p class="m-0 p-0" t-raw="data['terms_condition']"/>
+                                    </td>
+                                    <td class="bl-1 bl-r">
+                                        <div>
+                                            <p>
+                                                Drawn under the Documentary Credit No.: <br/>
+                                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']"/> <br/>
+                                                <t t-foreach="lc_revision_list" t-as="r">
+                                                    <strong>
+                                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']"/> <br/>
+                                                    </strong>
+                                                </t>
+                                                <span style="padding-left:25%">of</span> <br/>
+                                                <span t-esc="data['second_party_bank']"/>
+                                            </p>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <!--<td></td>-->
+                                    <td colspan="2">
+                                        <div>
+                                            <p>We certify that the goods supplied are of Bangladesh origin and strictly
+                                                in accordance with the Proforma Invoice No.
+                                            <t t-foreach="pi_id_list" t-as="r">
+                                                <strong t-esc="r['pi_id']"/>
+                                                Date: <strong t-esc="r['pi_date']"/>
+                                            </t></p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!--<hr class="hr-xxs"/>-->
+                            <h5 class="text-left"><u><b>Description of Goods</b></u></h5>
+
+                            <table class="table table-report-sm table-bordered table-striped m-middle">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="w50">Products</th>
+                                        <th class="text-center w10">H.S Code</th>
+                                        <th class="text-center w10">Qty</th>
+                                        <th class="text-center w10">UoM</th>
+                                        <th class="text-center w10">Unit Price</th>
+                                        <th class="text-center w10">Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td>
+                                                <span t-esc="l['name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l['hs_code']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="l['quantity']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l['product_uom']"/>
+                                            </td>
+
+                                            <td class="text-right">
+                                                <span t-esc="l['unit_price']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="l['sub_total_price']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td colspan="2" class="text-right">Total</td>
+                                        <!--<td></td>-->
+                                        <td class="text-right">
+                                            <strong t-esc="total_qty"/>
+                                        </td>
+                                        <td colspan="2" class="text-right"></td>
+                                        <!--<td></td>-->
+                                        <td class="text-right">
+                                            <strong t-esc=" total_price"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p>
+                                In Words: <span t-esc="data['currency_id']"/> <strong t-esc="amt_to_word"/> <strong>only</strong>
+                            </p>
+                            <hr class="hr-xs mb-10"/>
+
+                            <div class="text-right">
+                                <p>For and on behalf of <br/>
+                                    <span t-esc="data['company_id']"/>
+                                </p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p class="auth-signature">Authorised Signature</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

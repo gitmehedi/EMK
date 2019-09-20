@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem
+                name="Commercial"
+                id="commercial.menu_commercial_root"
+                sequence="23"
+                groups="commercial.group_commercial_user,group_approve_pr_foreign,group_approve_pr_local,group_imoprt_lc_local,group_imoprt_lc_foreign"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_creation_menu"
+                parent="commercial.menu_commercial_root"
+                sequence="4"
+                name="Letter of Credit"
+                groups="group_imoprt_lc_local,group_imoprt_lc_foreign"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_import_local_creation_submenu"
+                name="Import LC(Local)"
+                parent="letter_of_credit.lc_commercial_creation_menu"
+                sequence="4"
+                action="letter_of_credit.lc_import_local_creation_action"
+                groups="group_imoprt_lc_local"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_import_foreign_creation_submenu"
+                name="Import LC(Foreign)"
+                parent="letter_of_credit.lc_commercial_creation_menu"
+                sequence="2"
+                action="letter_of_credit.lc_import_foreign_creation_action"
+                groups="group_imoprt_lc_foreign"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.menu_pr_commercial"
+                parent="commercial.menu_commercial_root"
+                sequence="1"
+                name="Purchase Requisition"
+                groups="group_approve_pr_foreign,group_approve_pr_local"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_pr_local"
+                name="Approved PR(Local)"
+                parent="gbs_purchase_requisition.menu_pr_commercial"
+                sequence="1"
+                action="gbs_purchase_requisition.action_commercial_pr_local"
+                groups="group_approve_pr_local"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_pr_foreign"
+                name="Approved PR(Foreign)"
+                parent="gbs_purchase_requisition.menu_pr_commercial"
+                sequence="2"
+                action="gbs_purchase_requisition.action_commercial_pr_foreign"
+                groups="group_approve_pr_foreign"/>
+
+
+        <menuitem
+                name="Inventory"
+                id="stock.menu_stock_root"
+                sequence="30"
+                groups="stock.group_stock_manager,stock.group_stock_user,group_approve_gate_in"
+                web_icon="stock,static/description/icon.png"/>
+
+        <menuitem
+                id="com_shipment.lc_shipment_creation_menu"
+                parent="commercial.menu_commercial_root"
+                sequence="5"
+                name="Shipment"
+                groups="commercial.group_commercial_user"/>
+
+        <menuitem
+                id="com_shipment.shipment_creation_submenu"
+                name="LC Shipment"
+                parent="com_shipment.lc_shipment_creation_menu"
+                sequence="2"
+                action="com_shipment.shipment_creation_action"
+                groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
+
+        <menuitem id="gbs_purchase_quotation_cnf.menu_cnf_quatation" parent="commercial.menu_commercial_root"
+                  sequence="6" name="C&amp;F Quotation"
+                  groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
+
+        <menuitem id="gbs_purchase_quotation_cnf.submenu_cnf_quatation" name="C&amp;F Quotation" parent="gbs_purchase_quotation_cnf.menu_cnf_quatation"
+                  sequence="1" action="gbs_purchase_quotation_cnf.action_cnf_quotation"
+                  groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
+
+        <menuitem
+                id="letter_of_credit_report.lc_report_menu"
+                name="Letter of Credit Report"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="letter_of_credit_report.action_letter_of_credit_wizard"
+                groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
+
+
+        <menuitem
+                id="gbs_purchase_requisition.menu_commercial_configuration"
+                parent="commercial.menu_commercial_root"
+                sequence="100"
+                name="Configuration"
+                groups="commercial.group_commercial_manager"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_supplier"
+                name="Suppliers"
+                parent="base.group_no_one"
+                sequence="1"
+                action="base.action_partner_supplier_form"
+                groups="commercial.group_commercial_manager"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_products_purchase"
+                name="Products Purchaseable"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="2"
+                action="purchase.product_normal_action_puchased"
+                groups="commercial.group_commercial_manager,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
+
+        <menuitem
+				name="Question Set"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="3"
+				id="question_set.hr_criteria_main_me"
+                action="question_set.action_lc_criteria"
+                groups="gbs_procure_n_commercial_access.group_imoprt_lc_foreign,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
+
+         <menuitem
+                 id="letter_of_credit.lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 groups="commercial.group_commercial_user"
+                 sequence="7"/>
+
+        <menuitem id="terms_setup_foreign.terms_setup_com_menu"
+                  parent="gbs_purchase_requisition.menu_commercial_configuration"
+                  action="terms_setup_foreign.terms_setup_foreign_action"
+                  groups="group_imoprt_lc_foreign"
+                  sequence="25"/>
+
+        <menuitem id="terms_setup_local.terms_setup_local_com_menu"
+                  parent="gbs_purchase_requisition.menu_commercial_configuration"
+                  action="terms_setup_local.terms_setup_local_action"
+                  groups="group_local_purchase"
+                  sequence="26"/>
+        <menuitem
+                id="purchase_reports.pending_purchase_report_local_menu"
+                name="Pending Purchase(Local)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_pending_purchase_local_wizard"
+                sequence="5"
+                groups = "group_local_purchase" />
+
+        <menuitem
+                id="purchase_reports.pending_purchase_report_foreign_menu"
+                name="Pending Purchase(Foreign)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_pending_purchase_foreign_wizard"
+                sequence="6"
+                groups ="group_imoprt_lc_foreign"/>
+
+        <menuitem
+                name="Purchase Report(Local)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_material_req_local_wizard"
+                id="purchase_reports.purchase_material_req_local_menu"
+                sequence="7"
+                groups = "base.group_system"/>
+
+        <menuitem
+                name="Purchase Report(Foreign)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_material_req_foreign_wizard"
+                id="purchase_reports.purchase_material_req_foreign_menu"
+                sequence="8"
+                groups ="base.group_system"/>
+        <menuitem
+                name="Purchase Summary(Local)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_summary_local_wizard"
+                id="purchase_reports.purchase_summary_local_menu"
+                sequence="9"
+                groups = "base.group_system"/>
+        <menuitem
+                name="Purchase Summary(Foreign)"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="purchase_reports.action_purchase_summary_foreign_wizard"
+                id="purchase_reports.purchase_summary_foreign_menu"
+                sequence="10"
+                groups ="base.group_system"/>
+
+        <!--Action To SET the Multi PR RFQ-->
+        <act_window name="Send RFQ"
+                    res_model="rfq.wizard"
+                    src_model="purchase.requisition"
+                    key2="client_action_multi"
+                    view_mode="form" target="new"
+                    view_type="form"
+                    id="act_send_rfq"
+                    groups="group_local_purchase"
+        />
+
+        <menuitem id="menu_picking_mrr_ptp"
+              name="Show MRR"
+              parent="stock_picking_extend.menu_receive_picking_acc_approver"
+              sequence="2"
+              action="stock_picking_mrr.action_stock_picking_mrr"
+              groups="account.group_account_user"/>
+    </data>
+</odoo>

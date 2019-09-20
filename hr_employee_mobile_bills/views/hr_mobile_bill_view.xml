@@ -12,12 +12,12 @@
                          <button name="action_confirm" type="object"
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
-                         <button name="action_done" type="object"
+                         <button name="action_done" type="object" groups ="hr.group_hr_manager"
                                 string="Approve" states="applied"
                                 class="oe_highlight"/>
 						<button name="action_draft" type="object"
-                                string="Reject"
-                                states="applied"/>
+                                string="Reset to Draft" groups ="hr.group_hr_manager"
+                                states="applied,approved"/>
                          <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
@@ -28,19 +28,24 @@
 
 	                            </group>
 		                        <notebook colspan="4">
-									<page string="Bills">
+									<page string="Mobile Bills">
 										<field name="line_ids">
 											<tree string="List" editable="bottom">
 												<field  name="emp_mobile_phone" />											
 												<field name="employee_id"/>
 												<field  name="bill_amount" />
 												<field  name="amount" />
+												<field  name="state" invisible="1"/>
 											</tree>
 										</field>
 									</page>
 								</notebook>
 	                        </group>
 					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
 				</form>
 			</field>
 		</record>
@@ -63,8 +68,8 @@
         </record>
 
         <menuitem id="hr_mobile_bill_menu" name="Employee Mobile Bills" parent="hr.menu_hr_root"
-                  action="hr_mobile_bill_action" groups="hr.group_hr_user" sequence="92"/>
+                  action="hr_mobile_bill_action" groups="gbs_hr_security.group_payroll_user" sequence="92"/>
 		<menuitem id="hr_mobile_bills_menu" name="Mobile Bills" parent="hr_mobile_bill_menu"
-                  action="hr_mobile_bill_action" groups="hr.group_hr_user"/>
+                  action="hr_mobile_bill_action" groups="gbs_hr_security.group_payroll_user"/>
     </data>
 </odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="inherited_hr_applicant_bmb">
+        <field name="name">BMD Jobs - Recruitment Form</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="website_job_application.inherited_hr_applicant_bmb"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='birth_date']" position="after">
+                <field name="applicant_age"/>
+                <field name="eligible" />
+            </xpath>
+            <xpath expr="//field[@name='description']" position="replace">
+
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_crm_case_jobs_filter_inherit" model="ir.ui.view">
+        <field name="name">Jobs - Recruitment Search</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.view_crm_case_jobs_filter"/>
+        <field name="arch" type="xml">
+            <search string="Search Applicants">
+                <filter name="eligible" string="Eligible" domain="[('eligible', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_recruitment.crm_case_categ0_act_job" model="ir.actions.act_window">
+        <field name="name">Applications</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,pivot</field>
+        <field name="context">{'search_default_eligible': 1}</field>
+    </record>
+</odoo>

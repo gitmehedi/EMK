@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+    <record id="membership.menu_association" model="ir.ui.menu">
+        <field name="groups_id"
+               eval="[(4, ref('membership_user.group_mem_user_officer')),(4, ref('membership_user.group_user_member'))]"/>
+    </record>
+    <record id="membership.menu_marketing_config_association" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
+        <field name="groups_id" eval="[(3, ref('membership_user.group_mem_user_applicant'))]"/>
+    </record>
+    <record id="membership_card.membership_card_report" model="ir.actions.report.xml">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_user_member'))]"/>
+    </record>
+    <record id="account.action_report_print_overdue" model="ir.actions.report.xml">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+
+    <record id="account.act_account_partner_ledger_payable" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_partner_ledger_payable_no_partner" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_partner_ledger_receivable" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_partner_ledger_receivable_no_partner" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_acount_move_line_open_unreconciled" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.action_move_line_select_by_partner" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+
+
+    <record model="ir.rule" id="rule_mem_app">
+        <field name="name">Applicant</field>
+        <field name="model_id" ref="model_res_partner"></field>
+        <field name="groups" eval="[(4,ref('membership_user.group_mem_user_applicant'))]"></field>
+        <field name="domain_force">[('id','=',user.partner_id.id)]</field>
+        <field eval="1" name="perm_read"></field>
+        <field eval="1" name="perm_write"></field>
+        <field eval="0" name="perm_unlink"></field>
+        <field eval="1" name="perm_create"></field>
+    </record>
+
+    <record model="ir.rule" id="rule_mem_member">
+        <field name="name">Rule of Member</field>
+        <field name="model_id" ref="model_res_partner"></field>
+        <field name="groups" eval="[(4,ref('membership_user.group_user_member'))]"></field>
+        <field name="domain_force">[('id','=',user.partner_id.id)]</field>
+        <field eval="1" name="perm_read"></field>
+        <field eval="1" name="perm_write"></field>
+        <field eval="0" name="perm_unlink"></field>
+        <field eval="0" name="perm_create"></field>
+    </record>
+
+    <record model="ir.rule" id="rule_mem_officer">
+        <field name="name">Rule of Membership Officer</field>
+        <field name="model_id" ref="model_res_partner"></field>
+        <field name="groups" eval="[(4,ref('membership_user.group_mem_user_officer'))]"></field>
+        <field eval="1" name="perm_read"></field>
+        <field eval="1" name="perm_write"></field>
+        <field eval="0" name="perm_unlink"></field>
+        <field eval="1" name="perm_create"></field>
+    </record>
+
+
+    <!--<record model="ir.rule" id="rule_membership_manager_product_template">-->
+    <!--<field name="name">Product Template Member Memeber</field>-->
+    <!--<field name="model_id" ref="model_product_template"></field>-->
+    <!--<field name="groups" eval="[(4,ref('membership_extension.group_membership_manager'))]"></field>-->
+    <!--<field eval="1" name="perm_read"></field>-->
+    <!--<field eval="1" name="perm_write"></field>-->
+    <!--<field eval="1" name="perm_unlink"></field>-->
+    <!--<field eval="1" name="perm_create"></field>-->
+    <!--</record>-->
+</odoo>

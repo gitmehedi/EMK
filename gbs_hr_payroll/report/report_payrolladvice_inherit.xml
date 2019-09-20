@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_payrolladvice2" inherit_id="l10n_in_hr_payroll.report_payrolladvice">
+            <!--//tbody[@class='sale_tbody']//tr//td[3]-->
+            <!--<xpath expr="//div[@class='page']/table/tr[5]" position="replace">-->
+                <!--<tr>-->
+                    <!--<td><p><b><u>Subject: Disbursement of <span t-esc="o.name"/> to the following employees Bank Account.</u></b></p></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td><p><span>Dear Sir/Madam,</span></p></td>-->
+                <!--</tr>-->
+            <!--</xpath>-->
+
+            <xpath expr="//t[@t-call='report.external_layout']" position="replace">
+                <t>
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                            <table>
+                                <tr>
+                                    <td><p><span t-esc="time.strftime('%m-%d-%Y')"/></p></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span>To,</span></strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span>The Manager,</span></strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span t-esc="o.bank_id.name" /> Bank</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><p><b>Subject: Disbursement of <span t-esc="o.name"/> from A/C no. <span t-field="o.bank_acc_id" /> to the following employees Bank Account.</b></p></td>
+                                </tr>
+                                <tr>
+                                    <td><p><span>Dear Sir/Madam,</span></p></td>
+                                </tr>
+                                <tr>
+                                    <td><p><span t-esc="o.note" /></p></td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-report-sm table-bordered table-striped">
+                                <thead>
+                                    <tr style="background-color:#B4FDF0;
+                                                            border-bottom: 1px solid #030303;">
+                                        <th>SI No.</th>
+                                        <th>Name Of Employee</th>
+                                        <th>Bank Account No.</th>
+                                        <th>Amount (TK.)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="get_detail(o.line_ids)" t-as="l">
+                                        <td>
+                                            <span t-esc="l_index+1">.</span>
+                                        </td>
+                                        <td>
+                                          <span t-esc="l['name']"/>
+                                        </td>
+                                        <td>
+                                             <span t-esc="l['acc_no']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="'{:,.2f}'.format(l['bysal'])"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black" style="border-bottom: 1px solid black">
+                                        <td/>
+                                        <td/>
+                                        <td t-if="o.neft == True">
+                                            <strong >Total :</strong>
+                                        </td>
+                                        <td t-if="o.neft != True" >
+                                            <strong >Total :</strong>
+                                        </td>
+                                        <td>
+                                            <strong><span t-esc="'{:,.2f}'.format(get_bysal_total())"/></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>(<span t-esc="amount_to_text_bdt()"/>)</p>
+                            <p>Yours Sincerely</p>
+                            <p>For <span t-esc="o.company_id.name"/></p>
+                            <p class="mt32">Chairperson / Managing Director</p>
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+            <!--<xpath expr="//div/table/tr/td/p[@class='text-center'][1]" position="replace">-->
+                <!--<p class="text-center">-->
+                    <!--<strong>Payment Advice from <span t-esc="o.name"/> A/C no. <span t-field="o.bank_acc_id" /> form period  <span t-esc="get_month(o.date)['from_name']"/> to <span t-esc="get_month(o.date)['to_name']"/></strong>-->
+                <!--</p>-->
+            <!--</xpath>-->
+        </template>
+    </data>
+</odoo>

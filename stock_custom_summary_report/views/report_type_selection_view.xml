@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="report_type_selection_form_view" model="ir.ui.view">
+            <field name="name">Report Type Selection</field>
+            <field name="model">report.type.selection</field>
+            <field name="arch" type="xml">
+                <form string="Report Type Selection Form">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="status"/>
+                            </group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="report_type_selection_tree_view" model="ir.ui.view">
+            <field name="name">Report Type Selection Tree View</field>
+            <field name="model">report.type.selection</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="report_type_selection_search_view" model="ir.ui.view">
+            <field name="name">Report Type Selection Search View</field>
+            <field name="model">report.type.selection</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Stock Requisition Transfer Search">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="status"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="report_type_selection_action" model="ir.actions.act_window">
+            <field name="name">Report Type Selection</field>
+            <field name="res_model">report.type.selection</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="report_type_selection_menu" name="Report Type Selection"
+                  sequence="10" action="report_type_selection_action" parent="base.menu_reporting_config"
+        />
+    </data>
+</openerp>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_purchase_material_requisition"
+                model="hr.employee"
+                string="Purchase Material Requisition report"
+                report_type="qweb-pdf"
+                menu="False"
+                name="purchase_reports.report_purchase_material_requisition"
+                file="purchase_reports.report_purchase_material_requisition"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+        <template id="report_purchase_material_requisition">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title"><span t-esc="report_title"/></h4>
+                                <div class="row" style="padding-top:10px;">
+                                    <div class="col-xs-6 text-left">
+                                        <p><strong>Department: </strong><span t-esc="data['dept_location_id']"/></p>
+                                        <p><strong>Unit: </strong><span t-esc="data['operating_unit_id']"/></p>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <p/>
+                                        <strong>Date From : </strong>
+                                        <t t-esc="time.strftime('%d-%m-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+
+                                        <strong style="padding-left:10px;">To : </strong>
+                                        <t t-esc="time.strftime('%d-%m-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-report-xs table-striped"
+                                        style="table-layout: fixed;">
+                                <thead>
+                                    <tr class="odo-bg-gray text-center">
+                                        <th class="text-center" style="width:2%;">SL</th>
+                                        <th class="text-center" style="width:10%;">Ref.</th>
+                                        <th class="text-center" style="width:38%;">Particulars</th>
+                                        <th class="text-center" style="width:5%;">Qty</th>
+                                        <th class="text-center" style="width:5%;">unit</th>
+                                        <th class="text-center" style="width:5%;">Rate</th>
+                                        <th class="text-center" style="width:5%;">Discount</th>
+                                        <th class="text-center" style="width:6%;">Amount</th>
+                                        <th class="text-center" style="width:24%;">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td class="text-center"><span t-esc="l_index+1"/></td>
+                                            <td class="text-left"><span t-esc="l['ref']"/></td>
+                                            <td class="text-left"><span t-esc="l['particulars']"/></td>
+                                            <td class="text-right"><span t-esc="l['qty']"/></td>
+                                            <td class="text-left"><span t-esc="l['unit']"/></td>
+                                            <td class="text-right"><span t-esc="l['rate']"/></td>
+                                            <td class="text-right"><span t-esc="l['discount']"/></td>
+                                            <td class="text-right"><span t-esc="l['amount']"/></td>
+                                            <td class="text-left"><span t-esc="l['remarks']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -6,90 +6,114 @@
         <field name="model">customer.commission.configuration</field>
         <field name="priority" eval="30"/>
         <field name="arch" type="xml">
-            <form>
+            <form copy="0" delete="false">
                 <header>
-                    <button name="action_request" type="object" states="draft"
-                            string="Request" class="oe_highlight"/>
+                    <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"
+                            groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
-                    <button name="action_draft" type="object" states="request"
-                            string="Draft" class="oe_highlight"/>
+                    <button name="action_sales_head" type="object" states="validate" string="Approve" class="oe_highlight"
+                            groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
-                    <button name="action_approve" type="object" states="request"
-                            string="Approve" class="oe_highlight"/>
+                    <button name="action_draft" type="object"
+                            states="validate" string="Reset to Draft"
+                            groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                    <button name="action_confirm" type="object" states="approve"
-                            string="Confirm" class="oe_highlight"/>
+                    <button name="action_approve" type="object" states="validate2"
+                            string="Validate" class="oe_highlight"
+                            groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
 
-                    <button name="action_cancel" type="object" states="request,approve"
-                            string="Cancel" class="oe_highlight"/>
+                    <button name="action_close" type="object" states="approve"
+                            string="Approve" class="oe_highlight"
+                            groups="gbs_application_group.group_cxo"/>
 
-                    <button name="action_done" type="object" states="confirm"
-                            string="Done" class="oe_highlight"/>
+                    <button name="action_cancel" type="object" states="approve,validate2,validate"
+                            string="Refuse"
+                            groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,validate,validate2,approve,close"/>
+
                 </header>
                 <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
                     <group>
                         <group>
                             <field name="commission_type"/>
-                            <field name="product_id" attrs="{'invisible':[('commission_type', '!=', 'by_product')]}"
+                            <field name="product_id"
+                                   attrs="{'invisible':[('commission_type', '!=', 'by_product')],
+                                   'required':[('commission_type', '!=', 'by_customer')]}"
                                    options="{'no_open': True, 'no_create': True}"/>
-                            <field name="customer_id" attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}"
-                                   options="{'no_open': True, 'no_create': True}"/>
-
-                        </group>
-                        <group>
-                            <field name="requested_date"/>
-                            <field name="requested_by_id"
-                                   options="{'no_open': True, 'no_create': True}"/>
-                            <field name="approved_date"/>
-                            <field name="approved_user_id"
-                                   options="{'no_open': True, 'no_create': True}"/>
-                            <field name="confirmed_date"/>
-                            <field name="confirmed_user_id"
+                            <field name="customer_id"
+                                   attrs="{'invisible':[('commission_type', '!=', 'by_customer')],
+                                   'required':[('commission_type', '!=', 'by_product')]}"
                                    options="{'no_open': True, 'no_create': True}"/>
                         </group>
                     </group>
 
-                    <separator string="Products" attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}"/>
-                    <field name="config_product_ids" attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}">
-                        <tree string="Products" editable="top">
-                            <field name="product_id"
-                                   options="{'no_open': True, 'no_create': True}"/>
-                            <field name="old_value"/>
-                            <field name="new_value"/>
-                        </tree>
-                        <form string="Product">
+                    <notebook>
+                        <page string="Products" attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}">
+                            <field name="config_product_ids"
+                                   attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}">
+                                <tree string="Products" editable="top">
+                                    <field name="product_id"
+                                           options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="old_value"/>
+                                    <field name="new_value"/>
+                                    <field name="currency_id" attrs="{'readonly':[('currency_id', '=', False)]}"/>
+                                </tree>
+                                <form string="Product">
+                                    <group>
+                                        <field name="product_id"
+                                               options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="old_value"/>
+                                        <field name="new_value"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Customers"
+                              attrs="{'invisible':[('commission_type', '!=', 'by_product')]}">
+                            <field name="config_customer_ids"
+                                   attrs="{'invisible':[('commission_type', '!=', 'by_product')]}">
+                                <tree string="Customer" editable="top">
+
+                                    <field name="customer_id"
+                                           options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="old_value"/>
+                                    <field name="new_value"/>
+                                    <field name="currency_id" attrs="{'readonly':[('currency_id', '=', False)]}"/>
+                                </tree>
+                                <form string="Customer">
+                                    <group>
+                                        <field name="customer_id"
+                                               options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="old_value"/>
+                                        <field name="new_value"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Others">
                             <group>
-                                <field name="product_id"
-                                       options="{'no_open': True, 'no_create': True}"/>
-                                <field name="old_value"/>
-                                <field name="new_value"/>
+                                <group>
+                                    <field name="requested_by"/>
+                                    <field name="approver3_id"/>
+                                    <field name="approver2_id"/>
+                                    <field name="approver1_id"/>
+                                </group>
+                                <group>
+                                    <field name="approved_date"/>
+                                </group>
                             </group>
-
-                        </form>
-                    </field>
-
-                    <separator string="Customer" attrs="{'invisible':[('commission_type', '!=', 'by_product')]}"/>
-                    <field name="config_customer_ids" attrs="{'invisible':[('commission_type', '!=', 'by_product')]}">
-                        <tree string="Customer" editable="top">
-                            <field name="customer_id"
-                                   options="{'no_open': True, 'no_create': True}"/>
-                            <field name="old_value"/>
-                            <field name="new_value"/>
-                        </tree>
-                        <form string="Customer">
-                            <group>
-                                <field name="customer_id"
-                                       options="{'no_open': True, 'no_create': True}"/>
-                                <field name="old_value"/>
-                                <field name="new_value"/>
-                            </group>
-
-                        </form>
-                    </field>
-
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -99,12 +123,21 @@
         <field name="model">customer.commission.configuration</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Customer Commission Configuration Tree">
+            <tree string="Customer Commission Configuration Tree"
+            colors="blue:state == 'validate';red:state == 'approve'">
+                <field name="name"/>
                 <field name="product_id"/>
                 <field name="customer_id"/>
                 <field name="state"/>
             </tree>
         </field>
+    </record>
+
+    <record id="seq_creadit_limits" model="ir.sequence">
+        <field name="name">Sequence</field>
+        <field name="code">customer.commission.configuration</field>
+        <field name="prefix">CC</field>
+        <field name="padding">3</field>
     </record>
 
 
@@ -116,28 +149,17 @@
             <search string="Customer Commission Configuration Search">
                 <field name="product_id"/>
                 <field name="customer_id"/>
+                <filter name="validate" string="To Approve" domain="[('state','=','validate')]"/>
+
             </search>
         </field>
     </record>
 
-    <!-- Sequence Records -->
-    <!--<record id="seq_loan_request" model="ir.sequence">-->
-    <!--<field name="name">Loan Sequence</field>-->
-    <!--<field name="code">emp_code_id</field>-->
-    <!--<field name="prefix">EMPC/</field>-->
-    <!--<field name="padding">10</field>-->
-    <!--</record>-->
-
-
     <record model="ir.actions.act_window" id="sale_customer_commission_configuration_action">
         <field name="name">Customer Commission</field>
         <field name="res_model">customer.commission.configuration</field>
-        <!--<field name="domain">[('state','in',('disbursed',))]</field>-->
+        <field name="context">{'search_default_validate':1}</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-
-    <menuitem id="sale_customer_commission_configuration_menu" name="Customer Commission"
-              parent="sales_team.menu_sales" sequence="12"
-              action="sale_customer_commission_configuration_action"/>
 </odoo>

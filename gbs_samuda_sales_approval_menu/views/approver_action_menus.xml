@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--parent menus-->
+        <menuitem id="menu_hos_approval" name="Head Of Sales Approval" groups="gbs_application_group.group_head_sale"
+                  parent="sales_team.menu_base_partner" sequence="4"/>
+        <menuitem id="menu_hoa_approval" name="Head Of Accounts Approval"
+                  groups="gbs_application_group.group_head_account,account.group_account_user"
+                  parent="sales_team.menu_base_partner" sequence="3"/>
+        <menuitem id="menu_cxo_approval" name="CXO Approval" groups="gbs_application_group.group_cxo"
+                  parent="sales_team.menu_base_partner" sequence="2"/>
+        <!--........................................................................................................-->
+
+        <!--SO-->
+        <record id="search_so_pending" model="ir.ui.view">
+            <field name="name">delivery.authorization.search</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <search string="Quotations">
+                    <filter name="approvehos" string="To Approve" domain="[('approver_user_id','=',uid),('state','=','draft')]"/>
+                    <filter name="approvehoa" string="To Approve" domain="[('state','=','validate')]"/>
+                    <filter name="approvecxo" string="To Approve" domain="[('state','=','sent')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_so_hos_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_so_pending"/>
+            <field name="context">{
+                'search_default_approvehos':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_so_hoa_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_so_pending"/>
+            <field name="context">{
+                'search_default_approvehoa':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_so_cxo_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_so_pending"/>
+            <field name="context">{
+                'search_default_approvecxo':1,
+                }
+            </field>
+        </record>
+
+        <menuitem name="Pending SO"
+                  id="menu_sale_hos_pending"
+                  parent="menu_hos_approval"
+                  action="action_so_hos_pending"
+                  groups="gbs_application_group.group_head_sale" sequence="1"/>
+
+        <menuitem name="Pending SO"
+                  id="menu_sale_hoa_pending"
+                  parent="menu_hoa_approval"
+                  action="action_so_hoa_pending"
+                  groups="gbs_application_group.group_head_account" sequence="1"/>
+
+        <menuitem name="Pending SO"
+                  id="menu_sale_cxo_pending"
+                  parent="menu_cxo_approval"
+                  action="action_so_cxo_pending"
+                  groups="gbs_application_group.group_cxo" sequence="1"/>
+        <!--........................................................................................................-->
+
+        <!--DA-->
+        <record id="search_delivery_auth" model="ir.ui.view">
+            <field name="name">delivery.authorization.search</field>
+            <field name="model">delivery.authorization</field>
+            <field name="arch" type="xml">
+                <search string="Delivery Authorization">
+                    <filter name="confirm" string="To Validate" domain="[('state','=','validate')]"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="delivery_order_action_head_account">
+            <field name="name">Delivery Authorization</field>
+            <field name="res_model">delivery.authorization</field>
+            <field name="context">{
+                'search_default_confirm':1,
+                }</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_delivery_auth"/>
+        </record>
+        <record model="ir.actions.act_window" id="delivery_order_action_cxo">
+            <field name="name">Delivery Authorization</field>
+            <field name="res_model">delivery.authorization</field>
+            <field name="context">{
+                'search_default_validate':1,
+                }</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_delivery_auth"/>
+        </record>
+
+        <menuitem id="delivery_order_submenu_head_account"
+                  name="Pending DA"
+                  parent="menu_hoa_approval"
+                  sequence="2"
+                  groups="gbs_application_group.group_head_account"
+                  action="delivery_order_action_head_account"/>
+
+        <!--<menuitem id="delivery_order_submenu_cxo"-->
+                  <!--name="Pending DA"-->
+                  <!--parent="menu_cxo_approval"-->
+                  <!--sequence="2"-->
+                  <!--groups="gbs_application_group.group_cxo"-->
+                  <!--action="delivery_order_action_cxo"/>-->
+        <!--........................................................................................................-->
+
+        <!--Customer Credit Limit-->
+        <record id="search_customer_creditlimit_pending" model="ir.ui.view">
+            <field name="name">customer.creditlimit.assign.search</field>
+            <field name="model">customer.creditlimit.assign</field>
+            <field name="arch" type="xml">
+                <search string="Quotations">
+                    <filter name="approvehos" string="To Approve" domain="[('state','=','confirm')]"/>
+                    <filter name="approvehoa" string="To Approve" domain="[('state','=','validate')]"/>
+                    <filter name="approvecxo" string="To Approve" domain="[('state','=','validate1')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_customer_creditlimit_hos_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">customer.creditlimit.assign</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_customer_creditlimit_pending"/>
+            <field name="context">{
+                'search_default_approvehos':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_customer_creditlimit_hoa_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">customer.creditlimit.assign</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_customer_creditlimit_pending"/>
+            <field name="context">{
+                'search_default_approvehoa':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_customer_creditlimit_cxo_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">customer.creditlimit.assign</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_customer_creditlimit_pending"/>
+            <field name="context">{
+                'search_default_approvecxo':1,
+                }
+            </field>
+        </record>
+
+        <menuitem name="Pending Credit Limit"
+                  id="menu_customer_creditlimit_hos_pending"
+                  parent="menu_hos_approval"
+                  action="action_customer_creditlimit_hos_pending"
+                  groups="gbs_application_group.group_head_sale" sequence="3"/>
+
+        <menuitem name="Pending Credit Limit"
+                  id="menu_customer_creditlimit_hoa_pending"
+                  parent="menu_hoa_approval"
+                  action="action_customer_creditlimit_hoa_pending"
+                  groups="gbs_application_group.group_head_account" sequence="3"/>
+
+        <menuitem name="Pending Credit Limit"
+                  id="menu_customer_creditlimit_cxo_pending"
+                  parent="menu_cxo_approval"
+                  action="action_customer_creditlimit_cxo_pending"
+                  groups="gbs_application_group.group_cxo" sequence="3"/>
+        <!--........................................................................................................-->
+
+        <!--Customer Commission-->
+        <record id="search_customer_commission_pending" model="ir.ui.view">
+            <field name="name">customer.commission.configuration.search</field>
+            <field name="model">customer.commission.configuration</field>
+            <field name="arch" type="xml">
+                <search string="Quotations">
+                    <filter name="approvehos" string="To Approve" domain="[('state','=','validate')]"/>
+                    <filter name="approvehoa" string="To Approve" domain="[('state','=','validate2')]"/>
+                    <filter name="approvecxo" string="To Approve" domain="[('state','=','approve')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_customer_commission_hos_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">customer.commission.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_customer_commission_pending"/>
+            <field name="context">{
+                'search_default_approvehos':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_customer_commission_hoa_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">customer.commission.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_customer_commission_pending"/>
+            <field name="context">{
+                'search_default_approvehoa':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_customer_commission_cxo_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">customer.commission.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_customer_commission_pending"/>
+            <field name="context">{
+                'search_default_approvecxo':1,
+                }
+            </field>
+        </record>
+
+        <menuitem name="Pending Commission"
+                  id="menu_customer_commission_hos_pending"
+                  parent="menu_hos_approval"
+                  action="action_customer_commission_hos_pending"
+                  groups="gbs_application_group.group_head_sale" sequence="4"/>
+
+        <menuitem name="Pending Commission"
+                  id="menu_customer_commission_hoa_pending"
+                  parent="menu_hoa_approval"
+                  action="action_customer_commission_hoa_pending"
+                  groups="gbs_application_group.group_head_account" sequence="4"/>
+
+        <menuitem name="Pending Commission"
+                  id="menu_customer_commission_cxo_pending"
+                  parent="menu_cxo_approval"
+                  action="action_customer_commission_cxo_pending"
+                  groups="gbs_application_group.group_cxo" sequence="4"/>
+        <!--........................................................................................................-->
+
+        <!--Product Sales Price List-->
+        <record id="search_sales_pricelist_pending" model="ir.ui.view">
+            <field name="name">product.sales.pricelist.search</field>
+            <field name="model">product.sales.pricelist</field>
+            <field name="arch" type="xml">
+                <search string="Quotations">
+                    <filter name="approvehos" string="To Approve" domain="[('state','=','confirm')]"/>
+                    <filter name="approvehoa" string="To Approve" domain="[('state','=','validate2')]"/>
+                    <filter name="approvecxo" string="To Approve" domain="[('state','=','validate1')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_sales_pricelist_hos_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">product.sales.pricelist</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_sales_pricelist_pending"/>
+            <field name="context">{
+                'search_default_approvehos':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_sales_pricelist_hoa_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">product.sales.pricelist</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_sales_pricelist_pending"/>
+            <field name="context">{
+                'search_default_approvehoa':1,
+                }
+            </field>
+        </record>
+
+        <record id="action_sales_pricelist_cxo_pending" model="ir.actions.act_window">
+            <field name="name">Pending</field>
+            <field name="res_model">product.sales.pricelist</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_sales_pricelist_pending"/>
+            <field name="context">{
+                'search_default_approvecxo':1,
+                }
+            </field>
+        </record>
+
+        <menuitem name="Pending PriceList"
+                  id="menu_sales_pricelist_hos_pending"
+                  parent="menu_hos_approval"
+                  action="action_sales_pricelist_hos_pending"
+                  groups="gbs_application_group.group_head_sale" sequence="5"/>
+
+        <menuitem name="Pending PriceList"
+                  id="menu_sales_pricelist_hoa_pending"
+                  parent="menu_hoa_approval"
+                  action="action_sales_pricelist_hoa_pending"
+                  groups="gbs_application_group.group_head_account" sequence="5"/>
+
+        <menuitem name="Pending PriceList"
+                  id="menu_sales_pricelist_cxo_pending"
+                  parent="menu_cxo_approval"
+                  action="action_sales_pricelist_cxo_pending"
+                  groups="gbs_application_group.group_cxo" sequence="5"/>
+        <!--........................................................................................................-->
+
+    </data>
+</odoo>

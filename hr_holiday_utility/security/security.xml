@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="rule_hr_holiday_utility_import" model="ir.rule">
+        <field name="name">Holiday Utility Import</field>
+        <field name="model_id" ref="model_hr_holidays_import"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="groups" eval="[(4,ref('base.group_system'))]"/>
+    </record>
+
+       <record id="rule_hr_holiday_utility_import_error" model="ir.rule">
+        <field name="name">Holiday Utility Import Error</field>
+        <field name="model_id" ref="model_hr_holidays_import_error"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="groups" eval="[(4,ref('base_technical_features.group_technical_features'))]"/>
+    </record>
+
+    <record id="rule_hr_holiday_utility_import_line" model="ir.rule">
+        <field name="name">Holiday Utility Import Line</field>
+        <field name="model_id" ref="model_hr_holidays_import_line"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="groups" eval="[(4,ref('base_technical_features.group_technical_features'))]"/>
+    </record>
+
+    <record id="rule_hr_holiday_utility_import_temp" model="ir.rule">
+        <field name="name">Holiday Utility Import Temp</field>
+        <field name="model_id" ref="model_hr_holidays_import_temp"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="groups" eval="[(4,ref('base_technical_features.group_technical_features'))]"/>
+    </record>
+
+    <record id="rule_hr_holidays_uti" model="ir.rule">
+        <field name="name">Holiday Utility HR Holiday</field>
+        <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="groups" eval="[(4,ref('base_technical_features.group_technical_features'))]"/>
+    </record>
+
+
+
+</odoo>

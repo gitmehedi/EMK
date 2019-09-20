@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_inherit_account_payment_form" model="ir.ui.view">
+            <field name="name">inherit.account.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group/field[@name='payment_method_code']" position="after">
+                    <field name="hide_conversion_rate_field" invisible="1"/>
+                    <field name="conversion_rate"
+                           attrs="{'invisible':[('hide_conversion_rate_field', '==', True)], 'readonly': [('state', '!=', 'draft')]}"
+                           required="True"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_inherit_account_payment_invoice_form" model="ir.ui.view">
+            <field name="name">inherit.account.payment.invoice.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group/field[@name='payment_method_code']" position="after">
+                    <field name="hide_conversion_rate_field" invisible="1"/>
+                    <field name="conversion_rate"
+                           attrs="{'invisible':[('hide_conversion_rate_field', '==', True)], 'readonly': [('state', '!=', 'draft')]}"
+                           required="True"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

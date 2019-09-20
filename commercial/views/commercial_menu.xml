@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem name="Commercial" id="menu_commercial_root" sequence="23"/>
+    </data>
+</odoo>

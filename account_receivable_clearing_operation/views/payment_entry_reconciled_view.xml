@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="payment_entry_reconcile_form" model="ir.ui.view">
+        <field name="name">payment.entry.reconciled.form</field>
+        <field name="model">payment.entry.reconciled</field>
+        <field name="arch" type="xml">
+            <form string="Payment Entry Reconcile" class="oe_form_configuration">
+                <!--<separator string="Accounts Clearing"/>-->
+                <header>
+                    <button name="action_search" type="object" string="Search" class="oe_highlight"/>
+                    <!--<button name="action_clear_search" type="object" string="Clear Search"/>-->
+                    <style type="text/css">
+                        #new {
+                        position: absolute;
+                        left: 25px;
+                        top: 8px;
+
+                        text-transform: uppercase;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 40px;
+                        text-decoration: none;
+                        }
+
+                        /* Custom styles for the Timeline */
+                        div.timeline-frame {
+                        border-color: #5D99C3;
+                        border-radius: 5px;
+                        -moz-border-radius: 5px; /* For Firefox 3.6 and older */
+                        }
+                        div.timeline-axis {
+                        border-color: #5D99C3;
+                        background-color: #5D99C3;
+                        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5D99C3',
+                        endColorstr='#3A6DA0'); /* for IE */
+                        background: -webkit-gradient(linear, left top, left bottom, from(#5D99C3), to(#3A6DA0)); /* for
+                        webkit browsers */
+                        background: -moz-linear-gradient(top, #5D99C3, #3A6DA0); /* for firefox 3.6+ */
+                        }
+                        div.timeline-axis-grid {
+                        }
+                        div.timeline-groups-axis {
+                        border-color: #5D99C3;
+                        }
+                        div.timeline-axis-text {
+                        color: white;
+                        }
+                        div.timeline-groups-text {
+                        color: #4D4D4D;
+                        }
+                        div.timeline-event {
+                        color: white;
+                        border-radius: 5px;
+                        }
+                        div.timeline-event-content {
+                        padding: 5px;
+                        font-size: 0.85em !important;
+                        }
+
+                        div.unavailable {
+                        background-color: #F03030 !important; /* red */
+                        border-color: #bd2828 !important; /* red */
+                        }
+                        div.available {
+                        background-color: #1AA11A !important; /* green */
+                        border-color: #136e13 !important; /* green */
+                        }
+                        div.maybe {
+                        background-color: #FFA500 !important; /* orange */
+                        border-color: #cc8100 !important; /* orange */
+                        }
+
+                        /* @Override */
+
+                        .o_form_sheet {
+                        max-width: none !important;
+                        <!--margin: 0 15px !important;-->
+                        }
+                        .roster-filters {
+                        border-bottom: 1px solid #a8a8a8;
+                        padding-bottom: 15px;
+                        margin-bottom: 15px;
+                        }
+                        .roster-filters label {
+                        display: inline-block;
+                        width: 135px;
+                        text-align: right;
+                        }
+                        .roster-filters .o_form_input {
+                        width: 166px;
+                        }
+                        .o_form_view {
+                        background-color: #f0eeee;
+                        }
+                    </style>
+                </header>
+                <div class="row roster-filters">
+                    <div class="col-sm-4">
+                        <label for="date"/>
+                        <field name="date" class="oe_inline bappy"/>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label for="partner_id"/>
+                        <field name="partner_id" class="oe_inline"
+                               options="{'no_open':True, 'no_quick_create':True,'no_create_edit':True}"/>
+                    </div>
+
+                    <field name="line_ids_visibility" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                </div>
+
+                <div class="col-sm-12" attrs="{'invisible': [('line_ids_visibility', '=', False)]}">
+                    <label for="select_all_line_vals"/>
+                    <field name="select_all_line_vals" class="oe_inline"/>
+
+                    <button name="action_clear_accounts" type="object" string="Clear Account" class="oe_highlight"/>
+
+                </div>
+
+
+                <field name="line_ids" attrs="{'invisible': [('line_ids_visibility', '=', False)]}">
+                    <tree string="List" create="false" delete="false" editable="bottom">
+                        <field name="clear_acc_receivable"/>
+                        <field name="date"/>
+                        <field name="partner_id"
+                               options="{'no_open':True, 'no_quick_create':True,'no_create_edit':True}"/>
+                        <field name="amount"/>
+                        <field name="currency_id"
+                               options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                        <field name="cheque_received_id" invisible="1"/>
+                        <field name="payment_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                    </tree>
+                </field>
+
+                <div class="o_form_sheet"></div>
+
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_payment_entry_reconcile">
+        <field name="name">Account Clearing</field>
+        <field name="res_model">payment.entry.reconciled</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+
+    </record>
+
+
+    <menuitem id="unreconciled_entry_menu" parent="account.menu_finance"
+              groups="account.account_clearing_controller"
+              name="Account Clearing"/>
+
+    <menuitem id="unreconciled_entry_sub_menu" parent="unreconciled_entry_menu"
+              name="Account Clearing"
+              groups="account.account_clearing_controller"
+              action="action_payment_entry_reconcile"/>
+
+</odoo>

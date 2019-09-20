@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base_res_partner_bank" model="ir.rule">
+        <field name="name">Partner bank multi-company rule</field>
+        <field name="model_id" ref="base.model_res_partner_bank"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="groups" eval="[(4,ref('base.group_multi_company','hr.group_hr_user'))]"/>
+    </record>
+
+</odoo>

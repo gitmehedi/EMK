@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_rfq_report"
+                model="purchase.rfq"
+                string="RFQ"
+                report_type="qweb-pdf"
+                name="gbs_purchase_rfq.rfq_report"
+                file="gbs_purchase_rfq.rfq_report"
+                menu = "True"/>
+
+        <record id="action_rfq_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_layout.paperformat_backend_portrait"/>
+        </record>
+
+        <template id="rfq_report">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
+                        </style>
+                        <div class="clearfix">
+                            <h4 class="text-center mt-0">Request For Quotation(RFQ)</h4>
+                        </div>
+                        <div class="clearfix">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th>Sl#</th>
+                                        <th>Items/Description</th>
+                                        <th>Req. Quantity</th>
+                                        <th>Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><span t-esc="l_index+1"/></td>
+                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['product_qty']"/></td>
+                                            <td><span t-esc="l['product_uom_id']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

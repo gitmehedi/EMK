@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="doc_receive_wizard" model="ir.ui.view">
+            <field name="name">doc.receive.wizard</field>
+            <field name="model">doc.receive.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Please Enter Receive Document After Shipment" create="false" edit="false">
+                    <group>
+                        <group string="Bill Of Lading">
+                            <field name="bill_of_lading_number" />
+                            <field name="shipment_date" />
+                            <field name="invoice_number" />
+                            <field name="shipment_id" invisible='1'/>
+                        </group>
+                        <group string="Packing List">
+                            <field name="gross_weight" />
+                            <field name="net_weight" />
+                            <field name="invoice_value" readonly="0"/>
+                        </group>
+                    </group>
+                    <field name="product_lines" widget="one2many">
+                        <tree string="Purchase Order Lines" create="false" editable="bottom">
+                            <field name="product_id" readonly='1'/>
+                            <field name="name" readonly='1'/>
+                            <field name="date_planned" readonly='1'/>
+                            <field name="product_qty"/>
+                            <field name="product_uom" readonly='1'/>
+                            <field name="price_unit" invisible='1'/>
+                            <field name="lc_pro_line_id" invisible='1'/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Save" name="save_doc_receive" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

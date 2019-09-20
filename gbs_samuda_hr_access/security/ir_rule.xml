@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="res.groups" id="group_manage_user">
+        <field name="name">Manage User</field>
+    </record>
+
+    <record model="res.groups" id="group_manage_attendance_device">
+        <field name="name">Manage Attendance Device</field>
+    </record>
+
+    <record id="manage_attendance_device" model="ir.rule">
+        <field name="name">Manage Attendance Device</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_samuda_hr_access.group_manage_attendance_device'))]"/>
+    </record>
+
+</odoo>

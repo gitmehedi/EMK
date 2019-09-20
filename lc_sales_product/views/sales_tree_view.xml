@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_sale_order_comm_tree" model="ir.ui.view">
+            <field name="name">sale.order.comm.tree</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name" string="SO Number"/>
+                    <field name="pi_id" string="PI Number"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="type_id"/>
+                    <field name="user_id"/>
+                    <field name="operating_unit_id"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="invoice_status"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sale_order_comm_filter" model="ir.ui.view">
+            <field name="name">sale.order.comm.search</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <search string="Sale order">
+                    <field name="name" string="Sale Order"/>
+                    <field name="pi_id" string="PI Number"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="pi_comm_tree_view" model="ir.ui.view">
+            <field name="name">proforma.invoice.comm.tree</field>
+            <field name="model">proforma.invoice</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="PI" colors="red:state == 'draft'">
+                    <field name="name"/>
+                    <field name="invoice_date"/>
+                    <field name="partner_id"/>
+                    <field name="account_payment_term_id"/>
+                    <field name="pack_type"/>
+                    <field name="type_id"/>
+                    <field name="total"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="pi_comm_filter" model="ir.ui.view">
+            <field name="name">proforma.invoice.comm.search</field>
+            <field name="model">proforma.invoice</field>
+            <field name="arch" type="xml">
+                <search string="PI">
+                    <field name="name" string="PI Number"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

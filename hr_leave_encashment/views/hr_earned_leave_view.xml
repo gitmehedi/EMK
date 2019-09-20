@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<openerp>
+<odoo>
 	<data>
 		<record id="leave_encashment_tree" model="ir.ui.view">
 			<field name="name">hr.leave.encashment.tree</field>
 			<field name="model">hr.leave.encashment</field>
 			<field name="arch" type="xml">
-				<tree string="Leave Carry Forward">
+				<tree string="Leave Encashment">
 					<field name="name" />
 					<field name="encashment_year" />
 					<field name="leave_type" />
@@ -60,4 +60,4 @@
 			parent="menu_hr_leave_encashment"
 			action="hr_holidays_leave_encashment" groups="hr.group_hr_user"/>
 	</data>
-</openerp>
+</odoo>

@@ -1,4 +1,4 @@
-from openerp import models, fields,api
+from odoo import models, fields,api
 
 class HrEmployeeLoanType(models.Model):
     _name = 'hr.employee.loan.type'
@@ -27,13 +27,13 @@ class HrEmployeeLoanType(models.Model):
         ], string = 'Interest Mode')
     interest_account_id = fields.Selection([
         ('flat', '101200 Account Receivable'),
-        ], string = 'Interest Account',required='True')
+        ], string = 'Interest Account')
     repayment_method_id = fields.Selection([
         ('payrolldeduction', 'Deduction From Payroll'),
-        ], string = 'Repayment Method',required='True')
+        ], string = 'Repayment Method')
     disburse_method_id = fields.Selection([
         ('payrolldeduction', 'Deirect Cash/Cheque'),
-        ], string = 'Disburse Method',required='True')
+        ], string = 'Disburse Method')
 
 
     """All function which process data and operation"""

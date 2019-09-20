@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="manpower_req_id" model="ir.sequence">
+            <field name="name">Manpower Requisition Name</field>
+            <field name="code">hr.employee.requisition</field>
+            <field name="prefix">MR-</field>
+            <field name="padding">4</field>
+        </record>
+    </data>
+</odoo>

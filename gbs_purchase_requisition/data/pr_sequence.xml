@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="pr_sequence_SCCL_HO" model="ir.sequence">
+            <field name="name">PR SCCL HO</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SCCL_DF" model="ir.sequence">
+            <field name="name">PR SCCL DF</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SCCL_CTG" model="ir.sequence">
+            <field name="name">PR SCCL CTG</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SPL_HO" model="ir.sequence">
+            <field name="name">PR SPL HO</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SPL_DF" model="ir.sequence">
+            <field name="name">PR SPL DF</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SPL_CTG" model="ir.sequence">
+            <field name="name">PR SPL CTG</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SSCL_HO" model="ir.sequence">
+            <field name="name">PR SSCL_HO</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SSCL_CTG" model="ir.sequence">
+            <field name="name">PR SSCL CTG</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SPPL_HO" model="ir.sequence">
+            <field name="name">PR SPPL HO</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pr_sequence_SPPL_CTG" model="ir.sequence">
+            <field name="name">PR SPPL CTG</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+    </data>
+
+</odoo>

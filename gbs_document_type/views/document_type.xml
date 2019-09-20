@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_document_type_tree" model="ir.ui.view">
+            <field name="name">document.type.tree</field>
+            <field name="model">document.type</field>
+            <field name="arch" type="xml">
+                <tree string="Document">
+                    <field name="name" />
+                    <field name="sequence" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_document_type_form" model="ir.ui.view">
+            <field name="name">document.type.form</field>
+            <field name="model">document.type</field>
+            <field name="arch" type="xml">
+                <form string="Document">
+                    <group colspan="1" col="4">
+                        <field name="name" />
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_document_type" model="ir.actions.act_window">
+			<field name="name">Document Type</field>
+			<field name="res_model">document.type</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+        <menuitem
+				name="Document Type"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+				id="hr_do_type_menu"
+				sequence="21"
+                action="action_document_type"
+        />
+    </data>
+</odoo>

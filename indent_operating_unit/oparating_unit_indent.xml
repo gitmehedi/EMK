@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="indent_oparating_unit_view_form" model="ir.ui.view">
+            <field name="name">indent.oparating.unit.view.form</field>
+            <field name="model">indent.indent</field>
+            <field name="inherit_id" ref="stock_indent.view_stock_indent_indent_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                               groups="operating_unit.group_multi_operating_unit" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

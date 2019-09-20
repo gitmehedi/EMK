@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="product_temp_inventory_from_view" model="ir.ui.view">
+            <field name="name">product.temp.inven.from.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[2]" position="replace">
+                        <page string="Inventory">
+                            <group name="inventory">
+                                <group groups="base_technical_features.group_technical_features">
+                                    <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
+                                    <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
+                                </group>
+                                <group name="group_lots_and_weight" groups="base_technical_features.group_technical_features">
+                                    <label for="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                    <div class="o_row" name="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                        <field name="weight"/>
+                                    </div>
+                                    <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
+                                    <label for="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                    <div class="o_row" name="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                        <field name="volume" string="Volume"/>
+                                    </div>
+                                </group>
+                                <group name="stock_property" groups="base_technical_features.group_technical_features">
+                                    <field name="property_stock_procurement" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('usage','=','procurement')]"/>
+                                    <field name="property_stock_production" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('usage','=','production')]"/>
+                                    <field name="property_stock_inventory" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('usage','=','inventory')]"/>
+                                </group>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_view_invoice_policy">
+            <field name="name">product.invoice.policy</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_policy']" position="replace">
+                    <group>
+                        <field name="invoice_policy" widget="radio" groups="base_technical_features.group_technical_features"/>
+                        <field name="track_service" widget="radio" invisible="True"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_template_view1" model="ir.ui.view">
+            <field name="name">product.template.new</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="procurement.product_template_view_form_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(procurement.procurement_order_action_product_template_stat)d']" position="replace">
+                    <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_template_stat)d"
+                            icon="fa-truck" string="Procurements" type="action"
+                            groups="base.group_no_one"
+                            attrs="{'invisible': ['|',('purchase_ok', '=', False),('type', '=', 'service')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="product_template_purchase_view1" model="ir.ui.view">
+            <field name="name">product.template.purchase.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="purchase.view_product_template_purchase_buttons_from"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(purchase.action_purchase_line_product_tree)d']" position="replace">
+                    <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
+                            type="action" attrs="{'invisible': [('purchase_ok', '=', False)]}" icon="fa-shopping-cart">
+                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_template_toggle_active_view" model="ir.ui.view">
+            <field name="name">product.template.toggle.active.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='toggle_active']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_lc_export_foreign_form" model="ir.ui.view">
+            <field name="name">letter.credit.form</field>
+            <field name="model">letter.credit</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Letter Credit (Foreign)" delete="false" copy='0'>
+                    <link rel="stylesheet" href="/letter_of_credit/static/src/css/lc_foreign_style.css"></link>
+                    <header>
+                        <button string="Confirm" name="action_confirm_export" states="draft" type="object" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only" groups="base_technical_features.group_technical_features"/>
+                        <button string="Amendment" name="action_amendment_foreign" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done', 'cancel'))]}"/>
+                        <button string="New Shipment" name="action_shipment_export_foreign" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done', 'cancel'))]}" class="oe_highlight oe_read_only"/>
+                        <button string="Done" name="action_lc_done_export" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to continue?"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
+                        <button string="Cancel" name="action_cancel_export" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="confirmed,progress" confirm="Are you sure you want to continue?"/>
+
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"></div>
+                        <group>
+                            <group colspan="4">
+                                <field name="pi_ids_temp" widget="many2many_tags" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            </group>
+
+                            <group colspan="2">
+                                <group>
+                                    <field name="name" string="LC/TT/SC Number" required="1" attrs="{'readonly': [('state', 'in', ('confirmed','amendment','progress','done', 'cancel'))]}"/>
+                                    <field name="type" attrs="{'invisible': '1'}" required="1"/>
+                                    <field name="model_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="sc_type" attrs="{'required': [('model_type', '==', ('sales_contract'))],'invisible': [('model_type', '!=', ('sales_contract'))]}"/>
+                                </group>
+                                <group>
+                                    <field name="region_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="tenure" required="1" />
+                                </group>
+                            </group>
+                            <group colspan="4">
+                                <field name="declaration" class="gbs-text-area"/>
+                            </group>
+
+                            <group>
+                                <separator string="Beneficiary" colspan="2"/>
+                                <field name="first_party" string="Beneficiary" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="first_party_bank_acc" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="operating_unit_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            </group>
+
+                            <group>
+                                <separator string="Customer" colspan="2"/>
+                                <field name="second_party_applicant" required="1" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="second_party_bank" attrs="{'required': [('model_type', '!=', ('tt'))]}"/>
+                                <field name="document_receiver_bank" />
+                            </group>
+
+
+                            <!--Same Group-->
+                            <group string="LC/TT/SC Value">
+                                <field name="lc_value" string="Value"/>
+                                <field name="currency_id" required="1" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="tolerance"/>
+                            </group>
+                            <group string="LC/TT/SC Dateline">
+                                <field name="issue_date" required="1"/>
+                                <field name="expiry_date" required="0"/>
+                                <field name="shipment_date" string="Latest Shipment Date" required="0"/>
+                            </group>
+                            <group string="Others Info" colspan="4">
+                                <group>
+                                    <field name="payment_terms" required="1"/>
+                                    <field name="period_of_presentation"/>
+                                    <field name="not_for_medical_use" />
+                                    <field name="is_seaworthy_packing" />
+                                </group>
+                                <group>
+                                    <field name="master_lc_number"/>
+                                    <field name="ship_mode"/>
+                                    <field name="inco_terms"/>
+                                    <field name="partial_shipment"/>
+                                </group>
+                            </group>
+                            <notebook colspan="4">
+                                <page string="Additional Info">
+                                    <group string="Port Info" colspan="4">
+                                        <p><b>Loading Place/Port: &#x2063;&#x2063;&#x2063;&#x2063;</b>
+                                            <field name="landing_port" class="oe_inline" required="1" nolable="1"
+                                                style="width: 110px !important"/>&#x2063;&#x2063;
+                                            <field name="landing_port_country_id" required="1" class="oe_inline" nolable="1" style="width: 110px !important"
+                                                options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </p>
+                                        <p><b>Discharge Place/Port: &#x2063;&#x2063;&#x2063;&#x2063;</b>
+                                            <field name="discharge_port" class="oe_inline" required="1" nolable="1" style="width: 110px !important"/>&#x2063;&#x2063;
+                                            <field name="discharge_port_country_id" class="oe_inline" required="1" nolable="1" style="width: 110px !important"
+                                                options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </p>
+                                        <p><b>Allow Trans. Shipment: &#x2063;&#x2063;&#x2063;&#x2063;</b>
+                                            <field name="trans_shipment" class="oe_inline" nolable="1" style="width: 89px !important"/>&#x2063;&#x2063;
+                                            <field name="transshipment_country_id" class="oe_inline" nolable="1" style="width: 110px !important"
+                                                   attrs="{'required': [('trans_shipment', '==', True)],'invisible': [('trans_shipment', '!=', True)]}"
+                                                options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </p>
+                                        <p><b>C&amp;F Agent: &#x2063;&#x2063;&#x2063;&#x2063;</b>
+                                            <field name="cnf_agent" class="oe_inline" nolable="1" style="width: 110px !important"/>
+                                        </p>
+                                    </group>
+                                    <group string="Insurance" colspan="4">
+                                        <group>
+                                            <field name="insurance_company_name" string="Company Name:"/>
+                                            <field name="insurance_company_address" string="Address:"/>
+                                            <field name="insurance_number" string="Policy Number:"/>
+                                            <field name="insurance_policy_date" string="Policy Date:"/>
+                                        </group>
+                                        <group>
+                                            <field name="insurance_bill" string="Insurance Bill:"/>
+                                            <field name="cover_note_no" required="0" string="Cover Note No.:"/>
+                                            <field name="insurance_date" required="0" string="Cover Note Date:"/>
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Products">
+                                    <field name="product_lines">
+                                        <tree string="Sale Order Lines" create="false" delete="false"
+                                              colors="grey: product_received_qty==product_qty;green: product_received_qty!=product_qty;">
+                                            <field name="product_id" readonly='1'/>
+                                            <field name="name" readonly='1'/>
+                                            <field name="product_uom" string="UOM" readonly='1'/>
+                                            <field name="product_qty" string="LC Qty" readonly='1'/>
+                                            <field name="delivered_qty" string="Delivered Qty" readonly='1'/>
+                                            <field name="product_received_qty" string="Document Qty" readonly='1'/>
+                                            <field name="price_unit" readonly='1'/>
+                                        </tree>
+                                    </field>
+                                    <div class="oe_clear"/>
+                                </page>
+                                <!--<page string="Terms &amp; Condition">-->
+                                    <!--<field name="terms_condition" widget="html" options="{'style-inline': true}"/>-->
+                                <!--</page>-->
+                                <!--<page string="Attachments">-->
+                                    <!--<field name="attachment_ids" widget="one2many_list" class="lc_attachment" context="{'default_res_id': id, 'default_res_model': 'letter.credit'}">-->
+                                        <!--<tree string="Attachments" editable="top">-->
+                                            <!--<field name="res_id" invisible="1"/>-->
+                                            <!--<field name="res_model" invisible="1"/>-->
+                                            <!--<field name="name" string="Title"/>-->
+                                            <!--<field name="datas_fname" invisible="1"/>-->
+                                            <!--<field name="db_datas" filename="datas_fname" string="File"/>-->
+                                        <!--</tree>-->
+                                    <!--</field>-->
+                                <!--</page>-->
+                                <page string="Shipment">
+                                    <field name="shipment_ids" widget="one2many">
+                                        <tree create="false" delete="false" editable="bottom"
+                                              colors="black:state=='receive_doc';blue:state=='eta';blue:state=='cnf_quotation';blue:state=='approve_cnf_quotation';green:state=='cnf_clear';gray:state=='done';">
+                                            <field name="name"/>
+                                            <field name="etd_date"/>
+                                            <field name="eta_date"/>
+                                            <field name="state"/>
+                                            <button name="action_view_shipment_export_foreign" string="View" type="object" icon="fa-search-plus" />
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Amendment">
+                                    <field name="old_revision_ids" >
+                                        <tree>
+                                            <field name='name'/>
+                                            <field name='amendment_date' string="Amendment On"/>
+                                            <field name='create_uid' string="Amendment By"/>
+                                            <field name='state' invisible='1'/>
+                                        </tree>
+                                    </field>
+                                    <group attrs="{'invisible': [('active', '=', True)]}">
+                                        <field name="current_revision_id"/>
+                                        <field name="active" invisible="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="export_letter_credit_tree_view" model="ir.ui.view">
+            <field name="name">export.local.credit.tree</field>
+            <field name="model">letter.credit</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Letter of Credit">
+                    <field name="name"/>
+                    <field name="second_party_applicant" string="Applicant Name"/>
+                    <field name="second_party_bank" string="Applicant Bank"/>
+                    <field name="issue_date"/>
+                    <field name="expiry_date"/>
+                    <field name="shipment_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_gate_in_user,access_stock_gate_in_user,product_gate_in.model_product_gate_in,stock.group_stock_user,1,0,0,0

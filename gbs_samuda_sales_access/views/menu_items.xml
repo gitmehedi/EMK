@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="sales_team.menu_sales_team_act"
+                  action="sales_team.crm_team_salesteams_act"
+                  sequence="1"
+                  parent="sales_team.menu_base_partner"
+                  name="Dashboard"
+                  groups="sales_team.group_sale_salesman,account.group_account_user"/>
+
+        <menuitem action="customer_credit_limit.action_creditlimit_tree"
+                  id="menu_action_creditlimit_tree" parent="gbs_sale_order_approval.menu_customer" sequence="2"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo,sales_team.group_sale_salesman_all_leads"/>
+
+        <menuitem id="sales_commission_generate_menu"
+                  parent="gbs_sale_order_approval.menu_customer" sequence="4"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  action="gbs_sales_commission.action_sales_commission_generate"/>
+
+        <menuitem id="sale_customer_commission_configuration_menu" name="Customer Commission"
+                  parent="gbs_sale_order_approval.menu_customer" sequence="3"
+                  groups="account.group_account_user,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+                  action="gbs_sales_commission.sale_customer_commission_configuration_action"/>
+
+        <!--<menuitem action="sale.action_orders_to_invoice" groups="account.group_account_user"-->
+            <!--id="sale.menu_sale_order_invoice" parent="sale.menu_sale_invoicing"-->
+            <!--sequence="2"/>-->
+
+        <!--<menuitem action="sale.action_orders_upselling" groups="account.group_account_user"-->
+            <!--id="sale.menu_sale_order_upselling" parent="sale.menu_sale_invoicing"-->
+            <!--sequence="5"/>-->
+
+        <menuitem id="delivery_order.delivery_menu" name="Delivery" parent="sales_team.menu_base_partner"
+                  groups="account.group_account_user"/>
+
+        <menuitem
+                name="Commercial"
+                id="commercial.menu_commercial_root"
+                sequence="23"
+                groups="commercial.group_commercial_user_export"/>
+
+
+        <menuitem
+                id="gbs_purchase_requisition.menu_commercial_configuration"
+                parent="commercial.menu_commercial_root"
+                sequence="100"
+                name="Configuration"
+                groups="commercial.group_commercial_manager_export"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_customer"
+                name="Customers"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="1"
+                action="base.action_partner_customer_form"
+                groups="commercial.group_commercial_manager_export"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_products_sell"
+                name="Products Sellable"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="2"
+                action="product.product_template_action"
+                groups="commercial.group_commercial_manager_export"/>
+
+        <!--<menuitem id="terms_setup_com_menu"-->
+                  <!--parent="gbs_purchase_requisition.menu_commercial_configuration"-->
+                  <!--action="terms_setup.terms_setup_action"-->
+                  <!--groups="commercial.group_commercial_manager_export"-->
+                  <!--sequence="25"/>-->
+
+        <menuitem id="gbs_document_type.hr_do_type_menu"
+				name="Document Type"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+				sequence="21" groups="gbs_application_group.group_export_local_lc"
+                action="gbs_document_type.action_document_type"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_creation_menu"
+                parent="commercial.menu_commercial_root"
+                sequence="4"
+                name="Letter of Credit"
+                groups="commercial.group_commercial_user_export"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_import_foreign_creation_submenu"
+                name="Import LC(Foreign)"
+                parent="letter_of_credit.lc_commercial_creation_menu"
+                sequence="2"
+                action="letter_of_credit.lc_import_foreign_creation_action"
+                groups="base.group_no_one"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_import_local_creation_submenu"
+                name="Import LC(Local)"
+                parent="letter_of_credit.lc_commercial_creation_menu"
+                sequence="4"
+                action="letter_of_credit.lc_import_local_creation_action"
+                groups="base.group_no_one"/>
+
+        <menuitem id="gbs_pi_creation.pi_creation_submenu" name="Proforma Invoice (Local)"
+                  parent="sales_team.menu_sales" groups="group_sales_local,gbs_application_group.group_cxo"
+                  action="gbs_pi_creation.pi_creation_action"/>
+
+        <menuitem id="gbs_pi_creation.pi_creation_submenu_foreign" name="Proforma Invoice (Foreign)"
+                  parent="sales_team.menu_sales" groups="group_sales_foreign,gbs_application_group.group_cxo"
+                  action="gbs_pi_creation.pi_creation_action_foreign"/>
+
+        <menuitem action="sale.action_orders"
+                  id="sale.menu_sale_order"
+                  name="Sales Orders (Local)"
+                  groups="group_sales_local,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="1" />
+
+        <menuitem action="gbs_sale_order_approval.action_orders_foreign"
+                  id="gbs_sale_order_approval.menu_sale_order_foreign"
+                  name="Sales Orders (Foreign)"
+                  groups="group_sales_foreign,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="2" />
+
+        <menuitem action="sale.action_quotations"
+                  id="sale.menu_sale_quotations"
+                  name="Quotations (Local)"
+                  groups="group_sales_local,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="3" />
+
+        <menuitem action="gbs_sale_order_approval.action_quotations_foreign"
+                  id="gbs_sale_order_approval.menu_sale_quotations_foreign"
+                  name="Quotations (Foreign)"
+                  groups="group_sales_foreign,account.group_account_user,gbs_application_group.group_cxo,gbs_application_group.group_head_account"
+                  parent="sales_team.menu_sales"
+                  sequence="4" />
+
+
+    </data>
+</odoo>

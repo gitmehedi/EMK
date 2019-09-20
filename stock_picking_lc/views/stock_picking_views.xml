@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_picking_form_inherit_lc">
+        <field name="name">stock.picking.inherit.lc.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_form1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='receive_type']" position="after">
+                <field name="shipment_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
+                       attrs="{'invisible': [('receive_type', '!=', 'lc')],'required':[('receive_type', '=','lc')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <field name="partner_id" domain="[('supplier', '=', True),('parent_id', '=', False)]"
+                       attrs="{'invisible': [('picking_type_code', '=', 'internal')],'required':[('receive_type', 'in',['lc','loan','other'])]}"/>
+            </xpath>
+            <xpath expr="//field[@name='challan_bill_no']" position="replace">
+                <field name="challan_bill_no" attrs="{'required':[('receive_type', 'in',['lc','loan','other'])]}"/>
+            </xpath>
+            <!--<xpath expr="//field[@name='move_lines']/kanban/field[@name='product_id']" position="after">-->
+                <!--<field name="price_unit"/>-->
+            <!--</xpath>-->
+        </field>
+    </record>
+
+</odoo>

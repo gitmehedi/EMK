@@ -15,8 +15,7 @@
         'hr_employee_loan'
     ],
     'data': [
-        'views/inherited_hr_payslip_views.xml'
+        #'views/inherited_hr_payslip_views.xml'
     ],
-    'installable': True,
-    'application': True,
+    'application': False,
 }

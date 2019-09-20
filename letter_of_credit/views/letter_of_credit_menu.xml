@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_letter_credit_filter" model="ir.ui.view">
+            <field name="name">letter.credit.filter</field>
+            <field name="model">letter.credit</field>
+            <field name="arch" type="xml">
+                <search string="Search Letter of Credit">
+                    <field name="name"/>
+                    <filter name="active" string="Active" domain="[('state', 'in', ('draft','open','confirmed','amendment','progress'))]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="lc_import_local_creation_action">
+            <field name="name">Letter of Credit: Import</field>
+            <field name="res_model">letter.credit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','import'),('region_type','=','local')]</field>
+            <field name="context">{'default_type': 'import','default_region_type': 'local','search_default_active':1}</field>
+            <field name="view_id" ref="import_letter_credit_tree_view"/>
+            <field name="search_view_id" ref="view_letter_credit_filter"/>
+        </record>
+
+        <record model="ir.actions.act_window" id="lc_import_foreign_creation_action">
+            <field name="name">Letter of Credit: Import</field>
+            <field name="res_model">letter.credit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','import'),('region_type','=','foreign')]</field>
+            <field name="context">{'default_type': 'import','default_region_type': 'foreign','search_default_active':1}</field>
+            <field name="view_id" ref="import_letter_credit_tree_view"/>
+            <field name="search_view_id" ref="view_letter_credit_filter"/>
+        </record>
+
+        <!--<menuitem id="lc_import_creation_menu" parent="purchase.menu_purchase_root"-->
+            <!--sequence="10" name="Letter of Credit" />-->
+
+        <!--<menuitem id="lc_import_creation_submenu" name="Import LC(Foreign)" parent="lc_import_creation_menu"-->
+                  <!--action="lc_import_foreign_creation_action"/>-->
+
+        <!--<menuitem id="lc_import_creation_submenu" name="Import LC(Local)" parent="lc_import_creation_menu"-->
+                  <!--action="lc_import_local_creation_action"/>-->
+
+        <menuitem id="lc_commercial_creation_menu" parent="commercial.menu_commercial_root"
+            sequence="1" name="Letter of Credit" />
+
+        <menuitem
+                 id="lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 sequence="7"/>
+
+        <menuitem id="lc_commercial_import_foreign_creation_submenu" name="Import LC(Foreign)" parent="lc_commercial_creation_menu"
+                  sequence="2" action="lc_import_foreign_creation_action"/>
+
+        <menuitem id="lc_commercial_import_local_creation_submenu" name="Import LC(Local)" parent="lc_commercial_creation_menu"
+                  sequence="4" action="lc_import_local_creation_action"/>
+
+    </data>
+</odoo>

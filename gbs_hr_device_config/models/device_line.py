@@ -8,8 +8,9 @@ class DeviceLine(models.Model):
 
     name = fields.Char(size=100, string='Name', required='True')
     sensor_id = fields.Char(string='Machine Number', size=5, required=True)
-    in_code = fields.Char(string='In Code', size=5, required=True, default='1')
-    out_code = fields.Char(string='Out Code', size=5, required=True, default='101')
+    # in_code = fields.Char(string='In Code', size=5, required=True, default='1')
+    # out_code = fields.Char(string='Out Code', size=5, required=True, default='101')
+
 
     """" Relational Fields """
     device_detail_id = fields.Many2one("hr.attendance.device.detail", string="Device Details", required=True, ondelete='cascade')

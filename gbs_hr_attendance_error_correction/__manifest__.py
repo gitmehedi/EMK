@@ -10,7 +10,8 @@
     ],
     'depends': [
         'hr',
-        'hr_attendance'
+        'hr_attendance',
+        'gbs_hr_attendance',
         ],
     'summary': 'HR attendance error data correction process.',
     'description':

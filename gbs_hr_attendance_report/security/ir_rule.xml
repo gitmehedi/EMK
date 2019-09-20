@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="property_rule_daily_attendance_multi_companies" model="ir.rule">
+            <field name="name">Daily Attendance(Multi Company Rule)</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="domain_force">[('id','in',user.company_ids.ids)]</field>
+            <field name="groups" eval="[(4,ref('base.group_multi_company'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+        <!--<record id="operating_unit.operating_unit_comp_rule" model="ir.rule">-->
+            <!--<field name="name">Operating Unit Entry</field>-->
+            <!--<field name="model_id" ref="operating_unit.model_operating_unit"/>-->
+            <!--<field name="domain_force">['|',('company_id','=',False),('company_id','in',user.company_ids.ids)]</field>-->
+            <!--<field name="global" eval="True"/>-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_write"/>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+        <!--</record>-->
+
+        <!--<record id="operating_unit.ir_rule_operating_unit_allowed_operating_units" model="ir.rule">-->
+            <!--<field name="name">Allowed operating units</field>-->
+            <!--<field name="model_id" ref="operating_unit.model_operating_unit"/>-->
+            <!--<field name="domain_force">['|',('id','in',user.operating_unit_ids.ids),('active','=',False)]</field>-->
+            <!--<field name="groups" eval="[(4,ref('operating_unit.group_multi_operating_unit'))]"/>-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+            <!--<field eval="0" name="perm_write"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+        <!--</record>-->
+    </data>
+</openerp>

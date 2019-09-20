@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="delivery_order_form" model="ir.ui.view">
+            <field name="name">delivery.authorization.form</field>
+            <field name="model">delivery.authorization</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Delivery Order" delete="false" copy='0'>
+                    <header>
+                        <button name="action_validate" type="object" states="draft" string="Confirm"
+                                class="oe_highlight"
+                                groups="account.group_account_user,gbs_application_group.group_head_account"/>
+
+                        <button name="action_draft" type="object"
+                                states="validate" string="Reset to Draft"
+                                groups="gbs_application_group.group_head_account"/>
+
+                        <button name="action_approve" type="object" states="approve"
+                                string="Validate" class="oe_highlight"
+                                groups="gbs_application_group.group_head_account"/>
+
+                        <button name="action_close" type="object" states="validate"
+                                string="Approve" class="oe_highlight"
+                                groups="gbs_application_group.group_head_account"/>
+
+                        <button name="action_refuse" type="object" states="approve,validate"
+                                string="Refuse"
+                                groups="gbs_application_group.group_head_account"/>
+
+                        <field name="state" statusbar_visible="draft,validate,close, refused" widget="statusbar"/>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" string="Process Payments"
+                                    name="action_process_unattached_payments"
+                                    groups="account.group_account_user,gbs_application_group.group_head_account"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':[('so_type', '!=', 'cash')]}"
+                                    icon="fa-usd">
+                            <button type="object"
+                                    string="Delivery Order"
+                                    name="action_view_delivery_order"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible': [('state','in',('draft','validate','approve','refused'))]}"
+                                    icon="fa-truck"
+                                    groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
+                            </button>
+
+                            </button>
+                        </div>
+
+                        <h1>
+                            <field name="name"/>
+                            <field name="delivery_order_btn_hide" invisible="1"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="sale_order_id"/>
+                                <field name="deli_address"/>
+                                <field name="currency_id"/>
+                            </group>
+                            <group>
+                                <field name="parent_id"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="so_type"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="so_date"/>
+
+                                <field name="pi_id" attrs="{'invisible':[('so_type', 'not in', ['lc_sales','tt_sales','contract_sales'])]}"/>
+
+                                <field name="lc_id" attrs="{'invisible':[('so_type', 'not in', ['lc_sales','tt_sales','contract_sales'])]}"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+
+                            </group>
+
+                            <notebook colspan="4">
+                                <page string="Products">
+                                    <field name="line_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="product_id"
+                                                   options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="quantity"/>
+                                            <field name="delivery_qty"/>
+                                            <field name="uom_id" string="UoM"
+                                                   options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="pack_type"/>
+                                            <field name="deli_mode" invisible="1"/>
+                                            <field name="commission_rate"/>
+                                            <field name="tax_id"/>
+                                            <field name="price_unit"/>
+                                            <field name="price_subtotal"/>
+                                            <field name="sale_order_id" invisible="1"/>
+
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Other Information">
+                                    <group>
+                                        <group>
+                                            <field name="operating_unit_id"/>
+                                            <field name="requested_by" options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="requested_date"/>
+                                        </group>
+                                        <group>
+                                            <field name="approver1_id"
+                                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"
+                                                   options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="confirmed_date"
+                                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
+                                            <field name="approver2_id"
+                                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
+                                                   options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="approved_date"/>
+                                        </group>
+                                    </group>
+                                </page>
+
+                                <page string="Cash" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
+                                    <field name="cash_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="payment_date" string="Payment Date"/>
+                                            <field name="amount"/>
+                                            <field name="currency_id"/>
+                                            <field name="amount_in_diff_currency"/>
+                                            <field name="amount_currency"/>
+                                            <field name="dep_bank"/>
+                                            <field name="branch"/>
+                                            <!--<field name="validity"/>-->
+                                            <field name="account_payment_id"/>
+
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Cheque" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
+                                    <field name="cheque_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="payment_date" string="Payment Date"/>
+                                            <field name="amount"/>
+                                            <field name="currency_id"/>
+                                            <field name="amount_in_diff_currency"/>
+                                            <field name="amount_currency"/>
+                                            <field name="bank"/>
+                                            <field name="branch"/>
+                                            <field name="number"/>
+                                            <field name="account_payment_id"/>
+                                            <field name="cheque_info_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Cheque Received" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
+                                    <field name="cheque_rcv_all_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="payment_date" string="Payment Date"/>
+                                            <field name="amount"/>
+                                            <field name="bank"/>
+                                            <field name="branch"/>
+                                            <field name="number"/>
+                                            <field name="currency_id"/>
+                                            <field name="state"/>
+                                            <field name="account_payment_id"/>
+                                            <field name="cheque_info_id" invisible="1"/>
+                                            <field name="converted_amount" invisible="1"/>
+
+                                        </tree>
+                                    </field>
+                                </page>
+
+                            </notebook>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="amount_untaxed" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"/>
+
+                                <field name="total_payment_received" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"
+                                       attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+
+                                <field name="total_cheque_rcv_amount_not_honored" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"
+                                       attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+
+
+                                <!--<field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>-->
+                                <!--<field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'-->
+                                <!--options="{'currency_field': 'currency_id'}"/>-->
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="delivery_authorization_tree_view" model="ir.ui.view">
+            <field name="name">delivery.authorization.tree</field>
+            <field name="model">delivery.authorization</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Delivery Order"
+                      colors="blue:state == 'validate'">
+                    <field name="name" string="Delivery Authorization"/>
+                    <field name="sale_order_id" string="Sale Order"/>
+                    <field name="so_type"/>
+                    <field name="parent_id"/>
+                    <field name="state"/>
+                    <!--<field name="approved_date"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record id="search_delivery_auth_acc_ex" model="ir.ui.view">
+            <field name="name">delivery.authorization.search</field>
+            <field name="model">delivery.authorization</field>
+            <field name="arch" type="xml">
+                <search string="Delivery Authorization">
+                    <filter name="submit" string="To Submit" domain="[('state','=','draft')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="delivery_order_action">
+            <field name="name">Delivery Authorization</field>
+            <field name="res_model">delivery.authorization</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_delivery_auth_acc_ex"/>
+            <field name="context">{
+                'search_default_submit':1,
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new DA.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="delivery_authorization_mainmenu"
+                  name="Delivery Authorization"
+                  parent="delivery_menu"
+                  sequence="1"
+                  action="delivery_order_action"
+                  groups="account.group_account_user,gbs_application_group.group_head_account"/>
+
+    </data>
+</odoo>

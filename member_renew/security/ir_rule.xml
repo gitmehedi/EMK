@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+    <record model="ir.rule" id="rule_mem_renew_request">
+        <field name="name">Member Renew Request Replacement</field>
+        <field name="model_id" ref="model_renew_request"></field>
+        <field name="groups" eval="[(4,ref('membership_user.group_user_member'))]"></field>
+        <field name="domain_force">[('membership_id','=',user.partner_id.id)]</field>
+    </record>
+
+    <record model="ir.rule" id="rule_off_renew_request">
+        <field name="name">Officer Renew Request Replacement</field>
+        <field name="model_id" ref="model_renew_request"></field>
+        <field name="groups" eval="[(4,ref('membership_user.group_mem_user_officer'))]"></field>
+        <field name="domain_force">[(1,'=',1)]</field>
+    </record>
+
+
+</odoo>

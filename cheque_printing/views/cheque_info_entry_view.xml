@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="cheque_info_entry_form" model="ir.ui.view">
+            <field name="name">cheque.info.entry.form</field>
+            <field name="model">cheque.info.entry</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Cheque Info Entry" delete="false" copy='0'>
+                    <header>
+                        <button name="action_confirm" type="object" states="draft" string="Confirm"
+                                groups="cheque_printing.group_cheque_prepare_user"
+                                class="oe_highlight"/>
+
+                        <button name="action_print_approved" type="object" states="confirmed" string="Print Approved"
+                                groups="cheque_printing.group_cheque_approval_user"
+                                class="oe_highlight"/>
+
+                        <button name="action_cancel" type="object"
+                                groups="cheque_printing.group_cheque_prepare_user,cheque_printing.group_cheque_approval_user"
+                                states="confirmed,print" string="Cancel"/>
+
+                        <field name="state" statusbar_visible="draft,confirmed,print" widget="statusbar"/>
+
+
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="cheque_number" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="cheque_date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="amount" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="is_cheque_paid" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="uom_jar_received_tree" model="ir.ui.view">
+            <field name="name">cheque.info.entry.tree</field>
+            <field name="model">cheque.info.entry</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Cheque Info">
+                    <field name="partner_id"/>
+                    <field name="cheque_number"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="cheque_info_entry_action">
+            <field name="name">Cheque Info Entry</field>
+            <field name="res_model">cheque.info.entry</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="cheque_info_entry_menu" parent="account.menu_finance"
+                  groups="account.group_account_user,cheque_printing.group_cheque_prepare_user,cheque_printing.group_cheque_approval_user"
+                  name="Cheque Info Entry"/>
+
+        <menuitem id="uom_jar_received_submenu" parent="cheque_info_entry_menu"
+                  name="Cheque Info Entry"
+                  groups="account.group_account_user,cheque_printing.group_cheque_prepare_user,cheque_printing.group_cheque_approval_user"
+                  action="cheque_info_entry_action"/>
+
+    </data>
+</odoo>

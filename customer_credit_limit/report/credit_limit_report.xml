@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <report
+            id="report_credit_limit"
+            string="Creadit Limit Summary"
+            model="customer.creditlimit.assign"
+            report_type="qweb-pdf"
+            file="customer_credit_limit.customer_credit_limit"
+            name="customer_credit_limit.customer_credit_limit"
+            paperformat="report_layout.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>

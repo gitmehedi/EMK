@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="lc_sales_report_foreign_wizard_view" model="ir.ui.view">
+            <field name="name">lc.sales.report.foreign.wizard</field>
+            <field name="model">lc.sales.report.foreign.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Print Reports">
+                    <group>
+                        <group>
+                            <button string="Packing List" name="process_packing_list" type="object"
+                                    class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Commercial Invoice" name="process_commercial_invoice" type="object"
+                                    class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Bill of Exchange"
+                                    name="action_bill_of_exchange_no" type="object"
+                                    class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Certificate of Origin" name="process_certificate_origin" type="object"
+                                    class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Beneficiary Certificate" name="action_beneficiary_certificate" type="object" class="oe_highlight"/>
+                        </group>
+                        <!--<group>-->
+                            <!--<button string="LC Status Summary" name="action_ls_status_summary" type="object" class="oe_highlight"/>-->
+                        <!--</group>-->
+                    </group>
+
+                    <footer>
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- bill of exchange wizard for Add Bill of Exchange No:(first,second,single)-->
+        <record id="bill_of_exc_wizard_view" model="ir.ui.view">
+            <field name="name">bill.of.exc.wizard</field>
+            <field name="model">bill.of.exc.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bill of Exchange Number">
+                    <group>
+                        <group>
+                            <field name="bill_exchange"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print" class="oe_highlight" name="process_bill_exchange" type="object"/>
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- beneficiary certificate wizard for Add LC clause-->
+        <record id="beneficiary_certificate_wizard_view" model="ir.ui.view">
+            <field name="name">beneficiary.certificate.wizard</field>
+            <field name="model">beneficiary.certificate.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Beneficiary Certificate LC Clause">
+                    <group>
+                        <group>
+                            <field name="lc_clause"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print" class="oe_highlight" name="process_beneficiary_certificate" type="object"/>
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

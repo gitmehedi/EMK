@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <record id="hr_employee_map_to_device" model="ir.ui.view">
+            <field name="name">hr.employee.form.map.to.device</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='active_group']" position="after">
+                        <group string="Attendance Configuration">
+                            <field name="device_employee_acc"/>
+                            <field name="is_monitor_attendance"/>
+                            <field name="is_executive"/>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

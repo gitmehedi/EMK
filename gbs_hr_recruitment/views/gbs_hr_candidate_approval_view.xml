@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+
+        <!-- Tree View-->
+		<record id="hr_internal_approval_tree" model="ir.ui.view">
+			<field name="name">hr.candidate.approval.tree</field>
+			<field name="model">hr.candidate.approval</field>
+			<field name="arch" type="xml">
+				<tree string="Internal Approval">
+                   <field name="approval_form_name"/>
+                   <field name="manpower_requisition_id"/>
+                   <field name="department_id"/>
+                   <field name="job_id"/>
+                   <field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form View-->
+		<record id="hr_internal_approval_form" model="ir.ui.view">
+			<field name="name">hr.candidate.approval.form</field>
+			<field name="model">hr.candidate.approval</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Internal Approval">
+					<header>
+                        <button string="Confirm" name="action_confirm"
+								states="draft" type="object" class="oe_highlight"
+								groups="hr_recruitment.group_hr_recruitment_user"
+								/>
+
+						<button string="Approve" name="action_gm_approve"
+								states="gm_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_general_manager"
+								/>
+
+						<button string="Approve" name="action_cxo_approve"
+								states="cxo_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_cxo"
+								/>
+
+                     	<button string="Decline" name="action_decline"
+								type="object" attrs="{'invisible':[('check_edit_access','=',False)]}"
+								groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
+								/>
+
+						<button string="Reset To Draft" name="action_reset"
+								type="object" states="gm_approve,cxo_approve"
+								groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
+								/>
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,gm_approve,cxo_approve,approved"/>
+
+					</header>
+					<sheet>
+						<div class="oe_button_box"></div>
+                        <div class="oe_title">
+                            <h2>
+                                <field name="approval_form_name" placeholder="Description" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </h2>
+							<h5 class="o_row">
+                        		<div>
+                            		<label for="manpower_requisition_id" class="oe_edit_only"/>
+                            		<field name="manpower_requisition_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+							   			attrs="{'readonly':[('state','!=','draft')]}" />
+								</div>
+                    		</h5>
+
+                        </div>
+
+						<group>
+							<group><field name="department_id" /></group>
+							<group><field name="job_id" /></group>
+						</group>
+						<group>
+							<!--Access field-->
+							<field name='check_edit_access' invisible='1'/>
+						</group>
+						<separator string="Applicant's List"/>
+						<field name="applicant_ids">
+						 	<tree string="Applicant's List" create='false' delete='false' editable="bottom">
+            					<field name='is_selected' />
+            					<field name='applicant_name' readonly='1'/>
+            					<field name='applicant_id' invisible='1'/>
+            					<!--<field name='address' readonly='1'/>-->
+            					<field name='education_id' readonly='1'/>
+            					<!--<field name='experience' readonly='1'/>-->
+            					<field name='proposed_designation' readonly='1'/>
+            					<field name='expected_salary' readonly='1'/>
+            					<field name='joining_date' readonly='1'/>
+            					<!--<field name='remarks' readonly='1'/>-->
+            					<field name='state' readonly='1'/>
+								<button name="generate_appointletter" string="Action" type="object" icon='fa-file-text'
+										attrs="{'invisible':[('state','!=','approved')]}"/>
+
+							</tree>
+						</field>
+					</sheet>
+
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+
+				</form>
+			</field>
+		</record>
+
+        <record id="action_hr_internal_approval" model="ir.actions.act_window">
+			<field name="name">Internal Approval</field>
+			<field name="res_model">hr.candidate.approval</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+        <menuitem name="Internal Approval"
+				  parent="hr_recruitment.menu_hr_recruitment_root"
+				  id="main_menu_hr_internal_approval"
+				  sequence="81"
+				  groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
+
+		<menuitem name="Internal Approval"
+				  parent="main_menu_hr_internal_approval"
+				  id="menu_hr_internal_approval"
+				  action="action_hr_internal_approval"
+				  groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
+
+	</data>
+</openerp>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'operating_unit'), ('name', '=', 'operating_unit_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="operating_unit.operating_unit_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'operating_unit'), ('name', '=', 'operating_unit_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'operating_unit'), ('name', '=', 'ir_rule_operating_unit_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="operating_unit.ir_rule_operating_unit_allowed_operating_units"
+            model="ir.rule">
+        <field name="model_id" ref="operating_unit.model_operating_unit"/>
+        <field name="domain_force">[('id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="name">Allowed operating units</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'operating_unit'), ('name', '=', 'ir_rule_operating_unit_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+
+    <record id="ir_rule_hr_emp_1" model="ir.rule">
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">['|',('department_id','=',False),('department_id.manager_id.user_id','in',[e.id for e in user.employee_ids])]</field>
+        <field name="name">Employee Permission For Dept Manager</field>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+        <field name="groups" eval="[(4,ref('group_dept_manager'))]"/>
+    </record>
+
+    <record id="ir_rule_hr_emp_3" model="ir.rule">
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[g.id for g in user.company_ids])]
+        </field>
+        <field name="name">Employee Company Permission Employee</field>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+        <field name="groups" eval="[(4,ref('hr.group_hr_manager')),(4,ref('group_cxo'))]"/>
+    </record>
+
+
+</odoo>

@@ -5,7 +5,7 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [
-        'report/report_paperformat.xml',
+        #'report/report_paperformat.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
         'views/attendance_summary_view.xml',
@@ -17,14 +17,21 @@
     
     'depends': [
         'hr_attendance',
-        'hr',
+        'hr_rostering',
+        'gbs_hr_attendance_utility',
+        'gbs_hr_attendance_grace_time',
         'hr_holidays',
-        'gbs_hr_calendar',
-        'gbs_hr_employee_sequence',
+        'hr_holiday_year',
+        # 'gbs_hr_calendar',
+        'gbs_hr_employee',
         'gbs_hr_department_sequence',
         'gbs_hr_attendance_error_correction',
         'hr_employee_operating_unit',
-    ],    
+        'hr_overtime_requisition',
+        'hr_employee_seniority',
+        'hr_attendance_settings',
+        'report_layout'
+    ],
     
     'description': 
     """This module will show attendance and over time summary at a glance of employees""",        

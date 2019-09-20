@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_acc_acc_usr,access_acc_acc_usr,model_accounting_cheque_received,account.group_account_user,1,1,1,0
+access_acc_acc_hoa,access_acc_acc_hoa,model_accounting_cheque_received,gbs_application_group.group_head_account,1,1,1,0
+access_acc_director_acc,access_acc_director_acc,model_accounting_cheque_received,gbs_application_group.group_cxo,1,1,1,0
+
+access_sales_exe_partner,access_sales_exe_partner,gbs_accounting_cheque_received.model_accounting_cheque_received,sales_team.group_sale_salesman,1,0,0,0
+

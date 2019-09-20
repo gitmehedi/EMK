@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="hr_contract_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <field name="working_hours" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <xpath expr="//form/sheet/notebook/page[2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_cont_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="l10n_in_hr_payroll.hr_contract_form_in_inherit"/>
+            <field name="arch" type="xml">
+                <field name="driver_salay" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="house_rent_allowance_metro_nonmetro" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="medical_insurance" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="voluntary_provident_fund" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_payslip_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="l10n_in_hr_payroll.hr_payslip_run_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='available_advice']" position="replace">
+                    <field name="available_advice" attrs="{'invisible': [('state', '!=', ('close'))]}"/>
+                </xpath>
+                <field name="credit_note" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_res_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state_id']" position="replace">
+                    <field name="state_id" class="o_address_state" placeholder="Division" options='{"no_open": True}'/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_res_bank_form2" model="ir.ui.view">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" class="o_address_state" placeholder="Division" options='{"no_open": True}'/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state_id']" position="replace">
+                      <field name="state_id" class="o_address_state" placeholder="Division" options='{"no_open": True}'
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="replace">
+                     <field name="category_id" widget="many2many_tags" invisible="1" placeholder="Tags..." options="{'no_create_edit': True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gbs_stock_scrap_user,access_gbs_stock_scrap_user,model_gbs_stock_scrap,stock.group_stock_user,1,1,1,0
+access_gbs_stock_scrap_manager,access_gbs_stock_scrap_manager,model_gbs_stock_scrap,stock.group_stock_manager,1,1,1,1
+
+access_gbs_stock_scrap_line_user,access_gbs_stock_scrap_line_user,model_gbs_stock_scrap_line,stock.group_stock_user,1,1,1,0
+access_gbs_stock_scrap_line_manager,access_gbs_stock_scrap_line_manager,model_gbs_stock_scrap_line,stock.group_stock_manager,1,1,1,1

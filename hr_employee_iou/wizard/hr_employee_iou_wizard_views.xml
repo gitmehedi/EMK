@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="hr_employee_iou_wizard_view" model="ir.ui.view">
+			<field name="name">HR Employee IOU Wizard View</field>
+			<field name="model">hr.employee.iou.wizard</field>
+			<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<field name="repay" options="{'no_create': True, 'no_create_edit':True}"/>
+                    </group>
+				</sheet>
+				<footer>
+					<button name ="process_repayment" string="Process Repayment" type="object" class="oe_highlight"  />
+                    <button special="cancel" string="Cancel" />
+				</footer>
+               </form>
+			</field>
+		</record>		
+		
+		<record id="action_employee_iou_wizard" model="ir.actions.act_window">
+			<field name="name">Repay</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.employee.iou.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+	</data>
+</odoo>

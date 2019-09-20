@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+  <data>
+
+    <!-- MRP Daily Production tree view -->
+      <record model="ir.ui.view" id="daily_production_tree">
+          <field name="name">daily_production_tree</field>
+          <field name="model">daily.production</field>
+          <field name="arch" type="xml">
+              <tree string="Daily Production">
+                  <field name="section_id"/>
+                  <field name="production_date"/>
+              </tree>
+          </field>
+      </record>
+
+    <!-- MRP Daily Production Form view -->
+      <record model="ir.ui.view" id="daily_production_form">
+          <field name="name">daily_production_from</field>
+          <field name="model">daily.production</field>
+          <field name="arch" type="xml">
+              <form string="Daily Production">
+                  <header>
+                        <button string="Confirm" name="action_confirm"
+								states="draft" type="object" class="oe_highlight" groups="mrp.group_mrp_user"/>
+                        <button string="Consumed Goods" name="action_consume"
+								type="object" class="oe_highlight" groups="mrp.group_mrp_user"/>
+                        <button string="Approve" name="action_approved"
+								states="confirmed" type="object" class="oe_highlight" groups="mrp.group_mrp_manager"/>
+						<button string="Reset To Draft" name="action_reset"
+								type="object" states="approved" groups="base_technical_features.group_technical_features"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
+
+                  </header>
+                  <sheet>
+                      <group>
+                          <group>
+                              <field name="section_id" options='{"no_open" : True, "no_create" : True, "no_edit":True}'/>
+                              <field name="production_date"/>
+                          </group>
+                          <group>
+                              <field name="operating_unit_id" options='{"no_open" : True, "no_create" : True, "no_edit":True}'/>
+                          </group>
+                      </group>
+
+                      <separator string="Finish Products"/>
+                      <field name="finish_product_line_ids">
+                          <tree string="Finish Products" editable="bottom" nolabel="1">
+                              <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                              <field name="fnsh_product_qty"/>
+                              <field name="uom_id"/>
+                              <field name="finish_product_date" invisible = "1"/>
+                          </tree>
+                      </field>
+                      <separator string="Consumed Products"/>
+                      <field name="consumed_product_line_ids">
+                          <tree string="Consumed Products" editable="bottom">
+                              <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                              <field name="con_product_qty"/>
+                              <field name="consumed_product_date" invisible = "1"/>
+                          </tree>
+                      </field>
+                  </sheet>
+              </form>
+          </field>
+      </record>
+
+      <!-- actions opening views on models -->
+      <record model="ir.actions.act_window" id="daily_production_action_window">
+          <field name="name">Daily Production</field>
+          <field name="res_model">daily.production</field>
+          <field name="view_mode">tree,form</field>
+      </record>
+
+
+      <!-- menu item -->
+      <menuitem name="Daily Production"
+                id="top_menu_daily_production"
+                parent="mrp.menu_mrp_root"
+                groups="mrp.group_mrp_user"/>
+      <menuitem name="Daily Production"
+                id="sub_menu_daily_production"
+                parent="top_menu_daily_production"
+                action="daily_production_action_window"
+                groups="mrp.group_mrp_user"/>
+
+  </data>
+</odoo>

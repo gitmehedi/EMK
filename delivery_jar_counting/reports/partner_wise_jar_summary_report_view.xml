@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_jar_summary"
+                string="Jar Summary Report"
+                model="delivery.jar.count"
+                report_type="qweb-pdf"
+                file="delivery_jar_counting.report_jar_summary"
+                name="delivery_jar_counting.report_jar_summary"
+                menu="False"
+        />
+
+
+        <template id="report_jar_summary">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page">
+                        <div class="row">
+                            <center>
+                                <h6>JAR Summary Report</h6>
+                                Date:  <span t-esc="date"/>
+                            </center>
+
+                            <table class="table table-report-sm table-bordered table-striped">
+                                <thead>
+                                    <tr
+                                            style="background-color:#B4FDF0;
+												border-bottom: 1px solid #030303;">
+                                        <th>SL</th>
+                                        <th>Customer</th>
+                                        <th>Jar Type</th>
+                                        <th># Due Jar</th>
+                                        <th># Jar Received</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <t t-foreach="data_list" t-as="k">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="k_index+1"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['jar_type']"/>
+                                            </td>
+
+                                            <td>
+                                                <span t-esc="k['qty1']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['qty2']"/>
+                                            </td>
+
+                                        </tr>
+                                    </t>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

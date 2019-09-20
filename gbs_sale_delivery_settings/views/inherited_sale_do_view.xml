@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sales_config" model="ir.ui.view">
+        <field name="name">sale settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/div[@id='main']" position="after">
+                <group string="Delivery Order">
+                    <field name="delivery_order_auto_generate" class="oe_inline" widget="radio"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

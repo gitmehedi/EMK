@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_issue_wizard_form" model="ir.ui.view">
+            <field name="name">stock.issue.wizard.form</field>
+            <field name="model">stock.issue.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Stock Issue Report">
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                        <group>
+                            <field name="operating_unit_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
+                            <field name="stock_location_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="process_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_issue_wizard" model="ir.actions.act_window">
+            <field name="name">Stock Issue Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.issue.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_stock_issue"
+                  parent="stock.menu_warehouse_report"
+                  action="action_stock_issue_wizard"
+                  groups="stock.group_stock_user"
+                  sequence="17"/>
+    </data>
+</odoo>

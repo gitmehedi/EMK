@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <report id="report_indent_indent"
+                model="indent.indent"
+                string="Stock Indent"
+                name="stock_indent.report_stock_indent_view"
+                file="stock_indent.report_stock_indent_view"
+                menu="False"
+                report_type="qweb-pdf"
+                paperformat="report_layout.paperformat_backend_portrait"/>
+
+        <template id="report_stock_indent_view">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report_layout.gbs_internal_layout">
+                        <div class="page" style="page-break-inside: auto">
+                            <style>
+                                .table-caption {
+                                border: 1px solid #ddd;
+                                border-bottom: none;
+                                font-size: 14px;
+                                font-weight: bold;
+                                margin: 0;
+                                padding: 5px 5px;
+                                }
+                            </style>
+                            <div class="row">
+                                <h4 class="text-center">Indent Form</h4>
+                                <hr class="hr-sm mb-0"/>
+                                <div class="row">
+                                    <div class="col-xs-9">
+                                        <h6><b>Indent No: </b><span t-field="o.name"/></h6>
+                                        <h6><b>Department: </b><span t-field="o.stock_location_id"/></h6>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <h6><b>Date: </b><span t-field="o.indent_date"/></h6>
+                                        <h6><b>Type: </b><span t-field="o.indent_type"/></h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h6><b>The material is required for: </b><span t-field="o.material_required_for"/></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="row">
+                                    <table class="table table-report table-bordered table-striped">
+                                        <thead>
+                                            <tr class="odo-bg-gray">
+                                                <th>SL</th>
+                                                <th>Item Name</th>
+                                                <th>Unit</th>
+                                                <th>Issue Qty</th>
+                                                <th>Receive Qty</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.product_lines" t-as="p">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td><span t-esc="p_index+1"/></td>
+                                                    <td><span t-esc="p.product_id.name"/></td>
+                                                    <td><span t-esc="p.product_uom.name"/></td>
+                                                    <td><span t-esc="p.product_uom_qty"/></td>
+                                                    <td><span t-esc="p.received_qty"/></td>
+                                                    <td><span t-esc="p.remarks"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-3" style="display:inline; text-decoration:overline;">
+                                        <h6 class="text-center"><b> Prepared by </b></h6>
+                                    </div>
+                                    <div class="col-xs-3" style="display:inline; text-decoration:overline;">
+                                        <h6 class="text-center"><b> Approved by </b></h6>
+                                    </div>
+                                    <div class="col-xs-3" style="display:inline; text-decoration:overline;">
+                                        <h6 class="text-center"><b> Issue by </b></h6>
+                                    </div>
+                                    <div class="col-xs-3" style="display:inline; text-decoration:overline;">
+                                        <h6 class="text-center"><b> Received by </b></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

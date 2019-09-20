@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+
+        <template id="assets_backend" name="rnd_hr assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+
+                <script type="text/javascript" src="/gbs_employee_roster_view/static/libs/js/jsapi.js"></script>
+                <script type="text/javascript" src="/gbs_employee_roster_view/static/libs/js/timeline.js"></script>
+                <script type="text/javascript" src="/gbs_employee_roster_view/static/src/js/custom_edit.js"></script>
+                <link rel="stylesheet" href="/gbs_employee_roster_view/static/libs/css/timeline.css" type="text/css"></link>
+            </xpath>
+        </template>
+    </data>
+</odoo>

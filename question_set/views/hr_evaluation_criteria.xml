@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!--Employee criteria view-->
+        <record id="view_hr_employee_criteria_tree" model="ir.ui.view">
+			<field name="name">hr_employee_criteria_tree</field>
+			<field name="model">hr.employee.criteria</field>
+			<field name="arch" type="xml">
+				<tree string="HR Employee Criteria">
+					<field name="name" />
+                    <field name="seq"/>
+                    <field name="marks"/>
+                    <field name="type"/>
+                    <field name="is_active"/>
+				</tree>
+			</field>
+		</record>
+
+        <record id="view_hr_employee_criteria_form" model="ir.ui.view">
+			<field name="name">hr_employee_criteria_form</field>
+			<field name="model">hr.employee.criteria</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+                <form string="HR Employee Criteria">
+                    <sheet>
+                        <div class="oe_button_box"></div>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="seq"/>
+                                <field name="marks"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                                <field name="is_active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hr_employee_criteria" model="ir.actions.act_window">
+			<field name="name">Employee Performance Evaluation/Job Confirmation Criteria</field>
+			<field name="res_model">hr.employee.criteria</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('type','in', ['pfevaluation', 'jobconf'])]</field>
+		</record>
+
+        <record id="action_lc_criteria" model="ir.actions.act_window">
+			<field name="name">LC Evaluation Criteria</field>
+			<field name="res_model">hr.employee.criteria</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('type','in', ['lc_evaluation'])]</field>
+		</record>
+
+        <menuitem
+				name="Question Set"
+                parent="hr.menu_human_resources_configuration"
+				id="hr_criteria_main_menu"
+                action="action_hr_employee_criteria"
+				sequence="7"
+                groups="hr.group_hr_user,hr.group_hr_manager"
+        />
+        <menuitem
+				name="Question Set"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="3"
+				id="hr_criteria_main_me"
+                action="action_lc_criteria"
+        />
+    </data>
+</odoo>

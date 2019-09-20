@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_loan_lending_pivot" model="ir.ui.view">
+        <field name="name">stock.loan.lending.pivot</field>
+        <field name="model">stock.loan.lending.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Loan Analysis" disable_linking="True">
+                <field name="date" interval="day" type="col"/>
+                <field name="product_id" type="row"/>
+                <!--<field name="product_uom_qty" type="measure"/>-->
+                <!--<field name="received_qty" type="measure"/>-->
+                <field name="given_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_loan_lending_graph" model="ir.ui.view">
+        <field name="name">stock.loan.lending.graph</field>
+        <field name="model">stock.loan.lending.report</field>
+        <field name="arch" type="xml">
+            <graph string="Loan Analysis">
+                <!--<field name="date" interval="day" type="row"/>-->
+                <field name="product_id" type="row"/>
+                <field name="product_uom_qty" type="measure"/>
+                <field name="received_qty" type="measure"/>
+                <field name="given_qty" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_stock_loan_lending_search" model="ir.ui.view">
+        <field name="name">sale.loan.lending.search</field>
+        <field name="model">stock.loan.lending.report</field>
+        <field name="arch" type="xml">
+            <search string="Stock Loan Analysis">
+                <field name="date"/>
+                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter name="requested" string="Requested" domain="[('state','in',('draft', 'waiting_approval'))]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="received" string="Received" domain="[('state','=','received')]"/>
+                <separator/>
+                <field name="borrower_id"/>
+                <field name="product_id"/>
+                <group expand="0" string="Extended Filters">
+                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Requested Company" name="RequestedBy" context="{'group_by':'borrower_id'}"/>
+                    <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Operating Unit" groups="operating_unit.group_multi_operating_unit" context="{'group_by':'operating_unit_id'}"/>
+                    <separator/>
+                    <filter string="Loan Request Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_loan_lending_report" model="ir.actions.act_window">
+        <field name="name">Loan Lending Report</field>
+        <field name="res_model">stock.loan.lending.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="context">{'search_default_approved':1,'search_default_received' : 1}</field>
+        <field name="search_view_id" ref="view_stock_loan_lending_search"/>
+        <field name="help">From this report, you can have an overview of the Stock Loan report. The search tool can also be used to personalise your reports and so, match this analysis to your needs.</field>
+    </record>
+
+
+    <record id="view_loan_borrowing_pivot" model="ir.ui.view">
+        <field name="name">stock.loan.borrowing.pivot</field>
+        <field name="model">stock.loan.borrowing.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Loan Analysis" disable_linking="True">
+                <field name="date" interval="day" type="col"/>
+                <field name="product_id" type="row"/>
+                <!--<field name="product_uom_qty" type="measure"/>-->
+                <field name="received_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_loan_borrowing_graph" model="ir.ui.view">
+        <field name="name">stock.loan.borrowing.graph</field>
+        <field name="model">stock.loan.borrowing.report</field>
+        <field name="arch" type="xml">
+            <graph string="Loan Analysis">
+                <!--<field name="date" interval="day" type="row"/>-->
+                <field name="product_id" type="row"/>
+                <field name="product_uom_qty" type="measure"/>
+                <field name="received_qty" type="measure"/>
+                <field name="given_qty" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_stock_loan_borrowing_search" model="ir.ui.view">
+        <field name="name">sale.loan.borrowing.search</field>
+        <field name="model">stock.loan.borrowing.report</field>
+        <field name="arch" type="xml">
+            <search string="Stock Loan Analysis">
+                <field name="date"/>
+                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter name="requested" string="Requested" domain="[('state','in',('draft', 'waiting_approval'))]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <separator/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <group expand="0" string="Extended Filters">
+                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Partner Company" name="Partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Operating Unit" groups="operating_unit.group_multi_operating_unit" context="{'group_by':'operating_unit_id'}"/>
+                    <separator/>
+                    <filter string="Loan Request Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_loan_borrowing_report" model="ir.actions.act_window">
+        <field name="name">Loan Borrowing Report</field>
+        <field name="res_model">stock.loan.borrowing.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="context">{'search_default_approved':1}</field>
+        <field name="search_view_id" ref="view_stock_loan_borrowing_search"/>
+        <field name="help">From this report, you can have an overview of the Stock Loan Summary. The search tool can also be used to personalise your reports and so, match this analysis to your needs.</field>
+    </record>
+</odoo>

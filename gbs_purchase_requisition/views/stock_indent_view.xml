@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherited form view-->
+        <record id="inherit_indent_indent" model="ir.ui.view">
+            <field name="name">inherit.indent.indent.form</field>
+            <field name="model">indent.indent</field>
+            <field name="inherit_id" ref="stock_indent.view_stock_indent_indent_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='action_view_picking']" position="after">
+                        <field name="check_pr_issued" invisible="1"/>
+                        <button name="action_view_purchase_requisition" string="Issue PR" type="object"
+                            groups="stock_indent.group_stock_indent_issuer,stock.group_stock_user"
+                            attrs="{'invisible': ['|',('state','!=','inprogress'),('check_pr_issued','!=', True)]}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id='action_pr_stock_indent' model='ir.actions.act_window'>
+			<field name="name">Indents</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					No indent.
+				</p>
+			</field>
+		</record>
+    </data>
+</odoo>
+

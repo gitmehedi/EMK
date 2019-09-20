@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_beneficiary_certificate"
+                string="Beneficiary Certificate"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product_foreign.report_beneficiary_certificate"
+                name="lc_sales_product_foreign.report_beneficiary_certificate"
+                paperformat="report_layout.custom_pad_paperformat_foreign"
+                menu="False"
+
+        />
+
+        <template id="report_beneficiary_certificate">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_foreign_report_template">
+                    <div class="page" style="page-break-inside: auto; text-transform: uppercase;padding-top:30px;">
+                        <style>
+                            .auth-signature { padding: 5px; border-top: 1px dashed #333; float: right; }
+                        </style>
+                        <div class="beneficiary-certf">
+                            <div class="report-title">
+                                <h4 class="mt-0">
+                                    <b>Beneficiary Certificate/DESPATCH NOTE/SHIPMENT ADVICE</b>
+                                </h4>
+                                <t t-if="data['lc_clause']">
+                                    <h6 class="mt-0">
+                                        <strong t-esc="data['lc_clause']"/>
+                                    </h6>
+                                </t>
+                            </div>
+
+                            <br/>
+
+                            <div class="section">
+                                <div class="row mb-20">
+                                    <div class="col-xs-8">
+                                        <p class="mb-0 text-left">
+                                            To<br/>
+                                            <t t-if="data['insurance_company_name']">
+                                                <strong t-esc="data['insurance_company_name']"/><br/>
+                                            </t>
+                                            <t t-if="data['insurance_company_address']">
+                                                <span t-raw="data['insurance_company_address']"/>
+                                            </t>
+                                        </p>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <p class="mb-0 text-right">
+                                            <b>Date: </b>
+                                            <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y')"/>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <p class="mb-20">
+                                    <b>
+                                        <t t-if="data['insurance_number'] or data['insurance_policy_date']">(</t><t t-if="data['insurance_number']">INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/>,</t>
+                                        <t t-if="data['insurance_policy_date']"> DATE: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/></t><t t-if="data['insurance_number'] or data['insurance_policy_date']">)</t>
+                                    </b>
+                                </p>
+
+                                <p class="mb-20 text-justify">
+                                    <b>RE: </b>
+                                    <t t-foreach="lists" t-as="l">
+                                        <strong t-esc="l['quantity']"/>
+                                        <strong t-esc="l['uom']"/>
+                                        <span t-esc="l['name']"/>
+                                        <t t-if="len(lists)>1">,</t>
+                                    </t>
+                                    DESPATCHED UNDER
+                                    <t t-if="data['model_type'] == 'tt'"> TT NO: </t>
+                                    <t t-elif="data['model_type'] == 'lc'"> LC NO: </t>
+                                    <t t-elif="data['model_type'] == 'sales_contract'">
+                                        <t t-if = "data['sc_type'] == 'sc'"> Sales Contract NO: </t>
+                                        <t t-elif = "data['sc_type'] == 'pi'"> Proforma Invoice NO: </t>
+                                        <t t-elif = "data['sc_type'] == 'po'"> Purchase Order NO: </t>
+                                    </t>
+                                    <strong t-esc="data['lc_id']"/>,
+                                    <strong>DATE: </strong>
+                                    <strong t-esc="data['issue_date']"/>
+                                    <t t-if="data['insurance_number'] or data['insurance_policy_date']"><b>(</b></t><t t-if="data['insurance_number']">
+                                        <b>INSURANCE OPEN POLICY NO.: <strong t-esc="data['insurance_number']"/></b></t>
+                                         <b><t t-if="data['insurance_policy_date']">
+                                                Date: <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['insurance_policy_date'],'%Y-%m-%d'))"/>
+                                         </t><t t-if="data['insurance_number'] or data['insurance_policy_date']"><b>)</b></t> OF
+                                            <strong t-esc="data['second_party_bank']"/>
+                                        </b>
+                                    GOODS ARE UNDER H.S.CODE NO:
+                                    <t t-foreach="lists" t-as="l">
+                                        <strong t-esc="l['hs_code']"/>.
+                                    </t>
+                                    <t t-if="len(lists)>1">,</t>
+                                    <t t-if="data['partial_shipment'] == True">
+                                        (Partial Shipment:
+                                        <span t-esc="data['shipment_number']"/>).
+                                    </t>
+                                </p>
+
+                                <table class="mb-20">
+                                    <tbody>
+                                        <tr>
+                                            <td class="w75px">A/C:</td>
+                                            <td>
+                                                <strong t-esc="data['second_party_applicant']"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> </td>
+                                            <td>
+                                                <p class="m-0 w75">ADDRESS: <span t-esc="data['invoice_address']"/></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <p class="mb-20">
+                                    THIS IS TO CERTIFY THAT GOODS DESPATCHED STRICTLY AS PER OUR PROFORMA INVOICE:
+                                    <t t-foreach="pi_list" t-as="p">
+                                        <strong t-esc="p['number']"/><b>, DATE: </b>
+                                        <strong t-esc="p['date']"/>
+                                        <t t-if="len(pi_list)>1">,</t>
+                                    </t>
+                                </p>
+                            </div>
+
+                            <hr class="hr-xs"/>
+
+                            <p>
+                                <b><u>DESPATCH NOTE/SHIPMENT ADVICE</u></b>
+                            </p>
+
+                            <table class="table table-report table-bordered table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <t t-if="data['model_type'] == 'tt'">TT NO</t>
+                                            <t t-elif="data['model_type'] == 'lc'">LC NO</t>
+                                            <t t-elif="data['model_type'] == 'sales_contract'">
+                                                <t t-if = "data['sc_type'] == 'sc'">Sales Contract NO</t>
+                                                <t t-elif = "data['sc_type'] == 'pi'">Proforma Invoice NO</t>
+                                                <t t-elif = "data['sc_type'] == 'po'">Purchase Order NO</t>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <strong t-esc="data['lc_id']"/>
+                                            <strong> DATE: </strong>
+                                            <strong t-esc="data['issue_date']"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Goods   </td>
+                                        <td>
+                                            <t t-foreach="lists" t-as="l">
+                                                <strong t-esc="l['name']"/>
+                                                <t t-if="len(lists)>1">,</t>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>H.S.CODE   </td>
+                                        <td>
+                                            <t t-foreach="lists" t-as="l">
+                                                <t t-if="l['hs_code']">
+                                                    <strong t-esc="l['hs_code']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <b>N/A</b>
+                                                </t>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Buyer Name   </td>
+                                        <td>
+                                            <strong t-esc="data['second_party_applicant']"/>
+                                        </td>
+                                    </tr>
+                                    <t t-if="data['truck_receipt_no']">
+                                        <tr>
+                                            <td>BL No.   </td>
+                                            <td>
+                                                <strong t-esc="data['truck_receipt_no']"/> <t t-if="data['bl_date']"><b>Date: </b><strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['bl_date'],'%Y-%m-%d'))"/></t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data['container_no']">
+                                        <tr>
+                                            <td>CONTAINER No.   </td>
+                                            <td>
+                                                <strong t-esc="data['container_no']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data['vehical_no']">
+                                        <tr>
+                                            <td>LOADING/CARRYING VESSEL   </td>
+                                            <td>
+                                                <strong t-esc="data['vehical_no']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data['etd_date']">
+                                        <tr>
+                                            <td>ETD <span t-esc="data['landing_port']"/>, <span t-esc="data['landing_port_country_id']"/>   </td>
+                                            <td>
+                                                <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_date'],'%Y-%m-%d'))"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="data['trans_shipment']== True">
+                                        <t t-if="data['eta_trans_shipment_date']">
+                                            <tr>
+                                                <td>ETA <SPAN t-esc="data['transshipment_country_id']"/>   </td>
+                                                <td>
+                                                    <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_trans_shipment_date'],'%Y-%m-%d'))"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="data['mother_vessel']">
+                                            <tr>
+                                                <td>MOTHER VESSEL   </td>
+                                                <td>
+                                                    <strong t-esc="data['mother_vessel']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="data['etd_trans_shipment_date']">
+                                            <tr>
+                                                <td>ETD <SPAN t-esc="data['transshipment_country_id']"/>   </td>
+                                                <td>
+                                                    <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['etd_trans_shipment_date'],'%Y-%m-%d'))"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <t t-if="data['eta_date']">
+                                        <tr>
+                                            <td>ETA <span t-esc="data['discharge_port']"/>, <span t-esc="data['discharge_port_country_id']"/>   </td>
+                                            <td>
+                                                <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(data['eta_date'],'%Y-%m-%d'))"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td>GROSS WEIGHT   </td>
+                                        <td>
+                                            <strong t-esc="data['gross_weight']"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>NET WEIGHT   </td>
+                                        <td>
+                                            <strong t-esc="data['net_weight']"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PORT OF LOADING   </td>
+                                        <td>
+                                            <strong t-esc="data['landing_port']"/>, <strong t-esc="data['landing_port_country_id']"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PORT OF DESTINATION   </td>
+                                        <td>
+                                            <strong t-esc="data['discharge_port']"/>, <strong t-esc="data['discharge_port_country_id']"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <br/>
+
+                            <div class="row text-right">
+                                <div class="col-xs-12 text-right">
+                                    <p>For and on behalf of
+                                        <br/>
+                                        <span t-esc="data['first_party']"/>
+                                    </p>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p class="auth-signature">Authorized Signature</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

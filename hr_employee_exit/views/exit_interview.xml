@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Exit Interview Form Views -->
+        <record id="exit_interview_form_view" model="ir.ui.view">
+            <field name="name">exit_interview_form_view</field>
+            <field name="model">employee.exit.interview</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Exit Interview">
+                    <header>
+                        <button name="action_submit" states="draft" type="object" string="Apply" groups ="hr.group_hr_manager" class="oe_highlight"/>
+                        <button string="Submit" name="action_validate"
+                                attrs="{'invisible': [('state', 'not in', ['submit'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Validate" name="action_approved" groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
+                                attrs="{'invisible': [('state','not in',['validate'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Approved" name="action_done"
+                                attrs="{'invisible': [('state','not in',['approved'])]}" groups ="hr.group_hr_manager"
+                                type="object" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_reset" groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
+                                attrs="{'invisible': [('state', 'in', ['draft','submit','done'])]}"
+                                type="object"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,submit,validate,approved,done"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <separator string="Employee Details" colspan="2"/>
+                            <group>
+                                <field name="employee_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                                <field name="employee_code"/>
+                                <field name="emp_designation"/>
+                                <field name="emp_department"/>
+                                <field name="location"/>
+
+                            </group>
+                            <group>
+                                <field name="joining_date"/>
+                                <field name="resignation_date"/>
+                                <field name="leaving_date"/>
+                                <field name="supervisor_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                                <field name="supervisor_designation"/>
+                            </group>
+                        </group>
+                        <p><b>The Information you give here would be helpful to us to create a better working environment</b></p>
+                        <p><b>SECTION A: </b></p>
+                        <p>a) Please Indicate below the reasons for your decision by distributing 100 points over the
+                        factors given below indicating % contribution to your decision.</p>
+                        <p>b) Also cite critical incidents/example to support your rating.</p>
+                        <p><b>For example,</b> if only one major factor lead to your decision wright 100 against that factor,if two equally important factors give
+                        50 each, if one major factor and one minor factor give 70 or 80 depending on their importance.</p>
+                        <field name="line_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
+                            <tree editable="bottom">
+                                <field name="factor" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                                <field name="critical_incidents"/>
+                                <field name="point"/>
+                            </tree>
+                        </field>
+                        <p><b>SECTION B: </b></p>
+                        <p>In your opinion: </p>
+                        <field name="question_set_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
+                            <tree editable="bottom">
+                                <field name="question"/>
+                                <field name="answer"/>
+                            </tree>
+                        </field>
+                        <p><b>Would you recommend the company to a friend as a good
+                            organization to work for? </b></p>
+                        <group>
+                            <field name="recommend" widget="radio" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                        </group>
+                        <p><b>Your contract address for all further correspondence is: </b></p>
+                        <field name="contract_add" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                        <!--<separator string="Comment By Supervisor"/>-->
+                        <!--<field name="comment_supervisor" nolabel="1"/>-->
+                        <!--<separator string="Comment By HR"/>-->
+                        <!--<field name="comment_hr" nolabel="1"/>-->
+                        <p><b>SECTION C: </b></p>
+                        <p>To be filled by the Administration Department 7 days before the last working day.: </p>
+                        <p>(With input from the immediate supervisor of the employee)</p>
+                        <p><b>Details of any mentionable incident during the notice period of the person.</b></p>
+                        <field name="comment_supervisor" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                        <p><b>Can a good character be issued to the person?</b></p>
+                        <group>
+                            <field name="permission" widget="radio" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                        </group>
+                        <p><b>Can the person be reconsidered for re-employment?</b></p>
+                        <group>
+                            <field name="permission" widget="radio" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                        </group>
+                        <p><b>Any other comments?</b></p>
+                        <field name="comment_hr" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Exit Interview Tree Views -->
+        <record id="emp_interview_tree_view" model="ir.ui.view">
+            <field name="name">employee.exit.interview.tree</field>
+            <field name="model">employee.exit.interview</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Exit Interview">
+                    <field name="employee_id"/>
+                    <field name="emp_designation"/>
+                    <field name="resignation_date"/>
+                    <field name="leaving_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Exit Interview Action Views -->
+        <record id="action_exit_interview" model="ir.actions.act_window">
+            <field name="name">Exit Interview</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.exit.interview</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+		<!-- Exit Interview Menu -->
+        <menuitem
+				name="Exit Interview"
+				id="exit_interview_menu"
+                parent="menu_exit_management"
+				sequence="20"
+                action="action_exit_interview"
+        />
+
+        <!-- Factors Set -->
+
+
+        <!-- Factors Set Form Views -->
+        <record id="factor_form" model="ir.ui.view" >
+			<field name="name">factor.form</field>
+			<field name="model">factors.set</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Factors">
+                    <group>
+                        <group>
+                            <field name="name" />
+                        </group>
+                    </group>
+				</form>
+			</field>
+		</record>
+
+        <!-- Factors Set Tree Views -->
+		<record id="factor_tree_view" model="ir.ui.view">
+			<field name="name">factor.tree</field>
+			<field name="model">factors.set</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<form string="Factors">
+					<field name="name" />
+				</form>
+			</field>
+		</record>
+
+        <!-- Factors Set Action Views -->
+		<record id="action_factor_action_view" model="ir.actions.act_window">
+			<field name="name">Factors</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">factors.set</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="factor_tree_view" />
+		</record>
+
+		<!-- Factors Set Menu -->
+		<menuitem id="factor_menu" name="Factors"
+			parent="exit_checklist_menu" sequence="10"
+			action="action_factor_action_view" />
+
+    </data>
+</odoo>

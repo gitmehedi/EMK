@@ -4,11 +4,12 @@
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
     'category': 'Human Resources',
-    
+    'summary': 'This module handles holiday',
+    'description':"Complete HR Holiday Program",
     'depends': ['hr',
                 'hr_holidays',
                 'gbs_hr_package',
-                'hr_public_holidays'
+                'hr_employee_operating_unit',
                 ],
     'data': [
         'security/ir_rule.xml',

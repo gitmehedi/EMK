@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_gate_in_form_view1" model="ir.ui.view">
+            <field name="name">product.gate.in.form.view1</field>
+            <field name="model">product.gate.in</field>
+            <field name="inherit_id" ref="product_gate_in.product_gate_in_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_get_stock_picking"
+                                string="Stock Operation" type="object"
+                                attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"
+                                groups="stock.group_stock_user"/>
+                        <field name="picking_id" invisible="1"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

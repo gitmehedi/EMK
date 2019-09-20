@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+                id="print_journal_items_pdf"
+                model="account.move.line"
+                menu="True"
+                report_type="qweb-pdf"
+                string="Journal Items"
+                name="account_journal_report.project_journal_items_ids"
+                file="account_journal_report.project_journal_items_ids"
+        />
+
+        <template id="project_journal_items_ids">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page">
+                        <div class="row mb32">
+                            <div class="col-xs-12">
+                                <h4 class="text-center">Journal Items</h4>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <table class="table table-bordered table-report-xs table-striped">
+                                <thead>
+                                    <tr
+                                            style="background-color:#B4FDF0;
+												border-bottom: 1px solid #030303;">
+                                        <th>SL</th>
+                                        <th>Due Date</th>
+                                        <th>Name</th>
+                                        <th>Journal No</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <t t-foreach="docs" t-as="line">
+
+                                        <tr>
+                                            <td>
+                                                <span t-esc="line_index+1"/>
+                                            </td>
+
+                                            <td>
+                                                <span t-field="line.date_maturity"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.move_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.debit"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.credit"/>
+                                            </td>
+
+                                        </tr>
+                                    </t>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

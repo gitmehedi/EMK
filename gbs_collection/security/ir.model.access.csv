@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_acc_hos,access_acc_hos,account.model_account_payment,account.group_account_user,1,1,1,0
+access_acc_hoa,access_acc_hoa,account.model_account_payment,gbs_application_group.group_head_account,1,1,1,0
+access_acc_director,access_acc_director,account.model_account_payment,gbs_application_group.group_cxo,1,1,1,0

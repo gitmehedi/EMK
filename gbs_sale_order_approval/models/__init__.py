@@ -1,0 +1,3 @@
+import inherited_sale
+import sales_channel
+import inherited_ir_attachment

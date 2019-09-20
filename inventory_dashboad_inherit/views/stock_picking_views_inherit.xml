@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="inherit_stock_picking_type_kanban">
+            <field name="name">stock.picking.type.kanban</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='o_kanban_manage_button_section']" position="replace">
+                    <div class="o_kanban_manage_button_section">
+                        <a class="o_kanban_manage_toggle_button" invisible="1" href="#">More <i class="fa fa-caret-down"/></a>
+                    </div>
+                </xpath>
+                <xpath expr="//a[@name='get_action_picking_tree_late']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//t/div/div/div/div/div/div/div/field[@name='count_picking_late']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

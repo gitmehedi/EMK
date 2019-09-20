@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_proforma_invoice_SCCL_HO" model="ir.sequence">
+            <field name="name">PI SCCL HO</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SCCL_DF" model="ir.sequence">
+            <field name="name">PI SCCL DF</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SCCL_CTG" model="ir.sequence">
+            <field name="name">PI SCCL CTG</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SPL_HO" model="ir.sequence">
+            <field name="name">PI SPL HO</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SPL_DF" model="ir.sequence">
+            <field name="name">PI SPL DF</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SPL_CTG" model="ir.sequence">
+            <field name="name">PI SPL CTG</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SSCL_HO" model="ir.sequence">
+            <field name="name">PI SSCL_HO</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SSCL_CTG" model="ir.sequence">
+            <field name="name">PI SSCL CTG</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SPPL_HO" model="ir.sequence">
+            <field name="name">PI SPPL HO</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_proforma_invoice_SPPL_CTG" model="ir.sequence">
+            <field name="name">PI SPPL CTG</field>
+            <field name="code">proforma.invoice</field>
+            <field name="prefix">PI-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        
+    </data>
+</odoo>

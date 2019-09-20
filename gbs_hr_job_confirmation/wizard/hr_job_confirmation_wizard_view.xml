@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="job_confirmation_hr_manager_comment_wizard" model="ir.ui.view">
+            <field name="name">hr.manager.comment.wizard</field>
+            <field name="model">job.confirmation.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by HR Manager"/>
+                        <field name="hr_manager_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_hr_manager_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_confirmation_cxo_comment_wizard" model="ir.ui.view">
+            <field name="name">job.confirmation.cxo.comment.wizard</field>
+            <field name="model">job.confirmation.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Chief Officer"/>
+                        <field name="cxo_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_cxo_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_confirmation_supervisor_comment_wizard" model="ir.ui.view">
+            <field name="name">confirming.supervisor.comment.wizard</field>
+            <field name="model">job.confirmation.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Supervisor"/>
+                        <field name="supervisor_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_supervisor_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_confirmation_judgement_wizard" model="ir.ui.view">
+            <field name="name">job.confirmation.judgement.wizard</field>
+            <field name="model">job.confirmation.judgement.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="HR Confirmation">
+                    <group colspan="4">
+                        <separator string="Confirmation Criteria" colspan="4"/>
+                        <newline/>
+                        <field name="criteria_line_ids" nolabel="1">
+                            <tree string="Confirmation Criteria Line" create="false" delete="false" editable="bottom">
+                                <field name="seq" readonly="1"/>
+                                <field name="name" readonly="1"/>
+                                <field name="marks" readonly="1"/>
+                                <field name="obtain_marks"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Save" name="save_evaluating_judgement" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_confirmation_supervisor_comment_wizard" model="ir.ui.view">
+            <field name="name">confirming.supervisor.comment.wizard</field>
+            <field name="model">job.confirmation.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Supervisor"/>
+                        <field name="supervisor_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_supervisor_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_confirmation_hod_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.hod.comment.wizard</field>
+            <field name="model">job.confirmation.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Head Of department"/>
+                        <field name="hod_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_hod_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_confirmation_plant_incharge_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.plant.incharge.comment.wizard</field>
+            <field name="model">job.confirmation.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Plant Incharge"/>
+                        <field name="plant_incharge_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_plant_incharge_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_po_view_form1" model="ir.ui.view">
+            <field name="name">inherit.po.view.form1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button" name="action_add_pq" string="Add Quotation"
+                                attrs="{'invisible': [('state', 'in', ('purchase','done','cancel'))]}"
+                                type="object" icon="fa-list-ol"/>
+                    </div>
+                </data>
+            </field>
+        </record>
+
+
+        <!--Action To Merge Quotation-->
+        <act_window name="Merge Quotation"
+                    res_model="po.merge.wizard"
+                    src_model="purchase.order"
+                    key2="client_action_multi"
+                    view_mode="form" target="new"
+                    view_type="form"
+                    id="act_po_merge"/>
+
+    </data>
+</odoo>

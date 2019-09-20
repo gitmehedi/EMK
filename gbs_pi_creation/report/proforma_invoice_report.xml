@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_proforma_invoice"
+                string="Proforma Invoice"
+                model="proforma.invoice"
+                report_type="qweb-pdf"
+                file="gbs_pi_creation.report_proforma_invoice"
+                name="gbs_pi_creation.report_proforma_invoice"
+                paperformat="report_layout.custom_a4_pad_paperformat"
+
+        />
+
+        <template id="report_proforma_invoice">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_with_system_sig_report_template">
+                    <div class="page clearfix" style="page-break-inside: auto">
+                        <style>
+                            .proforma-terms p, .proforma-terms li {
+                                padding:0!important; margin:0!important; line-height:normal;
+                            }
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
+                        </style>
+                        <div class="clearfix">
+                            <div class="report-title">
+                                <h3 class="mt-0"><b>Proforma Invoice</b></h3>
+                            </div>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <t t-if="data['region_type']=='local'">
+                                        <p><b><u>Beneficiary:</u></b></p>
+                                    </t><t t-else="">
+                                        <p><b><u>Exporter/Seller:</u></b></p>
+                                    </t>
+                                    <p class="mb-5"><strong t-esc="data['beneficiary_id']"/> <br/>
+                                        Factory: <span t-esc="data['unit_address']"/></p>
+                                    <p><b>Vat Registration No:</b>
+                                        <span t-esc="data['vat']"/><br/>
+                                        <b>Bin No:</b>
+                                        <span t-esc="data['bin']"/></p>
+                                </div>
+                                <div class="col-xs-6 text-left">
+                                    <p><b>Proforma Invoice No &amp; Date : </b><br/>
+                                        <span t-esc="data['name']"/> <br/>
+                                        <span t-esc="data['pi_date']"/></p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <t t-if="data['region_type']=='local'">
+                                        <p><b><u>Applicant:</u></b></p>
+                                    </t><t t-else="">
+                                        <p><b><u>Importer/Buyer:</u></b></p>
+                                    </t>
+                                    <p><strong t-esc="data['customer']"/> <br/>
+                                        <span t-esc="data['customer_add']" /></p>
+                                    <t t-if="data['ntn_no']"><b>NTN No : </b><span t-esc="data['ntn_no']"/><br/></t>
+                                    <t t-if="data['gst_no']"><b>GST No : </b><span t-esc="data['gst_no']"/><br/></t>
+                                    <t t-if="data['iec_no']"><b>IEC No : </b><span t-esc="data['iec_no']"/><br/></t>
+                                </div>
+                                <div class="col-xs-6 text-left"><p>
+                                    <b>Mode of Shipment : </b><span t-esc="data['transport_by']"/> <br/>
+                                    <t t-if="data['region_type']=='local'">
+                                        <b>Place of Loading : </b>From Factory Premises of Beneficiary. <br/>
+                                        <b>Final Destination : </b>Applicant's Factory.
+                                    </t><t t-else="">
+                                        <b>Terms of Delivery : </b><span t-esc="data['terms_of_delivery']"/>
+                                    </t>
+                                </p></div>
+                            </div>
+                        </div>
+                        <div class="clearfix mb-10">
+                            <hr class="hr-xxs m-0"/>
+                            <h5 class="text-left mt-5"><u><b>Description of Goods</b></u></h5>
+                            <table class="table table-report-sm table-bordered table-striped mb-0">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="w5">Sl</th>
+                                        <th>Products</th>
+                                        <th class="text-center">HS Code</th>
+                                        <th class="w10 text-center">Qty</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="line_list" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><span t-esc="l_index+1"/></td>
+                                            <td><span t-esc="l['pro_name']"/></td>
+                                            <td><span t-esc="l['hs_code']"/></td>
+                                            <td class="text-right"><span t-esc="l['quantity']"/></td>
+                                            <td><span t-esc="l['uom']"/></td>
+                                            <td class="text-right"><span t-esc="l['price_unit']"/></td>
+                                            <td class="text-right"><span t-esc="l['price_subtotal_price']"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td colspan="6" rowspan="2"><strong>Amount in words : </strong> <span t-esc="data['currency']"/> <span t-esc="amt_to_word"/> only</td>
+                                        <td class="text-right"><strong>Total : </strong><span t-esc="total_amount"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <p>
+                                       <b>Advising Bank : </b><span t-esc="data['advising_bank']"/><br/>
+                                       <b>Account Number : </b><span t-esc="data['acc_number']"/><br/>
+                                       <b>Swift Code : </b><span t-esc="data['swift_code']"/><br/>
+                                       <b>Address : </b><span t-esc="data['bank_add']"/>
+                                    </p>
+                                </div>
+                                <div class="col-xs-6 text-left">
+                                    <p><b>Packing : </b><span t-esc="data['packing']"/> <br/>
+                                       <b>Terms of Payment : </b><span t-esc="data['terms_str']"/></p>
+                                </div>
+                            </div>
+                            <hr class="hr-xxs m-0"/>
+                        </div>
+                        <div class="proforma-terms mb-15">
+                            <p><b>Terms and Conditions:</b></p>
+                            <p t-raw="data['terms_condition']"/>
+                        </div>
+                        <hr class="hr-xxs"/>
+                        <div style="margin-top:50px">
+                            <p>For and on behalf of <br/>
+                                <span t-esc="data['beneficiary_id']"/>
+                            </p>
+
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

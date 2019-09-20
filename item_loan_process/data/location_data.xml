@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_location_lenders" model="stock.location">
+            <field name="name">Lenders</field>
+            <field name="location_id" ref="stock.stock_location_locations_partner"/>
+            <field name="usage">supplier</field>
+            <field name="company_id"></field>
+            <field name="can_loan_request">1</field>
+        </record>
+
+        <record id="stock_location_borrowers" model="stock.location">
+            <field name="name">Borrowers</field>
+            <field name="location_id" ref="stock.stock_location_locations_partner"/>
+            <field name="usage">customer</field>
+            <field name="company_id"></field>
+            <field name="can_loan_request">1</field>
+        </record>
+    </data>
+</odoo>

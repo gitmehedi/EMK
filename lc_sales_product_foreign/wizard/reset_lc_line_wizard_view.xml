@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="reset_lc_wizard_view" model="ir.ui.view">
+            <field name="name">reset.lc.wizard.view</field>
+            <field name="model">reset.lc.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Please Select" create="false" edit="false">
+                    <group>
+                        <group>
+                            <field name="shipment_id" invisible='1'/>
+                        </group>
+                    </group>
+                    <field name="product_lines" widget="one2many">
+                        <tree string="Purchase Order Lines" create="false" editable="bottom" delete="false">
+                            <field name="product_id" readonly='1'/>
+                            <field name="name" readonly='1'/>
+                            <field name="date_planned" invisible='1'/>
+                            <field name="product_qty" invisible='1'/>
+                            <field name="product_received_qty"/>
+                            <field name="product_uom" readonly='1'/>
+                            <field name="price_unit" invisible='1'/>
+                            <field name="lc_pro_line_id" invisible='1'/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Save" name="save_lc_line" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--<record id="rule_delivery_schedules_instructor" model="ir.rule">-->
+        <!--<field name="name">Delivery Schedules Instructor</field>-->
+        <!--<field name="model_id" ref="model_delivery_schedules"/>-->
+        <!--<field name="domain_force">[('sales_team_id.member_ids','child_of',[user.id])]</field>-->
+        <!--<field name="perm_read" eval="True" />-->
+        <!--<field name="perm_create" eval="True"/>-->
+        <!--<field name="perm_write" eval="True"/>-->
+        <!--<field name="perm_unlink" eval="False"/>-->
+        <!--<field name="groups" eval="[(4,ref('delivery_schedules.group_delivery_schedule_manager'))]"/>-->
+    <!--</record>-->
+
+    <record id="rule_delivery_schedules_line_operation" model="ir.rule">
+        <field name="name">Delivery Schedules line Operation</field>
+        <field name="model_id" ref="model_delivery_schedules_line"/>
+        <field name="domain_force">[('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('stock.delivery_user'))]"/>
+    </record>
+</odoo>
+
+
+<!--<record id="rule_delivery_schedules_op_instructor" model="ir.rule">-->
+        <!--<field name="name">Delivery Schedules OP Instructor</field>-->
+        <!--<field name="model_id" ref="model_delivery_schedules"/>-->
+        <!--<field name="domain_force">[('sales_team_id.operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>-->
+        <!--<field name="perm_read" eval="True" />-->
+        <!--<field name="perm_create" eval="True"/>-->
+        <!--<field name="perm_write" eval="True"/>-->
+        <!--<field name="perm_unlink" eval="False"/>-->
+        <!--<field name="groups" eval="[(4,ref('delivery_schedules.group_delivery_schedule_manager'))]"/>-->
+    <!--</record>-->

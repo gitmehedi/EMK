@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_lc_wizard" model="ir.ui.view">
+            <field name="name">letter.credit.wizard.view</field>
+            <field name="model">letter.credit.wizard</field>
+            <field name="arch" type="xml">
+                <form string="LC Wizard" edit="false" create="false" delete="false">
+                    <sheet>
+                        <group>
+                            <field name="lc_id"/>
+                        </group>
+                        <footer>
+						    <button string="Generate" name="compute_lc_no" type="object" class="oe_highlight" options="{'no_open': True, 'no_create': True}"/>
+					    </footer>
+                    </sheet>
+               </form>
+            </field>
+        </record>
+
+		<record id="action_view_lc_wizard" model="ir.actions.act_window">
+			<field name="name">LC</field>
+			<field name="type">ir.actions.act_window</field>
+            <field name="res_model">letter.credit.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+    </data>
+</odoo>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <template id="report_purchase_avg_temp" inherit_id="report_layout.gbs_external_layout" primary="True">
+            <xpath expr="//t[@t-call='report_layout.gbs_external_layout_header']" position="attributes">
+                <attribute name="t-call">purchase_average_price_report.external_layout_header_papr</attribute>
+            </xpath>
+        </template>
+        <template id="external_layout_header_papr" inherit_id="report_layout.gbs_external_layout_header" primary="True">
+            <xpath expr="//div[@class='company-info']" position="after">
+                <div name="company_address">
+                    <h5><span t-esc="address"/></h5>
+                </div>
+            </xpath>
+        </template>
+        <!-- Main template -->
+        <template id="purchase_price_report_temp">
+            <t t-call="report.html_container">
+                <t t-call="purchase_average_price_report.report_purchase_avg_temp">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row" style="padding-top:25px;">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Purchase Average Price History</h4>
+                                <div class="row" style="padding-bottom:10px;">
+                                    <div class="col-xs-8 text-left">
+                                        <t t-if="record['date_from']">
+                                            <strong>Period From : </strong>
+                                            <t t-esc="time.strftime('%d-%m-%Y',time.strptime(record['date_from'],'%Y-%m-%d'))"/>
+                                        </t>
+                                        <t t-if="record['date_to']">
+                                            <strong style="padding-left:10px;">To : </strong>
+                                            <t t-esc="time.strftime('%d-%m-%Y',time.strptime(record['date_to'],'%Y-%m-%d'))"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Product</th>
+                                        <th class="text-center">UOM</th>
+                                        <th class="text-center">Average Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="lines">
+                                        <t t-foreach="lines" t-as="line">
+                                            <tr>
+                                                <td>
+                                                    <!--<t t-esc="line['move_date']"/>-->
+                                                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['move_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                </td>
+                                                <td>
+                                                    <t t-if="line['variant_name']">
+                                                        <t t-esc="line['product_name']"/>(<t t-esc="line['variant_name']"/>)
+                                                    </t>
+                                                    <t t-else="">
+                                                        <t t-esc="line['product_name']"/>
+                                                    </t>
+
+                                                    <!--<t t-esc="line['variant_name']"/>-->
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['uom_name']"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['avg_price']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </t>
+
+            </t>
+        </template>
+
+        <report id="report_purchase_average_price"
+                model="stock.move"
+                string="Average Price"
+                name="purchase_average_price_report.purchase_price_report_temp"
+                file="purchase_average_price_report.purchase_price_report_temp"
+                multi="True"
+                menu="False"
+                report_type="qweb-pdf"/>
+
+        <record id="report_purchase_average_price" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_layout.paperformat_backend_portrait"/>
+        </record>
+    </data>
+</openerp>

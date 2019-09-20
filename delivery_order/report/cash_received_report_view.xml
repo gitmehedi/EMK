@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_individual_payslip">
+			<t t-call="report.html_container">
+				<t t-call="report_layout.gbs_internal_layout">
+					<div class="page" style="page-break-inside:auto">
+						<div class="row">
+							<div class="row">
+								<h2 class="text-center">Money Receipt</h2>
+							</div>
+							<br/>
+							<div class="row">
+								<div class="col-xs-6">
+                                    <h4><label>SL NO : </label>
+                                    <span t-esc="data['mr_sl_no']"/></h4>
+                                </div>
+								<div class="col-xs-6 text-right">
+                                </div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+                                    <h4><label>Customer</label> : <span t-esc="data['partner_id']"/></h4>
+                                </div>
+								<div class="col-xs-6 text-right">
+                                    <h4><label>Amount</label> : <span t-esc="thousand_separated_total_sum"/></h4>
+                                </div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+                                    <h4><label>Cash Payment</label> : Yes</h4>
+                                </div>
+								<div class="col-xs-6 text-right">
+                                    <h4><label>Date</label> : <span t-esc="data['payment_date']"/></h4>
+                                </div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+                                    <h4><label>Bank Name</label> : <span t-esc="data['deposited_bank']"/></h4>
+                                </div>
+								<div class="col-xs-6 text-right">
+                                    <h4><label>Branch Name</label> : <span t-esc="data['bank_branch']"/></h4>
+                                </div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+
+								</div>
+								<div class="col-xs-6 text-right">
+									<h4><b><label>For</label>, <span t-esc="data['company_id']"/></b></h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6" style="margin-top: 10mm;">
+                                    <h4><label>In Words </label>: (<span t-esc="amount_to_words"/>)</h4>
+                                </div>
+								<div class="col-xs-6 text-right" style="margin-top: 15mm;">
+                                    <strong style="border-top: 1px solid black; padding-top:5px;">Authorized Signature</strong>
+                                </div>
+							</div>
+							<div class="row">
+								<div class="col-xs-8">
+									<strong>CREDIT OF CHEQUE WILL BE VALID SUBJECT TO ENCASHMENT</strong>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</t>
+			</t>
+
+		</template>
+	</data>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<!-- Checklist Type Form Views -->
+		<record id="hr_exit_checklists_line_form_view" model="ir.ui.view">
+			<field name="name">hr.exit.checklists.line.form</field>
+			<field name="model">pendding.checklists.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Employee Exit Checklists" create="false">
+                    <header>
+                        <!--<button string="Done" name="check_list_submit" attrs="{'invisible': [('status', 'not in', ['draft'])]}" type="object"/>-->
+                        <!--<button string="Reset to Draft" name="check_list_reset"-->
+                                <!--attrs="{'invisible': [('status', 'in', ['draft','verify'])]}"-->
+                                <!--type="object"/>-->
+                        <button string="Receive" name="check_list_verify"
+                                attrs="{'invisible': [('status', 'in', ['verify'])]}"
+                                type="object" class="oe_highlight"/>
+                        <field name="status" widget="statusbar" statusbar_visible="draft,verify"
+                               statusbar_colors='{"draft":"blue"}'/>
+                    </header>
+					<sheet>
+						<group>
+							<field name="employee_id" readonly="1"/>
+							<field name="checklist_item_id" readonly="1"
+                           	options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							<field name="responsible_emp" readonly="1"/>
+							<field name="responsible_department" readonly="1"/>
+							<field name="remarks"/>
+						</group>
+					</sheet>
+					<field name="message_ids" widget="mail_thread"/>
+				</form>
+			</field>
+		</record>
+
+		<!-- Checklist Item Tree Views -->
+		<record id="hr_exit_checklists_line_tree_view" model="ir.ui.view">
+			<field name="name">hr.exit.checklists.line.tree</field>
+			<field name="model">pendding.checklists.line</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Checklist Item" create="false">
+					<field name="checklist_item_id"
+						   options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+					<field name="responsible_department"/>
+					<field name="responsible_emp"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+
+		<!-- Checklist Item Action Views -->
+		<record id="action_hr_exit_checklists_line_view" model="ir.actions.act_window">
+			<field name="name">Employee Checklists</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">pendding.checklists.line</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_exit_checklists_line_tree_view" />
+		</record>
+
+		<!-- Checklist Item Menu -->
+		<menuitem id="checklist_item_line_menu" name="Pendding Employee Checklists"
+			parent="menu_exit_management" sequence="8"
+			action="action_hr_exit_checklists_line_view" />
+	</data>
+</odoo>

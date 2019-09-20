@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--Email template -->
+        <record id="purchase_rfq_email_template" model="mail.template">
+            <field name="name">Purchase RFQ Email Template</field>
+            <field name="subject"></field>
+            <field name="model_id" ref="gbs_purchase_rfq.model_rfq_email_template_wizard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="acrion_send_rfq_report"/>
+            <field name="report_name">RFQ</field>
+            <field name="lang">${user.lang}</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>
+    Here is a Request For Quotation(RFQ).Please Find the attachment below for details information.
+</p>
+<p>
+    If any further information is required, do not hesitate to reply to this message.
+</p>
+
+]]></field>
+        </record>
+    </data>
+</odoo>

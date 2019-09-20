@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_att_error_summary">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
+                            <div class="">
+                                <h3 class="text-center">Attendance Error Summary</h3>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div>
+                                        <t t-if="data['operating_unit_name']">
+                                            <strong>Operating Unit:</strong>
+                                            <span t-esc="data['operating_unit_name']"/>
+                                        </t>
+                                    </div>
+                                    <div>
+                                        <t t-if="data['department_name']">
+                                            <strong>Department:</strong>
+                                            <span t-esc="data['department_name']"/>
+                                        </t>
+                                    </div>
+                                    <div>
+                                        <t t-if="data['emp_name']">
+                                            <strong>Employee Name:</strong>
+                                            <span t-esc="data['emp_name']"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <div>
+                                        <strong>From:</strong>
+                                        <span t-esc="data['from_date']"/>
+                                    </div>
+                                    <div>
+                                        <strong>To:</strong>
+                                        <span t-esc="data['to_date']"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+
+                        <div class="row">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th>SN</th>
+                                            <th>Employee</th>
+                                            <th>Acc No</th>
+                                            <th>Emp. Type</th>
+                                            <th>Designation</th>
+                                            <th style="min-width:90px">Check_in</th>
+                                            <th style="min-width:90px">Check_out</th>
+                                        </tr>
+                                    </thead>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data_list" t-as="k">
+                                        <t t-if="k['val']">
+                                            <td class="odo-bg-info"
+                                                    t-att-colspan="data_list_len">
+                                                <strong t-esc="k['name']"></strong>
+                                            </td>
+
+                                            <t t-foreach="k['val']" t-as="o">
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <span t-esc="o_index+1"/>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['name']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['acc_no']"/>
+                                                    </td>
+                                                     <td>
+                                                        <span class="text-nowrap" t-esc="o['is_executive']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['designation']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['check_in']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['check_out']"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <t t-call="report_layout.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="att_error_summary_report"
+                string="Error Summary"
+                model="hr.attendance"
+                report_type="qweb-pdf"
+                name="gbs_hr_attendance_report.report_att_error_summary"
+                file="gbs_hr_attendance_report.report_att_error_summary"
+                menu="False"
+                paperformat="report_layout.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>
+

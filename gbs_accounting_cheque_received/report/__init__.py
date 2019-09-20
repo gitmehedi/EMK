@@ -1,0 +1,1 @@
+import gbs_money_receipt_report

@@ -163,6 +163,13 @@ class hr_leave_fiscalyear(models.Model):
                 return []
         return ids
 
+    @api.multi
+    def action_close(self):
+        res = {
+            'state': 'done',
+        }
+        self.write(res)
+
 #     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
 #         if args is None:
 #             args = []

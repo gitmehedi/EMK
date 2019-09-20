@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<openerp>
+<odoo>
     <data>
 
 
@@ -15,7 +15,7 @@
                                 <field name="mob_bill_unlimited" />
                                 <field name="current_bill_limit" attrs="{'invisible': [('mob_bill_unlimited', '=', True)]}" />
                             </group>
-                            <field name="mobile_bill_line_ids">
+                            <field name="mobile_bill_line_ids" readonly="1">
                                 <tree string="List" editable="bottom">
                                     <field  name="effective_date" />
                                     <field  name="limit" />
@@ -28,4 +28,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

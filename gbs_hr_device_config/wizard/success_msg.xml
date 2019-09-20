@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="success_msg_wizard_id" model="ir.ui.view">
+            <field name="name">success.msg.wizard</field>
+            <field name="model">success.msg.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Success Message" create="false" edit="false">
+                    <group>
+                        <p>Successfully pull the data from server</p>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Ok" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="attendance_device_detail_form_inherit" model="ir.ui.view">
+            <field name="name">hr.attendance.device.detail.form.view</field>
+            <field name="model">hr.attendance.device.detail</field>
+            <field name="inherit_id" ref="gbs_hr_device_config.attendance_device_detail_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group[2]" position="attributes">
+                    <attribute name="groups">gbs_samuda_hr_access.group_manage_attendance_device,base.group_system</attribute>
+                </xpath>
+                <xpath expr="//sheet/notebook" position="attributes">
+                    <attribute name="groups">gbs_samuda_hr_access.group_manage_attendance_device,base.group_system</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem id="gbs_hr_device_config.menu_hr_attendance_detail_config" name="Device Configuration" parent="hr_attendance.menu_hr_attendance_settings"
+					action="gbs_hr_device_config.hr_attendance_device_detail_action" groups="hr_attendance.group_hr_attendance_user,gbs_samuda_hr_access.group_manage_attendance_device,base.group_system"/>
+		<!--<menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="hr_attendance.menu_hr_attendance_root"-->
+        <!--sequence="99" action="hr_attendance.action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_user,gbs_samuda_hr_access.group_manage_attendance_device"/>-->
+
+
+        <menuitem name="Settings"
+                  id="base.menu_administration"
+                  web_icon="base,static/description/settings.png"
+                  sequence="500"
+                  groups="base.group_erp_manager,gbs_samuda_hr_access.group_manage_user,base.group_system"/>
+
+        <menuitem id="base_user_role.menu_action_res_users_role_tree"
+                  parent="base.menu_users"
+                  action="base_user_role.action_res_users_role_tree"
+                  groups="base.group_erp_manager,gbs_samuda_hr_access.group_manage_user"/>
+
+        <menuitem id="base.menu_users"
+                  name="Users"
+                  parent="base.menu_administration"
+                  sequence="0"
+                  groups="base.group_erp_manager,gbs_samuda_hr_access.group_manage_user"/>z
+
+        <menuitem action="base.action_res_users"
+                  id="base.menu_action_res_users"
+                  parent="base.menu_users"
+                  sequence="0"
+                  groups="base.group_erp_manager,gbs_samuda_hr_access.group_manage_user"/>
+
+        <menuitem id="hr_attendance.menu_hr_attendance_settings"
+                  name="Configuration"
+                  parent="hr_attendance.menu_hr_attendance_root"
+                  sequence="99"
+                  action="hr_attendance.action_hr_attendance_settings"
+                  groups="hr_attendance.group_hr_attendance_manager,hr_attendance.group_hr_attendance_user,gbs_samuda_hr_access.group_manage_attendance_device"/>
+
+        <menuitem id="mass_editing.menu_mass_editing" name="Mass Editing"
+                  parent="base.menu_administration" sequence="6" groups="base.group_system"/>
+
+        <menuitem id="mass_editing.menu_mass_object_view" action="mass_editing.action_mass_object_form"
+                  parent="mass_editing.menu_mass_editing" groups="base.group_system"/>
+
+        <menuitem
+                name="Load a Translation"
+                action="base.action_view_base_language_install"
+                id="base.menu_view_base_language_install"
+                parent="base.menu_translation" sequence="2"
+                groups="base.group_system"/>
+        <menuitem
+                id='google_drive.menu_google_drive_config'
+                name='Google Drive'
+                parent='base.menu_administration'
+                groups="base.group_system"/>
+
+    </data>
+</odoo>

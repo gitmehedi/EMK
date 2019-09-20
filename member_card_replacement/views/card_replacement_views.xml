@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_card_replacement_form" model="ir.ui.view">
+        <field name="name">member.card.replacement.form</field>
+        <field name="model">member.card.replacement</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Card Replacement">
+                <header>
+                    <button string='Authenticate' name="act_authenticate" type='object' class="oe_highlight"
+                            states="request" groups="membership_user.group_mem_user_officer"/>
+                    <button string='Approve' name="act_approve" type='object' class="oe_highlight"
+                            states="authenticate" groups="membership_user.group_mem_user_officer"/>
+                    <button string='Reject' name="act_reject" type='object'
+                            states="request" groups="membership_user.group_mem_user_officer"/>
+                    <field name="state" widget="statusbar" statusbar_visible="request,authenticate,approve,paid"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" attrs="{'invisible':[('name','=',False)]}"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="membership_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                        </group>
+                        <group>
+                            <field name="request_date"/>
+                            <field name="authorize_date" attrs="{'invisible': [('state', '=', 'request')]}"/>
+                            <field name="approve_date"
+                                   attrs="{'invisible': [('state', 'in', ['request','authenticate'])]}"/>
+                            <field name="rejected_date"
+                                   attrs="{'invisible': [('state', 'in', ['request','authenticate','approve','paid'])]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_card_replacement_tree" model="ir.ui.view">
+        <field name="name">member.card.replacement.tree</field>
+        <field name="model">member.card.replacement</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Card Replacement" decoration-bf="state in ['request','authenticate','approve','paid']"
+                  decoration-info="state == 'request'" decoration-success="state in ['authenticate','approve']"
+                  decoration-muted="state == 'paid'" decoration-danger="state == 'reject'">
+                <field name="membership_id"/>
+                <field name="request_date"/>
+                <field name="authorize_date" attrs="{'invisible': [('state', '=', 'request')]}"/>
+                <field name="approve_date"
+                       attrs="{'invisible': [('state', 'in', ['request','authenticate'])]}"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_card_replacement">
+        <field name="name">Card Replacement</field>
+        <field name="res_model">member.card.replacement</field>
+        <field name="context">{'mcount':'request'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Card Replacement for Member
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="sub_card_replacement" parent="member_renew.menu_general"
+              action="action_card_replacement"
+              groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
+</odoo>

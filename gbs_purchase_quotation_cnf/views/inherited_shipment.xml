@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_purchase_shipment_inherit" model="ir.ui.view">
+            <field name="name">view_purchase_shipment_inherit</field>
+            <field name="model">purchase.shipment</field>
+            <field name="inherit_id" ref="com_shipment.view_shipment_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='action_eta']" position="before">
+                        <button string="C&amp;F Quotation" name="action_quotation" states="eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in"
+                                type="object" class="oe_highlight"/>
+                        <button string="Approve" name="action_approve_quotation" states="cnf_quotation"
+                                type="object" class="oe_highlight"/>
+                        <button string="Approve" name="action_to_quotation" states="eta"
+                                type="object" class="oe_highlight"/>
+                    </xpath>
+                    <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                        <button name="%(action_cnf_quotation2)d" type="action" class="oe_stat_button" icon="fa-list-alt"
+                                attrs="{'invisible': [('state', 'in', ['draft','on_board','receive_doc','send_to_cnf','eta'])]}" string="C&amp;F Quotations">
+                        </button>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

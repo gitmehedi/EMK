@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="purchase_summary_wizard_view" model="ir.ui.view">
+			<field name="name">Purchase Summary Wizard View</field>
+			<field name="model">purchase.summary.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="pur_month" placeholder="Please Select"/>
+                                <field name="pur_year"  placeholder="Please Select"/>
+                            </group>
+                            <group>
+                                <field name="operating_unit_ids" placeholder="Please Select"
+									  widget="many2many_tags" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+        <record id="action_purchase_summary_local_wizard" model="ir.actions.act_window">
+			<field name="name">Purchase Summary(Local)</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.summary.wizard</field>
+			<field name="view_type">form</field>
+			<field name="context">{'type': 'local'}</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+        <record id="action_purchase_summary_foreign_wizard" model="ir.actions.act_window">
+			<field name="name">Purchase Summary(Foreign)</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.summary.wizard</field>
+			<field name="view_type">form</field>
+			<field name="context">{'type': 'foreign'}</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+    </data>
+</odoo>

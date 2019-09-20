@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_picking_form_inherit_loan">
+        <field name="name">stock.picking.inherit.loan.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_form1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='receive_type']" position="after">
+                <field name="loan_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
+                       attrs="{'invisible': [('receive_type', '!=', 'loan')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

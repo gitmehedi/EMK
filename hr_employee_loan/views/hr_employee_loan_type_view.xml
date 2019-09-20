@@ -11,7 +11,8 @@
 				<sheet>
 					Name<h2><field name="name" /></h2>
 					Code<h2><field name="code" /></h2>
-					<group string="General">
+					<field name="company_id" readonly="1" groups="base.group_multi_company"/>
+					<group string="General" invisible="1">
 						<group>
 							<field name="is_interest_payable" />
 							<field name="interest_mode_id" attrs="{'invisible': [('is_interest_payable', '=', False)]}" />
@@ -23,13 +24,13 @@
 							<field name="disburse_method_id" />
 							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
 						</group>
-					</group>	
+					</group>
 					<notebook position="inside">
 						<page string="Loan Proofs">
 							<field name="loan_proof_ids" />	
 						</page>
-						<page string="Employee Categories">
-							<field name="employee_tag_ids" />		
+						<page string="Employee Categories" invisible="1">
+							<field name="employee_tag_ids" />
 						</page>
 						<page string="Loan Policies">
 							<field name="loan_policy_ids" />		

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="loan_lending_inherit_form">
+        <field name="name">loan.lending.inherit.form</field>
+        <field name="model">item.loan.lending</field>
+        <field name="inherit_id" ref="item_loan_process.view_item_loan_lending_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_draft']" position="after">
+                <button string="Loan Adjustment" name="action_view_picking"
+                                groups="stock.group_stock_user" class="oe_highlight"
+                                states="approved" type="object"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

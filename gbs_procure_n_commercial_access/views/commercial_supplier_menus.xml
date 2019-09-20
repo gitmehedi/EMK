@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+        <!-- CNF Agent Menu -->
+        <record id="action_partner_cnf_supplier_form" model="ir.actions.act_window">
+            <field name="name">CNF Agent</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('is_cnf','=','1')]</field>
+            <field name="context">{'default_customer':0, 'default_is_cnf':1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="filter" eval="True"/>
+            <field name="help" type="html">
+                  <p class="oe_view_nocontent_create">
+                    Click to add a contact in your address book.
+                  </p><p>
+                    Odoo helps you easily track all activities related to
+                    a supplier: discussions, history of purchases,
+                    documents, etc.
+                  </p>
+            </field>
+        </record>
+
+        <menuitem
+                id="cnf_agent_supplier"
+                name="CNF Agent"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="1"
+                action="action_partner_cnf_supplier_form"
+                groups="group_imoprt_lc_foreign"/>
+
+        <!-- Local Suppliers Menu-->
+        <record id="action_partner_supplier_local_form" model="ir.actions.act_window">
+            <field name="name">Local Suppliers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('supplier_type','=','local')]</field>
+            <field name="context">{'default_supplier_type':'local','default_customer':0,'default_supplier':1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="filter" eval="True"/>
+        </record>
+
+        <menuitem
+                id="local_supplier"
+                name="Local Suppliers"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="1"
+                action="action_partner_supplier_local_form"
+                groups="group_local_purchase"/>
+
+        <!-- Foreign Suppliers Menu-->
+        <record id="action_partner_supplier_foreign_form" model="ir.actions.act_window">
+            <field name="name">Foreign Suppliers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('supplier_type','=','foreign')]</field>
+            <field name="context">{'default_supplier_type':'foreign','default_customer':0,'default_supplier':1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="filter" eval="True"/>
+        </record>
+
+        <menuitem
+                id="foreign_supplier"
+                name="Foreign Suppliers"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="1"
+                action="action_partner_supplier_foreign_form"
+                groups="group_imoprt_lc_foreign"/>
+
+    </data>
+</odoo>

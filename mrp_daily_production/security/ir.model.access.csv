@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_daily_production_user,access_daily_production_user,model_daily_production,mrp.group_mrp_user,1,1,1,0
+access_consumed_product_line_user,access_consumed_product_line_user,model_consumed_product_line,mrp.group_mrp_user,1,1,1,0
+access_finish_product_line_user,access_finish_product_line_user,model_finish_product_line,mrp.group_mrp_user,1,1,1,0
+access_daily_production_manager,access_daily_production_manager,model_daily_production,mrp.group_mrp_manager,1,1,1,1
+access_consumed_product_line_manager,access_consumed_product_line_manager,model_consumed_product_line,mrp.group_mrp_manager,1,1,1,1
+access_finish_product_line_manager,access_finish_product_line_manager,model_finish_product_line,mrp.group_mrp_manager,1,1,1,1

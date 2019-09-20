@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="delivery_schedules_report"
+            string="Delivery Schedules"
+            model="delivery.schedules"
+            report_type="qweb-pdf"
+            file="delivery_schedules.report_delivery_schedules"
+            name="delivery_schedules.report_delivery_schedules"
+            paperformat="report_layout.paperformat_backend_landscape"
+            menu="True"
+        />
+    </data>
+</odoo>

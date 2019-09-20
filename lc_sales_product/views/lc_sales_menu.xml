@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="lc_export_creation_menu" parent="sales_team.menu_base_partner"
+            sequence="10" name="Letter of Credit" groups="gbs_application_group.group_export_local_lc,gbs_application_group.group_export_foreign_lc"/>
+
+
+        <menuitem id="main_menu_lc_sales_comm"
+                  parent="commercial.menu_commercial_root"
+                  sequence="1" name="Sales" groups="commercial.group_commercial_user_export"/>
+
+    </data>
+</odoo>

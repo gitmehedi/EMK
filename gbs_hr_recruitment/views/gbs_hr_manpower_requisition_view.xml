@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<!-- Tree View-->
+		<record id="hr_manpower_req_tree" model="ir.ui.view">
+			<field name="name">hr.employee.requisition.tree</field>
+			<field name="model">hr.employee.requisition</field>
+			<field name="arch" type="xml">
+				<tree string="Manpower Requisition">
+                   <field name="employee_id"/>
+					<field name="department_id"/>
+					<field name="factory_or_head_office"/>
+					<!--<field name="replaced_or_new" />-->
+					<!--<field name="replace_of_whom_emp_id" />-->
+					<!--<field name="replace_of_whom_designation" />-->
+					<!--<field name="reson_or_justification" />-->
+					<field name="issue_date"/>
+					<field name="current_no_of_emp" />
+					<field name="expected_date" />
+					<field name="req_no_of_employee" />
+					<!--<field name="qualification" />-->
+					<!--<field name="age" />-->
+					<!--<field name="training_or_practical_skills"/>-->
+					<!--<field name="principle_duties"/>-->
+					<!--<field name="comment_by_co_md"/>-->
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form View-->
+		<record id="hr_manpower_req_form" model="ir.ui.view">
+			<field name="name">hr.employee.requisition.form</field>
+			<field name="model">hr.employee.requisition</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Manpower Requisition" copy="0" delete="0">
+					<header>
+                        <button string="Confirm" name="action_confirm"
+								states="draft" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_dept_manager,hr_recruitment.group_hr_recruitment_manager"/>
+
+                    	<button string="Approve" name="action_hop_approve"
+								states="confirmed" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_head_of_plant"
+								/>
+
+						<button string="Approve" name="action_hr_approve"
+								states="hr_approve" type="object" class="oe_highlight"
+								groups="hr_recruitment.group_hr_recruitment_manager"
+								/>
+
+						<button string="Approve" name="action_cxo_approve"
+								states="cxo_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_cxo"
+								/>
+
+                     	<button string="Decline" name="action_decline" attrs="{'invisible':[('check_edit_access','=',False)]}"
+								type="object"
+								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+								/>
+
+						<button string="Reset To Draft" name="action_reset"
+								type="object" states="confirmed,hr_approve,cxo_approve,declined"
+								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+								/>
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,hr_approve,cxo_approve,approved"/>
+
+					</header>
+					<sheet>
+						<div class="oe_title">
+							<h2><field name="name" readonly="True"/></h2>
+						</div>
+						<separator string="Description" colspan="2"/>
+						<field name="comment_by_co_md" colspan="2" attrs="{'readonly':[('state','!=','draft')]}"/>
+						<group>
+        					<group>
+								<field name="employee_id"/>
+								<field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_ids','=',department_id)]" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="req_no_of_employee" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="age"  attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="check_edit_access" invisible="1"/>
+							</group>
+							<group>
+								<field name="issue_date"/>
+								<field name="expected_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="approved_no_of_emp" />
+								<field name="current_no_of_emp" />
+								<field name="factory_or_head_office" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="replaced_or_new" widget="radio" options="{'horizontal': true}" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')],'required':[('replaced_or_new', '=','replaced')],'readonly':[('state','!=','draft')]}"
+									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="['|',('department_id','=',department_id),('active','=',False)]"/>
+								<field name="replace_of_whom_designation" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
+								<field name="reson_or_justification" attrs="{'invisible': [('replaced_or_new', '!=','new')],'required':[('replaced_or_new', '=','new')]}"/>
+							</group>
+							 <notebook colspan="4">
+            					<page string="Requirements">
+									<separator string="Qualification" colspan="2" />
+									<field name="qualification" placeholder="Give some description..."  attrs="{'readonly':[('state','!=','draft')]}"/>
+
+									<separator string="Training / Practical experience / Skill"/>
+									<field name="training_or_practical_skills"  placeholder="Give some description about Training / Practical experience / Skill..."  attrs="{'readonly':[('state','!=','draft')]}" />
+
+									<separator string="Principle Duties"/>
+									<field name="principle_duties"  placeholder="Give some description about your principle duties" attrs="{'readonly':[('state','!=','draft')]}"/>
+								</page>
+							 </notebook>
+						</group>
+					</sheet>
+
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+
+				</form>
+			</field>
+		</record>
+
+		<record id="action_hr_manpower_requisition" model="ir.actions.act_window">
+			<field name="name">HR Manpower Requisition</field>
+			<field name="res_model">hr.employee.requisition</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem
+				name="Recruitment"
+				id="hr_recruitment.menu_hr_recruitment_root"
+				web_icon="hr_recruitment,static/description/icon.png"
+				sequence="80"
+				groups="gbs_application_group.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+
+		<menuitem
+				parent="hr_recruitment.menu_hr_recruitment_root"
+				id="hr_recruitment.menu_hr_job_position"
+				action="hr_recruitment.action_hr_job"
+				sequence="1"
+				groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+
+		<menuitem
+				id="hr_recruitment.menu_hr_recruitment_configuration"
+				name="Configuration" parent="hr_recruitment.menu_hr_recruitment_root"
+        		sequence="100"
+				groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+
+		<menuitem
+				name="Resumes and Letters"
+				parent="hr_recruitment.menu_hr_recruitment_root"
+				id="hr_recruitment.menu_crm_case_categ0_act_job02"
+				action="hr_recruitment.hr_applicant_resumes"
+				sequence="3"
+				groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+
+		<menuitem name="Manpower Requisition"
+				  parent="hr_recruitment.menu_hr_recruitment_root"
+				  id="main_menu_hr_manpower_requisition"
+				  sequence="80"
+				  groups="gbs_application_group.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+
+		<menuitem name="Manpower Requisition"
+				  parent="main_menu_hr_manpower_requisition"
+				  id="menu_hr_manpower_requisition"
+				  groups="gbs_application_group.group_dept_manager,gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+				  action="action_hr_manpower_requisition"/>
+
+	</data>
+</openerp>

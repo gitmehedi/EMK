@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_cnf_quotation_form" model="ir.ui.view">
+            <field name="name">view.cnf.quotation.form</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <form string="C&amp;F">
+                    <header>
+                        <button name="action_rfq_send" invisible="1" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                        <button name="action_rfq_send" invisible="1" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
+                        <button name="cnf_button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
+                        <button name="cnf_button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
+                        <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
+                        <button name="action_rfq_send" string="Send PO by Email" type="object" invisible="1"/>
+                        <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
+                        <button name="button_cancel" states="draft,to approve,sent" string="Cancel" type="object" />
+                        <button name="action_reset_cnf" type="object" string="Reset to Quotation" states="purchase,done" groups="commercial.group_commercial_manager"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,purchase"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="shipment_id" attrs="{'required':[('cnf_quotation','=',True)],'readonly':[('state', 'in', ['purchase','done'])]}"
+                                       options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                <field name="lc_id" attrs="{'required':[('cnf_quotation','=',True)]}"/>
+                                <field name="partner_id" string="C&amp;F Vendor" domain="[('is_cnf','=',True),('parent_id', '=', False)]"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                            </group>
+                            <group>
+                                <field name="date_order"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                <field name="commodity" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
+                                <field name="com_quantity" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
+                                <field name="cnf_quotation" invisible="1"/>
+                                <field name="is_shipped" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Services">
+                                <field name="order_line" >
+                                    <tree string="Services" editable="bottom">
+                                        <field name="product_id" string="Particular" domain="[('type','=','service')]"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="date_planned" string="Service date" invisible="1"/>
+                                        <field name="product_qty" invisible="1"/>
+                                        <field name="product_uom" string="Unit" invisible="1"/>
+                                        <field name="price_unit" string="Amount"/>
+                                        <field name="price_subtotal" widget="monetary" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total"/>
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                            </page>
+                            <page string="Deliveries &amp; Invoices" groups="base.group_system">
+                            <group>
+                                <group>
+                                    <label for="date_planned"/>
+                                    <div>
+                                        <field name="date_planned" required="1" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
+                                        <button name="action_set_date_planned" type="object"
+                                            states="draft,sent"
+                                            string="Set date to all order lines"
+                                            help="This changes the scheduled date of all order lines to the given date"
+                                            class="fa fa-calendar o_icon_button oe_edit_only"/>
+                                    </div>
+                                    <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                    <field name="dest_address_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
+                                    <field name="default_location_dest_id_usage" invisible="1"/>
+                                    <field name="incoterm_id"/>
+                                </group>
+                                <group>
+                                    <field name="invoice_status"/>
+                                    <field name="payment_term_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
+                                    <field name="fiscal_position_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
+                                    <field name="date_approve" groups="base.group_no_one"/>
+                                </group>
+                            </group>
+                        </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_cnf_quotation_tree" model="ir.ui.view">
+            <field name="name">view_cnf_quotation.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <tree string="C&amp;F">
+                    <field name="name"/>
+                    <field name="shipment_id"/>
+                    <field name="lc_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_cnf_quotation">
+            <field name="name">C&amp;F Quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_cnf_quotation_tree"/>
+            <field name="context">{'default_cnf_quotation':True}</field>
+            <field name="domain">[('cnf_quotation','=',True)]</field>
+            <field name="help" type="html">
+                <p>
+                    Here you can see C&amp;F  quotation list.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_cnf_quotation2">
+            <field name="name">C&amp;F Quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_cnf_quotation_tree"/>
+            <field name="domain">[('shipment_id','=',active_id)]</field>
+        </record>
+
+        <record id="action_cnf_quotation_view1" model="ir.actions.act_window.view">
+            <field eval="111" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_cnf_quotation_tree"/>
+            <field name="act_window_id" ref="action_cnf_quotation"/>
+        </record>
+        <record id="action_cnf_quotation_view2" model="ir.actions.act_window.view">
+            <field eval="112" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_cnf_quotation_form"/>
+            <field name="act_window_id" ref="action_cnf_quotation"/>
+        </record>
+
+        <record id="action_cnf_quotation_view3" model="ir.actions.act_window.view">
+            <field eval="111" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_cnf_quotation_tree"/>
+            <field name="act_window_id" ref="action_cnf_quotation2"/>
+        </record>
+        <record id="action_cnf_quotation_view4" model="ir.actions.act_window.view">
+            <field eval="112" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_cnf_quotation_form"/>
+            <field name="act_window_id" ref="action_cnf_quotation2"/>
+        </record>
+
+        <menuitem id="menu_cnf_quatation" parent="commercial.menu_commercial_root"
+                  sequence="6" name="C&amp;F Quotation" />
+
+        <menuitem id="submenu_cnf_quatation" name="C&amp;F Quotation" parent="menu_cnf_quatation"
+                  sequence="1" action="action_cnf_quotation"/>
+
+
+        <record id="inherit_cnf_form" model="ir.ui.view">
+            <field name="name">inherit.cnf.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="gbs_purchase_quotation_cnf.view_cnf_quotation_form"/>
+            <field name="arch" type="xml">
+                <button name="button_draft" position="after" >
+                    <button name="new_revision" string="New revision" type="object" attrs="{'invisible': ['|',('state', '!=', 'cancel'),('current_revision_id','!=', False)]}"/>
+                </button>
+                <button name="button_draft" position="attributes" >
+                    <attribute name="invisible">1</attribute>
+                </button>
+                <notebook position="inside">
+                    <page string="Revisions">
+                        <field name="old_revision_ids"/>
+                        <group attrs="{'invisible': [('active', '=', True)]}">
+                            <field name="current_revision_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

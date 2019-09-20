@@ -6,7 +6,7 @@ class CustomerCommissionLine(models.Model):
     _order='status desc, effective_date desc'
 
     effective_date = fields.Date(string='Effective Date', required=True)
-    commission_rate = fields.Float(string='Commission Rate', digits=(16, 2), required=True)
+    commission_rate = fields.Float(string='Commission', digits=(16, 2), required=True)
     status = fields.Boolean(string='Active Rate', default=True, required=True)
 
     """ Relational Fields """

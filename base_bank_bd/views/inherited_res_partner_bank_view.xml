@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="inherited_res_partner_bank_form_view" model="ir.ui.view">
+        <field name="name">inherited.res.partner.bank.view</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="bank_swift_code"/>
+                <field name="branch_code"/>
+                <label for="street" string="Address"/>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='branch_code']" position="after">
+                <field name="is_company_account"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

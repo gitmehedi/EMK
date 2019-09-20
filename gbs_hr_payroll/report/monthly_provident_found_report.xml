@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_provident_fund_unit_wise">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row">
+                            <div class="clearfix">
+                                <h3 class="report-title">Monthly Employee Provident Fund</h3>
+                                <h4>
+                                    <label>Description</label>
+                                    :
+                                    <span t-esc="data['name']"/>
+                                </h4>
+                            </div>
+                            <table class="table table-bordered table-report-xs table-striped"
+                                   style="margin-bottom: 10px;">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th>SN</th>
+                                        <th>Employee</th>
+                                        <th>Designation</th>
+                                        <th style="min-width:90px">D.O.J</th>
+                                        <th style="min-width:90px">Employee ID</th>
+                                        <t t-foreach="rules" t-as="r">
+                                            <t t-if="r['code']== 'EPMF'">
+                                                <th>
+                                                    <span t-esc="r['name']"></span>
+                                                </th>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="docs" t-as="k">
+                                        <t t-if="k['val']">
+                                            <td class="odo-bg-info" t-att-colspan="docs_len" style="padding-left:15px">
+                                                <strong t-esc="k['name']"></strong>
+                                            </td>
+
+                                            <t t-foreach="k['val']" t-as="o">
+                                                <tr>
+                                                    <td>
+                                                        <span t-esc="o['sn']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['emp_name']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['designation']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="o['doj']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="o['device_employee_acc']"></span>
+                                                    </td>
+                                                    <t t-foreach="rules" t-as="r">
+                                                        <t t-if="r['code'] == 'EPMF'">
+                                                            <td class="text-right">
+                                                                <span t-esc="o[r['code']]"></span>
+                                                            </td>
+                                                        </t>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <tr style="page-break-inside: avoid">
+                                        <t t-if="data['type'] != '1'">
+                                            <td colspan="5" class="text-right">Total</td>
+                                            <t t-foreach="rules" t-as="r">
+                                                <t t-if="r['code']== 'EPMF'">
+                                                    <td class="text-right">
+                                                        <strong class="text-nowrap"
+                                                                t-esc="row_total[r['code']]"></strong>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <t t-call="report_layout.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report
+                id="action_provident_fund_unit_wise"
+                string="Monthly Provident Fund"
+                model="hr.payslip.run"
+                report_type="qweb-pdf"
+                file="gbs_hr_payroll.report_provident_fund_unit_wise"
+                name="gbs_hr_payroll.report_provident_fund_unit_wise"
+                menu="False"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+    </data>
+</odoo>

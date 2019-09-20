@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="inherited_hr_job_bmd">
+        <field name="name">HR Jobs Form</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='no_of_recruitment']" position="after">
+                <field name="job_publish_date"/>
+                <field name="job_publish_number"/>
+                <field name="required_education"/>
+                <field name="authorize_district" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

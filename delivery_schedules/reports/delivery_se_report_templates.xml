@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_delivery_schedules">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page" style="padding-top:95px;page-break-inside:auto">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
+                            </style>
+
+                            <div class="clearfix">
+                                <h3 class="report-title mt-0">Delivery Schedules Report</h3>
+                                <br/>
+                                <div class="row" style="padding-top:15px;">
+                                    <div class="col-xs-6 text-left">
+                                        <p class="mb-5"><b>Operating Unit: </b><span t-field="o.operating_unit_id"/></p>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <p class="mb-5"><b>Date : </b><span t-field="o.requested_date"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center">SL</th>
+                                        <th>Customer</th>
+                                        <th>Pending D.O </th>
+                                        <th>Product</th>
+                                        <th>Ordered Qty</th>
+                                        <th>Undelivered Qty</th>
+                                        <th>Unit of Measure</th>
+                                        <th>Scheduled Qty</th>
+                                        <th>Special instructions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.line_ids" t-as="l">
+                                        <t t-if="l.state == 'approve'">
+                                            <tr style="page-break-inside: avoid" class="text-center">
+                                                <td><span t-esc="l_index+1"/></td>
+                                                <td class="text-left"><span t-esc="l.partner_id.name"/></td>
+                                                <td class="text-left"><span t-esc="l.pending_do.name"/></td>
+                                                <td class="text-left"><span t-esc="l.product_id.name"/></td>
+                                                <td class="text-left"><span t-esc="l.do_qty"/></td>
+                                                <td class="text-left"><span t-esc="l.undelivered_qty"/></td>
+                                                <td class="text-left"><span t-esc="l.uom_id.name"/></td>
+                                                <td class="text-left"><span t-esc="l.scheduled_qty"/></td>
+                                                <td class="text-left"><span t-esc="l.remarks"/></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

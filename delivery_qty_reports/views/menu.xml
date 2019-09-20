@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<menuitem id="stock.menu_warehouse_report"
+                  name="Reports" sequence="99"
+                  parent="stock.menu_stock_root"
+                  groups="stock.delivery_user"/>
+
+		<menuitem name="Daily Delivery Report"
+                  groups="stock.delivery_user"
+                  action="action_daily_delivery_undelivery_report"
+                  id="daily_deli_undeli_report_id_extend"
+                  parent="stock.menu_warehouse_report" sequence="10"/>
+
+		<menuitem name="Monthly Delivery Report"
+                  groups="stock.delivery_user"
+                  action="action_monthly_delivery_report"
+                  id="monthly_delivery_report_id"
+                  parent="stock.menu_warehouse_report" sequence="20"/>
+	</data>
+</odoo>

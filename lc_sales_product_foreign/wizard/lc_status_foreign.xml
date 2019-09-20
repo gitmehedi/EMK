@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="lc_status_wizard_view" model="ir.ui.view">
+            <field name="name">lc.status.wizard</field>
+            <field name="model">lc.status.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Foreign LC Status">
+                    <group>
+                        <group>
+                            <field name="status" widget="radio"
+                                    options="{'horizontal': true}"/>
+                            <field name="product_id" placeholder="All" domain="[('sale_ok','=',1)]"
+                                   attrs="{'invisible':[('status','!=','variant')]}"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="product_temp_id" placeholder="All" domain="[('sale_ok','=',1)]"
+                                   attrs="{'invisible':[('status','!=','product')]}"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_lc_status_wizard" model="ir.actions.act_window">
+            <field name="name">LC Status(Foreign)</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">lc.status.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                 id="letter_of_credit.lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 groups="gbs_application_group.group_export_foreign_lc"
+                 sequence="7"/>
+
+        <menuitem action="action_lc_status_wizard"
+                  id="menu_lc_status_wizard"
+                  parent="letter_of_credit.lc_report_menu_root"
+                  groups="gbs_application_group.group_export_foreign_lc"
+                  sequence="12"/>
+    </data>
+</odoo>

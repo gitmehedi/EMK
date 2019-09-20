@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_indent_config" model="ir.ui.view">
+        <field name="name">view.stock.indent.config</field>
+        <field name="model">stock.indent.config.settings</field>
+        <field name="arch" type="xml">
+            <form string="Settings" class="oe_form_configuration">
+                <header>
+                    <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
+                </header>
+                <separator string="Settings"/>
+                <sheet>
+                    <group colspan="4">
+                        <label for="id" string="Indent Back Dating"/>
+                        <div>
+                            <p><b>Consider Indent back dating for
+                            <field name="days_of_backdating_indent" class="oe_inline" nolable="1" style="width: 30px !important"/>
+                                day's.</b></p>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_indent_config" model="ir.actions.act_window">
+        <field name="name">Indent Settings</field>
+        <field name="res_model">stock.indent.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <menuitem
+            id="menu_stock_indent_config"
+            name="Indent Settings"
+            parent="stock.menu_stock_config_settings"
+            sequence="36"
+            action="action_stock_indent_config"
+            groups="stock.group_stock_manager"/>
+</odoo>

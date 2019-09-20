@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="account_code_length_form" model="ir.ui.view">
+        <field name="name">account.code.length.form</field>
+        <field name="model">account.code.length</field>
+        <field name="arch" type="xml">
+            <form string="Account Code Length">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" invisible="1"/>
+                            <field name="account_code_length"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_code_length_tree" model="ir.ui.view">
+        <field name="name">account.code.length.tree.view</field>
+        <field name="model">account.code.length</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Account Code Tree">
+                <field name="name"/>
+
+                <field name="account_code_length"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_account_code_length">
+        <field name="name">COA Code Length</field>
+        <field name="res_model">account.code.length</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="action_account_code_length"
+            id="menu_account_code_length"
+            parent="account.account_account_menu"
+            sequence="1"
+    />
+
+</odoo>

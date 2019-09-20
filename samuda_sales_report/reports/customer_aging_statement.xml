@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="samuda_sales_report.statement_document">
+        <t t-call="report_layout.gbs_internal_layout">
+            <div class="page" style="page-break-inside:auto;">
+                <div class="row" style="padding-top:-50px;">
+                    <style type="text/css">
+                        .report-title { text-align:center; }
+                        .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                    </style>
+                    <div class="clearfix">
+                        <h4 class="report-title">Statement of Aging Schedule</h4>
+                        <br/>
+                        <div class="row" style="padding-bottom:5px;">
+                            <div class="col-xs-6 text-left">
+                                <strong>Date From:</strong>
+                                <span t-esc="time.strftime('%d-%b-%Y',time.strptime(Date_start,'%Y-%m-%d'))"/>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <strong>Date To:</strong>
+                                <span t-esc="time.strftime('%d-%b-%Y',time.strptime(Date_end,'%Y-%m-%d'))"/>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-report-xs table-striped"
+                           style="margin-bottom: 10px; table-layout: fixed;" t-if="Show_Buckets">
+                        <!--<t t-set="qty" t-value="0">-->
+                        <thead>
+                            <tr class="odo-bg-gray text-center">
+                                <th class="text-center" style="width:23%;">Partner name</th>
+                                <th class="text-center" style="width:11%;">Current Due</th>
+                                <th class="text-center" style="width:11%;">1-30 Days Due</th>
+                                <th class="text-center" style="width:11%;">30-60 Days Due</th>
+                                <th class="text-center" style="width:11%;">60-90 Days Due</th>
+                                <th class="text-center" style="width:11%;">90-120 Days Due</th>
+                                <th class="text-center" style="width:11%;">+120 Days Due</th>
+                                <th class="text-center" style="width:11%;">Balance Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="r2" t-value="0"/>
+                            <t t-set="r3" t-value="0"/>
+                            <t t-set="r4" t-value="0"/>
+                            <t t-set="r5" t-value="0"/>
+                            <t t-set="r6" t-value="0"/>
+                            <t t-set="r7" t-value="0"/>
+                            <t t-set="r8" t-value="0"/>
+                            <t t-foreach="docs" t-as="o">
+                                <t t-foreach="Lines[o.id]" t-as="currency">
+                                    <tr style="page-break-inside: avoid" t-if="currency in Buckets[o.id]">
+                                        <td class="text-left">
+                                            <span t-field="o.name"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Buckets[o.id][currency]['current']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <t t-set="r2" t-value="r2+Buckets[o.id][currency]['current']" />
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Buckets[o.id][currency]['b_1_30']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <t t-set="r3" t-value="r3+Buckets[o.id][currency]['b_1_30']" />
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Buckets[o.id][currency]['b_30_60']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <t t-set="r4" t-value="r4+Buckets[o.id][currency]['b_30_60']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Buckets[o.id][currency]['b_60_90']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <t t-set="r5" t-value="r5+Buckets[o.id][currency]['b_60_90']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Buckets[o.id][currency]['b_90_120']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <t t-set="r6" t-value="r6+Buckets[o.id][currency]['b_90_120']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Buckets[o.id][currency]['b_over_120']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <t t-set="r7" t-value="r7+Buckets[o.id][currency]['b_over_120']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Buckets[o.id][currency]['balance']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <t t-set="r8" t-value="r8+Buckets[o.id][currency]['balance']"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="currency not in Buckets[o.id]">
+                                        <td class="text-right">
+                                            <span t-esc="0.0"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="0.0"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="0.0"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="0.0"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="0.0"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="0.0"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="0.0"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr>
+                                <td class="text-left">Total</td>
+                                <td class="text-right"><t t-esc="'{:,.2f}'.format(r2)"/></td>
+                                <td class="text-right"><t t-esc="'{:,.2f}'.format(r3)"/></td>
+                                <td class="text-right"><t t-esc="'{:,.2f}'.format(r4)"/></td>
+                                <td class="text-right"><t t-esc="'{:,.2f}'.format(r5)"/></td>
+                                <td class="text-right"><t t-esc="'{:,.2f}'.format(r6)"/></td>
+                                <td class="text-right"><t t-esc="'{:,.2f}'.format(r7)"/></td>
+                                <td class="text-right"><t t-esc="'{:,.2f}'.format(r8)"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <report id="action_print_customer_aging_statement"
+            model="res.partner"
+            report_type="qweb-pdf"
+            menu="False"
+            string="Customer Aging Statement"
+            name="samuda_sales_report.statement_document"
+            file="samuda_sales_report.statement_document"
+            paperformat="report_layout.paperformat_backend_landscape"
+    />
+</odoo>

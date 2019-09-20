@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherited_acc_payment_view" model="ir.ui.view">
+            <field name="name">Account.payment.view.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <field name="payment_type" position="before">
+                    <field name="sale_order_id" options="{'no_open': True, 'no_create': True}"/>
+                </field>
+
+                <field name="payment_type" position="after">
+                    <field name="is_this_payment_checked" invisible="1"/>
+                </field>
+
+
+            </field>
+        </record>
+    </data>
+</odoo>

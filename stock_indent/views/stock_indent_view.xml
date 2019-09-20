@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- Inventory Root Menu-->
+		<menuitem name="Inventory" id="stock.menu_stock_root"
+				  sequence="30"
+				  groups="base.group_user"
+				  web_icon="stock,static/description/icon.png"/>
+		<!-- Inventory Root Menu-->
+		<menuitem
+				action="stock.stock_picking_type_action"
+				id="stock.stock_picking_type_menu"
+				parent="stock.menu_stock_root" sequence="0"
+				groups="stock.group_stock_manager,stock.group_stock_user"
+				name="Dashboard"/>
+		<!-- Inventory Control Menu-->
+		<menuitem id="stock.menu_stock_inventory_control"
+				  name="Inventory Control"
+				  parent="stock.menu_stock_root"
+				  groups="stock.group_stock_manager,stock.group_stock_user"
+				  sequence="4"/>
+		<!-- Indent Tree View -->
+		<record id='view_indent_indent_tree' model='ir.ui.view'>
+			<field name="name">indent.indent.tree</field>
+			<field name="model">indent.indent</field>
+			<field name="arch" type="xml">
+				<tree string="Indents" ecoration-bf="message_needaction == True"
+					  colors="gray:state=='received';green:state=='waiting_approval';blue:state=='inprogress';red:state=='reject';">
+					<field name="name" />
+					<field name="indentor_id" />
+					<field name="stock_location_id" />
+					<field name="indent_date" />
+					<field name="required_date" />
+					<field name="approve_date" />
+					<field name="state" />
+					<field name="message_needaction" invisible="1"/>
+				</tree>
+			</field>
+		</record>
+		<!-- Indent Form View -->
+		<record id='view_stock_indent_indent_form' model='ir.ui.view'>
+			<field name="name">indent.indent.form</field>
+			<field name="model">indent.indent</field>
+			<field name="arch" type="xml">
+				<form string="Indents">
+					<header>
+						<button name="indent_confirm" string="Confirm" states="draft"
+								class="oe_highlight" type="object"/>
+						<button name="approve_indent" string="Approve" states="waiting_approval" type="object"
+								class="oe_highlight" groups="stock_indent.group_stock_indent_approver"/>
+						<button name="reject_indent" string="Reject" states="waiting_approval"
+								groups="stock_indent.group_stock_indent_approver" type="object"/>
+						<button name="action_view_picking" string="Issue Product(s)" type="object"
+								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
+						<button name="action_close_indent" string="Close" type="object"
+								states="inprogress" groups="stock.group_stock_user"/>
+						<button name="action_print" string="Print" type="object"
+								states="received" groups="stock.group_stock_user"/>
+						<field name="state" widget="statusbar"
+							   statusbar_visible="draft,waiting_approval,inprogress,received"
+							   statusbar_colors='{"reject":"red"}' />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="indentor_id" readonly="1" />
+								<field name="requirement"/>
+								<field name="stock_location_id" options="{'no_create': True,'no_open':True}"/>
+							</group>
+							<group>
+								<field name="days_of_backdating_indent" invisible="1"/>
+								<field name="indent_date" attrs="{'readonly': [('days_of_backdating_indent','=',0)]}"/>
+								<field name="required_date" />
+								<field name="approve_date" invisible="1"/>
+								<field name="indent_type" options="{'no_create': True,'no_open':True}"
+									   placeholder="Please Select"/>
+							</group>
+						</group>
+						<!--<group>-->
+						<!--<field name="material_required_for" placeholder="The material is required for..." />-->
+						<!--</group>-->
+						<notebook>
+							<page string="Products">
+								<field name="product_lines">
+									<tree string="Products" editable="bottom">
+										<field name="sequence" widget="handle"/>
+										<field name="product_id" domain="[('type','!=','service')]" options="{'no_create': True,'no_open':True}"/>
+										<field name="name" readonly="1" />
+										<field name="qty_available" invisible="1"/>
+										<field name="qty_available_now" readonly="1" groups="stock.group_stock_user,stock_indent.group_stock_indent_approver"/>
+										<field name="product_uom" string="UOM"/>
+										<field name="product_uom_qty" sum="Total Qty"/>
+										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+										<field name="issue_qty" invisible="1"/>
+										<field name="price_unit" invisible="1"/>
+										<field name="remarks"/>
+										<!--<field name="price_subtotal" sum="Total Price"/>-->
+									</tree>
+								</field>
+								<!--<group class="oe_subtotal_footer oe_right">-->
+								<!--<field name="amount_total" widget="monetary"-->
+								<!--class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}" />-->
+								<!--</group>-->
+								<div class="oe_clear">
+									<label for="material_required_for" />
+								</div>
+								<field name="material_required_for" class="oe_inline" placeholder="The material is required for..." />
+
+							</page>
+							<page string="Others">
+								<group>
+									<group>
+										<field name="company_id" groups="base.group_multi_company"
+											   options="{'no_create': True,'no_open':True}"/>
+										<field name="move_type" invisible="1"/>
+										<field name="approver_id" invisible="1"/>
+										<field name="closer_id" invisible="1"/>
+										<field name="pr_indent_check" invisible="1"/>
+									</group>
+									<group>
+										<field name="warehouse_id" readonly="1" groups="stock.group_stock_user" options="{'no_create': True,'no_open':True}"/>
+										<field name="picking_type_id" groups="stock.group_stock_user"/>
+									</group>
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		<!--Search View-->
+		<record id="search_stock_indent" model="ir.ui.view">
+			<field name="name">indent.indent.search</field>
+			<field name="model">indent.indent</field>
+			<field name="arch" type="xml">
+				<search string="Indents">
+					<filter name="inprogress" string="In Progress" domain="[('state','=','inprogress')]"/>
+					<filter name="own" string="Own" domain="[('indentor_id','=',uid)]"/>
+					<field name="name"/>
+				</search>
+			</field>
+		</record>
+		<!-- Indent Window Action -->
+		<record id='action_stock_indent' model='ir.actions.act_window'>
+			<field name="name">Indents</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="search_stock_indent"/>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new indent.
+				</p>
+			</field>
+			<field name="context">{
+				'search_default_own':1,
+				}
+			</field>
+		</record>
+		<!-- Indent Inventory User Window Action -->
+		<record id='action_indent_inprogress' model='ir.actions.act_window'>
+			<field name="name">Indents Inprogress</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="search_stock_indent"/>
+			<field name="context">{
+				'search_default_inprogress':1,
+				}
+			</field>
+		</record>
+		<!-- Indent Approval Window Action -->
+		<record id='action_indent_waiting_for_approval' model='ir.actions.act_window'>
+			<field name="name">Indents Waiting For Approval</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','waiting_approval')]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Nothing to approve.
+				</p>
+			</field>
+		</record>
+		<!-- Indent Menu -->
+		<menuitem name="Indents" parent="stock.menu_stock_root" id="menu_indent_indent_main"
+				  sequence="3" groups="base.group_user"/>
+
+		<menuitem action="action_stock_indent" name="Indents"
+				  parent="menu_indent_indent_main" id="menu_indent_indent" sequence="1"
+				  groups="base.group_user"/>
+
+		<menuitem action="action_indent_waiting_for_approval" name="Indents Waiting For Approval"
+				  parent="menu_indent_indent_main" id="menu_indent_waiting_for_approval" sequence="2"
+				  groups="stock_indent.group_stock_indent_approver"/>
+
+		<menuitem action="action_indent_inprogress" name="Indent Inprogress"
+				  parent="menu_indent_indent_main" id="menu_indent_inprogress" sequence="3"
+				  groups="stock.group_stock_user"/>
+
+	</data>
+</odoo>

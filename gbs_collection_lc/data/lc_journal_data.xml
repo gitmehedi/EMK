@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="lc_account_journal" model="account.journal">
+            <field name="name">LC Expenses</field>
+            <field name="type">lc</field>
+            <field name="code">LC</field>
+            <field name="favorite">True</field>
+            <field name="sequence">10</field>
+        </record>
+    </data>
+</odoo>

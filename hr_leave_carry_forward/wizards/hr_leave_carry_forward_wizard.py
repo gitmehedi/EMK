@@ -1,5 +1,5 @@
-from openerp import models, fields, api
-from openerp.exceptions import ValidationError,Warning
+from odoo import models, fields, api
+
 
 class HrLeaveCarryForwardWizard(models.TransientModel):
     _name = 'hr.leave.carry.forward.wizard'

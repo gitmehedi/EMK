@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_yearly_sales_comparison"
+                model="res.partner"
+                string="Yearly Sales Comparison Report"
+                report_type="qweb-pdf"
+                menu="False"
+                name="samuda_sales_report.report_yearly_sales_comparison"
+                file="samuda_sales_report.report_yearly_sales_comparison"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+        <template id="report_yearly_sales_comparison">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Yearly Sales Comparison (Without Product Variant) Report</h4>
+                            </div>
+
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th rowspan="2" class="text-center">Product Name</th>
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th colspan="2" class="text-center">
+                                                <t t-esc="head_value"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th class="text-center">Qty</th>
+                                            <th class="text-center">Val</th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data" t-as="obj">
+                                        <tr>
+                                            <td class="odo-bg-info" colspan="100%">
+                                                <strong class="text-nowrap" t-esc="obj_value['year']"/>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="obj_value['products']" t-as="prod">
+                                            <tr>
+                                                <td>
+                                                    <span class="text-nowrap" t-esc="prod_value['product_name']"/>
+                                                </td>
+                                                <t t-foreach="header_data" t-as="head">
+                                                    <td class="text-right">
+                                                        <span class="text-nowrap" t-esc="formatLang(prod_value['months'][head]['qty'])"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span class="text-nowrap" t-esc="formatLang(prod_value['months'][head]['val'])"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

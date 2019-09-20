@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="my_leave_carry_forward_tree" model="ir.ui.view">
+			<field name="name">hr.leave.forward.encash.line.tree</field>
+			<field name="model">hr.leave.forward.encash.line</field>
+			<field name="arch" type="xml">
+				<tree string="Leave Encashment">
+					<field name="emp_name"/>
+					<field name="acc_no"/>
+					<field name="carry_forward_year"/>
+					<field name="authorized_leave"/>
+					<field name="availed_leave"/>
+					<field name="balance_leave"/>
+					<field name="encashment_leave"/>
+					<field name="carried_leave"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		
+	
+		<record id="my_leave_carry_forward_form" model="ir.ui.view">
+			<field name="name">hr.leave.forward.encash.line.form</field>
+			<field name="model">hr.leave.forward.encash.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Leave Carry Forward" delete="false" copy='0' create="false" edit="false">
+					<header>
+						<button string="Confirm" name="action_confirm" type="object" attrs="{'invisible': [('state', 'in', ('approved'))]}"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group string="Empoyee Info" col="2">
+							<group>
+								<field name="emp_name"/>
+								<field name="department_name"/>
+								<field name="designation_name"/>
+							</group>
+							<group>
+								<field name="acc_no"/>
+								<field name="date_of_join"/>
+							</group>
+						</group>
+
+						<group string="Leave Info" col="2">
+							<group>
+								<field  name="carry_forward_year"/>
+								<field  name="leave_type"/>
+							</group>
+							<group>
+								<field  name="authorized_leave" />
+								<field  name="availed_leave" />
+								<field  name="balance_leave" />
+							</group>
+						</group>
+						<group string="Leave at Credit" col="2">
+							<group>
+								<field  name="encashment_leave" />
+							</group>
+							<group>
+								<field  name="carried_leave" />
+							</group>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+			</field>
+		</record>
+	
+		<record id="my_leave_forward_encash" model="ir.actions.act_window">
+			<field name="name">Leave Carry Forward</field>
+			<field name="res_model">hr.leave.forward.encash.line</field>
+			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="hr_my_leave_carry_forward" name="My Leave Encashment"
+			parent="menu_hr_leave_carry_forward"
+			action="my_leave_forward_encash" groups="base.group_user"/>
+	</data>
+</odoo>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_delivery_schedule_SCCL_HO" model="ir.sequence">
+            <field name="name">DS SCCL HO</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SCCL_DF" model="ir.sequence">
+            <field name="name">DS SCCL DF</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SCCL_CTG" model="ir.sequence">
+            <field name="name">DS SCCL CTG</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SPL_HO" model="ir.sequence">
+            <field name="name">DS SPL HO</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SPL_DF" model="ir.sequence">
+            <field name="name">DS SPL DF</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SPL_CTG" model="ir.sequence">
+            <field name="name">DS SPL CTG</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SSCL_HO" model="ir.sequence">
+            <field name="name">DS SSCL_HO</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SSCL_CTG" model="ir.sequence">
+            <field name="name">DS SSCL CTG</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SPPL_HO" model="ir.sequence">
+            <field name="name">DS SPPL HO</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_schedule_SPPL_CTG" model="ir.sequence">
+            <field name="name">DS SPPL CTG</field>
+            <field name="code">delivery.schedule</field>
+            <field name="prefix">DS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        
+    </data>
+</odoo>

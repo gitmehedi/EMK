@@ -52,7 +52,6 @@ class HrHolidays(models.Model):
     # def onchange_employee(self, employee_id):
     #     res = super(HrHolidays, self).onchange_employee(employee_id)
     #     duration = self._check_and_recompute_days()
-    #     print "------ Duration-----------:-----------", type(duration)
     #     res['value']['number_of_days_temp'] = duration
     #     return res
 

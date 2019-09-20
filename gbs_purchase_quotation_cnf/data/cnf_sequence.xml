@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequences for cnf.quotation -->
+        <record id="cq_sequence_SCCL_HO" model="ir.sequence">
+            <field name="name">CQ SCCL HO</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SCCL_DF" model="ir.sequence">
+            <field name="name">CQ SCCL DF</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SCCL_CTG" model="ir.sequence">
+            <field name="name">CQ SCCL CTG</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SPL_HO" model="ir.sequence">
+            <field name="name">CQ SPL HO</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SPL_DF" model="ir.sequence">
+            <field name="name">CQ SPL DF</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SPL_CTG" model="ir.sequence">
+            <field name="name">CQ SPL CTG</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SSCL_HO" model="ir.sequence">
+            <field name="name">CQ SSCL_HO</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SSCL_CTG" model="ir.sequence">
+            <field name="name">CQ SSCL CTG</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SPPL_HO" model="ir.sequence">
+            <field name="name">CQ SPPL HO</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="cq_sequence_SPPL_CTG" model="ir.sequence">
+            <field name="name">CQ SPPL CTG</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+    </data>
+</odoo>

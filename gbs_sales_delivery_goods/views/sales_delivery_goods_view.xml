@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="sale_delivery_goods_form" model="ir.ui.view">
+            <field name="name">sales.delivery.goods.form</field>
+            <field name="model">sales.delivery.goods</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Transport Information">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="transport_details"/>
+                                <field name="transport_name"/>
+                                <field name="vehicle_no"/>
+                                <field name="driver_no"/>
+                                <field name="driver_mob"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="sale_delivery_goods_tree" model="ir.ui.view">
+            <field name="name">sales.delivery.goods.tree</field>
+            <field name="model">sales.delivery.goods</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Transport Information">
+                   <field name="transport_details"/>
+                    <field name="transport_name"/>
+                    <field name="vehicle_no"/>
+                    <field name="driver_no"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="delivery_goods_action">
+            <field name="name">Transport Information</field>
+            <field name="res_model">sales.delivery.goods</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--<menuitem id="delievry_goods_menu" name="Transport Information" parent="sales_team.menu_base_partner"-->
+            <!--sequence="11" action="delivery_goods_action"/>-->
+        <!--<menuitem id="mrp_daily_production_submenu" name="Transport Information" parent="delivery_order.delivery_menu"-->
+                  <!--action="delivery_goods_action"/>-->
+    </data>
+</odoo>

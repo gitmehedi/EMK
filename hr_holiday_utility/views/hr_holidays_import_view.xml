@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!-- Tree View -->
+	<record id="hr_holidays_import_tree_view" model="ir.ui.view">
+			<field name="name">hr_import_holidays_tree</field>
+			<field name="model">hr.holidays.import</field>
+			<field name="arch" type="xml">
+				<tree string="Import Leave Data">
+					<field name= "name" />					
+					<field name="import_creation_date_time" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Form View -->
+		<record id="hr_holidays_import_form_view" model="ir.ui.view">
+			<field name="name">hr_holidays_import_form_view</field>
+			<field name="model">hr.holidays.import</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Import Leave Data">
+				 	<header>
+	                    <button name="hr_holiday_utility.hr_earned_leave_encashment_wizard_action_view"
+							states="draft,confirmed" type="action" string="Browse" /> 
+					 	<button name="validated" type="object" string="Import" states="draft,confirmed"/>
+					 	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,imported"/>
+                	</header>				
+                	
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />					
+								<field name="import_creation_date_time" readonly="1"/>
+							</group>								
+						</group>
+						<notebook position="inside">
+							<page string="Raw Input">
+								<field name="import_temp">
+									<tree string="List" editable="bottom">
+										<field name="name"/>
+										<field name="employee_id"/>
+										<field name="holiday_status_id"/>
+										<field name="number_of_days"/>
+										<field name="type"/>
+									</tree>
+								</field>	
+							</page>
+							<page string="Error Data">
+								<field name="import_error_lines">
+									<tree string="List" editable="bottom">
+										<field name="name"/>
+										<field name="employee_id"/>
+										<field name="holiday_status_id"/>
+										<field name="number_of_days"/>
+										<field name="type"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Ready to Import">
+								<field name="lines">
+									<tree string="List" editable="bottom">
+										<field name="name"/>
+										<field name="employee_id"/>
+										<field name="holiday_status_id"/>
+										<field name="number_of_days"/>
+										<field name="type"/>
+									</tree>
+								</field>	
+							</page>
+					</notebook>
+	                </sheet>	                
+				</form>
+			</field>
+		</record>
+    
+    <record id="hr_holidays_import_action" model="ir.actions.act_window">
+			<field name="name">Import Leave Data</field>
+			<field name="res_model">hr.holidays.import</field>
+			<field name="view_mode">tree,form</field>
+	</record>
+
+    <!-- Menu Item -->
+	  <menuitem id="menu_holidays_data_import" name="Leave Data Import"
+			parent="hr_holidays.menu_hr_holidays_root" groups="base_technical_features.group_technical_features" sequence="7"/>
+
+		<menuitem id="menu_hr_holidays_sub" name="Leave Data Import"
+			parent="menu_holidays_data_import"
+			action="hr_holidays_import_action"
+		    groups="base_technical_features.group_technical_features"
+		/>
+
+  </data>
+</odoo>

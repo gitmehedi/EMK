@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_delivery_schedule_manager" model="res.groups">
+        <field name="name">Delivery Instructor</field>
+        <field name="category_id"/>
+        <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+    </record>
+
+
+</odoo>

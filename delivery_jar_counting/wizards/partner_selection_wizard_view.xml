@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="partner_selection_wizard_form" model="ir.ui.view">
+            <field name="name">partner.selection.report.wizard.form</field>
+            <field name="model">partner.selection.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button name="send_date_val" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jar_summary_report" model="ir.actions.act_window">
+            <field name="name">Jar Summary By Date</field>
+            <field name="res_model">partner.selection.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="partner_selection_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Jar Summary By Date"
+                  action="action_jar_summary_report"
+                  id="jar_sum_report_id"
+                  parent="uom_jar_summary_menu" sequence="20"/>
+
+    </data>
+</odoo>

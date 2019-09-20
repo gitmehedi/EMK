@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--Holiday year-->
+
+        <record id="inherit_view_date_range_tree" model="ir.ui.view">
+            <field name="name">date.range.inherit.tree</field>
+            <field name="model">date.range</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Date range">
+                    <field name="name"/>
+                    <field name="type_id" domain="[('holiday_year','=', 1)]"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="active"/>
+                    <field name="current" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_date_range_type_inherit_form" model="ir.ui.view">
+            <field name="name">date.range.type.inherit.form</field>
+            <field name="model">date.range.type</field>
+            <field name="inherit_id" ref="date_range.view_date_range_type_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="holiday_year"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="holiday_date_range_action" model="ir.actions.act_window">
+            <field name="name">Holiday Years</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">date.range</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="inherit_view_date_range_tree"/>
+            <field name="domain">[('type_id.holiday_year', '=', 1)]</field>
+        </record>
+
+        <menuitem
+                action="holiday_date_range_action"
+                id="menu_holiday_date_range"
+                parent="hr_holidays.menu_hr_holidays_configuration"/>
+
+        <!--Holiday month-->
+
+        <record id="inherit_view_date_range_tree1" model="ir.ui.view">
+            <field name="name">date.range.inherit.tree1</field>
+            <field name="model">date.range</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Date range">
+                    <field name="name"/>
+                    <field name="type_id" domain="[('holiday_month','=', 1)]"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_date_range_type_inherit_form1" model="ir.ui.view">
+            <field name="name">date.range.type.inherit.form1</field>
+            <field name="model">date.range.type</field>
+            <field name="inherit_id" ref="date_range.view_date_range_type_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="holiday_month"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="holiday_date_range_action1" model="ir.actions.act_window">
+            <field name="name">Holiday Months</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">date.range</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="inherit_view_date_range_tree1"/>
+            <field name="domain">[('type_id.holiday_month', '=', 1)]</field>
+        </record>
+
+        <!-- holiday type -->
+        <record id="view_date_range_type_tree1" model="ir.ui.view">
+            <field name="name">date.range.type.inherit.tree</field>
+            <field name="model">date.range.type</field>
+            <field name="inherit_id" ref="date_range.view_date_range_type_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="holiday_year"/>
+                    <field name="holiday_month"/>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem
+                action="holiday_date_range_action1"
+                id="menu_holiday_month_date_range"
+                parent="hr_holidays.menu_hr_holidays_configuration"/>
+    </data>
+</odoo>

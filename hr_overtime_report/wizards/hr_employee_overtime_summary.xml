@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_overtime_summary_wizard_form" model="ir.ui.view">
+            <field name="name">hr.overtime.summary.wizard.form</field>
+            <field name="model">hr.overtime.summary.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Overtime Summary Report">
+                    <group>
+                        <group>
+                            <label for="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
+                            <div>
+                                <field name="operating_unit_id" class="oe_inline" placeholder="Please Select"
+                                       groups="operating_unit.group_multi_operating_unit"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            </div>
+                            <label for="emp_id"/>
+                            <div>
+                                <field name="emp_id" class="oe_inline" placeholder="Please Select"
+                                       options="{'no_create_edit': True, 'no_open': True}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="from_date"/>
+                            <div>
+                                <field name="from_date" class="oe_inline"/>
+                            </div>
+                            <label for="to_date"/>
+                            <div>
+                                <field name="to_date" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="process_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hr_overtime_summary_wizard" model="ir.actions.act_window">
+            <field name="name">Overtime Summary Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.overtime.summary.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                name="Overtime Summary"
+                parent="hr_attendance.menu_hr_attendance_report"
+				sequence="29"
+                action="action_hr_overtime_summary_wizard"
+                id="menu_hr_overtime_summary"
+                groups="hr_attendance.group_hr_attendance_user"/>
+    </data>
+</odoo>

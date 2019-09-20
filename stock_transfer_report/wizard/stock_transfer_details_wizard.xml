@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_stock_transfer_details" model="ir.ui.view">
+            <field name="name">wizard.stock.transfer.details</field>
+            <field name="model">stock.transfer.details.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="operating_unit_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="category_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_wizard_stock_transfer_details" model="ir.actions.act_window">
+            <field name="name">Stock Transfer Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.transfer.details.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_wizard_stock_transfer_details"
+                  id="menu_wizard_stock_transfer_details"
+                  parent="stock.menu_warehouse_report" groups="stock.group_stock_user"
+                  sequence="13"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="mr_seq_form" model="ir.ui.view">
+        <field name="name">account.money.receipt.form</field>
+        <field name="model">account.money.receipt</field>
+        <field name="arch" type="xml">
+            <form string="Money Receipt Form">
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="sequence_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="accounting_cheque_recieved_tree" model="ir.ui.view">
+        <field name="name">account.money.receipt.tree.view</field>
+        <field name="model">account.money.receipt</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Money Receipt Tree">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_money_receipt_seq_gen">
+        <field name="name">Money Receipt Seq</field>
+        <field name="res_model">account.money.receipt</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="action_money_receipt_seq_gen"
+            id="menu_money_receipt_seq"
+            parent="account.account_account_menu"
+            sequence="1"
+    />
+
+</odoo>

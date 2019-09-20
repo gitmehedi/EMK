@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_purchase_shipment_inherit" model="ir.ui.view">
+            <field name="name">view_purchase_shipment_inherit</field>
+            <field name="model">purchase.shipment</field>
+            <field name="inherit_id" ref="com_shipment.view_shipment_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[1]" position="before">
+                        <page string="Products" attrs="{'invisible': [('state', 'in', ('draft','on_board'))]}">
+                            <field name="shipment_product_lines">
+                                <tree string="Purchase Order Lines" create="false" delete="false" editable="false">
+                                    <field name="product_id" readonly='1'/>
+                                    <field name="name" readonly='1'/>
+                                    <field name="date_planned" readonly='1'/>
+                                    <field name="product_qty" readonly='1' />
+                                    <field name="product_uom" readonly='1'/>
+                                    <field name="price_unit" invisible='1'/>
+                                </tree>
+
+                            </field>
+                            <div class="oe_clear"/>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

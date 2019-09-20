@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_bill_exchange"
+                string="Bill OF Exchange"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product_foreign.report_bill_exchange"
+                name="lc_sales_product_foreign.report_bill_exchange"
+                paperformat="report_layout.custom_pad_paperformat_foreign"
+                menu="False"
+
+        />
+
+        <template id="report_bill_exchange">
+            <tr t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_foreign_report_template">
+                    <div class="page" style="page-break-inside: auto; text-transform: uppercase;padding-top:30px;">
+                        <style>
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
+                            .article { margin-bottom: 30px; }
+                            .para { margin-bottom: 15px; }
+                        </style>
+                        <div class="report-title">
+                            <h3 class="mt-0">
+                                <b>Bill Of Exchange</b>
+                            </h3>
+                        </div>
+                        <hr class="hr-sm mb-0"/>
+
+                        <div class="bill-ofexcfi row">
+                            <div class="col-xs-6">
+                                <p>
+                                    <u>
+                                        <b>For
+                                            <span t-esc="data['currency_id']"/>
+                                            <strong t-esc="data['invoice_value']"/>
+                                        </b>
+                                    </u>
+                                </p>
+                            </div>
+                            <div class="col-xs-6">
+                                <p class="text-right">
+                                    <t t-foreach="pi_list" t-as="p">
+                                        BOE: <u><strong t-esc="p['number']"/></u>
+                                        <br/>
+                                        Date: <strong t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y')"/>
+                                    </t>
+                                </p>
+                            </div>
+                        </div>
+
+                        <br/>
+
+                        <div class="article">
+                            <div class="para">
+                                <p class="text-justify">
+                                    <b>"<strong t-esc="data['tenure']"/>"</b>
+                                    OF THIS
+                                    <span t-esc="data['bill_exchange']"/>
+                                    BILL OF EXCHANGE PAY TO THE ORDER OF
+                                    <strong t-esc="data['first_party_bank']"/>.
+                                    <strong t-esc="data['first_party_bank_add']"/>.
+                                    THE SUM OF
+                                    <span t-esc="data['currency_id']"/>
+                                    <strong t-esc="amt_to_word"/>
+                                    <strong> ONLY.</strong>
+                                </p>
+                            </div>
+
+                            <div class="para">
+                                <t t-foreach="lists" t-as="l">
+                                    <tr style="page-break-inside: avoid; ">
+                                        <p class="text-justify">VALUE WILL BE RECEIVED AGAINST DELIVERY OF
+                                            <span t-esc="l['name']"/>,
+                                            <strong t-esc="'%.2f'% l['quantity']"/> <strong t-esc="l['uom']"/> IN
+                                            <t t-foreach="pi_id_list" t-as="r">
+                                                <span t-esc="r['pack_type']"/>
+                                                <t t-if="len(pi_id_list)>1">,<br/></t>
+                                            </t> AT THE RATE OF
+                                            <strong t-esc="data['currency_id']"/> <strong t-esc="l['price_unit']"/>
+                                            ON
+                                            <span t-esc="data['inco_terms']"/>,
+                                            <span t-esc="data['discharge_port']"/>,
+                                            <span t-esc="data['discharge_port_country_id']"/>
+                                            AS PER PROFORMA INVOICE NO:
+                                            <t t-foreach="pi_list" t-as="p">
+                                                <strong t-esc="p['number']"/><b>, DATE: </b><strong t-esc="p['date']"/>
+                                                <t t-if="len(pi_list)>1">,</t>
+                                            </t>
+                                        </p>
+                                    </tr>
+                                </t>
+                            </div>
+
+                            <div class="para text-justify">
+                                <t t-if="data['model_type'] != 'sales_contract'">
+                                    <p>DRAWN UNDER THE CONFIRMATION OF
+                                        <t t-if="data['model_type'] == 'tt'">TT NO: </t>
+                                        <t t-elif="data['model_type'] == 'lc'">LC NO: </t>
+                                    <strong t-esc="data['lc_id']"/>,
+                                    <strong>DATE:</strong>
+                                    <strong t-esc="data['issue_date']"/>
+                                    <b> (MARINE INSURANCE COVER NOTE NO: <strong t-esc="data['cover_note_no']"/>)
+                                    </b>
+                                    <strong>OF</strong>
+                                    <strong t-raw="data['second_party_bank']"/>,
+                                    GOODS ARE UNDER H.S.CODE NO:
+                                    <t t-foreach="lists" t-as="l">
+                                        <strong t-esc="l['hs_code']"/>
+                                    </t>
+                                    <t t-if="len(lists)>1">,</t></p>
+                                </t>
+                                <t t-else="data['model_type'] == 'sales_contract'">
+                                    <p class="text-justify">
+                                        <t t-if = "data['sc_type'] == 'sc'">
+                                            Drawn under the sales contract no.:
+                                        </t>
+                                        <t t-elif = "data['sc_type'] == 'pi'">
+                                            Drawn under the proforma invoice no.:
+                                        </t>
+                                        <t t-elif = "data['sc_type'] == 'po'">
+                                            Drawn under the purchase order no.:
+                                        </t>
+                                        <strong t-esc="data['lc_id']"/>,
+                                        <strong> DATE: </strong>
+                                        <strong t-esc="data['issue_date']"/>
+                                         BETWEEN
+                                        <strong t-esc="data['first_party']"/>.
+                                        <b> ADDRESS: </b>
+                                        <span t-esc="data['first_party_add']"/>.
+                                        <b> FACTORY: </b>
+                                        <span t-esc="data['factory']"/>
+                                        <strong> AND </strong>
+                                        <strong t-raw="data['second_party_applicant']"/>.
+                                        <b> ADDRESS: </b>
+                                        <span t-esc="data['invoice_address']"/>.
+                                         IMPORTER'S BANK:
+                                        <strong t-esc="data['second_party_bank']"/>
+                                         GOODS ARE UNDER H.S.CODE NO:
+                                        <t t-foreach="lists" t-as="l">
+                                            <strong t-esc="l['hs_code']"/>
+                                        </t>
+                                        <t t-if="len(lists)>1">,</t>
+                                    </p>
+                                </t>
+                            </div>
+                        </div><br/>
+
+                        <hr class="hr-xs"/>
+
+                        <table class="mb-0">
+                            <tbody>
+                                <t t-if="data['document_receiver_bank']">
+                                    <tr>
+                                        <td class="w75px">To:</td>
+                                        <td style="text-transform: uppercase;">
+                                            <span t-esc="data['document_receiver_bank']"/>
+                                            <br/>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td class="w75px">A/C:</td>
+                                    <td>
+                                        <strong t-esc="data['second_party_applicant']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td>
+                                        <p>ADDRESS: <span t-esc="data['invoice_address']"/></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <t t-if="data['ntn_no']">
+                                        <td>
+                                            <b>NTN NO:</b>
+                                            <span t-esc="data['ntn_no']"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <t t-if="data['gst_no']">
+                                        <td>
+                                            <b>GST NO:</b>
+                                            <span t-esc="data['gst_no']"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <t t-if="data['iec_no']">
+                                        <td>
+                                            <b>IEC NO:</b>
+                                            <span t-esc="data['iec_no']"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr class="hr-sm mb-10"/><br/><br/>
+
+                        <div class="row text-right">
+                            <div class="col-xs-12 text-right">
+                                <p>For and on behalf of
+                                    <br/>
+                                    <span t-esc="data['first_party']"/>
+                                </p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p class="auth-signature">Authorized Signature</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </tr>
+        </template>
+    </data>
+</odoo>

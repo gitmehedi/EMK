@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+        <!--Tree view-->
+        <record id="view_account_payment_batch_tree" model="ir.ui.view">
+            <field name="name">account.payment.batch.tree</field>
+            <field name="model">account.payment.batch</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state=='draft'" decoration-muted="state=='reconciled'" edit="false">
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Form view-->
+		<record id="view_account_payment_batch_form" model="ir.ui.view">
+			<field name="name">account.payment.batch.form</field>
+			<field name="model">account.payment.batch</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <header>
+                        <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
+<!--                        <button name="cancel" attrs="{'invisible': [('state', '=', 'draft')]}" string="Cancel" type="object"/>-->
+                        <field name="state" widget="statusbar" statusbar_visible="posted,reconciled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="button_journal_entries"
+                                    string="Journal Items" type="object"
+                                    groups="account.group_account_manager"
+                                    attrs="{'invisible':[('state', '=', 'draft')]}" icon="fa-bars"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="is_batch_model" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Customer Payments">
+                                <field name="payment_ids" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                    <tree string="Customer Payments" editable="bottom">
+                                        <field name="partner_id" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))]}" string="Customer"/>
+                                        <field name="journal_id" invisible="1"/>
+                                        <field name="deposited_bank" options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="bank_branch"/>
+                                        <field name="sale_order_id" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="payment_date"/>
+                                        <field name="communication"/>
+                                        <field name="payment_transaction_id"/>
+                                        <field name="amount"/>
+                                        <field name="state" invisible="1"/>
+                                        <field name="payment_type" invisible="1"/>
+                                        <field name="partner_type" invisible="1"/>
+                                        <field name="hide_payment_method" invisible="1"/>
+                                        <field name="payment_method_id" invisible="1"/>
+                                        <field name="payment_method_code" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="my_menu_check" invisible="1"/>
+                                        <field name="is_cash_payment" invisible="1"/>
+                                        <field name="is_this_payment_checked" invisible="1"/>
+                                        <field name="deposit_slip" invisible="1"/>
+                                        <field name="cheque_no" invisible="1"/>
+                                        <field name="is_entry_receivable_cleared_payments" invisible="1"/>
+                                        <field name="check_amount_in_words" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+			</field>
+		</record>
+
+        <!--Action of "Customer Payments Batch" menu-->
+        <record id="action_account_payment_batch" model="ir.actions.act_window">
+			<field name="name">Customer Payments Batch</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.payment.batch</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+    </data>
+</odoo>

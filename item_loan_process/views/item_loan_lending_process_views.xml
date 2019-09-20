@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Item Loan Lending Tree View -->
+        <record id='view_item_loan_lending_tree' model='ir.ui.view'>
+            <field name="name">view.item.loan.lending.tree</field>
+            <field name="model">item.loan.lending</field>
+            <field name="arch" type="xml">
+                <tree string="Item Loan Lending" ecoration-bf="message_needaction == True"
+                      colors="gray:state=='received';green:state=='waiting_approval';red:state=='reject';">
+                    <field name="name" />
+                    <field name="issuer_id" />
+                    <field name="request_date" />
+                    <field name="company_id" />
+                    <field name="operating_unit_id" />
+                    <field name="location_id" />
+                    <field name="state" />
+                    <field name="message_needaction" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Item Loan Lending Form View -->
+        <record id='view_item_loan_lending_form' model='ir.ui.view'>
+            <field name="name">view.item.loan.lending.form</field>
+            <field name="model">item.loan.lending</field>
+            <field name="arch" type="xml">
+                <form string="Item Loan Lending">
+                    <header>
+                        <button name="button_confirm" string="Confirm" states="draft"
+                                class="oe_highlight" type="object" groups="stock.group_stock_user"/>
+                        <button name="button_approve" string="Approve" states="waiting_approval" type="object"
+                                class="oe_highlight" groups="stock.group_stock_manager"/>
+                        <button name="button_reject" string="Reject" states="waiting_approval" type="object"
+                                groups="stock.group_stock_manager"/>
+                        <button string="Reset to Draft" name="action_draft"
+                                groups="stock.group_stock_manager"
+                                states="waiting_approval" type="object"/>
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,waiting_approval,approved"
+                               statusbar_colors='{"reject":"red"}' />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                        </div>
+                        <group col="2">
+                            <group>
+                                <field name="issuer_id" readonly="1" />
+                                <field name="request_date" />
+                                <field name="borrower_id"/>
+                            </group>
+                            <group>
+                                <field name="approved_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="approver_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            </group>
+
+                        </group>
+                        <notebook>
+                            <page string="Items">
+                                <field name="item_lines">
+                                    <tree string="Items" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="qty_available" readonly="1"/>
+                                        <field name="product_uom" string="UOM"/>
+                                        <field name="product_uom_qty" sum="Total Qty"/>
+                                        <field name="given_qty" sum="Total Given Qty" readonly="1"/>
+                                        <field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+                                        <field name="due_qty" sum="Total Due" readonly="1"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <div class="oe_clear">
+                                    <label for="description" />
+                                </div>
+                                <field name="description" placeholder="The material ..." />
+                            </page>
+                            <page string="Others">
+                                <group>
+                                    <group>
+                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                                        <field name="item_loan_location_id" />
+                                        <field name="picking_type_id" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company"
+                                               options="{'no_create': True,'no_open':True}"/>
+                                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                                               groups="operating_unit.group_multi_operating_unit" />
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Item Loan Main Menu -->
+        <menuitem name="Item Loan Process" parent="stock.menu_stock_root" id="main_menu_item_loan"
+                  sequence="4" groups="stock.group_stock_user"/>
+
+        <!-- Item Loan Lending Window Action -->
+        <record id='action_item_loan_lending' model='ir.actions.act_window'>
+            <field name="name">Item Loan Lending</field>
+            <field name="res_model">item.loan.lending</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new Item Loan Lending.
+                </p>
+            </field>
+        </record>
+        <!-- Item Loan Lending Menu -->
+        <menuitem name="Item Loan Lending"
+                  parent="main_menu_item_loan" id="main_menu_item_loan_lending" sequence="1"
+                  groups="stock.group_stock_user"/>
+
+        <menuitem action="action_item_loan_lending" name="All Records"
+                  parent="main_menu_item_loan_lending" id="menu_item_loan_lending" sequence="1"
+                  groups="stock.group_stock_user"/>
+
+        <!-- Item Loan Lending Pending Approval Window Action -->
+        <record id="search_item_loan_lending" model="ir.ui.view">
+            <field name="name">item.loan.lending.search</field>
+            <field name="model">item.loan.lending</field>
+            <field name="arch" type="xml">
+                <search string="Loan">
+                    <filter name="approve_manager" string="To Approve" domain="[('state','=','waiting_approval')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id='action_pending_item_loan_lending' model='ir.actions.act_window'>
+            <field name="name">Pending Approval</field>
+            <field name="res_model">item.loan.lending</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{
+                'search_default_approve_manager':1,
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Nothing to approve.
+                </p>
+            </field>
+            <field name="search_view_id" ref="search_item_loan_lending"/>
+        </record>
+        <!-- Item Loan Lending Pending Approval Menu -->
+        <menuitem action="action_pending_item_loan_lending" name="Pending"
+                  parent="main_menu_item_loan_lending" id="menu_pending_item_loan_lending" sequence="2"
+                  groups="stock.group_stock_manager"/>
+
+    </data>
+</odoo>

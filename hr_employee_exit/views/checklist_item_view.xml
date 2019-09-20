@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<!-- Checklist Type Form Views -->
+		<record id="checklist_item_form_view" model="ir.ui.view">
+			<field name="name">checklist.item.form</field>
+			<field name="model">hr.exit.checklist.item</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Checklist Item Form">
+					<header>
+						<field name="id" invisible="1" />
+					</header>
+					<sheet>
+						<group>
+							<field name="checklist_type" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							<field name="name" />
+							<field name="is_active" />
+							<field name="description" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Checklist Item Tree Views -->
+		<record id="checklist_item_tree_view" model="ir.ui.view">
+			<field name="name">checklist.item.tree</field>
+			<field name="model">hr.exit.checklist.item</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Checklist Item Tree">
+					<field name="checklist_type" />
+					<field name="name" />
+					<field name="description" />
+					<field name="is_active" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Checklist Item Search Views -->
+		<record id="checklist_item_search_view" model="ir.ui.view">
+			<field name="name">checklist.item.search</field>
+			<field name="model">hr.exit.checklist.item</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
+					<group expand="0" string="Group By">
+                        <filter string="Type" icon="terp-personal" domain="[]" context="{'group_by':'checklist_type'}"/>
+                    </group>
+				</search>
+			</field>
+		</record>
+
+
+		<!-- Checklist Item Action Views -->
+		<record id="action_checklist_item_view" model="ir.actions.act_window">
+			<field name="name">Checklist Item</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.exit.checklist.item</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="checklist_item_tree_view" />
+		</record>
+
+		<!-- Checklist Item Menu -->
+		<menuitem id="checklist_item_menu" name="Checklist Item"
+			parent="exit_checklist_menu" sequence="7"
+			action="action_checklist_item_view" />
+	</data>
+</odoo>

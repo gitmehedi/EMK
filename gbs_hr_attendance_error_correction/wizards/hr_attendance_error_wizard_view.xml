@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <openerp>
-    <data>
+	<data>
 		<!-- Form View -->
 		<record id="attendance_error_correct_form" model="ir.ui.view">
 			<field name="name">hr.attendance.error.correction.form</field>
@@ -18,6 +18,13 @@
 							<label for="type" />
 							<div>
 								<field name="type" class="oe_inline" placeholder="Please Select" />
+							</div>
+							<label for="operating_unit_id" attrs="{'invisible': [('type', '!=', 'op_type')]}"/>
+							<div>
+								<field name="operating_unit_id" class="oe_inline"
+									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+									   groups="operating_unit.group_multi_operating_unit"
+									   attrs="{'invisible': [('type', '!=', 'op_type')]}"/>
 							</div>
 							<label for="department_id" attrs="{'invisible': [('type', '!=', 'department_type')]}" />
 							<div>
@@ -43,7 +50,7 @@
 						<footer>
 							<footer>
 								<button string="Cancel" class="btn btn-sm btn-default o_form_button_cancel" special="cancel"/>
-                			</footer>
+							</footer>
 						</footer>
 					</sheet>
 				</form>
@@ -60,9 +67,9 @@
 			<field name="target">new</field>
 		</record>
 
-        <!--Menu Item-->
+		<!--Menu Item-->
 		<menuitem id="attendance_error_correct_menu" name="Correct Attendances"
 				  parent="hr_attendance.menu_hr_attendance_manage_attendances" groups="hr.group_hr_user"
-                  action="attendance_error_correct_action" />
-    </data>
+				  action="attendance_error_correct_action" />
+	</data>
 </openerp>

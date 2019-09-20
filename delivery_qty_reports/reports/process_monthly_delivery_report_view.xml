@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_monthly_delivery_products"
+                string="Monthly Delivery Report"
+                model="stock.move"
+                report_type="qweb-pdf"
+                file="delivery_qty_reports.report_monthly_delivery_products"
+                name="delivery_qty_reports.report_monthly_delivery_products"
+                menu="False"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+
+
+        <template id="report_monthly_delivery_products">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                            <div class="row">
+                                <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+                                <div class="clearfix">
+                                    <h3 class="report-title">Monthly Delivery Report</h3>
+                                    <div class="row">
+                                        <div class="col-xs-9 text-left">
+                                            <h6><b>To: </b><span t-esc="report_date_to"/></h6>
+                                            <h6><b>From: </b><span t-esc="report_date_from"/></h6>
+                                        </div>
+                                        <div class="col-xs-3 text-left">
+                                            <h6><b>Product Name: </b><span t-esc="product_name"/></h6>
+                                            <h6><b>Operating Unit: </b><span t-esc="operating_unit_name"/></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <table class="table table-bordered table-report-xs table-striped"
+                                       style="margin-bottom: 10px;table-layout: fixed;">
+                                        <thead>
+                                            <tr class="odo-bg-gray">
+                                            <th class="text-center" style="width:3%;">SL</th>
+                                            <th class="text-center" style="width:5%;">Date</th>
+                                            <th class="text-center" style="width:24%;">Customer Name</th>
+                                            <th class="text-center" style="width:14%;">DO No.</th>
+                                            <th class="text-center" style="width:5%;">DO Date</th>
+                                            <th class="text-center" style="width:5%;">Qty (Kg)</th>
+                                            <th class="text-center" style="width:5%;">Qty (MT)</th>
+                                            <th class="text-center" style="width:5%;">Qty (Bag)</th>
+                                            <th class="text-center" style="width:14%;">DO Challan ID</th>
+                                            <th class="text-center" style="width:15%;">Category</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <t t-foreach="do_list" t-as="k">
+                                            <tr style="page-break-inside: avoid">
+                                                <td>
+                                                    <span t-esc="k_index+1"/>
+                                                </td>
+
+                                                <td>
+                                                    <span t-esc="k['create_date']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="k['partner_id']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="k['do_no']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="k['do_date']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="k['do_qty_kg']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="k['do_qty_mt']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="k['do_qty_bag']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="k['challan_id']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="k['category']"/>
+                                                </td>
+
+                                            </tr>
+
+                                        </t>
+
+                                        <tr>
+                                            <td>
+                                                <b>Total</b>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+
+                                            <td class="text-right">
+                                                <b>
+                                                    <span t-esc="issued_do_sum_list"/>
+                                                </b>
+                                            </td>
+                                            <td class="text-right">
+                                                <b>
+                                                    <span t-esc="qty_kg_sum"/>
+                                                </b>
+                                            </td>
+                                            <td class="text-right">
+                                                <b>
+                                                    <span t-esc="qty_mt_sum"/>
+                                                </b>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                <t t-call="report_layout.report_signing"></t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

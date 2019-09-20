@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="hr_employee_requisition_for_dept_manager" model="ir.rule">
+            <field name="name">HR Employee Requisition for Department Manager</field>
+            <field name="model_id" ref="model_hr_employee_requisition"/>
+            <field name="domain_force">['|',('employee_id.parent_id','in',[e.id for e in user.employee_ids]),
+                ('employee_id.department_id.manager_id','in',[e.id for e in user.employee_ids])]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager')),(4,ref('gbs_application_group.group_head_of_plant'))]"/>
+        </record>
+
+        <record id="hr_employee_requisition_manager" model="ir.rule">
+            <field name="name">HR Employee Requisition(HR Manager and CXO)</field>
+            <field name="model_id" ref="model_hr_employee_requisition"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager')),(4,ref('gbs_application_group.group_cxo'))]"/>
+        </record>
+
+        <record id="hr_employee_requisition_officer" model="ir.rule">
+            <field name="name">HR Employee Requisition(Multi Operating Unit)</field>
+            <field name="model_id" ref="model_hr_employee_requisition"/>
+            <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+        </record>
+
+        <record id="hr_candidate_approval_manager" model="ir.rule">
+            <field name="name">HR Candidate Approval(HR Manager,GM and CXO)</field>
+            <field name="model_id" ref="model_hr_candidate_approval"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager')),(4,ref('gbs_application_group.group_cxo')),(4,ref('gbs_application_group.group_general_manager'))]"/>
+        </record>
+
+        <record id="hr_department_dept_manager" model="ir.rule">
+            <field name="name">HR Department for Department Manager</field>
+            <field name="model_id" ref="hr.model_hr_department"/>
+            <field name="domain_force">['|',('manager_id','in',[e.id for e in user.employee_ids]),('manager_id','=',False)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
+        </record>
+
+    </data>
+</openerp>

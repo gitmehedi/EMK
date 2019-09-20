@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="inherited_res_partner_form_view" model="ir.ui.view">
+        <field name="name">inherited.res.partner.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lang']" position="after">
+                <field name="tax"/>
+                <field name="vat"/>
+                <field name="bin"/>
+                <field name="tin"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

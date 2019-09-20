@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="checklist_line_form_view" model="ir.ui.view">
+            <field name="name">checklist_line_form_view</field>
+            <field name="model">hr.emp.master.checklists</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Checklist View">
+                    <header>
+                        <button name="%(action_hr_checklist_popup)d" states="draft" type="action" string="Generate Checklist" class="oe_highlight"/>
+                        <button string="Done" name="check_list_submit" states="draft" type="object"/>
+                        <button string="Reset to Draft" name="check_list_reset"
+                                attrs="{'invisible': [('state', 'in', ['draft'])]}"
+                                type="object"/>
+                        <button string="Send" name="check_list_send"
+                                attrs="{'invisible': [('state', 'in', ['draft','send','verify'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Verify" name="check_list_verify"
+                                attrs="{'invisible': [('state', 'in', ['draft','done','verify'])]}"
+                                type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,send,verify"
+                               statusbar_colors='{"draft":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="config_checklist_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                                <field name="responsible_type" />
+							    <field name="responsible_userdepartment_id"
+								    attrs="{'invisible':[('responsible_type', '!=', 'department')]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+							    <field name="responsible_username_id"
+								    attrs="{'invisible':[('responsible_type', '!=', 'individual')]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                            </group>
+                            <group>
+                                <field name="employee_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                                <field name="department_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="remarks"/>
+                        </group>
+
+
+                        <separator string="Check Lists" colspan="4"/>
+                        <newline/>
+                           <field name="checklist_status_ids">
+                                <tree editable="top">
+                                    <field name="checklist_type_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+                                    <field name="checklist_status_item_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+                                    <field name="is_check"/>
+                                </tree>
+                            </field>
+                    </sheet>
+                    <field name="message_ids" widget="mail_thread"/>
+                </form>
+            </field>
+        </record>
+        <record id="checklist_line_tree_view" model="ir.ui.view">
+            <field name="name">checklist_line_tree_view</field>
+            <field name="model">hr.emp.master.checklists</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Checklist Tree View">
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- Checklist Type Action Views -->
+        <record id="action_checklist_Line_view" model="ir.actions.act_window">
+            <field name="name">Employee Checklist</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.emp.master.checklists</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="checklist_line_tree_view"/>
+        </record>
+
+        <!-- Checklist Type Menu -->
+        <menuitem id="checklist_line_menu" name="Employee Checklists" parent="menu_exit_management"
+                  sequence="9" action="action_checklist_Line_view"/>
+
+    </data>
+</odoo>

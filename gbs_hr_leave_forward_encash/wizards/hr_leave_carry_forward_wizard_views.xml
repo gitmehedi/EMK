@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="hr_leave_carry_forward_wizard_view" model="ir.ui.view">
+			<field name="name">Employee Selection Wizard</field>
+			<field name="model">hr.leave.forward.encash.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Employees">
+                    <header>
+                        <button icon="fa-cogs" string="Process" name="process_employee_line" type="object" class="oe_highlight"  />
+                    </header>
+                    <group>
+                        <label colspan="4" nolabel="1" string="This form will process for all selected employee(s)." />
+                    </group>
+                    <group colspan="4" >
+                        <separator string="Employees" colspan="4"/>
+                        <newline/>
+                        <field name="employee_ids" nolabel="1" >
+                        	<tree string="List" editable="bottom">
+                        		<field name="name"/>
+                        		<field name="work_phone"/>
+                        	</tree>
+                        </field>
+                    </group>
+               </form>
+			</field>
+		</record>
+		
+		
+		<record id="hr_leave_carry_forward_wizard_action_view" model="ir.actions.act_window">
+			<field name="name">Employee Selection Wizard</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.leave.forward.encash.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+	</data>
+</odoo>

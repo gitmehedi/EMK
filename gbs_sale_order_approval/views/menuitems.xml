@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+          <menuitem action="sale.action_orders"
+                  id="sale.menu_sale_order"
+                  name="Sales Orders (Local)"
+                  parent="sales_team.menu_sales"
+                  sequence="1" />
+
+        <menuitem action="action_orders_foreign"
+                  id="menu_sale_order_foreign"
+                  name="Sales Orders (Foreign)"
+                  parent="sales_team.menu_sales"
+                  sequence="2" />
+
+        <menuitem action="sale.action_quotations"
+                  id="sale.menu_sale_quotations"
+                  name="Quotations (Local)"
+                  parent="sales_team.menu_sales"
+                  sequence="3" />
+
+        <menuitem action="action_quotations_foreign"
+                  id="menu_sale_quotations_foreign"
+                  name="Quotations (Foreign)"
+                  parent="sales_team.menu_sales"
+                  sequence="4" />
+
+        <menuitem id="menu_customer" name="Customers" parent="sales_team.menu_base_partner" sequence="6"/>
+        <menuitem id="sales_team.menu_partner_form" parent="menu_customer" action="base.action_partner_form"
+                  sequence="1"/>
+
+        <menuitem name="Invoicing"
+                  id="sale.menu_sale_invoicing" parent="sales_team.menu_base_partner"
+                  groups="base.group_system"
+                  sequence="7"/>
+        <record id="sale.menu_sale_invoicing" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
+
+        <menuitem action="product.product_category_action_form"
+                  groups="gbs_application_group.group_sales_product_manager,base.group_no_one"
+                  id="sale.menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
+
+        <menuitem name="Sales Teams"
+                  id="sales_team.sales_team_config"
+                  groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo,sales_team.group_sale_salesman,sales_team.group_sale_manager,account.group_account_user"
+                  parent="sales_team.menu_sale_config"
+                  action="sales_team.sales_team_config_action"/>
+
+    </data>
+</odoo>

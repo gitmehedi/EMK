@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="purchase_order_form_view_foreign1">
+            <field name="name">purchase.order.form.foreign1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="terms_setup_foreign.inherit_purchase_order_form_view_foreign"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='terms_foreign_id']" position="attributes">
+                    <attribute name="groups">gbs_procure_n_commercial_access.group_imoprt_lc_foreign</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="purchase_order_form_view_local1">
+            <field name="name">purchase.order.form.local1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="terms_setup_local.inherit_purchase_order_form_view_local"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='terms_local_id']" position="attributes">
+                    <attribute name="groups">gbs_procure_n_commercial_access.group_local_purchase</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="inherit_pr_view_form1_local">
+            <field name="name">inherit.pr.view.form.local</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="gbs_purchase_rfq.inherit_pr_view_form1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_send_rfq']" position="attributes">
+                    <attribute name="groups">gbs_procure_n_commercial_access.group_local_purchase</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="inherit_po_view_form1_local">
+            <field name="name">inherit_po_view_form1.local</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="gbs_po_merge.inherit_po_view_form1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_add_pq']" position="attributes">
+                    <attribute name="groups">gbs_procure_n_commercial_access.group_local_purchase</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="inherit_main_po_form1">
+            <field name="name">inherit.main.po.form1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='action_view_picking']" position="attributes">
+                    <attribute name="groups">stock.group_stock_user</attribute>
+                </xpath>
+                <xpath expr="//sheet/div/button[@name='action_view_picking']" position="attributes">
+                    <attribute name="groups">stock.group_stock_user</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_purchase_order_form2" model="ir.ui.view">
+            <field name="name">inherit.purchase.order.view.form2</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="gbs_purchase_rfq.inherit_rfq_purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='rfq_id']" position="attributes">
+                        <attribute name="groups">base.group_system</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_picking_form_inherit_ptp">
+            <field name="name">stock.picking.inherit.ptp.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock_picking_mrr.view_picking_form_inherit_mrr"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='button_print_mrr']" position="attributes">
+                        <attribute name="groups">account.group_account_user,gbs_procure_n_commercial_access.group_local_purchase,
+                            gbs_procure_n_commercial_access.group_imoprt_lc_foreign,
+                            stock.group_stock_user,gbs_application_group.group_head_of_plant</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_picking_form_inherit_ptp">
+            <field name="name">stock.picking.inherit.ptp.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock_picking_mrr.view_picking_form_inherit_mrr"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='button_print_mrr']" position="attributes">
+                        <attribute name="groups">account.group_account_user,gbs_procure_n_commercial_access.group_local_purchase,
+                            gbs_procure_n_commercial_access.group_imoprt_lc_foreign,
+                            stock.group_stock_user,gbs_application_group.group_head_of_plant</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

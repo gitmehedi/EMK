@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <report
+                id="custom_report_of_delivery_order"
+                model="delivery.order"
+                string="Delivery Order"
+                report_type="qweb-pdf"
+                name="delivery_order.report_delivery_order_doc"
+                file="delivery_order.report_delivery_order_doc"
+                paperformat="report_layout.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>

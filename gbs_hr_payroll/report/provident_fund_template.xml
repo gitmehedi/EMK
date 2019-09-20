@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_individual_provident_fund">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row">
+                            <div class="clearfix">
+                                <h4 class="report-title">Provident Fund Details</h4>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-xs-9 text-left">
+                                        <h6><b>Employee Name :  </b><span t-esc="employee_id"/></h6>
+                                        <h6><b>Department :  </b><span t-esc="department_id"/></h6>
+                                        <h6><b>Job Title :  </b><span t-esc="job_id"/></h6>
+                                    </div>
+                                    <div class="col-xs-3 text-left">
+                                        <h6><b>Employee ID :  </b><span t-esc="device_employee_acc"/></h6>
+                                        <h6><b>D.O.J :  </b><span t-esc="initial_employment_date"/></h6>
+                                        <h6><b>Total PF :  </b><span t-esc="total_pf"/></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-report-xs table-striped"
+                                   style="margin-bottom: 10px;">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th>SN</th>
+                                    <th>Payslip Name</th>
+                                    <th>Date</th>
+                                    <th>Employee PF Contribution (5%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lists" t-as="l">
+                                    <tr style="page-break-inside: avoid">
+                                        <td><span t-esc="l_index+1"/></td>
+                                        <td><span t-esc="l['name']"/></td>
+                                        <td><span t-esc="l['date']"/></td>
+                                        <td class="text-right"><span t-esc="l['pf']"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report
+            id="action_individual_provident_fund"
+            string="Employee Provident Fund"
+            model="hr.payslip"
+            report_type="qweb-pdf"
+            file="gbs_hr_payroll.report_individual_provident_fund"
+            name="gbs_hr_payroll.report_individual_provident_fund"
+            menu="False"
+            paperformat="report_layout.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>

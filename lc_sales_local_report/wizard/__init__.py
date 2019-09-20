@@ -1,0 +1,1 @@
+from . import lc_sales_local_wizard

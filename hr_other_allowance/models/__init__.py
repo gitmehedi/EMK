@@ -1,0 +1,2 @@
+import hr_other_allowance
+import hr_other_allowance_line

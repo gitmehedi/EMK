@@ -2,7 +2,7 @@
 <!-- Copyright 2015 Eficent Business and IT Consulting Services S.L.
      Serpent Consulting Services Pvt. Ltd.
      License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
-<openerp>
+<odoo>
     <data>
 
         <record id="hr_contract_view_search" model="ir.ui.view">
@@ -39,4 +39,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

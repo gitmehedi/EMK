@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_cheque_prepare_user" model="res.groups">
+            <field name="name">Cheque Prepare User</field>
+            <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+        </record>
+
+        <record id="group_cheque_approval_user" model="res.groups">
+            <field name="name">Cheque Approval User</field>
+            <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+        </record>
+
+    </data>
+</odoo>

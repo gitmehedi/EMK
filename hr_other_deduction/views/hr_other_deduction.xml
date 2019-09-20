@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_other_deduction_form" model="ir.ui.view">
+            <field name="name">hr.other.deduction.form</field>
+            <field name="model">hr.other.deduction</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Other Deduction Details" delete="false">
+                    <header>
+                        <button name="action_confirm" type="object"
+                                string="Apply" states="draft"
+                                class="oe_highlight"/>
+                        <button name="action_done" type="object"
+                                string="Approve" states="applied" groups="hr.group_hr_manager"
+                                class="oe_highlight"/>
+                        <button name="action_draft" type="object"
+                                string="Reset to Draft" groups="hr.group_hr_manager"
+                                states="applied,approved"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            </group>
+                            <notebook colspan="4">
+                                <page string="Other Deduction Details">
+                                    <field name="line_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="other_deduction_amount"/>
+                                            <field  name="state" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="hr_other_deduction_tree" model="ir.ui.view">
+            <field name="name">hr.other.deduction.tree</field>
+            <field name="model">hr.other.deduction</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Other Deduction Information">
+                    <field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="hr_other_deduction_action">
+            <field name="name">Other Deduction</field>
+            <field name="res_model">hr.other.deduction</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="hr_other_deduction_menu" name="Other Deduction" parent="hr.menu_hr_root" groups="gbs_hr_security.group_payroll_user" sequence="98"/>
+        <menuitem id="hr_other_deduction_submenu" name="Other Deduction" parent="hr_other_deduction_menu" groups="gbs_hr_security.group_payroll_user"
+                  action="hr_other_deduction_action"/>
+    </data>
+</odoo>

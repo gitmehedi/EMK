@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="inherit_stock_picking_for_delivery_order">
+            <field name="name">Stock.picking.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="delivery_order_id" options="{'no_open': True, 'no_create': True}"
+                           attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='delivery_order_id']" position="after">
+                    <field name="vat_challan_id" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='vat_challan_id']" position="after">
+                    <field name="pack_type" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="show_transport_info" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='show_transport_info']" position="after">
+                    <field name="transport_details" widget="radio" options="{'horizontal': true}"
+                           attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='transport_details']" position="after">
+                    <field name="vehicle_no" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='vehicle_no']" position="after">
+                    <field name="driver_no" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='driver_no']" position="after">
+                    <field name="driver_mob" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='driver_mob']" position="after">
+                    <field name="transport_name" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="customer_name" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='customer_name']" position="after">
+                    <field name="shipping_address_print" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="lc_id" options="{'no_open': True, 'no_create': True}"
+                           attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
+                </xpath>
+                <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="replace">
+                    <button name="%(stock.action_report_delivery)d" string="Print" states="done" type="action"
+                            groups="base.group_user" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//button[@name='do_print_picking']" position="replace">
+                    <button name="do_print_delivery_challan" string="Print"
+                            groups="stock.delivery_user,stock.group_stock_user"
+                            type="object"
+                            attrs="{'invisible': ['|',('state', 'in', ('assigned', 'confirmed','waiting','cancel')),('picking_type_code', '!=', 'outgoing')]}"/>
+                </xpath>
+
+
+                <xpath expr="//button[@name='button_scrap']" position="replace">
+                    <button name="button_scrap" type="object" string="Scrap" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_assign']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="inherit_stock_move_for_delivery_order">
+            <field name="name">Stock.move.form.view</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="delivery_order_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="inherit_acc_iaanvoice_frm">
+            <field name="name">Acc.invoice.view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group/field[@name='partner_id']" position="replace">
+                    <field string="Customer" name="partner_id"
+                           context="{'search_default_customer':1, 'show_address': 1}"
+                           options='{"always_reload": True}'
+                           domain="[('customer', '=', True),('parent_id', '=', False)]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

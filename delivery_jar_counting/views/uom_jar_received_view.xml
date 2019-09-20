@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="uom_jar_received_form" model="ir.ui.view">
+            <field name="name">uom.jar.received.form</field>
+            <field name="model">uom.jar.received</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="UoM Jar Received" delete="false" copy='0'>
+                    <header>
+                        <button name="action_confirm" type="object" states="draft" string="Confirm"
+                                class="oe_highlight"/>
+                        <field name="state" statusbar_visible="draft,confirmed" widget="statusbar"/>
+
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="due_jar"/>
+                                <field name="jar_received"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="uom_jar_received_tree" model="ir.ui.view">
+            <field name="name">uom.jar.received.tree</field>
+            <field name="model">uom.jar.received</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="UoM Jar Summary">
+                    <field name="partner_id"/>
+                    <field name="due_jar"/>
+                    <field name="jar_received"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="uom_jar_received_action">
+            <field name="name">Jar Received</field>
+            <field name="res_model">uom.jar.received</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="uom_jar_received_submenu"
+                  parent="uom_jar_summary_menu"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  action="uom_jar_received_action"/>
+
+    </data>
+</odoo>

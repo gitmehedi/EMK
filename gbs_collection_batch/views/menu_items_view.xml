@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem
+                name="Customer Payments Batch"
+                action="action_account_payment_batch"
+                id="menu_account_payment_batch"
+                parent="account.menu_finance_receivables"
+                sequence="22"/>
+    </data>
+</odoo>

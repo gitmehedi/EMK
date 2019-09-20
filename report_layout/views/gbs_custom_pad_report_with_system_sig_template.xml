@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="custom_report_gbs_internal" name="report assets" inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <link href="/report_layout/static/src/css/report.css" rel="stylesheet"/>
+        </xpath>
+    </template>
+
+    <template id="gbs_custom_pad_with_system_sig_report_template">
+        <t t-if="not o and doc">
+        <t t-set="o" t-value="doc"/>
+        </t>
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+
+        <t t-call="report_layout.gbs_layout_pad_header" />
+        <t t-raw="0" />
+        <t t-call="report_layout.gbs_layout_pad_footer" />
+    </template>
+
+    <template id="gbs_layout_pad_header">
+        <div class="header clearfix">
+            <style>
+                .header-content { position: relative; }
+                .com-logo { float: left; }
+                .com-logo-img { display: inline-block; }
+                .com-info {
+                    color: #0d47a1;
+                    position: absolute;
+                    font-size: 12px;
+                    text-align: right;
+                    right: 0;
+                    bottom: 13px;
+                    padding: 3px 5px 0 0;
+                    border-top: 1px solid #333;
+                    border-right: 1px solid #333;
+                    width: 92%;
+                    z-index:999;
+                }
+                .com-website { color: #333; position:absolute; right:0; top:-20px; font-size: 14px; font-weight:bold; }
+                .com-info ul > li { white-space: no-wrap; padding: 0 2px; }
+                .footer-content { width:100%; text-align: center; white-space: no-wrap; }
+
+            </style>
+            <div class="header-content clearfix">
+                <div class="com-logo">
+                    <img class="com-logo-img" t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" />
+                </div>
+                <div class="com-info">
+                    <div class="com-website" t-if="company.website">
+                        Web: <span t-field="company.website"/>
+                    </div>
+                    <ul class="list-inline m-0">
+                        <li class="com-info-phone" t-if="company.phone">
+                            Phone: <span t-field="company.phone"/>
+                        </li>
+                        <li class="com-info-email" t-if="company.email">
+                            Email: <span t-field="company.email"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="gbs_layout_pad_footer">
+        <div class="footer clearfix">
+            <div class="footer-content text-center">
+                <p style="font:'Courier New', Courier; padding: 10px;">This is a computer-generated copy, hence no signature is required.</p>
+            </div>
+            <div class="footer-content text-center">
+                <t t-if="company.partner_id.name">
+                    <span t-field="company.partner_id.name"/>,
+                </t>
+                <t t-if="company.partner_id.street">
+                    <span t-field="company.partner_id.street"/>,
+                </t>
+                <t t-if="company.partner_id.street2">
+                    <span t-field="company.partner_id.street2"/>,
+                </t>
+                <t t-if="company.partner_id.zip_id.name">
+                    <span t-field="company.partner_id.zip_id.name"/>,
+                </t>
+                <t t-if="company.partner_id.city">
+                    <span t-field="company.partner_id.city"/>,
+                </t>
+                <t t-if="company.partner_id.state_id.name">
+                    <span t-field="company.partner_id.state_id.name"/>,
+                </t>
+                <t t-if="company.partner_id.country_id.name">
+                    <span t-field="company.partner_id.country_id.name"/>
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

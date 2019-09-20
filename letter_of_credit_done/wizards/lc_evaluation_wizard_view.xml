@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record id="lc_evaluation_wizard" model="ir.ui.view">
+            <field name="name">lc.evaluation.wizard</field>
+            <field name="model">lc.evaluation.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="LC Done">
+                    <group>
+                        <separator string="LC Evaluation" colspan="4"/>
+                        <newline/>
+                        <field name="criteria_line_ids" nolabel="1">
+                            <tree string="LC Done" create="false" delete="false" editable="bottom">
+                                <field name="name" readonly="1"/>
+                                <field name="marks" readonly="1"/>
+                                <field name="obtain_marks"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <field name="comment" string="Comments" nolabel="1" placeholder="Comments ......"/>
+                    <footer>
+                        <button string="Save" name="save_evaluating" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+
+            </field>
+        </record>
+        <record id="lc_evaluation_wizard_button_box" model="ir.ui.view">
+            <field name="name">lc.evaluation.wizard</field>
+            <field name="model">lc.evaluation.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="LC Done" create="false" edit="false">
+                    <group colspan="4">
+                        <separator string="LC Evaluation" colspan="4"/>
+                        <newline/>
+                        <field name="criteria_line_ids" nolabel="1" readonly="1">
+                            <tree string="LC Done" create="false" delete="false" editable="bottom">
+                                <field name="name" readonly="1"/>
+                                <field name="marks" readonly="1"/>
+                                <field name="obtain_marks"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <separator string="Comments"/>
+                    <field name="comment" nolabel="1" readonly="1"/>
+                    <footer style="display:none !important;">
+                        <button />
+                        <button />
+                    </footer>
+                </form>
+
+            </field>
+        </record>
+    </data>
+</odoo>

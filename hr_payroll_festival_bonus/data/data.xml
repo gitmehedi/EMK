@@ -1,0 +1,36 @@
+<odoo>
+    <data noupdate="1">
+        <record id="FALW" model="hr.salary.rule.category">
+            <field name="name">Festival Allowance</field>
+            <field name="code">FALW</field>
+        </record>
+
+        <record id="festival_bonus_salary_rule" model="hr.salary.rule">
+            <field name="name">Festival Bonus</field>
+            <field name="category_id" ref="hr_payroll_festival_bonus.FALW"/>
+            <field name="code">FBONUS</field>
+            <field name="sequence" eval="140"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">if payslip.type == '0': result = False
+elif payslip.type == '1' and payslip.festival_date>= contract.trial_date_end: result = True
+elif payslip.type == '2' and payslip.festival_date>= contract.trial_date_end: result = True</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = ((contract.wage*2.5+contract.supplementary_allowance)/2)</field>
+        </record>
+
+        <record id="hr_payslip_tds" model="hr.salary.rule">
+            <field name="code">TDS</field>
+            <field name="name">Tax Deducted at Source</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">if payslip.type == '1': result = False
+else: result = bool(contract.tds)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -(contract.tds)</field>
+            <field name="sequence" eval="140"/>
+            <field name="note">As per income tax rules, all payment which are taxable in nature should be done after deduction of taxes at the source itself. Hence employer compute income tax on salary payment and deduct it every month. This TDS is based on employee’s saving/investment declaration at the start of year. If investments for tax saving is not done, large amount may be deducted in last few months.</field>
+        </record>
+
+
+    </data>
+</odoo>

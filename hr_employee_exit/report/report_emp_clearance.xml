@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report. -->
+<odoo>
+    <data>
+        <report
+                id="action_report_employee_clearance"
+                model="hr.emp.exit.req"
+                string="Employee Clearance"
+                report_type="qweb-pdf"
+                name="hr_employee_exit.report_employee_clearance"
+                file="hr_employee_exit.report_employee_clearance"
+                paperformat="report_layout.paperformat_backend_portrait"
+        />
+
+        <template id="report_employee_clearance">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row" style="padding-top:5px;">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h3 class="report-title">Employee Clearance Form</h3>
+                                <br/>
+
+                                <h4>Employee Details</h4>
+                                <div class="row">
+                                    <div class="col-xs-8 text-left">
+                                        <h6><b>Employee Name :  </b><span t-esc="data['employee_id']"/></h6>
+                                        <h6><b>Department :  </b><span t-esc="data['department_id']"/></h6>
+                                        <h6><b>Job Title :  </b><span t-esc="data['job_id']"/></h6>
+                                        <h6><b>Employee code :  </b><span t-esc="data['emp_code']"/></h6>
+                                    </div>
+                                    <div class="col-xs-4 text-left">
+                                        <h6><b>Date of Joining :  </b><span t-esc="data['initial_employment_date']"  t-options='{"widget": "date"}'/></h6>
+                                        <h6><b>Date of Resignation :  </b><span t-esc="data['req_date']" t-options='{"widget": "date"}'/></h6>
+                                        <h6><b>Date of Leaving :  </b><span t-esc="data['last_date']" t-options='{"widget": "date"}'/></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <t t-foreach="lists" t-as="l">
+                                <t t-if="l">
+                                    <div>
+                                        <h4>
+                                            <span t-esc="l"/>
+                                        </h4>
+                                        <table class="table table-report-xs table-bordered table-striped">
+                                            <thead>
+                                                <tr class="odo-bg-gray">
+                                                    <th>Checklist Item</th>
+                                                    <th>Remarks</th>
+                                                    <th>State</th>
+                                                    <th>Signature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="l_value['item_list']" t-as="line">
+                                                    <tr style="page-break-inside: avoid">
+                                                        <td><span t-esc="line['item_name']"/></td>
+                                                        <td><span t-esc="line['remarks']"/></td>
+                                                        <t t-if="line['state'] == 'received'"><td>Received</td></t>
+                                                        <t t-elif="line['state'] == 'not_received'"><td>Not Received</td></t>
+                                                        <t t-else=""><td></td></t>
+                                                        <t><td></td></t>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-foreach="checklist" t-as="l">
+                                <t t-if="l">
+                                    <div>
+                                        <h4>
+                                            <span t-esc="l"/>
+                                        </h4>
+                                        <table class="table table-report-xs table-bordered table-striped">
+                                            <thead>
+                                                <tr class="odo-bg-gray">
+                                                    <th>Checklist Item</th>
+                                                    <th>Remarks</th>
+                                                    <th>State</th>
+                                                    <th>Signature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="l_value['item']" t-as="line">
+                                                    <tr style="page-break-inside: avoid">
+                                                        <td><span t-esc="line['item_name']"/></td>
+                                                        <td><span t-esc="line['remarks']"/></td>
+                                                        <t t-if="line['state'] == 'received'"><td>Received</td></t>
+                                                        <t t-elif="line['state'] == 'not_received'"><td>Not Received</td></t>
+                                                        <t t-else=""><td></td></t>
+                                                        <t><td></td></t>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                        <br/>
+                        <div class="row">
+                        <div class="col-xs-8 text-left">
+                        <span class="signed-by"><b>Employee Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        <div class="col-xs-4 text-left" style="padding-left:35px;">
+                        <span class="signed-by"><b>HR Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-xs-8 text-left">
+                        <span class="signed-by"><b>Reporting Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        <div class="col-xs-4 text-left" style="padding-left:35px;">
+                        <span class="signed-by"><b>Accounte Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

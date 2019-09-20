@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="unreconciled_journal_entry_wizard" model="ir.ui.view">
+            <field name="name">unreconciled.journal.entry.wizard</field>
+            <field name="model">unreconciled.journal.entry.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                            <field name="date_range_fm_id"/>
+                            <field name="amount"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button name="get_all_unreconciled_credit_entries" string="Proceed" type="object"
+                                class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_unreconciled_journal_entry" model="ir.actions.act_window">
+            <field name="name">Unreconciled Entry Search</field>
+            <field name="res_model">unreconciled.journal.entry.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="unreconciled_journal_entry_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <!--<menuitem id="unreconciled_entry_menu" parent="account.menu_finance"-->
+                  <!--groups="account.account_clearing_controller"-->
+                  <!--name="Reconcile Journal Entry"/>-->
+
+        <!--<menuitem id="unreconciled_entry_sub_menu" parent="unreconciled_entry_menu"-->
+                  <!--name="Reconcile Journal Entry"-->
+                  <!--groups="account.account_clearing_controller"-->
+                  <!--action="action_unreconciled_journal_entry"/>-->
+
+    </data>
+</odoo>

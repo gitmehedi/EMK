@@ -1,0 +1,4 @@
+import cheque_received
+import inherit_account_move_line
+import money_receipt_sequence
+import inherit_account_config_settings

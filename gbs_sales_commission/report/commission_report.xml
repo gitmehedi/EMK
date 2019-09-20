@@ -1,0 +1,145 @@
+<odoo>
+    <data>
+        <report id="report_gbs_sales_commission"
+                model="customer.commission.configuration"
+                string="Commission Report"
+                name="gbs_sales_commission.report_Commission_view"
+                file="gbs_sales_commission.report_Commission"
+                paperformat="report_layout.paperformat_backend_portrait"
+                report_type="qweb-pdf"/>
+
+        <template id="report_Commission_view">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row">
+                                <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+
+                                <t t-if="doc.commission_type=='by_product'">
+                                    <h4 class="report-title">Product Commission Report</h4>
+                                    <div class="clearfix">
+                                        <div class="row" style="margin-top:25px;">
+                                            <div class="col-xs-9 text-left">
+                                                <h6><b>Commission Type: </b>
+                                                    <span t-field="doc.commission_type"/></h6>
+                                                <h6><strong>Product:</strong>
+                                                    <span t-field="doc.product_id"/></h6>
+                                                <h6><strong>Requested By :</strong>
+                                                    <span t-field="doc.requested_by"/></h6>
+                                                <h6><strong>Approved By :</strong>
+                                                    <span t-field="doc.approver1_id"/></h6>
+                                            </div>
+                                            <div class="col-xs-3 text-left">
+                                                <h6><strong>Requested Date:</strong>
+                                                    <span t-field="doc.requested_date" t-field-options='{"format": "Y-MM-dd"}'/></h6>
+                                                <h6><strong>Approved Date :</strong>
+                                                    <span t-field="doc.approved_date" t-field-options='{"format": "Y-MM-dd"}'/></h6>
+                                                <h6><strong>State :</strong>
+                                                <span t-field="doc.state"/></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered table-report-xs table-striped"
+                                                    style="margin-bottom: 10px; table-layout: fixed;">
+                                        <thead>
+                                            <tr class="odo-bg-gray">
+                                                <th class="text-center" style="width:4%;">SL</th>
+                                                <th class="text-center">Customer</th>
+                                                <th class="text-center" style="width:15%;">Old Value</th>
+                                                <th class="text-center" style="width:15%;">New Value</th>
+                                                <th class="text-center" style="width:15%;">Currency</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="doc.config_customer_ids" t-as="p">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td class="text-center">
+                                                        <span t-esc="p_index+1"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="p.customer_id.name"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'%.2f'%(p.old_value)"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'%.2f'%(p.new_value)"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="p.currency_id.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+                                <t t-if="doc.commission_type=='by_customer'">
+                                    <h4 class="report-title">Customer Commission Report</h4>
+                                    <div class="clearfix">
+                                        <div class="row" style="margin-top:25px;">
+                                            <div class="col-xs-9 text-left">
+                                                <h6><strong>Commission Type:</strong>
+                                                    <span t-field="doc.commission_type"/></h6>
+                                                <h6><strong>Customer:</strong>
+                                                    <span t-field="doc.customer_id"/></h6>
+                                                <h6><strong>Requested By :</strong>
+                                                    <span t-field="doc.requested_by"/></h6>
+                                                <h6><strong>Approved By :</strong>
+                                                    <span t-field="doc.approver1_id"/></h6>
+                                            </div>
+                                            <div class="col-xs-3 text-left">
+                                                <h6><strong>Requested Date:</strong>
+                                                    <span t-field="doc.requested_date" t-field-options='{"format": "Y-MM-dd"}'/></h6>
+                                                <h6><strong>Approved Date :</strong>
+                                                    <span t-field="doc.approved_date" t-field-options='{"format": "Y-MM-dd"}'/></h6>
+                                                <h6><strong>State :</strong>
+                                                <span t-field="doc.state"/></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered table-report-xs table-striped"
+                                                    style="margin-bottom: 10px; table-layout: fixed;">
+                                        <thead>
+                                            <tr class="odo-bg-gray">
+                                                <th class="text-center" style="width:4%;">SL</th>
+                                                <th>Product</th>
+                                                <th class="text-center" style="width:15%;">Old Value</th>
+                                                <th class="text-center" style="width:15%;">New Value</th>
+                                                <th class="text-center" style="width:15%;">Currency</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="doc.config_product_ids" t-as="p">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td class="text-center">
+                                                        <span t-esc="p_index+1"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="p.product_id.name"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'{:,.2f}'.format(p.old_value)"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'{:,.2f}'.format(p.new_value)"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="p.currency_id.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

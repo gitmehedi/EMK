@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_hr_recuitment_tests" name="Website HR Recruitment Tests" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/member_signup/static/src/js/utils.js"></script>
+            <script type="text/javascript" src="/member_signup/static/src/js/custom.js"></script>
+            <script type="text/javascript" src="/member_signup/static/src/js/bootstrap.validator.js"></script>
+            <link rel="stylesheet" href="/member_signup/static/src/css/style.css"/>
+        </xpath>
+    </template>
+
+    <template id="member_signup.login" inherit_id="web.login" name="Sign up">
+        <xpath expr="//button[@type='submit']" position="before">
+            <a t-if="member_signup_enabled" t-attf-href="/page/application?{{ keep_query() }}"
+               class="btn btn-success pull-right">Sign up for Member
+            </a>
+        </xpath>
+    </template>
+
+    <template id="member_signup.fields" name="Auth Signup/ResetPassword form fields">
+        <div class="col-md-12 margin-top-15">
+            <div class="panel panel-success">
+                <div class="panel-heading odoobg">
+                    <h3 class="panel-title text-center">Applicant Information</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12 text-center margin-bottom-15">
+                        The membership fee is
+                        <t t-esc="package_price"/>
+                        Taka per year
+                        <br/>
+                        (Please write in block letters)
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-field">
+                            <label for="firstname" class="control-label">First Name</label>
+                            <input type="text" name="firstname" t-att-value="firstname" id="firstname"
+                                   maxlength="100"
+                                   placeholder="First Name"
+                                   class="form-control input-sm reqfield" required="required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-field">
+                            <label for="lastname" class="control-label">Middle Name</label>
+                            <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
+                                   placeholder="Middle Name"
+                                   class="form-control input-sm"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-field">
+                            <label for="lastname2" class="control-label">Last Name</label>
+                            <input type="text" name="lastname2" t-att-value="lastname2" id="lastname2"
+                                   maxlength="100"
+                                   placeholder="Last Name"
+                                   class="form-control input-sm reqfield" required="required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="email" class="control-label">E-mail</label>
+                            <input type="email" name="email" t-att-value="email" id="email"
+                                   placeholder="info@info.com"
+                                   class="form-control input-sm reqfield" required="required"/>
+                            <div style="display: none; color:red; font-size: 12px;">A user with email
+                                <strong id="exits_email"></strong>
+                                already exists in the system. Either request a forgotten password or select another
+                                email address.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="birthdate" class="control-label">Date of Birth</label>
+                            <input type="text" name="birthdate" t-att-value="birthdate" maxlength="10"
+                                   placeholder="1960-12-31"
+                                   minlength="10" class="form-control input-sm reqfield"
+                                   id="birthdate" required="required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="phone" class="control-label">Phone</label>
+                            <input type="text" name="phone" t-att-value="phone" id="phone"
+                                   placeholder="01900000000"
+                                   class="form-control input-sm reqfield number"
+                                   data-minlength="6" data-maxlength="14" required="required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="phone" class="control-label">Mobile</label>
+                            <input type="text" name="mobile" t-att-value="mobile" id="mobile"
+                                   placeholder="01900000000"
+                                   class="form-control input-sm reqfield number"
+                                   data-maxlength="14" data-minlength="11" required="required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="occupation" class="control-label">Occupation</label>
+                            <select class="form-control input-sm reqfield" name="occupation"
+                                    required="required">
+                                <option value="">--Please Select--</option>
+                                <t t-foreach="occupation_ids" t-as='label'>
+                                    <option t-att-value="label_value[0]"
+                                            t-att-selected="'selected' if occupation==label_value[0] else None">
+                                        <t t-esc="label_value[1]"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="weburl" class="control-label">Website</label>
+                            <input type="text" name="weburl" id="weburl"
+                                   placeholder="www.abc.com"
+                                   pattern="^(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}$"
+                                   class="form-control input-sm"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="street" class="control-label">Current Address</label>
+                            <input type="text" name="street" t-att-value="street" id="street"
+                                   class="form-control input-sm reqfield" maxlength="50"
+                                   minlength="2" placeholder="Address"
+                                   required="required"/>
+                        </div>
+                        <div class="form-group form-field">
+                            <input type="text" name="street2" t-att-value="street2" id="street2"
+                                   class="form-control input-sm"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group form-field">
+                                    <input type="text" name="city" t-att-value="city" id="city" minlength="2"
+                                           maxlength="30" required="required" placeholder="City"
+                                           class="form-control input-sm reqfield"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-field">
+                                    <input type="text" name="zipcode" t-att-value="zipcode" id="zipcode" minlength="2"
+                                           maxlength="30" required="required" placeholder="Zip"
+                                           class="form-control input-sm reqfield"/>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group form-field">
+                                    <select class="form-control input-sm reqfield"
+                                            name="country_id">
+                                        <option value="">--Please Select--</option>
+                                        <t t-foreach="country_ids" t-as='label'>
+                                            <option t-att-value="label_value[0]"
+                                                    t-att-selected="'selected' if country_id==label_value[0] else None">
+                                                <t t-esc="label_value[1]"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="gender" class="control-label">Gender</label>
+                            <div class="mar-btm">
+                                <t t-foreach="gender_ids" t-as='label'>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="gender" t-att-value="label"
+                                               t-att-checked="'checked' if label==gender else None"/>
+                                        <t t-esc="label_value"/>
+                                    </label>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
+                            <label for="subject_of_interest" id="subject_of_interest" class="control-label">Subjects
+                                of Interest: (Please
+                                check all that apply)
+                            </label>
+                            <div class="mar-btm">
+                                <t t-foreach="subject_of_interest_ids" t-as='label'>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox"
+                                               name="subject_of_interest"
+                                               t-att-value="label_value[0]"
+                                               t-att-checked="'checked' if label_value[0] in subject_of_interest else None"/>
+                                        <t t-esc="label_value[1]"/>
+                                    </label>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field"
+                             style="display: none;">
+                            <input type="text" name="subject_of_interest_others"
+                                   t-att-value="subject_of_interest_others" id="subject_of_interest_others"
+                                   class="form-control input-sm reqfield"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading odoobg">
+                    <h3 class="panel-title text-center">Educational Information</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <div class="form-group form-field">
+                            <label for="last_place_of_study" class="control-label">Last or Current Place of Study
+                            </label>
+                            <input type="text" name="last_place_of_study" t-att-value="last_place_of_study"
+                                   id="last_place_of_study" placeholder="Last or Current Place of Study"
+                                   class="form-control input-sm" data-maxlength="50"
+                                   data-minlength="2"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group form-field">
+                            <label for="hightest_certification" class="control-label">Highest Certification Achieved
+                            </label>
+                            <select class="form-control input-sm" name="hightest_certification">
+                                <option value="">--Please Select--</option>
+                                <t t-foreach="hightest_certification_ids" t-as='label'>
+                                    <option t-att-value="label_value[0]"
+                                            t-att-selected="'selected' if hightest_certification==label_value[0] else None">
+                                        <t t-esc="label_value[1]"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field">
+                            <label for="field_of_study" class="control-label">Field of Study</label>
+                            <input type="text" name="field_of_study" t-att-value="field_of_study"
+                                   placeholder="Field of Study"
+                                   class="form-control input-sm" id="field_of_study"
+                                   data-minlength="2" data-maxlength="50"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field ">
+                            <label for="place_of_study" class="control-label">Place of Study</label>
+                            <input type="text" name="place_of_study" t-att-value="place_of_study"
+                                   placeholder="Place of Study"
+                                   class="form-control input-sm" id="place_of_study"/>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group form-field">
+                            <label for="usa_work_or_study" class="control-label">Have you worked, or studied in the
+                                U.S.?
+                            </label>
+
+                            <div class="mar-btm">
+                                <t t-foreach="usa_work_or_study_ids" t-as='label'>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="usa_work_or_study" t-att-value="label"
+                                               t-att-checked="'checked' if label==usa_work_or_study else None"/>
+                                        <t t-esc="label_value"/>
+                                    </label>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group form-field" style="display: none;">
+                            <label for="usa_work_or_study_place" class="control-label">If yes, where in the U.S. have
+                                you
+                                worked, or Studied
+                            </label>
+                            <input type="text" name="usa_work_or_study_place" t-att-value="usa_work_or_study_place"
+                                   placeholder="Institute Name or Company Name"
+                                   id="usa_work_or_study_place" class="form-control input-sm"/>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group form-field">
+                            <label for="alumni_institute" class="control-label">If you are an alumni of an American
+                                institution, which school did you attend?
+                            </label>
+                            <input type="text" name="alumni_institute" t-att-value="alumni_institute"
+                                   placeholder="School Name"
+                                   class="form-control input-sm" id="alumni_institute"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading odoobg">
+                    <h3 class="panel-title text-center">Additional Information</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="form-group form-field">
+                            <label for="current_employee" class="control-label">Current Employer</label>
+                            <input type="text" name="current_employee" t-att-value="current_employee"
+                                   placeholder="Organization Name"
+                                   class="form-control input-sm" id="current_employee"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field">
+                            <label for="work_title" class="control-label">Your Title</label>
+                            <input type="text" name="work_title" t-att-value="work_title" id="work_title"
+                                   placeholder="Job Title"
+                                   class="form-control input-sm" data-maxlength="50"
+                                   data-minlength="2"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field">
+                            <label for="work_phone" class="control-label">Work Phone</label>
+                            <input type="text" name="work_phone" t-att-value="work_phone" id="work_phone"
+                                   placeholder="01900000000"
+                                   class="form-control input-sm number" data-maxlength="14"
+                                   data-minlength="11"/>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group form-field">
+                            <label for="info_about_emk" class="control-label">How did you learn about the EMK Center?
+                            </label>
+                            <input type="textarea" name="info_about_emk" t-att-value="info_about_emk"
+                                   id="info_about_emk"
+                                   class="form-control input-sm" data-maxlength="200"
+                                   data-minlength="2"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading odoobg">
+                    <h3 class="panel-title text-center">Signature &amp; Image</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="margin-bottom-15 text-center">
+                            I hereby apply for membership to the EMK Center and agree to comply with its rules and
+                            regulation.
+                        </div>
+                        <div class="col-md-6">
+                            <div class="wrap_signature pull-left" id="img_wrap">
+                                <input id="signature-image-upload" name="signature_image" class="hidden"
+                                       type="file">
+                                    <img id="member_image"/>
+                                </input>
+                                <div class="signature_image_layer">
+                                    <p class="img_desc text-center">Click here to upload singnature.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="img__wrap  pull-right" id="img_wrap">
+                                <input id="member-image-upload" class="hidden" type="file" name="image">
+                                    <img id="member_image"/>
+                                </input>
+                                <div class="member_image_layer">
+                                    <p class="img_desc text-center">Click here to upload image.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading odoobg">
+                    <h3 class="panel-title text-center">Attachments</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <h4>Attachments</h4>
+                        <div class="input_fields_wrap">
+                            <div style="margin-bottom: 10px;">
+                                <a id="createAttachment" class="add_field_button btn btn-info btn-xs">
+                                    <i class="fa fa-plus"></i>
+                                    Add New Attachment
+                                </a>
+                            </div>
+                            <div>
+                                <table class="table table-hover" id="uploadtable">
+                                    <tr>
+                                        <td>
+                                            <input type="file" class="attachment" name="attachment"/>
+                                        </td>
+                                        <td>
+                                            <a href="#" class="remove_field btn btn-danger btn-xs">Remove</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="member_signup.success" name="Sign up Success">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Thank you!</h1>
+                        <div>
+                            <strong>
+                                <t t-esc="name"/>
+                            </strong>
+                            , your request has been submitted successfully. Check email for
+                            further processing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="member_signup.signup" name="Sign up login">
+        <t t-call="web.login_layout">
+            <div class="container">
+                <div class="row">
+                    <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
+                          method="post"
+                          t-if="not message" data-toggle="validator2" id="memberapp">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <script type="text/javascript">
+                            var config = {
+                            baseurl: "<t t-esc="baseurl"/>",
+                            };
+                        </script>
+                        <input type="hidden" name="redirect" t-att-value="redirect"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
+
+                        <div class="col-md-12">
+                            <p class="alert alert-danger" t-if="error">
+                                <t t-esc="error"/>
+                            </p>
+                        </div>
+                        <t t-call="member_signup.fields">
+                            <t t-set="only_passwords" t-value="bool(token)"/>
+                        </t>
+                        <div class="col-md-4 col-md-offset-5">
+                            <div class="clearfix oe_login_buttons">
+                                <button type="submit" class="btn btn-success">Sign up</button>
+                                <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-default">
+                                    <i class="fa fa-angle-double-left"></i>
+                                    Back to
+                                    Login
+                                </a>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

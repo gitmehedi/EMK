@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem
+                name="Executive (Area/Country)"
+                action="action_executive_sales_wizard"
+                id="menu_executive_sales_report"
+                groups="sales_team.group_sale_manager"
+                parent="sales_team.menu_sale_report"
+                sequence="25"/>
+
+        <menuitem
+                name="Customer (Area/Country)"
+                action="action_customer_sales_wizard"
+                id="menu_customer_sales_report"
+                groups="sales_team.group_sale_manager"
+                parent="sales_team.menu_sale_report"
+                sequence="35"/>
+
+        <menuitem
+                name="Customer (Sector Wise)"
+                action="action_customer_sales_sector_wizard"
+                id="menu_customer_sales_sector_report"
+                groups="sales_team.group_sale_manager"
+                parent="sales_team.menu_sale_report"
+                sequence="45"/>
+
+        <menuitem
+                name="Sector (Product Wise)"
+                action="action_sector_sales_product_wizard"
+                id="menu_sector_sales_product_report"
+                groups="sales_team.group_sale_manager"
+                parent="sales_team.menu_sale_report"
+                sequence="55"/>
+
+        <menuitem
+                name="Outstanding Statement"
+                action="action_outstanding_statement_wizard"
+                id="menu_outstanding_statement_report"
+                groups="sales_team.group_sale_manager"
+                parent="sales_team.menu_sale_report"
+                sequence="60"/>
+
+        <menuitem
+                name="Credit Details (Product)"
+                action="action_credit_details_product_wizard"
+                id="menu_credit_details_product_report"
+                parent="sales_team.menu_sale_report"
+                sequence="65"/>
+
+        <menuitem
+                name="Yearly Sales Comparison"
+                action="action_yearly_sales_comparison_wizard"
+                id="menu_yearly_sales_comparison_report"
+                parent="sales_team.menu_sale_report"
+                sequence="75"/>
+
+<!--        <menuitem-->
+<!--                name="Daily Delivery Statement"-->
+<!--                action="action_daily_delivery_statement_wizard"-->
+<!--                id="menu_daily_delivery_statement_report"-->
+<!--                groups="sales_team.group_sale_manager"-->
+<!--                parent="sales_team.menu_sale_report"-->
+<!--                sequence="80"/>-->
+
+<!--        <menuitem-->
+<!--                name="Daily Undelivered Statement"-->
+<!--                action="action_daily_undelivered_statement_wizard"-->
+<!--                id="menu_daily_undelivered_statement_report"-->
+<!--                groups="sales_team.group_sale_manager"-->
+<!--                parent="sales_team.menu_sale_report"-->
+<!--                sequence="85"/>-->
+
+        <menuitem
+                name="Monthly Delivery (Exe.)"
+                action="action_monthly_delivery_executive_wizard"
+                id="menu_monthly_delivery_executive_report"
+                groups="sales_team.group_sale_manager"
+                parent="sales_team.menu_sale_report"
+                sequence="90"/>
+
+        <menuitem
+                name="Monthly Delivery (Product)"
+                action="action_monthly_delivery_product_wizard"
+                id="menu_monthly_delivery_product_report"
+                groups="sales_team.group_sale_manager"
+                parent="sales_team.menu_sale_report"
+                sequence="100"/>
+
+    </data>
+</odoo>

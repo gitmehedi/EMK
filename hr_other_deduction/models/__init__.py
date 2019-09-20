@@ -1,0 +1,3 @@
+import hr_other_deduction
+import hr_other_deduction_line
+import inherited_hr_payslip

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_top_sheet">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row">
+                            <p>
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m-%d-%Y')"/>
+                            </p>
+                            <p>Initiated by : Human Resources</p>
+                            <p>To : Managing Director</p>
+                            <br/>
+
+                            <h4 class="report-title">
+                                <b>Money Requisition for Disbursement of Salary :
+                                    <span t-esc="data['name']"/>
+                                </b>
+                            </h4>
+
+                            <table class="table table-bordered table-report-sm table-striped">
+                                <thead style="border-style:none;">
+                                    <tr class="odo-bg-gray">
+                                        <t t-foreach="header" t-as="head">
+                                            <th class="text-center">
+                                                <span t-esc="head_value"></span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="record" t-as="rec">
+                                        <tr style="page-break-inside: avoid">
+                                            <td>
+                                                <span class="text-nowrap" t-esc="rec"></span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="rec_value['count']"></span>
+                                            </td>
+                                            <t t-foreach="rec_value['vals']" t-as="rule">
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="formatLang(rule_value)"></span>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                    <tr style="page-break-inside: avoid">
+                                        <td colspan="2">
+                                            <strong class="text-nowrap">Total</strong>
+                                        </td>
+                                        <t t-foreach="total" t-as="t">
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="formatLang(t_value)"></strong>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h5>
+                            <b>Bank Credit(Total):</b>
+                            <span t-esc="inword['bnet']"></span>
+                            (<span t-esc="inword['bnet_word']"/>)
+                            <t t-foreach="bank_list" t-as="bank">
+                                <p style="margin-left:80px;"><b><span t-esc="bank['bank_name']"/></b>(<span t-esc="bank['bank_acc_id']"/>) : <span t-esc="bank['bysal']"/></p>
+                            </t>
+                        </h5>
+                        <h5>
+                            <b>Cash Payment :</b>
+                            <span t-esc="inword['cash']"></span>
+                            (<span t-esc="inword['cash_word']"/>)
+                        </h5>
+                        <h5>
+                            <b>Total Fund Required :</b>
+                            <span t-esc="inword['net']"></span>
+                            (<span t-esc="inword['net_word']"/>)
+                        </h5>
+                        <div class="row mb32" style="margin-top: 50mm;">
+                            <div class="col-xs-9" style="float:Left;">
+                                <strong>Initiated By:------------------------</strong>
+                                <br/>Human Resources
+                            </div>
+                            <div class="col-xs-3 text-right">
+                                <strong>Approved By:-------------------------</strong>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <report
+                id="report_top_sheets"
+                string="Top Sheet"
+                model="hr.payslip.run"
+                report_type="qweb-pdf"
+                file="gbs_hr_payroll_top_sheet.report_top_sheet"
+                name="gbs_hr_payroll_top_sheet.report_top_sheet"
+                menu = "False"
+                paperformat="report_layout.paperformat_backend_landscape"/>
+
+    </data>
+</odoo>

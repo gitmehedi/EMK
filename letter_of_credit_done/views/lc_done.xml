@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+        <record id="lc_done_button" model="ir.ui.view">
+            <field name="name">view_local_credit_done_form_inherit</field>
+            <field name="model">letter.credit</field>
+            <field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_cancel']" position="before">
+                    <button string="Done" name="action_lc_eva_in_button" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to continue?"/>
+                </xpath>
+                <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                    <button name="lc_done_action_window1" type="object"
+                            class="oe_stat_button" icon="fa-usd"
+                            context="{'rel_job_id': id}"
+                            attrs="{'invisible':[('state', '!=', 'done')]}"
+                            string="LC Evaluation">
+                    </button>
+                </xpath>
+            </field>
+
+
+
+        </record>
+        <!-- Form views on models -->
+        <record model="ir.ui.view" id="lc_done_tree_view">
+            <field name="name">lc.done.tree.view</field>
+            <field name="model">lc.evaluation.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+               <tree string="LC Evaluation">
+                    <field name="name" readonly="1"/>
+                    <field name="marks" readonly="1" sum="Total"/>
+                    <field name="obtain_marks" sum="Total"/>
+               </tree>
+            </field>
+        </record>
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="lc_done_action_window">
+            <field name="name">LC Evaluation</field>
+            <field name="res_model">lc.evaluation.line</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+    </data>
+</odoo>

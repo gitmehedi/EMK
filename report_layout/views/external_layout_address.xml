@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="custom_report_gbs_internal" name="report assets" inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <link href="/report_layout/static/src/css/report.css" rel="stylesheet"/>
+        </xpath>
+    </template>
+
+    <template id="gbs_external_layout_with_address">
+        <t t-if="not o and doc">
+        <t t-set="o" t-value="doc"/>
+        </t>
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+
+        <t t-call="report_layout.gbs_external_layout_header" />
+        <t t-raw="0" />
+        <t t-call="report_layout.gbs_external_layout_footer" />
+    </template>
+
+    <template id="gbs_external_layout_header">
+        <div class="header">
+                <style type="text/css">
+                    .header-content {
+                        height:81px; position:relative; margin:0; padding:0; text-align:center;
+                    }
+                    .company-info {
+                        width:100%; height:81px;
+                    }
+                    .company-info h3 {
+                        text-align:center; padding-top:30px;
+                    }
+                    .company-logo {
+                        height:81px; width:160px; position:absolute; top:0; left:0; z-index:2; padding:5px;
+                    }
+                    .com-logo-img {
+                        width:auto; max-height:100%; padding:0; margin:0; float:left;
+                    }
+                </style>
+                <div class="header-content">
+                    <div class="company-logo">
+                        <img class="com-logo-img" t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" />
+                    </div>
+                    <div class="company-info">
+                       <h3 t-field="company.partner_id"
+                                 t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true}'/>
+                    </div>
+
+                    <div class="col-xs-12 text-center" name="company_address">
+                        <span t-field="company.partner_id"
+                            t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'
+                            style="display:inline-block;"/>
+                    </div>
+                </div>
+            </div>
+    </template>
+
+
+
+    <template id="gbs_external_layout_footer">
+        <div class="footer">
+            <div class="text-left" style="font-size: 10px; color: ash;">
+                <div class="row">
+                    <div t-if="not company.custom_footer" class="pull-left">
+                        <ul t-if="not company.custom_footer" style="list-style:none;">
+                            <t t-set="company" t-value="company.sudo()"/>
+                            <li t-if="company.phone">Phone:
+                                <span t-field="company.phone"/>
+                            </li>
+
+                            <li t-if="company.fax and company.phone">&amp;bull;</li>
+                            <li t-if="company.fax">Fax:
+                                <span t-field="company.fax"/>
+                            </li>
+
+                            <li t-if="company.email">Email:
+                                <span t-field="company.email"/>
+                            </li>
+
+                            <li>Print Time:
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <t t-if="company.custom_footer">
+                        <span t-raw="company.rml_footer"/>
+                    </t>
+                    <div class="pull-right">
+                        <ul class="list-inline">
+                            <li>Page:</li>
+                            <li>
+                                <span class="page"/>
+                            </li>
+                            <li>/</li>
+                            <li>
+                                <span class="topage"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </template>
+</odoo>

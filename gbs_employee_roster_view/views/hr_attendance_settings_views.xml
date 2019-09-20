@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_attendance_configuration" model="ir.ui.view">
+        <field name="name">Employee Roster</field>
+        <field name="model">hr.emp.roster</field>
+        <field name="arch" type="xml">
+            <form string="Employee Roster View" class="oe_form_configuration">
+                <header>
+                    <style type="text/css">
+                        #new {
+                            position: absolute;
+                            left: 25px;
+                            top: 8px;
+
+                            text-transform: uppercase;
+                            color: white;
+                            font-weight: bold;
+                            font-size: 40px;
+                            text-decoration: none;
+                        }
+
+                        /* Custom styles for the Timeline */
+                        div.timeline-frame {
+                            border-color: #5D99C3;
+                            border-radius: 5px;
+                            -moz-border-radius: 5px; /* For Firefox 3.6 and older */
+                        }
+                        div.timeline-axis {
+                            border-color: #5D99C3;
+                            background-color: #5D99C3;
+                            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5D99C3', endColorstr='#3A6DA0'); /* for IE */
+                            background: -webkit-gradient(linear, left top, left bottom, from(#5D99C3), to(#3A6DA0)); /* for webkit browsers */
+                            background: -moz-linear-gradient(top,  #5D99C3,  #3A6DA0); /* for firefox 3.6+ */
+                        }
+                        div.timeline-axis-grid {
+                        }
+                        div.timeline-groups-axis {
+                            border-color: #5D99C3;
+                        }
+                        div.timeline-axis-text {
+                            color: white;
+                        }
+                        div.timeline-groups-text {
+                            color: #4D4D4D;
+                        }
+                        div.timeline-event {
+                            color: white;
+                            border-radius: 5px;
+                        }
+                        div.timeline-event-content {
+                            padding: 5px;
+                            font-size: 0.85em !important;
+                        }
+
+                        div.unavailable {
+                            background-color: #F03030 !important; /* red */
+                            border-color: #bd2828 !important;     /* red */
+                        }
+                        div.available {
+                            background-color: #1AA11A !important; /* green */
+                            border-color: #136e13 !important;     /* green */
+                        }
+                        div.maybe {
+                            background-color: #FFA500 !important; /* orange */
+                            border-color: #cc8100 !important;     /* orange */
+                        }
+
+                        /* @Override */
+
+                        .o_form_sheet {
+                            max-width: none !important;
+                            <!--margin: 0 15px !important;-->
+                        }
+                        .roster-filters {
+                            border-bottom: 1px solid #a8a8a8;
+                            padding-bottom: 15px;
+                            margin-bottom: 15px;
+                        }
+                        .roster-filters label {
+                            display: inline-block;
+                            width: 135px;
+                            text-align: right;
+                        }
+                        .roster-filters .o_form_input {
+                            width: 166px;
+                        }
+                        .o_form_view {
+                            background-color: #f0eeee;
+                        }
+                    </style>
+                </header>
+                <separator string="Roster View"/>
+                <div class="row roster-filters">
+                    <div class="col-sm-4" groups="operating_unit.group_multi_operating_unit">
+                        <label for="operating_unit_id"/>
+                        <field name="operating_unit_id" id="operating_unit_id" class="oe_inline bappy"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                    </div>
+                    <div class="col-sm-4" groups="hr.group_hr_user,hr.group_hr_manager">
+                        <label for="department_id"/>
+                        <field name="department_id" placeholder="Please Select" class="oe_inline"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="employee_id"/>
+                        <field name="employee_id" placeholder="All" class="oe_inline"
+                                   options="{'no_create_edit': True, 'no_open': True}"/>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label for="from_date" />
+                        <field name="from_date" class="oe_inline"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="to_date" />
+                        <field name="to_date" class="oe_inline" />
+                    </div>
+                    <div class="col-sm-4">
+                        <button string="Generate" class="oe_highlight mr16 pull-right" custom="click"/>
+                    </div>
+                </div>
+                <div class="o_form_sheet"></div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_roster" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">hr.emp.roster</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <menuitem id="hr_rostering.main_menu_hr_shifting" name="Rostering"
+		  parent="hr_attendance.menu_hr_attendance_root"
+		  sequence="29" groups="base.group_user"/>
+
+    <menuitem
+            name="Rostering View"
+            id="menu_hr_roster"
+            parent="hr_rostering.main_menu_hr_shifting"
+            sequence="8" action="action_hr_roster"
+            groups="base.group_user"/>
+</odoo>

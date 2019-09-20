@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--<template id="head_local_first_acceptance_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">-->
+        <!--<xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">-->
+            <!--<attribute name="t-call">lc_sales_local_report.external_local_first_acceptance_temp</attribute>-->
+        <!--</xpath>-->
+    <!--</template>-->
+    <!--<template id="external_local_first_acceptance_temp" inherit_id="report_layout.gbs_internal_layout_header" primary="True">-->
+        <!--<xpath expr="//div[@class='company-info']" position="after">-->
+            <!--<div name="company_address" style="margin-top: -25px;">-->
+                <!--<h5><span t-esc="address"/></h5>-->
+            <!--</div>-->
+        <!--</xpath>-->
+    <!--</template>-->
+    <!-- Main template -->
+    <template id="local_first_acceptance_temp">
+        <t t-call="report.html_container">
+            <t t-call="report_layout.gbs_internal_layout">
+                <div class="page" style="page-break-inside:auto">
+                    <div class="row" style="padding-top:-5px;">
+                        <style type="text/css">
+                            .report-title { text-align:center; }
+                            .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                        </style>
+                        <div class="clearfix">
+                            <h4 class="report-title">First Acceptance Report</h4>
+                            <br/>
+                            <div class="row" style="padding-bottom:5px;">
+                                <div class="col-xs-6 text-left">
+                                    <strong>Product: </strong><span t-esc="record['product_temp_name']"/>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y, %H:%M %p')"/></div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-report-xs table-striped"
+                               style="margin-bottom: 10px;table-layout: fixed;">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th class="text-center" style="width:2%;">SL</th>
+                                    <th class="text-center" style="width:15%;">Customer</th>
+                                    <th class="text-center" style="width:8%;">L/C No</th>
+                                    <th class="text-center" style="width:6%;">Shipment No</th>
+                                    <th class="text-center" style="width:6.5%;">Value</th>
+                                    <th class="text-center" style="width:5%;">Tenor</th>
+                                    <th class="text-center" style="width:5.5%;">Dispatch To Sales</th>
+                                    <th class="text-center" style="width:5.5%;">Dispatch To Customer</th>
+                                    <th class="text-center" style="width:3%;">Aging</th>
+                                    <th class="text-center" style="width:5.5%;">First Delivery</th>
+                                    <th class="text-center" style="width:5.5%;">Last Delivery</th>
+                                    <th class="text-center" style="width:8%;">Remarks/Status</th>
+                                    <th class="text-center" style="width:8%;">F.P.R</th>
+                                    <th class="text-center" style="width:8%;">Bank</th>
+                                    <th class="text-center" style="width:8.5%;">Branch</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="lines">
+                                    <t t-foreach="lines" t-as="line">
+                                        <tr>
+                                            <td class="text-left">
+                                                <t t-esc="line_index+1"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="line['customer']" />&amp;nbsp;
+                                                <t t-if="line['beneficiary_bank']">
+                                                    (<span t-esc="line['beneficiary_bank']"/>)
+                                                </t>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['lc_name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['shipment_name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="line['currency']"/> <span t-esc="line['value']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['tenor'][0:9]"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-if="line['dispatch_to_sale']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_sale'],'%Y-%m-%d'))"/>
+                                                </t>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-if="line['dispatch_to_customer']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_customer'],'%Y-%m-%d'))"/>
+                                                </t>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['aging']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-if="line['first_delivery_date']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['first_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                </t>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-if="line['last_delivery_date']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['last_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                </t>
+                                            </td>
+                                            <td class="text-left" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
+                                                <t t-esc="line['comment']" />
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['sale_persons']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['bank_code']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['bank_branch']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                    <td colspan="4" class="text-left">
+                                        <t t-esc="total['title']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="total['total_val']"/>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--<t t-call="report_layout.report_signing"></t>-->
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <report id="report_local_first_acceptance"
+            model="letter.credit"
+            string="LC Sales First Acceptance Report"
+            name="lc_sales_local_report.local_first_acceptance_temp"
+            file="lc_sales_local_report.local_first_acceptance_temp"
+            multi="True"
+            menu="False"
+            report_type="qweb-pdf"/>
+
+    <record id="report_local_first_acceptance" model="ir.actions.report.xml">
+        <field name="paperformat_id" ref="report_layout.paperformat_backend_landscape"/>
+    </record>
+</odoo>

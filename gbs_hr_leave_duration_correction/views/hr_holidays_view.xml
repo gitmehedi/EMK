@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='number_of_days_temp']" position="replace">
-                   <field name="number_of_days_temp" attrs="{'readonly':[('type','=','remove')]}"/> days
+                   <field name="number_of_days_temp" widget="integer" attrs="{'readonly':[('type','=','remove')]}"/> days
                 </xpath>
 
             </field>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="inherited_acc_invoice_line_for_commission" model="ir.ui.view">
+        <field name="name">inherited.account.invoice.line.for.commission.view</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
+                <field name="commission_rate" invisible="1"/>
+            </xpath>
+
+             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='commission_rate']" position="after">
+                <field name="currency_id" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='currency_id']" position="after">
+                <field name="commission_amount" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

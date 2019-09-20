@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <data>
+        <record id="edit_holiday_new1" model="ir.ui.view">
+            <field name="name">Leave Request</field>
+            <field name="model">hr.holiday.hour</field>
+            <field name="arch" type="xml">
+                <form string="Leave Request">
+                    <field name="can_reset" invisible="1"/>
+                    <header>
+                        <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
+                        <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+                        <button string="Refuse" name="action_refuse" type="object"
+                                attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
+                        <button string="Reset to Draft" name="action_draft" type="object"
+                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+                        <button string="Reset to Draft" name="action_draft1" states="validate,validate1" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                                <field name="holiday_status_id"/>
+                                <label for="number_of_days_temp" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"  string="Duration"/>
+                                <div>
+                                    <div>
+                                        <field name="date_from" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
+                                        <label string="-" class="oe_inline"/>
+                                        <field name="date_to"  attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
+                                    </div>
+                                    <div>
+                                        <field name="number_of_days" widget="float_time" class="oe_inline"/> Hour(s)
+
+                                    </div>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="employee_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                <field name="department_id"/>
+                                <field name="leave_year_id" invisible="1"/>
+                            </group>
+                            <group colspan="2">
+                                <group><field name="notes" nolabel="1" placeholder="Add a reason..." /></group>
+                            </group>
+                            <div>
+                                <separator string="Comment by Manager" attrs="{'invisible':[('state','=','draft')]}"/>
+                                <field name="report_note" placeholder="e.g. Report to the next month..."
+                                       attrs="{'invisible':[('state','=','draft')],'readonly':[('state','!=','confirm')]}"/>
+                            </div>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="view_holiday1" model="ir.ui.view">
+            <field name="name">hr.holidays.tree</field>
+            <field name="model">hr.holiday.hour</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
+                      decoration-bf="message_needaction == True">
+                    <field name="employee_id"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="number_of_days" widget="float_time" string="Allocated Hours" sum="Remaining Days"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_hr_short_leave_filter" model="ir.ui.view">
+            <field name="name">hr.short.leave.filter</field>
+            <field name="model">hr.holiday.hour</field>
+            <field name="arch" type="xml">
+                <search string="Search Short Leave">
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <filter name="my_approval" string="My Approval" domain="[('employee_id.user_id','=',uid)]"/>
+                    <separator/>
+                    <filter name="to_approval" string="To Approval" domain="[('state','=','confirm')]"/>
+                    <separator/>
+                    <filter name="my_request" string="My Request" domain="[('employee_id.user_id', '=', uid)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="short_open_ask_holidays">
+            <field name="name">Half Day Leaves</field>
+            <field name="res_model">hr.holiday.hour</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new Short leave request.
+                </p><p>
+                Once you have recorded your Short leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal holidays, sickness) and the exact
+                number of open days related to your leave.
+            </p>
+            </field>
+            <field name="context">{
+                'search_default_to_approval': 1,
+                'search_default_my_approval': 1 ,
+            }</field>
+            <field name="search_view_id" ref="view_hr_short_leave_filter"/>
+        </record>
+
+        <menuitem
+            id="menu_short_open_ask_holidays_new"
+            parent="hr_holidays.menu_hr_holidays_my_leaves"
+            action="short_open_ask_holidays"
+            sequence="22"/>
+
+
+        <record id="edit_holiday_status_form_view" model="ir.ui.view">
+            <field name="name">hr_holidays_status_form</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form/group/group/field[@name='limit']" position="after">
+                        <field name="short_leave_flag" />
+                        <field name="compensatory_flag" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="edit_holidays_views" model="ir.ui.view">
+            <field name="name">hr.holidays.form</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='employee_id']" position="after">
+                        <field name="expire_date"
+                        attrs="{'invisible':[('type','=','remove')],'readonly':[('state','=','validate')]}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <menuitem action="hr_holidays.open_view_holiday_status" id="menu_hr_holidays_type" name="Leave Types"
+			parent="hr_holidays.menu_hr_holidays_configuration" sequence="5" />
+
+    </data>
+</odoo>

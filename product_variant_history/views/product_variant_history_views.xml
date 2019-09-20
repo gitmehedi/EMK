@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_variant_history_form" model="ir.ui.view">
+            <field name="name">product.variant.history.form</field>
+            <field name="model">product.variant.history</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Product Purchase History">
+                    <sheet>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="uom_id"/>
+                            <field name="product_tmpl_id"/>
+                        </group>
+                        <group>
+                            <field name="value"/>
+                            <field name="effective_datetime"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_variant_history_tree" model="ir.ui.view">
+            <field name="name">product.variant.history.tree</field>
+            <field name="model">product.variant.history</field>
+            <field name="arch" type="xml">
+                <tree string="Product Purchase History" create="false" edit="false">
+                    <field name="product_id"/>
+                    <field name="uom_id"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="value"/>
+                    <field name="effective_datetime"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_purchase_price_filter" model="ir.ui.view">
+            <field name="name">purchase.price.search</field>
+            <field name="model">product.variant.history</field>
+            <field name="arch" type="xml">
+                <search string="Purchase Price History">
+                    <field name="product_id"/>
+                    <filter string="Product" name="product" context="{'group_by': 'product_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_product_variant_history" model="ir.actions.act_window">
+            <field name="name">Product Variants History</field>
+            <field name="res_model">product.variant.history</field>
+            <field name="search_view_id" ref="view_purchase_price_filter"/>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_product':1}</field>
+        </record>
+
+        <menuitem id="menu_product_variant_history"
+                  name="Product Variant History" sequence="3"
+                  parent="stock.menu_stock_inventory_control"
+                  action="action_product_variant_history"/>
+
+
+        <record id="product_normal_form_view_inherit1" model="ir.ui.view">
+            <field name="name">product.normal.form.inherit1</field>
+            <field name="model">product.product</field>
+            <field name="priority">4</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook//page[4]" position="after">
+                    <page string="Product Price History" groups="stock.group_stock_user">
+                        <field name="price_history_ids">
+                            <tree editable="bottom" string="Price History">
+                                <field name="datetime"/>
+                                <field name="cost" string="Price"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="member_renew_notification_email_template" model="mail.template">
+        <field name="name">Membership Renew Notification</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="subject">Notification for Membership Renewal</field>
+        <field name="email_to">${object.email|safe}</field>
+        <field name="email_from">
+            <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
+        <field name="body_html"><![CDATA[
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+                <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+                    <tbody><tr>
+                        <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                            <img src="${user.company_id.logo_web}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+            <p>Dear ${ctx['name']|safe},</p>
+                <p>
+                    Your membership will expire after <strong>${ctx['expire_date']|safe}</strong>. Please take a visit and consult with EMK for continue membership.
+                </p>
+                <p>Best regards,</p>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+                ${user.signature | safe}
+                <p style="font-size: 11px; margin-top: 10px;">
+                    <strong>Sent by ${user.company_id.name}</strong>
+                </p>
+            </div>]]></field>
+        <field name="user_signature" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="done_wizard" model="ir.ui.view">
+            <field name="name">done.wizard</field>
+            <field name="model">done.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Do you want to done this Shipment?" create="false" edit="false">
+                    <!--<p>Would you want to leave a message?</p>-->
+                    <group string="Comments">
+                        <field name="comments" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button string="Save" name="save_done" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
