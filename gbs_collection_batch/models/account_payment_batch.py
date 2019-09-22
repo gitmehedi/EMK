@@ -4,12 +4,13 @@ from odoo.exceptions import UserError, ValidationError
 
 class AccountPaymentBatch(models.Model):
     _name = "account.payment.batch"
+    _inherit = ['mail.thread']
 
-    name = fields.Char(string='Batch Name', required=True)
+    name = fields.Char(string='Batch Name', required=True, track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
-                             readonly=True, default='draft', copy=False, string="Status")
+                             readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True,
-                                 domain=[('type', 'in', ('bank', 'cash'))])
+                                 domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
 
     """ Relational field"""
     payment_ids = fields.One2many('account.payment', 'batch_id', string='Customer Collection')
