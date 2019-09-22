@@ -56,7 +56,47 @@ class ResPartnerWizard(models.TransientModel):
         if self.mobile and not self.mobile.isdigit():
             raise Warning('[Format Error] Mobile must be numeric!')
 
-
+    @api.constrains('tax', 'bin', 'tin', 'vat', 'mobile', 'fax','nid')
+    def _check_numeric_constrain(self):
+        if self.tax:
+            tax = self.env['res.partner'].search(
+                [('tax', '=ilike', self.tax.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(tax) > 1:
+                raise Warning(_('[Unique Error] Trade License must be unique!'))
+        if self.bin:
+            bin = self.env['res.partner'].search(
+                [('bin', '=ilike', self.bin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(bin) > 1:
+                raise Warning(_('[Unique Error] BIN Number must be unique!'))
+            if len(self.bin) != 13 or not self.bin.isdigit():
+                raise Warning('[Format Error] BIN must be numeric with 13 digit!')
+        if self.vat:
+            vat = self.env['res.partner'].search(
+                [('vat', '=ilike', self.vat.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(vat) > 1:
+                raise Warning(_('[Unique Error] VAT Registration must be unique!'))
+            if len(self.vat) != 11 or not self.vat.isdigit():
+                raise Warning('[Format Error] VAT Registration must be numeric with 11 digit!')
+        if self.tin:
+            tin = self.env['res.partner'].search(
+                [('tin', '=ilike', self.tin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(tin) > 1:
+                raise Warning(_('[Unique Error] TIN Number must be unique!'))
+            if len(self.tin) != 12 or not self.tin.isdigit():
+                raise Warning('[Format Error] TIN must be numeric with 12 digit!')
+        if self.mobile and not self.mobile.isdigit():
+            raise Warning('[Format Error] Mobile must be numeric!')
+        if self.fax and len(self.fax) != 16:
+            raise Warning('[Format Error] Fax must be 16 character!')
+        if self.nid:
+            nid = self.env['res.partner'].search(
+                [('nid', '=ilike', self.nid.strip()), '|', ('active', '=', True), ('active', '=', False)])
+            if len(nid) > 1:
+                raise Warning(_('[Unique Error] NID must be unique!'))
+            if len(self.nid) not in (17,13,10):
+                raise Warning('[Format Error] NID must be 17/13/10 character!')
+            if not self.nid.isdigit():
+                raise Warning('[Format Error] NID must be numeric!')
 
     @api.multi
     def act_change_name(self):
