@@ -133,7 +133,11 @@ class LCReceivablePayment(models.Model):
             if rec.lc_receivable_charges_ids:
                 total_charges_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_charges_ids)
 
-            rec.currency_loss_gain_amount = rec.amount_in_company_currency - (total_collection_amount + total_charges_amount)
+            rec.currency_loss_gain_amount = (total_collection_amount + total_charges_amount) - rec.amount_in_company_currency
+
+            if -1 < rec.currency_loss_gain_amount < 1:
+                rec.currency_loss_gain_amount = 0
+
             if rec.currency_loss_gain_amount >= rec.amount_in_company_currency:
                 rec.currency_loss_gain_amount = 0.0
             if rec.currency_loss_gain_amount < 0:

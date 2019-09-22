@@ -109,5 +109,10 @@
                   parent="account.menu_finance_receivables"
                   sequence="19"/>
 
+        <record id="account.menu_action_account_payments_receivable" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
+
     </data>
 </odoo>
