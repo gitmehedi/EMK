@@ -61,9 +61,13 @@
             <field name="reference" position="after">
                 <field name="vat_selection"/>
             </field>
-            <!--<field name="amount_tax" position="after">-->
-                <!--<field name="security_deposit" widget="monetary"/>-->
-            <!--</field>-->
+            <field name="amount_tax" position="after">
+                <field name="security_deposit" widget="monetary"/>
+            </field>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="security_deposit_account_id"
+                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+            </xpath>
         </field>
     </record>
 

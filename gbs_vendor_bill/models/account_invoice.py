@@ -8,8 +8,8 @@ class AccountInvoice(models.Model):
     _inherit = ['account.invoice','ir.needaction_mixin']
 
     entity_service_id = fields.Many2one('entity.service', string='Service', readonly=True,
-                                       states={'draft': [('readonly', False)]},
-                                       track_visibility='onchange')
+                                        states={'draft': [('readonly', False)]},
+                                        track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', 'Branch',
                                         default=lambda self:
                                         self.env['res.users'].
@@ -21,6 +21,9 @@ class AccountInvoice(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     security_deposit = fields.Float('Security Deposit',track_visibility='onchange', copy=False,
                                     readonly=True, states={'draft': [('readonly', False)]})
+    security_deposit_account_id = fields.Many2one('account.account', string='Security Deposit Account',
+                                                  default=lambda self: self.env.user.company_id.security_deposit_account_id.id,
+                                                  required=True,readonly=True,states={'draft': [('readonly', False)]})
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange',copy=False)
     total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
@@ -33,8 +36,8 @@ class AccountInvoice(models.Model):
     payment_approver = fields.Text('Payment Instruction Responsible',track_visibility='onchange',
                                    help="Log for payment approver", copy=False)
     merged_bill = fields.Boolean(default=False,string='Is Merged Bill',track_visibility='onchange',
-                                   readonly=True, states={'draft': [('readonly', False)]},
-                                   help="Log for payment approver")
+                                 readonly=True, states={'draft': [('readonly', False)]},
+                                 help="Log for payment approver")
     provisional_expense = fields.Boolean(default=False,string='Is Provisional Expense',track_visibility='onchange',
                                          readonly=True, states={'draft': [('readonly', False)]},
                                          help="To manage provisional expense")
@@ -93,7 +96,6 @@ class AccountInvoice(models.Model):
             if len(bill_no) > 1:
                 raise UserError(_('Reference must be unique for %s !') % self.partner_id.name)
 
-
     @api.model
     def invoice_line_move_line_get(self):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
@@ -108,7 +110,6 @@ class AccountInvoice(models.Model):
         if res:
             res.update({'product_id': line.product_id.id})
         return res
-
 
     @api.model
     def tax_line_move_line_get(self):
@@ -167,9 +168,24 @@ class AccountInvoice(models.Model):
                     tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
-    # @api.multi
-    # def finalize_invoice_move_lines(self, move_lines):
-    #     return move_lines
+    @api.multi
+    def finalize_invoice_move_lines(self, move_lines):
+        if self.security_deposit > 0.0:
+            move_lines[-1][2]['credit'] = move_lines[-1][2]['credit'] - self.security_deposit
+            security_deposit_values = {
+                'account_id': self.security_deposit_account_id.id,
+                # 'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,
+                'credit': self.security_deposit,
+                'date_maturity': self.date_due,
+                'debit': False,
+                'invoice_id': self.id,
+                'name': 'Security Deposit',
+                'operating_unit_id': self.operating_unit_id.id,
+                'partner_id': self.partner_id.id,
+                'agreement_id': self.agreement_id.id,
+            }
+            move_lines.append((0, 0, security_deposit_values))
+        return move_lines
 
     @api.multi
     def action_move_create(self):
@@ -325,6 +341,7 @@ class ProductProduct(models.Model):
                 res.update({'is_tdsvat_payable': line.get('is_tdsvat_payable')})
         return res
 
+
 class AccountMove(models.Model):
     _inherit = "account.move"
 
@@ -337,6 +354,7 @@ class AccountMove(models.Model):
                 if op_unit:
                     move.write({'operating_unit_id':op_unit[0]})
         return res
+
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"

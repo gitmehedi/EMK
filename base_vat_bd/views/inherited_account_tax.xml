@@ -66,6 +66,8 @@
                                             </div>
                                         </group>
                                         <group attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                            <field name="price_include"
+                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                             <field name="account_id" domain="[('internal_type','=','other')]"
                                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                             <field name="refund_account_id"
@@ -84,7 +86,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Advanced Options">
+                                <page string="Advanced Options" groups="base.group_system">
                                     <group>
                                         <group>
                                             <field name="description"
@@ -104,8 +106,6 @@
                                             <field name="active" groups="base.group_system"/>
                                         </group>
                                         <group name="advanced_booleans">
-                                            <field name="price_include"
-                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                             <field name="include_base_amount"
                                                    attrs="{'invisible':[('amount_type','=', 'group')]}"
                                                    string="Affect Base of Subsequent Vat"
