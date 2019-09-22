@@ -72,6 +72,12 @@ class InheritResPartner(models.Model):
                 vals['property_account_receivable_id'] = receivable_id
                 # vals['property_account_payable_id'] = payable_id
 
+            elif not vals['parent_id'] and (vals['supplier'] is True or vals['is_cnf'] is True):
+                payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
+                vals['property_account_payable_id'] = payable_id
+            else:
+                pass
+
         return super(InheritResPartner, self).create(vals)
 
     @api.multi
