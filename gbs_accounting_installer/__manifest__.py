@@ -27,6 +27,7 @@
                 #'account_receivable_clearing_operation',
                 'gbs_account',
                 "account_standard_report",
+                "gbs_account_journal_log",
                 ],
 
     'data': [ ],
