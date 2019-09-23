@@ -17,8 +17,7 @@
     'category': 'Accounting & Finance',
     'depends': [
         'agreement_account',
-        'account_invoice_merge',
-        'gbs_payment_instruction',
+        'gbs_vendor_bill',
     ],
     'data': [
         'security/ir_rule.xml',

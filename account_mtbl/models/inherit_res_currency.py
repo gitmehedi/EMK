@@ -8,7 +8,7 @@ class Currency(models.Model):
     _order = 'name asc'
     _inherit = ['res.currency', 'mail.thread']
 
-    name = fields.Char(string='Currency', minlength=15, required=True, help="Currency Code (ISO 4217)",
+    name = fields.Char(string='Currency', size=50, required=True, help="Currency Code (ISO 4217)",
                        track_visibility='onchange')
     symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True,
                          track_visibility='onchange')

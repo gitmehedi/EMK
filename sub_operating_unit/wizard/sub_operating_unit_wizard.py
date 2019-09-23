@@ -17,6 +17,7 @@ class SubOperatingUnitWizard(models.TransientModel):
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -39,7 +40,11 @@ class SubOperatingUnitWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.sub.operating.unit'].create(
-            {'change_name': self.name, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+            {'change_name': self.name,
+             'operating_unit_id': self.operating_unit_id.id,
+             'status': self.status,
+             'request_date': fields.Datetime.now(),
+             'line_id': id})
         record = self.env['sub.operating.unit'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:

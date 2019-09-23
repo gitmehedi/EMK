@@ -61,6 +61,13 @@
             <field name="reference" position="after">
                 <field name="vat_selection"/>
             </field>
+            <field name="amount_tax" position="after">
+                <field name="security_deposit" widget="monetary"/>
+            </field>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="security_deposit_account_id"
+                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+            </xpath>
         </field>
     </record>
 
@@ -74,7 +81,7 @@
                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="domain">[('supplier','=',True),('entity_services','=',entity_service_id)]</attribute>
+                <attribute name="domain">[('supplier','=',True)]</attribute>
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="replace">
