@@ -20,8 +20,17 @@ class AssetAllocationWizard(models.TransientModel):
             branch = asset.asset_allocation_ids.search([('asset_id', '=', asset_id), ('state', '=', 'active')], limit=1)
             return branch.operating_unit_id
 
+    def default_date(self):
+        asset_id = self.env.context.get('active_id', False)
+        asset = self.env['account.asset.asset'].browse(asset_id)
+        if len(asset.asset_allocation_ids.ids) > 0:
+            print('')
+            return fields.Datetime.now()
+        else:
+            return asset.asset_usage_date
+
     asset_user = fields.Char("Asset User")
-    date = fields.Date(string='Allocation/Transfer Date', required=True, default=fields.Datetime.now)
+    date = fields.Date(string='Allocation/Transfer Date', required=True, default=default_date)
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
