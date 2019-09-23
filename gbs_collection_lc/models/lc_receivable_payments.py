@@ -1,5 +1,6 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.addons import decimal_precision as dp
 
 class LCReceivablePayment(models.Model):
 
@@ -19,11 +20,12 @@ class LCReceivablePayment(models.Model):
                                   track_visibility='onchange')
     currency_id = fields.Many2one('res.currency', string='Currency',readonly=True,store=True,
                                   track_visibility='onchange',compute='_compute_rate_amounts')
-    invoice_amount = fields.Float(string='Invoice Amount',readonly=True,store=True,
+    invoice_amount = fields.Float(string='Invoice Amount',readonly=True,store=True,digits=dp.get_precision('Account'),
                                   track_visibility='onchange',compute='_compute_rate_amounts')
     currency_rate = fields.Float(string='Currency Rate',readonly=True,store=True,
                                  track_visibility='onchange',compute='_compute_rate_amounts')
     amount_in_company_currency = fields.Float(string='Base Amount',readonly=True,store=True,
+                                              digits=dp.get_precision('Account'),
                                               track_visibility='onchange',compute='_compute_rate_amounts')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre', ondelete="cascade",
                                           readonly=True, states={'draft': [('readonly', False)]},
@@ -47,7 +49,7 @@ class LCReceivablePayment(models.Model):
                                    'Invoices',readonly=True,required=True,
                                    states={'draft': [('readonly', False)]})
     currency_loss_gain_amount = fields.Float(string='Loss/Gain Amount',compute='_compute_currency_loss_gain',
-                                             track_visibility='onchange')
+                                             track_visibility='onchange',digits=dp.get_precision('Account'))
     currency_loss_gain_type = fields.Selection([('margin', 'Margin'),
                                                 ('loss', 'Loss'),
                                                 ('gain', 'Gain'),], string='Loss/Gain Type', default='margin',
@@ -131,7 +133,11 @@ class LCReceivablePayment(models.Model):
             if rec.lc_receivable_charges_ids:
                 total_charges_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_charges_ids)
 
-            rec.currency_loss_gain_amount = rec.amount_in_company_currency - (total_collection_amount + total_charges_amount)
+            rec.currency_loss_gain_amount = (total_collection_amount + total_charges_amount) - rec.amount_in_company_currency
+
+            if -1 < rec.currency_loss_gain_amount < 1:
+                rec.currency_loss_gain_amount = 0
+
             if rec.currency_loss_gain_amount >= rec.amount_in_company_currency:
                 rec.currency_loss_gain_amount = 0.0
             if rec.currency_loss_gain_amount < 0:
@@ -285,6 +291,7 @@ class LCReceivablePayment(models.Model):
 
     def _generate_debit_move_line(self,account_move_id,line):
         date = self.date
+        amount_currency = 0.0
         if 'account_journal_id' in line:
             account_id = line.account_journal_id.default_debit_account_id.id
             name = line.account_journal_id.name
@@ -311,6 +318,7 @@ class LCReceivablePayment(models.Model):
             # 'partner_id': acc_inv_line_obj.partner_id.id,
             'move_id': account_move_id,
             'company_id': self.company_id.id,
+            # 'amount_currency': amount_currency,
         }
         # account_move_line_obj.create(account_move_line_debit)
         return account_move_line_debit
@@ -368,8 +376,9 @@ class LCReceivableCollection(models.Model):
                                          domain="[('type', '=', 'bank')]")
     currency_id = fields.Many2one('res.currency', string='Currency',required=True)
     currency_rate = fields.Float(string='Currency Rate',required=True)
-    amount_in_currency = fields.Float(string='Amount In Currency',required=True)
-    amount_in_company_currency = fields.Float(string='Base Amount',compute='_compute_rate_amounts',store=True)
+    amount_in_currency = fields.Float(string='Amount In Currency',required=True,digits=dp.get_precision('Account'))
+    amount_in_company_currency = fields.Float(string='Base Amount',compute='_compute_rate_amounts',
+                                              digits=dp.get_precision('Account'),store=True)
 
     @api.onchange('account_journal_id')
     def _onchange_account_journal_id(self):
@@ -415,9 +424,9 @@ class LCReceivableCharges(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency'
                                   ,required=True)
     currency_rate = fields.Float(string='Currency Rate',required=True)
-    amount_in_currency = fields.Float(string='Amount In Currency',required=True)
+    amount_in_currency = fields.Float(string='Amount In Currency',required=True,digits=dp.get_precision('Account'))
     amount_in_company_currency = fields.Float(string='Base Amount',compute='_compute_rate_amounts',
-                                              store=True)
+                                              store=True,digits=dp.get_precision('Account'))
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

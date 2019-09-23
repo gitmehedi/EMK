@@ -1,5 +1,5 @@
 {
-    'name': 'Account Receivable Auto Set',
+    'name': 'Account Journal Log',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'accounts',
@@ -7,13 +7,14 @@
     'depends': [
         'account',
     ],
-
     'data': [
+        'views/inherit_account_move_view.xml',
+        'views/inherit_account_move_line_view.xml',
     ],
 
-    'summary': 'Account Receivable Auto Set',
+    'summary': 'Account Journal Log',
     'description':
-    """When creating new customers, setting Receivable account automatically""",
+    """Creating log for journal item""",
     'installable': True,
     'application': False,
 }

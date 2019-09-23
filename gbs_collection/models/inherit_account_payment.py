@@ -1,8 +1,10 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class InheritAccountPayment(models.Model):
-    _inherit = 'account.payment'
+    # _inherit = 'account.payment'
+    _name = 'account.payment'
+    _inherit = ['account.payment', 'mail.thread']
 
     sale_order_id = fields.Many2many('sale.order', string='Sale Order',
                                     readonly=True,
@@ -27,6 +29,17 @@ class InheritAccountPayment(models.Model):
     payment_transaction_id = fields.Many2one('payment.transaction', string="Payment Transaction",readonly=True,states={'draft': [('readonly', False)]})
 
     is_entry_receivable_cleared_payments = fields.Boolean(string='Is this payments cleared receivable?')
+
+    # for log
+    partner_id = fields.Many2one('res.partner', string='Partner', track_visibility='always')
+    amount = fields.Monetary(string='Payment Amount', required=True, track_visibility='always')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
+                                  default=lambda self: self.env.user.company_id.currency_id, track_visibility='onchange')
+    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, track_visibility='onchange')
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True,
+                                 domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
+                             readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
 
     @api.multi
     def post(self):

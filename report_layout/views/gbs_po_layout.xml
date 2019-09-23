@@ -56,8 +56,8 @@
 
     <template id="gbs_po_layout_footer">
         <div class="footer">
-            <p class="text-center">
-                This is a computer-generated copy, hence no signature is required.
+            <p class="text-center" style="height:20px;">
+                <span>This is a computer-generated copy, hence no signature is required.</span>
             </p>
             <div class="text-left" style="font-size: 10px; color: ash;">
                 <div class="row">
@@ -69,11 +69,6 @@
                                 <span t-if="company.fax and company.phone">&amp;bull;</span>
                                 <span t-if="company.fax">Fax: <span t-field="company.fax"/></span>
                             </li>
-
-<!--                            <li t-if="company.fax and company.phone">&amp;bull;</li>-->
-<!--                            <li t-if="company.fax">Fax:-->
-<!--                                <span t-field="company.fax"/>-->
-<!--                            </li>-->
 
                             <li t-if="company.email">Email:
                                 <span t-field="company.email"/>
