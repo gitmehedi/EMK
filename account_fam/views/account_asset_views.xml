@@ -99,11 +99,11 @@
                 <page string="Depreciation History">
                     <field name="depreciation_line_ids" mode="tree" options="{'reload_whole_on_button': true}">
                         <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
-                            <field name="depreciation_date" string="Date"/>
+                            <field name="depreciation_date"/>
                             <field name="days"/>
-                            <field name="amount" widget="monetary" string="Depreciation"/>
+                            <field name="amount" widget="monetary"/>
                             <field name="depreciated_value" readonly="1"/>
-                            <field name="remaining_value" readonly="1" widget="monetary" string="WDV at Date"/>
+                            <field name="remaining_value" readonly="1" widget="monetary"/>
                             <field name="move_check" invisible="1"/>
                             <field name="move_posted_check" invisible="1"/>
                             <field name="parent_state" invisible="1"/>

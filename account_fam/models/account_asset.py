@@ -54,7 +54,8 @@ class AccountAssetAsset(models.Model):
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
-    accumulated_value = fields.Float(string='Accumulated Depreciation', track_visibility='onchange', readonly=True,
+    accumulated_value = fields.Float(string='Accumulated Depreciation', compute="_compute_accumulated_value",
+                                     track_visibility='onchange', readonly=True,
                                      states={'draft': [('readonly', False)]})
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
@@ -85,10 +86,21 @@ class AccountAssetAsset(models.Model):
         if self.depreciation_year:
             self.method_number = int(12 * self.depreciation_year)
 
+    @api.one
+    @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount')
+    def _compute_accumulated_value(self):
+        self.accumulated_value = self.value - self.value_residual
+
     @api.onchange("name")
     def onchange_strips(self):
         if self.name:
             self.name = self.name.strip()
+
+    @api.multi
+    def all_asset_validate(self):
+        assets = self.search([('state', '=', 'open')])
+        for asset in assets:
+            asset.validate()
 
     @api.multi
     def validate(self):
@@ -328,6 +340,9 @@ class AccountAssetDepreciationLine(models.Model):
     days = fields.Integer(string='Days', required=True)
     line_type = fields.Selection([('depreciation', 'Depreciation'), ('sale', 'Sale'), ('dispose', 'Dispose')],
                                  default='depreciation', required=True, string="Line Type")
+    amount = fields.Float(string='Depreciation')
+    remaining_value = fields.Float(string='WDV at Date')
+    depreciation_date = fields.Date('Date')
 
     @api.multi
     def create_move(self, post_move=True):

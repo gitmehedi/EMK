@@ -1,0 +1,5 @@
+Partner,Date,Account,Branch,Journal,Reference,Invoice Lines/Product,Invoice Lines/Description,Invoice Lines/Branch,Invoice Lines/Account,Invoice Lines/Quantity,Invoice Lines/Unit Price,Invoice Lines/TDS,Invoice Lines/VAT
+T. K. Group,2019-04-09,Sundry Deposits,Principal Branch,Vendor Bill,TK1234516,Rent,Rent,Principal Branch,MD House Rent,2,30000,TDS Flat 5%,VAT 2.00%
+,,,,,,Electricity Charge,Electricity Charge,Principal Branch,Electicity Charges,3,35000,,
+,,,,,,Rent,Rent,Ulipur Branch,MD House Rent,1,40000,,
+,,,,,,Rent,Rent,Sylhet Branch,MD House Rent,1,50000,,
