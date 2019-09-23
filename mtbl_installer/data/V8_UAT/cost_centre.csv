@@ -1,0 +1,31 @@
+Name,Code,Active,Pending,Status
+Retail Finance Business Unit 1,601,True,False,approve
+Retail Finance Business Unit 2,602,True,False,approve
+Retail Finance processing,603,True,False,approve
+NRB,620,True,False,approve
+Privilige Gulshan Centre,651,True,False,approve
+Privilige Uttara Centre,652,True,False,approve
+Corporate Unit 1,701,True,False,approve
+Corporate Unit 2,702,True,False,approve
+Corporate Unit 3 <Synd. & struc Fin.>,703,True,False,approve
+SME Unit 1,801,True,False,approve
+SME Unit 2,802,True,False,approve
+SME Unit 3,803,True,False,approve
+Agent Banking Centre,901,True,False,approve
+Audit,902,True,False,approve
+Cards Division,903,True,False,approve
+Contact Centre,904,True,False,approve
+Group Finance,905,True,False,approve
+HO CTG Airport Lounge,906,True,False,approve
+HO HSIA Lounge,907,True,False,approve
+IT,908,True,False,approve
+Legal,909,True,False,approve
+MITS Chattogram,910,True,False,approve
+MITS Dhaka,911,True,False,approve
+MITS Motijheel,912,True,False,approve
+Operations Central Clearing,913,True,False,approve
+Operations CPU,914,True,False,approve
+Operations HO,915,True,False,approve
+SWIFT,916,True,False,approve
+Treasury,917,True,False,approve
+HO Miscellaneous,999,True,False,approve
