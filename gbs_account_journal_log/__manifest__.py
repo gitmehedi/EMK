@@ -1,18 +1,20 @@
 {
-    'name': 'Account Payable Auto Set',
+    'name': 'Account Journal Log',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'accounts',
     'version': '10.1.1.1',
     'depends': [
-        'gbs_account_receivable_auto_set',
+        'account',
     ],
     'data': [
+        'views/inherit_account_move_view.xml',
+        'views/inherit_account_move_line_view.xml',
     ],
 
-    'summary': 'Account Payable Auto Set',
+    'summary': 'Account Journal Log',
     'description':
-    """When creating new customers, setting Payable account automatically""",
+    """Creating log for journal item""",
     'installable': True,
     'application': False,
 }

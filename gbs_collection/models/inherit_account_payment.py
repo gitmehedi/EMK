@@ -31,7 +31,6 @@ class InheritAccountPayment(models.Model):
     is_entry_receivable_cleared_payments = fields.Boolean(string='Is this payments cleared receivable?')
 
     # for log
-    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], track_visibility='onchange')
     partner_id = fields.Many2one('res.partner', string='Partner', track_visibility='always')
     amount = fields.Monetary(string='Payment Amount', required=True, track_visibility='always')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
