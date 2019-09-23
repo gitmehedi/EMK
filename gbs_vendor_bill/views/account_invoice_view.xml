@@ -163,7 +163,7 @@
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
             <!--<xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">-->
-                <!--<attribute name="groups">base.group_system</attribute>-->
+            <!--<attribute name="groups">base.group_system</attribute>-->
             <!--</xpath>-->
         </field>
     </record>
@@ -190,12 +190,42 @@
             <xpath expr="//field[@name='origin']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='number']" position="attributes">
+                <attribute name="string">Bill No</attribute>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="after">
+                <field name="user_id" string="User Id"/>
+            </xpath>
             <xpath expr="//field[@name='amount_total_signed']" position="after">
                 <field name="amount_tax" string="VAT"/>
             </xpath>
         </field>
     </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">gbs.account.invoice.search</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_by_partner_id']" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_partner_id']" position="after">
+                <filter string="Service" name="vendor_service"
+                        context="{'group_by': 'entity_service_id'}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="account.action_invoice_tree2" model="ir.actions.act_window">
+        <field name="context">
+            {'default_type': 'in_invoice',
+            'type': 'in_invoice',
+            'journal_type': 'purchase',
+            'search_default_draft':1,
+            }
+        </field>
+    </record>
 </odoo>
-<!--icon="fa fa-thumbs-up text-success"-->
-<!--icon="fa fa-thumbs-down text-danger"-->
-<!--icon="fa fa-undo text-warning"-->
+        <!--icon="fa fa-thumbs-up text-success"-->
+        <!--icon="fa fa-thumbs-down text-danger"-->
+        <!--icon="fa fa-undo text-warning"-->

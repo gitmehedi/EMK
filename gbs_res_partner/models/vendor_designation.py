@@ -136,10 +136,3 @@ class HistoryVendorDesignation(models.Model):
     line_id = fields.Many2one('vendor.designation', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
-
-
-class InheritResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    designation_id = fields.Many2one('vendor.designation', string="Designation")
-

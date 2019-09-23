@@ -257,7 +257,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'open')]
+        return [('state', '=', 'draft')]
 
     @api.model
     def _get_invoice_line_key_cols(self):

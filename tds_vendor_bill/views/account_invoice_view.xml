@@ -37,6 +37,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='amount_tax']" position="after">
                 <field name="total_tds_amount" string="TDS"/>
+                <field name="security_deposit"/>
             </xpath>
         </field>
     </record>

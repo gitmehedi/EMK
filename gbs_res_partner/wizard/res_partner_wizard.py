@@ -42,6 +42,7 @@ class ResPartnerWizard(models.TransientModel):
     entity_services = fields.Many2many('entity.service', 'service_partner_wizard_rel', 'service_id',
                                        'res_partner_wizard_id',string='Service')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
+    contact_person = fields.Char(string='Contact Person')
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -134,6 +135,7 @@ class ResPartnerWizard(models.TransientModel):
              'upazila_id': self.upazila_id.id,
              'postal_code': self.postal_code.id,
              'designation_id': self.designation_id.id,
+             'contact_person': self.contact_person,
              'entity_services': [(6, 0, self.entity_services.ids)],
              'request_date': fields.Datetime.now(),
              'line_id': id})

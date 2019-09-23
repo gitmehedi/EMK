@@ -62,6 +62,7 @@
                 </header>
             </xpath>
             <xpath expr="//field[@name='function']" position="replace">
+                <field name="contact_person"/>
                 <field name="designation_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
             </xpath>
             <xpath expr="//field[@name='tin']" position="after">
