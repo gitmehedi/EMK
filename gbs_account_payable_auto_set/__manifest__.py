@@ -5,7 +5,7 @@
     'category': 'accounts',
     'version': '10.1.1.1',
     'depends': [
-        'account',
+        'gbs_account_receivable_auto_set',
     ],
     'data': [
     ],
