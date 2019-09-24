@@ -148,7 +148,7 @@
                                     </tr>
                                     <t t-if="data['amount_discount']">
                                         <tr>
-                                            <td><strong>Discount</strong> (<span t-esc="data['amount_discount']"/> %) </td><td class="text-right"><span t-esc="data['total_discount']"/></td>
+                                            <td><strong>Discount</strong></td><td class="text-right"><span t-esc="data['total_discount']"/></td>
                                         </tr>
                                     </t>
                                     <t t-if="data['amount_after_discount']">
@@ -158,7 +158,7 @@
                                     </t>
                                     <t t-if="data['amount_vat']">
                                         <tr>
-                                            <td><strong>Vat</strong> (<span t-esc="data['amount_vat']" /> %) </td><td class="text-right"><span t-esc="data['total_vat']" /></td>
+                                            <td><strong>Tax</strong> (<span t-esc="data['amount_vat']" /> %) </td><td class="text-right"><span t-esc="data['total_vat']" /></td>
                                         </tr>
                                     </t>
                                     <tr>
