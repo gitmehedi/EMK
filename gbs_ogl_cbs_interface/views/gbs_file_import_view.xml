@@ -21,7 +21,7 @@
             <field name="arch" type="xml">
                 <form string="Import Data">
                     <header>
-                        <button name="gbs_file_import.action_gbs_file_import_wizard"
+                        <button name="gbs_ogl_cbs_interface.action_gbs_file_import_wizard"
                                 groups="mtbl_access.group_mtbl_sys_admin"
                                 type="action" string="Browse" class="oe_highlight"/>
                         <button name="action_process" attrs="{'invisible': [('import_lines','=', [])]}"

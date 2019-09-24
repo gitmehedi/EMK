@@ -22,7 +22,8 @@
             <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="replace">
                 <button name="%(gbs_reverse_bill.action_account_invoice_reverse)d" type='action' string='Reverse'
                         groups="account.group_account_manager"
-                        attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open'))]}"/>
+                        attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),
+                        ('state','not in',('open','paid'))]}"/>
             </xpath>
         </field>
     </record>
