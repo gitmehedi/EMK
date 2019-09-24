@@ -1,14 +1,7 @@
-import os, shutil, base64, traceback, logging
+import os
 from random import randint
 from odoo import api, models, fields, _
 from datetime import datetime
-
-
-_logger = logging.getLogger(__name__)
-try:
-    import pysftp
-except ImportError:  # pragma: no cover
-    _logger.debug('Cannot import pysftp')
 
 
 class GBSFileImport(models.Model):
@@ -60,7 +53,6 @@ class GBSFileImport(models.Model):
         return True if os.path.exists(file_path) else False
 
 
-
 class GBSFileImportLine(models.Model):
     _name = 'gbs.file.import.line'
 
@@ -83,6 +75,5 @@ class GBSFileImportLine(models.Model):
         ('debit_gen', 'Debit Gen'),
 
     ], string='Type')
-
 
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
