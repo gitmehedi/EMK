@@ -323,6 +323,83 @@ class AccountAssetAsset(models.Model):
                 }
             }
 
+    @api.multi
+    def set_to_close(self,date):
+        for asset in self:
+            if asset.allocation_status and asset.state == 'open' and asset.depreciation_flag:
+                last_depr_date = asset._get_last_depreciation_date()
+                curr_depr_date = self.date_depr_format(date)
+                no_of_days = (curr_depr_date - self.date_str_format(last_depr_date[asset['id']])).days
+                depr_amount = asset.value_residual
+                book_val_amount = asset.value_residual - depr_amount
+
+                vals = {
+                    'amount': asset.value_residual,
+                    'asset_id': self.id,
+                    'sequence': 1,
+                    'name': (asset.code or '') + '/' + str(1),
+                    'remaining_value': abs(book_val_amount),
+                    'depreciated_value': asset.value_residual,
+                    'depreciation_date': curr_depr_date.date(),
+                    'days': no_of_days,
+                    'asset_id': asset.id,
+                }
+
+                depreciation = asset.depreciation_line_ids.create(vals)
+                if depreciation:
+                    if asset.create_move(depreciation):
+                        asset.write({'lst_depr_date': curr_depr_date.date()})
+                        return True
+        # asset.message_post(subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'),
+        #                    tracking_value_ids=tracking_value_ids)
+        #     unposted_depreciation_line_ids = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
+        #     if unposted_depreciation_line_ids:
+        #         old_values = {
+        #             'method_end': asset.method_end,
+        #             'method_number': asset.method_number,
+        #         }
+        #
+        #         # Remove all unposted depr. lines
+        #         commands = [(2, line_id.id, False) for line_id in unposted_depreciation_line_ids]
+        #
+        #         # Create a new depr. line with the residual amount and post it
+        #         sequence = len(asset.depreciation_line_ids) - len(unposted_depreciation_line_ids) + 1
+        #         today = datetime.today().strftime(DF)
+        #         vals = {
+        #             'amount': asset.value_residual,
+        #             'asset_id': asset.id,
+        #             'sequence': sequence,
+        #             'name': (asset.code or '') + '/' + str(sequence),
+        #             'remaining_value': 0,
+        #             'depreciated_value': asset.value - asset.salvage_value,  # the asset is completely depreciated
+        #             'depreciation_date': today,
+        #         }
+        #         commands.append((0, False, vals))
+        #         asset.write({'depreciation_line_ids': commands, 'method_end': today, 'method_number': sequence})
+        #         tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_end'])
+        #         changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
+        #         if changes:
+        #             asset.message_post(subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'), tracking_value_ids=tracking_value_ids)
+        #         move_ids += asset.depreciation_line_ids[-1].create_move(post_move=False)
+        # if move_ids:
+        #     name = _('Disposal Move')
+        #     view_mode = 'form'
+        #     if len(move_ids) > 1:
+        #         name = _('Disposal Moves')
+        #         view_mode = 'tree,form'
+        #     return {
+        #         'name': name,
+        #         'view_type': 'form',
+        #         'view_mode': view_mode,
+        #         'res_model': 'account.move',
+        #         'type': 'ir.actions.act_window',
+        #         'target': 'current',
+        #         'res_id': move_ids[0],
+        #     }
+        # # Fallback, as if we just clicked on the smartbutton
+        # return self.open_entries()
+
+
     def date_depr_format(self, date):
         no_of_days = calendar.monthrange(date.year, date.month)[1]
         return date.replace(day=no_of_days)

@@ -2,6 +2,10 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning
+from datetime import datetime
+from odoo.tools import float_compare, float_is_zero
+
+DATE_FORMAT = "%Y-%m-%d"
 
 
 class AccountAssetDisposal(models.Model):
@@ -12,7 +16,7 @@ class AccountAssetDisposal(models.Model):
 
     name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
     total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
-    total_depr_amount = fields.Float(string='Depreciation Value', compute='_compute_total_depr_amount',
+    total_depr_amount = fields.Float(string='Total Accumulated Depr.', compute='_compute_total_depr_amount',
                                      track_visibility='onchange')
     request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now,
                                    readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
@@ -63,16 +67,66 @@ class AccountAssetDisposal(models.Model):
     def action_dispose(self):
         if self.state == 'approve':
             for rec in self.line_ids:
-                rec.asset_id.set_to_close()
-                for depr in rec.asset_id.depreciation_line_ids:
-                    if depr.move_id.state == 'draft':
-                        depr.move_id.post()
-                    if round(depr.amount, 2) == rec.asset_value:
-                        rec.write({'journal_entry': 'post', 'move_id': depr.move_id.id})
+                date = datetime.strptime(fields.Datetime.now()[:10], DATE_FORMAT)
+                dispose = self.generate_move(rec.asset_id)
+                if dispose.state == 'draft':
+                    dispose.post()
+                    rec.write({'journal_entry': 'post', 'move_id': dispose.id})
+                    response = rec.asset_id.set_to_close(date)
 
             self.state = 'dispose'
             self.dispose_date = fields.Datetime.now()
             self.dispose_user_id = self.env.user.id
+
+    def generate_move(self, asset):
+        prec = self.env['decimal.precision'].precision_get('Account')
+        company_currency = asset.company_id.currency_id
+        current_currency = asset.currency_id
+
+        credit = {
+            'name': asset.display_name,
+            'account_id': asset.asset_type_id.account_asset_id.id,
+            'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+            'debit': 0.0,
+            'journal_id': asset.asset_type_id.journal_id.id,
+            'operating_unit_id': asset.current_branch_id.id,
+            'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+            'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+        }
+
+        debit = {
+            'name': asset.display_name,
+            'account_id': asset.asset_type_id.account_depreciation_id.id,
+            'credit': 0.0,
+            'debit': asset.accumulated_value if float_compare(asset.accumulated_value, 0.0, precision_digits=prec) > 0 else 0.0,
+            'journal_id': asset.asset_type_id.journal_id.id,
+            'operating_unit_id': asset.current_branch_id.id,
+            'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+            'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+        }
+
+        debit2 = {
+            'name': asset.display_name,
+            'account_id': asset.asset_type_id.account_asset_loss_id.id,
+            'credit': 0.0,
+            'debit': asset.value_residual if float_compare(asset.value_residual, 0.0, precision_digits=prec) > 0 else 0.0,
+            'journal_id': asset.asset_type_id.journal_id.id,
+            'operating_unit_id': asset.current_branch_id.id,
+            'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+            'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
+            'currency_id': company_currency != current_currency and current_currency.id or False,
+        }
+
+        return self.env['account.move'].create({
+            'ref': asset.code,
+            'date': fields.Datetime.now() or False,
+            'journal_id': asset.category_id.journal_id.id,
+            'operating_unit_id': asset.current_branch_id.id,
+            'sub_operating_unit_id': asset.sub_operating_unit_id.id,
+            'line_ids': [(0, 0, credit), (0, 0, debit), (0, 0, debit2)],
+        })
 
     @api.multi
     def unlink(self):
@@ -93,7 +147,7 @@ class AccountAssetDisposalLine(models.Model):
     asset_id = fields.Many2one('account.asset.asset', required=True, string='Asset Name')
     cost_value = fields.Float(related='asset_id.value', string='Cost Value', required=True, digits=(14, 2))
     asset_value = fields.Float(string='WDV', required=True, digits=(14, 2))
-    depreciation_value = fields.Float(string='Depreciation Value', required=True, digits=(14, 2))
+    depreciation_value = fields.Float(string='Accumulated Depr.', required=True, digits=(14, 2))
 
     dispose_id = fields.Many2one('account.asset.disposal', string='Disposal', ondelete='restrict')
     journal_entry = fields.Selection([('unpost', 'Unposted'), ('post', 'Posted')], default='unpost', requried=True)

@@ -23,11 +23,10 @@ class AssetAllocationWizard(models.TransientModel):
     def default_date(self):
         asset_id = self.env.context.get('active_id', False)
         asset = self.env['account.asset.asset'].browse(asset_id)
-        if len(asset.asset_allocation_ids.ids) > 0:
-            print('')
-            return fields.Datetime.now()
-        else:
+        if asset.asset_usage_date and len(asset.asset_allocation_ids.ids) == 0:
             return asset.asset_usage_date
+        else:
+            return fields.Datetime.now()
 
     asset_user = fields.Char("Asset User")
     date = fields.Date(string='Allocation/Transfer Date', required=True, default=default_date)

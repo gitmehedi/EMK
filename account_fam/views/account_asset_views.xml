@@ -194,6 +194,7 @@
                       decoration-bf="(state == 'open')"
                       decoration-info="(state == 'open') and (allocation_status == False)"
                       decoration-success="(state == 'open') and (allocation_status == True)"
+                      decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
                       decoration-muted="(state == 'close')">
                     <field name="asset_seq"/>
                     <field name="name"/>

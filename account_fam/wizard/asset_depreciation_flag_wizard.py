@@ -17,7 +17,11 @@ class AssetDepreciationFlagWizard(models.TransientModel):
     def depreciation(self):
         for rec in self._context['active_ids']:
             asset = self.env['account.asset.asset'].browse(rec)
-            flag = True if self.flag == 'stop' else False
-            asset.write({'depreciation_flag': flag})
+            if asset.state=='open' and asset.allocation_status==True:
+                flag = True if self.flag == 'stop' else False
+                asset.write({'depreciation_flag': flag})
+            else:
+                name = asset.asset_seq if asset.asset_seq else asset.name
+                raise ValidationError(_('Asset [{0}] should in Running status.'.format(name)))
 
         return {'type': 'ir.actions.act_window_close'}
