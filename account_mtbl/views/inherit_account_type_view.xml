@@ -37,6 +37,8 @@
                                 <group>
                                     <field name="include_initial_balance"
                                            groups="base.group_system"/>
+                                    <field name="maker_id" invisible="1"/>
+                                    <field name="approver_id" invisible="1"/>
                                 </group>
                             </group>
                             <separator string="Description"/>
