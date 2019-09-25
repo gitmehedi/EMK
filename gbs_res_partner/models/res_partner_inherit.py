@@ -69,6 +69,8 @@ class ResPartner(models.Model):
                                        string='Service', readonly=True,
                                        states={'draft': [('readonly', False)]},
                                        track_visibility='onchange')
+    designation_id = fields.Many2one('vendor.designation', string="Designation")
+    contact_person = fields.Char(string='Contact Person')
 
     @api.one
     def act_draft(self):
@@ -124,6 +126,7 @@ class ResPartner(models.Model):
                 self.district_id = self.district_id if not requested.district_id.id else requested.district_id.id
                 self.upazila_id = self.upazila_id if not requested.upazila_id.id else requested.upazila_id.id
                 self.postal_code = self.postal_code if not requested.postal_code.id else requested.postal_code.id
+                self.contact_person = self.contact_person if not requested.contact_person else requested.contact_person
                 self.designation_id = self.designation_id if not requested.designation_id.id else \
                     requested.designation_id.id
                 if requested.entity_services:
@@ -289,3 +292,4 @@ class HistoryResPartner(models.Model):
     entity_services = fields.Many2many('entity.service', 'service_partner_history_rel', 'service_id',
                                        'res_partner_history_id', string='Service')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
+    contact_person = fields.Char(string='Contact Person')

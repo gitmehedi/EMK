@@ -46,6 +46,8 @@ class Branch(models.Model):
                 raise Warning('[Unique Error] Code must be unique!')
             if not self.code.isdigit():
                 raise Warning(_('[Format Error] Code must be numeric!'))
+            if len(self.code) != 3:
+                raise Warning('[Format Error] Code must be 3 character!')
 
     @api.one
     def act_draft(self):

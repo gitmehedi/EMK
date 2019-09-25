@@ -17,6 +17,7 @@
     "data": [
         "security/security.xml",
         "security/ir.model.access.csv",
+        "wizards/gbs_file_import_wizard_view.xml",
         "data/default_data.xml",
         "data/ir_cron.xml",
         "data/mail_message_subtype.xml",
@@ -29,6 +30,7 @@
         "views/cbs_batch_process_success_view.xml",
         "views/cbs_batch_process_view.xml",
         "views/payment_instruction_view.xml",
+        "views/gbs_file_import_view.xml",
     ],
     "application": True,
     "installable": True,

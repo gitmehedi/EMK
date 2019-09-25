@@ -274,6 +274,7 @@
                 <field name="partner_id" groups="base.group_user" string="Vendor"/>
                 <field name="date_invoice" string="Bill Date"/>
                 <field name="number"/>
+                <field name="user_id" string="User Id"/>
                 <field name="commercial_partner_id" invisible="1"/>
                 <field name="reference" invisible="1"/>
                 <field name="name" invisible="1"/>
@@ -285,6 +286,7 @@
                 <field name="amount_total_signed" string="Total" sum="Total"/>
                 <field name="amount_tax" string="VAT" sum="VAT"/>
                 <field name="total_tds_amount" string="TDS" sum="TDS"/>
+                <field name="security_deposit"/>
                 <field name="residual_signed" string="To Pay" sum="To Pay"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="company_currency_id" invisible="1"/>
@@ -300,9 +302,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1)]</field>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1)
+            ,('state','in',('draft','open','paid'))]</field>
         <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type': 'in_invoice',
-            'journal_type': 'purchase'}
+            'journal_type': 'purchase','search_default_draft':1,}
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
@@ -337,6 +340,6 @@
               parent="sub_assets_vendor_menu" name="Assets Vendor Bills" sequence="5"/>
 
     <record id="account.action_invoice_tree2" model="ir.actions.act_window">
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',0)]</field>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',0),('state','in',('draft','open','paid'))]</field>
     </record>
 </odoo>
