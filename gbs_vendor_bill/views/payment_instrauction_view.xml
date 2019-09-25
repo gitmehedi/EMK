@@ -82,6 +82,9 @@
                 <field name="vendor_bank_acc"/>
                 <field name="operating_unit_id"/>
                 <field name="sub_operating_unit_id"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Not Synced" name="is_sync" domain="[('is_sync','=',False)]"/>
+                <filter string="Synced" domain="[('is_sync','=',True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Vendor Bill" context="{'group_by':'invoice_id'}"/>
                     <filter string="Vendor" context="{'group_by':'partner_id'}"/>
@@ -97,11 +100,27 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="payment_instruction_bill_search"/>
         <field name="domain">[('invoice_id', '!=', False)]</field>
+        <field name="context">{'search_default_draft':1}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Payment instruction is empty.
             </p>
         </field>
+    </record>
+
+
+    <record model="ir.actions.act_window.view" id="action_bill_payment_instruction_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment_instruction_bill_form"/>
+        <field name="act_window_id" ref="action_payment_instruction_bill"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_bill_payment_instruction_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="payment_instruction_bill_tree"/>
+        <field name="act_window_id" ref="action_payment_instruction_bill"/>
     </record>
 
     <menuitem
