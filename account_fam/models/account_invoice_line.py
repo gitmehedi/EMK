@@ -14,9 +14,9 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('asset_category_id')
     def onchange_asset_category_id(self):
         if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.account_asset_id.id
+            self.account_id = self.asset_category_id.asset_suspense_account_id.id
         elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.account_asset_id.id
+            self.account_id = self.asset_category_id.asset_suspense_account_id.id
 
     @api.one
     def asset_create(self):

@@ -148,6 +148,7 @@
                                     <field name="total_tds_amount" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('is_tds_applicable', '=', False)]}"
                                            widget="monetary"/>
+                                    <field name="security_deposit" widget="monetary"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
