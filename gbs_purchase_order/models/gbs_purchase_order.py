@@ -23,7 +23,7 @@ class PurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
-    @api.depends('order_line.price_total','amount_discount','amount_vat')
+    @api.depends('order_line.price_total','amount_discount')
     def _amount_all(self):
         for order in self:
             amount_untaxed = amount_tax = 0.0
@@ -37,14 +37,13 @@ class PurchaseOrder(models.Model):
                 else:
                     amount_tax += line.price_tax
 
-            amount_after_discount = amount_untaxed - order.amount_discount
-            amount_vat = amount_after_discount * (order.amount_vat / 100)
+            amount_after_discount = amount_untaxed + amount_tax - order.amount_discount
             order.update({
                 'amount_untaxed': amount_untaxed,
                 'amount_tax': amount_tax,
-                'amount_after_vat': amount_after_discount + amount_vat,
+                'amount_after_tax': amount_untaxed + amount_tax,
                 'amount_after_discount': amount_after_discount,
-                'amount_total': amount_untaxed + amount_tax + amount_vat - order.amount_discount
+                'amount_total': amount_untaxed + amount_tax - order.amount_discount
             })
 
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New', track_visibility='onchange')
@@ -81,15 +80,17 @@ class PurchaseOrder(models.Model):
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all',
                                      track_visibility='always')
 
-    amount_tax = fields.Monetary(string='Product VAT', store=True, readonly=True, compute='_amount_all')
-    amount_vat = fields.Float(string='TAX(%)')
+    amount_tax = fields.Monetary(string='VAT', store=True, readonly=True, compute='_amount_all')
+    amount_vat = fields.Float(string='TDS(%)')
+    is_tds_applicable = fields.Boolean(string='TDS Applicable', default=False)
 
 
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
-    amount_discount = fields.Float(string='Discount')
-    amount_after_discount = fields.Monetary(string='After Discount', store=True, readonly=True,compute='_amount_all')
-    amount_after_vat = fields.Monetary(string='After Vat', store=True, readonly=True,compute='_amount_all')
+    amount_discount = fields.Float(string='Write-off')
+    amount_after_tax = fields.Monetary(string='After VAT', store=True, readonly=True, compute='_amount_all')
+    amount_after_discount = fields.Monetary(string='After Write-off', store=True, readonly=True,compute='_amount_all')
+    amount_after_vat = fields.Monetary(string='After TAX', store=True, readonly=True,compute='_amount_all')
     terms_condition = fields.Text(string='Terms & Conditions', readonly=True,
                                   states={'draft': [('readonly', False)]})
 
