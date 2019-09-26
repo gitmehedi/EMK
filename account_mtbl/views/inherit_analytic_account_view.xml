@@ -37,6 +37,10 @@
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="maker_id" invisible="1"/>
+                    <field name="approver_id" invisible="1"/>
+                </xpath>
                 <xpath expr="//field[@name='operating_unit_ids']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                     <attribute name="groups">base.group_system</attribute>

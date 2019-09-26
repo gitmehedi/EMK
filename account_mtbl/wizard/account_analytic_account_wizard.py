@@ -43,5 +43,5 @@ class AccountAnalyticAccountWizard(models.TransientModel):
         record = self.env['account.analytic.account'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})
 
