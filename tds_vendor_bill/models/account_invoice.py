@@ -24,11 +24,12 @@ class AccountInvoice(models.Model):
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
     @api.one
-    @api.depends('invoice_line_ids.tds_amount', 'is_tds_applicable')
+    @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount', 'is_tds_applicable')
     def _compute_total_tds(self):
         for invoice in self:
             if invoice.is_tds_applicable:
-                invoice.total_tds_amount = sum(line.tds_amount for line in invoice.invoice_line_ids)
+                invoice.total_tds_amount = sum(line.tds_amount for line in invoice.invoice_line_ids
+                                               if line.account_tds_id)
 
     @api.model
     def create(self, vals):
@@ -41,14 +42,14 @@ class AccountInvoice(models.Model):
     @api.multi
     def _write(self, vals):
         res = super(AccountInvoice, self)._write(vals)
-        if vals.get('invoice_line_ids', False):
+        if vals.get('invoice_line_ids', False) or vals.get('is_tds_applicable', False):
             if self.is_tds_applicable:
                 self._update_tds()
                 self._update_tax_line_vals()
-        # if self.is_tds_applicable is False:
-        #     for tax_line_obj in self.tax_line_ids:
-        #         if tax_line_obj.tds_id:
-        #             tax_line_obj.unlink()
+            elif self.is_tds_applicable is False:
+                for tax_line_obj in self.tax_line_ids:
+                    if tax_line_obj.tds_id:
+                        tax_line_obj.unlink()
         return res
 
     # @api.onchange('is_tds_applicable')

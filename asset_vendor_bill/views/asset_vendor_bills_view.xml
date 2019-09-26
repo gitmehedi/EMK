@@ -61,8 +61,7 @@
                             <field name="date_invoice" string="Bill Date"/>
                             <field name="is_tds_applicable"/>
                             <field name="inapplicable_type"
-                                   attrs="{'invisible':[('is_tds_applicable','=',True)],
-                                   'required': [('is_tds_applicable', '=', False)]}"/>
+                                   attrs="{'invisible':[('is_tds_applicable','=',True)]}"/>
                             <field name="date_due" groups="base.group_system"/>
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}"
