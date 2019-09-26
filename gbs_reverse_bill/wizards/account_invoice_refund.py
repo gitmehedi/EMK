@@ -27,7 +27,7 @@ class AccountInvoiceReverse(models.TransientModel):
         ac_move_line_ids = self.env['account.move.line'].search([('invoice_id', '=', self._context.get('active_id'))])
         ac_move_ids = self.env['account.move'].search([('id', '=', ac_move_line_ids and ac_move_line_ids[0].move_id.id)])
         acc_invoice = ac_move_line_ids[0].mapped('invoice_id')
-        if ac_move_ids:
+        if acc_invoice.state == "open" and ac_move_ids:
             if self.reverse_option == 'op1' and not acc_invoice.payment_line_ids:
                 self.env['account.move'].browse(ac_move_ids.ids).reverse_moves(date, journal_id or False)
                 return acc_invoice.write({'state': 'cancel', 'move_id': False})

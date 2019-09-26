@@ -20,7 +20,7 @@ class AccountInvoice(models.Model):
     total_tds_amount = fields.Float('Total TDS', compute='_compute_total_tds',
                                     store=True, readonly=True, track_visibility='always', copy=False)
 
-    tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines', oldname='tax_line',
+    tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='VAT', oldname='tax_line',
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
     @api.one

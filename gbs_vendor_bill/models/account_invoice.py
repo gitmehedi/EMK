@@ -306,6 +306,7 @@ class AccountInvoiceLine(models.Model):
     sub_operating_unit_id = fields.Many2one('sub.operating.unit',string='Sub Operating Unit')
 
     quantity = fields.Float(digits=0)
+    invoice_line_tax_ids = fields.Many2many(string='VAT')
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
