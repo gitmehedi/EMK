@@ -45,6 +45,10 @@ class AccountInvoice(models.Model):
             if self.is_tds_applicable:
                 self._update_tds()
                 self._update_tax_line_vals()
+        # if self.is_tds_applicable is False:
+        #     for tax_line_obj in self.tax_line_ids:
+        #         if tax_line_obj.tds_id:
+        #             tax_line_obj.unlink()
         return res
 
     # @api.onchange('is_tds_applicable')
@@ -150,7 +154,7 @@ class AccountInvoiceLine(models.Model):
     @api.multi
     def _calculate_tds_value(self, pre_invoice_line_list=None):
         # for line in self:
-        if self.invoice_id.is_tds_applicable and self.product_id:
+        if self.invoice_id.is_tds_applicable and self.name:
             # pro_base_val = self.quantity * self.price_unit
             pro_base_val = self.price_subtotal_without_vat
             if self.account_tds_id.type_rate == 'flat':
