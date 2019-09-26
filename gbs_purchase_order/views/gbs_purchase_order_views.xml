@@ -87,9 +87,15 @@
                     <xpath expr="//field[@name='origin']" position="attributes">
                         <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
                     </xpath>
+                    <xpath expr="//field[@name='origin']" position="after">
+                        <field name="is_tds_applicable" attrs="{'readonly': [('state', 'in', ['purchase','done'])]}"/>
+                    </xpath>
                     <xpath expr="//field[@name='product_uom']" position="replace">
                         <field name="product_uom" groups="product.group_uom" invisible="1"/>
                         <field name="product_uom_view" groups="product.group_uom"/>
+                    </xpath>
+                    <xpath expr="//field[@name='taxes_id']" position="replace">
+                        <field name="taxes_id" string="VAT" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
                     </xpath>
                     <xpath expr="//field[@name='order_line']" position="attributes">
                         <attribute name="attrs">{'readonly': [('state', 'in', ['purchase','done'])]}</attribute>
@@ -114,10 +120,11 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
 
-                    <xpath expr="//field[@name='amount_untaxed']" position="after">
+                    <xpath expr="//field[@name='amount_tax']" position="after">
+                        <field name="amount_after_tax"/>
                         <field name="amount_discount"/>
-                        <field name="amount_after_discount"/>
-                        <field name="amount_vat"/>
+                        <field name="amount_after_discount" invisible="1"/>
+                        <field name="amount_vat" invisible="1"/>
                         <field name="amount_after_vat" invisible="1"/>
                     </xpath>
                 </data>
