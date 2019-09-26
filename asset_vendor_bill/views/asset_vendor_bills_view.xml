@@ -201,8 +201,6 @@
                                     <field name="amount"/>
                                     <field name="currency_id"/>
                                     <field name="state" invisible="1"/>
-                                    <button name="action_approve" string="Approve" type="object"
-                                            class="oe_highlight" states="draft"/>
                                     <field name="is_sync" invisible="1"/>
                                     <button name="sync" string="Sync" type="action"
                                             icon="fa fa-check text-success"

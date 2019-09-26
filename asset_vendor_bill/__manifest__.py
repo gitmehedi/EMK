@@ -15,6 +15,7 @@
     ],
     'data': [
         'views/asset_vendor_bills_view.xml',
+        'views/payment_instrauction_view.xml',
     ],
     'installable': True,
     'application': True,
