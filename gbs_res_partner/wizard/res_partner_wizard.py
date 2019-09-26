@@ -44,13 +44,13 @@ class ResPartnerWizard(models.TransientModel):
     designation_id = fields.Many2one('vendor.designation', string="Designation")
     contact_person = fields.Char(string='Contact Person')
 
-    @api.constrains('name')
-    def _check_unique_constrain(self):
-        if self.name:
-            name = self.env['res.partner'].search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
+    # @api.constrains('name')
+    # def _check_unique_constrain(self):
+    #     if self.name:
+    #         name = self.env['res.partner'].search(
+    #             [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+    #         if len(name) > 1:
+    #             raise Warning('[Unique Error] Name must be unique!')
 
     @api.constrains('mobile')
     def _check_numeric_constrain(self):
