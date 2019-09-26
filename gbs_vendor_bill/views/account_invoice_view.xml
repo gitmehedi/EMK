@@ -80,7 +80,7 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="before">
-                <field name="entity_service_id" string="Service"
+                <field name="entity_service_id" string="Service" domain="[('type','=','service')]"
                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">

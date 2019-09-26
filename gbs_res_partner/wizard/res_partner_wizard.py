@@ -39,8 +39,8 @@ class ResPartnerWizard(models.TransientModel):
     district_id = fields.Many2one('bd.district', string='District')
     upazila_id = fields.Many2one('bd.upazila', string='Upazila/Thana')
     postal_code = fields.Many2one('bd.postal.code', 'Postal Code')
-    entity_services = fields.Many2many('entity.service', 'service_partner_wizard_rel', 'service_id',
-                                       'res_partner_wizard_id',string='Service')
+    entity_services = fields.Many2many('product.product', 'service_vendor_wizard_rel', 'service_id',
+                                       'vendor_wizard_id',string='Service')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
     contact_person = fields.Char(string='Contact Person')
 
