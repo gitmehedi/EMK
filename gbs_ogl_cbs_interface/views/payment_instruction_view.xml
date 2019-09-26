@@ -125,7 +125,7 @@
 
     <menuitem name="Payment Instructions"
               id="payment_instruction_menu"
-              parent="account.main_payment_instruction_interface"
+              parent="main_payment_instruction_interface"
               action="act_payment_instruction"
               sequence="10"/>
 </odoo>
