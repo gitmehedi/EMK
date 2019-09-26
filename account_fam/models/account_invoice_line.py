@@ -11,12 +11,12 @@ class AccountInvoiceLine(models.Model):
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', ondelete="restrict")
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Category', ondelete="restrict")
 
-    @api.onchange('asset_category_id')
-    def onchange_asset_category_id(self):
-        if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.asset_suspense_account_id.id
-        elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.asset_suspense_account_id.id
+    @api.onchange('asset_type_id')
+    def onchange_asset_type_id(self):
+        if self.invoice_id.type == 'out_invoice' and self.asset_type_id:
+            self.account_id = self.asset_type_id.asset_suspense_account_id.id
+        elif self.invoice_id.type == 'in_invoice' and self.asset_type_id:
+            self.account_id = self.asset_type_id.asset_suspense_account_id.id
 
     @api.one
     def asset_create(self):

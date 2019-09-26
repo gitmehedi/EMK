@@ -8,11 +8,14 @@
             <xpath expr="//button[@name='action_invoice_open']" position="attributes">
                 <attribute name="groups">account.group_account_manager</attribute>
             </xpath>
+            <xpath expr="//button[@name='action_invoice_draft']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="attributes">
                 <attribute name="string">Branch</attribute>
             </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="after">
-                <field name="sub_operating_unit_id"
+                <field name="sub_operating_unit_id" invisible="1"
                        options="{'no_create': True}" widget="selection"
                        groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
@@ -61,9 +64,9 @@
             <field name="reference" position="after">
                 <field name="vat_selection"/>
             </field>
-            <field name="amount_tax" position="after">
-                <field name="security_deposit" widget="monetary"/>
-            </field>
+            <!--<field name="amount_tax" position="after">-->
+                <!--<field name="security_deposit" widget="monetary"/>-->
+            <!--</field>-->
             <xpath expr="//field[@name='date']" position="after">
                 <field name="security_deposit_account_id"
                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
@@ -77,7 +80,7 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="before">
-                <field name="entity_service_id" string="Service"
+                <field name="entity_service_id" string="Service" domain="[('type','=','service')]"
                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">

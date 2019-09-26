@@ -1,6 +1,0 @@
-Service,Partner,Vendor Reference,VAT Selection,Date,TDS Applicable,Branch,Sub Operating Unit,Journal,Responsible,Account,Is Provisional Expense,Security Deposit Account,Security Deposit,Invoice Lines/Product,Invoice Lines/Description,Invoice Lines/Branch,Invoice Lines/Sub Operating Unit,Invoice Lines/Cost Centre,Invoice Lines/Account,Invoice Lines/Quantity,Invoice Lines/Unit Price,Invoice Lines/TDS,Invoice Lines/VAT
-,T. K. Group,123456,General,2019-04-09,True,Principal Branch,Principal Branch ATM 1,Vendor Bill,MTBL Admin 1,Sundry Deposits,FALSE,Security Deposit,,Rent,Rent,Principal Branch,Principal Branch ATM 1,NRB,MD House Rent,2,30000,TDS Flat 5%,VAT 2.00%
-,,,,,,,,,,,,,,Electricity Charge,Electricity Charge,Principal Branch,Principal Branch ATM 1,,Electrical Equipments,3,35000,,
-,,,,,,,,,,,,,,Rent,Rent,Ulipur Branch,,,MD House Rent,1,40000,,
-,,,,,,,,,,,,,,Rent,Rent,Sylhet Branch,,,MD House Rent,1,50000,,
-Technical,Ryans Computers Limited,r12345678,General,2019-22-09,FALSE,Principal Branch,Principal Branch ATM 1,Vendor Bill,MTBL Admin 1,Sundry Deposits,FALSE,Security Deposit,500,,Computer Monitor,Principal Branch,Principal Branch ATM 1,NRB,Computers & Peripherals,1,45000,TDS Flat 5%,VAT 2.00%

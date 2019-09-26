@@ -20,15 +20,16 @@ class AccountInvoice(models.Model):
     total_tds_amount = fields.Float('Total TDS', compute='_compute_total_tds',
                                     store=True, readonly=True, track_visibility='always', copy=False)
 
-    tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines', oldname='tax_line',
+    tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='VAT', oldname='tax_line',
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
     @api.one
-    @api.depends('invoice_line_ids.tds_amount', 'is_tds_applicable')
+    @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount', 'is_tds_applicable')
     def _compute_total_tds(self):
         for invoice in self:
             if invoice.is_tds_applicable:
-                invoice.total_tds_amount = sum(line.tds_amount for line in invoice.invoice_line_ids)
+                invoice.total_tds_amount = sum(line.tds_amount for line in invoice.invoice_line_ids
+                                               if line.account_tds_id)
 
     @api.model
     def create(self, vals):
@@ -41,10 +42,14 @@ class AccountInvoice(models.Model):
     @api.multi
     def _write(self, vals):
         res = super(AccountInvoice, self)._write(vals)
-        if vals.get('invoice_line_ids', False):
+        if vals.get('invoice_line_ids', False) or vals.get('is_tds_applicable', False):
             if self.is_tds_applicable:
                 self._update_tds()
                 self._update_tax_line_vals()
+            elif self.is_tds_applicable is False:
+                for tax_line_obj in self.tax_line_ids:
+                    if tax_line_obj.tds_id:
+                        tax_line_obj.unlink()
         return res
 
     # @api.onchange('is_tds_applicable')
@@ -102,7 +107,7 @@ class AccountInvoice(models.Model):
             if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
                 vals = {
                     'invoice_id': self.id,
-                    'name': line.account_tds_id.name + '/' + line.product_id.name,
+                    'name': line.account_tds_id.name + '/' + line.name,
                     'tds_id': line.account_tds_id.id,
                     'amount': line.tds_amount,
                     'manual': False,
@@ -150,7 +155,7 @@ class AccountInvoiceLine(models.Model):
     @api.multi
     def _calculate_tds_value(self, pre_invoice_line_list=None):
         # for line in self:
-        if self.invoice_id.is_tds_applicable and self.product_id:
+        if self.invoice_id.is_tds_applicable and self.name:
             # pro_base_val = self.quantity * self.price_unit
             pro_base_val = self.price_subtotal_without_vat
             if self.account_tds_id.type_rate == 'flat':

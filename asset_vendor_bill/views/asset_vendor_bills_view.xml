@@ -17,7 +17,7 @@
                     <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
                             groups="account.group_account_invoice"/>
                     <button name="action_invoice_draft" states="cancel" string="Set to draft" type="object"
-                            groups="account.group_account_invoice"/>
+                            groups="base.group_system"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid"/>
                 </header>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
@@ -61,8 +61,7 @@
                             <field name="date_invoice" string="Bill Date"/>
                             <field name="is_tds_applicable"/>
                             <field name="inapplicable_type"
-                                   attrs="{'invisible':[('is_tds_applicable','=',True)],
-                                   'required': [('is_tds_applicable', '=', False)]}"/>
+                                   attrs="{'invisible':[('is_tds_applicable','=',True)]}"/>
                             <field name="date_due" groups="base.group_system"/>
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}"
@@ -161,6 +160,9 @@
                         <page string="Other Info">
                             <group>
                                 <group>
+                                    <field name="operating_unit_id"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                           groups="operating_unit.group_multi_operating_unit"/>
                                     <field name="journal_id" groups="account.group_account_user"
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                            attrs="{'readonly':[('move_name','!=',False)]}"/>
@@ -187,6 +189,8 @@
                                            groups="base.group_multi_company"/>
                                     <field name="provisional_expense"/>
                                     <field name="merged_bill" groups="base.group_system"/>
+                                    <field name="security_deposit_account_id"
+                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 </group>
                             </group>
                         </page>
@@ -201,8 +205,6 @@
                                     <field name="amount"/>
                                     <field name="currency_id"/>
                                     <field name="state" invisible="1"/>
-                                    <button name="action_approve" string="Approve" type="object"
-                                            class="oe_highlight" states="draft"/>
                                     <field name="is_sync" invisible="1"/>
                                     <button name="sync" string="Sync" type="action"
                                             icon="fa fa-check text-success"

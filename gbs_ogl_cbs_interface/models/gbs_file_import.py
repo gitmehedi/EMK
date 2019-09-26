@@ -25,8 +25,8 @@ class GBSFileImport(models.Model):
         unique = str(randint(100, 999))
         filename = "File_" + record_date + process_date + unique + ".txt"
         current_path = os.path.dirname(os.path.realpath(__file__))
-        if not os.path.exists(current_path[:-6]+'/file_folder'):
-            os.makedirs(current_path[:-6]+'/file_folder')
+        if not os.path.exists(current_path[:-6]+'file_folder'):
+            os.makedirs(current_path[:-6]+'file_folder')
             path = current_path[:-6]+'file_folder'
         else:
             path = current_path[:-6]+'file_folder'

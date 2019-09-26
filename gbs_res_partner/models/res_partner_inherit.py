@@ -65,7 +65,7 @@ class ResPartner(models.Model):
     postal_code = fields.Many2one('bd.postal.code','Postal Code',readonly=True,
                               states={'draft': [('readonly', False)]},
                               track_visibility='onchange')
-    entity_services = fields.Many2many('entity.service', 'service_partner_rel','service_id','partner_id',
+    entity_services = fields.Many2many('product.product', 'service_vendor_rel','service_id','vendor_id',
                                        string='Service', readonly=True,
                                        states={'draft': [('readonly', False)]},
                                        track_visibility='onchange')
@@ -289,7 +289,7 @@ class HistoryResPartner(models.Model):
     district_id = fields.Many2one('bd.district', string='District')
     upazila_id = fields.Many2one('bd.upazila', string='Upazila/Thana')
     postal_code = fields.Many2one('bd.postal.code', 'Postal Code')
-    entity_services = fields.Many2many('entity.service', 'service_partner_history_rel', 'service_id',
-                                       'res_partner_history_id', string='Service')
+    entity_services = fields.Many2many('product.product', 'service_vendor_history_rel', 'service_id',
+                                       'vendor_history_id', string='Service')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
     contact_person = fields.Char(string='Contact Person')

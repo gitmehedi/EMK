@@ -11,7 +11,9 @@
                     <div name="sundry_account">
                         <div>
                             <label for="sundry_account_id"/>
-                            <field name="sundry_account_id" class="oe_inline"/>
+                            <field name="sundry_account_id" domain="[('internal_type','=','other')]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                   class="oe_inline"/>
                         </div>
                     </div>
                 </group>
