@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, Warning
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -56,6 +56,7 @@ class AssetAllocationWizard(models.TransientModel):
             company_currency = asset.company_id.currency_id
             current_currency = asset.currency_id
             sub_operating_unit = self.sub_operating_unit_id.id if self.sub_operating_unit_id else None
+            cur_sub_operating_unit = asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else False
 
             if asset.sub_operating_unit_id.id == sub_operating_unit:
                 raise ValidationError(_("Same branch transfer shouldn\'t possible."))
@@ -85,112 +86,120 @@ class AssetAllocationWizard(models.TransientModel):
                     'state': 'active',
                 })
 
-            if self.env.context.get('allocation') and not asset.allocation_status:
-                credit = {
-                    'name': asset.display_name,
-                    'account_id': asset.category_id.asset_suspense_account_id.id,
-                    'debit': 0.0,
-                    'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'analytic_account_id': self.cost_centre_id.id,
-                    'currency_id': company_currency != current_currency and current_currency.id or False,
-                }
-                debit = {
-                    'name': asset.display_name,
-                    'account_id': asset.category_id.account_asset_id.id,
-                    'debit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
-                    'credit': 0.0,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'analytic_account_id': self.cost_centre_id.id,
-                    'currency_id': company_currency != current_currency and current_currency.id or False,
-                }
+            if asset.state == 'open' and not asset.depreciation_flag:
+                if self.env.context.get('allocation') and not asset.allocation_status:
+                    credit = {
+                        'name': asset.display_name,
+                        'account_id': asset.asset_type_id.asset_suspense_account_id.id,
+                        'debit': 0.0,
+                        'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                        'journal_id': asset.category_id.journal_id.id,
+                        'operating_unit_id': self.operating_unit_id.id,
+                        'sub_operating_unit_id': cur_sub_operating_unit,
+                        'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else False,
+                        'currency_id': company_currency != current_currency and current_currency.id or False,
+                    }
+                    debit = {
+                        'name': asset.display_name,
+                        'account_id': asset.asset_type_id.account_asset_id.id,
+                        'debit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                        'credit': 0.0,
+                        'journal_id': asset.category_id.journal_id.id,
+                        'operating_unit_id': self.to_operating_unit_id.id,
+                        'sub_operating_unit_id': sub_operating_unit,
+                        'analytic_account_id': self.cost_centre_id.id,
+                        'currency_id': company_currency != current_currency and current_currency.id or False,
+                    }
 
-                move = self.env['account.move'].create({
-                    'ref': asset.code,
-                    'date': self.date or False,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'line_ids': [(0, 0, debit), (0, 0, credit)],
-                })
+                    move = self.env['account.move'].create({
+                        'ref': asset.code,
+                        'date': self.date or False,
+                        'journal_id': asset.category_id.journal_id.id,
+                        'operating_unit_id': self.operating_unit_id.id,
+                        'sub_operating_unit_id': cur_sub_operating_unit,
+                        'line_ids': [(0, 0, debit), (0, 0, credit)],
+                    })
 
-                assetmove = asset_move(asset)
-                assetmove.write({'move_id': move.id})
-                if move.state == 'draft':
-                    move.post()
-                asset.write({'allocation_status': True,
-                             'current_branch_id': self.to_operating_unit_id.id,
-                             'sub_operating_unit_id': sub_operating_unit,
-                             'asset_usage_date': self.date})
+                    assetmove = asset_move(asset)
+                    assetmove.write({'move_id': move.id})
+                    if move.state == 'draft':
+                        move.post()
+                    asset.write({'allocation_status': True,
+                                 'current_branch_id': self.to_operating_unit_id.id,
+                                 'sub_operating_unit_id': sub_operating_unit,
+                                 'asset_usage_date': self.date,
+                                 'cost_centre_id': self.cost_centre_id.id
+                                 })
 
-            elif not self.env.context.get('allocation') and asset.allocation_status:
-                from_total_credit = {
-                    'name': asset.display_name,
-                    'account_id': asset.category_id.account_asset_id.id,
-                    'debit': 0.0,
-                    'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'analytic_account_id': self.cost_centre_id.id,
-                    'currency_id': company_currency != current_currency and current_currency.id or False,
-                }
-                to_total_debit = {
-                    'name': asset.display_name,
-                    'account_id': asset.category_id.account_asset_id.id,
-                    'debit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
-                    'credit': 0.0,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'analytic_account_id': self.cost_centre_id.id,
-                    'currency_id': company_currency != current_currency and current_currency.id or False,
-                }
+                elif not self.env.context.get('allocation') and asset.allocation_status:
+                    from_total_credit = {
+                        'name': asset.display_name,
+                        'account_id': asset.category_id.account_asset_id.id,
+                        'debit': 0.0,
+                        'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                        'journal_id': asset.asset_type_id.journal_id.id,
+                        'operating_unit_id': self.operating_unit_id.id,
+                        'sub_operating_unit_id': sub_operating_unit,
+                        'analytic_account_id': asset.cost_centre_id.id,
+                        'currency_id': company_currency != current_currency and current_currency.id or False,
+                    }
+                    to_total_debit = {
+                        'name': asset.display_name,
+                        'account_id': asset.asset_type_id.account_asset_id.id,
+                        'debit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+                        'credit': 0.0,
+                        'journal_id': asset.category_id.journal_id.id,
+                        'operating_unit_id': self.to_operating_unit_id.id,
+                        'sub_operating_unit_id': sub_operating_unit,
+                        'analytic_account_id': self.cost_centre_id.id,
+                        'currency_id': company_currency != current_currency and current_currency.id or False,
+                    }
 
-                depr_value = asset.value - asset.value_residual
-                from_depr_credit = {
-                    'name': asset.display_name,
-                    'account_id': asset.category_id.account_depreciation_id.id,
-                    'debit': 0.0,
-                    'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'analytic_account_id': self.cost_centre_id.id,
-                    'currency_id': company_currency != current_currency and current_currency.id or False,
-                }
-                to_depr_debit = {
-                    'name': asset.display_name,
-                    'account_id': asset.category_id.account_depreciation_id.id,
-                    'debit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
-                    'credit': 0.0,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'analytic_account_id': self.cost_centre_id.id,
-                    'currency_id': company_currency != current_currency and current_currency.id or False,
-                }
+                    depr_value = asset.value - asset.value_residual
+                    from_depr_credit = {
+                        'name': asset.display_name,
+                        'account_id': asset.asset_type_id.account_depreciation_id.id,
+                        'debit': 0.0,
+                        'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
+                        'journal_id': asset.category_id.journal_id.id,
+                        'operating_unit_id': self.to_operating_unit_id.id,
+                        'sub_operating_unit_id': sub_operating_unit,
+                        'analytic_account_id': self.cost_centre_id.id,
+                        'currency_id': company_currency != current_currency and current_currency.id or False,
+                    }
+                    to_depr_debit = {
+                        'name': asset.display_name,
+                        'account_id': asset.asset_type_id.account_depreciation_id.id,
+                        'debit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
+                        'credit': 0.0,
+                        'journal_id': asset.category_id.journal_id.id,
+                        'operating_unit_id': self.operating_unit_id.id,
+                        'sub_operating_unit_id': sub_operating_unit,
+                        'analytic_account_id': asset.cost_centre_id.id,
+                        'currency_id': company_currency != current_currency and current_currency.id or False,
+                    }
 
-                move = self.env['account.move'].create({
-                    'ref': asset.code,
-                    'date': self.date or False,
-                    'journal_id': asset.category_id.journal_id.id,
-                    'operating_unit_id': self.to_operating_unit_id.id,
-                    'sub_operating_unit_id': sub_operating_unit,
-                    'line_ids': [(0, 0, from_total_credit), (0, 0, to_total_debit),
-                                 (0, 0, from_depr_credit), (0, 0, to_depr_debit)],
-                })
+                    move = self.env['account.move'].create({
+                        'ref': asset.code,
+                        'date': self.date or False,
+                        'journal_id': asset.category_id.journal_id.id,
+                        'operating_unit_id': self.operating_unit_id.id,
+                        'sub_operating_unit_id': cur_sub_operating_unit,
+                        'line_ids': [(0, 0, from_total_credit), (0, 0, to_total_debit),
+                                     (0, 0, from_depr_credit), (0, 0, to_depr_debit)],
+                    })
 
-                assetmove = asset_move(asset)
-                assetmove.write({'move_id': move.id})
-                if move.state == 'draft':
-                    move.post()
-                asset.write({'current_branch_id': self.to_operating_unit_id.id,
-                             'sub_operating_unit_id': sub_operating_unit,
-                             })
-
+                    assetmove = asset_move(asset)
+                    assetmove.write({'move_id': move.id})
+                    if move.state == 'draft':
+                        move.post()
+                    asset.write({'current_branch_id': self.to_operating_unit_id.id,
+                                 'sub_operating_unit_id': sub_operating_unit,
+                                 'cost_centre_id': self.cost_centre_id.id
+                                 })
+            else:
+                flag = 'Active' if asset.depreciation_flag else 'In-Active'
+                raise Warning(_('Asset [{0}] is in Status [{1}] with Depreciation Flag [{2}]'.format(asset.display_name,
+                                                                                                     asset.state,
+                                                                                                     flag)))
         return {'type': 'ir.actions.act_window_close'}

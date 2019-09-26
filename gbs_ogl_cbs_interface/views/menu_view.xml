@@ -9,4 +9,8 @@
               web_icon="account_fam,static/description/icon.png" parent="account.menu_finance_configuration"
               groups="grp_api_interface_manager"/>
 
+    <menuitem id="main_payment_instruction_interface" name="Payment Instruction" sequence="100"
+              web_icon="account_fam,static/description/icon.png" parent="account.menu_finance_configuration"
+              groups="grp_api_interface_manager"/>
+
 </odoo>

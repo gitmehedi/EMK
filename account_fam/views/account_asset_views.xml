@@ -8,15 +8,19 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="duplicate">0</attribute>
                 <attribute name="delete">false</attribute>
+                <attribute name="create">false</attribute>
             </xpath>
-
-            <xpath expr="//form/header/button[5]" position="after">
-                <button name="%(action_asset_allocation_wizard)d" string="Allocation" class="oe_highlight"
-                        type="action" context="{'allocation':'True'}"
-                        attrs="{'invisible': ['|',('allocation_status','=', True),('state','!=', 'open')]}"/>
-                <button name="%(action_asset_allocation_wizard)d" string="Transfer" class="oe_highlight"
-                        type="action" context="{'transfer':'True'}"
-                        attrs="{'invisible': ['|',('allocation_status','=', False),('state','!=', 'open')]}"/>
+            <xpath expr="//form/header" position="replace">
+                <header>
+                    <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="%(action_asset_allocation_wizard)d" string="Allocation" class="oe_highlight"
+                            type="action" context="{'allocation':'True'}"
+                            attrs="{'invisible': ['|',('allocation_status','=', True),('state','!=', 'open')]}"/>
+                    <button name="%(action_asset_allocation_wizard)d" string="Transfer" class="oe_highlight"
+                            type="action" context="{'transfer':'True'}"
+                            attrs="{'invisible': ['|',('allocation_status','=', False),('state','!=', 'open')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                </header>
             </xpath>
             <xpath expr="//form/sheet/div[2]" position="replace">
                 <div class="oe_title">
@@ -25,8 +29,10 @@
                     </h1>
                 </div>
             </xpath>
-            <xpath expr="//button[@name='set_to_close']" position="attributes">
-                <attribute name="invisible">True</attribute>
+            <xpath expr="//form/sheet/div/button[@name='open_entries']" position="replace">
+                <button class="oe_stat_button" name="open_entries" type="object" icon="fa-pencil">
+                    <field string="Depr. Journals" name="entry_count" widget="statinfo"/>
+                </button>
             </xpath>
             <xpath expr="//field[@name='code']" position="attributes">
                 <attribute name="invisible">True</attribute>
@@ -190,8 +196,7 @@
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Assets" delete="false"
-                      decoration-bf="(state == 'open')"
+                <tree string="Assets" delete="false" create="false"
                       decoration-info="(state == 'open') and (allocation_status == False)"
                       decoration-success="(state == 'open') and (allocation_status == True)"
                       decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
@@ -199,11 +204,13 @@
                     <field name="asset_seq"/>
                     <field name="name"/>
                     <field name="category_id"/>
+                    <field name="asset_type_id"/>
                     <field name="date"/>
+                    <field name="asset_usage_date"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="value" widget="monetary" sum="value"/>
-                    <field name="accumulated_value" widget="monetary"/>
                     <field name="value_residual" widget="monetary"/>
+                    <field name="accumulated_value" widget="monetary"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="True"/>
                     <field name="depreciation_flag" invisible="True"/>
@@ -234,9 +241,13 @@
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <group string="Group By...">
                         <filter string="Current" name="state" domain="[('state','in', ('draft','open'))]"/>
+                        <filter string="Confirmed"  domain="[('state','=', 'open'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
+                        <filter string="Allocated"  domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', False)]"/>
+                        <filter string="Dispose or Sale" domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', True)]"/>
                         <filter string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
                         <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Computation Method" domain="[('state','=', 'open')]" context="{'group_by':'method'}"/>
                     </group>
                 </search>
             </xpath>
