@@ -102,7 +102,7 @@ class AccountInvoice(models.Model):
             if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
                 vals = {
                     'invoice_id': self.id,
-                    'name': line.account_tds_id.name + '/' + line.product_id.name,
+                    'name': line.account_tds_id.name + '/' + line.name,
                     'tds_id': line.account_tds_id.id,
                     'amount': line.tds_amount,
                     'manual': False,
