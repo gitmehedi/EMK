@@ -17,3 +17,6 @@ class AccountInvoice(models.Model):
             if True in [i.is_asset for i in self]:
                 self.browse(res).write({'is_asset':True})
         return res
+
+
+
