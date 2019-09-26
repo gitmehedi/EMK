@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="replace">
                 <form string="Modify Assets">
-                    <group string="Asset Durations to Modify">
+                    <group>
                         <group>
                             <field name="asset_method_time" invisible="1"/>
                             <field name="method"/>
@@ -21,7 +21,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="modify" string="Modify" type="object" class="btn-primary"/>
+                        <button name="modify" string="Change Method" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>

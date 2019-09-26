@@ -55,8 +55,7 @@ class AccountAssetAsset(models.Model):
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
     accumulated_value = fields.Float(string='Accumulated Depreciation', compute="_compute_accumulated_value",
-                                     track_visibility='onchange', readonly=True,
-                                     states={'draft': [('readonly', False)]})
+                                     track_visibility='onchange')
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
                                      track_visibility='onchange', readonly=True,
@@ -86,10 +85,11 @@ class AccountAssetAsset(models.Model):
         if self.depreciation_year:
             self.method_number = int(12 * self.depreciation_year)
 
-    @api.one
+    @api.multi
     @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount')
     def _compute_accumulated_value(self):
-        self.accumulated_value = self.value - self.value_residual
+        for rec in self:
+            rec.accumulated_value = rec.value - rec.value_residual
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -269,7 +269,9 @@ class AccountAssetAsset(models.Model):
                 'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id if category_id.journal_id else False,
                 'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
-                'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+                'analytic_account_id': line.asset_id.cost_centre_id.id if line.asset_id.cost_centre_id else False,
+                'operating_unit_id': line.asset_id.current_branch_id.id,
+                'sub_operating_unit_id': line.asset_id.sub_operating_unit_id.id if line.asset_id.sub_operating_unit_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
@@ -280,7 +282,9 @@ class AccountAssetAsset(models.Model):
                 'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id if category_id.journal_id else False,
                 'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
-                'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
+                'analytic_account_id': line.asset_id.cost_centre_id.id if line.asset_id.cost_centre_id else False,
+                'operating_unit_id': line.asset_id.current_branch_id.id,
+                'sub_operating_unit_id': line.asset_id.sub_operating_unit_id.id if line.asset_id.sub_operating_unit_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and line.amount or 0.0,
             }
@@ -324,7 +328,7 @@ class AccountAssetAsset(models.Model):
             }
 
     @api.multi
-    def set_to_close(self,date):
+    def set_to_close(self, date):
         for asset in self:
             if asset.allocation_status and asset.state == 'open' and asset.depreciation_flag:
                 last_depr_date = asset._get_last_depreciation_date()
@@ -398,7 +402,6 @@ class AccountAssetAsset(models.Model):
         #     }
         # # Fallback, as if we just clicked on the smartbutton
         # return self.open_entries()
-
 
     def date_depr_format(self, date):
         no_of_days = calendar.monthrange(date.year, date.month)[1]
