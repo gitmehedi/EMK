@@ -17,7 +17,7 @@
     </record>
 
     <record id="action_asset_depreciation_wizard" model="ir.actions.act_window">
-        <field name="name">Fixed Assets Depreciation</field>
+        <field name="name">Execute Assets Depreciation</field>
         <field name="res_model">asset.depreciation.wizard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
@@ -25,7 +25,7 @@
         <field name="view_id" ref="asset_depreciation_wizard_form"/>
         <field name="target">new</field>
     </record>
-    <menuitem id="main_fixed_asset_depreciation_menu" name="Fixed Asset Depreciation"
+    <menuitem id="main_fixed_asset_depreciation_menu" name="Execute Asset Depreciation"
               parent="sub_assets_menu" sequence="50" action="action_asset_depreciation_wizard"
               groups="grp_fixasset_manager"/>
 </odoo>

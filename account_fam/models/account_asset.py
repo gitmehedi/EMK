@@ -62,7 +62,7 @@ class AccountAssetAsset(models.Model):
                                      states={'draft': [('readonly', False)]})
     note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
     allocation_status = fields.Boolean(string='Allocation Status', track_visibility='onchange', default=False)
-    depreciation_flag = fields.Boolean(string='Depreciation Flag', track_visibility='onchange', default=False)
+    depreciation_flag = fields.Boolean(string='Awaiting Disposal', track_visibility='onchange', default=False)
     lst_depr_date = fields.Date(string='Last Depr. Date', readonly=True, track_visibility='onchange')
 
     @api.model
@@ -255,7 +255,7 @@ class AccountAssetAsset(models.Model):
         if line:
             if line.move_id:
                 raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
-            category_id = line.asset_id.category_id
+            category_id = line.asset_id.asset_type_id
             depreciation_date = self.env.context.get(
                 'depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id

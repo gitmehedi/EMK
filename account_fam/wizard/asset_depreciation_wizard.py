@@ -13,8 +13,9 @@ class AssetDepreciationWizard(models.TransientModel):
 
     @api.multi
     def depreciate(self):
-        for rec in self._context['active_ids']:
-            asset = self.env['account.asset.asset'].browse(rec)
+        assets = self.env['account.asset.asset'].search(
+            [('state', '=', 'open'), ('depreciation_flag', '=', False), ('allocation_status', '=', True)])
+        for asset in assets:
             date = datetime.strptime(self.date, "%Y-%m-%d")
             asset.compute_depreciation_history(date, asset)
 

@@ -79,7 +79,6 @@
                            attrs="{'invisible': [('type','=','sale')]}"/>
                     <field name="accumulated_value" widget="monetary" options="{'currency_field': 'currency_id'}"
                            attrs="{'invisible': [('type','=','sale')]}"/>
-                    <field name="advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="warranty_date"/>
                     <field name="model_name"/>
                 </group>
@@ -236,7 +235,7 @@
                     <field name="date" string="Purchase Date"/>
                     <field name="category_id" string="Category"/>
                     <field name="state" string="Status"/>
-                    <field name="depreciation_flag" string="Depreciation Flag"/>
+                    <field name="depreciation_flag" string="Awaiting Disposal"/>
                     <field name="allocation_status" string="Allocation Status"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <group string="Group By...">
