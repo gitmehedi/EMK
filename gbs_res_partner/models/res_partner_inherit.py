@@ -238,7 +238,7 @@ class ResPartner(models.Model):
             if not self.nid.isdigit():
                 raise Warning('[Format Error] NID must be numeric!')
 
-    # """ All functions """
+    """ All functions """
     # @api.constrains('name')
     # def _check_unique_name(self):
     #     if self.name:

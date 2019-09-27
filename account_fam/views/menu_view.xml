@@ -7,9 +7,7 @@
     <menuitem id="sub_assets_menu" name="Fixed Assets" sequence="10"
               parent="account_fam.main_fixed_asset_menu" groups=""/>
 
-    <menuitem id="main_fixed_asset_depreciation_menu" name="Fixed Asset Depreciation"
-              parent="sub_assets_menu" sequence="50" action="action_asset_depreciation_wizard"
-              groups="grp_fixasset_manager"/>
+
 
     <record id="account_asset.menu_action_account_asset_asset_form" model="ir.ui.menu">
         <field name="parent_id" eval="ref('account_fam.sub_assets_menu')"/>
