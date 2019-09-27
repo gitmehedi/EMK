@@ -37,6 +37,7 @@ body, html {
     float: none;
     background-color: #FFF;
     opacity: 0.9;
+    box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .5);
 }
 
 #background-wrapper {
@@ -107,14 +108,21 @@ a.btn-select:hover {
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0);
 }
+.o_database_list > div {
+    text-align:center;
+    margin: 0 auto 50px;
+    border-radius: 3px;
+    padding: 10px;
+    display: block;
+}
 
 .o_database_list .company_logo {
-	margin-bottom: 50px;
-	max-width: 100%;
+    max-width: 100%;
     height: auto;
+    display: block;
 }
 
 .oe_login_buttons {
 	margin-top: 30px;
-	margin-bottom: 10px;
+	margin-bottom: 0;
 }
