@@ -10,18 +10,23 @@
                     <attribute name="create">0</attribute>
                     <attribute name="edit">0</attribute>
                 </xpath>
+                <xpath expr="//button[@name='open_reconcile_view']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
                 <xpath expr="//field[@name='operating_unit_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>>
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="required">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='line_ids']/tree//field[@name='account_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>>
-                    <attribute name="domain">[('level_id.name', '=', 'Layer 5')]</attribute>>
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="domain">[('level_id.name', '=', 'Layer 5')]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='line_ids']/tree//field[@name='operating_unit_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>>
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="required">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='line_ids']/tree//field[@name='analytic_account_id']" position="attributes">
-                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>>
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                     <attribute name="string">Cost Centre</attribute>
                 </xpath>
                 <xpath expr="//sheet/notebook/page/field/tree/field[@name='partner_id']" position="attributes">
@@ -67,16 +72,22 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <search string="Search Move">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]"
+                           string="Move"/>
                     <field name="date"/>
                     <filter string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                     <filter string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                     <separator/>
-                    <filter string="Sales" domain="[('journal_id.type','=','sale')]" context="{'default_journal_type': 'sale'}"/>
-                    <filter string="Purchases" domain="[('journal_id.type','=','purchase')]" context="{'default_journal_type': 'purchase'}"/>
-                    <filter string="Bank Operations" domain="[('journal_id.type','=','bank')]" context="{'default_journal_type': 'bank'}"/>
-                    <filter string="Cash Operations" domain="[('journal_id.type','=','cash')]" context="{'default_journal_type': 'cash'}"/>
-                    <filter string="Miscellaneous Operations" domain="[('journal_id.type','=','general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
+                    <filter string="Sales" domain="[('journal_id.type','=','sale')]"
+                            context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" domain="[('journal_id.type','=','purchase')]"
+                            context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank Operations" domain="[('journal_id.type','=','bank')]"
+                            context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash Operations" domain="[('journal_id.type','=','cash')]"
+                            context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Miscellaneous Operations" domain="[('journal_id.type','=','general')]"
+                            name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
