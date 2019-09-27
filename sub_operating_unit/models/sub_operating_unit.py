@@ -30,7 +30,6 @@ class SubOperatingUnit(models.Model):
     maker_id = fields.Many2one('res.users','Maker',default=lambda self: self.env.user.id,track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker',track_visibility='onchange')
 
-
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
         if self.name or self.code:
@@ -38,7 +37,7 @@ class SubOperatingUnit(models.Model):
                 [('name', '=ilike', self.name.strip()), ('operating_unit_id', '=', self.operating_unit_id.id), '|',
                  ('active', '=', True), ('active', '=', False)])
             code = self.search(
-                [('code', '=ilike', self.code.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('code', '=ilike', self.code.strip()),('operating_unit_id', '=', self.operating_unit_id.id), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
             if len(code) > 1:

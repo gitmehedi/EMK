@@ -48,6 +48,8 @@
         "web_login_theme",
         "app_odoo_customize",
         "account_reports_xls",
+        "auto_backup",
+        "mass_editing",
     ],
     'description': 'Install all modules which is related to MTBL OGL System',
     'installable': True,

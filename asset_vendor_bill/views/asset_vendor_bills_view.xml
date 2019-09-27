@@ -147,7 +147,8 @@
                                     <field name="total_tds_amount" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('is_tds_applicable', '=', False)]}"
                                            widget="monetary"/>
-                                    <field name="security_deposit" widget="monetary"/>
+                                    <field name="security_deposit" class="oe_subtotal_footer_separator"
+                                           widget="monetary"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
@@ -203,8 +204,8 @@
                                     <field name="default_debit_account_id" invisible="1"/>
                                     <field name="default_credit_account_id" invisible="1"/>
                                     <field name="amount"/>
-                                    <field name="currency_id"/>
-                                    <field name="state" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" string="Status"/>
                                     <field name="is_sync" invisible="1"/>
                                     <button name="sync" string="Sync" type="action"
                                             icon="fa fa-check text-success"

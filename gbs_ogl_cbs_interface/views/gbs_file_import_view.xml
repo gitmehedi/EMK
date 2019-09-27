@@ -70,8 +70,6 @@
         <menuitem id="menu_gbs_file_import" name="Import Data"
                   parent="account.menu_finance_configuration" sequence="88"
                   action="action_gbs_file_import"
-                  groups="mtbl_access.group_mtbl_sys_admin"
-        />
-
+                  groups="mtbl_access.group_mtbl_sys_admin"/>
     </data>
 </odoo>

@@ -127,4 +127,24 @@
             parent="account.menu_finance_payables"
             action="action_payment_instruction_bill"
             id="menu_payment_instruction_bill" sequence="3"/>
+
+    <!--in settings-->
+
+    <record id="action_payment_instruction_set" model="ir.actions.act_window">
+        <field name="name">Payment Instructions</field>
+        <field name="res_model">payment.instruction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="payment_instruction_bill_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Payment instruction is empty.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            parent="base.menu_custom"
+            action="action_payment_instruction_set" groups="base.group_system"
+            id="menu_payment_instruction_set" sequence="100"/>
 </odoo>

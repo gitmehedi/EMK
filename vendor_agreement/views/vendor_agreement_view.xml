@@ -56,7 +56,7 @@
                             <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                         </header>
                         <sheet>
-                            <div class="oe_button_box" name="button_box">
+                            <div class="oe_button_box" name="button_box" states="done">
                                 <button name="toggle_active" type="object"
                                         class="oe_stat_button" icon="fa-archive">
                                     <field name="active" widget="boolean_button"
@@ -94,7 +94,9 @@
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="service_value" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
-                                    <field name="adjusted_amount" widget="monetary"
+                                    <field name="total_payment_approved" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="adjusted_amount" readonly="1" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="outstanding_amount" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
@@ -146,8 +148,9 @@
                                             <field name="default_debit_account_id" invisible="1"/>
                                             <field name="default_credit_account_id" invisible="1"/>
                                             <field name="amount"/>
-                                            <field name="currency_id"/>
+                                            <field name="currency_id" invisible="1"/>
                                             <field name="is_sync" invisible="1"/>
+                                            <field name="state" string="Status"/>
                                             <button name="sync" string="Sync" type="action"
                                                     icon="fa fa-check text-success"
                                                     attrs="{'invisible': [('is_sync', '=', False)]}"/>

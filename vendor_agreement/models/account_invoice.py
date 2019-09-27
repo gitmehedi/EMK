@@ -18,8 +18,8 @@ class AccountInvoice(models.Model):
     def _compute_agreement_adjusted_amount(self):
         for invoice in self:
             if invoice.invoice_line_ids and invoice.agreement_id.product_id in [i.product_id for i in invoice.invoice_line_ids]:
-                if invoice.agreement_id.advance_amount > invoice.agreement_id.adjusted_amount:
-                    remaining_amount = invoice.agreement_id.advance_amount - invoice.agreement_id.adjusted_amount
+                if invoice.agreement_id.total_payment_approved > invoice.agreement_id.adjusted_amount:
+                    remaining_amount = invoice.agreement_id.total_payment_approved - invoice.agreement_id.adjusted_amount
                     if remaining_amount >= invoice.agreement_id.adjustment_value:
                         invoice.agreement_adjusted_amount = invoice.agreement_id.adjustment_value
                     else:

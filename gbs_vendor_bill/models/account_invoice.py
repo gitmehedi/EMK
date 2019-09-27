@@ -224,7 +224,7 @@ class AccountInvoice(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'invoice_amount': self.residual or False,
+            'context': {'invoice_amount': (self.residual + self.total_payment_approved) - self.total_payment_amount or 0.0,
                         'currency_id': self.currency_id.id or False,
                         'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
                         },
