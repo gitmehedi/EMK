@@ -45,7 +45,7 @@
         "password_security",
         "auth_session_timeout",
         "limit_login_attempts",
-        "odoo_web_login",
+        "web_login_theme",
         "app_odoo_customize",
         "account_reports_xls",
     ],
