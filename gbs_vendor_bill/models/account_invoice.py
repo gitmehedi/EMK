@@ -226,7 +226,8 @@ class AccountInvoice(models.Model):
             'target': 'new',
             'context': {'invoice_amount': (self.residual + self.total_payment_approved) - self.total_payment_amount or 0.0,
                         'currency_id': self.currency_id.id or False,
-                        'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
+                        'op_unit': self.operating_unit_id.id or False,
+                        'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[0].sub_operating_unit_id else None,
                         },
         }
 

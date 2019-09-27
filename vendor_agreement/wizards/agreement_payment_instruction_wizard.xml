@@ -17,10 +17,14 @@
                         <field name="instruction_date" invisible="1"/>
                         <field name="credit_account_id" domain="[('internal_type','=','other')]"
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                        <field name="operating_unit_id" required="1"
-                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                        <field name="sub_operating_unit_id" required="1"
-                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <field name="credit_operating_unit_id" required="1"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_sub_operating_unit_id"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="debit_operating_unit_id" invisible="1"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="debit_sub_operating_unit_id" invisible="1"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                     </group>
                 </group>
                 <footer>
