@@ -68,11 +68,17 @@ class VendorAgreement(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'agreement_id', readonly=True, copy=False)
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
-    total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
+    total_payment_approved = fields.Float('Advance Paid', compute='_compute_payment_amount',
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
     active = fields.Boolean(track_visibility='onchange')
     history_line_ids = fields.One2many('agreement.history', 'agreement_id', readonly=True, copy=False,
                                        ondelete='restrict')
+    operating_unit_id = fields.Many2one('operating.unit', 'Branch',
+                                        default=lambda self:
+                                        self.env['res.users'].
+                                        operating_unit_default_get(self._uid),
+                                        readonly=True, required=True,
+                                        states={'draft': [('readonly', False)]})
 
     @api.one
     @api.depends('payment_line_ids.amount','payment_line_ids.state')
@@ -146,6 +152,7 @@ class VendorAgreement(models.Model):
                         'advance_amount': self.advance_amount or 0.0,
                         'total_payment_approved': self.total_payment_approved or 0.0,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
+                        'operating_unit_id': self.operating_unit_id.id or False,
                         },
         }
 
