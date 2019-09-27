@@ -199,7 +199,7 @@ class AssetAllocationWizard(models.TransientModel):
                                  })
             else:
                 flag = 'Active' if asset.depreciation_flag else 'In-Active'
-                raise Warning(_('Asset [{0}] is in Status [{1}] with Depreciation Flag [{2}]'.format(asset.display_name,
+                raise Warning(_('Asset [{0}] is in Status [{1}] with Awaiting Disposal [{2}]'.format(asset.display_name,
                                                                                                      asset.state,
                                                                                                      flag)))
         return {'type': 'ir.actions.act_window_close'}

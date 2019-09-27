@@ -36,7 +36,7 @@
 		<xpath expr="//label[@for='password']" position="replace" />
 		
 		<xpath expr="//input[@name='login']" position="attributes">
-			<attribute name="placeholder">Email ...</attribute>
+			<attribute name="placeholder">Username ...</attribute>
 			<attribute name="autocomplete">off</attribute>
 			<attribute name="autocorrect">off</attribute>
 		</xpath>
@@ -44,9 +44,17 @@
 		<xpath expr="//input[@name='password']" position="attributes">
 			<attribute name="placeholder">Password ...</attribute>
 		</xpath>
+
+		<xpath expr="//input[@name='password']" position="attributes">
+			<attribute name="placeholder">Password ...</attribute>
+		</xpath>
 		
 		<xpath expr="//span[@class='input-group-btn']/a[@href='/web/database/selector']" position="replace">
 			<a href="/web/database/selector" class="btn btn-default btn-select"><i class="fa fa-database"></i></a>
+		</xpath>
+
+		<xpath expr="//form/div/button" position="replace">
+			<button type="submit" class="btn btn-lg btn-block btn-primary">Log in</button>
 		</xpath>
 	</template>
 

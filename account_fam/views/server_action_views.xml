@@ -33,7 +33,7 @@
                 groups="grp_fixasset_manager"/>
 
     <act_window id="action_depreciation_flag"
-                name="Depreciation Flag"
+                name="Awaiting Disposal"
                 src_model="account.asset.asset"
                 res_model="asset.depreciation.flag.wizard"
                 view_type="form"

@@ -12,6 +12,7 @@
                             <field name="method"/>
                             <field name="method_progress_factor" attrs="{'invisible': [('method', '=', 'linear')]}"/>
                             <field name="depreciation_year"/>
+                            <field name="adjusted_depr_amount"/>
                             <field name="method_number" invisible="1" attrs="{'invisible': [('asset_method_time', '=', 'end')]}"/>
                         </group>
                         <group>

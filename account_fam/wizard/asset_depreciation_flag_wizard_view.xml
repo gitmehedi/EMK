@@ -4,7 +4,7 @@
         <field name="name">asset.depreciation.flag.wizard</field>
         <field name="model">asset.depreciation.flag.wizard</field>
         <field name="arch" type="xml">
-            <form string="Depreciation Flag">
+            <form string="Awaiting Disposal">
                 <group>
                     <field name="flag"/>
                 </group>
