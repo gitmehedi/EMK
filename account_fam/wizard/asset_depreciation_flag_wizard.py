@@ -11,7 +11,7 @@ from odoo.tools import float_compare, float_is_zero
 class AssetDepreciationFlagWizard(models.TransientModel):
     _name = 'asset.depreciation.flag.wizard'
 
-    flag = fields.Selection([('stop', 'Stop'), ('start', 'Start')], string='Depreciaton Flag', required=True)
+    flag = fields.Selection([('stop', 'Stop'), ('start', 'Start')], string='Awaiting Disposal', required=True)
 
     @api.multi
     def depreciation(self):

@@ -103,7 +103,7 @@
             <xpath expr="//notebook/page[1]" position="replace">
                 <page string="Depreciation History">
                     <field name="depreciation_line_ids" mode="tree" options="{'reload_whole_on_button': true}">
-                        <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
+                        <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false" edit="false" delete="false">
                             <field name="depreciation_date"/>
                             <field name="days"/>
                             <field name="amount" widget="monetary"/>
@@ -114,7 +114,7 @@
                             <field name="parent_state" invisible="1"/>
                             <button name="create_move" type="object" widget="widgetonbutton"/>
                         </tree>
-                        <form string="Depreciation Lines">
+                        <form string="Depreciation Lines" create="false" edit="false" delete="false">
                             <group>
                                 <group>
                                     <field name="parent_state" invisible="1"/>
@@ -140,7 +140,7 @@
                     <field name="asset_allocation_ids" string="Allocation History">
                         <tree string="Allocation History" decoration-success="state=='active'"
                               decoration-bf="state=='active'"
-                              decoration-muted="state=='inactive'" delete="0" create="0">
+                              decoration-muted="state=='inactive'" delete="0" create="0" edit="0">
                             <field name="from_branch_id"/>
                             <field name="operating_unit_id"/>
                             <field name="sub_operating_unit_id"/>
@@ -151,7 +151,7 @@
                             <field name="move_id"/>
                             <field name="state"/>
                         </tree>
-                        <form string="Allocation History" create="0" edit="0">
+                        <form string="Allocation History" create="0" edit="0" delete="0">
                             <header>
                                 <field name="state" widget="statusbar"/>
                             </header>
@@ -179,23 +179,12 @@
         </field>
     </record>
 
-    <record id="inherit_view_account_asset_search" model="ir.ui.view">
-        <field name="model">account.asset.asset</field>
-        <field name="inherit_id" ref="account_asset.view_account_asset_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="asset_seq"/>
-                <field name="batch_no"/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="inherit_view_account_asset_asset_purchase_tree" model="ir.ui.view">
         <field name="model">account.asset.asset</field>
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Assets" delete="false" create="false"
+                <tree string="Assets"  edit="0" create="0" delete="0" duplicate="0"
                       decoration-info="(state == 'open') and (allocation_status == False)"
                       decoration-success="(state == 'open') and (allocation_status == True)"
                       decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
@@ -228,6 +217,10 @@
         <field name="model">account.asset.asset</field>
         <field name="inherit_id" ref="account_asset.view_account_asset_search"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="asset_seq"/>
+                <field name="batch_no"/>
+            </xpath>
             <xpath expr="//search" position="replace">
                 <search string="Asset Account">
                     <field name="name" string="Asset Name"/>
