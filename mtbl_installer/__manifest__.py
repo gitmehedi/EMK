@@ -41,7 +41,6 @@
         "bgl_accounts",
         "gbs_account_level",
         "gbs_account_budget",
-        "web_export_view",
         "gbs_reverse_bill",
         "password_security",
         "auth_session_timeout",
