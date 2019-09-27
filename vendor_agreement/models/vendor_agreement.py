@@ -33,8 +33,8 @@ class VendorAgreement(models.Model):
     advance_amount = fields.Float(string="Approved Advance", required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
                                   track_visibility='onchange', help="Finally granted advance amount.")
-    adjusted_amount = fields.Float(string="Adjusted Amount", readonly=True,states={'draft': [('readonly', False)]},
-                                   track_visibility='onchange', help="Total amount which are already adjusted in bill.")
+    adjusted_amount = fields.Float(string="Adjusted Amount",track_visibility='onchange',
+                                   help="Total amount which are already adjusted in bill.")
     outstanding_amount = fields.Float(string="Outstanding Amount",compute='_compute_outstanding_amount', readonly=True,
                                       track_visibility='onchange', help="Remaining Amount to adjustment.")
     account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
@@ -72,7 +72,7 @@ class VendorAgreement(models.Model):
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
     active = fields.Boolean(track_visibility='onchange')
     history_line_ids = fields.One2many('agreement.history', 'agreement_id', readonly=True, copy=False,
-                                        ondelete='restrict')
+                                       ondelete='restrict')
 
     @api.one
     @api.depends('payment_line_ids.amount','payment_line_ids.state')
@@ -142,7 +142,9 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'amount': self.advance_amount - self.total_payment_amount or False,
+            'context': {'amount': self.advance_amount - self.total_payment_amount or 0.0,
+                        'advance_amount': self.advance_amount or 0.0,
+                        'total_payment_approved': self.total_payment_approved or 0.0,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
                         },
         }

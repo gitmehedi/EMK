@@ -5,16 +5,24 @@
         <field name="model">agreement.payment.instruction.wizard</field>
         <field name="arch" type="xml">
             <form string="Payment Instruction">
+                <group>
                     <group>
-                        <group>
-                            <field name="agreement_id"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                        </group>
-                        <group>
-                            <field name="instruction_date" invisible="1"/>
-                        </group>
+                        <field name="agreement_id"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="total_payment_approved" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     </group>
+                    <group>
+                        <field name="instruction_date" invisible="1"/>
+                        <field name="credit_account_id" domain="[('internal_type','=','other')]"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <field name="operating_unit_id" required="1"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <field name="sub_operating_unit_id" required="1"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                    </group>
+                </group>
                 <footer>
                     <button string="Confirm" name="action_confirm" type="object"
                             confirm="Are you sure to generate payment instruction?" class="oe_highlight"/>

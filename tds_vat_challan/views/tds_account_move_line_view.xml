@@ -97,7 +97,9 @@
                 ('is_pending', '=', False),
                 ('is_challan', '=', False),
                 ('pending_for_paid', '=', False),
-                ('is_paid', '=', False)]</field>
+                ('is_paid', '=', False),
+                ('credit', '>', 0)]
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing for payable.
@@ -116,7 +118,9 @@
                 ('is_pending', '=', True),
                 ('is_challan', '=', False),
                 ('pending_for_paid', '=', False),
-                ('is_paid', '=', False)]</field>
+                ('is_paid', '=', False),
+                ('credit', '>', 0)]
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing in pending.
@@ -135,7 +139,9 @@
                 ('is_pending', '=', False),
                 ('is_challan', '=', False),
                 ('pending_for_paid', '=', False),
-                ('is_paid', '=', True)]</field>
+                ('is_paid', '=', True),
+                ('credit', '>', 0)]
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing in pending payment approval.

@@ -32,7 +32,7 @@ class TDSVATPayment(models.Model):
     @api.multi
     def action_approve(self):
         self.write({'state': 'approved'})
-        self.action_journal_creation()
+        self.suspend_security().action_journal_creation()
         self.account_move_line_ids.write(
             {'is_paid': True, 'is_pending': False, 'is_challan': False, 'pending_for_paid': False})
         # return {
@@ -61,7 +61,7 @@ class TDSVATPayment(models.Model):
             acc_journal_objs = account_conf_pool.tds_vat_transfer_journal_id
             account_move_obj = self.env['account.move']
             account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-            move_obj = rec._generate_move(acc_journal_objs, account_move_obj, date)
+            move_obj = rec.suspend_security()._generate_move(acc_journal_objs, account_move_obj, date)
             for line in rec.account_move_line_ids:
                 self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
             self._generate_credit_move_line(date, move_obj.id,account_move_line_obj)
@@ -85,6 +85,7 @@ class TDSVATPayment(models.Model):
                 'ref': '',
                 'company_id': self.operating_unit_id.company_id.id,
                 'journal_id': journal.id,
+                'operating_unit_id': self.operating_unit_id.id,
             }
             account_move = account_move_obj.create(account_move_dict)
         return account_move
