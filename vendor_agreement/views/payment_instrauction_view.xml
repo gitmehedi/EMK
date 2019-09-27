@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="payment_instruction_agreement_form">
+        <field name="name">payment.instruction.agreement.form</field>
+        <field name="model">payment.instruction</field>
+        <field name="inherit_id" ref="gbs_vendor_bill.payment_instruction_bill_form"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_id']" position="after">
+                <field name="agreement_id" string="Agreement"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="payment_instruction_agreement_tree">
+        <field name="name">payment.instruction.agreement.tree</field>
+        <field name="model">payment.instruction</field>
+        <field name="inherit_id" ref="gbs_vendor_bill.payment_instruction_bill_tree"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_id']" position="after">
+                <field name="agreement_id" string="Agreement"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="payment_instruction_agreement_search">
+        <field name="name">payment.instruction.agreement.search</field>
+        <field name="model">payment.instruction</field>
+        <field name="inherit_id" ref="gbs_vendor_bill.payment_instruction_bill_search"/>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <field name="agreement_id" string="Agreement"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="gbs_vendor_bill.action_payment_instruction_bill" model="ir.actions.act_window">
+        <field name="domain">['|',('invoice_id', '!=', False),('agreement_id', '!=', False)]</field>
+    </record>
+</odoo>

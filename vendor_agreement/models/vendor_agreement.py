@@ -30,7 +30,7 @@ class VendorAgreement(models.Model):
     service_value = fields.Float(string="Service Value", required=True, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Service value.")
-    advance_amount = fields.Float(string="Advance Amount", required=True, readonly=True,
+    advance_amount = fields.Float(string="Approved Advance", required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
                                   track_visibility='onchange', help="Finally granted advance amount.")
     adjusted_amount = fields.Float(string="Adjusted Amount", readonly=True,states={'draft': [('readonly', False)]},
@@ -68,21 +68,25 @@ class VendorAgreement(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'agreement_id', readonly=True, copy=False)
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
+    total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
+                                          store=True, readonly=True, track_visibility='onchange', copy=False)
     active = fields.Boolean(track_visibility='onchange')
     history_line_ids = fields.One2many('agreement.history', 'agreement_id', readonly=True, copy=False,
                                         ondelete='restrict')
 
     @api.one
-    @api.depends('payment_line_ids.amount')
+    @api.depends('payment_line_ids.amount','payment_line_ids.state')
     def _compute_payment_amount(self):
         for va in self:
-            va.total_payment_amount = sum(line.amount for line in va.payment_line_ids)
+            va.total_payment_amount = sum(line.amount for line in va.payment_line_ids if line.state not in ['cancel'])
+            va.total_payment_approved = sum(
+                line.amount for line in va.payment_line_ids if line.state in ['approved'])
 
     @api.one
-    @api.depends('adjusted_amount')
+    @api.depends('adjusted_amount','total_payment_approved')
     def _compute_outstanding_amount(self):
         for va in self:
-            va.outstanding_amount = va.advance_amount - va.adjusted_amount
+            va.outstanding_amount = va.total_payment_approved - va.adjusted_amount
 
     @api.depends('adjusted_amount', 'advance_amount')
     def _compute_is_remaining(self):
