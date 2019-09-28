@@ -27,6 +27,8 @@ class AccountAccountType(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    asset_liability_id = fields.Selection([('asset', 'Asset'), ('libility', 'Libility')], string='Asset / Liability',
+                                          track_visibility='onchange')
 
     @api.constrains('name')
     def _check_unique_constrain(self):

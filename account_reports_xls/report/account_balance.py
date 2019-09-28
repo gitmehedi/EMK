@@ -38,8 +38,9 @@ class ReportTrialBalance(models.AbstractModel):
             request = "SELECT aa.id," + \
                       "COALESCE(trial.credit,0) AS credit," + \
                       "COALESCE(trial.debit,0) AS debit," + \
-                      "(COALESCE(trial.debit,0) - COALESCE(trial.credit,0) + COALESCE(init.balance,0)) AS balance," + \
-                      "COALESCE(init.balance,0) AS init_bal " + \
+                      "(COALESCE(trial.credit,0) - COALESCE(trial.debit,0) + COALESCE(init.balance,0)) AS balance," + \
+                      "COALESCE(init.balance,0) AS init_bal, " + \
+                      "aat.asset_liability_id " + \
                       "FROM account_account aa " + \
                       "LEFT JOIN (SELECT account_id AS id," + \
                       "COALESCE(SUM(debit),0) AS debit," + \
@@ -56,11 +57,14 @@ class ReportTrialBalance(models.AbstractModel):
                       "ON (init.id = aa.id) " + \
                       "LEFT JOIN account_account_level aal " + \
                       "ON (aal.id = aa.level_id) " + \
+                      "LEFT JOIN account_account_type aat " + \
+                      "ON (aat.id = aa.user_type_id) " + \
                       "WHERE aal.name='Layer 5'"
+
             params = (tuple(accounts.ids),) + tuple(where_params) + (tuple(accounts.ids),) + tuple(where_params_init)
         else:
             request = (
-                    "SELECT account_id AS id, SUM(debit) AS debit, SUM(credit) AS credit, (SUM(debit) - SUM(credit)) AS balance, 0  AS init_bal" + \
+                    "SELECT account_id AS id, SUM(debit) AS debit, SUM(credit) AS credit, (SUM(credit) - SUM(debit)) AS balance, 0  AS init_bal" + \
                     " FROM " + tables + " WHERE account_id IN %s " + filters + " GROUP BY account_id")
             params = (tuple(accounts.ids),) + tuple(where_params)
 
@@ -75,6 +79,7 @@ class ReportTrialBalance(models.AbstractModel):
             res['code'] = account.code
             res['name'] = account.name
             if account.id in account_result.keys():
+                asslib_status =  account_result[account.id].get('asset_liability_id')
                 res['init_bal'] = account_result[account.id].get('init_bal')
                 res['debit'] = account_result[account.id].get('debit')
                 res['credit'] = account_result[account.id].get('credit')

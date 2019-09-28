@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 
