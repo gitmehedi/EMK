@@ -23,6 +23,7 @@ class AccountInvoice(models.Model):
     tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='VAT', oldname='tax_line',
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
+
     @api.one
     @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount', 'is_tds_applicable')
     def _compute_total_tds(self):
@@ -105,6 +106,10 @@ class AccountInvoice(models.Model):
     def _update_tax_line_vals(self):
         for line in self.invoice_line_ids:
             if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
+                if line.account_tds_id.operating_unit_id:
+                    op_unit_id = line.account_tds_id.operating_unit_id.id
+                else:
+                    op_unit_id = line.operating_unit_id.id or False
                 vals = {
                     'invoice_id': self.id,
                     'name': line.account_tds_id.name + '/' + line.name,
@@ -114,7 +119,7 @@ class AccountInvoice(models.Model):
                     'sequence': 0,
                     'account_id': self.type in ('out_invoice', 'in_invoice') and (line.account_tds_id.account_id.id),
                     'account_analytic_id': line.account_analytic_id.id or False,
-                    'operating_unit_id': line.operating_unit_id.id or False,
+                    'operating_unit_id': op_unit_id,
                     'product_id': line.product_id.id or False,
                     # 'base': tax['base'],
                     # 'tax_id': line.account_tds_id.id,

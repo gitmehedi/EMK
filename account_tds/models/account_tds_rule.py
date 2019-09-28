@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+import odoo.addons.decimal_precision as dp
 
 
 class TDSRules(models.Model):
@@ -36,6 +37,9 @@ class TDSRules(models.Model):
     ], default='draft',string="Status",track_visibility='onchange')
     is_amendment = fields.Boolean(default=False, string="Is Amendment",
                                   help="Take decision that, this agreement is amendment.")
+
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
+                                        states = {'confirm': [('readonly', True)]})
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),

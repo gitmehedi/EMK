@@ -158,8 +158,11 @@ class AccountInvoice(models.Model):
             for tax in taxes:
                 val = self._prepare_tax_line_vals(line, tax)
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
-
-                val.update({'operating_unit_id': line.operating_unit_id.id,'product_id': line.product_id.id})
+                if line.account_tds_id.operating_unit_id:
+                    op_unit_id = line.account_tds_id.operating_unit_id.id
+                else:
+                    op_unit_id = line.operating_unit_id.id or False
+                val.update({'operating_unit_id': op_unit_id,'product_id': line.product_id.id})
                 key = key+'-'+str(line.operating_unit_id.id)+'-'+str(line.product_id.id)
                 if key not in tax_grouped:
                     tax_grouped[key] = val

@@ -36,6 +36,8 @@ class AccountTax(models.Model):
                                   help='For Mushok-6.3')
     vds_amount = fields.Float(string='VDS Authority Value', track_visibility='onchange',
                                  help='For VDS Authority ')
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
+                                        readonly=True,states={'draft': [('readonly', False)]})
 
     @api.one
     def act_draft(self):

@@ -73,6 +73,8 @@
                                             <field name="refund_account_id"
                                                    groups="base.group_system"
                                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                            <field name="operating_unit_id"
+                                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                         </group>
                                     </group>
                                     <field name="children_tax_ids"
