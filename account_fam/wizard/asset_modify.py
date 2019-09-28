@@ -84,17 +84,20 @@ class AssetModify(models.TransientModel):
                                        tracking_value_ids=tracking_value_ids)
                 if self.adjusted_depr_amount > 0 and asset.allocation_status == True:
                     depr_value = self.adjusted_depr_amount
+                    depreciated_amount = sum([rec.amount for rec in asset.depreciation_line_ids]) + depr_value
+                    remaining_value = asset.value - depreciated_amount
                     vals = {
                         'amount': depr_value,
                         'asset_id': asset.id,
                         'sequence': 1,
                         'name': asset.code or '/',
-                        'remaining_value': abs(depr_value),
-                        'depreciated_value': depr_value,
+                        'remaining_value': abs(remaining_value),
+                        'depreciated_value': depreciated_amount,
                         'depreciation_date': fields.Datetime.now(),
                         'days': 0,
                         'asset_id': asset.id,
                     }
+
                     line = asset.depreciation_line_ids.create(vals)
                     if line:
                         move = self.create_move(asset, depr_value)
@@ -111,6 +114,7 @@ class AssetModify(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def create_move(self, asset, depr_value):
+
         prec = self.env['decimal.precision'].precision_get('Account')
         company_currency = asset.company_id.currency_id
         current_currency = asset.currency_id
