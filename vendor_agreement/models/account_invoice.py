@@ -37,7 +37,9 @@ class AccountInvoice(models.Model):
 
     def update_move_lines_with_agreement(self, move_lines,amount):
         if amount:
-            move_lines[-1][2]['credit'] = move_lines[-1][2]['credit'] - amount
+            for line in move_lines:
+                if line[2]['name'] == '/':
+                    line[2]['credit'] = line[2]['credit'] - amount
             agreement_values = {
                 'account_id': self.agreement_id.account_id.id,
                 'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,

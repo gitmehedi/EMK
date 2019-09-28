@@ -171,7 +171,9 @@ class AccountInvoice(models.Model):
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
         if self.security_deposit > 0.0:
-            move_lines[-1][2]['credit'] = move_lines[-1][2]['credit'] - self.security_deposit
+            for line in move_lines:
+                if line[2]['name'] == '/':
+                    line[2]['credit'] = line[2]['credit'] - self.security_deposit
             security_deposit_values = {
                 'account_id': self.security_deposit_account_id.id,
                 # 'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,
