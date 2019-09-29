@@ -37,6 +37,9 @@ class GbsPurchaseOrder(models.AbstractModel):
         data['total_vat'] = docs.amount_after_discount * (docs.amount_vat / 100)
         data['contact_person'] = docs.contact_person_txt
 
+        data['amount_tax'] = docs.amount_tax
+        data['amount_after_tax'] = formatLang(self.env, docs.amount_after_tax)
+
         # Supplier
         data['partner_vat_no'] = docs.partner_id.vat
         data['partner_bin_no'] = docs.partner_id.bin
@@ -68,7 +71,8 @@ class GbsPurchaseOrder(models.AbstractModel):
                 list_obj = {}
                 list_obj['product_id']= ol.product_id.name
                 list_obj['product_qty']= ol.product_qty
-                list_obj['price_unit']= formatLang(self.env,ol.price_unit)
+                unit_price = ol.price_subtotal / ol.product_qty
+                list_obj['price_unit']= formatLang(self.env,unit_price)
                 list_obj['product_uom'] = ol.product_uom.name
                 list_obj['price_subtotal']= ol.price_subtotal
                 list_obj['price_subtotal_price']= formatLang(self.env,ol.price_subtotal)

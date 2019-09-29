@@ -128,6 +128,7 @@
                                         <th class="text-center">Sl#</th>
                                         <th class="text-center">Description/Specification/Origin</th>
                                         <th class="text-center">Quantity</th>
+                                        <th class="text-center">Unit</th>
                                         <th class="text-center">Unit Rate</th>
                                         <th class="text-center">Total Price</th>
                                     </tr>
@@ -137,30 +138,32 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
-                                            <td class="text-right"><span t-esc="l['product_qty']"/>&amp;nbsp;&amp;nbsp;&amp;nbsp;<span t-esc="l['product_uom']"/></td>
+                                            <td class="text-right"><span t-esc="l['product_qty']"/></td>
+                                            <td class="text-right"><span t-esc="l['product_uom']"/></td>
                                             <td class="text-right"><span t-esc="l['price_unit']"/></td>
                                             <td class="text-right"><span t-esc="l['price_subtotal_price']"/></td>
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="3" rowspan="5"><strong>Amount in words : </strong><span t-esc="amt_to_word"/> Only</td>
+                                        <td colspan="4" rowspan="5"><strong>Amount in words : </strong><span t-esc="amt_to_word"/> Only</td>
                                         <td><strong>Sub Total</strong></td><td class="text-right"><span t-esc="total_amount" /></td>
                                     </tr>
+                                     <t t-if="data['amount_tax']">
+                                        <tr>
+                                            <td><strong>VAT</strong></td><td class="text-right"><span t-esc="data['amount_tax']" /></td>
+                                        </tr>
+
+                                         <tr>
+                                            <td><strong>After VAT</strong></td><td class="text-right"><span t-esc="data['amount_after_tax']" /></td>
+                                        </tr>
+                                    </t>
+
                                     <t t-if="data['amount_discount']">
                                         <tr>
-                                            <td><strong>Discount</strong></td><td class="text-right"><span t-esc="data['total_discount']"/></td>
+                                            <td><strong>Write-off</strong></td><td class="text-right"><span t-esc="data['amount_discount']"/></td>
                                         </tr>
                                     </t>
-                                    <t t-if="data['amount_after_discount']">
-                                        <tr>
-                                            <td><strong>After Discount</strong></td><td class="text-right"><span t-esc="data['amount_after_discount']"/></td>
-                                        </tr>
-                                    </t>
-                                    <t t-if="data['amount_vat']">
-                                        <tr>
-                                            <td><strong>Tax</strong> (<span t-esc="data['amount_vat']" /> %) </td><td class="text-right"><span t-esc="data['total_vat']" /></td>
-                                        </tr>
-                                    </t>
+
                                     <tr>
                                         <td><strong>Grand Total</strong></td><td class="text-right"><strong t-esc="data['amount_total']" /></td>
                                     </tr>
