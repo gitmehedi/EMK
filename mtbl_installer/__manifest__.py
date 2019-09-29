@@ -46,6 +46,7 @@
         "auth_session_timeout",
         "limit_login_attempts",
         "web_login_theme",
+        "web_export_view",
         "app_odoo_customize",
         "account_reports_xls",
         "auto_backup",
