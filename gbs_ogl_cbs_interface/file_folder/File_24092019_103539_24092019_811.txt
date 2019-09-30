@@ -1,8 +1,0 @@
-11206001|47250|Credit Department|Ref 2|06/30/19|None|credit_dep
-12103001|57500|Debit Department|Ref 1|07/02/19|None|debit_dep
-12106001|462000|Backdated entry|Ref 3|06/27/19|None|backdated_credit
-12202001|279000|Loan|Ref 4|07/02/19|None|debit_loan
-11206001|47250|Credit Department|Ref 2|06/30/19|None|credit_dep
-12103001|57500|Debit Department|Ref 1|07/02/19|None|debit_dep
-12106001|462000|Backdated entry|Ref 3|06/27/19|None|backdated_credit
-12202001|279000|Loan|Ref 4|07/02/19|None|debit_loan

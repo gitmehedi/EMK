@@ -30,7 +30,7 @@
         "views/cbs_batch_process_success_view.xml",
         "views/cbs_batch_process_view.xml",
         "views/payment_instruction_view.xml",
-        "views/gbs_file_import_view.xml",
+        "views/file_import_view.xml",
     ],
     "application": True,
     "installable": True,

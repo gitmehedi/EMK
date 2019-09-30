@@ -18,21 +18,11 @@ class GBSFileImportWizard(models.TransientModel):
 
     aml_data = fields.Binary(string='File')
     aml_fname = fields.Char(string='Filename')
-    lines = fields.Binary(
-        compute='_compute_lines', string='Input Lines')
-    dialect = fields.Binary(
-        compute='_compute_dialect', string='Dialect')
-    csv_separator = fields.Selection(
-        [(',', ', (comma)'), (';', '; (semicolon)')],
-        default=',',
-        string='CSV Separator', required=True)
-    decimal_separator = fields.Selection(
-        [('.', '. (dot)'), (',', ', (comma)')],
-        string='Decimal Separator',
-        default='.')
-    codepage = fields.Char(
-        string='Code Page',
-        default=lambda self: self._default_codepage(),
+    lines = fields.Binary(compute='_compute_lines', string='Input Lines')
+    dialect = fields.Binary(compute='_compute_dialect', string='Dialect')
+    csv_separator = fields.Selection([(',', ', (comma)'), (';', '; (semicolon)')],default=',',string='CSV Separator', required=True)
+    decimal_separator = fields.Selection([('.', '. (dot)'), (',', ', (comma)')],string='Decimal Separator',default='.')
+    codepage = fields.Char(string='Code Page',default=lambda self: self._default_codepage(),
         help="Code Page of the system that has generated the csv file."
              "\nE.g. Windows-1252, utf-8")
     note = fields.Text('Log')
@@ -148,7 +138,6 @@ class GBSFileImportWizard(models.TransientModel):
             temp_vals['value'] = line['value']
             temp_vals['date'] = line['date']
             temp_vals['type'] = line['type']
-            temp_vals['state'] = 'imported'
             temp_vals['import_id'] = move.id
              
             temp_pool = self.env['gbs.file.import.line']

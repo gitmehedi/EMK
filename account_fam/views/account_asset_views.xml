@@ -233,6 +233,7 @@
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <group string="Group By...">
                         <filter string="Current" name="state" domain="[('state','in', ('draft','open'))]"/>
+                        <filter string="Draft"  domain="[('state','=', 'draft'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
                         <filter string="Confirmed"  domain="[('state','=', 'open'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
                         <filter string="Allocated"  domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', False)]"/>
                         <filter string="Dispose or Sale" domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', True)]"/>

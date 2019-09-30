@@ -1,5 +1,15 @@
 <?xml version="1.0"?>
 <odoo>
+    <act_window id="action_confirm_asset"
+                name="Confirm Assets"
+                src_model="account.asset.asset"
+                res_model="asset.confirm.wiazrd"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                groups="grp_fixasset_manager"/>
+
     <act_window id="action_asset_multi_allocation_wizard"
                 name="Allocate Assets"
                 src_model="account.asset.asset"
@@ -41,4 +51,6 @@
                 key2="client_action_multi"
                 target="new"
                 groups="grp_fixasset_manager"/>
+
+
 </odoo>

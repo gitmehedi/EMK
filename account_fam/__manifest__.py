@@ -26,6 +26,7 @@
         'wizard/asset_sale_wizard_view.xml',
         'wizard/asset_depreciation_wizard_view.xml',
         'wizard/asset_depreciation_flag_wizard_view.xml',
+        'wizard/asset_confirm_wizard_views.xml',
         'views/account_asset_disposal_view.xml',
         'views/account_asset_sale_view.xml',
         'views/account_asset_views.xml',
