@@ -25,7 +25,7 @@
             <xpath expr="//form/sheet/div[2]" position="replace">
                 <div class="oe_title">
                     <h1>
-                        <field name="asset_seq"/>
+                        <field name="asset_seq" readonly="1"/>
                     </h1>
                 </div>
             </xpath>
@@ -37,56 +37,60 @@
             <xpath expr="//field[@name='code']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-            <xpath expr="//form/sheet/group/group[1]" position="replace">
+            <xpath expr="//form/sheet/group" position="replace">
                 <group>
-                    <field name="name"/>
-                    <field name="category_id" readonly="True"
-                           domain="[('type', '=', 'purchase')]"
-                           context="{'default_type': 'purchase'}"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="batch_no"/>
-                    <field name="partner_id" domain="[('supplier', '=', True)]" readonly="True"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="invoice_id" readonly="True"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="invoice_date" readonly="True"/>
-                    <field name="date"/>
-                    <field name="asset_usage_date"/>
-                    <field name="lst_depr_date"/>
-                    <field name="cost_centre_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="code" invisible="1"/>
-                    <field name="type" invisible="1"/>
-                    <field name="allocation_status" invisible="True"/>
-                    <field name="depreciation_flag" invisible="True"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="category_id" readonly="True"
+                               domain="[('type', '=', 'purchase')]"
+                               context="{'default_type': 'purchase'}"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="batch_no"/>
+                        <field name="partner_id" domain="[('supplier', '=', True)]" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="invoice_id" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="model_name"/>
+                    </group>
+                    <group>
+                        <field name="invoice_date" readonly="True"/>
+                        <field name="warranty_date"/>
+                        <field name="date"/>
+                        <field name="asset_usage_date"/>
+                        <field name="lst_depr_date"/>
+                        <field name="code" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="allocation_status" invisible="True"/>
+                        <field name="depreciation_flag" invisible="True"/>
+                    </group>
                 </group>
-            </xpath>
-            <xpath expr="//form/sheet/group/group[2]" position="replace">
+                <separator string="Asset Configure"/>
                 <group>
-                    <field name="operating_unit_id" readonly="True"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="current_branch_id" readonly="True"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="sub_operating_unit_id" readonly="True"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="currency_id" groups="base.group_multi_currency"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="company_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
-                           groups="base.group_multi_company"/>
-                    <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="True"
-                           help="Gross value of asset"/>
-                    <field name="depr_base_value" widget="monetary" options="{'currency_field': 'currency_id'}"
-                           readonly="True" help="Depreciation base value of asset"/>
-                    <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                    <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}"
-                           attrs="{'invisible': [('type','=','sale')]}"/>
-                    <field name="accumulated_value" widget="monetary" options="{'currency_field': 'currency_id'}"
-                           attrs="{'invisible': [('type','=','sale')]}"/>
-                    <field name="warranty_date"/>
-                    <field name="model_name"/>
+                    <group>
+                        <field name="operating_unit_id" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="current_branch_id" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="sub_operating_unit_id" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="cost_centre_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="currency_id" groups="base.group_multi_currency"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="company_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                               groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="depr_base_value" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               readonly="True" help="Depreciation base value of asset"/>
+                        <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               readonly="True" help="Gross value of asset"/>
+                        <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               attrs="{'invisible': [('type','=','sale')]}"/>
+                        <field name="accumulated_value" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               attrs="{'invisible': [('type','=','sale')]}"/>
+                    </group>
                 </group>
-            </xpath>
-
-            <xpath expr="//form/sheet/group" position="after">
                 <separator string="Asset Description"/>
                 <field name="asset_description" widget="html"/>
                 <separator string="Note"/>
@@ -142,7 +146,6 @@
                 <page string="Allocation &amp; Transfer History">
                     <field name="asset_allocation_ids" string="Allocation History">
                         <tree string="Allocation History" decoration-success="state=='active'"
-                              decoration-bf="state=='active'"
                               decoration-muted="state=='inactive'" delete="0" create="0" edit="0">
                             <field name="from_branch_id"/>
                             <field name="operating_unit_id"/>
@@ -192,7 +195,7 @@
                       decoration-success="(state == 'open') and (allocation_status == True)"
                       decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
                       decoration-muted="(state == 'close')">
-                    <field name="asset_seq"/>
+                    <field name="asset_seq" />
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="asset_type_id"/>
