@@ -74,6 +74,8 @@
                            groups="base.group_multi_company"/>
                     <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="True"
                            help="Gross value of asset"/>
+                    <field name="depr_base_value" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           readonly="True" help="Depreciation base value of asset"/>
                     <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}"
                            attrs="{'invisible': [('type','=','sale')]}"/>
@@ -103,7 +105,8 @@
             <xpath expr="//notebook/page[1]" position="replace">
                 <page string="Depreciation History">
                     <field name="depreciation_line_ids" mode="tree" options="{'reload_whole_on_button': true}">
-                        <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false" edit="false" delete="false">
+                        <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false"
+                              edit="false" delete="false">
                             <field name="depreciation_date"/>
                             <field name="days"/>
                             <field name="amount" widget="monetary"/>
@@ -184,7 +187,7 @@
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Assets"  edit="0" create="0" delete="0" duplicate="0"
+                <tree string="Assets" edit="0" create="0" delete="0" duplicate="0"
                       decoration-info="(state == 'open') and (allocation_status == False)"
                       decoration-success="(state == 'open') and (allocation_status == True)"
                       decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
@@ -197,6 +200,7 @@
                     <field name="asset_usage_date"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="value" widget="monetary" sum="value"/>
+                    <field name="depr_base_value" widget="monetary" sum="value"/>
                     <field name="value_residual" widget="monetary"/>
                     <field name="accumulated_value" widget="monetary"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
@@ -230,17 +234,23 @@
                     <field name="state" string="Status"/>
                     <field name="depreciation_flag" string="Awaiting Disposal"/>
                     <field name="allocation_status" string="Allocation Status"/>
-                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    <field name="partner_id" string="Vendor" filter_domain="[('partner_id','child_of',self)]"/>
                     <group string="Group By...">
                         <filter string="Current" name="state" domain="[('state','in', ('draft','open'))]"/>
-                        <filter string="Draft"  domain="[('state','=', 'draft'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
-                        <filter string="Confirmed"  domain="[('state','=', 'open'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
-                        <filter string="Allocated"  domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', False)]"/>
-                        <filter string="Dispose or Sale" domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', True)]"/>
+                        <filter string="Draft"
+                                domain="[('state','=', 'draft'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
+                        <filter string="Confirmed"
+                                domain="[('state','=', 'open'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
+                        <filter string="Allocated"
+                                domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', False)]"/>
+                        <filter string="Dispose or Sale"
+                                domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', True)]"/>
                         <filter string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
                         <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
-                        <filter string="Computation Method" domain="[('state','=', 'open')]" context="{'group_by':'method'}"/>
+                        <filter string="Computation Method" domain="[('state','=', 'open')]"
+                                context="{'group_by':'method'}"/>
+                        <filter string="By Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                     </group>
                 </search>
             </xpath>

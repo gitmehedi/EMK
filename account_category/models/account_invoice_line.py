@@ -39,6 +39,7 @@ class AccountInvoiceLine(models.Model):
                     'category_id': self.asset_category_id.id,
                     'asset_type_id': self.asset_type_id.id,
                     'value': asset_value,
+                    'depr_base_value': asset_value,
                     'partner_id': self.invoice_id.partner_id.id,
                     'company_id': self.invoice_id.company_id.id,
                     'currency_id': self.invoice_id.company_currency_id.id,

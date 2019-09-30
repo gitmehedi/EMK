@@ -46,6 +46,7 @@ class AccountAssetAsset(models.Model):
     method_period = fields.Integer(string='One Entry (In Month)', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
+    depr_base_value = fields.Float(string='Depreciation Base Value', track_visibility='onchange', readonly=True)
     value_residual = fields.Float(string='WDV', track_visibility='onchange')
     advance_amount = fields.Float(string='Adjusted Amount', track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)]})
@@ -63,6 +64,7 @@ class AccountAssetAsset(models.Model):
     note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
     allocation_status = fields.Boolean(string='Allocation Status', track_visibility='onchange', default=False)
     depreciation_flag = fields.Boolean(string='Awaiting Disposal', track_visibility='onchange', default=False)
+    lst_depr_date = fields.Date(string='Last Depr. Date', readonly=True, track_visibility='onchange')
     lst_depr_date = fields.Date(string='Last Depr. Date', readonly=True, track_visibility='onchange')
 
     @api.model
@@ -238,7 +240,10 @@ class AccountAssetAsset(models.Model):
                     depreciation = asset.depreciation_line_ids.create(vals)
                     if depreciation:
                         asset.create_move(depreciation)
-                        asset.write({'lst_depr_date': date.date()})
+                        if date.month == 12 and date.day == 31:
+                            asset.write({'lst_depr_date': date.date(), 'depr_base_value': book_val_amount})
+                        else:
+                            asset.write({'lst_depr_date': date.date()})
 
     @api.multi
     def create_move(self, line):
