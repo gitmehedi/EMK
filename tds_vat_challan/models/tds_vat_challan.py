@@ -29,6 +29,10 @@ class TdsVatChallan(models.Model):
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_amount')
     acc_move_line_ids = fields.Many2many('account.move.line',string='Account Move Lines',
                                          default=lambda self: self.env.context.get('acc_move_line_ids'))
+    type = fields.Selection([
+        ('tds', 'TDS'),
+        ('vat', 'VAT'),
+    ], string='Type',default=lambda self: self.env.context.get('type'))
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -77,6 +81,7 @@ class TdsVatChallan(models.Model):
                                     'product_id': acc_move_line_id['product'],
                                     'total_bill': acc_move_line_id['amount'],
                                     'currency_id': self.currency_id.id or False,
+                                    'type': self.type or False,
                                     }))
             self.line_ids = vals
 
@@ -166,6 +171,10 @@ class TdsVatChallanLine(models.Model):
     challan_no = fields.Char(string='Challan No.',related='parent_id.challan_no')
     deposited_bank = fields.Char(string='Deposited Bank',related='parent_id.deposited_bank')
     bank_branch = fields.Char(string='Bank Branch',related='parent_id.bank_branch')
+    type = fields.Selection([
+        ('tds', 'TDS'),
+        ('vat', 'VAT'),
+    ], string='Type')
 
     state = fields.Selection([
         ('draft', "Draft"),

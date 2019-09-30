@@ -18,6 +18,7 @@
                     <field name="product_id" string="Product/Service"/>
                     <field name="total_bill" string="Total Amount"/>
                     <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -38,6 +39,7 @@
                     <field name="deposited_bank"/>
                     <field name="bank_branch"/>
                     <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -53,11 +55,13 @@
                     <field name="deposited_bank"/>
                     <field name="bank_branch"/>
                     <field name="supplier_id"/>
+                    <field name="type"/>
                     <group expand="0" string="Group By">
                         <filter name="challan" string="Challan" context="{'group_by':'parent_id'}"/>
                         <filter name="vendor" string="Vendor" context="{'group_by':'supplier_id'}"/>
                         <filter name="service" string="Service" context="{'group_by':'product_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter name="type" string="Type" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
@@ -97,6 +101,7 @@
                     <field name="bank_branch"/>
                     <field name="total_amount"/>
                     <field name="state"/>
+                    <field name="type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -142,6 +147,7 @@
                                 <field name="deposited_bank"/>
                                 <field name="bank_branch"/>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="type"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -155,6 +161,7 @@
                                         <field name="currency_id" invisible="1"/>
                                         <field name="total_bill" string="Amount" widget="monetary"
                                                options="{'currency_field': 'currency_id'}"/>
+                                        <field name="type" invisible="1"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
@@ -184,12 +191,14 @@
             <field name="model">tds.vat.challan</field>
             <field name="arch" type="xml">
                 <search string="Search Challan">
-                    <field name="challan_date"/>
+                    <field name="challan_date" string="Date"/>
+                    <field name="type" string="Type"/>
                     <filter name="approve" string="To Approve" domain="[('state','=','confirm')]"/>
                     <group expand="0" string="Group By">
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
-                        <filter string="challan_date" context="{'group_by':'challan_date'}"/>
+                        <filter name="challan_date" string="Date" context="{'group_by':'challan_date'}"/>
+                        <filter name="type" string="Type" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
