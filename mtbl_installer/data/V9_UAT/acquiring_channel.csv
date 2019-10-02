@@ -1,0 +1,27 @@
+Name,Code,Active,Pending,Status
+Corporate Unit 1,11,True,False,approve
+Corporate Unit 2,12,True,False,approve
+Corporate Unit 3,13,True,False,approve
+Corporate Unit 4,14,True,False,approve
+Corporate Unit 5,15,True,False,approve
+SME Unit 1,21,True,False,approve
+Retail Unit 1,31,True,False,approve
+Retail RFC,32,True,False,approve
+Retail Payroll,33,True,False,approve
+MITS Motijheel,41,True,False,approve
+MITS Dhaka,42,True,False,approve
+MITS Chittagong,43,True,False,approve
+Cards,44,True,False,approve
+NRB,45,True,False,approve
+Dhaka Lounge,46,True,False,approve
+Chittagong Lounge,47,True,False,approve
+Privilege Banani,71,True,False,approve
+Privilege Gulshan,72,True,False,approve
+Privilege Baridhara,73,True,False,approve
+Privilege Panthapath,74,True,False,approve
+Privilege Motijheel,75,True,False,approve
+Privilege Chittagong,76,True,False,approve
+Privilege Tezgaon,77,True,False,approve
+Privilege Uttara,78,True,False,approve
+External Agency,98,True,False,approve
+Branch,99,True,False,approve
