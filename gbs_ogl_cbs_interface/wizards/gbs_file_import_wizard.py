@@ -135,7 +135,6 @@ class GBSFileImportWizard(models.TransientModel):
             temp_vals['amount'] = line['amount']
             temp_vals['narration'] = line['narration']
             temp_vals['reference_no'] = line['reference no']
-            temp_vals['value'] = line['value']
             temp_vals['date'] = line['date']
             temp_vals['type'] = line['type']
             temp_vals['import_id'] = move.id
