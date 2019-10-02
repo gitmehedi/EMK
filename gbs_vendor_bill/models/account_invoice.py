@@ -80,6 +80,7 @@ class AccountInvoice(models.Model):
 
     @api.onchange("entity_service_id")
     def onchange_entity_service_id(self):
+        self.partner_id = []
         if self.entity_service_id:
             domain = {'partner_id': [('entity_services', 'in', self.entity_service_id.id)]}
         else:

@@ -204,7 +204,7 @@ class BudgetDistributionLine(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount',compute='_compute_practical_amount')
-    remaining_amount = fields.Float(string='Remaining Amount',compute='_compute_remaining_amount')
+    remaining_amount = fields.Float(string='Remaining/Exceed Amount',compute='_compute_remaining_amount')
     theoritical_amount = fields.Float(string='Theoretical Amount' ,compute='_compute_theoritical_amount')
     active = fields.Boolean(default=True,compute='_compute_active')
 

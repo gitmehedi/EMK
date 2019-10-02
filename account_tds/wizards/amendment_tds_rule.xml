@@ -24,7 +24,12 @@
                                            attrs="{'required':[('type_rate', '=','flat')]}"/>
                                     <label string="%" class="oe_inline"/>
                                 </div>
-                                <field name="price_include" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                <field name="price_include"
+                                       attrs="{'invisible':['|',('type_rate', '!=', 'flat'),
+                                       ('price_exclude', '!=', False)]}"/>
+                                <field name="price_exclude"
+                                       attrs="{'invisible':['|',('type_rate', '!=', 'flat'),
+                                       ('price_include', '!=', False)]}"/>
                             </group>
                             <group>
                                 <field name="account_id" domain="[('internal_type','=','other')]"

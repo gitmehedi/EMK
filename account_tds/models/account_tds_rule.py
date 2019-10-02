@@ -31,6 +31,9 @@ class TDSRules(models.Model):
     price_include = fields.Boolean(string='Included in Price', default=False,
                                    track_visibility='onchange', states={'confirm': [('readonly', True)]},
                                    help="Check this if the price you use on the product and invoices includes this TAX.")
+    price_exclude = fields.Boolean(string='Excluded in Price', default=False,
+                                   track_visibility='onchange', states={'confirm': [('readonly', True)]},
+                                   help="Check this if the price you use on the product and invoices excludes this TAX.")
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
@@ -161,6 +164,7 @@ class TDSRules(models.Model):
                         'line_ids': slab_list,
                         'flat_rate': self.flat_rate or False,
                         'price_include': self.price_include or False,
+                        'price_exclude': self.price_exclude or False,
                         },
         }
         return result
@@ -180,6 +184,7 @@ class TDSRules(models.Model):
                 if requested.type_rate == 'flat' and requested.flat_rate:
                     self.flat_rate = requested.flat_rate
                     self.price_include = requested.price_include
+                    self.price_exclude = requested.price_exclude
                 elif requested.type_rate == 'slab' and requested.version_line_ids:
                     vals = []
                     for ver_line in requested.version_line_ids:
@@ -236,6 +241,8 @@ class TDSRuleVersion(models.Model):
         ('pending', "Pending"),
         ('confirm', "Confirmed")], default='pending', string="Status")
     price_include = fields.Boolean(string='Included in Price', default=False)
+    price_exclude = fields.Boolean(string='Excluded in Price', default=False)
+
 
 class TDSRuleLine(models.Model):
     _name = 'tds.rule.line'
