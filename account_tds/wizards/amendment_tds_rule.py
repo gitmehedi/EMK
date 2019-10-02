@@ -23,7 +23,10 @@ class TDSRulesWizard(models.TransientModel):
     flat_rate = fields.Float(string='Rate', size=3, default=lambda self: self.env.context.get('flat_rate'))
     price_include = fields.Boolean(string='Included in Price',
                                    default=lambda self: self.env.context.get('price_include'),
-                                   help="Check this if the price you use on the product and invoices includes this TAX.")
+                                   help="Check this if the price you use on the product and invoice includes this TAX.")
+    price_exclude = fields.Boolean(string='Excluded in Price',
+                                   default=lambda self: self.env.context.get('price_exclude'),
+                                   help="Check this if the price you use on the product and invoice exclude this TAX.")
 
     @api.multi
     def generate_rule(self):
@@ -39,6 +42,7 @@ class TDSRulesWizard(models.TransientModel):
             'type_rate': self.type_rate,
             'flat_rate': self.flat_rate,
             'price_include': self.price_include,
+            'price_exclude': self.price_exclude,
             'rel_id': self.id,
         }
         rule_list.version_ids += self.env['tds.rule.version'].create(rule_obj)
@@ -52,7 +56,6 @@ class TDSRulesWizard(models.TransientModel):
                 }
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
         return rule_list.write({'is_amendment':True})
-
 
     @api.constrains('effective_from')
     def _check_effective_from(self):

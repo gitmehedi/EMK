@@ -48,7 +48,6 @@
                                         <field name="amount"/>
                                         <field name="narration"/>
                                         <field name="reference_no"/>
-                                        <field name="value"/>
                                         <field name="date"/>
                                         <field name="state"/>
                                     </tree>
@@ -63,7 +62,6 @@
                                             </group>
                                             <group>
                                                 <field name="reference_no"/>
-                                                <field name="value"/>
                                                 <field name="date"/>
                                                 <field name="state"/>
                                             </group>

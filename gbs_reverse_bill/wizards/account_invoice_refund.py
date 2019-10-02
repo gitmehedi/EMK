@@ -67,19 +67,19 @@ class AccountInvoiceReverse(models.TransientModel):
                     move_line_id.debit -= tax_grouped[move_line_id.product_id.id]
                     del tax_grouped[move_line_id.product_id.id]
                 move_line_id.write({
-                'debit': move_line_id.credit,
-                'credit': move_line_id.debit,
-                'amount_currency': -move_line_id.amount_currency,
-            })
+                    'debit': move_line_id.credit,
+                    'credit': move_line_id.debit,
+                    'amount_currency': -move_line_id.amount_currency,
+                })
             elif move_line_id.pending_for_paid or move_line_id.is_paid or move_line_id.is_challan:
                 move_line_id.unlink()
             else:
                 move_line_id.write({
-                'debit': move_line_id.credit,
-                'credit': move_line_id.debit,
-                'amount_currency': -move_line_id.amount_currency,
-                'is_tdsvat_payable': False
-            })
+                    'debit': move_line_id.credit,
+                    'credit': move_line_id.debit,
+                    'amount_currency': -move_line_id.amount_currency,
+                    'is_tdsvat_payable': False
+                })
 
         return reversed_move.post()
 
@@ -97,9 +97,11 @@ class AccountInvoiceReverse(models.TransientModel):
                     'instruction_date': date,
                     'state': 'approved',
                     'amount': payment_line_id.amount,
-                    'operating_unit_id': payment_line_id.operating_unit_id.id or None,
-                    'sub_operating_unit_id': payment_line_id.sub_operating_unit_id.id if payment_line_id.sub_operating_unit_id else None,
-                    'origin':payment_line_id.id or False,
+                    'credit_operating_unit_id': payment_line_id.debit_operating_unit_id.id or None,
+                    'debit_operating_unit_id': payment_line_id.credit_operating_unit_id.id or None,
+                    'credit_sub_operating_unit_id': payment_line_id.debit_sub_operating_unit_id.id if payment_line_id.debit_sub_operating_unit_id else None,
+                    'debit_sub_operating_unit_id': payment_line_id.credit_sub_operating_unit_id.id if payment_line_id.credit_sub_operating_unit_id else None,
+                    'origin': payment_line_id.id or False,
                 })
                 new_payment_instruction_obj.action_invoice_reverse()
         return True

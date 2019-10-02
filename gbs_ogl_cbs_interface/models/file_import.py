@@ -35,7 +35,8 @@ class GBSFileImport(models.Model):
                     reference_no = val.reference_no or None
                     value = val.value or None
                     type = val.type or None
-                    date = val.date or None
+                    date_array = val.date.split("-")
+                    date = date_array[2] + date_array[1] + date_array[0]
                     narration = val.narration or None
                     record = "{0}|{1}|{2}|{3}|{4}|{5}|{6}\r\n".format(account_no, amount, narration,
                                                                       reference_no, date, value, type)
@@ -81,18 +82,17 @@ class GBSFileImportLine(models.Model):
     amount = fields.Float(string='Amount')
     narration = fields.Char(string='Narration')
     reference_no = fields.Char(string='Reference No')
-    value = fields.Float(string='Value')
-    date = fields.Char(string='Date')
+    date = fields.Char(string='Value Date')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string='Status')
     type = fields.Selection([
-        ('credit_dep', 'Credit Dep'),
-        ('debit_dep', 'Debit Dep'),
-        ('backdated_credit', 'Backdated Credit Dep'),
-        ('backdated_debit', 'Backdated Debit Dep'),
-        ('credit_loan', 'Credit Loan'),
-        ('debit_loan', 'Debit Loan'),
-        ('credit_gen', 'Credit Gen'),
-        ('debit_gen', 'Debit Gen'),
+        ('01', 'Credit Dep'),
+        ('51', 'Debit Dep'),
+        ('02', 'Backdated Credit Dep'),
+        ('52', 'Backdated Debit Dep'),
+        ('03', 'Credit Loan'),
+        ('53', 'Debit Loan'),
+        ('04', 'Credit Gen'),
+        ('54', 'Debit Gen'),
 
     ], string='Type')
 

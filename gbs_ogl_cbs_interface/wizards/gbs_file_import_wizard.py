@@ -130,14 +130,17 @@ class GBSFileImportWizard(models.TransientModel):
             dialect=self.dialect)
 
         for line in reader:
+            if len(line['type']) == 1:
+                d_type = '0'+line['type']
+            else:
+                d_type = line['type']
             temp_vals = {}
             temp_vals['account_no'] = line['account no']
             temp_vals['amount'] = line['amount']
             temp_vals['narration'] = line['narration']
             temp_vals['reference_no'] = line['reference no']
-            temp_vals['value'] = line['value']
             temp_vals['date'] = line['date']
-            temp_vals['type'] = line['type']
+            temp_vals['type'] = d_type
             temp_vals['import_id'] = move.id
              
             temp_pool = self.env['gbs.file.import.line']
