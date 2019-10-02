@@ -20,12 +20,13 @@ class AccountAssetCategory(models.Model):
 
     is_custom_depr = fields.Boolean(default=True, required=True)
     prorata = fields.Boolean(string='Prorata Temporis', default=True)
-    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0,
                                        track_visibility='onchange')
     method_number = fields.Integer(string='Number of Depreciations', default=1,
                                    help="The number of depreciations needed to depreciate your asset")
-    method = fields.Selection([('degressive', 'Reducing Method'),('linear', 'Straight Line/Linear')],
-                              string='Computation Method', required=True, default='degressive', track_visibility='onchange',
+    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
+                              string='Computation Method', required=True, default='degressive',
+                              track_visibility='onchange',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
@@ -63,9 +64,23 @@ class AccountAssetCategory(models.Model):
     line_ids = fields.One2many('history.account.asset.category', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
+
     @api.model
     def create(self, vals):
         return super(AccountAssetCategory, self).create(vals)
+
+    @api.onchange('account_asset_id')
+    def onchange_account_asset(self):
+        return False
+
+    @api.constrains('method')
+    def check_method(self):
+        if self.method == 'linear':
+            if self.depreciation_year < 1:
+                raise ValidationError(_('Asset Life (In Year) cann\'t be zero or negative value.'))
+        else:
+            if self.method_progress_factor <= 0:
+                raise ValidationError(_('Depreciation Factor cann\'t be zero or negative value.'))
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
@@ -74,8 +89,9 @@ class AccountAssetCategory(models.Model):
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):
-        if self.depreciation_year < 1:
-            raise ValidationError(_('Total year cannot be zero or negative value.'))
+        if self.method == 'linear':
+            if self.depreciation_year < 1:
+                raise ValidationError(_('Total year cannot be zero or negative value.'))
 
     @api.onchange("code")
     def onchange_code(self):
@@ -86,7 +102,7 @@ class AccountAssetCategory(models.Model):
             elif not self.parent_id:
                 self.code = filter
 
-    @api.constrains('name','code')
+    @api.constrains('name', 'code')
     def _check_unique_constrain(self):
         if self.name:
             if self.parent_id:

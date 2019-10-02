@@ -91,10 +91,10 @@
                             </div>
                             <field name="method_number" string="Number of Entries" invisible="1"
                                    attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)]}"/>
-                            <label for="method_period"/>
+                            <label for="method_period" invisible="True"/>
                             <div>
-                                <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}"
-                                       class="oe_inline"/>
+                                <field name="method_period" nolabel="1"
+                                       class="oe_inline" invisible="True"/>
                             </div>
                             <field name="method_end"
                                    attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
@@ -107,6 +107,7 @@
                             <field name="method" widget="radio"/>
                             <field name="method_progress_factor"
                                    attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="no_depreciation"/>
                             <field name="prorata"
                                    attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
                         </group>

@@ -22,10 +22,13 @@ class AccountAssetAsset(models.Model):
     asset_seq = fields.Char(string='Asset Code', track_visibility='onchange')
     batch_no = fields.Char(string='Batch No', readonly=True,
                            track_visibility='onchange', states={'draft': [('readonly', False)]})
-    method_progress_factor = fields.Float('Depreciation Factor', default=0.2, track_visibility='onchange')
+    method_progress_factor = fields.Float(string='Depreciation Factor', readonly=True, default=0.0,
+                                          states={'draft': [('readonly', False)]})
+    method_number = fields.Integer(string='Number of Depreciations', default=0,
+                                   help="The number of depreciations needed to depreciate your asset")
     is_custom_depr = fields.Boolean(default=True, required=True, track_visibility='onchange')
     partner_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
-    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1, readonly=True,
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0, readonly=True,
                                        track_visibility='onchange', states={'draft': [('readonly', False)]})
     method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
                               track_visibility='onchange',
@@ -78,13 +81,15 @@ class AccountAssetAsset(models.Model):
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):
-        if self.depreciation_year < 1:
-            raise ValidationError(_('Total year cannot be zero or negative value.'))
+        if self.method == 'linear':
+            if self.depreciation_year < 1:
+                raise ValidationError(_('Total year cannot be zero or negative value.'))
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
-        if self.depreciation_year:
-            self.method_number = int(12 * self.depreciation_year)
+        if self.method == 'linear':
+            if self.depreciation_year:
+                self.method_number = int(12 * self.depreciation_year)
 
     @api.multi
     @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount')
@@ -156,12 +161,12 @@ class AccountAssetAsset(models.Model):
         @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the purchase date of this asset
         """
         self.env.cr.execute("""
-                SELECT a.id as id, COALESCE(MAX(m.date),a.asset_usage_date) AS date
-                FROM account_asset_asset a
-                LEFT JOIN account_asset_depreciation_line rel ON (rel.asset_id = a.id)
-                LEFT JOIN account_move m ON (rel.move_id = m.id)
-                WHERE a.id IN %s
-                GROUP BY a.id, m.date """, (tuple(self.ids),))
+                        SELECT a.id as id, COALESCE(MAX(m.date),a.asset_usage_date) AS date
+                        FROM account_asset_asset a
+                        LEFT JOIN account_asset_depreciation_line rel ON (rel.asset_id = a.id)
+                        LEFT JOIN account_move m ON (rel.move_id = m.id)
+                        WHERE a.id IN %s
+                        GROUP BY a.id, m.date """, (tuple(self.ids),))
         result = dict(self.env.cr.fetchall())
         return result
 
@@ -175,7 +180,7 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def compute_depreciation_history(self, date, asset):
-        if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag:
+        if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and not asset.asset_type_id.no_depreciation:
             last_depr_date = asset._get_last_depreciation_date()
             no_of_days = (date - self.date_str_format(last_depr_date[asset['id']])).days
 

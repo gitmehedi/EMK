@@ -18,7 +18,6 @@
                         <group>
                             <field name="name"/>
                             <field name="method_end" attrs="{'invisible': [('asset_method_time', '=', 'number')]}"/>
-                            <field name="method_period" invisible="True"/>months
                         </group>
                     </group>
                     <footer>

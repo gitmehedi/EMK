@@ -13,9 +13,12 @@ from odoo.tools import float_compare, float_is_zero
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
 
+    method_progress_factor = fields.Float('Depreciation Factor', default=0.0, track_visibility='onchange')
     category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
     parent_id = fields.Many2one('account.asset.category', string="Asset Type Name", ondelete="restrict",
                                 track_visibility='onchange')
+    no_depreciation = fields.Boolean(string="No Depreciation", default=False, readonly=True,
+                                     states={'draft': [('readonly', False)]})
 
     @api.onchange('parent_id')
     def onchange_asset_type(self):
