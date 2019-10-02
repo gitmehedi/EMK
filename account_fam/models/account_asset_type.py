@@ -191,6 +191,18 @@ class AccountAssetCategory(models.Model):
                     'name': self.name if not requested.change_name else requested.change_name,
                     'pending': False,
                     'active': requested.status,
+                    'method_progress_factor': requested.method_progress_factor,
+                    'journal_id': requested.journal_id.id,
+                    'depreciation_year': requested.depreciation_year,
+                    'method_number': requested.method_number,
+                    'method': requested.method,
+                    'account_asset_id': requested.account_asset_id.id,
+                    'asset_suspense_account_id': requested.asset_suspense_account_id.id,
+                    'account_depreciation_id': requested.account_depreciation_id.id,
+                    'account_depreciation_expense_id': requested.account_depreciation_expense_id.id,
+                    'account_asset_loss_id': requested.account_asset_loss_id.id,
+                    'account_asset_gain_id': requested.account_asset_gain_id.id,
+                    'asset_sale_suspense_account_id': requested.asset_sale_suspense_account_id.id,
                 })
                 requested.write({
                     'state': 'approve',
