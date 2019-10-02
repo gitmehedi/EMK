@@ -236,3 +236,24 @@ class HistoryAccountAssetCategory(models.Model):
     line_id = fields.Many2one('account.asset.category', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
+    method_progress_factor = fields.Float(string='Depreciation Factor', default=0.0, )
+    journal_id = fields.Many2one('account.journal', string='Journal')
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', default=0)
+    method_number = fields.Integer(string='Number of Depreciations', default=0)
+    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
+                              string='Computation Method', default='degressive')
+    account_asset_id = fields.Many2one('account.account', string='Asset Account',
+                                       domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation',
+                                                domain=[('deprecated', '=', False)])
+    account_depreciation_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                              string='Accumulated Depreciation A/C', )
+    account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
+                                                      domain=[('internal_type', '=', 'other'),
+                                                              ('deprecated', '=', False)])
+    account_asset_loss_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                            string='Asset Loss A/C')
+    account_asset_gain_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                            string='Asset Gain A/C')
+    asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                                     string='Asset Awaiting Disposal')
