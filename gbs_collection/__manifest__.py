@@ -1,5 +1,5 @@
 {
-    'name': 'Delivery Authorization',
+    'name': 'Payment Collection',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Account',

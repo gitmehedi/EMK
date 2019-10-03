@@ -9,41 +9,21 @@ class GBSAccountInvoiceReport(models.Model):
     _auto = False
     _rec_name = 'date'
 
-    @api.multi
-    @api.depends('currency_id', 'date', 'price_total', 'price_average')
-    def _compute_amounts_in_user_currency(self):
-        """Compute the amounts in the currency of the user
-        """
-        context = dict(self._context or {})
-        user_currency_id = self.env.user.company_id.currency_id
-        currency_rate_id = self.env['res.currency.rate'].search([
-            ('rate', '=', 1),
-            '|', ('company_id', '=', self.env.user.company_id.id), ('company_id', '=', False)], limit=1)
-        base_currency_id = currency_rate_id.currency_id
-        ctx = context.copy()
-        for record in self:
-            ctx['date'] = record.date
-            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
-            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
-
-
+    # Report Fields
     date = fields.Date(readonly=True)
-    product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_qty = fields.Float(string='Quantity', readonly=True)
+    product_id = fields.Many2one('product.template', string='Product', readonly=True)
+    product_qty = fields.Float(string='Qty (MT)', readonly=True)
     country_id = fields.Many2one('res.country', string='Country')
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     sector = fields.Many2one('res.partner.category', string='Sector', readonly=True)
-    supplier_type = fields.Char(string='Region', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
-    company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
-    price_total = fields.Float(string='Value', readonly=True)
-    user_currency_price_total = fields.Float(string="Value", compute='_compute_amounts_in_user_currency', digits=0)
+    supplier_type = fields.Char(string='Region (Local/Foreign)', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
+    # company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    user_id = fields.Many2one('res.users', string='Sales Person', readonly=True)
+    price_total = fields.Float(string='Amt (BDT)', readonly=True)
     price_average = fields.Float(string='Avg Price', readonly=True, group_operator="avg")
-    user_currency_price_average = fields.Float(string="Avg Price", compute='_compute_amounts_in_user_currency',digits=0)
-    currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg")
-    uom_name = fields.Char(string='UOM', readonly=True)
+    # uom_name = fields.Char(string='UOM', readonly=True)
     so_name = fields.Char(string='SO Number', readonly=True)
+    val_ratio = fields.Float(string='Ratio(%)', readonly=True)
 
     # categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     # journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
@@ -61,20 +41,20 @@ class GBSAccountInvoiceReport(models.Model):
     # volume = fields.Float(string='Volume', readonly=True)
 
 
-    type = fields.Selection([
-        ('out_invoice', 'Customer Invoice'),
-        ('in_invoice', 'Vendor Bill'),
-        ('out_refund', 'Customer Refund'),
-        ('in_refund', 'Vendor Refund'),
-    ], readonly=True)
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('proforma', 'Pro-forma'),
-        ('proforma2', 'Pro-forma'),
-        ('open', 'Open'),
-        ('paid', 'Done'),
-        ('cancel', 'Cancelled')
-    ], string='Status', readonly=True)
+    # type = fields.Selection([
+    #     ('out_invoice', 'Customer Invoice'),
+    #     ('in_invoice', 'Vendor Bill'),
+    #     ('out_refund', 'Customer Refund'),
+    #     ('in_refund', 'Vendor Refund'),
+    # ], readonly=True)
+    # state = fields.Selection([
+    #     ('draft', 'Draft'),
+    #     ('proforma', 'Pro-forma'),
+    #     ('proforma2', 'Pro-forma'),
+    #     ('open', 'Open'),
+    #     ('paid', 'Done'),
+    #     ('cancel', 'Cancelled')
+    # ], string='Status', readonly=True)
 
     _order = 'date desc'
 
@@ -96,24 +76,51 @@ class GBSAccountInvoiceReport(models.Model):
         'res.partner': ['country_id'],
     }
 
+    def _get_ratio_column(self):
+        ratio_col_str = """
+            , (SUM(ail.price_subtotal_signed) / 
+            (SELECT SUM(ail.price_subtotal_signed) AS total_value 
+        """ + self._from() + self._where() + """ ) * 100) AS ratio"""
+        return ratio_col_str
+
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,sub.uom_name,
-                sub.currency_id,sub.user_id, sub.company_id, sub.type, sub.state,sub.so_name,
-                sub.supplier_type,sub.sector,sub.product_qty, sub.price_total as price_total, 
-                sub.price_average as price_average,COALESCE(cr.rate, 1) as currency_rate
+            SELECT
+                sub.id, 
+                sub.date, 
+                sub.product_id, 
+                sub.partner_id, 
+                sub.country_id,
+                sub.uom_name,
+                sub.user_id, 
+                sub.company_id, 
+                sub.type, 
+                sub.state,
+                sub.so_name,
+                sub.supplier_type,
+                sub.sector,
+                sub.product_qty, 
+                sub.price_total as price_total, 
+                sub.price_average,
+                sub.ratio as val_ratio
         """
         return select_str
 
     def _sub_select(self):
         select_str = """
-                SELECT ail.id AS id,
-                    ai.date_invoice AS date,u2.name AS uom_name,
-                    ail.product_id, ai.partner_id,ai.origin as so_name,
-                    ai.currency_id, ai.user_id, 
-                    ai.company_id,ai.type, ai.state,
-                    SUM ((invoice_type.sign * ail.quantity) / u.factor * u2.factor) AS product_qty,
-                    SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
+                SELECT
+                    ail.id AS id,
+                    ai.date_invoice AS date,
+                    u2.name AS uom_name,
+                    pt.id AS product_id,
+                    ai.partner_id,
+                    ai.origin as so_name,
+                    ai.user_id,
+                    ai.company_id,
+                    ai.type,
+                    ai.state,
+                    SUM (ail.quantity / u.factor * u2.factor) AS product_qty,
+                    SUM(ail.price_subtotal_signed) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                             WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
                                THEN SUM(ail.quantity / u.factor * u2.factor)
@@ -122,28 +129,20 @@ class GBSAccountInvoiceReport(models.Model):
                     partner.country_id,
                     partner.supplier_type AS supplier_type,
                     rpc.id AS sector
-        """
+        """ + self._get_ratio_column()
         return select_str
 
     def _from(self):
         from_str = """
-                FROM account_invoice_line ail
-                JOIN account_invoice ai ON ai.id = ail.invoice_id
-                JOIN res_partner partner ON ai.commercial_partner_id = partner.id
-                LEFT JOIN product_product pr ON pr.id = ail.product_id
-                LEFT JOIN product_template pt ON pt.id = pr.product_tmpl_id
-                LEFT JOIN product_uom u ON u.id = ail.uom_id
-                LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
-                JOIN res_partner_category rpc ON partner.sector_id = rpc.id
-                JOIN (
-                    -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Refund) 
-                    SELECT id,(CASE
-                         WHEN ai.type::text = ANY (ARRAY['in_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN -1
-                            ELSE 1
-                        END) AS sign
-                    FROM account_invoice ai
-                ) AS invoice_type ON invoice_type.id = ai.id
+                FROM 
+                    account_invoice_line ail
+                    JOIN account_invoice ai ON ai.id = ail.invoice_id AND ai.type = 'out_invoice'
+                    JOIN res_partner partner ON ai.commercial_partner_id = partner.id
+                    LEFT JOIN product_product pr ON pr.id = ail.product_id
+                    LEFT JOIN product_template pt ON pt.id = pr.product_tmpl_id
+                    LEFT JOIN product_uom u ON u.id = ail.uom_id
+                    LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
+                    JOIN res_partner_category rpc ON partner.sector_id = rpc.id
         """
         return from_str
 
@@ -156,17 +155,27 @@ class GBSAccountInvoiceReport(models.Model):
         to_month_format = str(year_now)+'-'+str(to_month_num)+'-'+str(last_day[1])
         from_month_format = str(year_now)+'-'+str(from_month_num)+'-01'
         where_str = """
-               where ai.state in ('open','paid') and ai.date_invoice BETWEEN '%s' and '%s'
-        """% (from_month_format, to_month_format)
+               WHERE ai.state in ('open','paid') AND pt.active = true AND ai.date_invoice BETWEEN '%s' and '%s'
+        """ % (from_month_format, to_month_format)
         return where_str
-
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.id, ail.product_id, ai.date_invoice, ai.id,u2.name,
-                    ai.partner_id, ai.currency_id,ai.origin,
-                    ai.user_id, ai.company_id, ai.type, invoice_type.sign, ai.state,
-                    partner.country_id,rpc.id,partner.supplier_type
+                GROUP BY 
+                    ail.id, 
+                    ai.date_invoice,
+                    u2.name,
+                    pt.id,  
+                    ai.id,
+                    ai.partner_id,
+                    ai.origin, 
+                    ai.user_id, 
+                    ai.company_id,
+                    ai.type,
+                    ai.state,
+                    partner.country_id,
+                    partner.supplier_type,
+                    rpc.id
         """
         return group_by_str
 
@@ -174,16 +183,10 @@ class GBSAccountInvoiceReport(models.Model):
     def init(self):
         # self._table = account_invoice_report
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
-            WITH currency_rate AS (%s)
-            %s
-            FROM (
-                %s %s %s %s
-            ) AS sub
-            LEFT JOIN currency_rate cr ON
-                (cr.currency_id = sub.currency_id AND
-                 cr.company_id = sub.company_id AND
-                 cr.date_start <= COALESCE(sub.date, NOW()) AND
-                 (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
-        )""" % (self._table, self.env['res.currency']._select_companies_rates(),
-                self._select(), self._sub_select(), self._from(),self._where(),self._group_by()))
+        self.env.cr.execute("""
+            CREATE or REPLACE VIEW %s AS (
+                %s
+                FROM (
+                    %s %s %s %s
+                ) AS sub
+            )""" % (self._table, self._select(), self._sub_select(), self._from(), self._where(), self._group_by()))

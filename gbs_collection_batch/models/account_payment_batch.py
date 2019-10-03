@@ -17,6 +17,8 @@ class AccountPaymentBatch(models.Model):
 
     is_batch_model = fields.Boolean(store=False, compute='_check_is_batch_model')
 
+    _sql_constraints = [('name_unique', 'unique(name)', 'The Batch name must be unique!')]
+
     @api.multi
     def unlink(self):
         """ delete function """
