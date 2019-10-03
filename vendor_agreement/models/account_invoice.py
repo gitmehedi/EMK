@@ -47,7 +47,7 @@ class AccountInvoice(models.Model):
                 'date_maturity': self.date_due,
                 'debit': False,
                 'invoice_id': self.id,
-                'name': self.agreement_id.name,
+                'name': self.invoice_line_ids[0].name,
                 'operating_unit_id': self.operating_unit_id.id,
                 'partner_id': self.partner_id.id,
                 'agreement_id': self.agreement_id.id,
