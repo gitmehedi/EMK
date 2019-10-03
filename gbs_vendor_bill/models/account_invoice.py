@@ -41,6 +41,8 @@ class AccountInvoice(models.Model):
     provisional_expense = fields.Boolean(default=False,string='Is Provisional Expense',track_visibility='onchange',
                                          readonly=True, states={'draft': [('readonly', False)]},
                                          help="To manage provisional expense")
+    mushok_vds_amount = fields.Float('VAT Payable',compute='_compute_amount',
+                                     store=True, readonly=True, track_visibility='onchange',copy=False)
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -49,7 +51,11 @@ class AccountInvoice(models.Model):
         round_curr = self.currency_id.round
         self.amount_untaxed = sum(line.price_subtotal_without_vat for line in self.invoice_line_ids)
         self.amount_tax = sum(round_curr(line.amount) for line in self.tax_line_ids if line.tax_id)
-        self.amount_total = self.amount_untaxed + self.amount_tax
+        self.mushok_vds_amount = sum(round_curr(line.mushok_vds_amount) for line in self.invoice_line_ids)
+        if self.vat_selection == 'normal':
+            self.amount_total = self.amount_untaxed + self.amount_tax
+        else:
+            self.amount_total = self.amount_untaxed + self.mushok_vds_amount
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.company_id and self.currency_id != self.company_id.currency_id:
@@ -109,7 +115,10 @@ class AccountInvoice(models.Model):
     def _prepare_tax_line_vals(self, line, tax):
         res = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
         if res:
-            res.update({'product_id': line.product_id.id})
+            if self.vat_selection in ['mushok','vds_authority']:
+                res.update({'product_id': line.product_id.id,'name':line.name,'mushok_vds_amount':line.mushok_vds_amount})
+            else:
+                res.update({'product_id': line.product_id.id,'name': line.name})
         return res
 
     @api.model
@@ -124,14 +133,18 @@ class AccountInvoice(models.Model):
                 if tax.amount_type == "group":
                     for child_tax in tax.children_tax_ids:
                         done_taxes.append(child_tax.id)
+                if self.vat_selection in ['mushok', 'vds_authority'] and tax_line.tax_id:
+                    amount = tax_line.mushok_vds_amount
+                else:
+                    amount = tax_line.amount
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
                     'name': tax_line.name,
-                    'price_unit': -tax_line.amount,
+                    'price_unit': -amount,
                     'quantity': 1,
-                    'price': -tax_line.amount,
+                    'price': -amount,
                     'account_id': tax_line.account_id.id,
                     'product_id': tax_line.product_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
@@ -142,35 +155,6 @@ class AccountInvoice(models.Model):
                 })
                 done_taxes.append(tax.id)
         return res
-
-    @api.multi
-    def get_taxes_values(self):
-        tax_grouped = {}
-        for line in self.invoice_line_ids:
-            price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            if self.vat_selection == 'normal':
-                taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity,
-                                                              line.product_id,self.partner_id)['taxes']
-            elif self.vat_selection in ['mushok','vds_authority']:
-                taxes = line.invoice_line_tax_ids.compute_all_for_mushok(price_unit, self.currency_id, line.quantity,
-                                                                         line.product_id,self.partner_id,self.vat_selection)['taxes']
-            else:
-                taxes = False
-            for tax in taxes:
-                val = self._prepare_tax_line_vals(line, tax)
-                key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
-                if line.account_tds_id.operating_unit_id:
-                    op_unit_id = line.account_tds_id.operating_unit_id.id
-                else:
-                    op_unit_id = line.operating_unit_id.id or False
-                val.update({'operating_unit_id': op_unit_id,'product_id': line.product_id.id})
-                key = key+'-'+str(line.operating_unit_id.id)+'-'+str(line.product_id.id)
-                if key not in tax_grouped:
-                    tax_grouped[key] = val
-                else:
-                    tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base'] += val['base']
-        return tax_grouped
 
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
@@ -185,7 +169,7 @@ class AccountInvoice(models.Model):
                 'date_maturity': self.date_due,
                 'debit': False,
                 'invoice_id': self.id,
-                'name': 'Security Deposit',
+                'name': self.invoice_line_ids[0].name,
                 'operating_unit_id': self.operating_unit_id.id,
                 'partner_id': self.partner_id.id,
                 'agreement_id': self.agreement_id.id,
@@ -200,6 +184,9 @@ class AccountInvoice(models.Model):
             for inv in self:
                 account_move = self.env['account.move'].search([('id','=',inv.move_id.id)])
                 account_move.write({'operating_unit_id': inv.operating_unit_id.id})
+                account_move_line = account_move.line_ids.search([('name','=','/'),('move_id','=',account_move.id)])
+                if account_move_line:
+                    account_move_line.write({'name': self.invoice_line_ids[0].name})
         return res
 
     @api.multi
@@ -286,12 +273,14 @@ class AccountInvoiceLine(models.Model):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = False
         if self.invoice_line_tax_ids:
-            if self.invoice_id.vat_selection == 'normal':
-                taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
-                                                              partner=self.invoice_id.partner_id)
-            elif self.invoice_id.vat_selection in ['mushok','vds_authority']:
-                taxes = self.invoice_line_tax_ids.compute_all_for_mushok(price, currency, self.quantity, product=self.product_id,
-                                                                         partner=self.invoice_id.partner_id,vat_selection=self.invoice_id.vat_selection)
+            taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
+                                                          partner=self.invoice_id.partner_id)
+            # if self.invoice_id.vat_selection == 'normal':
+            #     taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
+            #                                                   partner=self.invoice_id.partner_id)
+            # elif self.invoice_id.vat_selection in ['mushok','vds_authority']:
+            #     taxes = self.invoice_line_tax_ids.compute_all_for_mushok(price, currency, self.quantity, product=self.product_id,
+            #                                                              partner=self.invoice_id.partner_id,vat_selection=self.invoice_id.vat_selection)
         self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price
         self.price_subtotal_without_vat = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
         if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
@@ -300,6 +289,13 @@ class AccountInvoiceLine(models.Model):
                                                                         self.invoice_id.company_id.currency_id)
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
+        if taxes:
+            if self.invoice_id.vat_selection == 'mushok' and self.invoice_line_tax_ids[0].mushok_amount>0.0:
+                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
+            elif self.invoice_id.vat_selection == 'vds_authority' and self.invoice_line_tax_ids[0].vds_amount > 0.0:
+                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+            else:
+                self.mushok_vds_amount = False
 
     price_subtotal = fields.Monetary(string='Amount With Vat',
                                      store=True, readonly=True, compute='_compute_price')
@@ -311,9 +307,10 @@ class AccountInvoiceLine(models.Model):
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
     sub_operating_unit_id = fields.Many2one('sub.operating.unit',string='Sub Operating Unit')
-
     quantity = fields.Float(digits=0)
     invoice_line_tax_ids = fields.Many2many(string='VAT')
+    mushok_vds_amount = fields.Float('VAT Payable',compute='_compute_price',
+                                     store=True, readonly=True,copy=False)
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -331,6 +328,7 @@ class AccountInvoiceTax(models.Model):
 
     operating_unit_id = fields.Many2one('operating.unit', string='Branch')
     product_id = fields.Many2one('product.product', string='Product')
+    mushok_vds_amount = fields.Float('VAT Payable', readonly=True, store=True, copy=False)
 
 
 class ProductProduct(models.Model):
