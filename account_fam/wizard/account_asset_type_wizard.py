@@ -38,19 +38,16 @@ class AccountAssetCategoryWizard(models.TransientModel):
                                             string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
+    no_depreciation = fields.Boolean(string="No Depreciation", default=False)
 
     @api.multi
     def act_change_name(self):
         id = self._context['active_id']
         obj = self.env['account.asset.category']
         asset = obj.browse(id)
-        condition = [('parent_id', '!=', None),
-                     '|',
-                     ('active', '=', True),
-                     ('active', '=', False)]
-
+        condition = [('state', '!=', 'reject'), ('parent_id', '!=', None),
+                     '|', ('active', '=', True), ('active', '=', False)]
         condition[0] = ('name', '=ilike', self.name.strip()) if self.name else ('name', '=ilike', None)
-
         if asset.parent_id:
             condition[1] = ('parent_id', '!=', None)
             name = obj.search(condition)
@@ -73,6 +70,7 @@ class AccountAssetCategoryWizard(models.TransientModel):
         account_asset_gain_id = self.account_asset_gain_id.id if self.account_asset_gain_id else None
         asset_sale_suspense_account_id = self.asset_sale_suspense_account_id.id if self.asset_sale_suspense_account_id else None
         method_progress_factor = self.method_progress_factor if self.method_progress_factor else None
+        no_depreciation = self.no_depreciation if self.no_depreciation else None
 
         pending = self.env['history.account.asset.category'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:
@@ -95,10 +93,11 @@ class AccountAssetCategoryWizard(models.TransientModel):
              'account_asset_gain_id': account_asset_gain_id,
              'asset_sale_suspense_account_id': asset_sale_suspense_account_id,
              'method_progress_factor': method_progress_factor,
-             'status': self.status
+             'status': self.status,
+             'no_depreciation': self.no_depreciation
              })
 
         record = self.env['account.asset.category'].search(
-            [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
+            [('id', '=', id), ('state', '!=', 'reject'), '|', ('active', '=', False), ('active', '=', True)])
         if record:
             record.write({'pending': True})

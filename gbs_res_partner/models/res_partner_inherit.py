@@ -197,26 +197,26 @@ class ResPartner(models.Model):
     def _check_numeric_constrain(self):
         if self.tax:
             tax = self.search(
-                [('tax', '=ilike', self.tax.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('tax', '=ilike', self.tax.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(tax) > 1:
                 raise Warning(_('[Unique Error] Trade License must be unique!'))
         if self.bin:
             bin = self.search(
-                [('bin', '=ilike', self.bin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('bin', '=ilike', self.bin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(bin) > 1:
                 raise Warning(_('[Unique Error] BIN Number must be unique!'))
             if len(self.bin) != 13 or not self.bin.isdigit():
                 raise Warning('[Format Error] BIN must be numeric with 13 digit!')
         if self.vat:
             vat = self.search(
-                [('vat', '=ilike', self.vat.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('vat', '=ilike', self.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(vat) > 1:
                 raise Warning(_('[Unique Error] VAT Registration must be unique!'))
             if len(self.vat) != 11 or not self.vat.isdigit():
                 raise Warning('[Format Error] VAT Registration must be numeric with 11 digit!')
         if self.tin:
             tin = self.search(
-                [('tin', '=ilike', self.tin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('tin', '=ilike', self.tin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(tin) > 1:
                 raise Warning(_('[Unique Error] TIN Number must be unique!'))
             if len(self.tin) != 12 or not self.tin.isdigit():
@@ -230,29 +230,13 @@ class ResPartner(models.Model):
     def _check_nid_constrain(self):
         if self.nid:
             nid = self.search(
-                [('nid', '=ilike', self.nid.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('nid', '=ilike', self.nid.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(nid) > 1:
                 raise Warning(_('[Unique Error] NID must be unique!'))
             if len(self.nid) not in (17,13,10):
                 raise Warning('[Format Error] NID must be 17/13/10 character!')
             if not self.nid.isdigit():
                 raise Warning('[Format Error] NID must be numeric!')
-
-    """ All functions """
-    # @api.constrains('name')
-    # def _check_unique_name(self):
-    #     if self.name:
-    #         name = self.env['res.partner'].search([('name', '=ilike', self.name),'|',('active', '=', True), ('active', '=', False)])
-    #         if self.supplier == True:
-    #             if len(name) > 1:
-    #                 raise ValidationError('[Unique Error] Vendor Name must be unique!')
-    #         elif self.customer == True:
-    #             if len(name) > 1:
-    #                 raise ValidationError('[Unique Error] Customer Name must be unique!')
-    #         else:
-    #             if len(name) > 1:
-    #                 raise ValidationError('[Unique Error] Name must be unique!')
-
 
 class HistoryResPartner(models.Model):
     _name = 'history.res.partner'

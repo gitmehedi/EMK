@@ -48,7 +48,7 @@ class ResPartnerWizard(models.TransientModel):
     def _check_unique_constrain(self):
         if self.name:
             name = self.env['res.partner'].search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -61,26 +61,26 @@ class ResPartnerWizard(models.TransientModel):
     def _check_numeric_constrain(self):
         if self.tax:
             tax = self.env['res.partner'].search(
-                [('tax', '=ilike', self.tax.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('tax', '=ilike', self.tax.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(tax) > 1:
                 raise Warning(_('[Unique Error] Trade License must be unique!'))
         if self.bin:
             bin = self.env['res.partner'].search(
-                [('bin', '=ilike', self.bin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('bin', '=ilike', self.bin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(bin) > 1:
                 raise Warning(_('[Unique Error] BIN Number must be unique!'))
             if len(self.bin) != 13 or not self.bin.isdigit():
                 raise Warning('[Format Error] BIN must be numeric with 13 digit!')
         if self.vat:
             vat = self.env['res.partner'].search(
-                [('vat', '=ilike', self.vat.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('vat', '=ilike', self.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(vat) > 1:
                 raise Warning(_('[Unique Error] VAT Registration must be unique!'))
             if len(self.vat) != 11 or not self.vat.isdigit():
                 raise Warning('[Format Error] VAT Registration must be numeric with 11 digit!')
         if self.tin:
             tin = self.env['res.partner'].search(
-                [('tin', '=ilike', self.tin.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('tin', '=ilike', self.tin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(tin) > 1:
                 raise Warning(_('[Unique Error] TIN Number must be unique!'))
             if len(self.tin) != 12 or not self.tin.isdigit():
@@ -91,7 +91,7 @@ class ResPartnerWizard(models.TransientModel):
             raise Warning('[Format Error] Fax must be 16 character!')
         if self.nid:
             nid = self.env['res.partner'].search(
-                [('nid', '=ilike', self.nid.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('nid', '=ilike', self.nid.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(nid) > 1:
                 raise Warning(_('[Unique Error] NID must be unique!'))
             if len(self.nid) not in (17,13,10):
