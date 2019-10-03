@@ -11,8 +11,8 @@ class AssetModify(models.TransientModel):
     _inherit = 'asset.modify'
 
     method_number = fields.Integer(string='One Entry (In Month)', required=True, default=1, invisible=True)
-    method_progress_factor = fields.Float('Degressive Factor')
-    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True)
+    method_progress_factor = fields.Float('Degressive Factor', default=0.0)
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0)
     adjusted_depr_amount = fields.Float(string='Adjusted Depr. Amount')
     method = fields.Selection([('linear', 'Straight Line/ Linear'), ('degressive', 'Reducing Method')],
                               string='Computation Method', required=True, default='linear',

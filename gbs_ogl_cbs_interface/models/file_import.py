@@ -33,13 +33,13 @@ class GBSFileImport(models.Model):
                     account_no = val.account_no or None
                     amount = val.amount or None
                     reference_no = val.reference_no or None
-                    value = val.value or None
+                    # value = val.value or None
                     type = val.type or None
                     date_array = val.date.split("-")
                     date = date_array[2] + date_array[1] + date_array[0]
                     narration = val.narration or None
-                    record = "{0}|{1}|{2}|{3}|{4}|{5}|{6}\r\n".format(account_no, amount, narration,
-                                                                      reference_no, date, value, type)
+                    record = "{0}|{1}|{2}|{3}|{4}|{5}\r\n".format(account_no, amount, narration,
+                                                                      reference_no, date, type)
                     file.write(record)
                     val.write({'state': 'done'})
                 self.write({'state': 'processed'})

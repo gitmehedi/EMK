@@ -97,15 +97,6 @@
                 <field name="note" widget="html"/>
             </xpath>
 
-            <xpath expr="//field[@name='method_number']" position="before">
-                <field name="depreciation_year"/>
-            </xpath>
-            <xpath expr="//field[@name='method_number']" position="replace">
-                <field name="method_number" invisible="True"/>
-            </xpath>
-            <xpath expr="//field[@name='prorata']" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
             <xpath expr="//notebook/page[1]" position="replace">
                 <page string="Depreciation History">
                     <field name="depreciation_line_ids" mode="tree" options="{'reload_whole_on_button': true}">
@@ -140,6 +131,20 @@
                             </group>
                         </form>
                     </field>
+                </page>
+            </xpath>
+            <xpath expr="//notebook/page[2]" position="replace">
+                <page string="Depreciation Information">
+                    <group>
+                        <group string="Periodicity">
+                            <field name="method_number" string="Asset Life (In Year)"/>
+                        </group>
+                        <group string="Depreciation Method">
+                            <field name="method" widget="radio" attrs="{'invisible': [('type','=','sale')]}"/>
+                            <field name="method_progress_factor"
+                                   attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                        </group>
+                    </group>
                 </page>
             </xpath>
             <xpath expr="//notebook" position="inside">
@@ -195,7 +200,7 @@
                       decoration-success="(state == 'open') and (allocation_status == True)"
                       decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
                       decoration-muted="(state == 'close')">
-                    <field name="asset_seq" />
+                    <field name="asset_seq"/>
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="asset_type_id"/>

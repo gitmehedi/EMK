@@ -20,12 +20,13 @@ class AccountAssetCategory(models.Model):
 
     is_custom_depr = fields.Boolean(default=True, required=True)
     prorata = fields.Boolean(string='Prorata Temporis', default=True)
-    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0,
                                        track_visibility='onchange')
     method_number = fields.Integer(string='Number of Depreciations', default=1,
                                    help="The number of depreciations needed to depreciate your asset")
-    method = fields.Selection([('degressive', 'Reducing Method'),('linear', 'Straight Line/Linear')],
-                              string='Computation Method', required=True, default='degressive', track_visibility='onchange',
+    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
+                              string='Computation Method', required=True, default='degressive',
+                              track_visibility='onchange',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
@@ -63,9 +64,23 @@ class AccountAssetCategory(models.Model):
     line_ids = fields.One2many('history.account.asset.category', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
+
     @api.model
     def create(self, vals):
         return super(AccountAssetCategory, self).create(vals)
+
+    @api.onchange('account_asset_id')
+    def onchange_account_asset(self):
+        return False
+
+    @api.constrains('method')
+    def check_method(self):
+        if self.method == 'linear':
+            if self.depreciation_year < 1:
+                raise ValidationError(_('Asset Life (In Year) cann\'t be zero or negative value.'))
+        else:
+            if self.method_progress_factor <= 0:
+                raise ValidationError(_('Depreciation Factor cann\'t be zero or negative value.'))
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
@@ -74,8 +89,9 @@ class AccountAssetCategory(models.Model):
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):
-        if self.depreciation_year < 1:
-            raise ValidationError(_('Total year cannot be zero or negative value.'))
+        if self.method == 'linear':
+            if self.depreciation_year < 1:
+                raise ValidationError(_('Total year cannot be zero or negative value.'))
 
     @api.onchange("code")
     def onchange_code(self):
@@ -86,7 +102,7 @@ class AccountAssetCategory(models.Model):
             elif not self.parent_id:
                 self.code = filter
 
-    @api.constrains('name','code')
+    @api.constrains('name', 'code')
     def _check_unique_constrain(self):
         if self.name:
             if self.parent_id:
@@ -175,6 +191,18 @@ class AccountAssetCategory(models.Model):
                     'name': self.name if not requested.change_name else requested.change_name,
                     'pending': False,
                     'active': requested.status,
+                    'method_progress_factor': requested.method_progress_factor,
+                    'journal_id': requested.journal_id.id,
+                    'depreciation_year': requested.depreciation_year,
+                    'method_number': requested.method_number,
+                    'method': requested.method,
+                    'account_asset_id': requested.account_asset_id.id,
+                    'asset_suspense_account_id': requested.asset_suspense_account_id.id,
+                    'account_depreciation_id': requested.account_depreciation_id.id,
+                    'account_depreciation_expense_id': requested.account_depreciation_expense_id.id,
+                    'account_asset_loss_id': requested.account_asset_loss_id.id,
+                    'account_asset_gain_id': requested.account_asset_gain_id.id,
+                    'asset_sale_suspense_account_id': requested.asset_sale_suspense_account_id.id,
                 })
                 requested.write({
                     'state': 'approve',
@@ -220,3 +248,24 @@ class HistoryAccountAssetCategory(models.Model):
     line_id = fields.Many2one('account.asset.category', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
+    method_progress_factor = fields.Float(string='Depreciation Factor', default=0.0, )
+    journal_id = fields.Many2one('account.journal', string='Journal')
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', default=0)
+    method_number = fields.Integer(string='Number of Depreciations', default=0)
+    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
+                              string='Computation Method', default='degressive')
+    account_asset_id = fields.Many2one('account.account', string='Asset Account',
+                                       domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation',
+                                                domain=[('deprecated', '=', False)])
+    account_depreciation_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                              string='Accumulated Depreciation A/C', )
+    account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
+                                                      domain=[('internal_type', '=', 'other'),
+                                                              ('deprecated', '=', False)])
+    account_asset_loss_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                            string='Asset Loss A/C')
+    account_asset_gain_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                            string='Asset Gain A/C')
+    asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
+                                                     string='Asset Awaiting Disposal')

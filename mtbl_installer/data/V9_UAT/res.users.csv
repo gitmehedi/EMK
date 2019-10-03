@@ -1,0 +1,10 @@
+Name,Login,Active,Pending
+Accountant 1,accountant1@mtb.com,True,False
+Accountant 2,accountant2@mtb.com,True,False
+Accountant 3,accountant3@mtb.com,True,False
+Account Manager 1,accountmanager1@mtb.com,True,False
+Account Manager 2,accountmanager2@mtb.com,True,False
+Account Manager 3,accountmanager3@mtb.com,True,False
+MTBL Admin 1,mtbladmin1@mtb.com,True,False
+MTBL Admin 2,mtbladmin@mtb.com,True,False
+MTBL Admin 3,mtbladmin3@mtb.com,True,False
