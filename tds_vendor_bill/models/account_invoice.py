@@ -29,11 +29,12 @@ class AccountInvoice(models.Model):
 
 
     @api.one
-    @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount', 'is_tds_applicable')
+    @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount',
+                 'is_tds_applicable','tax_line_ids.amount')
     def _compute_total_tds(self):
         for invoice in self:
             if invoice.is_tds_applicable:
-                invoice.total_tds_amount = sum(line.tds_amount for line in invoice.invoice_line_ids)
+                invoice.total_tds_amount = sum(line.amount for line in self.tax_line_ids if line.tds_id)
 
     @api.onchange('is_tds_applicable')
     def _onchange_is_tds_applicable(self):
@@ -177,7 +178,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    tds_amount = fields.Float('TDS Value', store=True, copy=False)
+    tds_amount = fields.Float('TDS Value',store=True, copy=False)
     account_tds_id = fields.Many2one('tds.rule', string='TDS',
                                      domain="[('active', '=', True),('state', '=','confirm' )]")
 
@@ -215,10 +216,10 @@ class AccountInvoiceLine(models.Model):
                         break
                     elif pre_invoice_line_list:
                         # total_amount = pro_base_val + sum(int(i.quantity * i.price_unit) for i in pre_invoice_line_list)
-                        total_amount = pro_base_val + sum(int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
+                        total_amount = pro_base_val + sum(int(i.price_subtotal_without_vat) for i in pre_invoice_line_list if i.account_tds_id.type_rate == 'slab')
                         if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
-                            remaining_tds_amount = total_tds_amount - sum(int(i.tds_amount) for i in pre_invoice_line_list)
+                            remaining_tds_amount = total_tds_amount - sum(int(i.tds_amount) for i in pre_invoice_line_list if i.account_tds_id.type_rate == 'slab')
                             self.tds_amount = remaining_tds_amount
                             break
                     else:
@@ -276,3 +277,9 @@ class AccountMoveLine(models.Model):
     #                 if tax_line_obj.tds_id:
     #                     tax_line_obj.unlink()
     #     return res
+    # @api.one
+    # @api.depends('price_unit', 'account_tds_id', 'quantity', 'price_subtotal_without_vat',
+    #              'invoice_id.vat_selection', 'invoice_line_tax_ids')
+    # def _compute_tds(self):
+    #     self.invoice_id._update_tds()
+    #     self.tds_amount = self._calculate_tds_value()
