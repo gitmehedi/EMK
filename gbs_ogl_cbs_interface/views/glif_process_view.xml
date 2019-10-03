@@ -18,7 +18,7 @@
                                    attrs="{'invisible': [('method', '!=', 'sftp')],'required': [('method', '=', 'sftp')]}"/>
                         </group>
                     </group>
-                    <group string="Source and Destination Settings">
+                    <group>
                         <group string="Source Settings">
                             <field name="source_path" placeholder="/var/backups"/>
                             <field name="source_sftp_host" placeholder="sftp.example.com"

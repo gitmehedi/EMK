@@ -7,16 +7,23 @@
         <field name="arch" type="xml">
             <form string="API Process">
                 <sheet>
-                    <label for="endpoint_fullname" string="Endpoint Full Name"/>
-                    <h4>
-                        <field name="endpoint_fullname" placeholder="Endpoint Name"/>
-                    </h4>
-                    <group>
+                    <div class="oe_title">
+                        <label for="endpoint_fullname" string="API Endpoint"/>
+                        <h4>
+                            <field name="endpoint_fullname" placeholder="Endpoint Name"/>
+                        </h4>
+                    </div>
+                    <group string="API Settings">
                         <field name="name"/>
+                        <field name="http_method"/>
                         <field name="endpoint_url"/>
                         <field name="endpoint_port"/>
                         <field name="wsdl_name"/>
                         <field name="status"/>
+                    </group>
+                    <group string="Credentials">
+                        <field name="username"/>
+                        <field name="password" password="True"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">

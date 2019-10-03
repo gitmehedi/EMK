@@ -16,7 +16,7 @@
                             <field name="method"/>
                         </group>
                     </group>
-                    <group string="Source and Destination Settings">
+                    <group>
                         <group string="Source Settings">
                             <field name="source_path" placeholder="/var/source"/>
                         </group>
