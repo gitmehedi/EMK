@@ -43,7 +43,6 @@ class AccountInvoice(models.Model):
                 line.tds_amount = False
                 line.account_tds_id = False
 
-
     @api.multi
     def action_invoice_open(self):
         # if self.is_tds_applicable:
@@ -178,7 +177,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    tds_amount = fields.Float('TDS Value',store=True, copy=False)
+    tds_amount = fields.Float('TDS Value',copy=False)
     account_tds_id = fields.Many2one('tds.rule', string='TDS',
                                      domain="[('active', '=', True),('state', '=','confirm' )]")
 
@@ -188,10 +187,10 @@ class AccountInvoiceLine(models.Model):
     #         self.account_tds_id = self.product_id.account_tds_id.id
     #     return super(AccountInvoiceLine, self)._onchange_product_id()
 
-    @api.onchange('account_tds_id','price_subtotal_without_vat')
+    @api.onchange('account_tds_id','price_subtotal_without_vat','invoice_id.total_tds_amount')
     def _onchange_account_tds_id(self):
         if self.account_tds_id:
-            self.tds_amount = self._calculate_tds_value()
+            return self.invoice_id._update_tds()
 
     @api.multi
     def _calculate_tds_value(self, pre_invoice_line_list=None):
@@ -257,29 +256,22 @@ class AccountMoveLine(models.Model):
 
     tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')
 
-    # @api.model
-    # def create(self, vals):
-    #     invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
-    #     if invoice.is_tds_applicable:
-    #         invoice._update_tds()
-    #         invoice._update_tax_line_vals()
-    #     return invoice
-    #
-    # @api.multi
-    # def _write(self, vals):
-    #     res = super(AccountInvoice, self)._write(vals)
-    #     if vals.get('invoice_line_ids', False) or vals.get('is_tds_applicable', False):
-    #         if self.is_tds_applicable:
-    #             self._update_tds()
-    #             self._update_tax_line_vals()
-    #         elif self.is_tds_applicable is False:
-    #             for tax_line_obj in self.tax_line_ids:
-    #                 if tax_line_obj.tds_id:
-    #                     tax_line_obj.unlink()
-    #     return res
     # @api.one
     # @api.depends('price_unit', 'account_tds_id', 'quantity', 'price_subtotal_without_vat',
     #              'invoice_id.vat_selection', 'invoice_line_tax_ids')
     # def _compute_tds(self):
     #     self.invoice_id._update_tds()
     #     self.tds_amount = self._calculate_tds_value()
+    # @api.model
+    # def create(self, vals):
+    #     invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
+    #     if invoice.is_tds_applicable:
+    #         invoice._update_tds()
+    #     return invoice
+    # @api.multi
+    # def _write(self, vals):
+    #     res = super(AccountInvoice, self)._write(vals)
+    #     if vals.get('invoice_line_ids', False) or vals.get('is_tds_applicable', False):
+    #         if self.is_tds_applicable:
+    #             self._update_tds()
+    #     return res
