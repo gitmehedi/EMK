@@ -43,7 +43,6 @@ class AccountInvoice(models.Model):
                 line.tds_amount = False
                 line.account_tds_id = False
 
-
     @api.multi
     def action_invoice_open(self):
         # if self.is_tds_applicable:
@@ -120,11 +119,11 @@ class AccountInvoice(models.Model):
     def get_taxes_values(self):
         tax_grouped = {}
         for line in self.invoice_line_ids:
-            # if self.vat_over_tds:
-            #     tds = line._calculate_tds_value()
-            #     price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0) + tds
-            # else:
-            price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            if line.account_tds_id.effect_on_base:
+                tds = line.tds_amount
+                price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0) + tds
+            else:
+                price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             # if self.vat_selection == 'normal':
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity,
                                                               line.product_id, self.partner_id)['taxes']
@@ -178,7 +177,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    tds_amount = fields.Float('TDS Value',store=True, copy=False)
+    tds_amount = fields.Float('TDS Value',copy=False)
     account_tds_id = fields.Many2one('tds.rule', string='TDS',
                                      domain="[('active', '=', True),('state', '=','confirm' )]")
 
@@ -187,18 +186,55 @@ class AccountInvoiceLine(models.Model):
     #     if self.product_id:
     #         self.account_tds_id = self.product_id.account_tds_id.id
     #     return super(AccountInvoiceLine, self)._onchange_product_id()
+    @api.one
+    @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
+                 'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id',
+                 'invoice_id.company_id', 'invoice_id.date_invoice', 'invoice_id.date',
+                 'invoice_id.vat_selection', 'invoice_id.vat_over_tds')
+    def _compute_price(self):
+        if self.account_tds_id.effect_on_base:
+            currency = self.invoice_id and self.invoice_id.currency_id or None
+            price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+            tds = self.tds_amount
+            price_with_tds = price + tds
+            taxes = False
+            if self.invoice_line_tax_ids:
+                taxes = self.invoice_line_tax_ids.compute_all(price_with_tds, currency, self.quantity, product=self.product_id,
+                                                              partner=self.invoice_id.partner_id)
+            self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price_with_tds
+            self.price_subtotal_without_vat = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price_with_tds
 
-    @api.onchange('account_tds_id','price_subtotal_without_vat')
+            if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
+                price_subtotal_signed = self.invoice_id.currency_id.with_context(
+                    date=self.invoice_id._get_currency_rate_date()).compute(price_subtotal_signed,
+                                                                            self.invoice_id.company_id.currency_id)
+            sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
+            self.price_subtotal_signed = price_subtotal_signed * sign
+            if taxes:
+                if self.invoice_id.vat_selection == 'mushok' and self.invoice_line_tax_ids[0].mushok_amount > 0.0:
+                    self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
+                    self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
+                elif self.invoice_id.vat_selection == 'vds_authority' and self.invoice_line_tax_ids[0].vds_amount > 0.0:
+                    self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
+                    self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+                else:
+                    self.mushok_vds_amount = False
+        else:
+            return super(AccountInvoiceLine, self)._compute_price()
+
+    @api.onchange('account_tds_id','price_subtotal_without_vat','invoice_id.total_tds_amount')
     def _onchange_account_tds_id(self):
         if self.account_tds_id:
-            self.tds_amount = self._calculate_tds_value()
+            return self.invoice_id._update_tds()
 
     @api.multi
     def _calculate_tds_value(self, pre_invoice_line_list=None):
         # for line in self:
         if self.invoice_id.is_tds_applicable and self.name:
-            # pro_base_val = self.quantity * self.price_unit
-            pro_base_val = self.price_subtotal_without_vat
+            if self.account_tds_id.effect_on_base:
+                pro_base_val = self.quantity * self.price_unit
+            else:
+                pro_base_val = self.price_subtotal_without_vat
             if self.account_tds_id.type_rate == 'flat':
                 if self.account_tds_id.price_include:
                     self.tds_amount = pro_base_val-(pro_base_val/(1+self.account_tds_id.flat_rate / 100))
@@ -245,7 +281,6 @@ class AccountInvoiceLine(models.Model):
         return remain_tds_amount
 
 
-
 class AccountInvoiceTax(models.Model):
     _inherit = "account.invoice.tax"
 
@@ -256,30 +291,3 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')
-
-    # @api.model
-    # def create(self, vals):
-    #     invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
-    #     if invoice.is_tds_applicable:
-    #         invoice._update_tds()
-    #         invoice._update_tax_line_vals()
-    #     return invoice
-    #
-    # @api.multi
-    # def _write(self, vals):
-    #     res = super(AccountInvoice, self)._write(vals)
-    #     if vals.get('invoice_line_ids', False) or vals.get('is_tds_applicable', False):
-    #         if self.is_tds_applicable:
-    #             self._update_tds()
-    #             self._update_tax_line_vals()
-    #         elif self.is_tds_applicable is False:
-    #             for tax_line_obj in self.tax_line_ids:
-    #                 if tax_line_obj.tds_id:
-    #                     tax_line_obj.unlink()
-    #     return res
-    # @api.one
-    # @api.depends('price_unit', 'account_tds_id', 'quantity', 'price_subtotal_without_vat',
-    #              'invoice_id.vat_selection', 'invoice_line_tax_ids')
-    # def _compute_tds(self):
-    #     self.invoice_id._update_tds()
-    #     self.tds_amount = self._calculate_tds_value()

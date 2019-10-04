@@ -31,7 +31,7 @@
                        widget="monetary"/>
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="after">
-                <field name="tds_id"/>
+                <field name="tds_id" invisible="1"/>
             </xpath>
         </field>
     </record>
