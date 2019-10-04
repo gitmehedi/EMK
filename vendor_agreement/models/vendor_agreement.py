@@ -33,9 +33,9 @@ class VendorAgreement(models.Model):
     advance_amount = fields.Float(string="Approved Advance", required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
                                   track_visibility='onchange', help="Finally granted advance amount.")
-    adjusted_amount = fields.Float(string="Adjusted Amount",track_visibility='onchange',
+    adjusted_amount = fields.Float(string="Adjusted Amount", track_visibility='onchange',
                                    help="Total amount which are already adjusted in bill.")
-    outstanding_amount = fields.Float(string="Outstanding Amount",compute='_compute_outstanding_amount', readonly=True,
+    outstanding_amount = fields.Float(string="Outstanding Amount", compute='_compute_outstanding_amount', readonly=True,
                                       track_visibility='onchange', help="Remaining Amount to adjustment.")
     account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
@@ -55,7 +55,7 @@ class VendorAgreement(models.Model):
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
         ('done', "Done"),
-        ('cancel',"Canceled")], default='draft',string="Status",
+        ('cancel', "Canceled")], default='draft', string="Status",
         track_visibility='onchange')
 
     agreement_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ], string='Type', required=True,
@@ -81,7 +81,7 @@ class VendorAgreement(models.Model):
                                         states={'draft': [('readonly', False)]})
 
     @api.one
-    @api.depends('payment_line_ids.amount','payment_line_ids.state')
+    @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
     def _compute_payment_amount(self):
         for va in self:
             va.total_payment_amount = sum(line.amount for line in va.payment_line_ids if line.state not in ['cancel'])
@@ -89,7 +89,7 @@ class VendorAgreement(models.Model):
                 line.amount for line in va.payment_line_ids if line.state in ['approved'])
 
     @api.one
-    @api.depends('adjusted_amount','total_payment_approved')
+    @api.depends('adjusted_amount', 'total_payment_approved')
     def _compute_outstanding_amount(self):
         for va in self:
             va.outstanding_amount = va.total_payment_approved - va.adjusted_amount
@@ -208,7 +208,7 @@ class VendorAgreement(models.Model):
         if self.is_amendment == True:
             requested = self.history_line_ids.search([('state', '=', 'pending'),
                                                       ('agreement_id', '=', self.id)],
-                                                     order='id desc',limit=1)
+                                                     order='id desc', limit=1)
             if requested:
                 self.write({
                     'end_date': requested.end_date,
@@ -218,14 +218,14 @@ class VendorAgreement(models.Model):
                     'account_id': requested.account_id.id,
                     'is_amendment': False,
                 })
-                requested.write({'state':'confirm'})
-
+                requested.write({'state': 'confirm'})
 
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

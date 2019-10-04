@@ -64,7 +64,6 @@ class AccountAssetCategory(models.Model):
     line_ids = fields.One2many('history.account.asset.category', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
 
-
     @api.model
     def create(self, vals):
         return super(AccountAssetCategory, self).create(vals)
@@ -107,12 +106,12 @@ class AccountAssetCategory(models.Model):
         if self.name:
             if self.parent_id:
                 name = self.search(
-                    [('name', '=ilike', self.name.strip()), ('parent_id', '!=', None), '|', ('active', '=', True),
-                     ('active', '=', False)])
+                    [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), ('parent_id', '!=', None), '|',
+                     ('active', '=', True), ('active', '=', False)])
             else:
                 name = self.search(
-                    [('name', '=ilike', self.name.strip()), ('parent_id', '=', None), '|', ('active', '=', True),
-                     ('active', '=', False)])
+                    [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), ('parent_id', '=', None), '|',
+                     ('active', '=', True), ('active', '=', False)])
 
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
@@ -125,12 +124,12 @@ class AccountAssetCategory(models.Model):
 
             if self.parent_id:
                 code = self.search(
-                    [('code', '=ilike', self.code.strip()), ('parent_id', '!=', None), '|', ('active', '=', True),
-                     ('active', '=', False)], )
+                    [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'), ('parent_id', '!=', None), '|',
+                     ('active', '=', True), ('active', '=', False)])
             else:
                 code = self.search(
-                    [('code', '=ilike', self.code.strip()), ('parent_id', '=', None), '|', ('active', '=', True),
-                     ('active', '=', False)])
+                    [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'), ('parent_id', '=', None), '|',
+                     ('active', '=', True), ('active', '=', False)])
 
             if len(code) > 1:
                 raise Warning('[Unique Error] Code must be unique!')
@@ -187,23 +186,40 @@ class AccountAssetCategory(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.write({
+                line = {
                     'name': self.name if not requested.change_name else requested.change_name,
                     'pending': False,
                     'active': requested.status,
-                    'method_progress_factor': requested.method_progress_factor,
-                    'journal_id': requested.journal_id.id,
-                    'depreciation_year': requested.depreciation_year,
-                    'method_number': requested.method_number,
-                    'method': requested.method,
-                    'account_asset_id': requested.account_asset_id.id,
-                    'asset_suspense_account_id': requested.asset_suspense_account_id.id,
-                    'account_depreciation_id': requested.account_depreciation_id.id,
-                    'account_depreciation_expense_id': requested.account_depreciation_expense_id.id,
-                    'account_asset_loss_id': requested.account_asset_loss_id.id,
-                    'account_asset_gain_id': requested.account_asset_gain_id.id,
-                    'asset_sale_suspense_account_id': requested.asset_sale_suspense_account_id.id,
-                })
+                }
+
+                if requested.method_progress_factor:
+                    line['method_progress_factor'] = requested.method_progress_factor
+                if requested.depreciation_year:
+                    line['depreciation_year'] = requested.depreciation_year
+                if requested.method_number:
+                    line['method_number'] = requested.method_number
+                if requested.method:
+                    line['method'] = requested.method
+                if requested.journal_id:
+                    line['journal_id'] = requested.journal_id.id
+                if requested.account_asset_id:
+                    line['account_asset_id'] = requested.account_asset_id.id
+                if requested.asset_suspense_account_id:
+                    line['asset_suspense_account_id'] = requested.asset_suspense_account_id.id
+                if requested.account_depreciation_id:
+                    line['account_depreciation_id'] = requested.account_depreciation_id.id
+                if requested.account_depreciation_expense_id:
+                    line['account_depreciation_expense_id'] = requested.account_depreciation_expense_id.id
+                if requested.account_asset_loss_id:
+                    line['account_asset_loss_id'] = requested.account_asset_loss_id.id
+                if requested.account_asset_gain_id:
+                    line['account_asset_gain_id'] = requested.account_asset_gain_id.id
+                if requested.asset_sale_suspense_account_id:
+                    line['account_depreciation_expense_id'] = requested.account_depreciation_expense_id.id
+                if requested.no_depreciation:
+                    line['no_depreciation'] = requested.no_depreciation
+
+                self.write(line)
                 requested.write({
                     'state': 'approve',
                     'change_date': fields.Datetime.now()
@@ -269,3 +285,4 @@ class HistoryAccountAssetCategory(models.Model):
                                             string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
+    no_depreciation = fields.Boolean(string="No Depreciation", default=False)

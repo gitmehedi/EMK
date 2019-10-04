@@ -44,12 +44,14 @@
                 </group>
                 <group>
                     <group string="Periodicity">
-                        <field name="method_number" string="Asset Life (In Year)"/>
+                        <field name="method_number" string="Asset Life (In Year)"
+                        attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
                     </group>
                     <group string="Depreciation Method">
                         <field name="method" widget="radio"/>
                         <field name="method_progress_factor"
                                attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                        <field name="no_depreciation"/>
                     </group>
                 </group>
                 <footer>

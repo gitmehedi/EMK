@@ -31,10 +31,10 @@ class AcquiringChannel(models.Model):
     def _check_unique_constrain(self):
         if self.name or self.code:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|',
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|',
                  ('active', '=', True), ('active', '=', False)])
             code = self.search(
-                [('code', '=ilike', self.code.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
             if len(code) > 1:

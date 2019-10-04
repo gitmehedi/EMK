@@ -125,6 +125,7 @@
                                 <field name="method_number"/>
                                 <field name="method"/>
                                 <field name="status"/>
+                                <field name="no_depreciation"/>
                                 <field name="state"/>
                             </tree>
                         </field>

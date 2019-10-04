@@ -44,7 +44,7 @@ class BottomLineBudget(models.Model):
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|',
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|',
                  ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning(_('[Unique Error] Name must be unique!'))

@@ -8,15 +8,18 @@ class SOAPProcess(models.Model):
     _name = 'soap.process'
     _inherit = ["mail.thread"]
     _rec_name = 'name'
-    _description = 'SOAP Endpoint'
+    _description = 'API Endpoint'
 
     name = fields.Char(string='Endpoint Name', required=True)
     endpoint_fullname = fields.Char(string='Endpoint', compute='_compute_endpoint_fullname', store=True)
-
     endpoint_url = fields.Char(string='Host IP', size=24, required=True, track_visibility='onchange')
     endpoint_port = fields.Char(string='Host Port', size=10, required=True, track_visibility='onchange')
     wsdl_name = fields.Char(string='WSDL', size=100, required=True, track_visibility='onchange')
-    status = fields.Boolean(string='Status', default=True)
+    http_method = fields.Selection([('http', 'http'), ('https', 'https')], string='HTTP Method', default='http',
+                                   required=True, track_visibility='onchange')
+    username = fields.Char(string='Username', required=True, track_visibility='onchange')
+    password = fields.Char(string='Password', required=True, track_visibility='onchange')
+    status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name', 'endpoint_fullname')
     def _check_unique_constrain(self):
@@ -42,8 +45,8 @@ class SOAPProcess(models.Model):
     @api.depends("endpoint_url", "endpoint_port", "wsdl_name")
     def _compute_endpoint_fullname(self):
         for rec in self:
-            if rec.endpoint_url and rec.endpoint_port and rec.wsdl_name:
-                rec.endpoint_fullname = rec.endpoint_url + ':' + rec.endpoint_port + rec.wsdl_name
+            if rec.http_method and rec.endpoint_url and rec.endpoint_port and rec.wsdl_name:
+                rec.endpoint_fullname = rec.http_method + "://" + rec.endpoint_url + ':' + rec.endpoint_port + '/' + rec.wsdl_name
 
     @api.model
     def action_api_interface(self):
@@ -431,3 +434,24 @@ class SOAPProcess(models.Model):
     def format_date(self, val):
         vals = val.split('-')
         return vals[0] + vals[1] + vals[2]
+
+
+class ServerFileError(models.Model):
+    _name = 'soap.process.error'
+    _description = "SOAP Processing Error"
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _order = 'id desc'
+
+    name = fields.Char(string='Title', required=True)
+    process_date = fields.Datetime(string='Process Date', default=fields.Datetime.now, required=True, readonly=True)
+    status = fields.Boolean(default=False, string='Status')
+    request_body = fields.Text(string='Request Data', required=True)
+    response_body = fields.Text(string='Response Data', required=True)
+    errors = fields.Text(string='Error Code', required=True)
+    error_code = fields.Char(string='Error Code', required=True)
+    error_message = fields.Char(string='Error Details', required=True)
+    state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'issued')]

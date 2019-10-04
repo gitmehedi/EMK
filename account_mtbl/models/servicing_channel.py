@@ -20,7 +20,7 @@ class ServicingChannel(models.Model):
                             states={'draft': [('readonly', False)]})
 
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             track_visibility='onchange',string='Status')
+                             track_visibility='onchange', string='Status')
     line_ids = fields.One2many('history.servicing.channel', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
@@ -30,9 +30,11 @@ class ServicingChannel(models.Model):
     def _check_unique_constrain(self):
         if self.name or self.code:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             code = self.search(
-                [('code', '=ilike', self.code.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
             if len(code) > 1:
@@ -153,4 +155,4 @@ class HistoryServicingChannel(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('servicing.channel', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')
