@@ -46,6 +46,7 @@
                                         </div>
                                         <field name="price_include" attrs="{'invisible':['|',('type_rate', '!=', 'flat'),('price_exclude', '!=', False)]}"/>
                                         <field name="price_exclude" attrs="{'invisible':['|',('type_rate', '!=', 'flat'),('price_include', '!=', False)]}"/>
+                                        <field name="effect_on_base" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
                                     </group>
                                     <group>
                                         <field name="account_id" domain="[('internal_type','=','other')]"

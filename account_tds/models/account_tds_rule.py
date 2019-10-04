@@ -34,6 +34,9 @@ class TDSRules(models.Model):
     price_exclude = fields.Boolean(string='Excluded in Price', default=False,
                                    track_visibility='onchange', states={'confirm': [('readonly', True)]},
                                    help="Check this if the price you use on the product and invoices excludes this TAX.")
+    effect_on_base = fields.Boolean(string='Effect On Base Price', default=False,
+                                   track_visibility='onchange', states={'confirm': [('readonly', True)]},
+                                   help="Check this if the TDS effect on base price.")
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
