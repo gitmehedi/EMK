@@ -170,7 +170,7 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).do_merge(keep_references=keep_references, date_invoice=date_invoice)
         if res:
             self.browse(res)._update_tds()
-            self.browse(res)._update_tax_line_vals()
+            # self.browse(res)._update_tax_line_vals()
         return res
 
 
