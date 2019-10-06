@@ -283,7 +283,7 @@
                 <field name="partner_id" groups="base.group_user" string="Vendor"/>
                 <field name="date_invoice" string="Bill Date"/>
                 <field name="number" string="Bill No"/>
-                <field name="user_id" string="User Id"/>
+                <field name="user_id" string="Responsible"/>
                 <field name="commercial_partner_id" invisible="1"/>
                 <field name="reference" invisible="1"/>
                 <field name="name" invisible="1"/>
