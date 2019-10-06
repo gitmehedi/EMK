@@ -81,6 +81,9 @@ class ReportTrialBalance(models.AbstractModel):
             if account.id in account_result.keys():
                 asslib_status =  account_result[account.id].get('asset_liability_id')
                 res['init_bal'] = account_result[account.id].get('init_bal')
+                res['sec_layer'] = account.parent_id.parent_id.parent_id.name
+                res['third_layer'] = account.parent_id.parent_id.name
+                res['init_bal'] = account_result[account.id].get('init_bal')
                 res['debit'] = account_result[account.id].get('debit')
                 res['credit'] = account_result[account.id].get('credit')
                 res['balance'] = account_result[account.id].get('balance')

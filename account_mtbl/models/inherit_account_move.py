@@ -14,6 +14,7 @@ class AccountMove(models.Model):
                                         track_visibility='onchange')
     is_cbs = fields.Boolean(default=False, help='CBS data always sync with OGL using GLIF.')
     is_sync = fields.Boolean(default=False, help='OGL continuously send data to CBS for journal sync.')
+    is_cr = fields.Boolean(default=False)
 
 
 class AccountMoveLine(models.Model):
