@@ -16,17 +16,14 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]},
         help="""If TDS not apply for this bill or supplier already give the TDS for this bill then it will permanently inapplicable.
         If there any chance to add TDS in this bill then its temporary inapplicable""")
-
     total_tds_amount = fields.Float('Total TDS', compute='_compute_total_tds',
                                     store=True, readonly=True, track_visibility='always', copy=False)
-
     tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='VAT', oldname='tax_line',
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     vat_over_tds = fields.Boolean(string='VAT over TDS', default=False,
                                   readonly=True, states={'draft': [('readonly', False)]},
                                   help="""TDS will applicable to base price for this bill. 
                                        VAT will be calculated on TDS+Base price.""")
-
 
     @api.one
     @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount',
@@ -83,7 +80,8 @@ class AccountInvoice(models.Model):
                     pre_invoice_line_list = []
                     for invoice_obj in invoice_objs:
                         for invoice_line_obj in invoice_obj.invoice_line_ids:
-                            if invoice_line_obj.product_id.id == line.product_id.id and invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
+                            # if invoice_line_obj.product_id.id == line.product_id.id and invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
+                            if invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
                                 pre_invoice_line_list.append(invoice_line_obj)
                     line._calculate_tds_value(pre_invoice_line_list)
                 else:
@@ -252,10 +250,10 @@ class AccountInvoiceLine(models.Model):
                         break
                     elif pre_invoice_line_list:
                         # total_amount = pro_base_val + sum(int(i.quantity * i.price_unit) for i in pre_invoice_line_list)
-                        total_amount = pro_base_val + sum(int(i.price_subtotal_without_vat) for i in pre_invoice_line_list if i.account_tds_id.type_rate == 'slab')
+                        total_amount = pro_base_val + sum(int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
                         if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
-                            remaining_tds_amount = total_tds_amount - sum(int(i.tds_amount) for i in pre_invoice_line_list if i.account_tds_id.type_rate == 'slab')
+                            remaining_tds_amount = total_tds_amount - sum(int(i.tds_amount) for i in pre_invoice_line_list)
                             self.tds_amount = remaining_tds_amount
                             break
                     else:
