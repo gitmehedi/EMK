@@ -233,6 +233,15 @@ class VendorAgreement(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'confirm')]
 
+    def name_get(self):
+        res = []
+        for agr in self:
+            name = agr.name
+            if agr.product_id:
+                name = u'%s[%s]' % (agr.name,agr.product_id.name)
+            res.append((agr.id, name))
+        return res
+
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
