@@ -147,7 +147,7 @@
                                 <field name="deposited_bank"/>
                                 <field name="bank_branch"/>
                                 <field name="currency_id" invisible="1"/>
-                                <field name="type"/>
+                                <field name="type" invisible="1"/>
                             </group>
                         </group>
                         <notebook colspan="4">
