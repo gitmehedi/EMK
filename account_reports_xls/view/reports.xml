@@ -53,7 +53,7 @@
                         </td>
                         <t t-set="init_bal" t-value="init_bal+account['init_bal']"/>
                         <t t-set="debit" t-value="debit+account['debit']"/>
-                        <t t-set="credit" t-value="debit+account['credit']"/>
+                        <t t-set="credit" t-value="credit+account['credit']"/>
                         <t t-set="balance" t-value="balance+account['balance']"/>
                     </tr>
                     <tr style="font-weight: bold;">
