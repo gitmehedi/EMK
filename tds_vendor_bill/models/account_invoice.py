@@ -83,7 +83,8 @@ class AccountInvoice(models.Model):
                     pre_invoice_line_list = []
                     for invoice_obj in invoice_objs:
                         for invoice_line_obj in invoice_obj.invoice_line_ids:
-                            if invoice_line_obj.product_id.id == line.product_id.id and invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
+                            # if invoice_line_obj.product_id.id == line.product_id.id and invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
+                            if invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
                                 pre_invoice_line_list.append(invoice_line_obj)
                     line._calculate_tds_value(pre_invoice_line_list)
                 else:
