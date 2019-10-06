@@ -46,7 +46,7 @@
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Amendment" name="action_amendment" states="done"
                                     type="object" class="oe_read_only"
-                                    groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_invoice"/>
+                                    groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
                             <button string="Payment" name="action_payment" states="done"
                                     type="object" class="oe_read_only"
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>

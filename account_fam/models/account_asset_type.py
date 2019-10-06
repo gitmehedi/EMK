@@ -90,7 +90,7 @@ class AccountAssetCategory(models.Model):
     def check_depreciation_year(self):
         if self.method == 'linear':
             if self.depreciation_year < 1:
-                raise ValidationError(_('Total year cannot be zero or negative value.'))
+                raise ValidationError(_('Asset Life cann\'t be zero or negative value.'))
 
     @api.onchange("code")
     def onchange_code(self):

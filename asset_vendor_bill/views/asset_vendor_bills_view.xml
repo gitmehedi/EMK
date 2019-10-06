@@ -10,12 +10,12 @@
                     <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate"
                             class="oe_highlight" groups="account.group_account_manager"/>
                     <button name="action_payment_instruction" type="object" states="open"
-                            string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
+                            string="Payment Instruction" class="oe_highlight" groups="account.group_account_user"/>
                     <button name="%(account.action_account_invoice_refund)d" type='action' string='Ask Refund'
                             groups="base.group_system"
                             attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','paid'))]}"/>
                     <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
-                            groups="account.group_account_invoice"/>
+                            groups="account.group_account_user"/>
                     <button name="action_invoice_draft" states="cancel" string="Set to draft" type="object"
                             groups="base.group_system"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid"/>
@@ -125,7 +125,7 @@
                                                 <field name="tax_id" invisible="1"/>
                                                 <field name="sequence" invisible="1"/>
                                                 <field name="manual" invisible="1"/>
-                                                <field name="account_id" groups="account.group_account_invoice"/>
+                                                <field name="account_id" groups="account.group_account_user"/>
                                                 <field name="operating_unit_id"/>
                                                 <field name="product_id"/>
                                                 <field name="account_analytic_id"

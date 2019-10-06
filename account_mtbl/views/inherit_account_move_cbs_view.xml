@@ -66,7 +66,7 @@
             </field>
         </record>
 
-        <record id="account.action_account_move_reversal_cbs" model="ir.values" >
+        <record id="account.action_account_move_reversal_cbs" model="ir.values">
             <field name="model_id" ref="account.model_account_move"/>
             <field name="name">Reverse Moves</field>
             <field name="key2">client_action_multi</field>
@@ -127,12 +127,10 @@
             </field>
         </record>
 
-        <menuitem
-                action="action_move_journal_line_cbs" name="CBS"
-                id="menu_action_move_journal_line_cbs_form"
-                parent="account.menu_action_move_journal_line_form"
-                groups="account.group_account_user"
-                sequence="5"/>
-
+        <menuitem action="action_move_journal_line_cbs" name="CBS"
+                  id="menu_action_move_journal_line_cbs_form"
+                  parent="account.menu_action_move_journal_line_form"
+                  groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"
+                  sequence="5"/>
     </data>
 </odoo>

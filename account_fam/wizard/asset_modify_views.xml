@@ -9,15 +9,15 @@
                     <group>
                         <group>
                             <field name="asset_method_time" invisible="1"/>
-                            <field name="method"/>
-                            <field name="method_progress_factor" attrs="{'invisible': [('method', '=', 'linear')]}"/>
-                            <field name="depreciation_year"/>
+                            <field name="method" widget="radio"/>
+                            <field name="method_progress_factor"
+                                   attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="depreciation_year" string="Asset Life (In Year)"
+                                   attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
                             <field name="adjusted_depr_amount"/>
-                            <field name="method_number" invisible="1" attrs="{'invisible': [('asset_method_time', '=', 'end')]}"/>
                         </group>
                         <group>
                             <field name="name"/>
-                            <field name="method_end" attrs="{'invisible': [('asset_method_time', '=', 'number')]}"/>
                         </group>
                     </group>
                     <footer>
