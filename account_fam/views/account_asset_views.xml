@@ -12,12 +12,15 @@
             </xpath>
             <xpath expr="//form/header" position="replace">
                 <header>
-                    <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
                     <button name="%(action_asset_allocation_wizard)d" string="Allocation" class="oe_highlight"
                             type="action" context="{'allocation':'True'}"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                             attrs="{'invisible': ['|',('allocation_status','=', True),('state','!=', 'open')]}"/>
                     <button name="%(action_asset_allocation_wizard)d" string="Transfer" class="oe_highlight"
                             type="action" context="{'transfer':'True'}"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                             attrs="{'invisible': ['|',('allocation_status','=', False),('state','!=', 'open')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
@@ -208,9 +211,9 @@
                     <field name="asset_usage_date"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="value" widget="monetary" sum="value"/>
-                    <field name="depr_base_value" widget="monetary" sum="value"/>
-                    <field name="value_residual" widget="monetary"/>
-                    <field name="accumulated_value" widget="monetary"/>
+                    <field name="depr_base_value" widget="monetary" sum="depr_base_value"/>
+                    <field name="value_residual" widget="monetary" sum="value_residual"/>
+                    <field name="accumulated_value" widget="monetary" sum="accumulated_value"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="True"/>
                     <field name="depreciation_flag" invisible="True"/>
