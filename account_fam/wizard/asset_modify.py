@@ -10,20 +10,24 @@ from odoo.tools import float_compare, float_is_zero
 class AssetModify(models.TransientModel):
     _inherit = 'asset.modify'
 
-    method_number = fields.Integer(string='One Entry (In Month)', required=True, default=1, invisible=True)
+    method_number = fields.Integer(string='Asset Life (In Year)', required=True, default=0, invisible=True)
     method_progress_factor = fields.Float('Degressive Factor', default=0.0)
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0)
     adjusted_depr_amount = fields.Float(string='Adjusted Depr. Amount')
-    method = fields.Selection([('linear', 'Straight Line/ Linear'), ('degressive', 'Reducing Method')],
+    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/ Linear')],
                               string='Computation Method', required=True, default='linear',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
 
-    @api.onchange('depreciation_year')
-    def onchange_depreciation_year(self):
-        if self.depreciation_year:
-            self.method_number = int(12 * self.depreciation_year)
+    @api.onchange('method', 'method_number', 'method_progress_factor')
+    def check_method(self):
+        if self.method == 'linear':
+            if self.depreciation_year < 1:
+                raise ValidationError(_('Asset Life (In Year) cann\'t be zero or negative value.'))
+        else:
+            if self.method_progress_factor <= 0:
+                raise ValidationError(_('Depreciation Factor cann\'t be zero or negative value.'))
 
     @api.model
     def default_get(self, fields):

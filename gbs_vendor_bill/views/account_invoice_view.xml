@@ -94,7 +94,7 @@
             </xpath>
             <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="replace">
                 <button name="action_payment_instruction" type="object" states="open"
-                        string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
+                        string="Payment Instruction" class="oe_highlight" groups="account.group_account_user"/>
             </xpath>
             <xpath expr="//notebook/page[2]" position="after">
                 <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">

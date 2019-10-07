@@ -8,20 +8,21 @@
                 <form string="Account Asset Category" edit="0" duplicate="0">
                     <header>
                         <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
-                                 groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
+                                groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
                         <button name="act_reject" string="Reject" type="object" states="draft"
-                                 groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
+                                groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
                         <button name="%(action_account_asset_category_wizard)d" string="Edit" type="action"
-                                class="oe_highlight"  groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
+                                class="oe_highlight"
+                                groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                                 attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                         <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                                 groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
+                                groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                                 attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                         <button name="act_reject_pending" string="Reject" type="object"
-                                 groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
+                                groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                                 attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                         <button name="act_draft" string="Set to Draft" type="object" states="reject"
-                                 groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
+                                groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
                         <field name="state" widget="statusbar" invisible="True"/>
                     </header>
                     <sheet>
@@ -75,34 +76,15 @@
                             </group>
                         </group>
                         <group>
-                            <group string="Periodicity">
-                                <field name="method_time" string="Time Method Based On" widget="radio"
-                                       attrs="{'invisible': ['|',('type','!=','purchase'),('is_custom_depr','=',True)]}"/>
-                                <label for="depreciation_year" string="Asset Life (In Year)"/>
-                                <div>
-                                    <field name="depreciation_year" nolabel="1" class="oe_inline"
-                                           attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
-                                </div>
-                                <field name="method_number" string="Number of Entries" invisible="1"
-                                       attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)]}"/>
-                                <label for="method_period"/>
-                                <div>
-                                    <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}"
-                                           class="oe_inline"/>
-                                </div>
-                                <field name="method_end"
-                                       attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
-                            </group>
-                            <group string="Additional Options" attrs="{'invisible': [('is_custom_depr','=',True)]}">
-                                <field name="open_asset"/>
-                                <field name="group_entries"/>
-                            </group>
                             <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                                 <field name="method" widget="radio"/>
                                 <field name="method_progress_factor"
                                        attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                                <field name="prorata"
-                                       attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
+                                <field name="depreciation_year"
+                                       attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                            </group>
+                            <group string="No Depreciation" invisible="1">
+
                             </group>
                         </group>
                         <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">

@@ -139,13 +139,12 @@
             <xpath expr="//notebook/page[2]" position="replace">
                 <page string="Depreciation Information">
                     <group>
-                        <group string="Periodicity">
-                            <field name="method_number" string="Asset Life (In Year)"/>
-                        </group>
                         <group string="Depreciation Method">
-                            <field name="method" widget="radio" attrs="{'invisible': [('type','=','sale')]}"/>
+                            <field name="method" widget="radio" />
                             <field name="method_progress_factor"
                                    attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="depreciation_year"
+                                       attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
                         </group>
                     </group>
                 </page>
