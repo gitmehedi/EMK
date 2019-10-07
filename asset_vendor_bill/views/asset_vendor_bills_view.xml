@@ -281,6 +281,7 @@
                   decoration-muted="state in('paid','cancel') "
                   decoration-bf="state in ('open','paid')" string="Invoice">
                 <field name="partner_id" groups="base.group_user" string="Vendor"/>
+                <field name="entity_service_id" string="Service"/>
                 <field name="date_invoice" string="Bill Date"/>
                 <field name="number" string="Bill No"/>
                 <field name="user_id" string="Responsible"/>

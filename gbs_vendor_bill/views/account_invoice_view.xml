@@ -205,6 +205,9 @@
             <xpath expr="//field[@name='number']" position="after">
                 <field name="user_id" string="Responsible"/>
             </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="entity_service_id" string="Service"/>
+            </xpath>
             <xpath expr="//field[@name='amount_total_signed']" position="after">
                 <field name="amount_tax" string="VAT"/>
             </xpath>

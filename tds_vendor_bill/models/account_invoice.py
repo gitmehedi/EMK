@@ -179,11 +179,13 @@ class AccountInvoiceLine(models.Model):
     account_tds_id = fields.Many2one('tds.rule', string='TDS',
                                      domain="[('active', '=', True),('state', '=','confirm' )]")
 
-    # @api.onchange('product_id')
-    # def _onchange_product_id(self):
-    #     if self.product_id:
-    #         self.account_tds_id = self.product_id.account_tds_id.id
-    #     return super(AccountInvoiceLine, self)._onchange_product_id()
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        self.account_tds_id = False
+        if self.product_id:
+            self.account_tds_id = self.product_id.account_tds_id.id
+        return super(AccountInvoiceLine, self)._onchange_product_id()
+
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
                  'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id',
