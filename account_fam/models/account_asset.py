@@ -191,7 +191,7 @@ class AccountAssetAsset(models.Model):
             elif asset.method == 'degressive':
                 year = self.date_str_format(asset.date).year
                 date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
-                daily_depr = ((asset.value - asset.salvage_value) * asset.method_progress_factor) / date_delta
+                daily_depr = (asset.depr_base_value * asset.method_progress_factor) / date_delta
 
             depr_amount = no_of_days * daily_depr
             cumul_depr = sum([rec.amount for rec in asset.depreciation_line_ids]) + depr_amount

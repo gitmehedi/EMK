@@ -20,7 +20,7 @@
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
                 <xpath expr="//button[@name='open_reconcile_view']" position="after">
-                   <field name="is_cr" invisible="True"/>
+                    <field name="is_cr" invisible="True"/>
                 </xpath>
                 <xpath expr="//field[@name='operating_unit_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
@@ -50,8 +50,14 @@
                 <xpath expr="//button[@name='button_cancel']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
-                <xpath expr="//button[@name='open_reconcile_view']" position="attributes">
-                    <attribute name="groups">base.group_system</attribute>
+                <xpath expr="//button[@name='open_reconcile_view']" position="replace">
+                    <button name="not_sync" string="Not Sync" type="action"
+                            groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"
+                            class="btn-danger" attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                    <button name="sync" string="Sync" type="action"
+                            groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"
+                            class="btn-success" attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                    <field name="is_sync" invisible="1"/>
                 </xpath>
             </field>
         </record>
