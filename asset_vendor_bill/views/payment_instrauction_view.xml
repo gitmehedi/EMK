@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_payment_instruction_asset" model="ir.actions.act_window">
-        <field name="name">Asset Bill Payment Instructions</field>
+        <field name="name">Payment Instructions</field>
         <field name="res_model">payment.instruction</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -30,8 +30,7 @@
         <field name="act_window_id" ref="action_payment_instruction_asset"/>
     </record>
 
-    <menuitem
-            parent="sub_assets_vendor_menu"
-            action="action_payment_instruction_asset"
-            id="menu_payment_instruction_asset" sequence="10"/>
+    <menuitem name="Payment Instructions" parent="sub_assets_vendor_menu"
+              action="action_payment_instruction_asset"
+              id="menu_payment_instruction_asset" sequence="10"/>
 </odoo>

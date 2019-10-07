@@ -19,7 +19,7 @@ class AssetDepreciationFlagWizard(models.TransientModel):
             asset = self.env['account.asset.asset'].browse(rec)
             if asset.state=='open' and asset.allocation_status==True:
                 flag = True if self.flag == 'stop' else False
-                asset.write({'depreciation_flag': flag})
+                asset.write({'depreciation_flag': flag,'awaiting_dispose_date':fields.Datetime.now()})
             else:
                 name = asset.asset_seq if asset.asset_seq else asset.name
                 raise ValidationError(_('Asset [{0}] should in Running status.'.format(name)))

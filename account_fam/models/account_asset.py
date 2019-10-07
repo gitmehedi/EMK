@@ -68,6 +68,7 @@ class AccountAssetAsset(models.Model):
     allocation_status = fields.Boolean(string='Allocation Status', track_visibility='onchange', default=False)
     depreciation_flag = fields.Boolean(string='Awaiting Disposal', track_visibility='onchange', default=False)
     lst_depr_date = fields.Date(string='Last Depr. Date', readonly=True, track_visibility='onchange')
+    awaiting_dispose_date = fields.Date(string='Awaiting Dispose Date', readonly=True, track_visibility='onchange')
 
     @api.model
     def create(self, vals):

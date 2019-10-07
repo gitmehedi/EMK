@@ -19,8 +19,7 @@
         'views/account_config.xml',
         'views/invoice_merge_view.xml',
         'views/account_invoice_view.xml',
-        'views/payment_instrauction_view.xml',
-
+        'views/payment_instructions_view.xml',
     ],
     'installable': True,
     'application': True,
