@@ -11,6 +11,7 @@
     "depends": [
         "date_range",
         "account_fiscal_year",
+        "mtbl_access",
     ],
     "data": [
         'security/ir.model.access.csv',

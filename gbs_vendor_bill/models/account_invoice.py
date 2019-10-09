@@ -172,7 +172,6 @@ class AccountInvoice(models.Model):
                 'name': self.invoice_line_ids[0].name,
                 'operating_unit_id': self.operating_unit_id.id,
                 'partner_id': self.partner_id.id,
-                # 'agreement_id': self.agreement_id.id,
             }
             move_lines.append((0, 0, security_deposit_values))
         return move_lines
