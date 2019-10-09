@@ -14,7 +14,7 @@
                         <button name="not_sync" string="Not Sync"
                                 class="btn-danger"
                                 attrs="{'invisible': [('is_sync', '=', True)]}"/>
-                        <button name="sync" string="Syncd"
+                        <button name="sync" string="Synced"
                                 class="btn-success"
                                 attrs="{'invisible': [('is_sync', '=', False)]}"/>
                         <field name="is_sync" invisible="1"/>
