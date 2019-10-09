@@ -257,8 +257,10 @@
                                 domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', True)]"/>
                         <filter string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
                         <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
-                        <filter string="Computation Method" domain="[('state','=', 'open')]"
+                        <filter string="By Branch" domain="[]" context="{'group_by':'current_branch_id'}"/>
+                        <filter string="By Asset Type" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="By Asset Category" domain="[]" context="{'group_by':'asset_type_id'}"/>
+                        <filter string="By Computation Method" domain="[('state','=', 'open')]"
                                 context="{'group_by':'method'}"/>
                         <filter string="By Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                     </group>

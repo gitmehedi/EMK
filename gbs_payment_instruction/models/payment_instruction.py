@@ -8,25 +8,23 @@ class PaymentInstruction(models.Model):
     _rec_name = 'code'
     _description = 'Payment Instruction'
 
-    sequence = fields.Integer('Sequence', help="Gives the sequence of this line when displaying the invoice.")
-    code = fields.Char('Sequence', help="Gives the sequence of this line when displaying the invoice.")
-    instruction_date = fields.Date(string='Date')
-    is_sync = fields.Boolean(string='Is Synced', default=False)
-    amount = fields.Float(string='Amount')
-    partner_id = fields.Many2one('res.partner', string='Vendor')
-    currency_id = fields.Many2one('res.currency', string='Currency')
-    default_debit_account_id = fields.Many2one('account.account', string='Debit Account',
-                                               help='Default Debit Account of the Payment')
-    default_credit_account_id = fields.Many2one('account.account', string='Credit Account',
-                                                help='Default Credit Account of the Payment')
-    vendor_bank_acc = fields.Char(string='Vendor Bank Account')
+    sequence = fields.Integer('Sequence',  track_visibility='onchange')
+    code = fields.Char('Sequence',  track_visibility='onchange')
+    instruction_date = fields.Date(string='Date', track_visibility='onchange')
+    is_sync = fields.Boolean(string='Payment Synced', default=False, track_visibility='onchange')
+    amount = fields.Float(string='Amount', track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', string='Vendor', track_visibility='onchange')
+    currency_id = fields.Many2one('res.currency', string='Currency', track_visibility='onchange')
+    default_debit_account_id = fields.Many2one('account.account', string='Debit Account', track_visibility='onchange')
+    default_credit_account_id = fields.Many2one('account.account', string='Credit Account', track_visibility='onchange')
+    vendor_bank_acc = fields.Char(string='Vendor Bank Account', track_visibility='onchange')
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch', required=True,
-                                        default=lambda self: self.env.user.default_operating_unit_id)
+                                        default=lambda self: self.env.user.default_operating_unit_id, track_visibility='onchange')
     debit_operating_unit_id = fields.Many2one('operating.unit', string='Debit Branch', required=True,
-                                        default=lambda self: self.env.user.default_operating_unit_id)
-    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU')
-    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit SOU')
-    origin = fields.Char('Origin')
+                                        default=lambda self: self.env.user.default_operating_unit_id, track_visibility='onchange')
+    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU', track_visibility='onchange')
+    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit SOU', track_visibility='onchange')
+    origin = fields.Char('Origin', track_visibility='onchange')
     state = fields.Selection([
         ('draft', "Draft"),
         ('approved', "Approved"),

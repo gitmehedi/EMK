@@ -336,7 +336,7 @@ class SOAPProcess(models.Model):
 
             if endpoint:
                 reqBody = self.genGenericTransferAmountInterfaceForPayment(record)
-                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,
+                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,verify=False, auth=(endpoint.username,endpoint.password),
                                         headers={'content-type': 'application/text'})
                 root = ElementTree.fromstring(resBody.content)
                 response = {}
@@ -348,7 +348,9 @@ class SOAPProcess(models.Model):
                     else:
                         response[key[0]] = text
 
-                if 'ErrorMessage' in response:
+                if 'OkMessage' in response:
+                    record.write({'is_sync': True})
+                elif 'ErrorMessage' in response:
                     error = {
                         'name': endpoint.endpoint_fullname,
                         'request_body': reqBody,
@@ -358,8 +360,6 @@ class SOAPProcess(models.Model):
                         'errors': json.dumps(response)
                     }
                     self.env['soap.process.error'].create(error)
-                elif 'OkMessage' in response:
-                    record.write({'is_sync': True})
                 elif 'faultcode' in response:
                     error = {
                         'name': endpoint.endpoint_fullname,
@@ -373,18 +373,24 @@ class SOAPProcess(models.Model):
 
     @api.model
     def genGenericTransferAmountInterfaceForPayment(self, record):
-        sub_operating_unit = record.sub_operating_unit_id.code if record.sub_operating_unit_id else '001'
-        from_bgl = "0{0}{1}00{2}".format(record.default_debit_account_id.code, sub_operating_unit,
-                                         record.operating_unit_id.code)
+        credit = record.default_credit_account_id.code if record.default_credit_account_id else None
+        c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
+        c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
+
+        debit = record.default_debit_account_id.code if record.default_debit_account_id else None
+        d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
+        d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
+
+        from_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
+
         if record.vendor_bank_acc:
             to_bgl = record.vendor_bank_acc
         else:
-            to_bgl = "0{0}{1}00{2}".format(record.default_credit_account_id.code, sub_operating_unit,
-                                           record.operating_unit_id.code)
+            to_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
 
         data = {
             'InstNum': '003',
-            'BrchNum': str('00' + record.operating_unit_id.code),
+            'BrchNum': str('00' + d_ou),
             'TellerNum': '1107',
             'Flag4': 'W',
             'Flag5': 'Y',
