@@ -68,31 +68,34 @@ class InheritAccountPayment(models.Model):
     """ Relational field"""
     batch_id = fields.Many2one('account.payment.batch', ondelete='cascade')
 
+    sale_order_domain_ids = fields.Many2many('sale.order', compute="_compute_sale_order_domain_ids", readonly=True, store=False)
+
+    @api.multi
+    @api.depends('partner_id')
+    def _compute_sale_order_domain_ids(self):
+        for rec in self:
+            id_list = rec.get_sale_order_id_list()
+            rec.sale_order_domain_ids = self.env['sale.order'].search([('id', 'in', id_list)])
+
     @api.onchange('partner_id')
-    def _onchange_partner_id(self):
+    def onchange_partner_id(self):
         res = super(InheritAccountPayment, self).onchange_partner_id()
         if self.batch_id.is_batch_model:
-            if self.batch_id.journal_id.id:
-                self.journal_id = self.batch_id.journal_id
-            else:
+            res['domain'] = {}
+            if not self.batch_id.journal_id:
                 raise UserError(_("You must select a payment journal."))
-
         return res
 
     @api.multi
-    def get_invoices(self):
-        if self.sale_order_id.ids:
-            invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
-                                                                    ('state', '=', 'open')])
-        else:
-            invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                                     ('state', '=', 'open')])
+    def get_invoice_ids(self):
+        invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
+                                                                ('state', '=', 'open')])
         return invoice_ids
 
     @api.multi
     def post(self):
-        if not self.invoice_ids.ids:
-            self.invoice_ids = self.get_invoices()
+        if self.sale_order_id.ids:
+            self.invoice_ids = self.get_invoice_ids()
 
         result = super(InheritAccountPayment, self).post()
         return result
