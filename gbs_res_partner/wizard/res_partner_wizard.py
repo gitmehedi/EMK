@@ -142,7 +142,7 @@ class ResPartnerWizard(models.TransientModel):
         record = self.env['res.partner'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})
 
     @api.onchange("division_id")
     def onchange_division(self):

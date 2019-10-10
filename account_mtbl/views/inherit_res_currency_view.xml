@@ -41,7 +41,9 @@
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="rate"/>
-                                <field name="pending" invisible="True"/>
+                                <field name="pending" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
                             </group>
 
                             <group>

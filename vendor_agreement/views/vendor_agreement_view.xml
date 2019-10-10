@@ -83,6 +83,8 @@
                                     <field name="operating_unit_id"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="is_amendment" invisible="1"/>
+                                    <field name="maker_id" invisible="1"/>
+                                    <field name="approver_id" invisible="1"/>
                                 </group>
                                 <group name="right">
                                     <field name="pro_advance_amount" widget="monetary"

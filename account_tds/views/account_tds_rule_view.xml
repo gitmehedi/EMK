@@ -25,6 +25,8 @@
                                 <field name="name" placeholder="Name"/>
                                 <field name="active"/>
                                 <field name="is_amendment" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
                             </group>
                             <group>
                                 <field name="effective_from"/>

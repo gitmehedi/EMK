@@ -53,4 +53,4 @@ class AccountAccountWizard(models.TransientModel):
             record = self.env['account.account'].with_context({'show_parent_account': True}).search(
                 [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})

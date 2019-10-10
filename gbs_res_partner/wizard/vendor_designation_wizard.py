@@ -43,4 +43,4 @@ class VendorDesignationWizard(models.TransientModel):
         record = self.env['vendor.designation'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})

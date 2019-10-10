@@ -55,7 +55,7 @@ class TDSRulesWizard(models.TransientModel):
                     'rel_id': rule.id
                 }
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
-        return rule_list.write({'is_amendment':True})
+        return rule_list.write({'is_amendment':True,'maker_id': self.env.user.id})
 
     @api.constrains('effective_from')
     def _check_effective_from(self):

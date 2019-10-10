@@ -41,6 +41,8 @@
                         </div>
                         <div>
                             <field name="pending" invisible="1"/>
+                            <field name="maker_id" invisible="1"/>
+                            <field name="approver_id" invisible="1"/>
                             <field name="is_custom_depr" invisible="1"/>
                             <field name="type" invisible="1"/>
                             <field name="company_id" options="{'no_create': True}"

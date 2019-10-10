@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -79,6 +79,8 @@ class VendorAgreement(models.Model):
                                         operating_unit_default_get(self._uid),
                                         readonly=True, required=True,
                                         states={'draft': [('readonly', False)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
@@ -158,19 +160,30 @@ class VendorAgreement(models.Model):
 
     @api.one
     def action_confirm(self):
-        self.state = 'confirm'
+        if self.state == 'draft':
+            self.write({
+                'state': 'confirm',
+            })
 
     @api.one
     def action_validate(self):
-        self.state = 'done'
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+        if self.state == 'confirm':
+            self.write({
+                'state': 'done',
+                'approver_id': self.env.user.id,
+            })
 
     @api.multi
     def action_draft(self):
-        self.write({'state': 'draft'})
+        if self.state == 'cancel':
+            self.write({'state': 'draft'})
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        if self.state == 'confirm':
+            self.write({'state': 'cancel'})
 
     @api.multi
     def unlink(self):
@@ -205,6 +218,8 @@ class VendorAgreement(models.Model):
 
     @api.multi
     def action_approve_amendment(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.is_amendment == True:
             requested = self.history_line_ids.search([('state', '=', 'pending'),
                                                       ('agreement_id', '=', self.id)],
@@ -217,6 +232,7 @@ class VendorAgreement(models.Model):
                     'service_value': requested.service_value,
                     'account_id': requested.account_id.id,
                     'is_amendment': False,
+                    'approver_id': self.env.user.id,
                 })
                 requested.write({'state': 'confirm'})
 

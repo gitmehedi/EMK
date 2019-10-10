@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
@@ -25,6 +25,8 @@ class Currency(models.Model):
                              track_visibility='onchange', string='Status')
     line_ids = fields.One2many('history.res.currency', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.one
     def name_get(self):
@@ -51,11 +53,14 @@ class Currency(models.Model):
 
     @api.one
     def act_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.write({
                 'state': 'approve',
                 'pending': False,
                 'active': True,
+                'approver_id': self.env.user.id,
             })
 
     @api.one
@@ -69,6 +74,8 @@ class Currency(models.Model):
 
     @api.one
     def act_approve_pending(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
@@ -77,6 +84,7 @@ class Currency(models.Model):
                     'name': self.name if not requested.change_name else requested.change_name,
                     'pending': False,
                     'active': requested.status,
+                    'approver_id': self.env.user.id,
                 })
                 requested.write({
                     'state': 'approve',
