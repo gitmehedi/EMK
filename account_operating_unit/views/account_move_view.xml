@@ -47,7 +47,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='account_id']" position="after">
                 <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
-                <filter string="Operating Unit"  icon="terp-folder-green"
+                <filter string="Branch"  icon="terp-folder-green"
                         context="{'group_by':'operating_unit_id'}" groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
         </field>
