@@ -39,7 +39,7 @@ class TrialBalanceXLSX(ReportXlsx):
         worksheet.merge_range('A1:H2', self.env.user.company_id.name + ': ' + self.title, header_left)
 
         if docs['display_account']:
-            worksheet.write('C5', 'Display Accounts:', bold)
+            worksheet.write('B5', 'Display Accounts:', bold)
             if docs['display_account'] == 'all':
                 display = 'All'
             elif docs['display_account'] == 'movement':
@@ -47,7 +47,7 @@ class TrialBalanceXLSX(ReportXlsx):
             else:
                 display = 'With balance is not equal to 0'
 
-            worksheet.write('C6', display)
+            worksheet.write('B6', display)
 
         if docs['date_from']:
             worksheet.write('D5', 'Date From:', bold)
