@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
@@ -20,6 +20,8 @@ class ProductProduct(models.Model):
                              string='Status', track_visibility='onchange')
     line_ids = fields.One2many('history.product.product', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.one
     def act_draft(self):
@@ -32,10 +34,13 @@ class ProductProduct(models.Model):
 
     @api.one
     def act_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.active = True
             self.pending = False
             self.state = 'approve'
+            self.approver_id = self.env.user.id
 
     @api.one
     def act_reject(self):
@@ -45,6 +50,8 @@ class ProductProduct(models.Model):
 
     @api.one
     def act_approve_pending(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
@@ -63,6 +70,7 @@ class ProductProduct(models.Model):
                     self.default_code = requested.default_code
 
                 self.pending = False
+                self.approver_id = self.env.user.id
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()
 
@@ -119,7 +127,7 @@ class HistoryProductProduct(models.Model):
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
                                          string='Vendor Taxes',
                                          domain=[('type_tax_use', '=', 'purchase')])
-    default_code = fields.Char('Internal Reference', index=True)
+    default_code = fields.Char('Internal Reference')
     line_id = fields.Many2one('product.product', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')

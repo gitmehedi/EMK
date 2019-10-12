@@ -100,4 +100,4 @@ class AccountAssetCategoryWizard(models.TransientModel):
         record = self.env['account.asset.category'].search(
             [('id', '=', id), ('state', '!=', 'reject'), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})

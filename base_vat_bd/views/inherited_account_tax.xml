@@ -32,7 +32,9 @@
                             <group>
                                 <group>
                                     <field name="name"/>
-                                    <field name="pending" invisible="True"/>
+                                    <field name="pending" invisible="1"/>
+                                    <field name="maker_id" invisible="1"/>
+                                    <field name="approver_id" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="type_tax_use"/>
@@ -231,36 +233,36 @@
         </record>
 
         <act_window
-            id="account.act_account_tax_net"
-            name="Net Tax Lines"
-            res_model="account.move.line"
-            context="{'search_default_tax_ids': [active_id]}"
-            src_model="account.tax"
-            groups="base.group_system"/>
+                id="account.act_account_tax_net"
+                name="Net Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_ids': [active_id]}"
+                src_model="account.tax"
+                groups="base.group_system"/>
 
         <act_window
-            id="account.act_account_tax_tax"
-            name="Tax Lines"
-            res_model="account.move.line"
-            context="{'search_default_tax_line_id': [active_id]}"
-            src_model="account.tax"
-            groups="base.group_system"/>
+                id="account.act_account_tax_tax"
+                name="Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_line_id': [active_id]}"
+                src_model="account.tax"
+                groups="base.group_system"/>
 
         <act_window
-            id="account.act_account_tax_net_posted"
-            name="Net Tax Lines"
-            res_model="account.move.line"
-            context="{'search_default_tax_ids': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"
-            groups="base.group_system"/>
+                id="account.act_account_tax_net_posted"
+                name="Net Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_ids': [active_id], 'search_default_posted': 1}"
+                src_model="account.tax"
+                groups="base.group_system"/>
 
         <act_window
-            id="account.act_account_tax_tax_posted"
-            name="Tax Lines"
-            res_model="account.move.line"
-            context="{'search_default_tax_line_id': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"
-            groups="base.group_system"/>
+                id="account.act_account_tax_tax_posted"
+                name="Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_line_id': [active_id], 'search_default_posted': 1}"
+                src_model="account.tax"
+                groups="base.group_system"/>
 
     </data>
 </odoo>

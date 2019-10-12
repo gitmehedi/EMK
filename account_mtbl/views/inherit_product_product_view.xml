@@ -12,6 +12,10 @@
                 <xpath expr="//field[@name='barcode']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
+                <xpath expr="//field[@name='barcode']" position="after">
+                    <field name="maker_id" invisible="1"/>
+                    <field name="approver_id" invisible="1"/>
+                </xpath>
             </field>
         </record>
 
@@ -33,7 +37,7 @@
                     <attribute name="duplicate">0</attribute>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="after">
-                    <field name="pending" invisible="True"/>
+                    <field name="pending" invisible="1"/>
                 </xpath>
                 <xpath expr="//sheet" position="before">
                     <header>

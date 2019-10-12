@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
@@ -63,14 +63,16 @@ class ResPartner(models.Model):
                                  states={'draft': [('readonly', False)]},
                                  track_visibility='onchange')
     postal_code = fields.Many2one('bd.postal.code','Postal Code',readonly=True,
-                              states={'draft': [('readonly', False)]},
-                              track_visibility='onchange')
+                                  states={'draft': [('readonly', False)]},
+                                  track_visibility='onchange')
     entity_services = fields.Many2many('product.product', 'service_vendor_rel','service_id','vendor_id',
                                        string='Service', readonly=True,
                                        states={'draft': [('readonly', False)]},
                                        track_visibility='onchange')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
     contact_person = fields.Char(string='Contact Person')
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.one
     def act_draft(self):
@@ -83,10 +85,13 @@ class ResPartner(models.Model):
 
     @api.one
     def act_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.active = True
             self.pending = False
             self.state = 'approve'
+            self.approver_id = self.env.user.id
 
     @api.one
     def act_reject(self):
@@ -96,6 +101,8 @@ class ResPartner(models.Model):
 
     @api.one
     def act_approve_pending(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
@@ -133,6 +140,7 @@ class ResPartner(models.Model):
                     self.entity_services = [(6, 0, requested.entity_services.ids)]
 
                 self.pending = False
+                self.approver_id = self.env.user.id
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()
 

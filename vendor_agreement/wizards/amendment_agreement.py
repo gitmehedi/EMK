@@ -28,7 +28,7 @@ class AmendmentAgreementWizard(models.TransientModel):
             'account_id': self.account_id.id,
             'agreement_id': self._context['active_id'],
         })
-        self.env['agreement'].browse(self._context['active_id']).write({'is_amendment': True})
+        self.env['agreement'].browse(self._context['active_id']).write({'is_amendment': True,'maker_id': self.env.user.id})
 
     @api.constrains('end_date')
     def check_end_date(self):

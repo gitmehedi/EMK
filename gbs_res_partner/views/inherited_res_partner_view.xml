@@ -67,6 +67,8 @@
             </xpath>
             <xpath expr="//field[@name='tin']" position="after">
                 <field name="nid"/>
+                <field name="maker_id" invisible="1"/>
+                <field name="approver_id" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='street2']" position="attributes">
                 <attribute name="placeholder">etc.</attribute>

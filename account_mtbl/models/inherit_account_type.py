@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
@@ -62,7 +62,7 @@ class AccountAccountType(models.Model):
 
     @api.one
     def act_approve(self):
-        if self.env.user.id == self.maker_id.id:
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.write({
@@ -83,7 +83,7 @@ class AccountAccountType(models.Model):
 
     @api.one
     def act_approve_pending(self):
-        if self.env.user.id == self.maker_id.id:
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',

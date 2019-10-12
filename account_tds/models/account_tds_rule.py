@@ -1,6 +1,5 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
-import odoo.addons.decimal_precision as dp
 
 
 class TDSRules(models.Model):
@@ -35,17 +34,18 @@ class TDSRules(models.Model):
                                    track_visibility='onchange', states={'confirm': [('readonly', True)]},
                                    help="Check this if the price you use on the product and invoices excludes this TAX.")
     effect_on_base = fields.Boolean(string='Effect On Base Price', default=False,
-                                   track_visibility='onchange', states={'confirm': [('readonly', True)]},
-                                   help="Check this if the TDS effect on base price.")
+                                    track_visibility='onchange', states={'confirm': [('readonly', True)]},
+                                    help="Check this if the TDS effect on base price.")
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
     ], default='draft',string="Status",track_visibility='onchange')
     is_amendment = fields.Boolean(default=False, string="Is Amendment",
                                   help="Take decision that, this agreement is amendment.")
-
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
                                         states = {'confirm': [('readonly', True)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
@@ -115,6 +115,8 @@ class TDSRules(models.Model):
 
     @api.multi
     def action_confirm(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         for rec in self:
             num = 1
             seq = self.name + ' / 000' + str(num)
@@ -127,6 +129,7 @@ class TDSRules(models.Model):
                 'flat_rate': rec.flat_rate,
                 'rel_id': rec.id,
                 'state': 'confirm',
+                'approver_id': self.env.user.id,
             }
             self.version_ids += self.env['tds.rule.version'].create(res)
         if self.type_rate == 'slab':
@@ -174,6 +177,8 @@ class TDSRules(models.Model):
 
     @api.multi
     def action_approve_amendment(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.is_amendment == True:
             requested = self.version_ids.search([('state', '=', 'pending'),
                                                  ('tds_version_rule_id', '=', self.id)],
@@ -183,6 +188,7 @@ class TDSRules(models.Model):
                     'effective_from': requested.effective_from,
                     'type_rate': requested.type_rate,
                     'account_id': requested.account_id.id,
+                    'approver_id': self.env.user.id,
                 })
                 if requested.type_rate == 'flat' and requested.flat_rate:
                     self.flat_rate = requested.flat_rate

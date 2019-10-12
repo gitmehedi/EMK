@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
@@ -41,6 +41,8 @@ class AccountJournal(models.Model):
                                        states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('history.account.journal', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.one
     def act_draft(self):
@@ -53,11 +55,14 @@ class AccountJournal(models.Model):
 
     @api.one
     def act_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.write({
                 'state': 'approve',
                 'pending': False,
                 'active': True,
+                'approver_id': self.env.user.id,
             })
 
     @api.one
@@ -71,6 +76,8 @@ class AccountJournal(models.Model):
 
     @api.one
     def act_approve_pending(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
@@ -81,6 +88,7 @@ class AccountJournal(models.Model):
                     'default_credit_account_id': self.default_credit_account_id.id if not requested.default_credit_account_id else requested.default_credit_account_id.id,
                     'pending': False,
                     'active': requested.status,
+                    'approver_id': self.env.user.id,
                 })
                 requested.write({
                     'state': 'approve',

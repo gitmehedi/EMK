@@ -1,5 +1,5 @@
 from datetime import timedelta
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError,Warning, ValidationError
 
 # ---------------------------------------------------------
@@ -12,9 +12,8 @@ class BranchDistribution(models.Model):
 
     name = fields.Char('Budget Name',readonly=True, track_visibility='onchange')
     creating_user_id = fields.Many2one('res.users', 'Responsible', readonly=True, track_visibility='onchange',
-                                       default=lambda self: self.env.user)
-    approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange',
-                                       default=lambda self: self.env.user)
+                                       default=lambda self: self.env.user.id)
+    approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange')
     account_id = fields.Many2one('account.account', string='Account', required=True,readonly=True,
                                  default=lambda self: self.env.context.get('default_account_id'),
                                  track_visibility='onchange')
@@ -51,19 +50,24 @@ class BranchDistribution(models.Model):
 
     @api.multi
     def action_budget_approve(self):
-        vals = {'state': 'approve',
-                'approve_date': fields.Datetime.now(),
-                'approved_user_id': self.env.user.id
-                }
-        self.write(vals)
+        if self.env.user.id == self.creating_user_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+        if self.state == 'draft':
+            vals = {'state': 'approve',
+                    'approve_date': fields.Datetime.now(),
+                    'approved_user_id': self.env.user.id
+                    }
+            self.write(vals)
 
     @api.multi
     def action_budget_draft(self):
-        self.write({'state': 'draft'})
+        if self.state == 'cancel':
+            self.write({'state': 'draft'})
 
     @api.multi
     def action_budget_cancel(self):
-        self.write({'state': 'cancel'})
+        if self.state == 'draft':
+            self.write({'state': 'cancel'})
 
     @api.multi
     def unlink(self):
@@ -128,7 +132,7 @@ class BranchDistribution(models.Model):
             }
             history_line_pools.create(lines)
 
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft','creating_user_id':self.env.user.id})
 
     def _compute_active(self):
         if self.bottom_line_budget_line and self.bottom_line_budget_line.active ==False:
