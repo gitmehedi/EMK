@@ -136,6 +136,9 @@
                     <attribute name="decoration-danger">state=='reject'</attribute>
                     <attribute name="decoration-bf">state in ('approve',)</attribute>
                 </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="string">Product/Service</attribute>
+                </xpath>
                 <xpath expr="//field[@name='lst_price']" position="replace">
                     <field name="standard_price"/>
                 </xpath>

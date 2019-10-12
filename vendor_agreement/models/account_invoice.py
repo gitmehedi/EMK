@@ -40,6 +40,10 @@ class AccountInvoice(models.Model):
             for line in move_lines:
                 if line[2]['name'] == '/':
                     line[2]['credit'] = line[2]['credit'] - amount
+            if self.env.user.company_id.head_branch_id:
+                branch_id = self.env.user.company_id.head_branch_id.id
+            else:
+                branch_id = self.operating_unit_id.id
             agreement_values = {
                 'account_id': self.agreement_id.account_id.id,
                 'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,
@@ -48,7 +52,7 @@ class AccountInvoice(models.Model):
                 'debit': False,
                 'invoice_id': self.id,
                 'name': self.invoice_line_ids[0].name,
-                'operating_unit_id': self.operating_unit_id.id,
+                'operating_unit_id': branch_id,
                 'partner_id': self.partner_id.id,
                 'agreement_id': self.agreement_id.id,
             }

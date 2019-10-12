@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError,ValidationError
 
 
@@ -162,6 +161,10 @@ class AccountInvoice(models.Model):
             for line in move_lines:
                 if line[2]['name'] == '/':
                     line[2]['credit'] = line[2]['credit'] - self.security_deposit
+            if self.env.user.company_id.head_branch_id:
+                branch_id = self.env.user.company_id.head_branch_id.id
+            else:
+                branch_id = self.operating_unit_id.id
             security_deposit_values = {
                 'account_id': self.security_deposit_account_id.id,
                 # 'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,
@@ -170,15 +173,21 @@ class AccountInvoice(models.Model):
                 'debit': False,
                 'invoice_id': self.id,
                 'name': self.invoice_line_ids[0].name,
-                'operating_unit_id': self.operating_unit_id.id,
+                'operating_unit_id': branch_id,
                 'partner_id': self.partner_id.id,
             }
             move_lines.append((0, 0, security_deposit_values))
         return move_lines
 
     @api.multi
+    def action_invoice_open(self):
+        if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+        return super(AccountInvoice, self).action_invoice_open()
+
+    @api.multi
     def action_move_create(self):
-        res = super(AccountInvoice, self).action_move_create()
+        res = super(AccountInvoice, self.sudo()).action_move_create()
         if res:
             for inv in self:
                 account_move = self.env['account.move'].search([('id','=',inv.move_id.id)])
@@ -363,5 +372,6 @@ class AccountMove(models.Model):
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
+    _order = "date desc, id asc"
 
     is_tdsvat_payable = fields.Boolean('TDS/VAT Payable', default=False)
