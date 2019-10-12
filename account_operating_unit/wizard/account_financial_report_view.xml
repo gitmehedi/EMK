@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.accounting_report_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='comparison']" position="after">
-                    <page string="Operating Units"
+                    <page string="Branch"
                           name="operating_units"
                           widget="selection"
                           options="{'no_create': True}"
