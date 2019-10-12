@@ -32,9 +32,10 @@ class GBSFileImport(models.Model):
                 for val in self.import_lines:
                     trn_type = val.type
                     account_no = str(val.account_no)
-                    amount = format(val.amount, '.3f') if val.amount > 0 else format(val.amount, '.3f')
+                    amount = format(val.amount, '.2f') if val.amount > 0 else format(val.amount, '.2f')
+                    amount = ''.join(amount.split('.')).zfill(16)
                     narration = val.narration[:50]
-                    trn_ref_no = val.reference_no[-8:]
+                    trn_ref_no = '{0}'.format(val.id).zfill(8)
                     date_array = val.date.split("-")
                     date = date_array[2] + date_array[1] + date_array[0]
 

@@ -330,7 +330,7 @@ class ServerFileProcess(models.Model):
                 line['company_id'])
 
         with open(source_path, 'r') as file_ins:
-            moves = {}
+
             index = 0
             coa = {val.code: val.id for val in
                    self.env['account.account'].search([('level_id.name', '=', 'Layer 5'), ('active', '=', True)])}
@@ -346,6 +346,17 @@ class ServerFileProcess(models.Model):
                                                               'file_path': source_path,
                                                               'ftp_ip': self.source_sftp_host})
             errors, journal_entry = "", ""
+            journal_type = 'CBS'
+            if journal_type not in jrnl.keys():
+                raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
+
+            move_id = self.env['account.move'].create({
+                'journal_id': jrnl['CBS'],
+                'date': fields.Datetime.now(),
+                'is_cbs': True,
+                'ref': '123456789',
+                'line_ids': [],
+            })
             for worksheet_index in file_ins:
                 index += 1
                 if len(worksheet_index) > 2:
@@ -354,16 +365,8 @@ class ServerFileProcess(models.Model):
                         errors += format_error(error_obj.id, index, '{0} has invalid value'.format(rec))
                         continue
 
-                    journal_type = 'CBS'
-                    if journal_type not in jrnl.keys():
-                        raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
-
-                    name = rec['DESC-TEXT-24'].strip()
-                    if not name:
-                        errors += format_error(error_obj.id, index, 'Narration [{0}] has invalid value'.format(name))
+                    name = rec['DESC-TEXT-24'].strip() if not rec['DESC-TEXT-24'].strip() else '/'
                     amount = float(rec['LCY-AMT'][:14] + '.' + rec['LCY-AMT'][14:17])
-                    if not amount:
-                        errors += format_error(error_obj.id, index, 'LCY-AMT [{0}] has invalid value'.format(amount))
 
                     posting_date = rec['POSTING-DATE']
                     if not posting_date:
@@ -442,17 +445,8 @@ class ServerFileProcess(models.Model):
                             comp_val = coa[comp_code]
 
                     if len(errors) == 0:
-                        if rec['JOURNAL-NBR'] not in moves:
-                            moves[rec['JOURNAL-NBR']] = self.env['account.move'].create({
-                                'journal_id': jrnl['CBS'],
-                                'date': rec['POSTING-DATE'],
-                                'is_cbs': True,
-                                'ref': rec['JOURNAL-NBR'],
-                                'line_ids': [],
-                            })
-
                         line = {
-                            'move_id': moves[rec['JOURNAL-NBR']].id,
+                            'move_id': move_id.id,
                             'name': name,
                             'amount': amount,
                             'account_id': comp_val,
@@ -475,7 +469,6 @@ class ServerFileProcess(models.Model):
                             line['debit'] = amount
                             line['credit'] = 0.0
                         journal_entry += format_journal(line)
-                        print("---------------------------------------------------{0}".format(index))
 
         if len(errors) > 0:
             try:
@@ -499,14 +492,12 @@ class ServerFileProcess(models.Model):
                 VALUES %s""" % journal_entry[:-1]
 
                 self.env.cr.execute(query)
-                for key in moves:
-                    if moves[key].state == 'draft':
-                        moves[key].sudo().post()
-                return True
+                if move_id.state == 'draft':
+                    move_id.sudo().post()
+                    return True
             except Exception:
-                for key in moves:
-                    if moves[key].state == 'draft':
-                        moves[key].unlink()
+                # if move_id.state == 'draft':
+                #     move_id.unlink()
                 self.env['server.file.error'].create({'name': file,
                                                       'file_path': source_path,
                                                       'errors': 'Unknown Error. Please check your file.',

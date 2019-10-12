@@ -78,17 +78,17 @@ class AccountAccount(models.Model):
                 }
                 return res
 
-    @api.onchange("code", "parent_id")
+    @api.onchange("parent_id")
     def onchange_strips(self):
-        if self.code:
-            code = ''
-            filter = str(self.code.strip()).upper()
-            if self.level_size == 1:
-                code = filter[:self.level_size]
-            elif self.parent_id:
-                code = self.parent_id.code + filter
-            if code:
-                self.code = code[:self.level_id.size]
+        if self.parent_id:
+            self.code = self.parent_id.code
+            # filter = str(self.code.strip()).upper()
+            # if self.level_size == 1:
+            #     code = filter[:self.level_size]
+            # elif self.parent_id:
+            #     code = self.parent_id.code + filter
+            # if code:
+            #     self.code = code[:self.level_id.size]
 
     @api.one
     def name_get(self):

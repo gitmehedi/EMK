@@ -63,10 +63,11 @@ class SOAPProcess(models.Model):
         if endpoint:
             reqBody = self.genGenericTransferAmountInterfaceForPayment(record)
             try:
-                root = ElementTree.fromstring(resBody.content)
                 resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
                                         auth=(endpoint.username, endpoint.password),
                                         headers={'content-type': 'application/text'})
+
+                root = ElementTree.fromstring(reqBody.content)
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
