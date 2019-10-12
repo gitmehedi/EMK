@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -22,6 +22,7 @@ class TDSVATPayment(models.Model):
     amount = fields.Float(string='Amount')
     account_move_line_ids = fields.Many2many('account.move.line', 'move_line_payment_rel', 'payment_id', 'move_line_id',
                                              string='Payment Move Lines')
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -31,6 +32,8 @@ class TDSVATPayment(models.Model):
 
     @api.multi
     def action_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         self.write({'state': 'approved'})
         self.suspend_security().action_journal_creation()
         self.account_move_line_ids.write(
@@ -66,7 +69,7 @@ class TDSVATPayment(models.Model):
                 self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
             self._generate_credit_move_line(date, move_obj.id,account_move_line_obj)
             move_obj.write({'operating_unit_id': self.operating_unit_id.id,})
-            move_obj.post()
+            move_obj.sudo().post()
         return True
 
     def _generate_move(self, journal, account_move_obj, date):

@@ -81,7 +81,7 @@ class AccountInvoiceReverse(models.TransientModel):
                     'is_tdsvat_payable': False
                 })
 
-        return reversed_move.post()
+        return reversed_move.sudo().post()
 
     @api.multi
     def reverse_payment_instruction(self, date=None, acc_invoice=None):

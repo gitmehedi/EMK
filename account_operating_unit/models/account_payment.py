@@ -99,5 +99,5 @@ class AccountPayment(models.Model):
         transfer_debit_aml_dict.update(
             self._get_transfer_debit_aml_dict_vals())
         transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
-        dst_move.post()
+        dst_move.sudo().post()
         return transfer_debit_aml

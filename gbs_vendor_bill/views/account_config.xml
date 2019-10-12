@@ -17,6 +17,16 @@
                         </div>
                     </div>
                 </group>
+                <group string="Head Branch" name="head_branch">
+                    <label for="id" string="Configuration" groups="account.group_account_user"/>
+                    <div name="head_branch_id">
+                        <div>
+                            <label for="head_branch_id"/>
+                            <field name="head_branch_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                   class="oe_inline"/>
+                        </div>
+                    </div>
+                </group>
             </xpath>
         </field>
     </record>

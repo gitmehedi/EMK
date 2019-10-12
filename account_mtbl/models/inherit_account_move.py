@@ -1,4 +1,5 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
+from odoo.exceptions import ValidationError
 
 
 class AccountMove(models.Model):
@@ -15,6 +16,13 @@ class AccountMove(models.Model):
     is_cbs = fields.Boolean(default=False, help='CBS data always sync with OGL using GLIF.')
     is_sync = fields.Boolean(default=False, help='OGL continuously send data to CBS for journal sync.')
     is_cr = fields.Boolean(default=False)
+    user_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+
+    @api.multi
+    def post(self):
+        if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+        return super(AccountMove, self).post()
 
 
 class AccountMoveLine(models.Model):

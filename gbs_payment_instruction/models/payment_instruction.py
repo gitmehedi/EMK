@@ -1,4 +1,5 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
+from odoo.exceptions import UserError, ValidationError
 
 
 class PaymentInstruction(models.Model):
@@ -31,6 +32,7 @@ class PaymentInstruction(models.Model):
         ('approved', "Approved"),
         ('cancel', "Cancel"),
     ], default='draft', string="Status", track_visibility='onchange')
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
 
 
     @api.model
@@ -42,6 +44,8 @@ class PaymentInstruction(models.Model):
     @api.multi
     def action_approve(self):
         if self.state=='draft':
+            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
             return self.write({'state': 'approved'})
 
     @api.multi

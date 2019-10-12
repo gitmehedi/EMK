@@ -107,7 +107,7 @@ class AssetModify(models.TransientModel):
                         move = self.create_move(asset, depr_value)
                         line.write({'move_id': move.id, 'move_check': True})
                         if move.state == 'draft' and line.move_id.id == move.id:
-                            move.post()
+                            move.sudo().post()
 
             else:
                 flag = 'Active' if asset.depreciation_flag else 'In-Active'
