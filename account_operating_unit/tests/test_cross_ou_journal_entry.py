@@ -47,7 +47,7 @@ class TestCrossOuJournalEntry(test_ou.TestAccountOperatingUnit):
         })
         move = self.acc_move_model.sudo(self.user_id.id).create(move_vals)
         # Post journal entries
-        move.post()
+        move.sudo().post()
         # Check the balance of the account
         self._check_balance(self.current_asset_account_id.id, acc_type='other')
         clearing_account_id = self.company.inter_ou_clearing_account_id.id

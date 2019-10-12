@@ -491,7 +491,7 @@ class ServerFileProcess(models.Model):
                 self.env.cr.execute(query)
                 for key in moves:
                     if moves[key].state == 'draft':
-                        moves[key].post()
+                        moves[key].sudo().post()
                 return True
             except Exception:
                 for key in moves:

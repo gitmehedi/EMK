@@ -273,7 +273,7 @@ class AccountAssetAsset(models.Model):
             created_moves |= move
 
         if move.state == 'draft' and line.move_id.id == move.id:
-            move.post()
+            move.sudo().post()
             return True
 
     @api.multi

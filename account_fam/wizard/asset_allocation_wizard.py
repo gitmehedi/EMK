@@ -123,7 +123,7 @@ class AssetAllocationWizard(models.TransientModel):
                     assetmove = asset_move(asset)
                     assetmove.write({'move_id': move.id})
                     if move.state == 'draft':
-                        move.post()
+                        move.sudo().post()
                     asset.write({'allocation_status': True,
                                  'current_branch_id': self.to_operating_unit_id.id,
                                  'sub_operating_unit_id': sub_operating_unit,
@@ -192,7 +192,7 @@ class AssetAllocationWizard(models.TransientModel):
                     assetmove = asset_move(asset)
                     assetmove.write({'move_id': move.id})
                     if move.state == 'draft':
-                        move.post()
+                        move.sudo().post()
                     asset.write({'current_branch_id': self.to_operating_unit_id.id,
                                  'sub_operating_unit_id': sub_operating_unit,
                                  'cost_centre_id': self.cost_centre_id.id

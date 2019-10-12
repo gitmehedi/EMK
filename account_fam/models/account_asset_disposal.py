@@ -70,7 +70,7 @@ class AccountAssetDisposal(models.Model):
                 date = datetime.strptime(fields.Datetime.now()[:10], DATE_FORMAT)
                 dispose = self.generate_move(rec.asset_id)
                 if dispose.state == 'draft':
-                    dispose.post()
+                    dispose.sudo().post()
                     rec.write({'journal_entry': 'post', 'move_id': dispose.id})
                     response = rec.asset_id.set_to_close(date)
 

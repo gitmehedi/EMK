@@ -71,7 +71,7 @@ class AccountAssetSale(models.Model):
                 date = datetime.strptime(fields.Datetime.now()[:10], DATE_FORMAT)
                 sell = self.generate_move(rec.asset_id, rec)
                 if sell.state == 'draft':
-                    sell.post()
+                    sell.sudo().post()
                     rec.write({'journal_entry': 'post', 'move_id': sell.id})
                     response = rec.asset_id.set_to_close(date)
 
