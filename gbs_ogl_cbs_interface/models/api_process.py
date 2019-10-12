@@ -1,7 +1,8 @@
 import requests, json
 
-from odoo import exceptions, models, fields, api, _, tools
+from odoo import models, fields, api, _, tools
 from xml.etree import ElementTree
+from odoo.exceptions import ValidationError
 
 
 class SOAPProcess(models.Model):
@@ -49,80 +50,23 @@ class SOAPProcess(models.Model):
                 rec.endpoint_fullname = rec.http_method + "://" + rec.endpoint_url + ':' + rec.endpoint_port + '/' + rec.wsdl_name
 
     @api.model
-    def action_api_interface(self):
-        pending_journal = self.env['account.move'].search(
-            [('is_sync', '=', False), ('is_cbs', '=', False), ('state', '=', 'posted')])
-
-        for record in pending_journal:
-            debit, credit = 0, 0
-            for rec in record.line_ids:
-                if rec.debit > 0:
-                    debit += 1
-                if rec.credit > 0:
-                    credit += 1
-            endpoint = self.apiInterfaceMapping(debit, credit)
-
-            if endpoint:
-                if endpoint.name == 'GenericTransferAmountInterfaceHttpService':
-                    reqBody = self.genGenericTransferAmountInterface(record)
-                elif endpoint.name == 'SingleDebitMultiCreditInterfaceHttpService':
-                    reqBody = self.SingleDebitMultiCreditInterfaceHttpService(record)
-                elif endpoint.name == 'AccountingEntryMDMCInterfaceHttpService':
-                    reqBody = self.AccountingEntryMDMCInterfaceHttpService(record)
-
-                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,
-                                        headers={'content-type': 'application/text'})
-                root = ElementTree.fromstring(resBody.content)
-                response = {}
-                for rec in root.iter('*'):
-                    key = rec.tag.split("}")
-                    text = rec.text
-                    if len(key) == 2:
-                        response[key[1]] = text
-                    else:
-                        response[key[0]] = text
-
-                if 'ErrorMessage' in response:
-                    error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
-                        'error_code': response['ErrorCode'],
-                        'error_message': response['ErrorMessage'],
-                        'errors': json.dumps(response)
-                    }
-                    self.env['soap.process.error'].create(error)
-                elif 'OkMessage' in response:
-                    record.write({'is_sync': True})
-                elif 'faultcode' in response:
-                    error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
-                        'error_code': response['faultcode'],
-                        'error_message': response['faultstring'],
-                        'errors': json.dumps(response)
-                    }
-                    self.env['soap.process.error'].create(error)
-
-    @api.model
     def apiInterfaceMapping(self, debit, credit):
         endpoint = self.search([('name', '=', 'GenericTransferAmountInterfaceHttpService')], limit=1)
         if endpoint:
             return endpoint
 
     @api.model
-    def action_payment_instruction(self):
-        payment_ids = self.env['payment.instruction'].search([('is_sync', '=', False), ('state', '=', 'approved')])
-        for record in payment_ids:
-            debit, credit = 1, 1
-            endpoint = self.apiInterfaceMapping(debit, credit)
+    def call_payment_api(self, record):
+        debit, credit = 1, 1
+        endpoint = self.apiInterfaceMapping(debit, credit)
 
-            if endpoint:
-                reqBody = self.genGenericTransferAmountInterfaceForPayment(record)
-                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody,verify=False, auth=(endpoint.username,endpoint.password),
-                                        headers={'content-type': 'application/text'})
+        if endpoint:
+            reqBody = self.genGenericTransferAmountInterfaceForPayment(record)
+            try:
                 root = ElementTree.fromstring(resBody.content)
+                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
+                                        auth=(endpoint.username, endpoint.password),
+                                        headers={'content-type': 'application/text'})
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -133,7 +77,8 @@ class SOAPProcess(models.Model):
                         response[key[0]] = text
 
                 if 'OkMessage' in response:
-                    record.write({'is_sync': True})
+                    record.write({'is_sync': True, 'cbs_response': response})
+                    return "OkMessage"
                 elif 'ErrorMessage' in response:
                     error = {
                         'name': endpoint.endpoint_fullname,
@@ -144,6 +89,7 @@ class SOAPProcess(models.Model):
                         'errors': json.dumps(response)
                     }
                     self.env['soap.process.error'].create(error)
+                    return error
                 elif 'faultcode' in response:
                     error = {
                         'name': endpoint.endpoint_fullname,
@@ -154,6 +100,21 @@ class SOAPProcess(models.Model):
                         'errors': json.dumps(response)
                     }
                     self.env['soap.process.error'].create(error)
+                    return error
+            except Exception:
+                error = {
+                    'name': endpoint.endpoint_fullname,
+                    'error_code': "Server is not avaiable.",
+                    'error_message': "Server is not avaiable.",
+                }
+                self.env['soap.process.error'].create(error)
+                return error
+
+    @api.model
+    def action_payment_instruction(self):
+        payment_ids = self.env['payment.instruction'].search([('is_sync', '=', False), ('state', '=', 'approved')])
+        for record in payment_ids:
+            self.call_payment_api(record)
 
     @api.model
     def genGenericTransferAmountInterfaceForPayment(self, record):
@@ -165,12 +126,12 @@ class SOAPProcess(models.Model):
         d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
         d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
 
-        from_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
-
         if record.vendor_bank_acc:
-            to_bgl = record.vendor_bank_acc
+            from_bgl = record.vendor_bank_acc
         else:
-            to_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
+            from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
+
+        to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
 
         data = {
             'InstNum': '003',
@@ -219,7 +180,8 @@ class SOAPProcess(models.Model):
     @api.model
     def prepare_bgl(self, record, rec):
         sub_operating_unit = rec.sub_operating_unit_id.code if rec.sub_operating_unit_id else '001'
-        return "0{0}{1}00{2}".format(rec.account_id.code, sub_operating_unit, record.operating_unit_id.code)
+        branch = str("00" + record.operating_unit_id.code) if record.operating_unit_id.code else '00001'
+        return "0{0}{1}00{2}".format(rec.account_id.code, sub_operating_unit, branch)
 
     def format_date(self, val):
         vals = val.split('-')
@@ -235,9 +197,9 @@ class ServerFileError(models.Model):
     name = fields.Char(string='Title', required=True)
     process_date = fields.Datetime(string='Process Date', default=fields.Datetime.now, required=True, readonly=True)
     status = fields.Boolean(default=False, string='Status')
-    request_body = fields.Text(string='Request Data', required=True)
-    response_body = fields.Text(string='Response Data', required=True)
-    errors = fields.Text(string='Error Code', required=True)
+    request_body = fields.Text(string='Request Data')
+    response_body = fields.Text(string='Response Data')
+    errors = fields.Text(string='Error Code')
     error_code = fields.Char(string='Error Code', required=True)
     error_message = fields.Char(string='Error Details', required=True)
     state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
@@ -245,3 +207,18 @@ class ServerFileError(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'issued')]
+
+
+class PaymentInstruction(models.Model):
+    _inherit = 'payment.instruction'
+
+    @api.multi
+    def action_approve(self):
+        if self.state == 'draft':
+            response = self.env['soap.process'].call_payment_api(self)
+            if 'error_code' in response:
+                err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
+                    self.code, response['error_code'], response['error_message'])
+                raise ValidationError(_(err_text))
+            else:
+                res = super(PaymentInstruction, self).action_approve()

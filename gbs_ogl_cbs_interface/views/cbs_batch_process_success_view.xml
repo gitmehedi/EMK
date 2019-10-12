@@ -42,7 +42,6 @@
                 <field name="start_date"/>
                 <field name="stop_date"/>
                 <field name="time"/>
-                <field name="upload_file"/>
                 <field name="status" invisible="1"/>
                 <field name="state" invisible="1"/>
             </tree>

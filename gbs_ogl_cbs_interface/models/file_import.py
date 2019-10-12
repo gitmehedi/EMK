@@ -30,16 +30,16 @@ class GBSFileImport(models.Model):
             file_path = os.path.join(record.source_path, filename)
             with open(file_path, "w+") as file:
                 for val in self.import_lines:
-                    account_no = val.account_no or None
-                    amount = val.amount or None
-                    reference_no = val.reference_no or None
-                    # value = val.value or None
-                    type = val.type or None
+                    trn_type = val.type
+                    account_no = str(val.account_no)
+                    amount = format(val.amount, '.3f') if val.amount > 0 else format(val.amount, '.3f')
+                    narration = val.narration[:50]
+                    trn_ref_no = val.reference_no[-8:]
                     date_array = val.date.split("-")
                     date = date_array[2] + date_array[1] + date_array[0]
-                    narration = val.narration or None
-                    record = "{0}|{1}|{2}|{3}|{4}|{5}\r\n".format(account_no, amount, narration,
-                                                                      reference_no, date, type)
+
+                    record = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}\r\n".format(trn_type, account_no, amount, narration,
+                                                                            trn_ref_no, date)
                     file.write(record)
                     val.write({'state': 'done'})
                 self.write({'state': 'processed'})
@@ -60,7 +60,18 @@ class GBSFileImport(models.Model):
 
                 if file:
                     if destination.put(local_path, dest_path):
-                        os.remove(local_path)
+                        with open(local_path, "rb") as cbs_file:
+                            encoded_file = base64.b64encode(cbs_file.read())
+                        stop_date = fields.Datetime.now()
+                        success = self.env['generate.cbs.journal.success'].create({'name': filename,
+                                                                                   'start_date': start_date,
+                                                                                   'stop_date': stop_date,
+                                                                                   'upload_file': encoded_file,
+                                                                                   'file_name': filename})
+                        if success:
+                            os.remove(local_path)
+                        else:
+                            continue
                     else:
                         continue
 

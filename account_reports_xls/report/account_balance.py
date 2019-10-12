@@ -74,15 +74,14 @@ class ReportTrialBalance(models.AbstractModel):
 
         account_res = []
         for account in accounts:
-            res = dict((fn, 0.0) for fn in ['init_bal', 'credit', 'debit', 'balance'])
+            res = dict((fn, 0.0) for fn in ['init_bal', 'sec_layer', 'third_layer', 'credit', 'debit', 'balance'])
             currency = account.currency_id and account.currency_id or account.company_id.currency_id
             res['code'] = account.code
+            res['sec_layer'] = account.parent_id.parent_id.parent_id.name
+            res['third_layer'] = account.parent_id.parent_id.name
             res['name'] = account.name
             if account.id in account_result.keys():
-                asslib_status =  account_result[account.id].get('asset_liability_id')
-                res['init_bal'] = account_result[account.id].get('init_bal')
-                res['sec_layer'] = account.parent_id.parent_id.parent_id.name
-                res['third_layer'] = account.parent_id.parent_id.name
+                asslib_status = account_result[account.id].get('asset_liability_id')
                 res['init_bal'] = account_result[account.id].get('init_bal')
                 res['debit'] = account_result[account.id].get('debit')
                 res['credit'] = account_result[account.id].get('credit')
