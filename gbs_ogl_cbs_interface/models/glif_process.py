@@ -267,6 +267,12 @@ class ServerFileProcess(models.Model):
             data[0] = self.format_data(self.strslice(data[0] + '000000', date_struc))
             data[1] = self.format_data(self.strslice(data[1] + '000000', date_struc))
             data[13] = self.format_data(self.strslice(data[13] + '000000', date_struc))
+            if data[14][-1:] == '+':
+                data[14] = data[14][:-1]
+                data[5] = '01'
+            else:
+                data[14] = data[14][:-1]
+                data[5] = '02'
 
             return dict(zip(keys, data[:len(data)]))
         else:
@@ -361,15 +367,19 @@ class ServerFileProcess(models.Model):
 
                     posting_date = rec['POSTING-DATE']
                     if not posting_date:
-                        errors += format_error(error_obj.id, index, 'POSTING-DATE or POSTING-TIME [{0}]has invalid value'.format(posting_date))
+                        errors += format_error(error_obj.id, index,
+                                               'POSTING-DATE or POSTING-TIME [{0}]has invalid value'.format(
+                                                   posting_date))
 
                     system_date = rec['SYSTEM-DATE']
                     if not system_date:
-                        errors += format_error(error_obj.id, index, 'SYSTEM-DATE [{0}] has invalid value'.format(system_date))
+                        errors += format_error(error_obj.id, index,
+                                               'SYSTEM-DATE [{0}] has invalid value'.format(system_date))
 
                     trans_date = rec['TRANS-DATE']
                     if not trans_date:
-                        errors += format_error(error_obj.id, index, 'TRANS-DATE [{0}] has invalid value'.format(trans_date))
+                        errors += format_error(error_obj.id, index,
+                                               'TRANS-DATE [{0}] has invalid value'.format(trans_date))
 
                     branch_code = rec['GL-CLASS-CODE']['BRANCH']
                     if branch_code not in branch.keys():
@@ -427,7 +437,7 @@ class ServerFileProcess(models.Model):
                         comp_code = rec['GL-CLASS-CODE']['COMP_1'] + rec['GL-CLASS-CODE']['COMP_2']
                         if comp_code not in coa.keys():
                             errors += format_error(error_obj.id, index,
-                                                   'Chart of Account [{0}]  has invalid value'.format(cc_code))
+                                                   'Chart of Account [{0}]  has invalid value'.format(comp_code))
                         else:
                             comp_val = coa[comp_code]
 
@@ -469,7 +479,7 @@ class ServerFileProcess(models.Model):
 
         if len(errors) > 0:
             try:
-                query="""
+                query = """
                     INSERT INTO server_file_error_line (line_id,line_no,details,process_date) 
                     VALUES %s """ % errors[:-1]
                 self.env.cr.execute(query)
@@ -482,7 +492,7 @@ class ServerFileProcess(models.Model):
         else:
             error_obj.unlink()
             try:
-                query="""
+                query = """
                 INSERT INTO account_move_line 
                 (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
                 analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,company_id)  
@@ -599,6 +609,7 @@ class ServerFileError(models.Model):
             if rec.file_path and rec.ftp_ip:
                 rec.name = "{0} and {1}".format(rec.ftp_ip, rec.file_path)
 
+
 class ServerFileErrorDetails(models.Model):
     _name = 'server.file.error.line'
     _description = "File Processing Error Details"
@@ -611,9 +622,11 @@ class ServerFileErrorDetails(models.Model):
     details = fields.Text(string='Error Details')
     line_id = fields.Many2one('server.file.error')
 
+
 from datetime import datetime as dt
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 
 class ServerFileSuccess(models.Model):
     _name = 'server.file.success'

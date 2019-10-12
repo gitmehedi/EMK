@@ -25,6 +25,7 @@ class PaymentInstruction(models.Model):
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU', track_visibility='onchange')
     debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit SOU', track_visibility='onchange')
     origin = fields.Char('Origin', track_visibility='onchange')
+    cbs_response = fields.Text('Response')
     state = fields.Selection([
         ('draft', "Draft"),
         ('approved', "Approved"),
@@ -40,19 +41,18 @@ class PaymentInstruction(models.Model):
 
     @api.multi
     def action_approve(self):
-        return self.write({'state': 'approved'})
+        if self.state=='draft':
+            return self.write({'state': 'approved'})
 
     @api.multi
     def action_reject(self):
-        return self.write({'state': 'cancel'})
+        if self.state == 'draft':
+            return self.write({'state': 'cancel'})
 
     @api.multi
     def action_reset(self):
-        return self.write({'state': 'draft'})
-        # return {
-        #     'type': 'ir.actions.client',
-        #     'tag': 'reload',
-        # }
+        if self.state == 'cancel':
+            return self.write({'state': 'draft'})
 
     @api.model
     def _needaction_domain_get(self):

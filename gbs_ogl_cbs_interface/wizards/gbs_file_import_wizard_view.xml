@@ -6,14 +6,16 @@
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Import File">
-                <group col="4">
-                    <separator string="Please select CSV file to import data :" colspan="4"/>
-                    <field name="aml_data" filename="aml_fname"/>
-                    <field name="aml_fname" readonly="1"/>
-                    <newline/>
-                    <field name="csv_separator" groups="base.group_system"/>
-                    <field name="decimal_separator" groups="base.group_system"/>
-                    <field name="codepage" groups="base.group_system"/>
+                <group string="Please Select File for Import Data">
+                    <group>
+                        <field name="aml_data" filename="aml_fname"/>
+                    </group>
+                    <group>
+                        <field name="aml_fname" readonly="1"/>
+                        <field name="csv_separator" groups="base.group_system" invisible="1"/>
+                        <field name="decimal_separator" groups="base.group_system" invisible="1"/>
+                        <field name="codepage" groups="base.group_system" invisible="1"/>
+                    </group>
                 </group>
                 <footer>
                     <button name="aml_import" string="Import" type="object" class="oe_highlight"/>
