@@ -137,7 +137,7 @@ class AccountInvoice(models.Model):
                 val = self._prepare_tax_line_vals(line, tax)
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
                 if self.env['account.tax'].browse(tax['id']).operating_unit_id:
-                    op_unit_id = line.account_tds_id.operating_unit_id.id
+                    op_unit_id = self.env['account.tax'].browse(tax['id']).operating_unit_id.id
                 elif self.env.user.company_id.head_branch_id:
                     op_unit_id = self.env.user.company_id.head_branch_id.id
                 else:

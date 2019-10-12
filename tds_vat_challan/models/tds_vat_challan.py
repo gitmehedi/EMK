@@ -1,5 +1,5 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import models, fields, api, _, SUPERUSER_ID
+from odoo.exceptions import UserError,ValidationError
 
 
 class TdsVatChallan(models.Model):
@@ -33,15 +33,14 @@ class TdsVatChallan(models.Model):
         ('tds', 'TDS'),
         ('vat', 'VAT'),
     ], string='Type',default=lambda self: self.env.context.get('type'))
-
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
         ('approved', "Approved"),
         ('cancel', "Rejected"),
     ], default='draft',string="Status", track_visibility='onchange')
-
-
+    maker_id = fields.Many2one('res.users', 'Maker',
+                               default=lambda self: self.env.user.id, track_visibility='onchange')
 
     deposit_date = fields.Datetime(string='Deposit Date', readonly=True, track_visibility='onchange')
     deposit_approver = fields.Many2one('res.users', string='Deposit By', readonly=True,
@@ -110,6 +109,8 @@ class TdsVatChallan(models.Model):
             if record.state not in ('confirm'):
                 raise UserError(
                     _("Selected record cannot be approve as they are not in 'Deposited' state."))
+            if record.env.user.id == record.maker_id.id and record.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
             record.line_ids.write({'state': 'approved'})
             res = {
                 'state': 'approved',
