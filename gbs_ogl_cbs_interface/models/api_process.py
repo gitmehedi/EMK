@@ -128,12 +128,12 @@ class SOAPProcess(models.Model):
         d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
         d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
 
+        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
+
         if record.vendor_bank_acc:
             from_bgl = record.vendor_bank_acc
         else:
-            from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
-
-        to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
+            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
 
         data = {
             'InstNum': '003',
