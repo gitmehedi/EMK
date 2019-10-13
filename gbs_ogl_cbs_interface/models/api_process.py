@@ -2,6 +2,7 @@ import requests, json
 
 from odoo import models, fields, api, _, tools
 from xml.etree import ElementTree
+import lxml.etree as etree
 from odoo.exceptions import ValidationError
 
 
@@ -63,10 +64,11 @@ class SOAPProcess(models.Model):
         if endpoint:
             reqBody = self.genGenericTransferAmountInterfaceForPayment(record)
             try:
-                root = ElementTree.fromstring(resBody.content)
                 resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
                                         auth=(endpoint.username, endpoint.password),
                                         headers={'content-type': 'application/text'})
+
+                root = ElementTree.fromstring(resBody.content)
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -77,7 +79,7 @@ class SOAPProcess(models.Model):
                         response[key[0]] = text
 
                 if 'OkMessage' in response:
-                    record.write({'is_sync': True, 'cbs_response': response})
+                    record.write({'is_sync': True, 'cbs_response': resBody.content})
                     return "OkMessage"
                 elif 'ErrorMessage' in response:
                     error = {
@@ -104,8 +106,8 @@ class SOAPProcess(models.Model):
             except Exception:
                 error = {
                     'name': endpoint.endpoint_fullname,
-                    'error_code': "Server is not avaiable.",
-                    'error_message': "Server is not avaiable.",
+                    'error_code': "Operation Interrupted",
+                    'error_message': "Please contact with authority.",
                 }
                 self.env['soap.process.error'].create(error)
                 return error
@@ -126,12 +128,12 @@ class SOAPProcess(models.Model):
         d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
         d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
 
-        if record.vendor_bank_acc:
-            from_bgl = record.vendor_bank_acc
-        else:
-            from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
+        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
 
-        to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
+        if record.vendor_bank_acc:
+            to_bgl = record.vendor_bank_acc
+        else:
+            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
 
         data = {
             'InstNum': '003',
@@ -220,5 +222,5 @@ class PaymentInstruction(models.Model):
                 err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
                     self.code, response['error_code'], response['error_message'])
                 raise ValidationError(_(err_text))
-            else:
+            elif response == 'OkMessage':
                 res = super(PaymentInstruction, self).action_approve()

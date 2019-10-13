@@ -184,19 +184,21 @@ class GenerateCBSJournal(models.Model):
                 for vals in journals:
                     for val in vals.line_ids:
                         trn_type = '54' if val.debit > 0 else '04'
-                        amount = format(val.debit, '.3f') if val.debit > 0 else format(val.credit, '.3f')
+                        amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
+                        amount = ''.join(amount.split('.')).zfill(16)
                         narration = val.name[:50]
-                        trn_ref_no = vals.name[-8:]
+                        trn_ref_no = ''.join(vals.name.split('/'))[-8:]
                         date_array = val.date.split("-")
                         date = date_array[2] + date_array[1] + date_array[0]
-                        cost_centre = str("0"+val.analytic_account_id.code) if val.analytic_account_id.code else '0000'
+                        cost_centre = str(
+                            "0" + val.analytic_account_id.code) if val.analytic_account_id.code else '0000'
                         account_no = str(val.account_id.code)
                         sub_opu = str(val.sub_operating_unit_id.code) if val.sub_operating_unit_id.code else '001'
                         branch_code = str("00" + val.operating_unit_id.code) if val.operating_unit_id.code else '00001'
                         bgl = "0{0}{1}{2}".format(account_no, sub_opu, branch_code)
 
-                        journal = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount,narration,
-                                                                                      trn_ref_no, date,cost_centre)
+                        journal = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount, narration,
+                                                                                      trn_ref_no, date, cost_centre)
                         file.write(journal)
                     vals.write({'is_sync': True})
 

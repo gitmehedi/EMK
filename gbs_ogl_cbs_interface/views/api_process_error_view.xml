@@ -23,6 +23,8 @@
                     </group>
                     <separator string="Request Details"/>
                     <field name="request_body"/>
+                    <separator string="Response Details"/>
+                    <field name="response_body"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>

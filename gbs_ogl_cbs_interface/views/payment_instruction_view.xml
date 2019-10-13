@@ -106,10 +106,10 @@
                 <field name="debit_operating_unit_id"/>
                 <field name="partner_id"/>
                 <field name="currency_id"/>
-                <filter string="Not Synced" name="is_sync" domain="[('is_sync','=',False)]"/>
-                <filter string="Synced" domain="[('is_sync','=',True)]"/>
+                <filter string="Not Synced"  domain="[('is_sync','=',False)]"/>
+                <filter string="Synced" name="is_sync" domain="[('is_sync','=',True)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Syncronization" context="{'group_by':'is_sync'}"/>
+                    <filter string="By Status" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
