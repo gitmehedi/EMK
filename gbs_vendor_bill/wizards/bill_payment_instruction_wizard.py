@@ -60,17 +60,11 @@ class BillPaymentInstructionWizard(models.TransientModel):
         #             val = 1
         #         line.write({'amount_residual': ((line.amount_residual) * val) - self.amount})
 
-        debit_acc = False
-        debit_acc_id = False
+        credit_acc = False
         account_config_pool = self.env.user.company_id
+        debit_acc_id = self.invoice_id.partner_id.property_account_payable_id.id
         if self.invoice_id.partner_id.vendor_bank_acc:
-            debit_acc = self.invoice_id.partner_id.vendor_bank_acc
-        elif account_config_pool and account_config_pool.sundry_account_id:
-            debit_acc_id = self.invoice_id.partner_id.property_account_payable_id.id
-        else:
-            raise UserError(
-                _("Account Settings are not properly set. "
-                  "Please contact your system administrator for assistance."))
+            credit_acc = self.invoice_id.partner_id.vendor_bank_acc
 
         self.env['payment.instruction'].create({
             'invoice_id': self.invoice_id.id,
@@ -78,7 +72,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             'currency_id': self.invoice_id.currency_id.id,
             'default_debit_account_id': debit_acc_id,
             'default_credit_account_id': self.credit_account_id.id,
-            'vendor_bank_acc': debit_acc,
+            'vendor_bank_acc': credit_acc,
             'instruction_date': self.instruction_date,
             'amount': self.amount,
             'credit_operating_unit_id': self.credit_operating_unit_id.id or None,
