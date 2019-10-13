@@ -128,7 +128,7 @@
             <field name="view_id" ref="account.view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_journal_entry_manual_search"/>
             <field name="context">{"search_default_is_sync":1,"default_is_cr":True}</field>
-            <field name="domain">[('is_cbs','=',False),('is_sync','=',False),('is_cr','=',True)]</field>
+            <field name="domain">[('is_cr','=',True)]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a journal entry.

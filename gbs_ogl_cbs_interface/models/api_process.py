@@ -2,6 +2,7 @@ import requests, json
 
 from odoo import models, fields, api, _, tools
 from xml.etree import ElementTree
+import lxml.etree as etree
 from odoo.exceptions import ValidationError
 
 
@@ -67,7 +68,7 @@ class SOAPProcess(models.Model):
                                         auth=(endpoint.username, endpoint.password),
                                         headers={'content-type': 'application/text'})
 
-                root = ElementTree.fromstring(reqBody.content)
+                root = ElementTree.fromstring(resBody.content)
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -78,7 +79,7 @@ class SOAPProcess(models.Model):
                         response[key[0]] = text
 
                 if 'OkMessage' in response:
-                    record.write({'is_sync': True, 'cbs_response': response})
+                    record.write({'is_sync': True, 'cbs_response': resBody.content})
                     return "OkMessage"
                 elif 'ErrorMessage' in response:
                     error = {
@@ -105,8 +106,8 @@ class SOAPProcess(models.Model):
             except Exception:
                 error = {
                     'name': endpoint.endpoint_fullname,
-                    'error_code': "Server is not avaiable.",
-                    'error_message': "Server is not avaiable.",
+                    'error_code': "Operation Interrupted",
+                    'error_message': "Please contact with authority.",
                 }
                 self.env['soap.process.error'].create(error)
                 return error
@@ -221,5 +222,5 @@ class PaymentInstruction(models.Model):
                 err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
                     self.code, response['error_code'], response['error_message'])
                 raise ValidationError(_(err_text))
-            else:
+            elif response == 'OkMessage':
                 res = super(PaymentInstruction, self).action_approve()
