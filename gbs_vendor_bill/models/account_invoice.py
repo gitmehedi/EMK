@@ -324,6 +324,11 @@ class AccountInvoiceLine(models.Model):
     def _onchange_operating_unit_id(self):
         for line in self:
             line.sub_operating_unit_id = []
+            sub_operating_unit_ids = self.env['sub.operating.unit'].search([
+                ('operating_unit_id', '=', self.operating_unit_id.id)]).ids
+            return {'domain': {
+                'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
+            }}
 
     @api.constrains('invoice_line_tax_ids')
     def _check_supplier_taxes_id(self):
