@@ -131,7 +131,7 @@ class SOAPProcess(models.Model):
         from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
 
         if record.vendor_bank_acc:
-            from_bgl = record.vendor_bank_acc
+            to_bgl = record.vendor_bank_acc
         else:
             to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
 
