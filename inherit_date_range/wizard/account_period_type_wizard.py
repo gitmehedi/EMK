@@ -43,4 +43,4 @@ class AccountPeriodTypeWizard(models.TransientModel):
         record = self.env['date.range.type'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})
