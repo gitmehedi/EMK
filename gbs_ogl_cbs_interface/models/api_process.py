@@ -131,7 +131,7 @@ class SOAPProcess(models.Model):
         from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
 
         if record.vendor_bank_acc:
-            to_bgl = record.vendor_bank_acc
+            to_bgl = record.vendor_bank_acc.zfill(17)
         else:
             to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
 
@@ -213,10 +213,12 @@ class ServerFileError(models.Model):
 
 class PaymentInstruction(models.Model):
     _inherit = 'payment.instruction'
+    _payments = []
 
     @api.multi
     def action_approve(self):
-        if self.state == 'draft':
+        if self.state == 'draft' and not self.is_sync and self.code not in self._payments:
+            self._payments.append(self.code)
             response = self.env['soap.process'].call_payment_api(self)
             if 'error_code' in response:
                 err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
@@ -224,3 +226,9 @@ class PaymentInstruction(models.Model):
                 raise ValidationError(_(err_text))
             elif response == 'OkMessage':
                 res = super(PaymentInstruction, self).action_approve()
+        else:
+            raise ValidationError(_("Payment Instruction {0} already processed".format(self.code)))
+
+    @api.multi
+    def set_payments_empty(self):
+        self._payments = []
