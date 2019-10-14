@@ -1,0 +1,768 @@
+Code,Name,Branch,Active,Pending,Status
+801,MTB Operations Division,001,True,False,approve
+802,Board Division,001,True,False,approve
+803,Cash Management Unit,001,True,False,approve
+804,AML & CFT division,001,True,False,approve
+805,CIB Department,001,True,False,approve
+806,Credit Administration Department,001,True,False,approve
+807,Credit Monitoring Department,001,True,False,approve
+808,Credit Risk management Division,001,True,False,approve
+809,Engineering Department,001,True,False,approve
+810,Group Finance,001,True,False,approve
+811,Group Security & Fire Safety Department,001,True,False,approve
+812,Human Resource Division,001,True,False,approve
+813,ICC Division,001,True,False,approve
+814,IT Security Department,001,True,False,approve
+815,ITS Division,001,True,False,approve
+816,Group Legal Affairs Division,001,True,False,approve
+817,MDs Secretariat,001,True,False,approve
+818,MTB Collection Unit for SME Retail and Cards,001,True,False,approve
+819,MTB Communication Department,001,True,False,approve
+820,MTB Financial Institutions Services,001,True,False,approve
+821,MTB Infrastructure Division,001,True,False,approve
+822,MTB Tower,001,True,False,approve
+823,MTB CBS Transformation (MCT) ,001,True,False,approve
+824,Reconciliation Department,001,True,False,approve
+825,Research & Development Dept.,001,True,False,approve
+826,Retail Banking Division,001,True,False,approve
+827,Risk Management Division,001,True,False,approve
+828,Security & Printing Department,001,True,False,approve
+829,Share Department,001,True,False,approve
+830,Special Asset Management Department,001,True,False,approve
+831,Sustainable Finance Unit(SFU),001,True,False,approve
+832,Trainning Institute,001,True,False,approve
+833,Transport Department,001,True,False,approve
+834,Dhaka Div Branches,001,True,False,approve
+835,Ctg Div Branches,001,True,False,approve
+836,Other Div Branches,001,True,False,approve
+837,MTB Digital Banking Division ,001,True,False,approve
+838,SME- CRM Department ,001,True,False,approve
+839,MTB Operational Analytics Department,001,True,False,approve
+840,MTB Service Quality Department,001,True,False,approve
+841,MTB Investor Relations Dept.,001,True,False,approve
+842,MTB Centralized Report. Unit,001,True,False,approve
+843,MNC Banking Unit,001,True,False,approve
+844,MTB OBU,001,True,False,approve
+845,Retail Finance Centre,001,True,False,approve
+846,Branch Operations Unit,001,True,False,approve
+847,MTB Banking Booth Op. & Gov. Unit,001,True,False,approve
+848,Liability Operations Unit,001,True,False,approve
+849,Asset Operations Unit,001,True,False,approve
+850,Payments System Unit,001,True,False,approve
+851,System Policies Procedure Process Unit,001,True,False,approve
+852,Card Operations Unit,001,True,False,approve
+853,Agent Banking Operations Unit,001,True,False,approve
+854,NRB & Inward Remittance Unit,001,True,False,approve
+855,Centralized Bond Management Unit,001,True,False,approve
+856,Operational Risk Assurance Unit,001,True,False,approve
+857,MTB Square,001,True,False,approve
+858,Airport Lounge Dhaka,114,True,False,approve
+859,Airport Lounge Sylhet,114,True,False,approve
+860,Airport Lounge Chattagram,114,True,False,approve
+861,Airport Lounge,114,True,False,approve
+862,Privilege Centre-Banani,107,True,False,approve
+863,Privilege Centre-Baridhara,107,True,False,approve
+864,Privilege Centre-Chittagong,107,True,False,approve
+865,Privilege Centre-Gulshan,107,True,False,approve
+866,Privilege Centre-Motijheel,107,True,False,approve
+867,Privilege Centre-Panthapath,107,True,False,approve
+868,Privilege Centre-Tejgaon,107,True,False,approve
+869,Privilege Centre-Uttara,107,True,False,approve
+870,Privilege Banking Dept.,107,True,False,approve
+871,ATM Project,115,True,False,approve
+872,KIOSK,115,True,False,approve
+873,POS,115,True,False,approve
+874,ADC,115,True,False,approve
+875,Card Sales Office-Dhaka,099,True,False,approve
+876,Card Sales Office-Chattagram,099,True,False,approve
+877,Card Div,099,True,False,approve
+891,General Banking,001,True,False,approve
+891,General Banking,002,True,False,approve
+891,General Banking,003,True,False,approve
+891,General Banking,004,True,False,approve
+891,General Banking,005,True,False,approve
+891,General Banking,006,True,False,approve
+891,General Banking,007,True,False,approve
+891,General Banking,008,True,False,approve
+891,General Banking,009,True,False,approve
+891,General Banking,010,True,False,approve
+891,General Banking,011,True,False,approve
+891,General Banking,012,True,False,approve
+891,General Banking,013,True,False,approve
+891,General Banking,014,True,False,approve
+891,General Banking,015,True,False,approve
+891,General Banking,016,True,False,approve
+891,General Banking,017,True,False,approve
+891,General Banking,018,True,False,approve
+891,General Banking,019,True,False,approve
+891,General Banking,020,True,False,approve
+891,General Banking,021,True,False,approve
+891,General Banking,022,True,False,approve
+891,General Banking,023,True,False,approve
+891,General Banking,024,True,False,approve
+891,General Banking,025,True,False,approve
+891,General Banking,026,True,False,approve
+891,General Banking,027,True,False,approve
+891,General Banking,028,True,False,approve
+891,General Banking,029,True,False,approve
+891,General Banking,030,True,False,approve
+891,General Banking,031,True,False,approve
+891,General Banking,032,True,False,approve
+891,General Banking,033,True,False,approve
+891,General Banking,034,True,False,approve
+891,General Banking,035,True,False,approve
+891,General Banking,036,True,False,approve
+891,General Banking,037,True,False,approve
+891,General Banking,038,True,False,approve
+891,General Banking,039,True,False,approve
+891,General Banking,040,True,False,approve
+891,General Banking,041,True,False,approve
+891,General Banking,042,True,False,approve
+891,General Banking,043,True,False,approve
+891,General Banking,044,True,False,approve
+891,General Banking,045,True,False,approve
+891,General Banking,046,True,False,approve
+891,General Banking,047,True,False,approve
+891,General Banking,048,True,False,approve
+891,General Banking,049,True,False,approve
+891,General Banking,050,True,False,approve
+891,General Banking,051,True,False,approve
+891,General Banking,052,True,False,approve
+891,General Banking,053,True,False,approve
+891,General Banking,054,True,False,approve
+891,General Banking,055,True,False,approve
+891,General Banking,056,True,False,approve
+891,General Banking,057,True,False,approve
+891,General Banking,058,True,False,approve
+891,General Banking,059,True,False,approve
+891,General Banking,060,True,False,approve
+891,General Banking,061,True,False,approve
+891,General Banking,062,True,False,approve
+891,General Banking,063,True,False,approve
+891,General Banking,064,True,False,approve
+891,General Banking,065,True,False,approve
+891,General Banking,066,True,False,approve
+891,General Banking,067,True,False,approve
+891,General Banking,068,True,False,approve
+891,General Banking,069,True,False,approve
+891,General Banking,070,True,False,approve
+891,General Banking,071,True,False,approve
+891,General Banking,072,True,False,approve
+891,General Banking,073,True,False,approve
+891,General Banking,074,True,False,approve
+891,General Banking,075,True,False,approve
+891,General Banking,076,True,False,approve
+891,General Banking,077,True,False,approve
+891,General Banking,078,True,False,approve
+891,General Banking,079,True,False,approve
+891,General Banking,080,True,False,approve
+891,General Banking,081,True,False,approve
+891,General Banking,082,True,False,approve
+891,General Banking,083,True,False,approve
+891,General Banking,084,True,False,approve
+891,General Banking,085,True,False,approve
+891,General Banking,086,True,False,approve
+891,General Banking,087,True,False,approve
+891,General Banking,088,True,False,approve
+891,General Banking,089,True,False,approve
+891,General Banking,090,True,False,approve
+891,General Banking,091,True,False,approve
+891,General Banking,092,True,False,approve
+891,General Banking,093,True,False,approve
+891,General Banking,094,True,False,approve
+891,General Banking,095,True,False,approve
+891,General Banking,096,True,False,approve
+891,General Banking,097,True,False,approve
+891,General Banking,098,True,False,approve
+891,General Banking,501,True,False,approve
+891,General Banking,502,True,False,approve
+891,General Banking,503,True,False,approve
+891,General Banking,504,True,False,approve
+891,General Banking,505,True,False,approve
+891,General Banking,506,True,False,approve
+891,General Banking,507,True,False,approve
+891,General Banking,508,True,False,approve
+891,General Banking,509,True,False,approve
+891,General Banking,510,True,False,approve
+891,General Banking,511,True,False,approve
+891,General Banking,512,True,False,approve
+891,General Banking,513,True,False,approve
+891,General Banking,514,True,False,approve
+891,General Banking,515,True,False,approve
+891,General Banking,516,True,False,approve
+891,General Banking,517,True,False,approve
+892,Cash Department,001,True,False,approve
+892,Cash Department,002,True,False,approve
+892,Cash Department,003,True,False,approve
+892,Cash Department,004,True,False,approve
+892,Cash Department,005,True,False,approve
+892,Cash Department,006,True,False,approve
+892,Cash Department,007,True,False,approve
+892,Cash Department,008,True,False,approve
+892,Cash Department,009,True,False,approve
+892,Cash Department,010,True,False,approve
+892,Cash Department,011,True,False,approve
+892,Cash Department,012,True,False,approve
+892,Cash Department,013,True,False,approve
+892,Cash Department,014,True,False,approve
+892,Cash Department,015,True,False,approve
+892,Cash Department,016,True,False,approve
+892,Cash Department,017,True,False,approve
+892,Cash Department,018,True,False,approve
+892,Cash Department,019,True,False,approve
+892,Cash Department,020,True,False,approve
+892,Cash Department,021,True,False,approve
+892,Cash Department,022,True,False,approve
+892,Cash Department,023,True,False,approve
+892,Cash Department,024,True,False,approve
+892,Cash Department,025,True,False,approve
+892,Cash Department,026,True,False,approve
+892,Cash Department,027,True,False,approve
+892,Cash Department,028,True,False,approve
+892,Cash Department,029,True,False,approve
+892,Cash Department,030,True,False,approve
+892,Cash Department,031,True,False,approve
+892,Cash Department,032,True,False,approve
+892,Cash Department,033,True,False,approve
+892,Cash Department,034,True,False,approve
+892,Cash Department,035,True,False,approve
+892,Cash Department,036,True,False,approve
+892,Cash Department,037,True,False,approve
+892,Cash Department,038,True,False,approve
+892,Cash Department,039,True,False,approve
+892,Cash Department,040,True,False,approve
+892,Cash Department,041,True,False,approve
+892,Cash Department,042,True,False,approve
+892,Cash Department,043,True,False,approve
+892,Cash Department,044,True,False,approve
+892,Cash Department,045,True,False,approve
+892,Cash Department,046,True,False,approve
+892,Cash Department,047,True,False,approve
+892,Cash Department,048,True,False,approve
+892,Cash Department,049,True,False,approve
+892,Cash Department,050,True,False,approve
+892,Cash Department,051,True,False,approve
+892,Cash Department,052,True,False,approve
+892,Cash Department,053,True,False,approve
+892,Cash Department,054,True,False,approve
+892,Cash Department,055,True,False,approve
+892,Cash Department,056,True,False,approve
+892,Cash Department,057,True,False,approve
+892,Cash Department,058,True,False,approve
+892,Cash Department,059,True,False,approve
+892,Cash Department,060,True,False,approve
+892,Cash Department,061,True,False,approve
+892,Cash Department,062,True,False,approve
+892,Cash Department,063,True,False,approve
+892,Cash Department,064,True,False,approve
+892,Cash Department,065,True,False,approve
+892,Cash Department,066,True,False,approve
+892,Cash Department,067,True,False,approve
+892,Cash Department,068,True,False,approve
+892,Cash Department,069,True,False,approve
+892,Cash Department,070,True,False,approve
+892,Cash Department,071,True,False,approve
+892,Cash Department,072,True,False,approve
+892,Cash Department,073,True,False,approve
+892,Cash Department,074,True,False,approve
+892,Cash Department,075,True,False,approve
+892,Cash Department,076,True,False,approve
+892,Cash Department,077,True,False,approve
+892,Cash Department,078,True,False,approve
+892,Cash Department,079,True,False,approve
+892,Cash Department,080,True,False,approve
+892,Cash Department,081,True,False,approve
+892,Cash Department,082,True,False,approve
+892,Cash Department,083,True,False,approve
+892,Cash Department,084,True,False,approve
+892,Cash Department,085,True,False,approve
+892,Cash Department,086,True,False,approve
+892,Cash Department,087,True,False,approve
+892,Cash Department,088,True,False,approve
+892,Cash Department,089,True,False,approve
+892,Cash Department,090,True,False,approve
+892,Cash Department,091,True,False,approve
+892,Cash Department,092,True,False,approve
+892,Cash Department,093,True,False,approve
+892,Cash Department,094,True,False,approve
+892,Cash Department,095,True,False,approve
+892,Cash Department,096,True,False,approve
+892,Cash Department,097,True,False,approve
+892,Cash Department,098,True,False,approve
+892,Cash Department,501,True,False,approve
+892,Cash Department,502,True,False,approve
+892,Cash Department,503,True,False,approve
+892,Cash Department,504,True,False,approve
+892,Cash Department,505,True,False,approve
+892,Cash Department,506,True,False,approve
+892,Cash Department,507,True,False,approve
+892,Cash Department,508,True,False,approve
+892,Cash Department,509,True,False,approve
+892,Cash Department,510,True,False,approve
+892,Cash Department,511,True,False,approve
+892,Cash Department,512,True,False,approve
+892,Cash Department,513,True,False,approve
+892,Cash Department,514,True,False,approve
+892,Cash Department,515,True,False,approve
+892,Cash Department,516,True,False,approve
+892,Cash Department,517,True,False,approve
+893,Foreign Exchange,001,True,False,approve
+893,Foreign Exchange,002,True,False,approve
+893,Foreign Exchange,003,True,False,approve
+893,Foreign Exchange,004,True,False,approve
+893,Foreign Exchange,005,True,False,approve
+893,Foreign Exchange,006,True,False,approve
+893,Foreign Exchange,007,True,False,approve
+893,Foreign Exchange,008,True,False,approve
+893,Foreign Exchange,009,True,False,approve
+893,Foreign Exchange,010,True,False,approve
+893,Foreign Exchange,011,True,False,approve
+893,Foreign Exchange,012,True,False,approve
+893,Foreign Exchange,013,True,False,approve
+893,Foreign Exchange,014,True,False,approve
+893,Foreign Exchange,015,True,False,approve
+893,Foreign Exchange,016,True,False,approve
+893,Foreign Exchange,017,True,False,approve
+893,Foreign Exchange,018,True,False,approve
+893,Foreign Exchange,019,True,False,approve
+893,Foreign Exchange,020,True,False,approve
+893,Foreign Exchange,021,True,False,approve
+893,Foreign Exchange,022,True,False,approve
+893,Foreign Exchange,023,True,False,approve
+893,Foreign Exchange,024,True,False,approve
+893,Foreign Exchange,025,True,False,approve
+893,Foreign Exchange,026,True,False,approve
+893,Foreign Exchange,027,True,False,approve
+893,Foreign Exchange,028,True,False,approve
+893,Foreign Exchange,029,True,False,approve
+893,Foreign Exchange,030,True,False,approve
+893,Foreign Exchange,031,True,False,approve
+893,Foreign Exchange,032,True,False,approve
+893,Foreign Exchange,033,True,False,approve
+893,Foreign Exchange,034,True,False,approve
+893,Foreign Exchange,035,True,False,approve
+893,Foreign Exchange,036,True,False,approve
+893,Foreign Exchange,037,True,False,approve
+893,Foreign Exchange,038,True,False,approve
+893,Foreign Exchange,039,True,False,approve
+893,Foreign Exchange,040,True,False,approve
+893,Foreign Exchange,041,True,False,approve
+893,Foreign Exchange,042,True,False,approve
+893,Foreign Exchange,043,True,False,approve
+893,Foreign Exchange,044,True,False,approve
+893,Foreign Exchange,045,True,False,approve
+893,Foreign Exchange,046,True,False,approve
+893,Foreign Exchange,047,True,False,approve
+893,Foreign Exchange,048,True,False,approve
+893,Foreign Exchange,049,True,False,approve
+893,Foreign Exchange,050,True,False,approve
+893,Foreign Exchange,051,True,False,approve
+893,Foreign Exchange,052,True,False,approve
+893,Foreign Exchange,053,True,False,approve
+893,Foreign Exchange,054,True,False,approve
+893,Foreign Exchange,055,True,False,approve
+893,Foreign Exchange,056,True,False,approve
+893,Foreign Exchange,057,True,False,approve
+893,Foreign Exchange,058,True,False,approve
+893,Foreign Exchange,059,True,False,approve
+893,Foreign Exchange,060,True,False,approve
+893,Foreign Exchange,061,True,False,approve
+893,Foreign Exchange,062,True,False,approve
+893,Foreign Exchange,063,True,False,approve
+893,Foreign Exchange,064,True,False,approve
+893,Foreign Exchange,065,True,False,approve
+893,Foreign Exchange,066,True,False,approve
+893,Foreign Exchange,067,True,False,approve
+893,Foreign Exchange,068,True,False,approve
+893,Foreign Exchange,069,True,False,approve
+893,Foreign Exchange,070,True,False,approve
+893,Foreign Exchange,071,True,False,approve
+893,Foreign Exchange,072,True,False,approve
+893,Foreign Exchange,073,True,False,approve
+893,Foreign Exchange,074,True,False,approve
+893,Foreign Exchange,075,True,False,approve
+893,Foreign Exchange,076,True,False,approve
+893,Foreign Exchange,077,True,False,approve
+893,Foreign Exchange,078,True,False,approve
+893,Foreign Exchange,079,True,False,approve
+893,Foreign Exchange,080,True,False,approve
+893,Foreign Exchange,081,True,False,approve
+893,Foreign Exchange,082,True,False,approve
+893,Foreign Exchange,083,True,False,approve
+893,Foreign Exchange,084,True,False,approve
+893,Foreign Exchange,085,True,False,approve
+893,Foreign Exchange,086,True,False,approve
+893,Foreign Exchange,087,True,False,approve
+893,Foreign Exchange,088,True,False,approve
+893,Foreign Exchange,089,True,False,approve
+893,Foreign Exchange,090,True,False,approve
+893,Foreign Exchange,091,True,False,approve
+893,Foreign Exchange,092,True,False,approve
+893,Foreign Exchange,093,True,False,approve
+893,Foreign Exchange,094,True,False,approve
+893,Foreign Exchange,095,True,False,approve
+893,Foreign Exchange,096,True,False,approve
+893,Foreign Exchange,097,True,False,approve
+893,Foreign Exchange,098,True,False,approve
+893,Foreign Exchange,501,True,False,approve
+893,Foreign Exchange,502,True,False,approve
+893,Foreign Exchange,503,True,False,approve
+893,Foreign Exchange,504,True,False,approve
+893,Foreign Exchange,505,True,False,approve
+893,Foreign Exchange,506,True,False,approve
+893,Foreign Exchange,507,True,False,approve
+893,Foreign Exchange,508,True,False,approve
+893,Foreign Exchange,509,True,False,approve
+893,Foreign Exchange,510,True,False,approve
+893,Foreign Exchange,511,True,False,approve
+893,Foreign Exchange,512,True,False,approve
+893,Foreign Exchange,513,True,False,approve
+893,Foreign Exchange,514,True,False,approve
+893,Foreign Exchange,515,True,False,approve
+893,Foreign Exchange,516,True,False,approve
+893,Foreign Exchange,517,True,False,approve
+894,Credit Department,001,True,False,approve
+894,Credit Department,002,True,False,approve
+894,Credit Department,003,True,False,approve
+894,Credit Department,004,True,False,approve
+894,Credit Department,005,True,False,approve
+894,Credit Department,006,True,False,approve
+894,Credit Department,007,True,False,approve
+894,Credit Department,008,True,False,approve
+894,Credit Department,009,True,False,approve
+894,Credit Department,010,True,False,approve
+894,Credit Department,011,True,False,approve
+894,Credit Department,012,True,False,approve
+894,Credit Department,013,True,False,approve
+894,Credit Department,014,True,False,approve
+894,Credit Department,015,True,False,approve
+894,Credit Department,016,True,False,approve
+894,Credit Department,017,True,False,approve
+894,Credit Department,018,True,False,approve
+894,Credit Department,019,True,False,approve
+894,Credit Department,020,True,False,approve
+894,Credit Department,021,True,False,approve
+894,Credit Department,022,True,False,approve
+894,Credit Department,023,True,False,approve
+894,Credit Department,024,True,False,approve
+894,Credit Department,025,True,False,approve
+894,Credit Department,026,True,False,approve
+894,Credit Department,027,True,False,approve
+894,Credit Department,028,True,False,approve
+894,Credit Department,029,True,False,approve
+894,Credit Department,030,True,False,approve
+894,Credit Department,031,True,False,approve
+894,Credit Department,032,True,False,approve
+894,Credit Department,033,True,False,approve
+894,Credit Department,034,True,False,approve
+894,Credit Department,035,True,False,approve
+894,Credit Department,036,True,False,approve
+894,Credit Department,037,True,False,approve
+894,Credit Department,038,True,False,approve
+894,Credit Department,039,True,False,approve
+894,Credit Department,040,True,False,approve
+894,Credit Department,041,True,False,approve
+894,Credit Department,042,True,False,approve
+894,Credit Department,043,True,False,approve
+894,Credit Department,044,True,False,approve
+894,Credit Department,045,True,False,approve
+894,Credit Department,046,True,False,approve
+894,Credit Department,047,True,False,approve
+894,Credit Department,048,True,False,approve
+894,Credit Department,049,True,False,approve
+894,Credit Department,050,True,False,approve
+894,Credit Department,051,True,False,approve
+894,Credit Department,052,True,False,approve
+894,Credit Department,053,True,False,approve
+894,Credit Department,054,True,False,approve
+894,Credit Department,055,True,False,approve
+894,Credit Department,056,True,False,approve
+894,Credit Department,057,True,False,approve
+894,Credit Department,058,True,False,approve
+894,Credit Department,059,True,False,approve
+894,Credit Department,060,True,False,approve
+894,Credit Department,061,True,False,approve
+894,Credit Department,062,True,False,approve
+894,Credit Department,063,True,False,approve
+894,Credit Department,064,True,False,approve
+894,Credit Department,065,True,False,approve
+894,Credit Department,066,True,False,approve
+894,Credit Department,067,True,False,approve
+894,Credit Department,068,True,False,approve
+894,Credit Department,069,True,False,approve
+894,Credit Department,070,True,False,approve
+894,Credit Department,071,True,False,approve
+894,Credit Department,072,True,False,approve
+894,Credit Department,073,True,False,approve
+894,Credit Department,074,True,False,approve
+894,Credit Department,075,True,False,approve
+894,Credit Department,076,True,False,approve
+894,Credit Department,077,True,False,approve
+894,Credit Department,078,True,False,approve
+894,Credit Department,079,True,False,approve
+894,Credit Department,080,True,False,approve
+894,Credit Department,081,True,False,approve
+894,Credit Department,082,True,False,approve
+894,Credit Department,083,True,False,approve
+894,Credit Department,084,True,False,approve
+894,Credit Department,085,True,False,approve
+894,Credit Department,086,True,False,approve
+894,Credit Department,087,True,False,approve
+894,Credit Department,088,True,False,approve
+894,Credit Department,089,True,False,approve
+894,Credit Department,090,True,False,approve
+894,Credit Department,091,True,False,approve
+894,Credit Department,092,True,False,approve
+894,Credit Department,093,True,False,approve
+894,Credit Department,094,True,False,approve
+894,Credit Department,095,True,False,approve
+894,Credit Department,096,True,False,approve
+894,Credit Department,097,True,False,approve
+894,Credit Department,098,True,False,approve
+894,Credit Department,501,True,False,approve
+894,Credit Department,502,True,False,approve
+894,Credit Department,503,True,False,approve
+894,Credit Department,504,True,False,approve
+894,Credit Department,505,True,False,approve
+894,Credit Department,506,True,False,approve
+894,Credit Department,507,True,False,approve
+894,Credit Department,508,True,False,approve
+894,Credit Department,509,True,False,approve
+894,Credit Department,510,True,False,approve
+894,Credit Department,511,True,False,approve
+894,Credit Department,512,True,False,approve
+894,Credit Department,513,True,False,approve
+894,Credit Department,514,True,False,approve
+894,Credit Department,515,True,False,approve
+894,Credit Department,516,True,False,approve
+894,Credit Department,517,True,False,approve
+895,Branch,001,True,False,approve
+895,Branch,002,True,False,approve
+895,Branch,003,True,False,approve
+895,Branch,004,True,False,approve
+895,Branch,005,True,False,approve
+895,Branch,006,True,False,approve
+895,Branch,007,True,False,approve
+895,Branch,008,True,False,approve
+895,Branch,009,True,False,approve
+895,Branch,010,True,False,approve
+895,Branch,011,True,False,approve
+895,Branch,012,True,False,approve
+895,Branch,013,True,False,approve
+895,Branch,014,True,False,approve
+895,Branch,015,True,False,approve
+895,Branch,016,True,False,approve
+895,Branch,017,True,False,approve
+895,Branch,018,True,False,approve
+895,Branch,019,True,False,approve
+895,Branch,020,True,False,approve
+895,Branch,021,True,False,approve
+895,Branch,022,True,False,approve
+895,Branch,023,True,False,approve
+895,Branch,024,True,False,approve
+895,Branch,025,True,False,approve
+895,Branch,026,True,False,approve
+895,Branch,027,True,False,approve
+895,Branch,028,True,False,approve
+895,Branch,029,True,False,approve
+895,Branch,030,True,False,approve
+895,Branch,031,True,False,approve
+895,Branch,032,True,False,approve
+895,Branch,033,True,False,approve
+895,Branch,034,True,False,approve
+895,Branch,035,True,False,approve
+895,Branch,036,True,False,approve
+895,Branch,037,True,False,approve
+895,Branch,038,True,False,approve
+895,Branch,039,True,False,approve
+895,Branch,040,True,False,approve
+895,Branch,041,True,False,approve
+895,Branch,042,True,False,approve
+895,Branch,043,True,False,approve
+895,Branch,044,True,False,approve
+895,Branch,045,True,False,approve
+895,Branch,046,True,False,approve
+895,Branch,047,True,False,approve
+895,Branch,048,True,False,approve
+895,Branch,049,True,False,approve
+895,Branch,050,True,False,approve
+895,Branch,051,True,False,approve
+895,Branch,052,True,False,approve
+895,Branch,053,True,False,approve
+895,Branch,054,True,False,approve
+895,Branch,055,True,False,approve
+895,Branch,056,True,False,approve
+895,Branch,057,True,False,approve
+895,Branch,058,True,False,approve
+895,Branch,059,True,False,approve
+895,Branch,060,True,False,approve
+895,Branch,061,True,False,approve
+895,Branch,062,True,False,approve
+895,Branch,063,True,False,approve
+895,Branch,064,True,False,approve
+895,Branch,065,True,False,approve
+895,Branch,066,True,False,approve
+895,Branch,067,True,False,approve
+895,Branch,068,True,False,approve
+895,Branch,069,True,False,approve
+895,Branch,070,True,False,approve
+895,Branch,071,True,False,approve
+895,Branch,072,True,False,approve
+895,Branch,073,True,False,approve
+895,Branch,074,True,False,approve
+895,Branch,075,True,False,approve
+895,Branch,076,True,False,approve
+895,Branch,077,True,False,approve
+895,Branch,078,True,False,approve
+895,Branch,079,True,False,approve
+895,Branch,080,True,False,approve
+895,Branch,081,True,False,approve
+895,Branch,082,True,False,approve
+895,Branch,083,True,False,approve
+895,Branch,084,True,False,approve
+895,Branch,085,True,False,approve
+895,Branch,086,True,False,approve
+895,Branch,087,True,False,approve
+895,Branch,088,True,False,approve
+895,Branch,089,True,False,approve
+895,Branch,090,True,False,approve
+895,Branch,091,True,False,approve
+895,Branch,092,True,False,approve
+895,Branch,093,True,False,approve
+895,Branch,094,True,False,approve
+895,Branch,095,True,False,approve
+895,Branch,096,True,False,approve
+895,Branch,097,True,False,approve
+895,Branch,098,True,False,approve
+895,Branch,501,True,False,approve
+895,Branch,502,True,False,approve
+895,Branch,503,True,False,approve
+895,Branch,504,True,False,approve
+895,Branch,505,True,False,approve
+895,Branch,506,True,False,approve
+895,Branch,507,True,False,approve
+895,Branch,508,True,False,approve
+895,Branch,509,True,False,approve
+895,Branch,510,True,False,approve
+895,Branch,511,True,False,approve
+895,Branch,512,True,False,approve
+895,Branch,513,True,False,approve
+895,Branch,514,True,False,approve
+895,Branch,515,True,False,approve
+895,Branch,516,True,False,approve
+895,Branch,517,True,False,approve
+1,SOU CBS,001,True,False,approve
+1,SOU CBS,002,True,False,approve
+1,SOU CBS,003,True,False,approve
+1,SOU CBS,004,True,False,approve
+1,SOU CBS,005,True,False,approve
+1,SOU CBS,006,True,False,approve
+1,SOU CBS,007,True,False,approve
+1,SOU CBS,008,True,False,approve
+1,SOU CBS,009,True,False,approve
+1,SOU CBS,010,True,False,approve
+1,SOU CBS,011,True,False,approve
+1,SOU CBS,012,True,False,approve
+1,SOU CBS,013,True,False,approve
+1,SOU CBS,014,True,False,approve
+1,SOU CBS,015,True,False,approve
+1,SOU CBS,016,True,False,approve
+1,SOU CBS,017,True,False,approve
+1,SOU CBS,018,True,False,approve
+1,SOU CBS,019,True,False,approve
+1,SOU CBS,020,True,False,approve
+1,SOU CBS,021,True,False,approve
+1,SOU CBS,022,True,False,approve
+1,SOU CBS,023,True,False,approve
+1,SOU CBS,024,True,False,approve
+1,SOU CBS,025,True,False,approve
+1,SOU CBS,026,True,False,approve
+1,SOU CBS,027,True,False,approve
+1,SOU CBS,028,True,False,approve
+1,SOU CBS,029,True,False,approve
+1,SOU CBS,030,True,False,approve
+1,SOU CBS,031,True,False,approve
+1,SOU CBS,032,True,False,approve
+1,SOU CBS,033,True,False,approve
+1,SOU CBS,034,True,False,approve
+1,SOU CBS,035,True,False,approve
+1,SOU CBS,036,True,False,approve
+1,SOU CBS,037,True,False,approve
+1,SOU CBS,038,True,False,approve
+1,SOU CBS,039,True,False,approve
+1,SOU CBS,040,True,False,approve
+1,SOU CBS,041,True,False,approve
+1,SOU CBS,042,True,False,approve
+1,SOU CBS,043,True,False,approve
+1,SOU CBS,044,True,False,approve
+1,SOU CBS,045,True,False,approve
+1,SOU CBS,046,True,False,approve
+1,SOU CBS,047,True,False,approve
+1,SOU CBS,048,True,False,approve
+1,SOU CBS,049,True,False,approve
+1,SOU CBS,050,True,False,approve
+1,SOU CBS,051,True,False,approve
+1,SOU CBS,052,True,False,approve
+1,SOU CBS,053,True,False,approve
+1,SOU CBS,054,True,False,approve
+1,SOU CBS,055,True,False,approve
+1,SOU CBS,056,True,False,approve
+1,SOU CBS,057,True,False,approve
+1,SOU CBS,058,True,False,approve
+1,SOU CBS,059,True,False,approve
+1,SOU CBS,060,True,False,approve
+1,SOU CBS,061,True,False,approve
+1,SOU CBS,062,True,False,approve
+1,SOU CBS,063,True,False,approve
+1,SOU CBS,064,True,False,approve
+1,SOU CBS,065,True,False,approve
+1,SOU CBS,066,True,False,approve
+1,SOU CBS,067,True,False,approve
+1,SOU CBS,068,True,False,approve
+1,SOU CBS,069,True,False,approve
+1,SOU CBS,070,True,False,approve
+1,SOU CBS,071,True,False,approve
+1,SOU CBS,072,True,False,approve
+1,SOU CBS,073,True,False,approve
+1,SOU CBS,074,True,False,approve
+1,SOU CBS,075,True,False,approve
+1,SOU CBS,076,True,False,approve
+1,SOU CBS,077,True,False,approve
+1,SOU CBS,078,True,False,approve
+1,SOU CBS,079,True,False,approve
+1,SOU CBS,080,True,False,approve
+1,SOU CBS,081,True,False,approve
+1,SOU CBS,082,True,False,approve
+1,SOU CBS,083,True,False,approve
+1,SOU CBS,084,True,False,approve
+1,SOU CBS,085,True,False,approve
+1,SOU CBS,086,True,False,approve
+1,SOU CBS,087,True,False,approve
+1,SOU CBS,088,True,False,approve
+1,SOU CBS,089,True,False,approve
+1,SOU CBS,090,True,False,approve
+1,SOU CBS,091,True,False,approve
+1,SOU CBS,092,True,False,approve
+1,SOU CBS,093,True,False,approve
+1,SOU CBS,094,True,False,approve
+1,SOU CBS,095,True,False,approve
+1,SOU CBS,096,True,False,approve
+1,SOU CBS,097,True,False,approve
+1,SOU CBS,098,True,False,approve
+1,SOU CBS,501,True,False,approve
+1,SOU CBS,502,True,False,approve
+1,SOU CBS,503,True,False,approve
+1,SOU CBS,504,True,False,approve
+1,SOU CBS,505,True,False,approve
+1,SOU CBS,506,True,False,approve
+1,SOU CBS,507,True,False,approve
+1,SOU CBS,508,True,False,approve
+1,SOU CBS,509,True,False,approve
+1,SOU CBS,510,True,False,approve
+1,SOU CBS,511,True,False,approve
+1,SOU CBS,512,True,False,approve
+1,SOU CBS,513,True,False,approve
+1,SOU CBS,514,True,False,approve
+1,SOU CBS,515,True,False,approve
+1,SOU CBS,516,True,False,approve
+1,SOU CBS,517,True,False,approve
