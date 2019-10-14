@@ -51,7 +51,8 @@
                                     type="object" class="oe_read_only"
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Approve" name="action_approve_amendment"
-                                    type="object" class="oe_highlight" attrs="{'invisible': [('is_amendment', '=', False)]}"
+                                    type="object" class="oe_highlight"
+                                    attrs="{'invisible': [('is_amendment', '=', False)]}"
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                         </header>
@@ -149,12 +150,12 @@
                                             <field name="sequence" widget="handle"/>
                                             <field name="instruction_date"/>
                                             <field name="partner_id"/>
-                                            <field name="default_debit_account_id" invisible="1"/>
-                                            <field name="default_credit_account_id" invisible="1"/>
                                             <field name="amount"/>
+                                            <field name="default_debit_account_id"/>
+                                            <field name="default_credit_account_id"/>
                                             <field name="currency_id" invisible="1"/>
-                                            <field name="is_sync" invisible="1"/>
                                             <field name="state" string="Status"/>
+                                            <field name="is_sync" invisible="1"/>
                                             <button name="sync" string="Sync" type="action"
                                                     icon="fa fa-check text-success"
                                                     attrs="{'invisible': [('is_sync', '=', False)]}"/>
@@ -265,8 +266,6 @@
                   name="Vendor Agreements"
                   groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
                   parent="account.menu_finance_payables" sequence="2"/>
-
-
 
 
         <!-- inherit 'invoice supplier form' from agreement_account to add domain -->

@@ -7,7 +7,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_id']" position="after">
-                <field name="agreement_id" string="Agreement"/>
+                <field name="agreement_id" attrs="{'invisible':[('invoice_id','!=',False)]}" string="Agreement"/>
             </xpath>
         </field>
     </record>
