@@ -254,6 +254,14 @@ class AccountInvoice(models.Model):
                 to_pay_invoice.write({'state': 'paid'})
         return True
 
+    @api.constrains('date_invoice')
+    def _check_date_invoice(self):
+        date = fields.Date.today()
+        if self.date_invoice:
+            if self.date_invoice > date:
+                raise ValidationError(
+                    "Please Check Bill Date!! \n 'Bill Date' can not be future date")
+
     @api.model
     def create(self, vals):
         if vals.get('reference'):
