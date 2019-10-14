@@ -13,10 +13,21 @@ class AssetDepreciationWizard(models.TransientModel):
 
     @api.multi
     def depreciate(self):
-        assets = self.env['account.asset.asset'].search(
-            [('state', '=', 'open'), ('depreciation_flag', '=', False), ('allocation_status', '=', True)])
-        for asset in assets:
-            date = datetime.strptime(self.date, "%Y-%m-%d")
-            asset.compute_depreciation_history(date, asset)
+
+        if 'active_ids' in self._context:
+            assets = self.env['account.asset.asset'].browse(self._context['active_ids'])
+            for asset in assets:
+                if asset.state == 'open' and not asset.depreciation_flag and asset.allocation_status:
+                    self.depr_asset(asset)
+        else:
+            assets = self.env['account.asset.asset'].search(
+                [('state', '=', 'open'), ('depreciation_flag', '=', False), ('allocation_status', '=', True)])
+            for asset in assets:
+                self.depr_asset(asset)
 
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def depr_asset(self, asset):
+        date = datetime.strptime(self.date, "%Y-%m-%d")
+        asset.compute_depreciation_history(date, asset)
