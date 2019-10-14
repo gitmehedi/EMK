@@ -51,6 +51,7 @@ class AccountAssetAsset(models.Model):
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
     depr_base_value = fields.Float(string='Depr. Base Value', track_visibility='onchange', readonly=True)
     value_residual = fields.Float(string='WDV', track_visibility='onchange')
+    sum_value_residual = fields.Float(string='WDV')
     advance_amount = fields.Float(string='Adjusted Amount', track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)]})
     current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
@@ -60,6 +61,7 @@ class AccountAssetAsset(models.Model):
                                             states={'draft': [('readonly', False)]})
     accumulated_value = fields.Float(string='Accumulated Depr.', compute="_compute_accumulated_value",
                                      track_visibility='onchange')
+    sum_accumulated_value = fields.Float(string='Accumulated Depr.')
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
                                      track_visibility='onchange', readonly=True,
@@ -218,9 +220,16 @@ class AccountAssetAsset(models.Model):
                     if depreciation:
                         asset.create_move(depreciation)
                         if date.month == 12 and date.day == 31:
-                            asset.write({'lst_depr_date': date.date(), 'depr_base_value': book_val_amount})
+                            asset.write({'lst_depr_date': date.date(),
+                                         'depr_base_value': book_val_amount,
+                                         'sum_value_residual': book_val_amount,
+                                         'sum_accumulated_value': cumul_depr
+                                         })
                         else:
-                            asset.write({'lst_depr_date': date.date()})
+                            asset.write({'lst_depr_date': date.date(),
+                                         'sum_value_residual': book_val_amount,
+                                         'sum_accumulated_value': cumul_depr
+                                         })
 
     @api.multi
     def create_move(self, line):
@@ -228,7 +237,8 @@ class AccountAssetAsset(models.Model):
         prec = self.env['decimal.precision'].precision_get('Account')
         if line:
             if line.move_id:
-                raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
+                raise UserError(
+                    _('This depreciation is already linked to a journal entry! Please post or delete it.'))
             category_id = line.asset_id.asset_type_id
             depreciation_date = self.env.context.get(
                 'depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
@@ -338,7 +348,6 @@ class AccountAssetAsset(models.Model):
             return datetime.strptime(date, DATE_FORMAT)
         elif type(date) is datetime:
             return "{0}-{1}-{2}".format(date.year, date.month, date.day)
-
 
 class AccountAssetDepreciationLine(models.Model):
     _inherit = 'account.asset.depreciation.line'

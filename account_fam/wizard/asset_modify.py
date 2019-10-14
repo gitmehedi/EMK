@@ -105,10 +105,12 @@ class AssetModify(models.TransientModel):
                     line = asset.depreciation_line_ids.create(vals)
                     if line:
                         move = self.create_move(asset, depr_value)
+                        asset.write({'sum_value_residual': remaining_value,
+                                     'sum_accumulated_value': depreciated_amount
+                                     })
                         line.write({'move_id': move.id, 'move_check': True})
                         if move.state == 'draft' and line.move_id.id == move.id:
                             move.sudo().post()
-
             else:
                 flag = 'Active' if asset.depreciation_flag else 'In-Active'
                 raise Warning(_('Depreciation of Asset {0} is in Status [{1}] with Awaiting Disposal [{2}]'.format(
@@ -118,7 +120,6 @@ class AssetModify(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def create_move(self, asset, depr_value):
-
         prec = self.env['decimal.precision'].precision_get('Account')
         company_currency = asset.company_id.currency_id
         current_currency = asset.currency_id
