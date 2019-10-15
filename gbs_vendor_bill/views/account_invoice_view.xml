@@ -98,7 +98,7 @@
                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="domain">[('supplier','=',True)]</attribute>
+                <attribute name="domain">[('supplier','=',True),('state','=','approve')]</attribute>
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="replace">
@@ -151,7 +151,6 @@
                             <field name="payment_approver" invisible="1"/>
                         </group>
                     </group>
-                    <!--attrs="{'invisible': [('payment_line_ids', '=', [])]}"-->
                 </page>
             </xpath>
             <xpath expr="//notebook/page[1]/field/tree/field[@name='product_id']" position="attributes">
@@ -164,6 +163,9 @@
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='journal_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[2]/group/group/field[@name='date']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='user_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
@@ -185,9 +187,6 @@
                 <label for="provisional_expense"/>
                 <field name="provisional_expense"/>
             </xpath>
-            <!--<xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">-->
-            <!--<attribute name="groups">base.group_system</attribute>-->
-            <!--</xpath>-->
         </field>
     </record>
 
@@ -252,6 +251,3 @@
         </field>
     </record>
 </odoo>
-        <!--icon="fa fa-thumbs-up text-success"-->
-        <!--icon="fa fa-thumbs-down text-danger"-->
-        <!--icon="fa fa-undo text-warning"-->

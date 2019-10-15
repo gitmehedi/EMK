@@ -107,9 +107,9 @@ class GBSFileImportWizard(models.TransientModel):
                     "\nPlease correct the input file.")
                     % hf)
             else:
-                header_fields2.append(hf)
+                header_fields2.append(hf.strip())
 
-        return header_fields
+        return header_fields2
 
     def _log_line_error(self, line, msg):
         data = self.csv_separator.join(
@@ -119,6 +119,9 @@ class GBSFileImportWizard(models.TransientModel):
 
     @api.multi
     def aml_import(self):
+        if not self.lines:
+            raise ValidationError(_('Please Select File.'))
+
         self._err_log = ''
         move = self.env['gbs.file.import'].browse(self._context['active_id'])
         lines, header = self._remove_leading_lines(self.lines)
@@ -135,14 +138,14 @@ class GBSFileImportWizard(models.TransientModel):
             else:
                 d_type = line['type']
             temp_vals = {}
-            temp_vals['account_no'] = line['account no']
-            temp_vals['amount'] = line['amount']
-            temp_vals['narration'] = line['narration']
-            temp_vals['reference_no'] = line['reference no']
+            temp_vals['account_no'] = line['account no'].strip()
+            temp_vals['amount'] = float(line['amount'].strip().replace(",", ""))
+            temp_vals['narration'] = line['narration'].strip()
+            temp_vals['reference_no'] = line['reference no'].strip()
             temp_vals['date'] = line['date']
-            temp_vals['type'] = d_type
+            temp_vals['type'] = d_type.strip()
             temp_vals['import_id'] = move.id
-             
+
             temp_pool = self.env['gbs.file.import.line']
             temp_pool.create(temp_vals)
         return True

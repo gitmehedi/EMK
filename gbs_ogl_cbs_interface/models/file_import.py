@@ -36,8 +36,10 @@ class GBSFileImport(models.Model):
                     amount = ''.join(amount.split('.')).zfill(16)
                     narration = val.narration[:50]
                     trn_ref_no = '{0}'.format(val.id).zfill(8)
-                    date_array = val.date.split("-")
-                    date = date_array[2] + date_array[1] + date_array[0]
+                    date_array = val.date if val.date else fields.Datetime.now()[:10]
+                    date_array = date_array.split("-")
+                    if date_array:
+                        date = date_array[2] + date_array[1] + date_array[0]
 
                     record = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}\r\n".format(trn_type, account_no, amount, narration,
                                                                             trn_ref_no, date)
@@ -89,12 +91,12 @@ class GBSFileImport(models.Model):
 class GBSFileImportLine(models.Model):
     _name = 'gbs.file.import.line'
 
-    name = fields.Char(string='Name')
-    account_no = fields.Char(string='Account No')
-    amount = fields.Float(string='Amount')
-    narration = fields.Char(string='Narration')
-    reference_no = fields.Char(string='Reference No')
-    date = fields.Char(string='Value Date')
+    name = fields.Char(string='Name', required=True)
+    account_no = fields.Char(string='Account No', required=True, )
+    amount = fields.Float(string='Amount', required=True)
+    narration = fields.Char(string='Narration', required=True)
+    reference_no = fields.Char(string='Reference No', required=True)
+    date = fields.Char(string='Value Date', required=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string='Status')
     type = fields.Selection([
         ('01', 'Credit Dep'),
@@ -105,7 +107,6 @@ class GBSFileImportLine(models.Model):
         ('53', 'Debit Loan'),
         ('04', 'Credit Gen'),
         ('54', 'Debit Gen'),
-
-    ], string='Type')
+    ], string='Type', required=True, )
 
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
