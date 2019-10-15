@@ -43,6 +43,8 @@ class AccountInvoice(models.Model):
                                          help="To manage provisional expense")
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_amount',
                                      store=True, readonly=True, track_visibility='onchange', copy=False)
+    total_amount_with_vat = fields.Float('Total', compute='_compute_total_amount_with_vat',
+                                        store=True, readonly=True, track_visibility='onchange', copy=False)
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -75,6 +77,14 @@ class AccountInvoice(models.Model):
                 line.amount for line in invoice.payment_line_ids if line.state not in ['cancel'])
             invoice.total_payment_approved = sum(
                 line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
+
+    @api.one
+    @api.depends('amount_untaxed', 'amount_tax','vat_selection')
+    def _compute_total_amount_with_vat(self):
+        for invoice in self:
+            if invoice.amount_untaxed and invoice.amount_tax:
+                invoice.total_amount_with_vat = invoice.amount_untaxed + invoice.amount_tax
+
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
