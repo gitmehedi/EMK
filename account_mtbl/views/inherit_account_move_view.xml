@@ -28,9 +28,6 @@
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                     <attribute name="required">True</attribute>
                 </xpath>
-                <xpath expr="//field[@name='date']" position="attributes">
-                    <attribute name="readonly">1</attribute>
-                </xpath>
                 <xpath expr="//field[@name='line_ids']/tree//field[@name='account_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                     <attribute name="domain">[('level_id.name', '=', 'Layer 5')]</attribute>
