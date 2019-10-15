@@ -98,9 +98,9 @@ class TDSRuleWizardLine(models.TransientModel):
     _name = 'tds.rule.wizard.line'
 
     tds_rule_wiz_id = fields.Many2one('tds.rule.wizard')
-    range_from = fields.Integer(string='From Range', required=True)
-    range_to = fields.Integer(string='To Range', required=True)
-    rate = fields.Float(string='Rate', required=True, digits=(12, 2))
+    range_from = fields.Integer(string='From Range')
+    range_to = fields.Integer(string='To Range')
+    rate = fields.Float(string='Rate', digits=(12, 2))
 
     @api.constrains('range_from', 'range_to')
     def _check_time(self):

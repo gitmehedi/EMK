@@ -115,33 +115,33 @@ class TDSRules(models.Model):
 
     @api.multi
     def action_confirm(self):
-        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         for rec in self:
+            if rec.env.user.id == rec.maker_id.id and rec.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
             num = 1
-            seq = self.name + ' / 000' + str(num)
+            seq = rec.name + ' / 000' + str(num)
             res = {
                 'name': seq,
                 'active': rec.active,
                 'effective_from': rec.effective_from,
-                'account_id': self.account_id.id,
+                'account_id': rec.account_id.id,
                 'type_rate': rec.type_rate,
                 'flat_rate': rec.flat_rate,
                 'rel_id': rec.id,
                 'state': 'confirm',
-                'approver_id': self.env.user.id,
+                'approver_id': rec.env.user.id,
             }
-            self.version_ids += self.env['tds.rule.version'].create(res)
-        if self.type_rate == 'slab':
-            for rule in self.line_ids:
-                line_res = {
-                    'range_from': rule.range_from,
-                    'range_to': rule.range_to,
-                    'rate': rule.rate,
-                    'rel_id': rule.id
-                }
-                self.version_ids.version_line_ids += self.env['tds.rule.version.line'].create(line_res)
-        self.state = 'confirm'
+            rec.version_ids += self.env['tds.rule.version'].create(res)
+            if rec.type_rate == 'slab':
+                for rule in rec.line_ids:
+                    line_res = {
+                        'range_from': rule.range_from,
+                        'range_to': rule.range_to,
+                        'rate': rule.rate,
+                        'rel_id': rule.id
+                    }
+                    rec.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
+            rec.state = 'confirm'
 
     @api.multi
     def action_amendment(self):
@@ -287,7 +287,6 @@ class TDSRuleVersionLine(models.Model):
     range_from = fields.Integer(string='From Range', required=True)
     range_to = fields.Integer(string='To Range', required=True)
     rate = fields.Float(string='Rate', required=True, digits=(12,2))
-
 
     # automated version for previous
     # @api.model

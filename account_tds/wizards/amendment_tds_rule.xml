@@ -40,9 +40,9 @@
                             <page string="Slab Details">
                                 <field name="line_ids">
                                     <tree string="List" editable="bottom">
-                                        <field name="range_from" placeholder="Enter Numeric Number"/>
-                                        <field name="range_to"  placeholder="Enter Numeric Number"/>
-                                        <field name="rate"/>
+                                        <field name="range_from" placeholder="Enter Numeric Number" required="1"/>
+                                        <field name="range_to"  placeholder="Enter Numeric Number" required="1"/>
+                                        <field name="rate" required="1"/>
                                     </tree>
                                 </field>
                             </page>
