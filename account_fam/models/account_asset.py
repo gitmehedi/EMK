@@ -45,7 +45,7 @@ class AccountAssetAsset(models.Model):
                              states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Purchase Branch', required=True,
                                         track_visibility='onchange')
-    invoice_date = fields.Date(related='invoice_id.date', string='Bill Date', track_visibility='onchange')
+    invoice_date = fields.Date(related='invoice_id.date_invoice', string='Bill Date', track_visibility='onchange')
     method_period = fields.Integer(string='One Entry (In Month)', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)

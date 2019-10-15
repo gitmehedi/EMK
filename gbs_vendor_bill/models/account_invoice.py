@@ -340,6 +340,8 @@ class AccountInvoiceLine(models.Model):
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price',store=True, readonly=True, copy=False)
     narration = fields.Text('Narration')
 
+
+
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
         for line in self:
