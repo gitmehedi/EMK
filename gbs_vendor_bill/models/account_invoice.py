@@ -1,10 +1,10 @@
 from odoo import models, fields, api, _, SUPERUSER_ID
-from odoo.exceptions import UserError,ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
-    _inherit = ['account.invoice','ir.needaction_mixin']
+    _inherit = ['account.invoice', 'ir.needaction_mixin']
 
     entity_service_id = fields.Many2one('product.product', string='Service', readonly=True,
                                         states={'draft': [('readonly', False)]},
@@ -13,35 +13,36 @@ class AccountInvoice(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid),
-                                        readonly=True,required=True,
-                                        states={'draft': [('readonly',False)]})
+                                        readonly=True, required=True,
+                                        states={'draft': [('readonly', False)]})
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
-                                            readonly=True,states={'draft': [('readonly',False)]})
+                                            readonly=True, states={'draft': [('readonly', False)]})
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
-    security_deposit = fields.Float('Security Deposit',track_visibility='onchange', copy=False,
+    security_deposit = fields.Float('Security Deposit', track_visibility='onchange', copy=False,
                                     readonly=True, states={'draft': [('readonly', False)]})
     security_deposit_account_id = fields.Many2one('account.account', string='Security Deposit Account',
-                                                  default=lambda self: self.env.user.company_id.security_deposit_account_id.id,
-                                                  required=True,readonly=True,states={'draft': [('readonly', False)]})
+                                                  default=lambda
+                                                      self: self.env.user.company_id.security_deposit_account_id.id,
+                                                  required=True, readonly=True, states={'draft': [('readonly', False)]})
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
-                                        store=True, readonly=True, track_visibility='onchange',copy=False)
+                                        store=True, readonly=True, track_visibility='onchange', copy=False)
     total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
     vat_selection = fields.Selection([('normal', 'General'),
                                       ('mushok', 'Mushok-6.3'),
                                       ('vds_authority', 'VDS Authority'),
                                       ], string='VAT Selection', default='normal',
-                                     readonly=True,states={'draft': [('readonly',False)]})
-    payment_approver = fields.Text('Payment Instruction Responsible',track_visibility='onchange',
+                                     readonly=True, states={'draft': [('readonly', False)]})
+    payment_approver = fields.Text('Payment Instruction Responsible', track_visibility='onchange',
                                    help="Log for payment approver", copy=False)
-    merged_bill = fields.Boolean(default=False,string='Is Merged Bill',track_visibility='onchange',
+    merged_bill = fields.Boolean(default=False, string='Is Merged Bill', track_visibility='onchange',
                                  readonly=True, states={'draft': [('readonly', False)]},
                                  help="Log for payment approver")
-    provisional_expense = fields.Boolean(default=False,string='Is Provisional Expense',track_visibility='onchange',
+    provisional_expense = fields.Boolean(default=False, string='Is Provisional Expense', track_visibility='onchange',
                                          readonly=True, states={'draft': [('readonly', False)]},
                                          help="To manage provisional expense")
-    mushok_vds_amount = fields.Float('VAT Payable',compute='_compute_amount',
-                                     store=True, readonly=True, track_visibility='onchange',copy=False)
+    mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_amount',
+                                     store=True, readonly=True, track_visibility='onchange', copy=False)
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -67,11 +68,13 @@ class AccountInvoice(models.Model):
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
     @api.one
-    @api.depends('payment_line_ids.amount','payment_line_ids.state')
+    @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
     def _compute_payment_amount(self):
         for invoice in self:
-            invoice.total_payment_amount = sum(line.amount for line in invoice.payment_line_ids if line.state not in ['cancel'])
-            invoice.total_payment_approved = sum(line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
+            invoice.total_payment_amount = sum(
+                line.amount for line in invoice.payment_line_ids if line.state not in ['cancel'])
+            invoice.total_payment_approved = sum(
+                line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -97,7 +100,8 @@ class AccountInvoice(models.Model):
     @api.constrains('reference')
     def _check_unique_reference(self):
         if self.partner_id and self.reference:
-            filters = [['reference', '=ilike', self.reference],['partner_id', '=', self.partner_id.id],['state','!=','cancel']]
+            filters = [['reference', '=ilike', self.reference], ['partner_id', '=', self.partner_id.id],
+                       ['state', '!=', 'cancel']]
             bill_no = self.search(filters)
             if len(bill_no) > 1:
                 raise UserError(_('Reference must be unique for %s !') % self.partner_id.name)
@@ -107,17 +111,18 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
         if res:
             for iml in res:
-                inv_line_obj = self.env['account.invoice.line'].search([('id','=',iml['invl_id'])])
+                inv_line_obj = self.env['account.invoice.line'].search([('id', '=', iml['invl_id'])])
                 iml.update({'operating_unit_id': inv_line_obj.operating_unit_id.id})
         return res
 
     def _prepare_tax_line_vals(self, line, tax):
         res = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
         if res:
-            if self.vat_selection in ['mushok','vds_authority']:
-                res.update({'product_id': line.product_id.id,'name':line.name,'mushok_vds_amount':line.mushok_vds_amount})
+            if self.vat_selection in ['mushok', 'vds_authority']:
+                res.update(
+                    {'product_id': line.product_id.id, 'name': line.name, 'mushok_vds_amount': line.mushok_vds_amount})
             else:
-                res.update({'product_id': line.product_id.id,'name': line.name})
+                res.update({'product_id': line.product_id.id, 'name': line.name})
         return res
 
     @api.model
@@ -190,9 +195,10 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self.sudo()).action_move_create()
         if res:
             for inv in self:
-                account_move = self.env['account.move'].search([('id','=',inv.move_id.id)])
+                account_move = self.env['account.move'].search([('id', '=', inv.move_id.id)])
                 account_move.write({'operating_unit_id': inv.operating_unit_id.id})
-                account_move_line = account_move.line_ids.search([('name','=','/'),('move_id','=',account_move.id)])
+                account_move_line = account_move.line_ids.search(
+                    [('name', '=', '/'), ('move_id', '=', account_move.id)])
                 if account_move_line:
                     account_move_line.write({'name': self.invoice_line_ids[0].name})
         return res
@@ -225,18 +231,21 @@ class AccountInvoice(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'invoice_amount': (self.residual + self.total_payment_approved) - self.total_payment_amount or 0.0,
-                        'currency_id': self.currency_id.id or False,
-                        'op_unit': self.operating_unit_id.id or False,
-                        'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[0].sub_operating_unit_id else None,
-                        },
+            'context': {
+                'invoice_amount': (self.residual + self.total_payment_approved) - self.total_payment_amount or 0.0,
+                'currency_id': self.currency_id.id or False,
+                'op_unit': self.operating_unit_id.id or False,
+                'partner_id': self.partner_id.id or False,
+                'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[
+                    0].sub_operating_unit_id else None,
+                }
         }
 
     def action_paid_invoice(self):
         to_pay_invoices = self.search([('state', '=', 'open')]).filtered(lambda inv: len(inv.payment_line_ids) > 0
-                                                                                     and inv.residual<=inv.total_payment_amount)
+                                                                                     and inv.residual <= inv.total_payment_amount)
         for to_pay_invoice in to_pay_invoices:
-            if len([i.is_sync for i in to_pay_invoice.payment_line_ids if not i.is_sync])>0:
+            if len([i.is_sync for i in to_pay_invoice.payment_line_ids if not i.is_sync]) > 0:
                 pass
             else:
                 for line in to_pay_invoice.suspend_security().move_id.line_ids:
@@ -298,7 +307,8 @@ class AccountInvoiceLine(models.Model):
             #     taxes = self.invoice_line_tax_ids.compute_all_for_mushok(price, currency, self.quantity, product=self.product_id,
             #                                                              partner=self.invoice_id.partner_id,vat_selection=self.invoice_id.vat_selection)
         self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price
-        self.price_subtotal_without_vat = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
+        self.price_subtotal_without_vat = price_subtotal_signed = taxes[
+            'total_excluded'] if taxes else self.quantity * price
         if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
             price_subtotal_signed = self.invoice_id.currency_id.with_context(
                 date=self.invoice_id._get_currency_rate_date()).compute(price_subtotal_signed,
@@ -306,10 +316,12 @@ class AccountInvoiceLine(models.Model):
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
         if taxes:
-            if self.invoice_id.vat_selection == 'mushok' and self.invoice_line_tax_ids[0].mushok_amount>0.0:
-                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
+            if self.invoice_id.vat_selection == 'mushok' and self.invoice_line_tax_ids[0].mushok_amount > 0.0:
+                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
+                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
             elif self.invoice_id.vat_selection == 'vds_authority' and self.invoice_line_tax_ids[0].vds_amount > 0.0:
-                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
+                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
             else:
                 self.mushok_vds_amount = False
 
@@ -317,16 +329,16 @@ class AccountInvoiceLine(models.Model):
                                      store=True, readonly=True, compute='_compute_price')
     price_subtotal_without_vat = fields.Monetary(string='Amount',
                                                  store=True, readonly=True, compute='_compute_price')
-    operating_unit_id = fields.Many2one('operating.unit',string='Branch',required=True,
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True,
                                         related='', readonly=False,
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit',string='Sub Operating Unit')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
     quantity = fields.Float(digits=0)
     invoice_line_tax_ids = fields.Many2many(string='VAT')
-    mushok_vds_amount = fields.Float('VAT Payable',compute='_compute_price',
-                                     store=True, readonly=True,copy=False)
+    mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price',store=True, readonly=True, copy=False)
+    narration = fields.Text('Narration')
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -379,7 +391,7 @@ class AccountMove(models.Model):
             for move in self:
                 op_unit = [i.operating_unit_id.id for i in move.line_ids if i.operating_unit_id]
                 if op_unit:
-                    move.write({'operating_unit_id':op_unit[0]})
+                    move.write({'operating_unit_id': op_unit[0]})
         return res
 
 

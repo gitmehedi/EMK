@@ -11,8 +11,9 @@ class AccountMove(models.Model):
     ref = fields.Char(states={'posted': [('readonly', True)]}, track_visibility='onchange')
     state = fields.Selection(track_visibility='onchange')
     narration = fields.Text(states={'posted': [('readonly', True)]}, track_visibility='onchange')
-    operating_unit_id = fields.Many2one(string='Branch',  states={'posted': [('readonly', True)]},
-                                        track_visibility='onchange')
+    operating_unit_id = fields.Many2one(string='Branch', track_visibility='onchange',
+                                        states={'posted': [('readonly', True)]},
+                                        default=lambda self: self.env.user.default_operating_unit_id)
     is_cbs = fields.Boolean(default=False, help='CBS data always sync with OGL using GLIF.')
     is_sync = fields.Boolean(default=False, help='OGL continuously send data to CBS for journal sync.')
     is_cr = fields.Boolean(default=False)
@@ -27,10 +28,9 @@ class AccountMove(models.Model):
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
-
+    
     name = fields.Char(string="Narration")
-    account_id = fields.Many2one('account.account',
-                                 domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)])
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string="Sub Operating Unit")
     segment_id = fields.Many2one('segment', string="Segment")
     acquiring_channel_id = fields.Many2one('acquiring.channel', string="AC")
