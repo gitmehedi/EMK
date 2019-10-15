@@ -13,15 +13,14 @@ class VendorAgreement(models.Model):
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
                                  states={'draft': [('readonly', False)]})
-    product_id = fields.Many2one('product.product', string='Service', required=True, readonly=True,
-                                 domain=[('type', '=', 'service')], track_visibility='onchange',
-                                 states={'draft': [('readonly', False)]},
+    product_id = fields.Many2one('product.product', string='Service/Product', required=True, readonly=True,
+                                 track_visibility='onchange',states={'draft': [('readonly', False)]},
                                  help="Agreement Service.")
     start_date = fields.Date(string='Start Date', default=fields.Date.context_today, required=True, readonly=True,
                              track_visibility='onchange', states={'draft': [('readonly', False)]})
-    end_date = fields.Date(string='End Date', required=True, readonly=True, track_visibility='onchange',
+    end_date = fields.Date(string='End Date', readonly=True, track_visibility='onchange',
                            states={'draft': [('readonly', False)]})
-    pro_advance_amount = fields.Float(string="Proposed Amount", required=True, readonly=True,
+    pro_advance_amount = fields.Float(string="Proposed Amount", readonly=True,
                                       track_visibility='onchange', states={'draft': [('readonly', False)]},
                                       help="Proposed advance amount. Initially proposed amount raise by vendor.")
     adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
@@ -116,10 +115,11 @@ class VendorAgreement(models.Model):
         date = fields.Date.today()
         # if not self.is_amendment and self.start_date < date:
         #     raise ValidationError("Agreement 'Start Date' never be less than 'Current Date'.")
-        if self.end_date < date:
-            raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
-        elif self.start_date >= self.end_date:
-            raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
+        if self.end_date:
+            if self.end_date < date:
+                raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
+            elif self.start_date >= self.end_date:
+                raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
     @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value')
     def check_pro_advance_amount(self):
@@ -279,3 +279,5 @@ class VendorAgreementHistory(models.Model):
     state = fields.Selection([
         ('pending', "Pending"),
         ('confirm', "Confirmed")], default='pending', string="Status")
+
+# domain=[('type', '=', 'service')],

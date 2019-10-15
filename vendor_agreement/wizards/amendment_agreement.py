@@ -8,8 +8,7 @@ class AmendmentAgreementWizard(models.TransientModel):
 
 
     name = fields.Char('Name',readonly=True)
-    end_date = fields.Date(string='End Date', required=True,
-                           default=lambda self: self.env.context.get('end_date'))
+    end_date = fields.Date(string='End Date',default=lambda self: self.env.context.get('end_date'))
     advance_amount_add = fields.Float(string="Advance Amount Addition")
     adjustment_value = fields.Float(string="Adjustment Value", required=True,
                                     default=lambda self: self.env.context.get('adjustment_value'))
@@ -33,8 +32,9 @@ class AmendmentAgreementWizard(models.TransientModel):
     @api.constrains('end_date')
     def check_end_date(self):
         date = fields.Date.today()
-        if self.end_date < date:
-            raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
+        if self.end_date:
+            if self.end_date < date:
+                raise ValidationError("Agreement 'End Date' never be less than 'Current Date'.")
 
     @api.constrains('advance_amount_add','adjustment_value','service_value')
     def check_constrains_amount(self):
