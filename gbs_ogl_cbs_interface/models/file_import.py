@@ -1,41 +1,65 @@
-import os, shutil, base64, traceback, logging, json
+import os, base64
 
 from random import randint
 from odoo import api, models, fields, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 
 class GBSFileImport(models.Model):
     _name = 'gbs.file.import'
-    _inherit = ['mail.thread']
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
     _description = "Import File"
+    _rec_name = 'code'
+    _order = 'id desc'
 
-    name = fields.Char(string='Title', required=True, track_visibility='onchange')
+    code = fields.Char(string='Code', track_visibility='onchange', readonly=True)
     date = fields.Datetime(string='Date', default=fields.Datetime.now, track_visibility='onchange')
-    state = fields.Selection([('draft', 'Draft'), ('processed', 'Processed')], default='draft', string='State')
-    import_lines = fields.One2many('gbs.file.import.line', 'import_id')
+    debit = fields.Float(compute='_compute_debit', string='Debit', track_visibility='onchange')
+    credit = fields.Float(compute='_compute_debit', string='Credit', track_visibility='onchange')
+    mismatch_amount = fields.Float(compute='_compute_debit', string='Mismatch Values',
+                                   track_visibility='onchange')
+    import_lines = fields.One2many('gbs.file.import.line', 'import_id', readonly=True,
+                                   states={'draft': [('readonly', False)]})
+    state = fields.Selection([('draft', 'Draft'), ('processed', 'Processed')], default='draft', string='Status')
 
-    _sql_constraints = [
-        ('name_unique', 'unique (name)', 'Cannot duplicate the name !')
-    ]
+    @api.multi
+    @api.depends('import_lines')
+    def _compute_debit(self):
+        for rec in self:
+            rec.debit = float(sum([val.debit for val in rec.import_lines]))
+            rec.credit = float(sum([val.credit for val in rec.import_lines]))
+            rec.mismatch_amount = float(rec.debit - rec.credit)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('code', 'New') == 'New':
+            vals['code'] = self.env['ir.sequence'].next_by_code('salary.file.sequence') or ''
+        return super(GBSFileImport, self).create(vals)
 
     @api.multi
     def action_process(self):
+        if self.mismatch_amount != 0:
+            debit = format(self.debit, '.2f')
+            credit = format(self.credit, '.2f')
+            raise ValidationError(_(
+                'Debit and Credit value must be same\n - Debit: {0} \n - Credit: {1}'.format(debit, credit)))
+
         record_date = datetime.strftime(datetime.now(), "%d%m%Y_%H%M%S_")
         process_date = datetime.strftime(datetime.now(), "%d%m%Y_")
         unique = str(randint(100, 999))
-        filename = "MDC_41101_" + record_date + process_date + unique + ".txt"
+        filename = "MDC_00001_" + record_date + process_date + unique + "_SAL.txt"
 
         def generate_file(record):
             file_path = os.path.join(record.source_path, filename)
             with open(file_path, "w+") as file:
                 for val in self.import_lines:
-                    trn_type = val.type
-                    account_no = str(val.account_no)
-                    amount = format(val.amount, '.2f') if val.amount > 0 else format(val.amount, '.2f')
+                    trn_type = '54' if val.debit > 0 else '04'
+                    account_no = str(val.account_no).zfill(17)
+                    amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                     amount = ''.join(amount.split('.')).zfill(16)
                     narration = val.narration[:50]
-                    trn_ref_no = '{0}'.format(val.id).zfill(8)
+                    trn_ref_no = str(val.reference_no[:8] if val.reference_no else '').zfill(8)
                     date_array = val.date if val.date else fields.Datetime.now()[:10]
                     date_array = date_array.split("-")
                     if date_array:
@@ -87,26 +111,32 @@ class GBSFileImport(models.Model):
                 except OSError:
                     pass
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'draft')]
+
 
 class GBSFileImportLine(models.Model):
     _name = 'gbs.file.import.line'
 
-    name = fields.Char(string='Name', required=True)
-    account_no = fields.Char(string='Account No', required=True, )
-    amount = fields.Float(string='Amount', required=True)
+    name = fields.Char(string='Name')
+    account_no = fields.Char(string='Account No', required=True)
     narration = fields.Char(string='Narration', required=True)
-    reference_no = fields.Char(string='Reference No', required=True)
-    date = fields.Char(string='Value Date', required=True)
+    reference_no = fields.Char(string='Reference No')
+    date = fields.Date(string='Date', required=True)
+    debit = fields.Float(string='Debit', )
+    credit = fields.Float(string='Credit')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string='Status')
-    type = fields.Selection([
-        ('01', 'Credit Dep'),
-        ('51', 'Debit Dep'),
-        ('02', 'Backdated Credit Dep'),
-        ('52', 'Backdated Debit Dep'),
-        ('03', 'Credit Loan'),
-        ('53', 'Debit Loan'),
-        ('04', 'Credit Gen'),
-        ('54', 'Debit Gen'),
-    ], string='Type', required=True, )
+    type = fields.Selection([('cr', 'CR'), ('dr', 'DR')], string='Type')
 
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
+
+    @api.constrains('account_no', 'debit', 'credit')
+    def _check_unique_constrain(self):
+        if self.account_no or self.debit or self.credit:
+            if not self.account_no.isdigit():
+                raise Warning('Account No should be number!')
+            if not self.debit.isdigit():
+                raise Warning('Debit should be number!')
+            if not self.credit.isdigit():
+                raise Warning('Credit should be number!')
