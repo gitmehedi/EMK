@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id='lc_receivable_payment_tree' model='ir.ui.view'>
+        <field name="name">lc.receivable.payment.tree</field>
+        <field name="model">lc.receivable.payment</field>
+        <field name="arch" type="xml">
+            <tree string="LC Collection Payments" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
+                  decoration-muted="state in ('cancel','approve')"
+                  decoration-bf="state in ('approve') ">
+                <field name="name" />
+                <field name="lc_id" />
+                <field name="shipment_id" />
+                <field name="date" />
+                <field name="company_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='lc_receivable_payment_form' model='ir.ui.view'>
+        <field name="name">lc.receivable.payment.form</field>
+        <field name="model">lc.receivable.payment</field>
+        <field name="arch" type="xml">
+            <form string="LC Collection Payments">
+                <header>
+                    <button name="action_confirm" states="draft" string="Confirm" type="object" class="oe_highlight" groups="account.group_account_user"/>
+                    <button name="action_approve" states="confirm" string="Approve" groups="account.group_account_manager" class="oe_highlight" type="object"/>
+                    <button name="action_cancel" states="draft,confirm" string="Cancel" groups="account.group_account_manager" type="object"/>
+                    <button name="action_draft" states="cancel" string="Reset to draft" type="object" class="oe_highlight" groups="account.group_account_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
+                </header>
+                <sheet>
+                    <div class="pull-left">
+                        <label for="name" class="oe_edit_only oe_inline"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="journal_id"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="lc_id"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="shipment_id"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="invoice_ids" widget="many2many_tags"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="analytic_acc_create" invisible="1"/>
+                            <field name="analytic_account_id"
+                                   attrs="{'required': [('analytic_acc_create', '=', False)]}"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group>
+                            <field name="invoice_amount"/>
+                            <field name="currency_id"/>
+                            <field name="currency_rate"/>
+                            <field name="amount_in_company_currency"/>
+                        </group>
+                        <button name="action_analytic_create" string="Create Analytic"
+                                attrs="{'invisible': [('analytic_acc_create', '=', False)]}"
+                                type="object" class="btn-link"/>
+                        <group>
+                            <field name="reference"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Collection Entry">
+                            <field name="lc_receivable_collection_ids" string="Collections">
+                                <tree string="Tree Views" editable="bottom">
+                                    <field name="account_journal_id"
+                                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="amount_in_currency"/>
+                                    <field name="currency_id"
+                                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="currency_rate"/>
+                                    <field name="amount_in_company_currency" readonly="False"/>
+                                </tree>
+                                <form string="Form Views">
+                                    <group>
+                                        <group>
+                                            <field name="account_journal_id"/>
+                                            <field name="amount_in_currency"/>
+                                            <field name="currency_id"/>
+                                            <field name="currency_rate"/>
+                                            <field name="amount_in_company_currency" readonly="False"/>
+                                        </group>
+                                        <group>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Charges">
+                            <field name="lc_receivable_charges_ids" string="Charges">
+                                <tree string="Tree Views" editable="bottom">
+                                    <field name="product_id"
+                                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="account_id" invisible="1"/>
+                                    <field name="amount_in_currency"/>
+                                    <field name="currency_id"
+                                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="currency_rate"/>
+                                    <field name="amount_in_company_currency" readonly="False"/>
+                                </tree>
+                                <form string="Form Views">
+                                    <group>
+                                        <group>
+                                            <field name="product_id"
+                                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="account_id" invisible="1"/>
+                                            <field name="amount_in_currency"/>
+                                            <field name="currency_id"
+                                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="currency_rate"/>
+                                            <field name="amount_in_company_currency" readonly="False"/>
+                                        </group>
+                                        <group>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Currency Gain/Loss">
+                            <group>
+                                <group>
+                                    <field name="currency_loss_gain_amount"/>
+                                    <field name="currency_loss_gain_type"/>
+                                </group>
+                                <group>
+                                    <field name="particular"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Other">
+                            <group>
+                                <group>
+                                    <field name="operating_unit_id"/>
+                                    <field name="company_id"/>
+                                </group>
+                                <group>
+                                    <field name="account_move_id"
+                                           attrs="{'invisible': [('state', '!=', 'approve')]}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--Search View-->
+    <record id="lc_receivable_payment_search" model="ir.ui.view">
+        <field name="name">lc.receivable.payment.search</field>
+        <field name="model">lc.receivable.payment</field>
+        <field name="arch" type="xml">
+            <search string="LC Collection Payments">
+                <field name="lc_id"/>
+                <field name="shipment_id"/>
+            </search>
+        </field>
+    </record>
+    <record id='action_lc_receivable_payment' model='ir.actions.act_window'>
+        <field name="name">LC Collection Payments</field>
+        <field name="res_model">lc.receivable.payment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new LC Receivable Payment.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="action_lc_receivable_payment" name="LC Collection"
+              parent="account.menu_finance_receivables"
+              id="menu_lc_receivable_payment" sequence="90"
+              groups="account.group_account_user"/>
+</odoo>
