@@ -351,6 +351,3 @@ class GenerateCBSJournalSuccess(models.Model):
             diff = datetime.strptime(rec.stop_date, TIME_FORMAT) - datetime.strptime(rec.start_date, TIME_FORMAT)
             rec.time = str(diff)
 
-    @api.model
-    def _needaction_domain_get(self):
-        return [('state', '=', 'issued')]

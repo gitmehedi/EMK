@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
     <record id="cbs_journal" model="account.journal">
         <field name="name">CBS Invoices</field>
         <field name="code">CBS</field>
@@ -10,4 +9,12 @@
         <field name="state">approve</field>
     </record>
 
+    <record id="glif_file_seq" model="ir.sequence">
+        <field name="name">Salary File Import</field>
+        <field name="code">salary.file.sequence</field>
+        <field name="prefix">MTB/SAL/</field>
+        <field name="padding">10</field>
+        <field name="number_increment" eval="1"/>
+        <field name="company_id" eval="False"/>
+    </record>
 </odoo>

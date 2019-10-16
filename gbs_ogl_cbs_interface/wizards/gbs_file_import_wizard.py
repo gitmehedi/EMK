@@ -6,11 +6,13 @@ import base64
 import csv
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 import logging
+
 _logger = logging.getLogger(__name__)
 
-from odoo.exceptions import ValidationError,Warning
+from odoo.exceptions import ValidationError, Warning
 
 
 class GBSFileImportWizard(models.TransientModel):
@@ -20,11 +22,13 @@ class GBSFileImportWizard(models.TransientModel):
     aml_fname = fields.Char(string='Filename')
     lines = fields.Binary(compute='_compute_lines', string='Input Lines')
     dialect = fields.Binary(compute='_compute_dialect', string='Dialect')
-    csv_separator = fields.Selection([(',', ', (comma)'), (';', '; (semicolon)')],default=',',string='CSV Separator', required=True)
-    decimal_separator = fields.Selection([('.', '. (dot)'), (',', ', (comma)')],string='Decimal Separator',default='.')
-    codepage = fields.Char(string='Code Page',default=lambda self: self._default_codepage(),
-        help="Code Page of the system that has generated the csv file."
-             "\nE.g. Windows-1252, utf-8")
+    csv_separator = fields.Selection([(',', ', (comma)'), (';', '; (semicolon)')], default=',', string='CSV Separator',
+                                     required=True)
+    decimal_separator = fields.Selection([('.', '. (dot)'), (',', ', (comma)')], string='Decimal Separator',
+                                         default='.')
+    codepage = fields.Char(string='Code Page', default=lambda self: self._default_codepage(),
+                           help="Code Page of the system that has generated the csv file."
+                                "\nE.g. Windows-1252, utf-8")
     note = fields.Text('Log')
 
     @api.model
@@ -85,7 +89,7 @@ class GBSFileImportWizard(models.TransientModel):
                 _("No header line found in the input file !"))
         output = input.read()
         return output, header
-  
+
     def _process_header(self, header_fields):
         # header fields after blank column are considered as comments
         column_cnt = 0
@@ -105,7 +109,7 @@ class GBSFileImportWizard(models.TransientModel):
                 raise Warning(_(
                     "Duplicate header field '%s' found !"
                     "\nPlease correct the input file.")
-                    % hf)
+                              % hf)
             else:
                 header_fields2.append(hf.strip())
 
@@ -125,27 +129,55 @@ class GBSFileImportWizard(models.TransientModel):
         self._err_log = ''
         move = self.env['gbs.file.import'].browse(self._context['active_id'])
         lines, header = self._remove_leading_lines(self.lines)
-        header_fields = csv.reader(
-            StringIO.StringIO(header), dialect=self.dialect).next()
+        header_fields = csv.reader(StringIO.StringIO(header), dialect=self.dialect).next()
         self._header_fields = self._process_header(header_fields)
-        reader = csv.DictReader(
-            StringIO.StringIO(lines), fieldnames=self._header_fields,
-            dialect=self.dialect)
-
+        reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
+        vals = []
+        count = 0
         for line in reader:
-            if len(line['type']) == 1:
-                d_type = '0'+line['type']
-            else:
-                d_type = line['type']
-            temp_vals = {}
-            temp_vals['account_no'] = line['account no'].strip()
-            temp_vals['amount'] = float(line['amount'].strip().replace(",", ""))
-            temp_vals['narration'] = line['narration'].strip()
-            temp_vals['reference_no'] = line['reference no'].strip()
-            temp_vals['date'] = line['date']
-            temp_vals['type'] = d_type.strip()
-            temp_vals['import_id'] = move.id
+            count += 1
+            line_no = count + 1
+            val = {}
+            val['import_id'] = move.id
+            val['account_no'] = line['account'].strip()
+            if not val['account_no'] and not val['account_no'].isdigit():
+                raise ValidationError(
+                    _("Please check the file with values {0} and line no {1} !".format(val['account_no'], line_no)))
 
-            temp_pool = self.env['gbs.file.import.line']
-            temp_pool.create(temp_vals)
-        return True
+            val['narration'] = line['narration'].strip()
+            if not val['narration']:
+                raise ValidationError(
+                    _("Please check the file with values {0} and line no {1} !".format(val['narration'], line_no)))
+
+            val['reference_no'] = line['reference'].strip()
+            val['date'] = line['date'].strip()
+            if not val['date']:
+                raise ValidationError(
+                    _("Please check the file with values {0} and line no {1} !".format(val['date'], line_no)))
+
+            val['type'] = line['type'].strip().lower()
+            if not val['type']:
+                raise ValidationError(
+                    _("Please check the file with values {0} and line no {1} !".format(val['type'], line_no)))
+
+            amount = line['amount'].strip()
+            if not amount and not amount.isdigit():
+                raise ValidationError(
+                    _("Please check the file with values {0} and line no {1} !".format(amount, line_no)))
+
+            if val['type'] == 'cr':
+                val['credit'] = amount
+                val['debit'] = 0
+            if val['type'] == 'dr':
+                val['credit'] = 0
+                val['debit'] = amount
+            vals.append((0, 0, val))
+
+        res = move.write({'import_lines': vals})
+        import_line = len(move.import_lines)
+        if import_line is not count and not res:
+            msg = "Summary of Importing:\n - Total lines of import files is {0} \n - Valid record is {1} \n Please check the import file".format(
+                count, import_line)
+            raise ValidationError(_(msg))
+        else:
+            return True

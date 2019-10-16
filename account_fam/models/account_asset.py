@@ -125,10 +125,13 @@ class AccountAssetAsset(models.Model):
     @api.multi
     def validate(self):
         super(AccountAssetAsset, self).validate()
-        if not self.asset_seq:
+        if not self.asset_seq and self.date and self.category_id.code:
             code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
-            ATAC = '{0}-{1}'.format(self.category_id.code, self.asset_type_id.code)
+            date = self.date.split('-')
+            ATAC = '{0}-{1}-MTB-{2}-{3}'.format(date[0], date[1], self.category_id.code, self.asset_type_id.code)
             self.write({'asset_seq': code.replace('ATAC', ATAC)})
+        else:
+            raise ValidationError(_('Purchase Date or Asset Category is not available.'))
 
     @api.multi
     def name_get(self):
@@ -164,12 +167,11 @@ class AccountAssetAsset(models.Model):
         @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the purchase date of this asset
         """
         self.env.cr.execute("""
-                        SELECT a.id as id, COALESCE(MAX(m.date),a.asset_usage_date) AS date
+                        SELECT a.id as id, COALESCE(MAX(rel.depreciation_date),a.asset_usage_date) AS date
                         FROM account_asset_asset a
                         LEFT JOIN account_asset_depreciation_line rel ON (rel.asset_id = a.id)
-                        LEFT JOIN account_move m ON (rel.move_id = m.id)
                         WHERE a.id IN %s
-                        GROUP BY a.id, m.date """, (tuple(self.ids),))
+                        GROUP BY a.id, rel.depreciation_date """, (tuple(self.ids),))
         result = dict(self.env.cr.fetchall())
         return result
 
@@ -184,8 +186,12 @@ class AccountAssetAsset(models.Model):
     @api.model
     def compute_depreciation_history(self, date, asset):
         if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and not asset.asset_type_id.no_depreciation:
-            last_depr_date = asset._get_last_depreciation_date()
-            no_of_days = (date - self.date_str_format(last_depr_date[asset['id']])).days
+            # last_depr_date = asset._get_last_depreciation_date()
+            # no_of_days = (date - self.date_str_format(last_depr_date[asset['id']])).days
+            if self.lst_depr_date:
+                no_of_days = (date - self.date_str_format(asset.lst_depr_date)).days
+            else:
+                no_of_days = (date - self.date_str_format(asset.asset_usage_date)).days
 
             if asset.method == 'linear':
                 date_delta = (self.date_str_format(asset.date) + relativedelta(
@@ -348,6 +354,7 @@ class AccountAssetAsset(models.Model):
             return datetime.strptime(date, DATE_FORMAT)
         elif type(date) is datetime:
             return "{0}-{1}-{2}".format(date.year, date.month, date.day)
+
 
 class AccountAssetDepreciationLine(models.Model):
     _inherit = 'account.asset.depreciation.line'
