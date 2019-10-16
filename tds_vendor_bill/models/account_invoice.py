@@ -40,25 +40,6 @@ class AccountInvoice(models.Model):
                 line.tds_amount = False
                 line.account_tds_id = False
 
-    @api.multi
-    def action_invoice_open(self):
-        # if self.is_tds_applicable:
-        #     self._update_tds()
-        #     self._update_tax_line_vals()
-        res = super(AccountInvoice, self).action_invoice_open()
-        self._update_acc_move_line_taxtype()
-        return res
-
-    def _update_acc_move_line_taxtype(self):
-        if self.move_id:
-            for tax_line in self.tax_line_ids:
-                for move_line in self.move_id[0].line_ids:
-                    if tax_line.name == move_line.name:
-                        if tax_line.tds_id:
-                            move_line.write({'tax_type': 'tds'})
-                        else:
-                            move_line.write({'tax_type': 'vat'})
-
     def _update_tds(self):
         if not self.date:
             self.date = fields.Date.context_today(self)
@@ -289,9 +270,3 @@ class AccountInvoiceTax(models.Model):
     _inherit = "account.invoice.tax"
 
     tds_id = fields.Many2one('tds.rule', string='TDS')
-
-
-class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
-
-    tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')
