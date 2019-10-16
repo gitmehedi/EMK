@@ -170,7 +170,7 @@ class AccountAssetAsset(models.Model):
                         SELECT a.id as id, COALESCE(MAX(rel.depreciation_date),a.asset_usage_date) AS date
                         FROM account_asset_asset a
                         LEFT JOIN account_asset_depreciation_line rel ON (rel.asset_id = a.id)
-                        WHERE a.id IN %s and rel.move_check=TRUE
+                        WHERE a.id IN %s
                         GROUP BY a.id, rel.depreciation_date """, (tuple(self.ids),))
         result = dict(self.env.cr.fetchall())
         return result
@@ -186,8 +186,12 @@ class AccountAssetAsset(models.Model):
     @api.model
     def compute_depreciation_history(self, date, asset):
         if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and not asset.asset_type_id.no_depreciation:
-            last_depr_date = asset._get_last_depreciation_date()
-            no_of_days = (date - self.date_str_format(last_depr_date[asset['id']])).days
+            # last_depr_date = asset._get_last_depreciation_date()
+            # no_of_days = (date - self.date_str_format(last_depr_date[asset['id']])).days
+            if self.lst_depr_date:
+                no_of_days = (date - self.date_str_format(asset.lst_depr_date)).days
+            else:
+                no_of_days = (date - self.date_str_format(asset.asset_usage_date)).days
 
             if asset.method == 'linear':
                 date_delta = (self.date_str_format(asset.date) + relativedelta(
