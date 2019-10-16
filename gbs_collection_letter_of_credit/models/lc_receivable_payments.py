@@ -72,6 +72,9 @@ class LCReceivablePayment(models.Model):
     lc_receivable_charges_ids = fields.One2many('lc.receivable.charges', 'charges_parent_id',
                                                 string="Charges",readonly=True,
                                                 states={'draft': [('readonly', False)]})
+    lc_receivable_miscellaneous_ids = fields.One2many('lc.receivable.miscellaneous', 'miscellaneous_parent_id',
+                                                      string='Miscellaneous', readonly=True,
+                                                      states={'draft': [('readonly', False)]})
 
     @api.onchange('lc_id')
     def onchange_lc_id(self):
@@ -83,6 +86,7 @@ class LCReceivablePayment(models.Model):
             self.amount_in_company_currency = []
             self.lc_receivable_collection_ids = []
             self.lc_receivable_charges_ids = []
+            self.lc_receivable_miscellaneous_ids = []
             self.analytic_account_id = False
             self.analytic_acc_create = False
             invoice_ids = []
@@ -124,17 +128,21 @@ class LCReceivablePayment(models.Model):
 
     @api.multi
     @api.depends('lc_receivable_collection_ids.amount_in_company_currency',
-                 'lc_receivable_charges_ids.amount_in_company_currency')
+                 'lc_receivable_charges_ids.amount_in_company_currency',
+                 'lc_receivable_miscellaneous_ids.amount_in_company_currency')
     def _compute_currency_loss_gain(self):
         for rec in self:
             total_collection_amount = 0.0
             total_charges_amount = 0.0
+            total_miscellaneous_amount = 0.0
             if rec.lc_receivable_collection_ids:
                 total_collection_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_collection_ids)
             if rec.lc_receivable_charges_ids:
                 total_charges_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_charges_ids)
+            if rec.lc_receivable_miscellaneous_ids:
+                total_miscellaneous_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_miscellaneous_ids)
 
-            rec.currency_loss_gain_amount = (total_collection_amount + total_charges_amount) - rec.amount_in_company_currency
+            rec.currency_loss_gain_amount = (total_collection_amount + total_charges_amount + total_miscellaneous_amount) - rec.amount_in_company_currency
 
             if -1 < rec.currency_loss_gain_amount < 1:
                 rec.currency_loss_gain_amount = 0
@@ -172,6 +180,8 @@ class LCReceivablePayment(models.Model):
             acc_move_line_list.append(collection_line)
         for charge_line in self.lc_receivable_charges_ids:
             acc_move_line_list.append(charge_line)
+        for misc_line in self.lc_receivable_miscellaneous_ids:
+            acc_move_line_list.append(misc_line)
         move_obj = False
         if acc_move_line_list:
             move_obj = self._generate_move(account_move_obj, self.journal_id)
@@ -263,6 +273,11 @@ class LCReceivablePayment(models.Model):
         elif 'product_id' in line:
             account_id = line.account_id.id
             name = line.product_id.name
+            analytic_account_id = self.analytic_account_id.id
+            amount_in_company_currency = line.amount_in_company_currency
+        elif hasattr(line, 'narration'):
+            account_id = line.account_id.id
+            name = line.narration
             analytic_account_id = self.analytic_account_id.id
             amount_in_company_currency = line.amount_in_company_currency
         else:
@@ -386,8 +401,6 @@ class LCReceivableCharges(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     currency_rate = fields.Float(string='Currency Rate')
     amount_in_currency = fields.Float(string='Amount In Currency',digits=dp.get_precision('Account'))
-    # amount_in_company_currency = fields.Float(string='Base Amount',compute='_compute_rate_amounts',
-    #                                           store=True,digits=dp.get_precision('Account'))
     amount_in_company_currency = fields.Float(string='Base Amount', digits=dp.get_precision('Account'))
 
     @api.onchange('product_id')
@@ -409,6 +422,47 @@ class LCReceivableCharges(models.Model):
             self.account_id = self.product_id.property_account_expense_id
 
         domain['currency_id'] = [('active', '=', True), ('id', '!=', self.charges_parent_id.company_id.currency_id.id)]
+        return {'domain': domain}
+
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
+            self.currency_rate = self.charges_parent_id.company_id.currency_id.rate / \
+                                 self.currency_id.with_context(date=fields.Date.context_today(self)).rate
+
+    @api.onchange('currency_id', 'currency_rate', 'amount_in_currency')
+    def _onchange_amount_in_company_currency(self):
+        if self.amount_in_currency and self.currency_rate and self.currency_id.id:
+            self.amount_in_company_currency = self.amount_in_currency * self.currency_rate
+
+
+class LCReceivableMiscellaneous(models.Model):
+    _name = 'lc.receivable.miscellaneous'
+
+    # relational field
+    miscellaneous_parent_id = fields.Many2one('lc.receivable.payment', 'Miscellaneous', ondelete='cascade')
+
+    narration = fields.Text(string='Narration', required=True)
+    account_id = fields.Many2one('account.account', string="Account", required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency')
+    currency_rate = fields.Float(string='Currency Rate')
+    amount_in_currency = fields.Float(string='Amount In Currency', digits=dp.get_precision('Account'))
+    amount_in_company_currency = fields.Float(string='Base Amount', digits=dp.get_precision('Account'))
+
+    @api.onchange('account_id')
+    def _onchange_account_id(self):
+        domain = dict()
+        if not self.miscellaneous_parent_id:
+            return
+
+        if not self.miscellaneous_parent_id.lc_id or not self.miscellaneous_parent_id.invoice_ids:
+            warning = {
+                'title': _('Warning!'),
+                'message': _('You must first select a LC and at lest one Invoice!'),
+            }
+            return {'warning': warning}
+
+        domain['currency_id'] = [('active', '=', True), ('id', '!=', self.miscellaneous_parent_id.company_id.currency_id.id)]
         return {'domain': domain}
 
     @api.onchange('currency_id')
