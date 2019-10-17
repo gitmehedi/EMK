@@ -192,7 +192,7 @@ class TdsVatChallanLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    tds_vat_challan_ids = fields.Many2many('tds.vat.challan',string='TDS & VAT Challan')
+    tds_vat_challan_ids = fields.Many2many('tds.vat.challan',string='TDS & VAT Challan', copy=False)
 
 # Accounting treatment previous version
     #

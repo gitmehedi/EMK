@@ -202,6 +202,8 @@
                                     <field name="merged_bill" groups="base.group_system"/>
                                     <field name="security_deposit_account_id"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                    <field name="tds_vat_challan_ids" widget="many2many_tags"
+                                           readonly="1" attrs="{'invisible': [('tds_vat_challan_ids','=', [])]}"/>
                                 </group>
                             </group>
                         </page>
