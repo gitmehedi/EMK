@@ -129,6 +129,13 @@ class AccountTax(models.Model):
         if self.minimum_amount and self.amount and self.minimum_amount >= self.amount:
             raise Warning('Minimum Amount should be less then Rate Amount!')
 
+    @api.constrains('mushok_amount','vds_amount')
+    def _check_mushok_vds_amount(self):
+        if self.mushok_amount and self.amount and self.mushok_amount >= self.amount:
+            raise Warning('Mushok Amount should be less then Rate Amount!')
+        if self.vds_amount and self.amount and self.vds_amount >= self.amount:
+            raise Warning('VDS Amount should be less then Rate Amount!')
+
     @api.onchange("name")
     def onchange_strips(self):
         if self.name:
