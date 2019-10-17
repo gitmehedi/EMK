@@ -193,6 +193,8 @@ class AccountAssetAsset(models.Model):
             else:
                 no_of_days = (date - self.date_str_format(asset.asset_usage_date)).days
 
+            print "-----------------------------------------------------------", asset.asset_seq
+
             if asset.method == 'linear':
                 date_delta = (self.date_str_format(asset.date) + relativedelta(
                     years=asset.depreciation_year) - self.date_str_format(asset.date)).days
