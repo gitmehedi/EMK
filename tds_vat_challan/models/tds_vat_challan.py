@@ -4,6 +4,7 @@ from odoo.exceptions import UserError,ValidationError
 
 class TdsVatChallan(models.Model):
     _name = 'tds.vat.challan'
+    _rec_name = 'challan_no'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'challan_date desc'
     _description = 'TDS Vendor Challan'
@@ -95,6 +96,10 @@ class TdsVatChallan(models.Model):
                 raise UserError(
                     _("Without Challan No/Deposited Bank/Bank Branch record cannot be confirm. Please fill all those."))
             record.line_ids.write({'state': 'confirm'})
+            # invoice_ids = [i.invoice_id.id for i in record.acc_move_line_ids]
+            # 'account_invoice_ids': [(6, 0, invoice_ids)],
+            for i in record.acc_move_line_ids:
+                i.invoice_id.tds_vat_challan_ids = [(4, self.id)]
             res = {
                 'state': 'confirm',
                 # 'deposit_approver': record.env.user.id,
@@ -183,6 +188,11 @@ class TdsVatChallanLine(models.Model):
         ('cancel', "Cancel"),
     ], default='draft', track_visibility='onchange')
 
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    tds_vat_challan_ids = fields.Many2many('tds.vat.challan',string='TDS & VAT Challan')
 
 # Accounting treatment previous version
     #

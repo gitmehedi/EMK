@@ -42,8 +42,8 @@
         <field name="inherit_id" ref="gbs_vendor_bill.inherited_invoice_supplier_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='amount_tax']" position="after">
-                <field name="total_tds_amount" string="TDS"/>
-                <field name="security_deposit"/>
+                <field name="total_tds_amount" string="TDS" sum="Total"/>
+                <field name="security_deposit" sum="Total"/>
             </xpath>
         </field>
     </record>

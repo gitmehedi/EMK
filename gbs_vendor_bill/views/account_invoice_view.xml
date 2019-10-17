@@ -222,7 +222,7 @@
                 <field name="entity_service_id" string="Service"/>
             </xpath>
             <xpath expr="//field[@name='amount_total_signed']" position="after">
-                <field name="amount_tax" string="VAT"/>
+                <field name="amount_tax" string="VAT" sum="Total"/>
             </xpath>
         </field>
     </record>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--<record id="inherit_agreement_supplier_invoice" model="ir.ui.view">-->
+        <!--<field name="name">inherit.agreement.supplier.invoice.form</field>-->
+        <!--<field name="model">account.invoice</field>-->
+        <!--<field name="priority" eval="100"/>-->
+        <!--<field name="inherit_id" ref="agreement_account.invoice_supplier_form"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//field[@name='agreement_id']" position="replace">-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!--<record id="account_invoice_vat_challan_form" model="ir.ui.view">-->
+        <!--<field name="name">account.invoice.vat.challan.form</field>-->
+        <!--<field name="model">account.invoice</field>-->
+        <!--<field name="priority" eval="102"/>-->
+        <!--<field name="inherit_id" ref="account.invoice_supplier_form"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//field[@name='account_id']" position="after">-->
+                <!--<field name="tds_vat_challan_ids" widget="many2many" readonly="1"/>-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!--<record id="inherited_invoice_agreement_tree" model="ir.ui.view">-->
+        <!--<field name="name">inherited.invoice.agreement.tree</field>-->
+        <!--<field name="model">account.invoice</field>-->
+        <!--<field name="inherit_id" ref="account.invoice_supplier_tree"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//field[@name='amount_total_signed']" position="after">-->
+                <!--<field name="agreement_adjusted_amount" string="Advance"/>-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
+</odoo>

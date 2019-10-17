@@ -8,7 +8,6 @@ class AccountInvoice(models.Model):
     agreement_id = fields.Many2one('agreement', string='Agreement', ondelete='restrict',
                                    readonly=True, states={'draft': [('readonly', False)]},
                                    track_visibility='onchange', copy=False)
-
     agreement_adjusted_amount = fields.Float('Adjusted Amount', compute='_compute_agreement_adjusted_amount',
                                              store=True, readonly=True,
                                              track_visibility='onchange', copy=False)

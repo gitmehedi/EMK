@@ -302,7 +302,7 @@
                 <field name="amount_total_signed" string="Total" sum="Total"/>
                 <field name="amount_tax" string="VAT" sum="VAT"/>
                 <field name="total_tds_amount" string="TDS" sum="TDS"/>
-                <field name="security_deposit"/>
+                <field name="security_deposit" sum="Total"/>
                 <field name="residual_signed" string="To Pay" sum="To Pay"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="company_currency_id" invisible="1"/>
