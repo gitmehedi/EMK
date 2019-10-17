@@ -141,6 +141,12 @@ class AccountTax(models.Model):
         if self.name:
             self.name = self.name.strip()
 
+    @api.one
+    def name_get(self):
+        if self.name and self.amount:
+            name = '%s [%s]' % (self.name,self.amount)
+        return (self.id, name)
+
 class HistoryVAT(models.Model):
     _name = 'history.account.tax'
     _description = 'History VAT'
