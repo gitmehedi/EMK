@@ -151,6 +151,10 @@ class AccountInvoice(models.Model):
                     amount = tax_line.mushok_vds_amount
                 else:
                     amount = tax_line.amount
+                if tax_line.tax_id:
+                    tax_type = 'vat'
+                else:
+                    tax_type = 'tds'
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -165,6 +169,7 @@ class AccountInvoice(models.Model):
                     'invoice_id': self.id,
                     'operating_unit_id': tax_line.operating_unit_id.id,
                     'is_tdsvat_payable': self.type in ('out_invoice', 'in_invoice') and True,
+                    'tax_type': tax_type,
                     'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
                 })
                 done_taxes.append(tax.id)
@@ -310,12 +315,6 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_line_tax_ids:
             taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
                                                           partner=self.invoice_id.partner_id)
-            # if self.invoice_id.vat_selection == 'normal':
-            #     taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id,
-            #                                                   partner=self.invoice_id.partner_id)
-            # elif self.invoice_id.vat_selection in ['mushok','vds_authority']:
-            #     taxes = self.invoice_line_tax_ids.compute_all_for_mushok(price, currency, self.quantity, product=self.product_id,
-            #                                                              partner=self.invoice_id.partner_id,vat_selection=self.invoice_id.vat_selection)
         self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price
         self.price_subtotal_without_vat = price_subtotal_signed = taxes[
             'total_excluded'] if taxes else self.quantity * price
@@ -389,7 +388,7 @@ class ProductProduct(models.Model):
                 inv_obj = self.env['account.invoice'].search([('id', '=', line['invoice_id'])])
                 res.update({'operating_unit_id': inv_obj.operating_unit_id.id})
             if line.get('is_tdsvat_payable'):
-                res.update({'is_tdsvat_payable': line.get('is_tdsvat_payable')})
+                res.update({'is_tdsvat_payable': line.get('is_tdsvat_payable'),'tax_type': line.get('tax_type')})
         return res
 
 
@@ -412,3 +411,4 @@ class AccountMoveLine(models.Model):
     _order = "date desc, id asc"
 
     is_tdsvat_payable = fields.Boolean('TDS/VAT Payable', default=False)
+    tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')

@@ -40,25 +40,6 @@ class AccountInvoice(models.Model):
                 line.tds_amount = False
                 line.account_tds_id = False
 
-    @api.multi
-    def action_invoice_open(self):
-        # if self.is_tds_applicable:
-        #     self._update_tds()
-        #     self._update_tax_line_vals()
-        res = super(AccountInvoice, self).action_invoice_open()
-        self._update_acc_move_line_taxtype()
-        return res
-
-    def _update_acc_move_line_taxtype(self):
-        if self.move_id:
-            for tax_line in self.tax_line_ids:
-                for move_line in self.move_id[0].line_ids:
-                    if tax_line.name == move_line.name:
-                        if tax_line.tds_id:
-                            move_line.write({'tax_type': 'tds'})
-                        else:
-                            move_line.write({'tax_type': 'vat'})
-
     def _update_tds(self):
         if not self.date:
             self.date = fields.Date.context_today(self)
@@ -124,15 +105,8 @@ class AccountInvoice(models.Model):
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0) + tds
             else:
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            # if self.vat_selection == 'normal':
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity,
-                                                              line.product_id, self.partner_id)['taxes']
-            # elif self.vat_selection in ['mushok', 'vds_authority']:
-            #     taxes = line.invoice_line_tax_ids.compute_all_for_mushok(price_unit, self.currency_id, line.quantity,
-            #                                                              line.product_id, self.partner_id,
-            #                                                              self.vat_selection)['taxes']
-            # else:
-            #     taxes = False
+                                                          line.product_id, self.partner_id)['taxes']
             for tax in taxes:
                 val = self._prepare_tax_line_vals(line, tax)
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
@@ -217,10 +191,10 @@ class AccountInvoiceLine(models.Model):
             if taxes:
                 if self.invoice_id.vat_selection == 'mushok' and self.invoice_line_tax_ids[0].mushok_amount > 0.0:
                     self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                    self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
+                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
                 elif self.invoice_id.vat_selection == 'vds_authority' and self.invoice_line_tax_ids[0].vds_amount > 0.0:
                     self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                    self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
                 else:
                     self.mushok_vds_amount = False
         else:
@@ -255,7 +229,6 @@ class AccountInvoiceLine(models.Model):
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
                         break
                     elif pre_invoice_line_list:
-                        # total_amount = pro_base_val + sum(int(i.quantity * i.price_unit) for i in pre_invoice_line_list)
                         total_amount = pro_base_val + sum(int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
                         if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
@@ -277,11 +250,9 @@ class AccountInvoiceLine(models.Model):
                     pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat-(pre_invoice_line_obj.price_subtotal_without_vat*(self.account_tds_id.flat_rate / 100)))
                 else:
                     pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat)
-
             pre_rate = (pre_total_tds * 100) / pre_total_base_amount
             if current_rate > round(pre_rate,False):
                 remain_tds_amount = ((pre_total_base_amount * current_rate) / 100) - pre_total_tds
-
         return remain_tds_amount
 
 
@@ -289,9 +260,3 @@ class AccountInvoiceTax(models.Model):
     _inherit = "account.invoice.tax"
 
     tds_id = fields.Many2one('tds.rule', string='TDS')
-
-
-class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
-
-    tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')
