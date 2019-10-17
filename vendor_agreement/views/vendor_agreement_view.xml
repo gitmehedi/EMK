@@ -47,8 +47,8 @@
                             <button string="Amendment" name="action_amendment" states="done"
                                     type="object" class="oe_read_only"
                                     groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
-                            <button string="Payment" name="action_payment" states="done"
-                                    type="object" class="oe_read_only"
+                            <button string="Payment" name="action_payment" type="object" class="oe_read_only"
+                                    attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                                     groups="vendor_agreement.group_vendor_agreement_manager"/>
                             <button string="Approve" name="action_approve_amendment"
                                     type="object" class="oe_highlight"
@@ -84,6 +84,7 @@
                                     <field name="start_date"/>
                                     <field name="end_date"/>
                                     <field name="is_amendment" invisible="1"/>
+                                    <field name="payment_btn_visible" invisible="1"/>
                                     <field name="maker_id" invisible="1"/>
                                     <field name="approver_id" invisible="1"/>
                                 </group>

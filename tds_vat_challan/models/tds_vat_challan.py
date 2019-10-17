@@ -41,7 +41,6 @@ class TdsVatChallan(models.Model):
     ], default='draft',string="Status", track_visibility='onchange')
     maker_id = fields.Many2one('res.users', 'Maker',
                                default=lambda self: self.env.user.id, track_visibility='onchange')
-
     deposit_date = fields.Datetime(string='Deposit Date', readonly=True, track_visibility='onchange')
     deposit_approver = fields.Many2one('res.users', string='Deposit By', readonly=True,
                                        help="who is deposited.", track_visibility='onchange')
