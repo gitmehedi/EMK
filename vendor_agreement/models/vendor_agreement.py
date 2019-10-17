@@ -155,6 +155,7 @@ class VendorAgreement(models.Model):
                         'total_payment_approved': self.total_payment_approved or 0.0,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
                         'operating_unit_id': self.operating_unit_id.id or False,
+                        'partner_id': self.partner_id.id or False,
                         },
         }
 
