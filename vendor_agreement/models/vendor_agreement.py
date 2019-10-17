@@ -46,7 +46,6 @@ class VendorAgreement(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
                                   default=lambda self: self.env.user.company_id.currency_id.id)
-
     company_id = fields.Many2one('res.company', string='Company', readonly=True, track_visibility='onchange',
                                  states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('agreement'))
@@ -80,6 +79,8 @@ class VendorAgreement(models.Model):
                                         states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
+                                         string="Is Visible")
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
@@ -102,6 +103,19 @@ class VendorAgreement(models.Model):
                 record.is_remaining = False
             else:
                 record.is_remaining = True
+
+    @api.depends('advance_amount', 'total_payment_amount')
+    def _compute_payment_btn_visible(self):
+        for record in self:
+            if record.state == 'done':
+                if record.advance_amount and record.total_payment_amount \
+                    and record.advance_amount <= record.total_payment_amount:
+                    record.payment_btn_visible = False
+                else:
+                    record.payment_btn_visible = True
+            else:
+                record.payment_btn_visible = False
+
 
     @api.model
     def create(self, vals):
@@ -136,8 +150,6 @@ class VendorAgreement(models.Model):
 
     @api.multi
     def action_payment(self):
-        if self.advance_amount <= self.total_payment_amount:
-            raise ValidationError(_('No payment instruction needed!'))
 
         res = self.env.ref('vendor_agreement.view_agreement_payment_instruction_wizard')
 

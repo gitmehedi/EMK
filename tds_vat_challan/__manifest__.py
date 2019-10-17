@@ -28,6 +28,7 @@
         'views/account_config.xml',
         'views/tds_vat_payments.xml',
         'reports/tds_vat_challan_report.xml',
+        'views/account_invoice_view.xml',
     ],
     'installable': True,
     'application': True,

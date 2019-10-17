@@ -11,7 +11,7 @@
         'account_asset',
         'account_fam',
         'account_category',
-        'tds_vendor_bill',
+        'tds_vat_challan',
     ],
     'data': [
         'views/asset_vendor_bills_view.xml',

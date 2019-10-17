@@ -4,6 +4,7 @@ from odoo.exceptions import UserError,ValidationError
 
 class TdsVatChallan(models.Model):
     _name = 'tds.vat.challan'
+    _rec_name = 'challan_no'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'challan_date desc'
     _description = 'TDS Vendor Challan'
@@ -41,7 +42,6 @@ class TdsVatChallan(models.Model):
     ], default='draft',string="Status", track_visibility='onchange')
     maker_id = fields.Many2one('res.users', 'Maker',
                                default=lambda self: self.env.user.id, track_visibility='onchange')
-
     deposit_date = fields.Datetime(string='Deposit Date', readonly=True, track_visibility='onchange')
     deposit_approver = fields.Many2one('res.users', string='Deposit By', readonly=True,
                                        help="who is deposited.", track_visibility='onchange')
@@ -96,6 +96,10 @@ class TdsVatChallan(models.Model):
                 raise UserError(
                     _("Without Challan No/Deposited Bank/Bank Branch record cannot be confirm. Please fill all those."))
             record.line_ids.write({'state': 'confirm'})
+            # invoice_ids = [i.invoice_id.id for i in record.acc_move_line_ids]
+            # 'account_invoice_ids': [(6, 0, invoice_ids)],
+            for i in record.acc_move_line_ids:
+                i.invoice_id.tds_vat_challan_ids = [(4, self.id)]
             res = {
                 'state': 'confirm',
                 # 'deposit_approver': record.env.user.id,
@@ -184,6 +188,11 @@ class TdsVatChallanLine(models.Model):
         ('cancel', "Cancel"),
     ], default='draft', track_visibility='onchange')
 
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    tds_vat_challan_ids = fields.Many2many('tds.vat.challan',string='TDS & VAT Challan', copy=False)
 
 # Accounting treatment previous version
     #
