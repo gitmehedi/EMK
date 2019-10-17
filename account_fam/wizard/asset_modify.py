@@ -105,9 +105,6 @@ class AssetModify(models.TransientModel):
                     line = asset.depreciation_line_ids.create(vals)
                     if line:
                         move = self.create_move(asset, depr_value)
-                        asset.write({'sum_value_residual': remaining_value,
-                                     'sum_accumulated_value': depreciated_amount
-                                     })
                         line.write({'move_id': move.id, 'move_check': True})
                         if move.state == 'draft' and line.move_id.id == move.id:
                             move.sudo().post()

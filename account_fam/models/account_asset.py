@@ -50,8 +50,7 @@ class AccountAssetAsset(models.Model):
                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
     depr_base_value = fields.Float(string='Depr. Base Value', track_visibility='onchange', readonly=True)
-    value_residual = fields.Float(string='WDV', track_visibility='onchange')
-    sum_value_residual = fields.Float(string='WDV')
+    value_residual = fields.Float(string='WDV', track_visibility='onchange', store=True)
     advance_amount = fields.Float(string='Adjusted Amount', track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)]})
     current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
@@ -60,8 +59,7 @@ class AccountAssetAsset(models.Model):
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
     accumulated_value = fields.Float(string='Accumulated Depr.', compute="_compute_accumulated_value",
-                                     track_visibility='onchange')
-    sum_accumulated_value = fields.Float(string='Accumulated Depr.')
+                                     track_visibility='onchange',store=True)
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
                                      track_visibility='onchange', readonly=True,
@@ -193,8 +191,6 @@ class AccountAssetAsset(models.Model):
             else:
                 no_of_days = (date - self.date_str_format(asset.asset_usage_date)).days
 
-            print "-----------------------------------------------------------", asset.asset_seq
-
             if asset.method == 'linear':
                 date_delta = (self.date_str_format(asset.date) + relativedelta(
                     years=asset.depreciation_year) - self.date_str_format(asset.date)).days
@@ -230,14 +226,9 @@ class AccountAssetAsset(models.Model):
                         if date.month == 12 and date.day == 31:
                             asset.write({'lst_depr_date': date.date(),
                                          'depr_base_value': book_val_amount,
-                                         'sum_value_residual': book_val_amount,
-                                         'sum_accumulated_value': cumul_depr
                                          })
                         else:
-                            asset.write({'lst_depr_date': date.date(),
-                                         'sum_value_residual': book_val_amount,
-                                         'sum_accumulated_value': cumul_depr
-                                         })
+                            asset.write({'lst_depr_date': date.date()})
 
     @api.multi
     def create_move(self, line):
