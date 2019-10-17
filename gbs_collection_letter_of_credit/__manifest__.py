@@ -9,6 +9,7 @@
     "depends": ["account","com_shipment","lc_sales_product","custom_amount_conversion"],
     'data': [
         "security/ir.model.access.csv",
+        "security/security.xml",
         "data/data.xml",
         "data/lc_journal_data.xml",
         "views/lc_receivable_payments_view.xml",

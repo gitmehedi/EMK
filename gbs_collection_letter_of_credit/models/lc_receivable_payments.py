@@ -144,17 +144,17 @@ class LCReceivablePayment(models.Model):
 
             rec.currency_loss_gain_amount = (total_collection_amount + total_charges_amount + total_miscellaneous_amount) - rec.amount_in_company_currency
 
-            if -1 < rec.currency_loss_gain_amount < 1:
-                rec.currency_loss_gain_amount = 0
-
-            if rec.currency_loss_gain_amount >= rec.amount_in_company_currency:
-                rec.currency_loss_gain_amount = 0.0
-            if rec.currency_loss_gain_amount < 0:
-                rec.currency_loss_gain_type = 'loss'
-            elif rec.currency_loss_gain_amount > 0:
-                rec.currency_loss_gain_type = 'gain'
-            else:
-                rec.currency_loss_gain_type = 'margin'
+            # if -1 < rec.currency_loss_gain_amount < 1:
+            #     rec.currency_loss_gain_amount = 0
+            #
+            # if rec.currency_loss_gain_amount >= rec.amount_in_company_currency:
+            #     rec.currency_loss_gain_amount = 0.0
+            # if rec.currency_loss_gain_amount < 0:
+            #     rec.currency_loss_gain_type = 'loss'
+            # elif rec.currency_loss_gain_amount > 0:
+            #     rec.currency_loss_gain_type = 'gain'
+            # else:
+            #     rec.currency_loss_gain_type = 'margin'
 
     @api.depends('shipment_id')
     def _compute_reference(self):
