@@ -30,8 +30,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
         move_lines = super(AccountInvoice,self).finalize_invoice_move_lines(move_lines)
-        if self.agreement_id and self.agreement_id.active == True \
-                and self.date >= self.agreement_id.start_date and self.date <= self.agreement_id.end_date:
+        if self.agreement_id and self.agreement_id.active == True:
             self.update_move_lines_with_agreement(move_lines,self.agreement_adjusted_amount)
         return move_lines
 
