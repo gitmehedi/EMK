@@ -14,7 +14,7 @@ class GBSFileImport(models.Model):
     _order = 'id desc'
 
     code = fields.Char(string='Code', track_visibility='onchange', readonly=True)
-    date = fields.Datetime(string='Date', default=fields.Datetime.now, track_visibility='onchange')
+    date = fields.Date(string='Date', default=fields.Datetime.now, track_visibility='onchange')
     debit = fields.Float(compute='_compute_debit', string='Debit', track_visibility='onchange')
     credit = fields.Float(compute='_compute_debit', string='Credit', track_visibility='onchange')
     mismatch_amount = fields.Float(compute='_compute_debit', string='Mismatch Values',
@@ -54,7 +54,7 @@ class GBSFileImport(models.Model):
             file_path = os.path.join(record.source_path, filename)
             with open(file_path, "w+") as file:
                 for val in self.import_lines:
-                    trn_type = '54' if val.debit > 0 else '04'
+                    trn_type = val.type
                     account_no = str(val.account_no).zfill(17)
                     amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                     amount = ''.join(amount.split('.')).zfill(16)
@@ -127,7 +127,16 @@ class GBSFileImportLine(models.Model):
     debit = fields.Float(string='Debit', )
     credit = fields.Float(string='Credit')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string='Status')
-    type = fields.Selection([('cr', 'CR'), ('dr', 'DR')], string='Type')
+    type = fields.Selection([
+        ('01', 'Credit Dep'),
+        ('51', 'Dredit Dep'),
+        ('02', 'Backdated Credit Dep'),
+        ('52', 'Backdated Debit Dep'),
+        ('03', 'Credit Loan'),
+        ('53', 'Debit Loan'),
+        ('04', 'Credit Gen'),
+        ('54', 'Debit Gen'),
+    ], string='Type')
 
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
 
@@ -136,7 +145,3 @@ class GBSFileImportLine(models.Model):
         if self.account_no or self.debit or self.credit:
             if not self.account_no.isdigit():
                 raise Warning('Account No should be number!')
-            if not self.debit.isdigit():
-                raise Warning('Debit should be number!')
-            if not self.credit.isdigit():
-                raise Warning('Credit should be number!')

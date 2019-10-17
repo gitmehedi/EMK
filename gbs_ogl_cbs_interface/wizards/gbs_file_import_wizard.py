@@ -3,7 +3,7 @@ try:
 except ImportError:
     import StringIO
 import base64
-import csv
+import csv, datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -140,7 +140,9 @@ class GBSFileImportWizard(models.TransientModel):
             val = {}
             val['import_id'] = move.id
             val['account_no'] = line['account'].strip()
-            if not val['account_no'] and not val['account_no'].isdigit():
+            line['type'] = line['type'].strip().lower()
+
+            if len(val['account_no']) in [13, 16] and not val['account_no'].isdigit():
                 raise ValidationError(
                     _("Please check the file with values {0} and line no {1} !".format(val['account_no'], line_no)))
 
@@ -150,27 +152,39 @@ class GBSFileImportWizard(models.TransientModel):
                     _("Please check the file with values {0} and line no {1} !".format(val['narration'], line_no)))
 
             val['reference_no'] = line['reference'].strip()
-            val['date'] = line['date'].strip()
-            if not val['date']:
-                raise ValidationError(
-                    _("Please check the file with values {0} and line no {1} !".format(val['date'], line_no)))
 
-            val['type'] = line['type'].strip().lower()
-            if not val['type']:
+            date = self.date_validate(line['date'].strip())
+            if not date:
                 raise ValidationError(
-                    _("Please check the file with values {0} and line no {1} !".format(val['type'], line_no)))
+                    _(
+                        "Please check the Date format with values {0} and line no {1}! Expected format: 31/12/2000".format(
+                            line['date'], line_no)))
+            else:
+                val['date'] = datetime.datetime.strptime(line['date'].strip(), '%d/%m/%Y')
+
+            cus_type = line['type'].strip().lower()
+            if not cus_type:
+                raise ValidationError(
+                    _("Please check the file with values {0} and line no {1} !".format(cus_type, line_no)))
+            else:
+                if len(line['account']) == 13:
+                    type = '01' if line['type'] == 'cr' else '51'
+                if len(line['account']) == 16:
+                    type = '04' if line['type'] == 'cr' else '54'
 
             amount = line['amount'].strip()
-            if not amount and not amount.isdigit():
+            if not amount and not amount.isnumeric():
                 raise ValidationError(
                     _("Please check the file with values {0} and line no {1} !".format(amount, line_no)))
 
-            if val['type'] == 'cr':
+            if line['type'] == 'cr':
                 val['credit'] = amount
                 val['debit'] = 0
-            if val['type'] == 'dr':
+            if line['type'] == 'dr':
                 val['credit'] = 0
                 val['debit'] = amount
+            val['type'] = type
+
             vals.append((0, 0, val))
 
         res = move.write({'import_lines': vals})
@@ -181,3 +195,16 @@ class GBSFileImportWizard(models.TransientModel):
             raise ValidationError(_(msg))
         else:
             return True
+
+    def date_validate(self, data):
+        date = data.split('/')
+        if len(date) != 3:
+            return False
+
+        is_valid = True
+        try:
+            datetime.datetime(int(date[2]), int(date[1]), int(date[0]))
+        except ValueError:
+            is_valid = False
+
+        return is_valid
