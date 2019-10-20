@@ -37,7 +37,7 @@ class DeliveryChallanReport(models.AbstractModel):
             report_data['partner_name'] = picking_obj.customer_name
 
         if bin_number:
-            report_data['partner_name'] += report_data['partner_name'] + ", BIN:" + bin_number
+            report_data['partner_name'] += ", BIN:" + bin_number
 
         if not picking_obj.shipping_address_print:
             report_data['shipping_address'] = self.get_address_by_partner(picking_obj.partner_id)
