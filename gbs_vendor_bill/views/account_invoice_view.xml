@@ -232,6 +232,12 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.view_account_invoice_filter"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="string">Responsible</attribute>
+            </xpath>
             <xpath expr="//filter[@name='group_by_partner_id']" position="attributes">
                 <attribute name="string">Vendor</attribute>
             </xpath>

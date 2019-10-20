@@ -14,17 +14,15 @@
         </field>
     </record>
 
-    <!--<record id="account_invoice_vat_challan_filter" model="ir.ui.view">-->
-        <!--<field name="name">account.invoice.vat.challan.filter</field>-->
-        <!--<field name="model">account.invoice</field>-->
-        <!--<field name="priority" eval="17"/>-->
-        <!--<field name="inherit_id" ref="gbs_vendor_bill.view_account_invoice_filter"/>-->
-        <!--<field name="arch" type="xml">-->
-            <!--<xpath expr="//filter[@name='vendor_service']" position="after">-->
-                <!--<field name="tds_vat_challan_ids" invisible="1"/>-->
-                <!--<filter string="TDS &amp; VAT Challan" name="tds_vat_challan"-->
-                        <!--context="{'group_by': 'tds_vat_challan_ids'}"/>-->
-            <!--</xpath>-->
-        <!--</field>-->
-    <!--</record>-->
+    <record id="account_invoice_vat_challan_filter" model="ir.ui.view">
+        <field name="name">account.invoice.vat.challan.filter</field>
+        <field name="model">account.invoice</field>
+        <field name="priority" eval="17"/>
+        <field name="inherit_id" ref="gbs_vendor_bill.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="tds_vat_challan_ids" string="Challan No"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
