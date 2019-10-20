@@ -84,8 +84,6 @@ class TdsVatChallan(models.Model):
                                     }))
             self.line_ids = vals
 
-
-
     @api.multi
     def action_confirm(self):
         for record in self:
@@ -100,8 +98,15 @@ class TdsVatChallan(models.Model):
             # 'account_invoice_ids': [(6, 0, invoice_ids)],
             for i in record.acc_move_line_ids:
                 i.invoice_id.tds_vat_challan_ids = [(4, self.id)]
+
+            new_seq = self.env['ir.sequence'].next_by_code('tds.vat.challan')
+            if new_seq:
+                name = self.name+new_seq
+            else:
+                name = self.name
             res = {
                 'state': 'confirm',
+                'name': name,
                 # 'deposit_approver': record.env.user.id,
                 # 'deposit_date': fields.Datetime.now(),
             }
@@ -172,6 +177,7 @@ class TdsVatChallanLine(models.Model):
     total_bill = fields.Float(String='Total Bill')
     parent_id = fields.Many2one('tds.vat.challan')
     currency_id = fields.Many2one('res.currency', string='Currency')
+    parent_name = fields.Char(string='TDS & VAT Challan',related='parent_id.name')
     challan_date = fields.Date(string='Challan Date',related='parent_id.challan_date')
     challan_no = fields.Char(string='Challan No.',related='parent_id.challan_no')
     deposited_bank = fields.Char(string='Deposited Bank',related='parent_id.deposited_bank')

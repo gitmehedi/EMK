@@ -66,6 +66,11 @@ class TDSChallaSelectionWizard(models.TransientModel):
 
         res_view = self.env.ref('tds_vat_challan.tds_vat_challan_form_view')
 
+        if self.type == 'tds':
+            pre_name = 'MTB-TC'
+        else:
+            pre_name = 'MTB-VC'
+
         result = {
             'name': _('Challan Item'),
             'view_type': 'form',
@@ -76,7 +81,7 @@ class TDSChallaSelectionWizard(models.TransientModel):
             'nodestroy': True,
             'target': 'current',
             'context': {'acc_move_line_ids': move_lines.ids,
-                        'name': self.type.upper()+' Challan '+ fields.Date.context_today(self),
+                        'name': pre_name+'-'+fields.Date.context_today(self),
                         'currency_id': self.env.user.company_id.currency_id.id,
                         'type': self.type,
                         },

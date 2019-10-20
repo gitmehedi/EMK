@@ -17,6 +17,7 @@
                 ],
     'data': [
         'security/ir.model.access.csv',
+        'data/tds_vat_challan_data.xml',
         # 'security/ir_rule.xml',
         'views/menu_view.xml',
         'wizards/tds_vat_move_payment_wizard.xml',
