@@ -25,6 +25,9 @@ def check_access_rule_all(self, operations=None):
             # operations
             result[operation] = True
             continue
+        if self.id and isinstance(self.id, basestring) and "one2many_v_id_" in self.id:
+            result[operation] = True
+            continue
         try:
             self.check_access_rule(operation)
         except exceptions.AccessError:
