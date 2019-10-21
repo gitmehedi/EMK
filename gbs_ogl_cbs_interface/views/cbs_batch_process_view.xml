@@ -100,8 +100,7 @@
             id="action_generate_cbs_journal_form"
             res_model="generate.cbs.journal"/>
 
-    <menuitem
-            parent="main_api_interface"
+    <menuitem parent="main_api_interface" groups="grp_api_interface_manager"
             action="action_generate_cbs_journal_form"
-            id="generate_cbs_journal_menu"/>
+            id="generate_cbs_journal_menu" sequence="5"/>
 </odoo>

@@ -71,5 +71,5 @@
     </record>
 
     <menuitem parent="main_error_api_interface" action="action_generate_cbs_journal_success_form"
-              id="generate_cbs_journal_success_menu" sequence="20" groups="grp_api_interface_manager"/>
+              id="generate_cbs_journal_success_menu" sequence="10" groups="grp_api_interface_manager"/>
 </odoo>

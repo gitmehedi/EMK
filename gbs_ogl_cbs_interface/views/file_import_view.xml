@@ -112,8 +112,8 @@
             </field>
         </record>
 
-        <menuitem id="menu_gbs_file_import" name="Import Data"
-                  parent="main_error_api_interface" sequence="50"
+        <menuitem id="menu_gbs_file_import" name="Bulk Data Import"
+                  parent="account.menu_finance_payables" sequence="50"
                   action="action_gbs_file_import"
                   groups="mtbl_access.group_mtbl_sys_admin"/>
     </data>

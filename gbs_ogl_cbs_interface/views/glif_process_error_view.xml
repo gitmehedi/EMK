@@ -93,5 +93,5 @@
     </record>
 
     <menuitem parent="main_error_api_interface" action="action_server_file_error_form" id="server_file_error_menu"
-              sequence="10" groups="grp_api_interface_manager"/>
+              sequence="20" groups="grp_api_interface_manager"/>
 </odoo>
