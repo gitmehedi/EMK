@@ -266,7 +266,7 @@
         <menuitem id="agreement_account.agreement_menu" action="agreement_account.agreement_action"
                   name="Vendor Agreements"
                   groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
-                  parent="account.menu_finance_payables" sequence="2"/>
+                  parent="account.menu_finance_payables" sequence="30"/>
 
 
         <!-- inherit 'invoice supplier form' from agreement_account to add domain -->

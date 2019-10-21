@@ -396,13 +396,7 @@
         <field name="act_window_id" ref="action_asset_vendor_bill_validated"/>
     </record>
 
-
     <menuitem action="action_asset_vendor_bill_validated" id="menu_asset_action_invoice_tree2_validated"
               parent="sub_assets_vendor_menu" name="Vendor Bills (Validated)" sequence="6"/>
 
-    <record id="account.action_invoice_tree2" model="ir.actions.act_window">
-        <field name="domain">[('type','in',('in_invoice',
-            'in_refund')),('is_asset','=',0),('state','in',('draft','open','paid'))]
-        </field>
-    </record>
 </odoo>

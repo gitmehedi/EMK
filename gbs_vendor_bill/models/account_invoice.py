@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'ir.needaction_mixin']
-    _order = 'number DESC'
+    _order = 'number DESC, id desc'
 
     entity_service_id = fields.Many2one('product.product', string='Service', readonly=True,
                                         states={'draft': [('readonly', False)]},
