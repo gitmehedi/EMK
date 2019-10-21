@@ -245,6 +245,7 @@
                 <filter string="Service" name="vendor_service"
                         context="{'group_by': 'entity_service_id'}"/>
             </xpath>
+
         </field>
     </record>
     <record id="account.action_invoice_tree2" model="ir.actions.act_window">
