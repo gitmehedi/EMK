@@ -236,7 +236,8 @@ class LCReceivablePayment(models.Model):
             account_move_dict = {
                 'name': name,
                 'date': date,
-                'ref': '',
+                # 'ref': '',
+                'ref': self.lc_id.name,
                 'company_id': self.company_id.id,
                 'journal_id': journal.id,
                 'operating_unit_id': self.operating_unit_id.id,
