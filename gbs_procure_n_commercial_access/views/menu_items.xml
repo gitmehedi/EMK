@@ -117,6 +117,14 @@
                 groups="commercial.group_commercial_manager,gbs_procure_n_commercial_access.group_imoprt_lc_local"/>
 
         <menuitem
+                id="gbs_service.product_template_service_menu"
+                name="Service"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="3"
+                action="gbs_service.product_template_service_action"
+                groups="commercial.group_commercial_manager"/>
+
+        <menuitem
 				name="Question Set"
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="3"
