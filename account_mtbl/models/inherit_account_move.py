@@ -25,10 +25,15 @@ class AccountMove(models.Model):
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         return super(AccountMove, self).post()
 
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date > fields.Datetime.now():
+            raise ValidationError(_('Journal Date should not be greater than current datetime.'))
+
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
-    
+
     name = fields.Char(string="Narration")
     account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)])
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string="Sub Operating Unit")

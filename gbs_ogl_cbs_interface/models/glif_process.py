@@ -206,7 +206,8 @@ class ServerFileProcess(models.Model):
                             self.env['server.file.success'].create({'name': file,
                                                                     'start_date': start_date,
                                                                     'stop_date': stop_date,
-                                                                    'file_name': file})
+                                                                    'file_name': file,
+                                                                    'move_id': journal.id})
 
         for rec in self.filtered(lambda r: r.method == "sftp"):
             with self.sftp_connection('source') as source:
@@ -228,7 +229,8 @@ class ServerFileProcess(models.Model):
                                 self.env['server.file.success'].create({'name': file,
                                                                         'start_date': start_date,
                                                                         'stop_date': stop_date,
-                                                                        'file_name': file})
+                                                                        'file_name': file,
+                                                                        'move_id': journal.id})
                                 if not source.unlink(source_path):
                                     os.remove(local_path)
                                 else:
@@ -334,8 +336,8 @@ class ServerFileProcess(models.Model):
                 line['company_id'])
 
         with open(source_path, 'r') as file_ins:
-
             index = 0
+            debit, credit = 0.0, 0.0
             coa = {val.code: val.id for val in
                    self.env['account.account'].search([('level_id.name', '=', 'Layer 5'), ('active', '=', True)])}
             jrnl = {val.code: val.id for val in self.env['account.journal'].search([('active', '=', True)])}
@@ -346,9 +348,16 @@ class ServerFileProcess(models.Model):
             sg = {val.code: val.id for val in self.env['segment'].search([('active', '=', True)])}
             cc = {val.code: val.id for val in
                   self.env['account.analytic.account'].search([('active', '=', True)])}
-            error_obj = self.env['server.file.error'].create({'name': file,
-                                                              'file_path': source_path,
-                                                              'ftp_ip': self.source_sftp_host})
+
+            errObj = self.env['server.file.error'].search([('name', '=', file), ('state', '=', 'issued')])
+            if not errObj:
+                errObj = self.env['server.file.error'].create({'name': file,
+                                                               'file_path': source_path,
+                                                               'ftp_ip': self.source_sftp_host,
+                                                               })
+            else:
+                errObj.line_ids.unlink()
+
             errors, journal_entry = "", ""
             journal_type = 'CBS'
             if journal_type not in jrnl.keys():
@@ -358,7 +367,7 @@ class ServerFileProcess(models.Model):
                 'journal_id': jrnl['CBS'],
                 'date': fields.Datetime.now(),
                 'is_cbs': True,
-                'ref': '123456789',
+                'ref': 'Journal generated from CBS using {0}'.format(file),
                 'line_ids': [],
             })
             for worksheet_index in file_ins:
@@ -366,7 +375,7 @@ class ServerFileProcess(models.Model):
                 if len(worksheet_index) > 2:
                     rec = self.data_mapping(worksheet_index)
                     if rec == worksheet_index:
-                        errors += format_error(error_obj.id, index, '{0} has invalid value'.format(rec))
+                        errors += format_error(errObj.id, index, '{0} has invalid value'.format(rec))
                         continue
 
                     name = rec['DESC-TEXT-24'].strip() if not rec['DESC-TEXT-24'].strip() else '/'
@@ -374,30 +383,30 @@ class ServerFileProcess(models.Model):
 
                     posting_date = rec['POSTING-DATE']
                     if not posting_date:
-                        errors += format_error(error_obj.id, index,
+                        errors += format_error(errObj.id, index,
                                                'POSTING-DATE or POSTING-TIME [{0}]has invalid value'.format(
                                                    posting_date))
 
                     system_date = rec['SYSTEM-DATE']
                     if not system_date:
-                        errors += format_error(error_obj.id, index,
+                        errors += format_error(errObj.id, index,
                                                'SYSTEM-DATE [{0}] has invalid value'.format(system_date))
 
                     trans_date = rec['TRANS-DATE']
                     if not trans_date:
-                        errors += format_error(error_obj.id, index,
+                        errors += format_error(errObj.id, index,
                                                'TRANS-DATE [{0}] has invalid value'.format(trans_date))
 
                     branch_code = rec['GL-CLASS-CODE']['BRANCH']
                     if branch_code not in branch.keys():
-                        errors += format_error(error_obj.id, index,
+                        errors += format_error(errObj.id, index,
                                                'BRANCH [{0}] has invalid value'.format(branch_code))
                     else:
                         branch_val = branch[branch_code]
 
                     currency_code = rec['GL-CLASS-CODE']['CURRENCY']
                     if currency_code not in currency.keys():
-                        errors += format_error(error_obj.id, index,
+                        errors += format_error(errObj.id, index,
                                                'CURRENCY [{0}]  has invalid value'.format(currency_code))
                     else:
                         currency_val = currency[currency_code]
@@ -407,7 +416,7 @@ class ServerFileProcess(models.Model):
                         if sg_code == '0':
                             sg_val = 'NULL'
                         else:
-                            errors += format_error(error_obj.id, index,
+                            errors += format_error(errObj.id, index,
                                                    'SEGMENT [{0}]  has invalid value'.format(sg_code))
                     else:
                         sg_val = sg[sg_code]
@@ -417,7 +426,7 @@ class ServerFileProcess(models.Model):
                         if ac_code == '00':
                             ac_val = 'NULL'
                         else:
-                            errors += format_error(error_obj.id, index, 'AC [{0}]  has invalid value'.format(ac_code))
+                            errors += format_error(errObj.id, index, 'AC [{0}]  has invalid value'.format(ac_code))
                     else:
                         ac_val = ac[ac_code]
 
@@ -426,7 +435,7 @@ class ServerFileProcess(models.Model):
                         if sc_code == '00':
                             sc_val = 'NULL'
                         else:
-                            errors += format_error(error_obj.id, index, 'SC [{0}]  has invalid value'.format(sc_code))
+                            errors += format_error(errObj.id, index, 'SC [{0}]  has invalid value'.format(sc_code))
                     else:
                         sc_val = sc[sc_code]
 
@@ -435,7 +444,7 @@ class ServerFileProcess(models.Model):
                         if cc_code == '000':
                             cc_val = 'NULL'
                         else:
-                            errors += format_error(error_obj.id, index,
+                            errors += format_error(errObj.id, index,
                                                    'COST_CENTRE [{0}]  has invalid value'.format(cc_code))
                     else:
                         cc_val = cc[cc_code]
@@ -443,7 +452,7 @@ class ServerFileProcess(models.Model):
                     if rec['GL-CLASS-CODE']['COMP_1'] and rec['GL-CLASS-CODE']['COMP_2']:
                         comp_code = rec['GL-CLASS-CODE']['COMP_1'] + rec['GL-CLASS-CODE']['COMP_2']
                         if comp_code not in coa.keys():
-                            errors += format_error(error_obj.id, index,
+                            errors += format_error(errObj.id, index,
                                                    'Chart of Account [{0}]  has invalid value'.format(comp_code))
                         else:
                             comp_val = coa[comp_code]
@@ -469,9 +478,11 @@ class ServerFileProcess(models.Model):
                         if rec['JOURNAL-SEQ'] == '01':
                             line['debit'] = 0.0
                             line['credit'] = amount
+                            credit += amount
                         elif rec['JOURNAL-SEQ'] == '02':
                             line['debit'] = amount
                             line['credit'] = 0.0
+                            debit += amount
                         journal_entry += format_journal(line)
 
         if len(errors) > 0:
@@ -481,32 +492,33 @@ class ServerFileProcess(models.Model):
                     VALUES %s """ % errors[:-1]
                 self.env.cr.execute(query)
             except Exception:
-                self.env['server.file.error'].create({'name': file,
-                                                      'file_path': source_path,
-                                                      'errors': 'Unknown Error. Please check your file.',
-                                                      'ftp_ip': 'localhost'
-                                                      })
+                errObj.line_ids.create({'line_id': errObj.id,
+                                        'line_no': 'UNKNOWN ERROR',
+                                        'details': 'Please check your file.'})
         else:
-            error_obj.unlink()
             try:
                 query = """
                 INSERT INTO account_move_line 
                 (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
                 analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,company_id)  
                 VALUES %s""" % journal_entry[:-1]
-
                 self.env.cr.execute(query)
-                if move_id.state == 'draft':
+                missmatch = round(debit - credit, 2)
+                if move_id.state == 'draft' and abs(missmatch) == 0.0:
                     move_id.sudo().post()
-                    return True
+                    errObj.write({'state': 'resolved'})
+                    return move_id
+                else:
+                    msg = 'DEBIT: {0}, CREDIT: {1} and UNBALANCED VALUE: {2}'.format(debit, credit, missmatch)
+                    errObj.line_ids.create({'line_id': errObj.id,
+                                            'line_no': 'UNBALANCED VALUE',
+                                            'details': msg})
             except Exception:
-                # if move_id.state == 'draft':
-                #     move_id.unlink()
-                self.env['server.file.error'].create({'name': file,
-                                                      'file_path': source_path,
-                                                      'errors': 'Unknown Error. Please check your file.',
-                                                      'ftp_ip': 'localhost'
-                                                      })
+                if move_id.state == 'draft':
+                    move_id.unlink()
+                errObj.line_ids.create({'line_id': errObj.id,
+                                        'line_no': 'UNKNOWN ERROR',
+                                        'details': 'Please check your file.'})
 
         return False
 
@@ -636,6 +648,7 @@ class ServerFileSuccess(models.Model):
     file_name = fields.Char(string='File Path', required=True)
     upload_file = fields.Binary(string="Upload File", attachment=True)
     time = fields.Text(string='Time', compute="_compute_time")
+    move_id = fields.Many2one('account.move', string="Journal")
     status = fields.Boolean(default=False, string='Status')
 
     @api.depends('start_date', 'stop_date')
