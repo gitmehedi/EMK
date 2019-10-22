@@ -233,7 +233,10 @@ class AccountInvoiceLine(models.Model):
                         if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
                             remaining_tds_amount = total_tds_amount - sum(int(i.tds_amount) for i in pre_invoice_line_list)
-                            self.tds_amount = remaining_tds_amount
+                            if remaining_tds_amount>pro_base_val:
+                                self.tds_amount = pro_base_val
+                            else:
+                                self.tds_amount = remaining_tds_amount
                             break
                     else:
                         self.tds_amount = 0.0
