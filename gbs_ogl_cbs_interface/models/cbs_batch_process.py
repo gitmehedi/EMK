@@ -177,6 +177,7 @@ class GenerateCBSJournal(models.Model):
         filename = "MDC_00001_" + record_date + process_date + unique + ".txt"
 
         def generate_file(record):
+            move_ids = []
             file_path = os.path.join(record.source_path, filename)
             journals = self.env['account.move'].search(
                 [('is_cbs', '=', False), ('is_sync', '=', False), ('state', '=', 'posted')])
@@ -200,11 +201,13 @@ class GenerateCBSJournal(models.Model):
                         journal = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount, narration,
                                                                                       trn_ref_no, date, cost_centre)
                         file.write(journal)
+
+                    move_ids.append((0, 0, {'move_id': vals.id}))
                     vals.write({'is_sync': True})
 
             if os.stat(file_path).st_size == 0:
                 os.remove(file_path)
-            return True if os.path.exists(file_path) else False
+            return move_ids if os.path.exists(file_path) else False
 
         for rec in self.env['generate.cbs.journal'].search([('method', '=', 'sftp')]):
             with rec.sftp_connection('destination') as destination:
@@ -225,7 +228,9 @@ class GenerateCBSJournal(models.Model):
                                                                                    'start_date': start_date,
                                                                                    'stop_date': stop_date,
                                                                                    'upload_file': encoded_file,
-                                                                                   'file_name': filename})
+                                                                                   'file_name': filename,
+                                                                                   'line_ids': file,
+                                                                                   })
                         if success:
                             os.remove(local_path)
                         else:
@@ -343,6 +348,8 @@ class GenerateCBSJournalSuccess(models.Model):
     upload_file = fields.Binary(string="Upload File", attachment=True)
     time = fields.Text(string='Time', compute="_compute_time")
     status = fields.Boolean(default=False, string='Status')
+    journal_count = fields.Char(string="Total Journals", compute='_compute_journal', store=True)
+    line_ids = fields.One2many('cbs.journal.line', 'line_id', string="Journal")
     state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
 
     @api.depends('start_date', 'stop_date')
@@ -351,3 +358,16 @@ class GenerateCBSJournalSuccess(models.Model):
             diff = datetime.strptime(rec.stop_date, TIME_FORMAT) - datetime.strptime(rec.start_date, TIME_FORMAT)
             rec.time = str(diff)
 
+    @api.depends('line_ids')
+    def _compute_journal(self):
+        for rec in self:
+            rec.journal_count = len(rec.line_ids)
+
+
+class CBSJournalLine(models.Model):
+    _name = 'cbs.journal.line'
+    _description = "CBS Journal Line"
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
+
+    line_id = fields.Many2one('generate.cbs.journal.success', ondelete='cascade')
+    move_id = fields.Many2one('account.move', string="Journals")

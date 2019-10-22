@@ -6,7 +6,7 @@
             <field name="model">gbs.file.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import Data">
+                <form string="Import Data" delete="0" duplicate="0">
                     <header>
                         <button name="gbs_ogl_cbs_interface.action_gbs_file_import_wizard"
                                 groups="mtbl_access.group_mtbl_sys_admin"
@@ -27,6 +27,8 @@
                         <group>
                             <group>
                                 <field name="date" readonly="1"/>
+                                <field name="file_name" invisible="1"/>
+                                <field name="upload_file" filename="file_name" readonly="1"/>
                             </group>
                             <group>
                                 <field name="debit"/>
@@ -38,6 +40,7 @@
                             <page string="Values">
                                 <field name="import_lines">
                                     <tree string="List" editable="bottom">
+                                        <field name="type"/>
                                         <field name="name" invisible="1"/>
                                         <field name="account_no"/>
                                         <field name="narration"/>
@@ -52,7 +55,7 @@
                                         </header>
                                         <group>
                                             <group>
-
+                                                <field name="type"/>
                                                 <field name="account_no"/>
                                                 <field name="narration"/>
                                                 <field name="reference_no"/>
@@ -82,7 +85,9 @@
                 <tree string="Import Data"
                       decoration-success="state=='draft'" decoration-muted="state=='processed'">
                     <field name="code"/>
+                    <field name="file_name" invisible="1"/>
                     <field name="date"/>
+                    <field name="upload_file" filename="file_name" readonly="1"/>
                     <field name="state"/>
                 </tree>
             </field>

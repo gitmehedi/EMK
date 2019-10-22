@@ -21,6 +21,8 @@ class GBSFileImport(models.Model):
                                    track_visibility='onchange')
     import_lines = fields.One2many('gbs.file.import.line', 'import_id', readonly=True,
                                    states={'draft': [('readonly', False)]})
+    file_name = fields.Char(string='File Path')
+    upload_file = fields.Binary(string="Generated File", attachment=True)
     state = fields.Selection([('draft', 'Draft'), ('processed', 'Processed')], default='draft', string='Status')
 
     @api.multi
@@ -90,11 +92,15 @@ class GBSFileImport(models.Model):
                         with open(local_path, "rb") as cbs_file:
                             encoded_file = base64.b64encode(cbs_file.read())
                         stop_date = fields.Datetime.now()
-                        success = self.env['generate.cbs.journal.success'].create({'name': filename,
-                                                                                   'start_date': start_date,
-                                                                                   'stop_date': stop_date,
-                                                                                   'upload_file': encoded_file,
-                                                                                   'file_name': filename})
+                        success = self.write({'upload_file': encoded_file,
+                                              'file_name': filename})
+
+                        # success = self.env['generate.cbs.journal.success'].create({'name': filename,
+                        #                                                            'start_date': start_date,
+                        #                                                            'stop_date': stop_date,
+                        #                                                            'upload_file': encoded_file,
+                        #                                                            'file_name': filename,
+                        #                                                            })
                         if success:
                             os.remove(local_path)
                         else:
@@ -128,15 +134,11 @@ class GBSFileImportLine(models.Model):
     credit = fields.Float(string='Credit')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string='Status')
     type = fields.Selection([
-        ('01', 'Credit Dep'),
-        ('51', 'Dredit Dep'),
-        ('02', 'Backdated Credit Dep'),
-        ('52', 'Backdated Debit Dep'),
-        ('03', 'Credit Loan'),
-        ('53', 'Debit Loan'),
-        ('04', 'Credit Gen'),
-        ('54', 'Debit Gen'),
-    ], string='Type')
+        ('01', 'Customer Credit'),
+        ('51', 'Customer Debit '),
+        ('04', 'GL Credit'),
+        ('54', 'GL Debit'),
+    ], string='Type', required=True)
 
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
 

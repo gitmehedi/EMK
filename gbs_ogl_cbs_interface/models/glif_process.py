@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import os, shutil, base64, traceback, logging, json
+
 from datetime import datetime
+from datetime import datetime as dt
 from contextlib import contextmanager
 from odoo import exceptions, models, fields, api, _, tools
 from odoo.exceptions import ValidationError
+
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 _logger = logging.getLogger(__name__)
 try:
@@ -582,11 +586,12 @@ class ServerFileError(models.Model):
     _order = 'id desc'
 
     name = fields.Char(string='Name')
-    process_date = fields.Datetime(default=fields.Datetime.now)
+    process_date = fields.Datetime(string="Process Date", default=fields.Datetime.now)
     file_path = fields.Char(string='File Path')
     ftp_ip = fields.Char(string='FTP IP')
     status = fields.Boolean(default=False, string='Status')
     errors = fields.Text(string='Error Details')
+    error_count = fields.Char(string="Total Error", compute='_compute_error')
     state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
     line_ids = fields.One2many('server.file.error.line', 'line_id', readonly=True)
 
@@ -600,6 +605,11 @@ class ServerFileError(models.Model):
             if rec.file_path and rec.ftp_ip:
                 rec.name = "{0} and {1}".format(rec.ftp_ip, rec.file_path)
 
+    @api.depends('line_ids')
+    def _compute_error(self):
+        for rec in self:
+            rec.error_count = len(rec.line_ids)
+
 
 class ServerFileErrorDetails(models.Model):
     _name = 'server.file.error.line'
@@ -611,12 +621,7 @@ class ServerFileErrorDetails(models.Model):
     line_no = fields.Char(string='Line No')
     status = fields.Boolean(default=False, string='Status')
     details = fields.Text(string='Error Details')
-    line_id = fields.Many2one('server.file.error')
-
-
-from datetime import datetime as dt
-
-TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+    line_id = fields.Many2one('server.file.error', ondelete='cascade')
 
 
 class ServerFileSuccess(models.Model):
