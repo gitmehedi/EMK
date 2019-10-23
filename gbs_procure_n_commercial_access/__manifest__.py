@@ -45,6 +45,7 @@
                 'gbs_po_merge',
                 'purchase_reports',
                 'gbs_purchase_mrr',
+                'gbs_service',
     ],
 
 

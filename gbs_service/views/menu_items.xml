@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!--<menuitem-->
+                <!--id="product_template_service_menu"-->
+                <!--name="Services"-->
+                <!--action="product_template_service_action"-->
+                <!--parent="gbs_purchase_requisition.menu_procurement_management_product_root"-->
+                <!--sequence="3"/>-->
+
+    </data>
+</odoo>
