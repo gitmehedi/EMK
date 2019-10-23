@@ -7,7 +7,7 @@ class AccountInvoice(models.Model):
     _inherit = ['account.invoice', 'ir.needaction_mixin']
     _order = 'number DESC, id desc'
 
-    entity_service_id = fields.Many2one('product.product', string='Service', readonly=True,
+    entity_service_id = fields.Many2one('product.product', string='Service/Product', readonly=True,
                                         states={'draft': [('readonly', False)]},
                                         track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', 'Branch',

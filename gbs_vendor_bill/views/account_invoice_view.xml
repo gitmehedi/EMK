@@ -94,8 +94,8 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="before">
-                <field name="entity_service_id" string="Service" domain="[('type','=','service')]"
-                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                <field name="entity_service_id" domain="[('type','in',('service','consu'))]"
+                       options='{"no_open": True,"no_create": True, "no_create_edit": True}'/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="domain">[('supplier','=',True),('state','=','approve')]</attribute>
@@ -155,6 +155,7 @@
             </xpath>
             <xpath expr="//notebook/page[1]/field/tree/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="domain">[('type','in',('service','consu'))]</attribute>
                 <attribute name="required">1</attribute>
             </xpath>
             <xpath expr="//notebook/page[1]/field/tree/field[@name='analytic_tag_ids']" position="attributes">
@@ -225,9 +226,9 @@
             <xpath expr="//field[@name='amount_total_signed']" position="after">
                 <field name="amount_tax" string="VAT" sum="Total"/>
             </xpath>
-             <xpath expr="//field[@name='number']" position="replace">
+            <xpath expr="//field[@name='number']" position="replace">
             </xpath>
-             <xpath expr="//field[@name='partner_id']" position="before">
+            <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="number" string="Bill No"/>
             </xpath>
         </field>
@@ -273,8 +274,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
-        <field name="domain">[('type','in',('in_invoice',
-            'in_refund')),('state','in',('open','paid')),('is_asset','=',0)]
+        <field name="domain">[('type','in',('in_invoice','in_refund')),
+            ('state','in',('open','paid')),('is_asset','=',0)]
         </field>
         <field name="context">{'default_type': 'in_invoice','type': 'in_invoice',
             'journal_type': 'purchase','search_default_status':1}
