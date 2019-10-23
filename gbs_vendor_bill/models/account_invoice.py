@@ -348,9 +348,7 @@ class AccountInvoiceLine(models.Model):
     quantity = fields.Float(digits=0)
     invoice_line_tax_ids = fields.Many2many(string='VAT')
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price',store=True, readonly=True, copy=False)
-    narration = fields.Text('Narration')
-
-
+    asset_name = fields.Char(string='Asset Name')
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):

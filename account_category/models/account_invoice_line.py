@@ -34,7 +34,7 @@ class AccountInvoiceLine(models.Model):
             batch_seq = {val: key for key, val in enumerate(self.invoice_id.invoice_line_ids.ids)}
             for rec in range(0, int(self.quantity)):
                 vals = {
-                    'name': self.name,
+                    'name': self.asset_name or '/',
                     'code': self.invoice_id.number or False,
                     'category_id': self.asset_category_id.id,
                     'asset_type_id': self.asset_type_id.id,

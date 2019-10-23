@@ -345,7 +345,7 @@ class GenerateCBSJournalSuccess(models.Model):
     start_date = fields.Datetime(string='Start Datetime', required=True)
     stop_date = fields.Datetime(string='Stop Datetime', required=True)
     file_name = fields.Char(string='File Path', required=True)
-    upload_file = fields.Binary(string="Upload File", attachment=True)
+    upload_file = fields.Binary(string="Generated File", attachment=True)
     time = fields.Text(string='Time', compute="_compute_time")
     status = fields.Boolean(default=False, string='Status')
     journal_count = fields.Char(string="Total Journals", compute='_compute_journal', store=True)

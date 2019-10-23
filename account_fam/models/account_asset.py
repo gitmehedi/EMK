@@ -14,7 +14,7 @@ DATE_FORMAT = "%Y-%m-%d"
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
-    _order = "asset_seq desc"
+    _order = "id DESC,allocation_status ASC"
 
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'close': [('readonly', False)]})
     category_id = fields.Many2one(string='Asset Type', required=True, change_default=True, readonly=True)
