@@ -11,6 +11,7 @@ class AccountMove(models.Model):
     ref = fields.Char(states={'posted': [('readonly', True)]}, track_visibility='onchange')
     state = fields.Selection(track_visibility='onchange')
     narration = fields.Text(states={'posted': [('readonly', True)]}, track_visibility='onchange')
+    partner_id = fields.Many2one(string='Vendor')
     operating_unit_id = fields.Many2one(string='Branch', track_visibility='onchange',
                                         states={'posted': [('readonly', True)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)

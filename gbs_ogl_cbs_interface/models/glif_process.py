@@ -379,7 +379,13 @@ class ServerFileProcess(models.Model):
                         continue
 
                     name = rec['DESC-TEXT-24'].strip() if not rec['DESC-TEXT-24'].strip() else '/'
-                    amount = float(rec['LCY-AMT'][:14] + '.' + rec['LCY-AMT'][14:17])
+
+                    decimal_bef = rec['LCY-AMT'][-17:-3]
+                    decimal_after = rec['LCY-AMT'][-3:]
+                    if not decimal_bef.isdigit() or not decimal_after.isdigit():
+                        errors += format_error(errObj.id, index, 'Amount [{0}] has invalid value'.format(rec['LCY-AMT']))
+                    else:
+                        amount = float(decimal_bef + '.' + decimal_after)
 
                     posting_date = rec['POSTING-DATE']
                     if not posting_date:
@@ -484,7 +490,6 @@ class ServerFileProcess(models.Model):
                             line['credit'] = 0.0
                             debit += amount
                         journal_entry += format_journal(line)
-
         if len(errors) > 0:
             try:
                 query = """

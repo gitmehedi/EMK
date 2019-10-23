@@ -30,6 +30,9 @@
                     <field name="servicing_channel_id"
                            options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
                 </xpath>
+                <xpath expr="//button[@name='post']" position="attributes">
+                    <attribute name="string">Approve</attribute>
+                </xpath>
                 <xpath expr="//sheet/notebook/page/field/tree/field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath>
@@ -131,7 +134,6 @@
                   id="menu_action_move_journal_line_cbs_form"
                   parent="account.menu_action_move_journal_line_form"
                   groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"
-
                   sequence="5"/>
     </data>
 </odoo>
