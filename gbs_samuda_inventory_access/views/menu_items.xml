@@ -43,5 +43,10 @@
                 sequence="2" groups="base.group_system"/>
 
 
+        <record id="purchase.view_product_template_purchase_buttons_from" model="ir.ui.view">
+                <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user')),(4,ref('stock.group_stock_user'))]"/>
+        </record>
+
+
     </data>
 </odoo>
