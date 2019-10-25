@@ -11,11 +11,12 @@
                         <group>
                             <field name="upload_file" filename="name" invisible="1"/>
                             <field name="name"/>
+                            <field name="move_id"/>
+                        </group>
+                        <group>
                             <field name="start_date"/>
                             <field name="stop_date"/>
                             <field name="time"/>
-                        </group>
-                        <group>
                             <field name="status" invisible="1"/>
                         </group>
                     </group>

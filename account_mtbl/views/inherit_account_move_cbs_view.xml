@@ -30,6 +30,7 @@
                     <field name="servicing_channel_id"
                            options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
                 </xpath>
+
                 <xpath expr="//button[@name='post']" position="attributes">
                     <attribute name="string">Approve</attribute>
                 </xpath>

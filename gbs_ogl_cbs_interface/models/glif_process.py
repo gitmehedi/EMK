@@ -7,6 +7,7 @@ from datetime import datetime as dt
 from contextlib import contextmanager
 from odoo import exceptions, models, fields, api, _, tools
 from odoo.exceptions import ValidationError
+import numpy as np
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -378,14 +379,7 @@ class ServerFileProcess(models.Model):
                         errors += format_error(errObj.id, index, '{0} has invalid value'.format(rec))
                         continue
 
-                    name = rec['DESC-TEXT-24'].strip() if not rec['DESC-TEXT-24'].strip() else '/'
-
-                    decimal_bef = rec['LCY-AMT'][-17:-3]
-                    decimal_after = rec['LCY-AMT'][-3:]
-                    if not decimal_bef.isdigit() or not decimal_after.isdigit():
-                        errors += format_error(errObj.id, index, 'Amount [{0}] has invalid value'.format(rec['LCY-AMT']))
-                    else:
-                        amount = float(decimal_bef + '.' + decimal_after)
+                    name = rec['DESC-TEXT-24'].strip() if rec['DESC-TEXT-24'].strip() else '/'
 
                     posting_date = rec['POSTING-DATE']
                     if not posting_date:
@@ -463,6 +457,15 @@ class ServerFileProcess(models.Model):
                         else:
                             comp_val = coa[comp_code]
 
+                    decimal_bef = rec['LCY-AMT'][-17:-3]
+                    decimal_after = rec['LCY-AMT'][-3:]
+                    if not decimal_bef.isdigit() or not decimal_after.isdigit():
+                        errors += format_error(errObj.id, index,
+                                               'Amount [{0}] has invalid value'.format(rec['LCY-AMT']))
+                    else:
+                        lcy_amt = np.float128(decimal_bef + '.' + decimal_after)
+                        amount = "{:.2f}".format(lcy_amt)
+
                     if len(errors) == 0:
                         line = {
                             'move_id': move_id.id,
@@ -481,14 +484,14 @@ class ServerFileProcess(models.Model):
                             'company_id': self.env.user.company_id.id,
                         }
 
-                        if rec['JOURNAL-SEQ'] == '01':
-                            line['debit'] = 0.0
-                            line['credit'] = amount
-                            credit += amount
-                        elif rec['JOURNAL-SEQ'] == '02':
+                        if rec['JOURNAL-SEQ'] == '02':
                             line['debit'] = amount
                             line['credit'] = 0.0
-                            debit += amount
+                            debit += lcy_amt
+                        elif rec['JOURNAL-SEQ'] == '01':
+                            line['debit'] = 0.0
+                            line['credit'] = amount
+                            credit += lcy_amt
                         journal_entry += format_journal(line)
         if len(errors) > 0:
             try:
@@ -508,22 +511,28 @@ class ServerFileProcess(models.Model):
                 analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,company_id)  
                 VALUES %s""" % journal_entry[:-1]
                 self.env.cr.execute(query)
-                missmatch = round(debit - credit, 2)
-                if move_id.state == 'draft' and abs(missmatch) == 0.0:
+
+                missmatch = "{:.2f}".format(debit - credit)
+                if move_id.state == 'draft' and missmatch == '0.00':
                     move_id.sudo().post()
                     errObj.write({'state': 'resolved'})
                     return move_id
                 else:
-                    msg = 'DEBIT: {0}, CREDIT: {1} and UNBALANCED VALUE: {2}'.format(debit, credit, missmatch)
+                    if debit-credit > 0:
+                        msg = 'Debit is greater than Credit amount. Please register a Credit entry with amount {0}'.format(
+                            missmatch)
+                    else:
+                        msg = 'Credit is greater than Debit amount. Please register a Dedit entry with amount {0}'.format(
+                            missmatch)
                     errObj.line_ids.create({'line_id': errObj.id,
-                                            'line_no': 'UNBALANCED VALUE',
+                                            'line_no': 'Unequal Amount',
                                             'details': msg})
             except Exception:
-                if move_id.state == 'draft':
-                    move_id.unlink()
+                # if move_id.state == 'draft':
+                #     move_id.unlink()
                 errObj.line_ids.create({'line_id': errObj.id,
-                                        'line_no': 'UNKNOWN ERROR',
-                                        'details': 'Please check your file.'})
+                                        'line_no': 'Unknown Error',
+                                        'details': 'Cannot create unbalanced journal entry.'})
 
         return False
 

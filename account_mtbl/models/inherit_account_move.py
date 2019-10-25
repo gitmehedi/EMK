@@ -1,3 +1,4 @@
+import numpy as np
 from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
@@ -19,17 +20,32 @@ class AccountMove(models.Model):
     is_sync = fields.Boolean(default=False, help='OGL continuously send data to CBS for journal sync.')
     is_cr = fields.Boolean(default=False)
     user_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    total_debit = fields.Char(compute='_compute_sum', string="Total Debit")
+    total_credit = fields.Char(compute='_compute_sum', string="Total Credit")
+    missmatch_value = fields.Char(compute='_compute_sum', string="Amount Variance")
+
+    @api.depends('line_ids')
+    def _compute_sum(self):
+        for rec in self:
+            prec = self.env['decimal.precision'].precision_get('Account')
+            self._cr.execute("""\
+                            SELECT  TRUNC(SUM(debit),2) AS debit,
+                                    TRUNC(SUM(credit),2) AS credit,
+                                    sum(debit) - sum(credit) as missmatch
+                            FROM account_move_line                 
+                            WHERE move_id = %s
+                            """ % rec.id)
+
+            for val in self.env.cr.fetchall():
+                rec.total_debit = "{:.2f}".format(val[0])
+                rec.total_credit = "{:.2f}".format(val[1])
+                rec.missmatch_value = "{:.2f}".format(val[2])
 
     @api.multi
     def post(self):
         if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         return super(AccountMove, self).post()
-
-    @api.constrains('date')
-    def _check_date(self):
-        if self.date > fields.Datetime.now():
-            raise ValidationError(_('Journal Date should not be greater than current datetime.'))
 
 
 class AccountMoveLine(models.Model):
