@@ -36,12 +36,12 @@ class AccountAssetCategory(models.Model):
                                        help="Account used to record the purchase of the asset at its original price.")
     asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation', required=True,
                                                 domain=[('deprecated', '=', False)], track_visibility='onchange')
-    account_depreciation_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
+    account_depreciation_id = fields.Many2one('account.account', track_visibility='onchange', required=False,
                                               domain=[('deprecated', '=', False)],
                                               string='Accumulated Depreciation A/C', )
     account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
-                                                      track_visibility='onchange',
-                                                      required=True, domain=[('internal_type', '=', 'other'),
+                                                      track_visibility='onchange', required=False,
+                                                      domain=[('internal_type', '=', 'other'),
                                                                              ('deprecated', '=', False)],
                                                       oldname='account_income_recognition_id',
                                                       help="Account used in the periodical entries, to record a part of the asset as expense.")
@@ -65,6 +65,8 @@ class AccountAssetCategory(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    no_depreciation = fields.Boolean(string="No Depreciation", default=False, readonly=True,
+                                     states={'draft': [('readonly', False)]})
 
     @api.model
     def create(self, vals):
@@ -144,11 +146,26 @@ class AccountAssetCategory(models.Model):
         else:
             self.method_period = 1
 
+    @api.onchange('no_depreciation')
+    def onchange_no_depreciation(self):
+        if self.no_depreciation:
+            self.account_depreciation_expense_id = None
+            self.account_depreciation_id = None
+
     @api.one
     def name_get(self):
         if self.code:
             name = '[%s] %s' % (self.code, self.name)
         return (self.id, name)
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
+        names2 = []
+        if name:
+            domain = ['|', ('code', '=', name), ('name', '=', name + '%')]
+            names2 = self.search(domain, limit=limit).name_get()
+        return list(set(names1) | set(names2))[:limit]
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -283,10 +300,10 @@ class HistoryAccountAssetCategory(models.Model):
     asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation',
                                                 domain=[('deprecated', '=', False)])
     account_depreciation_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
-                                              string='Accumulated Depreciation A/C', )
+                                              string='Accumulated Depreciation A/C',required=False)
     account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
                                                       domain=[('internal_type', '=', 'other'),
-                                                              ('deprecated', '=', False)])
+                                                              ('deprecated', '=', False)],required=False)
     account_asset_loss_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                             string='Asset Loss A/C')
     account_asset_gain_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],

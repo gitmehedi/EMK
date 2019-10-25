@@ -68,6 +68,12 @@ class ProductProduct(models.Model):
                     self.supplier_taxes_id = [(6, 0, requested.supplier_taxes_id.ids)]
                 if requested.default_code:
                     self.default_code = requested.default_code
+                if requested.type=='asset':
+                    self.type = requested.type
+                    self.asset_category_id = requested.asset_category_id.id
+                    self.asset_type_id = requested.asset_type_id.id
+                else:
+                    self.type = requested.type
 
                 self.pending = False
                 self.approver_id = self.env.user.id
@@ -128,6 +134,9 @@ class HistoryProductProduct(models.Model):
                                          string='Vendor Taxes',
                                          domain=[('type_tax_use', '=', 'purchase')])
     default_code = fields.Char('Internal Reference')
+    type = fields.Selection([('consu','Product'),('service','Service'),('asset','Assets')],string='Product Type')
+    asset_type_id = fields.Many2one('account.asset.category', string='Asset Type')
+    asset_category_id = fields.Many2one('account.asset.category', string='Asset Category')
     line_id = fields.Many2one('product.product', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')

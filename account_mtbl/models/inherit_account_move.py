@@ -27,25 +27,31 @@ class AccountMove(models.Model):
     @api.depends('line_ids')
     def _compute_sum(self):
         for rec in self:
-            prec = self.env['decimal.precision'].precision_get('Account')
-            self._cr.execute("""\
-                            SELECT  TRUNC(SUM(debit),2) AS debit,
-                                    TRUNC(SUM(credit),2) AS credit,
-                                    sum(debit) - sum(credit) as missmatch
-                            FROM account_move_line                 
-                            WHERE move_id = %s
-                            """ % rec.id)
+            if rec.journal_id:
+                prec = self.env['decimal.precision'].precision_get('Account')
+                self._cr.execute("""\
+                                SELECT  SUM(debit) AS debit,
+                                        SUM(credit) AS credit,
+                                        sum(debit) - sum(credit) as missmatch
+                                FROM account_move_line                 
+                                WHERE move_id = %s
+                                """ % rec.id)
 
-            for val in self.env.cr.fetchall():
-                rec.total_debit = "{:.2f}".format(val[0])
-                rec.total_credit = "{:.2f}".format(val[1])
-                rec.missmatch_value = "{:.2f}".format(val[2])
+                for val in self.env.cr.fetchall():
+                    rec.total_debit = "{:.2f}".format(val[0])
+                    rec.total_credit = "{:.2f}".format(val[1])
+                    rec.missmatch_value = "{:.2f}".format(val[2])
 
     @api.multi
     def post(self):
         if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         return super(AccountMove, self).post()
+
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date > fields.Datetime.now():
+            raise ValidationError(_('Journal Date should not be greater than current datetime.'))
 
 
 class AccountMoveLine(models.Model):

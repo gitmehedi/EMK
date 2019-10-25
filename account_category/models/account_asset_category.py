@@ -17,8 +17,6 @@ class AccountAssetCategory(models.Model):
     category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
     parent_id = fields.Many2one('account.asset.category', string="Asset Type Name", ondelete="restrict",
                                 track_visibility='onchange')
-    no_depreciation = fields.Boolean(string="No Depreciation", default=False, readonly=True,
-                                     states={'draft': [('readonly', False)]})
 
     @api.onchange('parent_id')
     def onchange_asset_type(self):
@@ -26,8 +24,8 @@ class AccountAssetCategory(models.Model):
             self.journal_id = self.parent_id.journal_id
             self.asset_suspense_account_id = self.parent_id.asset_suspense_account_id
             self.account_asset_id = self.parent_id.account_asset_id
-            self.account_depreciation_id = self.parent_id.account_depreciation_id
-            self.account_depreciation_expense_id = self.parent_id.account_depreciation_expense_id
+            self.account_depreciation_id = self.parent_id.account_depreciation_id if self.parent_id.account_depreciation_id else None
+            self.account_depreciation_expense_id = self.parent_id.account_depreciation_expense_id if self.parent_id.account_depreciation_expense_id else None
             self.account_asset_loss_id = self.parent_id.account_asset_loss_id
             self.account_asset_gain_id = self.parent_id.account_asset_gain_id
             self.asset_sale_suspense_account_id = self.parent_id.asset_sale_suspense_account_id
@@ -37,6 +35,7 @@ class AccountAssetCategory(models.Model):
             self.method_number = self.parent_id.method_number
             self.method_progress_factor = self.parent_id.method_progress_factor
             self.code = self.parent_id.code
+            self.no_depreciation = self.parent_id.no_depreciation
 
     @api.model
     def create(self, vals):

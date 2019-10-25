@@ -7,9 +7,8 @@ class AccountInvoice(models.Model):
     _inherit = ['account.invoice', 'ir.needaction_mixin']
     _order = 'number DESC, id desc'
 
-    entity_service_id = fields.Many2one('product.product', string='Service/Product', readonly=True,
-                                        states={'draft': [('readonly', False)]},
-                                        track_visibility='onchange')
+    entity_service_id = fields.Many2one('product.product', string='Product/Service', readonly=True,
+                                        states={'draft': [('readonly', False)]}, track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', 'Branch',
                                         default=lambda self:
                                         self.env['res.users'].
@@ -45,7 +44,7 @@ class AccountInvoice(models.Model):
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_amount',
                                      store=True, readonly=True, track_visibility='onchange', copy=False)
     total_amount_with_vat = fields.Float('Total', compute='_compute_total_amount_with_vat',
-                                        store=True, readonly=True, track_visibility='onchange', copy=False)
+                                         store=True, readonly=True, track_visibility='onchange', copy=False)
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice',
@@ -80,12 +79,11 @@ class AccountInvoice(models.Model):
                 line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
 
     @api.one
-    @api.depends('amount_untaxed', 'amount_tax','vat_selection')
+    @api.depends('amount_untaxed', 'amount_tax', 'vat_selection')
     def _compute_total_amount_with_vat(self):
         for invoice in self:
             if invoice.amount_untaxed and invoice.amount_tax:
                 invoice.total_amount_with_vat = invoice.amount_untaxed + invoice.amount_tax
-
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
@@ -254,7 +252,7 @@ class AccountInvoice(models.Model):
                 'partner_id': self.partner_id.id or False,
                 'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[
                     0].sub_operating_unit_id else None,
-                }
+            }
         }
 
     def action_paid_invoice(self):
@@ -328,10 +326,10 @@ class AccountInvoiceLine(models.Model):
         if taxes:
             if self.invoice_id.vat_selection == 'mushok' and self.invoice_line_tax_ids[0].mushok_amount > 0.0:
                 self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
+                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
             elif self.invoice_id.vat_selection == 'vds_authority' and self.invoice_line_tax_ids[0].vds_amount > 0.0:
                 self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
             else:
                 self.mushok_vds_amount = False
 
@@ -347,7 +345,7 @@ class AccountInvoiceLine(models.Model):
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
     quantity = fields.Float(digits=0)
     invoice_line_tax_ids = fields.Many2many(string='VAT')
-    mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price',store=True, readonly=True, copy=False)
+    mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price', store=True, readonly=True, copy=False)
     asset_name = fields.Char(string='Asset Name')
 
     @api.onchange('operating_unit_id')
@@ -364,6 +362,13 @@ class AccountInvoiceLine(models.Model):
     def _check_supplier_taxes_id(self):
         if self.invoice_line_tax_ids and len(self.invoice_line_tax_ids) > 1:
             raise Warning('You can select one VAT!')
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        vals = super(AccountInvoiceLine, self)._onchange_product_id()
+        if self.product_id:
+            self.asset_name = self.product_id.name
+        return vals
 
 
 class AccountInvoiceTax(models.Model):
@@ -387,7 +392,7 @@ class ProductProduct(models.Model):
                 inv_obj = self.env['account.invoice'].search([('id', '=', line['invoice_id'])])
                 res.update({'operating_unit_id': inv_obj.operating_unit_id.id})
             if line.get('is_tdsvat_payable'):
-                res.update({'is_tdsvat_payable': line.get('is_tdsvat_payable'),'tax_type': line.get('tax_type')})
+                res.update({'is_tdsvat_payable': line.get('is_tdsvat_payable'), 'tax_type': line.get('tax_type')})
         return res
 
 

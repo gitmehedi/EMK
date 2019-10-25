@@ -272,8 +272,8 @@ class AccountAssetAsset(models.Model):
                 'amount_currency': company_currency != current_currency and line.amount or 0.0,
             }
             move_vals = {
-                'ref': line.asset_id.code,
-                'date': depreciation_date or False,
+                'ref': line.asset_id.asset_seq,
+                'date': fields.Datetime.now(),
                 'journal_id': category_id.journal_id.id,
                 'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
             }

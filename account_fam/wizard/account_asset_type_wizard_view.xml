@@ -23,22 +23,24 @@
                         <field name="asset_suspense_account_id"
                                domain="[('internal_type','!=','view')]"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                        <field name="account_depreciation_expense_id"
+                        <field name="asset_sale_suspense_account_id"
                                domain="[('internal_type','!=','view')]"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                     <group>
-                        <field name="account_depreciation_id"
-                               domain="[('internal_type','!=','view')]"
-                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="account_asset_loss_id"
                                domain="[('internal_type','!=','view')]"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="account_asset_gain_id"
                                domain="[('internal_type','!=','view')]"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                        <field name="asset_sale_suspense_account_id"
+                        <field name="account_depreciation_expense_id"
                                domain="[('internal_type','!=','view')]"
+                               attrs="{'invisible': [('no_depreciation', '=', True )]}"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="account_depreciation_id"
+                               domain="[('internal_type','!=','view')]"
+                               attrs="{'invisible': [('no_depreciation', '=', True )]}"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                 </group>

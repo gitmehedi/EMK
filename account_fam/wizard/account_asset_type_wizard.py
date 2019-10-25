@@ -28,10 +28,10 @@ class AccountAssetCategoryWizard(models.TransientModel):
     asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation',
                                                 domain=[('deprecated', '=', False)])
     account_depreciation_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
-                                              string='Accumulated Depreciation A/C', )
+                                              string='Accumulated Depreciation A/C',required=False)
     account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
                                                       domain=[('internal_type', '=', 'other'),
-                                                              ('deprecated', '=', False)])
+                                                              ('deprecated', '=', False)],required=False)
     account_asset_loss_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                             string='Asset Loss A/C')
     account_asset_gain_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
@@ -39,6 +39,12 @@ class AccountAssetCategoryWizard(models.TransientModel):
     asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
     no_depreciation = fields.Boolean(string="No Depreciation", default=False)
+
+    @api.onchange('no_depreciation')
+    def onchange_no_depreciation(self):
+        if self.no_depreciation:
+            self.account_depreciation_expense_id = None
+            self.account_depreciation_id = None
 
     @api.multi
     def act_change_name(self):
