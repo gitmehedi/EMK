@@ -84,8 +84,12 @@
               id="account_operating_unit_report_trialbalance_">
         <xpath expr="//div[@class='row mt32']/div[4]" position="replace">
             <div class="col-xs-4" t-if="data['operating_units']">
-                <strong>Branch:</strong>
+                <strong>Branch (Include):</strong>
                 <p t-esc="data['operating_units']"/>
+            </div>
+            <div class="col-xs-4" t-if="data['ex_operating_units']">
+                <strong>Branch (Exclude):</strong>
+                <p t-esc="data['ex_operating_units']"/>
             </div>
         </xpath>
     </template>

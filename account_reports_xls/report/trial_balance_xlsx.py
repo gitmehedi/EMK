@@ -11,6 +11,7 @@ class TrialBalanceXLSX(ReportXlsx):
         used_context = {
             'lang': self.env.context['lang'],
             'operating_unit_ids': docs['operating_unit_ids'].ids,
+            'ex_operating_unit_ids': docs['ex_operating_unit_ids'].ids,
             'date_from': docs['date_from'],
             'date_to': docs['date_to'],
             'journal_ids': docs['journal_ids'].ids,
@@ -62,8 +63,12 @@ class TrialBalanceXLSX(ReportXlsx):
             worksheet.write('F6', target)
 
         if docs['operating_unit_ids']:
-            worksheet.write('F8', 'Branch:', bold)
+            worksheet.write('F8', 'Branch (Include):', bold)
             worksheet.merge_range('F9:F10', ', '.join([val.name for val in docs['operating_unit_ids']]), format)
+
+        if docs['ex_operating_unit_ids']:
+            worksheet.write('G8', 'Branch (Exclude):', bold)
+            worksheet.merge_range('G9:G10', ', '.join([val.name for val in docs['ex_operating_unit_ids']]), format)
 
         row, col = 11, 0
 
