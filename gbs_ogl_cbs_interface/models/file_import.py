@@ -50,7 +50,7 @@ class GBSFileImport(models.Model):
         record_date = datetime.strftime(datetime.now(), "%d%m%Y_%H%M%S_")
         process_date = datetime.strftime(datetime.now(), "%d%m%Y_")
         unique = str(randint(100, 999))
-        filename = "MDC_00001_" + record_date + process_date + unique + "_SAL.txt"
+        filename = "MDC_00001_" + record_date + process_date + unique + ".txt"
 
         def generate_file(record):
             file_path = os.path.join(record.source_path, filename)
@@ -64,11 +64,12 @@ class GBSFileImport(models.Model):
                     trn_ref_no = str(val.reference_no[:8] if val.reference_no else '').zfill(8)
                     date_array = val.date if val.date else fields.Datetime.now()[:10]
                     date_array = date_array.split("-")
+                    cost_centre = '0000'
                     if date_array:
                         date = date_array[2] + date_array[1] + date_array[0]
 
-                    record = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}\r\n".format(trn_type, account_no, amount, narration,
-                                                                            trn_ref_no, date)
+                    record = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, account_no, amount, narration,
+                                                                            trn_ref_no, date,cost_centre)
                     file.write(record)
                     val.write({'state': 'done'})
                 self.write({'state': 'processed'})
