@@ -33,6 +33,9 @@
                     <button name="%(action_account_period_wizard)d" string="Edit" type="action"
                             class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                    <button name="%(action_account_period_close)d" string="Close a Period" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
                             groups="mtbl_access.group_mtbl_sys_admin"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>

@@ -6,7 +6,10 @@
         <field name="arch" type="xml">
             <form string="Assets Allocation">
                 <group>
-                    <field name="date"/>
+                    <group>
+                        <field name="date"/>
+                        <field name="sure"/>
+                    </group>
                 </group>
                 <footer>
                     <button name="depreciate" string="Depreciate" type="object" class="btn-primary"/>
