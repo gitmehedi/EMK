@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="tds_vat_payment_tree">
+        <field name="name">tds.vat.payment.tree</field>
+        <field name="model">tds.vat.payment</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="TDS &amp; VAT Payments" create="false" delete="false"
+                  decoration-info="state == 'draft'" decoration-success="state == 'approved'"
+                  decoration-muted="state in ('cancel') "
+                  decoration-bf="state in ('approved') ">
+                <field name="sequence" widget="handle"/>
+                <field name="date"/>
+                <field name="operating_unit_id"/>
+                <field name="credit_account_id"/>
+                <field name="amount"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="tds_vat_payment_form">
+        <field name="name">tds.vat.payment.form</field>
+        <field name="model">tds.vat.payment</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="TDS &amp; VAT Payments" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_approve" string="Approve" type="object"
+                            class="oe_highlight" states="draft"/>
+                    <button name="action_reject" string="Reject" type="object"
+                            states="draft"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="credit_account_id"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="operating_unit_id"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="TDS &amp; VAT">
+                                <field name="account_move_line_ids" widget="one2many_list">
+                                    <tree string="TDS &amp; VAT">
+                                        <field name="name" string="TDS &amp; VAT Description"/>
+                                        <field name="product_id" string="Service"/>
+                                        <field name="statement_id" invisible="1"/>
+                                        <field name="partner_id" string="Vendor"/>
+                                        <field name="operating_unit_id" string="Branch"/>
+                                        <field name="credit" sum="Total Credit" string="Amount"/>
+                                    </tree>
+                                    <form string="TDS &amp; VAT">
+                                        <group>
+                                            <group>
+                                                <field name="product_id" string="Service"/>
+                                                <field name="credit" sum="Total Credit" string="Amount"/>
+                                            </group>
+                                            <group>
+                                                <field name="partner_id" string="Vendor"/>
+                                                <field name="operating_unit_id" string="Branch"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="tds_vat_payment_filter" model="ir.ui.view">
+        <field name="name">tds.vat.payment.filter</field>
+        <field name="model">tds.vat.payment</field>
+        <field name="arch" type="xml">
+            <search string="TDS &amp; VAT Payments">
+                <field name="state"/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tds_vat_payments" model="ir.actions.act_window">
+        <field name="name">TDS &amp; VAT Payments</field>
+        <field name="res_model">tds.vat.payment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tds_vat_payment_tree"/>
+        <field name="search_view_id" ref="tds_vat_payment_filter"/>
+        <field name="context">{'search_default_draft':1}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Payments is empty.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="menu_tds_vat_payment"
+            name="TDS &amp; VAT Payments"
+            parent="main_menu_tds_vat"
+            sequence="4"
+            action="action_tds_vat_payments"
+            groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+</odoo>

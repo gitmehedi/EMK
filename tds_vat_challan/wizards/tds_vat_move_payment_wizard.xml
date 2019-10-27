@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="tds_vat_move_payment_wizard" model="ir.ui.view">
+        <field name="name">tds.vat.move.payment.wizard</field>
+        <field name="model">tds.vat.move.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Payment Instruction">
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="credit_account_id" domain="[('internal_type','=','other')]"
+                                   options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group>
+                            <field name="instruction_date" invisible="1"/>
+                            <field name="operating_unit_id"
+                                   options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                            <!--<field name="sub_operating_unit_id"-->
+                                   <!--options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>-->
+                        </group>
+                    </group>
+                <footer>
+                    <button string="Confirm" name="action_validate" type="object"
+                            confirm="Are you sure to generate payment instruction?" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

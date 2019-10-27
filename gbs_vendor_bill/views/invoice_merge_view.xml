@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gbs_invoice_merge" model="ir.ui.view">
+        <field name="name">GBS Merger Vendor Invoice</field>
+        <field name="model">invoice.merge</field>
+        <field name="inherit_id" ref="account_invoice_merge.view_invoice_merge" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='keep_references']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_invoice']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//p[1]" position="replace">
+                <p>
+                    Please note that:
+                    <br/><br/>
+                    Invoices will only be merged if:
+                    <br/>
+                    * Invoices are in draft
+                    <br/>
+                    * Invoices belong to the same partner
+                    <br/><br/>
+                    Lines will only be merged if:
+                    <br/>
+                    * Invoice lines are exactly the same except Description &amp; Quantity.
+                    <br/>
+                </p>
+            </xpath>
+        </field>
+    </record>
+
+    <act_window name="Merge Vendor Invoice"
+                id="account_invoice_merge.action_view_invoice_merge"
+                res_model="invoice.merge"
+                src_model="account.invoice" view_mode="form" target="new"
+                multi="True" key2="client_action_multi"
+    />
+</odoo>
+
