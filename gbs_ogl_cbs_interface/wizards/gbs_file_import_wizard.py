@@ -142,7 +142,7 @@ class GBSFileImportWizard(models.TransientModel):
             val['account_no'] = line['account'].strip()
             line['type'] = line['type'].strip().lower()
 
-            if len(val['account_no']) in [13, 16] and not val['account_no'].isdigit():
+            if len(val['account_no']) not in [13, 16] or not val['account_no'].isdigit():
                 raise ValidationError(
                     _("Please check the file with values {0} and line no {1} !".format(val['account_no'], line_no)))
 
@@ -150,8 +150,6 @@ class GBSFileImportWizard(models.TransientModel):
             if not val['narration']:
                 raise ValidationError(
                     _("Please check the file with values {0} and line no {1} !".format(val['narration'], line_no)))
-
-            val['reference_no'] = line['reference'].strip()
 
             date = self.date_validate(line['date'].strip())
             if not date:
@@ -163,6 +161,7 @@ class GBSFileImportWizard(models.TransientModel):
                 val['date'] = datetime.datetime.strptime(line['date'].strip(), '%d/%m/%Y')
 
             cus_type = line['type'].strip().lower()
+
             if not cus_type:
                 raise ValidationError(
                     _("Please check the file with values {0} and line no {1} !".format(cus_type, line_no)))
@@ -180,9 +179,11 @@ class GBSFileImportWizard(models.TransientModel):
             if line['type'] == 'cr':
                 val['credit'] = amount
                 val['debit'] = 0
+                val['type_journal'] = 'cr'
             if line['type'] == 'dr':
                 val['credit'] = 0
                 val['debit'] = amount
+                val['type_journal'] = 'dr'
             val['type'] = type
 
             vals.append((0, 0, val))

@@ -40,13 +40,16 @@
                             <page string="Values">
                                 <field name="import_lines">
                                     <tree string="List" editable="bottom">
-                                        <field name="type"/>
+                                        <field name="type" invisible="1"/>
+                                        <field name="type_journal"/>
                                         <field name="name" invisible="1"/>
                                         <field name="account_no"/>
                                         <field name="narration"/>
-                                        <field name="reference_no"/>
-                                        <field name="debit" sum="debit"/>
-                                        <field name="credit" sum="credit"/>
+                                        <field name="debit" sum="debit"
+                                               attrs="{'readonly':[('type_journal','=','cr')],'required':[('type_journal','=','dr')]}"/>
+                                        <field name="credit"
+                                               attrs="{'readonly':[('type_journal','=','dr')],'required':[('type_journal','=','cr')]}"
+                                               sum="credit"/>
                                         <field name="date"/>
                                     </tree>
                                     <form string="Values">
@@ -58,7 +61,6 @@
                                                 <field name="type"/>
                                                 <field name="account_no"/>
                                                 <field name="narration"/>
-                                                <field name="reference_no"/>
                                             </group>
                                             <group>
                                                 <field name="date"/>

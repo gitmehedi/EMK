@@ -12,7 +12,7 @@
     <record id="glif_file_seq" model="ir.sequence">
         <field name="name">Salary File Import</field>
         <field name="code">salary.file.sequence</field>
-        <field name="prefix">MTB/SAL/</field>
+        <field name="prefix">MTB/BULK/</field>
         <field name="padding">10</field>
         <field name="number_increment" eval="1"/>
         <field name="company_id" eval="False"/>

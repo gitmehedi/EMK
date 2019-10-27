@@ -33,14 +33,11 @@ class GBSFileImport(models.Model):
             rec.credit = float(sum([val.credit for val in rec.import_lines]))
             rec.mismatch_amount = float(rec.debit - rec.credit)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('code', 'New') == 'New':
-            vals['code'] = self.env['ir.sequence'].next_by_code('salary.file.sequence') or ''
-        return super(GBSFileImport, self).create(vals)
-
     @api.multi
     def action_process(self):
+        if not self.code:
+            self.code = self.env['ir.sequence'].next_by_code('salary.file.sequence') or ''
+
         if self.mismatch_amount != 0:
             debit = format(self.debit, '.2f')
             credit = format(self.credit, '.2f')
@@ -61,15 +58,15 @@ class GBSFileImport(models.Model):
                     amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                     amount = ''.join(amount.split('.')).zfill(16)
                     narration = val.narration[:50]
-                    trn_ref_no = str(val.reference_no[:8] if val.reference_no else '').zfill(8)
+                    trn_ref_no = ''.join(self.code.split('/'))[-8:]
                     date_array = val.date if val.date else fields.Datetime.now()[:10]
                     date_array = date_array.split("-")
                     cost_centre = '0000'
                     if date_array:
                         date = date_array[2] + date_array[1] + date_array[0]
-
-                    record = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, account_no, amount, narration,
-                                                                            trn_ref_no, date,cost_centre)
+                    record = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, account_no, amount,
+                                                                                 narration,
+                                                                                 trn_ref_no, date, cost_centre)
                     file.write(record)
                     val.write({'state': 'done'})
                 self.write({'state': 'processed'})
@@ -129,11 +126,15 @@ class GBSFileImportLine(models.Model):
     name = fields.Char(string='Name')
     account_no = fields.Char(string='Account No', required=True)
     narration = fields.Char(string='Narration', required=True)
-    reference_no = fields.Char(string='Reference No')
-    date = fields.Date(string='Date', required=True)
+    date = fields.Date(string='Date', default=fields.Datetime.now, readonly=True)
     debit = fields.Float(string='Debit', )
     credit = fields.Float(string='Credit')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft', string='Status')
+    type_journal = fields.Selection([
+        ('cr', 'CR'),
+        ('dr', 'DR'),
+    ], string='Type', required=True)
+
     type = fields.Selection([
         ('01', 'Customer Credit'),
         ('51', 'Customer Debit '),
@@ -143,8 +144,22 @@ class GBSFileImportLine(models.Model):
 
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
 
-    @api.constrains('account_no', 'debit', 'credit')
+    @api.constrains('account_no', 'type_journal', 'debit', 'credit')
     def _check_unique_constrain(self):
         if self.account_no or self.debit or self.credit:
             if not self.account_no.isdigit():
-                raise Warning('Account No should be number!')
+                raise ValidationError('Account No should be number!')
+            if len(self.account_no) not in [13, 16]:
+                raise ValidationError('Account No should be should be 13 or 16!')
+
+    @api.onchange('account_no', 'type_journal')
+    def _onchange_account(self):
+        if self.account_no:
+            if self.type_journal:
+                if len(self.account_no) == 13:
+                    self.type = '01' if self.type_journal == 'cr' else '51'
+                if len(self.account_no) == 16:
+                    self.type = '04' if self.type_journal == 'cr' else '54'
+
+            if len(self.account_no) not in [13, 16]:
+                raise ValidationError('Account No should be should be 13 or 16!')
