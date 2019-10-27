@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem
+                name="Customer Collection Batch"
+                action="action_account_payment_batch"
+                id="menu_account_payment_batch"
+                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                parent="account.menu_finance_receivables"
+                sequence="20"/>
+    </data>
+</odoo>

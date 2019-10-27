@@ -37,8 +37,8 @@ class GbsProformaInvoice(models.AbstractModel):
         data['currency'] = pi_obj.currency_id.name
         data['packing'] = pi_obj.pack_type.packaging_mode
 
-        if pi_obj.region_type == 'foreign' and pi_obj.terms_id and pi_obj.terms_id.name:
-            data['terms_str'] = pi_obj.terms_id.name
+        if pi_obj.region_type == 'foreign' and pi_obj.account_payment_term_id and pi_obj.account_payment_term_id.name:
+            data['terms_str'] = pi_obj.account_payment_term_id.name
         else:
             data['terms_str'] = "By Equivalent Letter Of Credit"
 

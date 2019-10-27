@@ -221,10 +221,15 @@ class DeviceDetail(models.Model):
 
 
     def is_live_server(self, app_url):
-        if self.getBaseURL() == app_url:
-            return True
-        else:
-            return False
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print app_url
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        # For Time being we close the code besause app_url are not properly set
+        # if self.getBaseURL() == app_url:
+        #     return True
+        # else:
+        #     return False
+        return True
 
     def getBaseURL(self):
 

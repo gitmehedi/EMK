@@ -1,1 +1,3 @@
 import inherit_account_invoice
+import inherit_account_payment
+import inherit_res_currency

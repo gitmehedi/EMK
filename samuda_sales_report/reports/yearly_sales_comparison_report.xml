@@ -30,7 +30,7 @@
                                         <th rowspan="2" class="text-center">Product Name</th>
                                         <t t-foreach="header_data" t-as="head">
                                             <th colspan="2" class="text-center">
-                                                <t t-esc="head['name']"/>
+                                                <t t-esc="head_value"/>
                                             </th>
                                         </t>
                                     </tr>
@@ -55,10 +55,10 @@
                                                 </td>
                                                 <t t-foreach="header_data" t-as="head">
                                                     <td class="text-right">
-                                                        <span class="text-nowrap" t-esc="formatLang(prod_value['months'][head['sl']]['qty'])"/>
+                                                        <span class="text-nowrap" t-esc="formatLang(prod_value['months'][head]['qty'])"/>
                                                     </td>
                                                     <td class="text-right">
-                                                        <span class="text-nowrap" t-esc="formatLang(prod_value['months'][head['sl']]['val'])"/>
+                                                        <span class="text-nowrap" t-esc="formatLang(prod_value['months'][head]['val'])"/>
                                                     </td>
                                                 </t>
                                             </tr>

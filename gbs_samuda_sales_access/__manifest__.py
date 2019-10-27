@@ -31,6 +31,7 @@
         'product_sales_pricelist',
         'hidden_admin',
         'lc_sales_product_local',
+        'gbs_payment_term',
     ],
 
 

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_monthly_delivery_product"
+                model="res.partner"
+                string="Monthly Delivery Statement (Product Wise)"
+                report_type="qweb-pdf"
+                menu="False"
+                name="samuda_sales_report.report_monthly_delivery_product"
+                file="samuda_sales_report.report_monthly_delivery_product"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+        <template id="report_monthly_delivery_product">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Product Wise Monthly Delivery Statement (<span t-esc="data['type']" />)</h4>
+                                <br/>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        <strong>Product Name : </strong>
+                                        <span t-esc="data['product_name']"/>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <strong>Month : </strong>
+                                        <span t-esc="data['month_name']"/>, <span t-esc="data['year']"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center" rowspan="2">Customer Name</th>
+                                        <th class="text-center"></th>
+                                        <th class="text-center" t-att-colspan="len(header_data) + 1" >Date</th>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center"></th>
+                                        <t t-foreach="header_data" t-as="head">
+                                            <th class="text-center"><t t-esc="head"/></th>
+                                        </t>
+                                        <th class="text-center">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data" t-as="dic">
+                                        <tr>
+                                            <td rowspan="2"><t t-esc="dic_value['customer_name']"/></td>
+                                            <td>Qty (MT)</td>
+                                            <t t-foreach="dic_value['qty']" t-as="qty_dic">
+                                                <td class="text-right">
+                                                    <t t-esc="formatLang(qty_dic_value)"/>
+                                                </td>
+                                            </t>
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="formatLang(total[dic]['qty'])"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Val (BDT)</td>
+                                            <t t-foreach="dic_value['val']" t-as="val_dic">
+                                                <td class="text-right">
+                                                    <t t-esc="formatLang(val_dic_value)"/>
+                                                </td>
+                                            </t>
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="formatLang(total[dic]['val'])"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <!-- Grand Total -->
+                                    <t t-if="report_data">
+                                        <tr>
+                                            <td rowspan="2"><strong class="text-nowrap">Grand Total</strong></td>
+                                            <td>Qty (MT)</td>
+                                            <t t-foreach="header_data" t-as="head">
+                                                <td class="text-right">
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(report_data[key]['qty'][head] for key in report_data))"/>
+                                                </td>
+                                            </t>
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="formatLang(sum(total[key]['qty'] for key in total))"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Val (BDT)</td>
+                                            <t t-foreach="header_data" t-as="head">
+                                                <td class="text-right">
+                                                    <strong class="text-nowrap" t-esc="formatLang(sum(report_data[key]['val'][head] for key in report_data))"/>
+                                                </td>
+                                            </t>
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="formatLang(sum(total[key]['val'] for key in total))"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <!-- Grand Total -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -17,10 +17,10 @@ class CashReceivedReport(models.AbstractModel):
 
         data['partner_id'] = docs.partner_id.name
         data['is_cash_payment'] = docs.is_cash_payment
-        data['deposited_bank'] = docs.deposited_bank
+        data['deposited_bank'] = docs.deposited_bank.name
         data['bank_branch'] = docs.bank_branch
         data['cheque_amount'] = docs.amount
-        data['sale_order_id'] = docs.sale_order_id.name
+        # data['sale_order_id'] = docs.sale_order_id.name
         data['payment_date'] = docs.payment_date
         data['mr_sl_no'] = seq
         data['company_id'] = docs.company_id.name

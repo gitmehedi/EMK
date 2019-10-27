@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="monthly_delivery_executive_wizard_view" model="ir.ui.view">
+			<field name="name">monthly.delivery.executive.wizard</field>
+			<field name="model">monthly.delivery.executive.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+                        <group>
+                            <field name="executive_id"
+                                   options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="month"/>
+                        </group>
+                        <group>
+                            <field name="year"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+        <record id="action_monthly_delivery_executive_wizard" model="ir.actions.act_window">
+			<field name="name">Monthly Delivery Statement (Executive Wise)</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">monthly.delivery.executive.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+    </data>
+</odoo>

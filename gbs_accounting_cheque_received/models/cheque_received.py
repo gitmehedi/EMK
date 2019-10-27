@@ -26,7 +26,7 @@ class ChequeReceived(models.Model):
     @api.multi
     def _get_name(self):
         for n in self:
-            n.name = 'Customer Payments'
+            n.name = 'Customer Collection'
 
     name = fields.Char(string='Name', compute='_get_name')
 
