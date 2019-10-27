@@ -6,7 +6,7 @@
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Import File">
-                <group string="Please Select File for Import Data">
+                <group string="Please Select File for Bulk Import Data">
                     <group>
                         <field name="aml_data" filename="aml_fname"/>
                     </group>
@@ -27,7 +27,7 @@
     </record>
 
     <record id="action_gbs_file_import_wizard" model="ir.actions.act_window">
-        <field name="name">Import Data</field>
+        <field name="name">Bulk Import Data</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">gbs.file.import.wizard</field>
         <field name="view_type">form</field>

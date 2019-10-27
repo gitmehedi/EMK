@@ -19,8 +19,8 @@ class DateRange(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             string='Status', track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('close', 'Close'), ('reject', 'Rejected')],
+                             default='draft', string='Status', track_visibility='onchange')
     date_start = fields.Date(string='Start Date', required=True, readonly=True,
                              states={'draft': [('readonly', False)]})
     date_end = fields.Date(string='End Date', required=True, readonly=True,
@@ -109,7 +109,8 @@ class DateRange(models.Model):
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -137,5 +138,4 @@ class HistoryAccountPeriod(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('date.range', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
-
+                             default='pending', string='Status')
