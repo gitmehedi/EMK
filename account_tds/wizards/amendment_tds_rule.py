@@ -82,16 +82,16 @@ class TDSRulesWizard(models.TransientModel):
                     for line in rec.line_ids:
                         if line.range_from >= line.range_to:
                             raise ValidationError(
-                                "Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
+                                "Please Check Your Slab Range!! \n 'From Range' Never Be Greater Than or Equal to 'To Range'")
                         elif line.rate < 0:
                             raise ValidationError(
-                                "Please Check Your Slab's Tds Rate!! \n Rate never take  negative value!")
+                                "Please Check Your Slab's Rate!! \n Rate never take negative value!")
                         elif line.range_from < 0:
                             raise ValidationError(
-                                "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                                "Please Check Your Slab's 'From Range'!! \n 'From Range' never take negative value!")
                         elif line.range_to < 0:
                             raise ValidationError(
-                                "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                                "Please Check Your Slab's 'To Range'!! \n 'To Range' never take negative value!")
 
 
 class TDSRuleWizardLine(models.TransientModel):

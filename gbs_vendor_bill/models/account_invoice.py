@@ -85,11 +85,6 @@ class AccountInvoice(models.Model):
             if invoice.amount_untaxed and invoice.amount_tax:
                 invoice.total_amount_with_vat = invoice.amount_untaxed + invoice.amount_tax
 
-    @api.onchange('operating_unit_id')
-    def _onchange_operating_unit_id(self):
-        for invoice in self:
-            invoice.sub_operating_unit_id = []
-
     @api.onchange("reference")
     def onchange_strips(self):
         if self.reference:
@@ -348,15 +343,15 @@ class AccountInvoiceLine(models.Model):
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price', store=True, readonly=True, copy=False)
     asset_name = fields.Char(string='Asset Name')
 
-    @api.onchange('operating_unit_id')
-    def _onchange_operating_unit_id(self):
-        for line in self:
-            line.sub_operating_unit_id = []
-            sub_operating_unit_ids = self.env['sub.operating.unit'].search([
-                ('operating_unit_id', '=', self.operating_unit_id.id)]).ids
-            return {'domain': {
-                'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
-            }}
+    # @api.onchange('operating_unit_id')
+    # def _onchange_operating_unit_id(self):
+    #     for line in self:
+    #         line.sub_operating_unit_id = []
+    #         sub_operating_unit_ids = self.env['sub.operating.unit'].search([
+    #             ('operating_unit_id', '=', self.operating_unit_id.id)]).ids
+    #         return {'domain': {
+    #             'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
+    #         }}
 
     @api.constrains('invoice_line_tax_ids')
     def _check_supplier_taxes_id(self):
@@ -366,8 +361,10 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         vals = super(AccountInvoiceLine, self)._onchange_product_id()
+        self.sub_operating_unit_id = []
         if self.product_id:
             self.asset_name = self.product_id.name
+            vals['domain']['sub_operating_unit_id'] = [('product_id', '=', self.product_id.id)]
         return vals
 
 

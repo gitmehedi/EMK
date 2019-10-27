@@ -17,7 +17,8 @@ class SubOperatingUnitWizard(models.TransientModel):
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    # operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    product_id = fields.Many2one('product.product', string='Product')
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -41,7 +42,7 @@ class SubOperatingUnitWizard(models.TransientModel):
 
         self.env['history.sub.operating.unit'].create(
             {'change_name': self.name,
-             'operating_unit_id': self.operating_unit_id.id,
+             'product_id': self.product_id.id,
              'status': self.status,
              'request_date': fields.Datetime.now(),
              'line_id': id})

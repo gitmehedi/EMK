@@ -31,7 +31,9 @@
                             <field name="pending" invisible="True"/>
                         </group>
                         <group>
-                            <field name="operating_unit_id"
+                            <!--<field name="operating_unit_id"-->
+                                   <!--options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>-->
+                            <field name="product_id"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                             <field name="maker_id" invisible="1"/>
                             <field name="approver_id" invisible="1"/>
@@ -66,7 +68,8 @@
                   decoration-bf="state in ('approve',)">
                 <field name="name"/>
                 <field name="code"/>
-                <field name="operating_unit_id"/>
+                <!--<field name="operating_unit_id"/>-->
+                <field name="product_id"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -80,9 +83,11 @@
                 <field name="name" string="Sub Operating Unit"/>
                 <field name="pending" string="Pending"/>
                 <field name="code" string="Code"/>
-                <field name="operating_unit_id" string="Branch"/>
+                <!--<field name="operating_unit_id" string="Branch"/>-->
+                <field name="product_id" string="Product"/>
                 <group string="Group By">
-                    <filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>
+                    <!--<filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>-->
+                    <filter name="product_id" string="Product" context="{'group_by': 'product_id'}"/>
                     <filter string="Pending" name="pending" icon="terp-personal"
                             domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                     <filter string="Rejected" name="state" icon="terp-personal"
@@ -114,5 +119,3 @@
               parent="account.account_account_menu" sequence="15"
               groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
 </odoo>
-
-        <!--"search_default_operating_unit_id":1,-->

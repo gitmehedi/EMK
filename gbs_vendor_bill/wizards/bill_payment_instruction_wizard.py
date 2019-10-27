@@ -31,15 +31,15 @@ class BillPaymentInstructionWizard(models.TransientModel):
                 raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "
                                         "Remaining balance is %s") % (rem_amount))
 
-    @api.onchange('credit_operating_unit_id')
-    def _onchange_operating_unit_id(self):
-        if self.credit_operating_unit_id:
-            self.credit_sub_operating_unit_id = []
-            credit_sub_operating_unit_ids = self.env['sub.operating.unit'].search([
-                ('operating_unit_id', '=', self.credit_operating_unit_id.id)])
-            return {'domain': {
-                'credit_sub_operating_unit_id': [('id', 'in', credit_sub_operating_unit_ids.ids)]
-            }}
+    # @api.onchange('credit_operating_unit_id')
+    # def _onchange_operating_unit_id(self):
+    #     if self.credit_operating_unit_id:
+    #         self.credit_sub_operating_unit_id = []
+    #         credit_sub_operating_unit_ids = self.env['sub.operating.unit'].search([
+    #             ('operating_unit_id', '=', self.credit_operating_unit_id.id)])
+    #         return {'domain': {
+    #             'credit_sub_operating_unit_id': [('id', 'in', credit_sub_operating_unit_ids.ids)]
+    #         }}
 
     @api.multi
     def action_validate(self):
