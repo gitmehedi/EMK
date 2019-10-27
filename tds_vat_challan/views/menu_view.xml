@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="main_menu_tds_vat" name="TDS &amp; VAT Operations"  parent="account.menu_finance" sequence="5"
+     groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+</odoo>

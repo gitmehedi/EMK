@@ -1,0 +1,253 @@
+<odoo>
+    <data>
+        <record id="tds_vat_move_payable_tree" model="ir.ui.view">
+            <field name="name">tds.vat.move.payable.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="TDS &amp; VAT Payable" create="false" delete="false">
+                    <field name="date" string="Bill Date"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
+                    <field name="product_id" string="Service"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="operating_unit_id" string="Branch"/>
+                    <field name="credit" sum="Total Credit" string="Amount"/>
+                    <button name="action_do_pending" string="Pending" type="object" icon="fa-minus-square text-danger"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tds_vat_move_pending_tree" model="ir.ui.view">
+            <field name="name">tds.vat.move.pending.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="TDS &amp; VAT Pending" create="false" delete="false">
+                    <field name="date" string="Bill Date"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
+                    <field name="product_id" string="Service"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="operating_unit_id" string="Branch"/>
+                    <field name="credit" sum="Total Credit" string="Amount"/>
+                    <button name="action_undo_pending" string="Undo" type="object" icon="fa-repeat text-success"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tds_vat_move_paid_tree" model="ir.ui.view">
+            <field name="name">tds.vat.move.paid.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="TDS &amp; VAT Paid" create="false" delete="false">
+                    <field name="date" string="Bill Date"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
+                    <field name="product_id" string="Service"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="operating_unit_id" string="Branch"/>
+                    <field name="credit" sum="Total Credit" string="Amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tds_vat_move_pending_paid_tree" model="ir.ui.view">
+            <field name="name">tds.vat.move.pending.paid.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="Waiting for Payment Approval" create="false" delete="false">
+                    <field name="date" string="Bill Date"/>
+                    <field name="name" string="TDS &amp; VAT Description"/>
+                    <field name="product_id" string="Service"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="operating_unit_id" string="Branch"/>
+                    <field name="credit" sum="Total Credit" string="Amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tds_move_line_filter" model="ir.ui.view">
+            <field name="name">tds.move.line.filter</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <search string="Search TDS &amp; VAT">
+                    <field name="tax_type" string="Type" filter_domain="[('tax_type','ilike',self)]"/>
+                    <separator/>
+                    <filter name="tax_type" string="Type" context="{'group_by': 'tax_type'}"/>
+                    <filter string="VAT" name="vat" domain="[('tax_type', '=', 'vat')]"/>
+                    <filter string="TDS" name="tds" domain="[('tax_type', '=', 'tds')]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Service" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string='Vendor' domain="[]" context="{'group_by' : 'partner_id'}"/>
+                        <filter string="Branch" domain="[]" context="{'group_by':'operating_unit_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_tds_vat_payable" model="ir.actions.act_window">
+            <field name="name">TDS &amp; VAT Payable</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="tds_vat_move_payable_tree"/>
+            <field name="search_view_id" ref="tds_move_line_filter"/>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_tax_type':1}</field>
+            <field name="domain">[('tax_type', 'in', ['vat','tds']),
+                ('is_tdsvat_payable', '=', True),
+                ('is_pending', '=', False),
+                ('is_challan', '=', False),
+                ('pending_for_paid', '=', False),
+                ('is_paid', '=', False),
+                ('credit', '>', 0)]
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Nothing for payable.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_tds_vat_pending" model="ir.actions.act_window">
+            <field name="name">TDS &amp; VAT Pending</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="tds_vat_move_pending_tree"/>
+            <field name="search_view_id" ref="tds_move_line_filter"/>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_tax_type':1}</field>
+            <field name="domain">[('tax_type', 'in', ['vat','tds']),
+                ('is_pending', '=', True),
+                ('is_challan', '=', False),
+                ('pending_for_paid', '=', False),
+                ('is_paid', '=', False),
+                ('credit', '>', 0)]
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Nothing in pending.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_tds_vat_paid" model="ir.actions.act_window">
+            <field name="name">TDS &amp; VAT Paid</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="tds_vat_move_paid_tree"/>
+            <field name="search_view_id" ref="tds_move_line_filter"/>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_tax_type':1}</field>
+            <field name="domain">[('tax_type', 'in', ['vat','tds']),
+                ('is_pending', '=', False),
+                ('is_challan', '=', False),
+                ('pending_for_paid', '=', False),
+                ('is_paid', '=', True),
+                ('credit', '>', 0)]
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Nothing in pending payment approval.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="TDS &amp; VAT Payable" parent="main_menu_tds_vat"
+                  action="action_tds_vat_payable" id="tds_vat_payable_menu" sequence="1"
+                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+
+        <menuitem name="TDS &amp; VAT Pending" parent="main_menu_tds_vat"
+                  action="action_tds_vat_pending" id="tds_vat_pending_menu" sequence="101"
+                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+
+        <menuitem name="TDS &amp; VAT Paid" parent="main_menu_tds_vat"
+                  action="action_tds_vat_paid" id="tds_vat_paid_menu" sequence="5"
+                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+
+        <record id="action_open_account_move_pending" model="ir.actions.server">
+            <field name="name">Do Pending</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="code">action = model.action_do_pending(records)</field>
+        </record>
+
+        <record id="ir_values_open_account_move_pending" model="ir.values">
+            <field name="name">ir_values_open_account_move_pending</field>
+            <field name="action_id" ref="action_open_account_move_pending" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_open_account_move_pending'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_account_move_line" />
+            <field name="model">account.move.line</field>
+            <field name="key2">client_action_multi</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record id="action_account_move_pending_undo" model="ir.actions.server">
+            <field name="name">Undo Pending</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="code">action = model.action_undo_pending(records)</field>
+        </record>
+
+        <record id="ir_values_account_move_pending_undo" model="ir.values">
+            <field name="name">ir_values_account_move_pending_undo</field>
+            <field name="action_id" ref="action_account_move_pending_undo" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_account_move_pending_undo'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_account_move_line" />
+            <field name="model">account.move.line</field>
+            <field name="key2">client_action_multi</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record id="action_open_account_move_payment" model="ir.actions.server">
+            <field name="name">Payments</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="code">action = model.action_account_move_payment(records)</field>
+        </record>
+
+        <record id="ir_values_open_account_move_payment" model="ir.values">
+            <field name="name">ir_values_open_account_move_payment</field>
+            <field name="action_id" ref="action_open_account_move_payment" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_open_account_move_payment'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_account_move_line" />
+            <field name="model">account.move.line</field>
+            <field name="key2">client_action_multi</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record id="action_open_challan_generate" model="ir.actions.server">
+            <field name="name">Generate</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="code">action = model.action_challan_generate_open(records)</field>
+        </record>
+
+        <record id="ir_values_open_challan_generate" model="ir.values">
+            <field name="name">ir_values_open_challan_generate</field>
+            <field name="action_id" ref="action_open_challan_generate" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_open_challan_generate'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_account_move_line" />
+            <field name="model">account.move.line</field>
+            <field name="key2">client_action_multi</field>
+            <field name="multi">True</field>
+        </record>
+
+        <!--<act_window id="action_account_invoice_confirm1"-->
+                    <!--multi="True"-->
+                    <!--key2="client_action_multi" name="Generate"-->
+                    <!--groups="account.group_account_manager"-->
+                    <!--res_model="tds.challan.ou.selection.wizard" src_model="account.move.line"-->
+                    <!--view_mode="form" target="new" view_type="form"/>-->
+
+
+    </data>
+</odoo>

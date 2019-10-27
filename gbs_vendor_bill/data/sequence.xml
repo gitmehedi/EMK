@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <function name="write" model="ir.model.data">
+        <!-- First we need to find the record...-->
+        <function name="search" model="ir.model.data">
+            <value
+                    eval="[('name', '=', 'Payments supplier invoices sequence')]"
+            />
+        </function>
+        <!-- ...and temporarily set the noupdate field to False-->
+        <value eval="{'noupdate': False}" />
+
+    </function>
+    <!--<function name="write" model="ir.sequence">-->
+        <!--&lt;!&ndash; First we need to find the record...&ndash;&gt;-->
+        <!--<function name="search" model="ir.sequence">-->
+            <!--<value-->
+                    <!--eval="[('name', '=', 'sequence_payment_supplier_invoice')]"-->
+            <!--/>-->
+        <!--</function>-->
+        <!--&lt;!&ndash; ...and temporarily set the noupdate field to False&ndash;&gt;-->
+        <!--<value eval="{'noupdate': False}" />-->
+
+    <!--</function>-->
+
+
+    <record id="account.sequence_payment_supplier_invoice" model="ir.sequence">
+        <field name="padding">5</field>
+    </record>
+
+</odoo>
