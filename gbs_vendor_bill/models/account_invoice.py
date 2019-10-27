@@ -353,15 +353,6 @@ class AccountInvoiceLine(models.Model):
     #             'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
     #         }}
 
-    # @api.onchange('product_id')
-    # def _onchange_product_id(self):
-    #     res = super(AccountInvoiceLine, self)._onchange_product_id()
-    #     self.sub_operating_unit_id = []
-    #     if self.product_id:
-    #         sub_operating_unit_ids = \
-    #             self.env['sub.operating.unit'].search([('product_id', '=', self.product_id.id)]).ids
-    #     return res
-
     @api.constrains('invoice_line_tax_ids')
     def _check_supplier_taxes_id(self):
         if self.invoice_line_tax_ids and len(self.invoice_line_tax_ids) > 1:
@@ -370,8 +361,10 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         vals = super(AccountInvoiceLine, self)._onchange_product_id()
+        self.sub_operating_unit_id = []
         if self.product_id:
             self.asset_name = self.product_id.name
+            vals['domain']['sub_operating_unit_id'] = [('product_id', '=', self.product_id.id)]
         return vals
 
 
