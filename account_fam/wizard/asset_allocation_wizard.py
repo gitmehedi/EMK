@@ -36,17 +36,17 @@ class AssetAllocationWizard(models.TransientModel):
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre')
 
-    @api.onchange('to_operating_unit_id')
-    def onchange_operating_unit(self):
-        if self.operating_unit_id:
-            res = {}
-            self.sub_operating_unit_id = 0
-            sub_operating = self.env['sub.operating.unit'].search(
-                [('operating_unit_id', '=', self.to_operating_unit_id.id)])
-            res['domain'] = {
-                'sub_operating_unit_id': [('id', 'in', sub_operating.ids)]
-            }
-            return res
+    # @api.onchange('to_operating_unit_id')
+    # def onchange_operating_unit(self):
+    #     if self.operating_unit_id:
+    #         res = {}
+    #         self.sub_operating_unit_id = 0
+    #         sub_operating = self.env['sub.operating.unit'].search(
+    #             [('operating_unit_id', '=', self.to_operating_unit_id.id)])
+    #         res['domain'] = {
+    #             'sub_operating_unit_id': [('id', 'in', sub_operating.ids)]
+    #         }
+    #         return res
 
     @api.multi
     def allocation(self):

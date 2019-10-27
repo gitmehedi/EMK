@@ -19,8 +19,8 @@ class SubOperatingUnit(models.Model):
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange',
-                                        readonly=True, states={'draft': [('readonly', False)]})
+    # operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, track_visibility='onchange',
+    #                                     readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              track_visibility='onchange', string='Status')
 
@@ -29,17 +29,27 @@ class SubOperatingUnit(models.Model):
 
     maker_id = fields.Many2one('res.users','Maker',default=lambda self: self.env.user.id,track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker',track_visibility='onchange')
+    product_id = fields.Many2one('product.product', string='Product', required=True, track_visibility='onchange',
+                                 readonly=True, states={'draft': [('readonly', False)]})
 
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
         if self.name or self.code:
+            # name = self.search(
+            #     [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), ('operating_unit_id', '=', self.operating_unit_id.id), '|',
+            #      ('active', '=', True), ('active', '=', False)])
+            # code = self.search(
+            #     [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'),('operating_unit_id', '=', self.operating_unit_id.id), '|', ('active', '=', True), ('active', '=', False)])
             name = self.search(
-                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), ('operating_unit_id', '=', self.operating_unit_id.id), '|',
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'),
+                 ('product_id', '=', self.product_id.id), '|',
                  ('active', '=', True), ('active', '=', False)])
             code = self.search(
-                [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'),('operating_unit_id', '=', self.operating_unit_id.id), '|', ('active', '=', True), ('active', '=', False)])
+                [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'),
+                 ('product_id', '=', self.product_id.id), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
-                raise Warning(_('[Unique Error] Name must be unique witin a branch!'))
+                raise Warning(_('[Unique Error] Name must be unique within a Product!'))
             if len(code) > 1:
                 raise Warning(_('[Unique Error] Code must be unique!'))
             if len(self.code) != 3 or not self.code.isdigit():
@@ -111,7 +121,8 @@ class SubOperatingUnit(models.Model):
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
-                    'operating_unit_id': self.operating_unit_id.id if not requested.operating_unit_id.id else requested.operating_unit_id.id,
+                    # 'operating_unit_id': self.operating_unit_id.id if not requested.operating_unit_id.id else requested.operating_unit_id.id,
+                    'product_id': self.product_id.id if not requested.product_id.id else requested.product_id.id,
                     'pending': False,
                     'active': requested.status,
                     'approver_id': self.env.user.id,
@@ -154,7 +165,8 @@ class HistorySubOperatingUnit(models.Model):
     _order = 'id desc'
 
     change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
-    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    # operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    product_id = fields.Many2one('product.product', string='Product')
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
