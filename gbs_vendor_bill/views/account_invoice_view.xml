@@ -27,7 +27,7 @@
                 <attribute name="string">Cost Centre</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="groups"></attribute>
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
