@@ -217,31 +217,34 @@ class PaymentInstruction(models.Model):
 
     @api.multi
     def action_approve(self):
-        if self.state == 'draft' and not self.is_sync and self.code not in self._payments:
+        payment = self.search([('id', '=', self.id), ('is_sync', '=', False), ('state', '=', 'draft')])
+        if not payment:
+            raise ValidationError(_("Payment Instruction [{0}] already submitted.".format(self.code)))
+
+        if payment.state == 'draft' and not payment.is_sync and payment.code not in self._payments:
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
             self._payments.append(self.code)
-            response = self.env['soap.process'].call_payment_api(self)
+            response = self.env['soap.process'].call_payment_api(payment)
             if 'error_code' in response:
                 self._payments.remove(self.code)
                 err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
                     self.code, response['error_code'], response['error_message'])
                 raise ValidationError(_(err_text))
             elif response == 'OkMessage':
-                self.write({'state': 'approved'})
-                if self.invoice_id:
-                    for line in self.invoice_id.suspend_security().move_id.line_ids:
+                payment.write({'state': 'approved'})
+                if payment.invoice_id:
+                    for line in payment.invoice_id.suspend_security().move_id.line_ids:
                         if line.account_id.internal_type in ('receivable', 'payable'):
                             if line.amount_residual < 0:
                                 val = -1
                             else:
                                 val = 1
-                            line.write({'amount_residual': ((line.amount_residual) * val) - self.amount})
+                            line.write({'amount_residual': ((line.amount_residual) * val) - payment.amount})
 
                 self._payments.remove(self.code)
             else:
                 self._payments.remove(self.code)
         else:
-            raise ValidationError(_("Payment Instruction {0} is in processing stage.".format(self.code)))
-
+            raise ValidationError(_("Payment Instruction [{0}] is processing.".format(self.code)))
