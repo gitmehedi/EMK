@@ -221,12 +221,16 @@ class PaymentInstruction(models.Model):
             self._payments.append(self.code)
             response = self.env['soap.process'].call_payment_api(self)
             if 'error_code' in response:
+                self._payments.remove(self.code)
                 err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
                     self.code, response['error_code'], response['error_message'])
                 raise ValidationError(_(err_text))
             elif response == 'OkMessage':
                 res = super(PaymentInstruction, self).action_approve()
-            self._payments.remove(self.code)
+                self._payments.remove(self.code)
+            else:
+                self._payments.remove(self.code)
         else:
             raise ValidationError(_("Payment Instruction {0} is in processing stage.".format(self.code)))
+
 
