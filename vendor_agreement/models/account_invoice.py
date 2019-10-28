@@ -37,6 +37,9 @@ class AccountInvoice(models.Model):
         if amount:
             for line in move_lines:
                 if line[2]['name'] == '/':
+                    if amount>line[2]['credit']:
+                        amount = line[2]['credit']
+                        self.agreement_adjusted_amount = amount
                     line[2]['credit'] = line[2]['credit'] - amount
             if self.env.user.company_id.head_branch_id:
                 branch_id = self.env.user.company_id.head_branch_id.id
