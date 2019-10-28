@@ -1,6 +1,6 @@
 import requests, json
 
-from odoo import models, fields, api, _, tools
+from odoo import models, fields, api, _, tools, SUPERUSER_ID
 from xml.etree import ElementTree
 import lxml.etree as etree
 from odoo.exceptions import ValidationError
@@ -147,7 +147,7 @@ class SOAPProcess(models.Model):
             'FrmAcct': from_bgl,
             'Amt': record.amount,
             'ToAcct': to_bgl,
-            'StmtNarr': "Payment Instruction",
+            'StmtNarr': str(record.code),
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                <soapenv:Header/>
@@ -218,6 +218,9 @@ class PaymentInstruction(models.Model):
     @api.multi
     def action_approve(self):
         if self.state == 'draft' and not self.is_sync and self.code not in self._payments:
+            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+
             self._payments.append(self.code)
             response = self.env['soap.process'].call_payment_api(self)
             if 'error_code' in response:
@@ -226,11 +229,19 @@ class PaymentInstruction(models.Model):
                     self.code, response['error_code'], response['error_message'])
                 raise ValidationError(_(err_text))
             elif response == 'OkMessage':
-                res = super(PaymentInstruction, self).action_approve()
+                self.write({'state': 'approved'})
+                if self.invoice_id:
+                    for line in self.invoice_id.suspend_security().move_id.line_ids:
+                        if line.account_id.internal_type in ('receivable', 'payable'):
+                            if line.amount_residual < 0:
+                                val = -1
+                            else:
+                                val = 1
+                            line.write({'amount_residual': ((line.amount_residual) * val) - self.amount})
+
                 self._payments.remove(self.code)
             else:
                 self._payments.remove(self.code)
         else:
             raise ValidationError(_("Payment Instruction {0} is in processing stage.".format(self.code)))
-
 

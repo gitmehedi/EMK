@@ -364,14 +364,13 @@ class ServerFileProcess(models.Model):
             if journal_type not in jrnl.keys():
                 raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
 
-            move_id = self.env['account.move'].create({
+            move_id = {
                 'journal_id': jrnl['CBS'],
                 'date': fields.Datetime.now(),
                 'is_cbs': True,
                 'ref': 'Journal generated from CBS using {0}'.format(file),
                 'line_ids': [],
-                'amount': 0
-            })
+            }
             for worksheet_index in file_ins:
                 index += 1
                 if len(worksheet_index) > 2:
@@ -415,7 +414,7 @@ class ServerFileProcess(models.Model):
                     sg_code = rec['GL-CLASS-CODE']['SEGMENT']
                     if sg_code not in sg.keys():
                         if sg_code == '0':
-                            sg_val = 'NULL'
+                            sg_val = False
                         else:
                             errors += format_error(errObj.id, index,
                                                    'SEGMENT [{0}]  has invalid value'.format(sg_code))
@@ -425,7 +424,7 @@ class ServerFileProcess(models.Model):
                     ac_code = rec['GL-CLASS-CODE']['AC']
                     if ac_code not in ac.keys():
                         if ac_code == '00':
-                            ac_val = 'NULL'
+                            ac_val = False
                         else:
                             errors += format_error(errObj.id, index, 'AC [{0}]  has invalid value'.format(ac_code))
                     else:
@@ -434,7 +433,7 @@ class ServerFileProcess(models.Model):
                     sc_code = rec['GL-CLASS-CODE']['SC']
                     if sc_code not in sc.keys():
                         if sc_code == '00':
-                            sc_val = 'NULL'
+                            sc_val = False
                         else:
                             errors += format_error(errObj.id, index, 'SC [{0}]  has invalid value'.format(sc_code))
                     else:
@@ -443,7 +442,7 @@ class ServerFileProcess(models.Model):
                     cc_code = rec['GL-CLASS-CODE']['COST_CENTRE']
                     if cc_code not in cc.keys():
                         if cc_code == '000':
-                            cc_val = 'NULL'
+                            cc_val = False
                         else:
                             errors += format_error(errObj.id, index,
                                                    'COST_CENTRE [{0}]  has invalid value'.format(cc_code))
@@ -469,7 +468,6 @@ class ServerFileProcess(models.Model):
 
                     if len(errors) == 0:
                         line = {
-                            'move_id': move_id.id,
                             'name': name,
                             'account_id': comp_val,
                             'journal_id': jrnl['CBS'],
@@ -479,20 +477,21 @@ class ServerFileProcess(models.Model):
                             'acquiring_channel_id': ac_val,
                             'servicing_channel_id': sc_val,
                             'operating_unit_id': branch_val,
-                            'date': posting_date,
-                            'date_maturity': posting_date,
+                            'date': fields.Datetime.now(),
+                            'date_maturity': fields.Datetime.now(),
                             'company_id': self.env.user.company_id.id,
                         }
 
                         if rec['JOURNAL-SEQ'] == '02':
-                            line['debit'] = amount
+                            line['debit'] = lcy_amt
                             line['credit'] = 0.0
                             debit += lcy_amt
                         elif rec['JOURNAL-SEQ'] == '01':
                             line['debit'] = 0.0
-                            line['credit'] = amount
+                            line['credit'] = lcy_amt
                             credit += lcy_amt
-                        journal_entry += format_journal(line)
+                        move_id['line_ids'].append((0, 0, line))
+                        print "---------------------", index
         if len(errors) > 0:
             try:
                 query = """
@@ -505,38 +504,35 @@ class ServerFileProcess(models.Model):
                                         'details': 'Please check your file.'})
         else:
             try:
-                query = """
-                INSERT INTO account_move_line 
-                (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
-                analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,company_id)  
-                VALUES %s""" % journal_entry[:-1]
-                self.env.cr.execute(query)
-
-                missmatch = "{:.2f}".format(debit - credit)
-                if move_id:
-                    move_id.amount = debit
-                if move_id.state == 'draft':
-                    move_id.sudo().post()
+                # query = """
+                # INSERT INTO account_move_line
+                # (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
+                # analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,company_id)
+                # VALUES %s""" % journal_entry[:-1]
+                # self.env.cr.execute(query)
+                #
+                # missmatch = "{:.2f}".format(debit - credit)
+                move_obj = self.env['account.move'].create(move_id)
+                if move_obj.state == 'draft':
+                    move_obj.sudo().post()
                     errObj.write({'state': 'resolved'})
-                    return move_id
-                else:
-                    if debit - credit > 0:
-                        msg = 'Debit is greater than Credit amount. Please register a Credit entry with amount {0}'.format(
-                            missmatch)
-                    else:
-                        msg = 'Credit is greater than Debit amount. Please register a Dedit entry with amount {0}'.format(
-                            missmatch)
-                    errObj.line_ids.create({'line_id': errObj.id,
-                                            'line_no': 'Unequal Amount',
-                                            'details': msg})
+                    return move_obj
+                # else:
+                #     if debit-credit > 0:
+                #         msg = 'Debit is greater than Credit amount. Please register a Credit entry with amount {0}'.format(
+                #             missmatch)
+                #     else:
+                #         msg = 'Credit is greater than Debit amount. Please register a Dedit entry with amount {0}'.format(
+                #             missmatch)
+                #     errObj.line_ids.create({'line_id': errObj.id,
+                #                             'line_no': 'Unequal Amount',
+                #                             'details': msg})
             except Exception:
-                missmatch = move_id.missmatch_value
-                if move_id.state == 'draft':
-                    move_id.unlink()
+                # if move_id.state == 'draft':
+                #     move_id.unlink()
                 errObj.line_ids.create({'line_id': errObj.id,
                                         'line_no': 'Unknown Error',
-                                        'details': 'Cannot create unbalanced journal entry. Amount Variance is {0}'.format(
-                                            missmatch)})
+                                        'details': 'Cannot create unbalanced journal entry.'})
 
         return False
 

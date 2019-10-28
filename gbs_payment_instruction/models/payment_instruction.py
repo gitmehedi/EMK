@@ -38,12 +38,7 @@ class PaymentInstruction(models.Model):
             vals['code'] = self.env['ir.sequence'].next_by_code('payment.instruction.sequence') or ''
         return super(PaymentInstruction, self).create(vals)
 
-    @api.multi
-    def action_approve(self):
-        if self.state == 'draft':
-            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
-                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
-            return self.write({'state': 'approved'})
+
 
     @api.multi
     def action_reject(self):
