@@ -220,7 +220,6 @@ class PaymentInstruction(models.Model):
         payment = self.search([('id', '=', self.id), ('is_sync', '=', False), ('state', '=', 'draft')])
         if not payment:
             raise ValidationError(_("Payment Instruction [{0}] already submitted.".format(self.code)))
-
         if payment.state == 'draft' and not payment.is_sync and payment.code not in self._payments:
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
@@ -242,9 +241,15 @@ class PaymentInstruction(models.Model):
                             else:
                                 val = 1
                             line.write({'amount_residual': ((line.amount_residual) * val) - payment.amount})
-
                 self._payments.remove(self.code)
             else:
                 self._payments.remove(self.code)
         else:
             raise ValidationError(_("Payment Instruction [{0}] is processing.".format(self.code)))
+
+    @api.multi
+    def invalidate_cache(self):
+        payments = self.search([('is_sync', '=', False), ('state', '=', 'draft')])
+        for val in payments:
+            if val.code in self._payments:
+                self._payments.remove(val.code)
