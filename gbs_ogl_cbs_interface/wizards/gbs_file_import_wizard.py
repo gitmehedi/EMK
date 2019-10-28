@@ -134,7 +134,11 @@ class GBSFileImportWizard(models.TransientModel):
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
         vals = []
         count = 0
+        allow_header = ['date','account','type','amount','narration']
         for line in reader:
+            if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):
+                raise ValidationError(_("Please check header of the file"))
+
             count += 1
             line_no = count + 1
             val = {}
