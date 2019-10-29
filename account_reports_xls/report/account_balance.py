@@ -22,47 +22,54 @@ class ReportTrialBalance(models.AbstractModel):
         filters_init = filters[:]
         where_params_init = where_params[:]
         context = self.env.context
-        if context['date_to']:
-            if context['operating_unit_ids'] or context['ex_operating_unit_ids']:
-                filters_init = filters_init.replace('AND  ("account_move_line"."date" <= %s)', '')
-            else:
-                filters_init = filters_init.replace('("account_move_line"."date" <= %s)  AND  ', '')
 
-            index = where_params_init.index(context['date_to'])
-            del where_params_init[index]
-        if context['date_from']:
-            filters_init = filters_init.replace('>', '<')
+        # if context['date_to']:
+        #     if context['operating_unit_ids'] or context['ex_operating_unit_ids']:
+        #         filters_init = filters_init.replace('AND  ("account_move_line"."date" <= %s)', '')
+        #     else:
+        #         filters_init = filters_init.replace('("account_move_line"."date" <= %s)  AND  ', '')
+        #
+        #     index = where_params_init.index(context['date_to'])
+        #     del where_params_init[index]
+        #
+        # if context['date_from']:
+        #     filters_init = filters_init.replace('>', '<')
 
         # compute the balance, debit and credit for the provided accounts
 
-        request = "SELECT aa.id," + \
-                  "COALESCE(trial.credit,0) AS credit," + \
-                  "COALESCE(trial.debit,0) AS debit," + \
-                  "(COALESCE(trial.credit,0) - COALESCE(trial.debit,0) + COALESCE(init.balance,0)) AS balance," + \
-                  "COALESCE(init.balance,0) AS init_bal, " + \
-                  "aat.asset_liability_id " + \
-                  "FROM account_account aa " + \
-                  "LEFT JOIN (SELECT account_id AS id," + \
-                  "COALESCE(SUM(debit),0) AS debit," + \
-                  "COALESCE(SUM(credit),0) AS credit " + \
-                  "FROM " + tables + " " + \
-                  "WHERE account_id IN %s " + filters + " " + \
-                  "GROUP BY account_id) trial " + \
-                  "ON (trial.id = aa.id) " + \
-                  "LEFT JOIN (SELECT account_id AS id," + \
-                  "COALESCE((SUM(debit)-SUM(credit)),0) AS balance " + \
-                  "FROM " + tables + " " + \
-                  "WHERE account_id IN %s " + filters_init + " " + \
-                  "GROUP BY account_id) init " + \
-                  "ON (init.id = aa.id) " + \
-                  "LEFT JOIN account_account_level aal " + \
-                  "ON (aal.id = aa.level_id) " + \
-                  "LEFT JOIN account_account_type aat " + \
-                  "ON (aat.id = aa.user_type_id) " + \
-                  "WHERE aal.name='Layer 5'"
+        if context['date_from']:
+            request = "SELECT aa.id," + \
+                      "COALESCE(trial.credit,0) AS credit," + \
+                      "COALESCE(trial.debit,0) AS debit," + \
+                      "(COALESCE(trial.credit,0) - COALESCE(trial.debit,0) + COALESCE(init.balance,0)) AS balance," + \
+                      "COALESCE(init.balance,0) AS init_bal, " + \
+                      "aat.asset_liability_id " + \
+                      "FROM account_account aa " + \
+                      "LEFT JOIN (SELECT account_id AS id," + \
+                      "COALESCE(SUM(debit),0) AS debit," + \
+                      "COALESCE(SUM(credit),0) AS credit " + \
+                      "FROM " + tables + " " + \
+                      "WHERE account_id IN %s " + filters + " " + \
+                      "GROUP BY account_id) trial " + \
+                      "ON (trial.id = aa.id) " + \
+                      "LEFT JOIN (SELECT account_id AS id," + \
+                      "COALESCE((SUM(debit)-SUM(credit)),0) AS balance " + \
+                      "FROM " + tables + " " + \
+                      "WHERE account_id IN %s " + filters_init + " " + \
+                      "GROUP BY account_id) init " + \
+                      "ON (init.id = aa.id) " + \
+                      "LEFT JOIN account_account_level aal " + \
+                      "ON (aal.id = aa.level_id) " + \
+                      "LEFT JOIN account_account_type aat " + \
+                      "ON (aat.id = aa.user_type_id) " + \
+                      "WHERE aal.name='Layer 5'"
 
-        params = (tuple(accounts.ids),) + tuple(where_params) + (tuple(accounts.ids),) + tuple(where_params_init)
-
+            params = (tuple(accounts.ids),) + tuple(where_params) + (tuple(accounts.ids),) + tuple(where_params_init)
+        else:
+            request = (
+                    "SELECT account_id AS id, SUM(debit) AS debit, SUM(credit) AS credit, (SUM(credit) - SUM(debit)) AS balance, 0  AS init_bal" + \
+                    " FROM " + tables + " WHERE account_id IN %s " + filters + " GROUP BY account_id")
+            params = (tuple(accounts.ids),) + tuple(where_params)
 
         self.env.cr.execute(request, params)
         for row in self.env.cr.dictfetchall():
