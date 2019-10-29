@@ -234,7 +234,7 @@
                     <search string="Search Agreements">
                         <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
                                string="Name or Number"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" string="Vendor"/>
                         <field name="product_id"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
@@ -246,7 +246,7 @@
                         <separator/>
                         <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                         <group name="groupby">
-                            <filter name="partner_groupby" string="Customer"
+                            <filter name="partner_groupby" string="Vendor"
                                     context="{'group_by': 'partner_id'}"/>
                         </group>
                     </search>
