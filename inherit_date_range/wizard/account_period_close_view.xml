@@ -7,14 +7,16 @@
             <field name="arch" type="xml">
                 <form string="Close Period">
                     <group string="Are you sure?">
-                        <field name="sure"/>
+                        <group>
+                            <field name="sure"/>
+                        </group>
                     </group>
                     <footer>
                         <button string="Close Period" name="data_save" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
-               </form>
+                </form>
             </field>
         </record>
 
