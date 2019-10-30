@@ -22,7 +22,7 @@ class Currency(models.Model):
         list = str(number).split('.')
         start_word = int(list[0])
         start_word_total = start_word
-        end_word = list[1]
+        end_word = len(list)>1 and list[1] or 0
 
         # Amount to word for integer portion
         if start_word is 0:
