@@ -51,6 +51,7 @@
         "auto_backup",
         "mass_editing",
         "web_export_view",
+        "web_widget_many2many_tags_multi_selection",
     ],
     'description': 'Install all modules which is related to MTBL OGL System',
     'installable': True,

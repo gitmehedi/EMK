@@ -10,7 +10,7 @@
                             <th>Particulars</th>
                             <th>GL Head</th>
                             <th>CGL Code</th>
-                            <th class="text-right">Opeing Balance</th>
+                            <th class="text-right">Opening Balance</th>
                             <th class="text-right">Debit</th>
                             <th class="text-right">Credit</th>
                             <th class="text-right">Current Balance</th>
