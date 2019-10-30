@@ -4,7 +4,7 @@
         <field name="name">tds.vat.move.payment.wizard</field>
         <field name="model">tds.vat.move.payment.wizard</field>
         <field name="arch" type="xml">
-            <form string="Payment Instruction">
+            <form string="Payment">
                     <group>
                         <group>
                             <field name="currency_id" invisible="1"/>

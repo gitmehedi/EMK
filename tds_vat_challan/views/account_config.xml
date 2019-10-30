@@ -19,9 +19,3 @@
         </field>
     </record>
 </odoo>
-
-
-        <!--<div>-->
-        <!--<label for="tds_vat_transfer_account_id"/>-->
-        <!--<field name="tds_vat_transfer_account_id" class="oe_inline"/>-->
-        <!--</div>-->

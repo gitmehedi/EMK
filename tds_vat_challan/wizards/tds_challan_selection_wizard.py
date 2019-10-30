@@ -87,20 +87,3 @@ class TDSChallaSelectionWizard(models.TransientModel):
                         },
         }
         return result
-
-
-# date_from = fields.Date(string='From Date', required=True)
-# date_to = fields.Date(string='To Date', required=True)
-# ('date', '<=', self.date_to), ('date', '>=', self.date_from)
-#  if self.product_ids:
-#     self.supplier_id = []
-#     self.operating_unit_id = []
-#     move_lines = self.env['account.move.line'].search(
-#         [('id', 'in', self.env.context.get('records')),('product_id','in',self.product_ids.ids)])
-#     if move_lines:
-#         supplier_ids = [move.partner_id.id for move in move_lines]
-#         operating_unit_ids = [move.operating_unit_id.id for move in move_lines]
-#         return {'domain': {
-#             'supplier_id': [('id', 'in', supplier_ids)],
-#             'operating_unit_id': [('id', 'in', operating_unit_ids)],
-#         }}

@@ -94,8 +94,6 @@ class TdsVatChallan(models.Model):
                 raise UserError(
                     _("Without Challan No/Deposited Bank/Bank Branch record cannot be confirm. Please fill all those."))
             record.line_ids.write({'state': 'confirm'})
-            # invoice_ids = [i.invoice_id.id for i in record.acc_move_line_ids]
-            # 'account_invoice_ids': [(6, 0, invoice_ids)],
             for i in record.acc_move_line_ids:
                 i.invoice_id.tds_vat_challan_ids = [(4, self.id)]
 
@@ -107,8 +105,6 @@ class TdsVatChallan(models.Model):
             res = {
                 'state': 'confirm',
                 'name': name,
-                # 'deposit_approver': record.env.user.id,
-                # 'deposit_date': fields.Datetime.now(),
             }
             record.write(res)
 
@@ -123,8 +119,6 @@ class TdsVatChallan(models.Model):
             record.line_ids.write({'state': 'approved'})
             res = {
                 'state': 'approved',
-                # 'distribute_approver': record.env.user.id,
-                # 'distribute_date': fields.Datetime.now(),
             }
             record.write(res)
 
@@ -199,74 +193,3 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     tds_vat_challan_ids = fields.Many2many('tds.vat.challan',string='TDS & VAT Challan', copy=False)
-
-# Accounting treatment previous version
-    #
-    # @api.multi
-    # def generate_account_journal(self):
-    #     for rec in self:
-    #         date = fields.Date.context_today(self)
-    #         account_conf_pool = self.env.user.company_id
-    #         if not account_conf_pool.tds_vat_transfer_journal_id and not account_conf_pool.tds_vat_transfer_account_id:
-    #             raise UserError(
-    #                 _(
-    #                     "Account Settings are not properly set. Please contact your system administrator for assistance."))
-    #         acc_journal_objs = account_conf_pool.tds_vat_transfer_journal_id
-    #         account_move_obj = self.env['account.move']
-    #         account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-    #         move_obj = rec._generate_move(acc_journal_objs, account_move_obj, date)
-    #         for line in rec.line_ids:
-    #             self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
-    #         self._generate_credit_move_line(account_conf_pool.tds_vat_transfer_account_id, date, move_obj.id,
-    #                                         account_move_line_obj)
-    #         move_obj.post()
-    #     return True
-    #
-    # def _generate_move(self, journal, account_move_obj, date):
-    #     if not journal.sequence_id:
-    #         raise UserError(_('Configuration Error !'),
-    #                         _('The journal %s does not have a sequence, please specify one.') % journal.name)
-    #     if not journal.sequence_id.active:
-    #         raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
-    #
-    #     name = journal.with_context(ir_sequence_date=date).sequence_id.next_by_id()
-    #     account_move_id = False
-    #     if not account_move_id:
-    #         account_move_dict = {
-    #             'name': name,
-    #             'date': date,
-    #             'ref': '',
-    #             'company_id': self.operating_unit_id.company_id.id,
-    #             'journal_id': journal.id,
-    #             'operating_unit_id': self.operating_unit_id.id,
-    #         }
-    #         account_move = account_move_obj.create(account_move_dict)
-    #     return account_move
-    #
-    # def _generate_credit_move_line(self, tds_vat_transfer_account_id, date, account_move_id, account_move_line_obj):
-    #     account_move_line_credit = {
-    #         'account_id': tds_vat_transfer_account_id.id,
-    #         'credit': self.total_amount,
-    #         'date_maturity': date,
-    #         'debit': False,
-    #         'name': '/',
-    #         'operating_unit_id': self.operating_unit_id.id,
-    #         'move_id': account_move_id,
-    #     }
-    #     account_move_line_obj.create(account_move_line_credit)
-    #     return True
-    #
-    # def _generate_debit_move_line(self, line, date, account_move_id, account_move_line_obj):
-    #     account_move_line_debit = {
-    #         'account_id': self.acc_move_line_ids[0].account_id.id,
-    #         # 'analytic_account_id': line.acc_move_line_id.analytic_account_id.id,
-    #         'credit': False,
-    #         'date_maturity': date,
-    #         'debit': line.total_bill,
-    #         'name': 'challan/' + self.acc_move_line_ids[0].name,
-    #         'operating_unit_id': self.operating_unit_id.id,
-    #         'move_id': account_move_id,
-    #         # 'partner_id': acc_inv_line_obj.partner_id.id,
-    #     }
-    #     account_move_line_obj.create(account_move_line_debit)
-    #     return True
