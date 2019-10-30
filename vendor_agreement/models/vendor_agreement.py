@@ -292,5 +292,3 @@ class VendorAgreementHistory(models.Model):
     state = fields.Selection([
         ('pending', "Pending"),
         ('confirm', "Confirmed")], default='pending', string="Status")
-
-# domain=[('type', '=', 'service')],
