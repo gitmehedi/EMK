@@ -22,6 +22,7 @@ class ReportTrialBalance(models.AbstractModel):
         filters_init = filters[:]
         where_params_init = where_params[:]
         context = self.env.context
+        move_ids = self.env['account.move'].search([('is_cbs', '=', True)])
 
         # if context['date_to']:
         #     if context['operating_unit_ids'] or context['ex_operating_unit_ids']:
@@ -66,10 +67,16 @@ class ReportTrialBalance(models.AbstractModel):
 
             params = (tuple(accounts.ids),) + tuple(where_params) + (tuple(accounts.ids),) + tuple(where_params_init)
         else:
+            if len(move_ids) > 0:
+                filters = " AND move_id IN %s " + filters
+                params = (tuple(accounts.ids),) + (tuple(move_ids.ids),) + tuple(where_params)
+            else:
+                filters = " AND move_id IS NULL " + filters
+                params = (tuple(accounts.ids),) +  tuple(where_params)
+
             request = (
                     "SELECT account_id AS id, SUM(debit) AS debit, SUM(credit) AS credit, (SUM(credit) - SUM(debit)) AS balance, 0  AS init_bal" + \
                     " FROM " + tables + " WHERE account_id IN %s " + filters + " GROUP BY account_id")
-            params = (tuple(accounts.ids),) + tuple(where_params)
 
         self.env.cr.execute(request, params)
         for row in self.env.cr.dictfetchall():
