@@ -10,6 +10,7 @@
         'account_invoice_merge_attachment',
         'account_operating_unit',
         'base_suspend_security',
+        'purchase',
     ],
     'data': [
         'views/account_config.xml',
