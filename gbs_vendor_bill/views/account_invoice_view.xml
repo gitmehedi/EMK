@@ -57,7 +57,7 @@
                 <attribute name="groups"></attribute>
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="after">
-                <field name="operating_unit_id"/>
+                <field name="operating_unit_id" string="Operating Unit"/>
                 <field name="product_id"/>
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="replace">
@@ -88,10 +88,6 @@
                 <field name="total_amount_with_vat" class="oe_subtotal_footer_separator"
                        attrs="{'invisible': [('vat_selection','=','normal')]}"/>
             </field>
-            <xpath expr="//field[@name='date']" position="after">
-                <field name="security_deposit_account_id"
-                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-            </xpath>
             <xpath expr="//field[@name='tax_line_ids']" position="after">
                 <label for="provisional_expense"/>
                 <field name="provisional_expense"/>

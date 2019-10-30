@@ -12,12 +12,6 @@ class AccountInvoice(models.Model):
                                         operating_unit_default_get(self._uid),
                                         readonly=True, required=True,
                                         states={'draft': [('readonly', False)]})
-    security_deposit = fields.Float('Security Deposit', track_visibility='onchange', copy=False,
-                                    readonly=True, states={'draft': [('readonly', False)]})
-    security_deposit_account_id = fields.Many2one('account.account', string='Security Deposit Account',
-                                                  default=lambda
-                                                      self: self.env.user.company_id.security_deposit_account_id.id,
-                                                  required=True, readonly=True, states={'draft': [('readonly', False)]})
     vat_selection = fields.Selection([('normal', 'General'),
                                       ('mushok', 'Mushok-6.3'),
                                       ('vds_authority', 'VDS Authority'),
@@ -122,30 +116,6 @@ class AccountInvoice(models.Model):
                 })
                 done_taxes.append(tax.id)
         return res
-
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        if self.security_deposit > 0.0:
-            for line in move_lines:
-                if line[2]['name'] == '/':
-                    line[2]['credit'] = line[2]['credit'] - self.security_deposit
-            if self.env.user.company_id.head_branch_id:
-                branch_id = self.env.user.company_id.head_branch_id.id
-            else:
-                branch_id = self.operating_unit_id.id
-            security_deposit_values = {
-                'account_id': self.security_deposit_account_id.id,
-                # 'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,
-                'credit': self.security_deposit,
-                'date_maturity': self.date_due,
-                'debit': False,
-                'invoice_id': self.id,
-                'name': self.invoice_line_ids[0].name,
-                'operating_unit_id': branch_id,
-                'partner_id': self.partner_id.id,
-            }
-            move_lines.append((0, 0, security_deposit_values))
-        return move_lines
 
     @api.multi
     def action_invoice_open(self):

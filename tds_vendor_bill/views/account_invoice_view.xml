@@ -27,8 +27,6 @@
             <xpath expr="//field[@name='residual']" position="after">
                 <field name="total_tds_amount" class="oe_subtotal_footer_separator"
                        attrs="{'invisible': [('is_tds_applicable', '=', False)]}" widget="monetary"/>
-                <field name="security_deposit" class="oe_subtotal_footer_separator"
-                       widget="monetary"/>
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="after">
                 <field name="tds_id" invisible="1"/>
@@ -43,7 +41,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='amount_tax']" position="after">
                 <field name="total_tds_amount" string="TDS" sum="Total"/>
-                <field name="security_deposit" sum="Total"/>
             </xpath>
         </field>
     </record>
