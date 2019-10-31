@@ -22,7 +22,7 @@ class AccountAssetAsset(models.Model):
     asset_seq = fields.Char(string='Asset Code', track_visibility='onchange')
     batch_no = fields.Char(string='Batch No', readonly=True,
                            track_visibility='onchange', states={'draft': [('readonly', False)]})
-    method_progress_factor = fields.Float(string='Depreciation Factor', readonly=True, default=0.0,
+    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1,3),readonly=True, default=0.0,
                                           states={'draft': [('readonly', False)]})
     method_number = fields.Integer(string='Number of Depreciations', default=0,
                                    help="The number of depreciations needed to depreciate your asset")
