@@ -8,8 +8,8 @@ class AccountFiscalyearClose(models.TransientModel):
     _name = "account.fiscalyear.close"
     _description = "Fiscal Year Close"
 
-    close_fiscal_year = fields.Many2one('date.range', string='Fiscal Year to close', required=True)
-    start_fiscal_year = fields.Many2one('date.range', string='New Fiscal Year', required=True)
+    close_fy_id = fields.Many2one('date.range', string='Fiscal Year to Close', required=True)
+    start_fy_id = fields.Many2one('date.range', string='New Fiscal Year', required=True)
     journal_id = fields.Many2one('account.journal', string='Opening Entries Journal',
                                  domain="[('type','=','situation')]", required=True)
     period_id = fields.Many2one('date.range', string='Opening Entries Period', required=True)
@@ -60,23 +60,23 @@ class AccountFiscalyearClose(models.TransientModel):
 
         if context is None:
             context = {}
-        close_fiscal_year = data[0].close_fiscal_year.id
+        close_fy_id = data[0].close_fy_id.id
 
         cr.execute(
             "SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)",
-            (str(data[0].start_fiscal_year.id),))
+            (str(data[0].start_fy_id.id),))
         fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
         cr.execute(
             "SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)",
-            (str(close_fiscal_year),))
+            (str(close_fy_id),))
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         if not fy_period_set or not fy2_period_set:
             raise osv.except_osv(_('User Error!'), _('The periods to generate opening entries cannot be found.'))
 
         period = obj_acc_period.browse(cr, uid, data[0].period_id.id, context=context)
-        new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0].start_fiscal_year.id, context=context)
-        old_fyear = obj_acc_fiscalyear.browse(cr, uid, close_fiscal_year, context=context)
+        new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0].start_fy_id.id, context=context)
+        old_fyear = obj_acc_fiscalyear.browse(cr, uid, close_fy_id, context=context)
 
         new_journal = data[0].journal_id.id
         new_journal = obj_acc_journal.browse(cr, uid, new_journal, context=context)
@@ -215,7 +215,7 @@ class AccountFiscalyearClose(models.TransientModel):
         """
         query_2nd_part = ""
         query_2nd_part_args = []
-        for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': close_fiscal_year}):
+        for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': close_fy_id}):
             company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
             if not currency_obj.is_zero(cr, uid, company_currency_id, abs(account.balance)):
                 if query_2nd_part:

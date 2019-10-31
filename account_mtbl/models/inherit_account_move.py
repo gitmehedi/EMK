@@ -38,9 +38,12 @@ class AccountMove(models.Model):
                                 """ % rec.id)
 
                 for val in self.env.cr.fetchall():
-                    rec.total_debit = "{:.2f}".format(val[0])
-                    rec.total_credit = "{:.2f}".format(val[1])
-                    rec.missmatch_value = "{:.2f}".format(val[2])
+                    if not val[0] and not val[1] and not val[2]:
+                        pass
+                    else:
+                        rec.total_debit = "{:.2f}".format(val[0])
+                        rec.total_credit = "{:.2f}".format(val[1])
+                        rec.missmatch_value = "{:.2f}".format(val[2])
 
     @api.multi
     def post(self):
