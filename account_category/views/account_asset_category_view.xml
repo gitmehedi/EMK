@@ -84,12 +84,12 @@
                         </group>
                     </group>
                     <group>
-                        <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
+                        <group attrs="{'invisible': ['|',('type','=','sale'),('no_depreciation','=',True)]}" string="Depreciation Method">
                             <field name="method" widget="radio"/>
                             <field name="method_progress_factor"
-                                   attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                                   attrs="{'invisible':['|',('no_depreciation','=',True),('method','=','linear')], 'required':['|',('no_depreciation','=',False),('method','=','degressive')]}"/>
                             <field name="depreciation_year"
-                                   attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                                   attrs="{'invisible':['|',('no_depreciation','=',True),('method','=','degressive')], 'required':['|',('no_depreciation','=',False),('method','=','linear')]}"/>
                         </group>
                         <group string="No Depreciation">
                             <field name="no_depreciation"/>
