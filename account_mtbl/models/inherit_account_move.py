@@ -53,7 +53,7 @@ class AccountMove(models.Model):
 
     @api.constrains('date')
     def _check_date(self):
-        if self.date > fields.Datetime.now():
+        if self.date > fields.Date.today():
             raise ValidationError(_('Journal Date should not be greater than current datetime.'))
 
 

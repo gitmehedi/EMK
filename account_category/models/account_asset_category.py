@@ -35,7 +35,6 @@ class AccountAssetCategory(models.Model):
             self.method_number = self.parent_id.method_number
             self.method_progress_factor = self.parent_id.method_progress_factor
             self.code = self.parent_id.code
-            self.no_depreciation = self.parent_id.no_depreciation
 
     @api.model
     def create(self, vals):

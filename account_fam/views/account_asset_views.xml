@@ -142,9 +142,9 @@
                         <group string="Depreciation Method">
                             <field name="method" widget="radio"/>
                             <field name="method_progress_factor"
-                                   attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                             <field name="depreciation_year"
-                                   attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
                         </group>
                     </group>
                 </page>
@@ -246,7 +246,7 @@
                     <field name="allocation_status" string="Allocation Status"/>
                     <field name="partner_id" string="Vendor" filter_domain="[('partner_id','child_of',self)]"/>
                     <group string="Group By...">
-                        <filter string="Current"  domain="[('state','in', ('draft','open'))]"/>
+                        <filter string="Current" domain="[('state','in', ('draft','open'))]"/>
                         <filter string="Draft"
                                 domain="[('state','=', 'draft'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
                         <filter string="Confirmed"

@@ -22,7 +22,7 @@ class AccountAssetAsset(models.Model):
     asset_seq = fields.Char(string='Asset Code', track_visibility='onchange')
     batch_no = fields.Char(string='Batch No', readonly=True,
                            track_visibility='onchange', states={'draft': [('readonly', False)]})
-    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1,3),readonly=True, default=0.0,
+    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1, 3), readonly=True, default=0.0,
                                           states={'draft': [('readonly', False)]})
     method_number = fields.Integer(string='Number of Depreciations', default=0,
                                    help="The number of depreciations needed to depreciate your asset")
@@ -30,7 +30,9 @@ class AccountAssetAsset(models.Model):
     partner_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0, readonly=True,
                                        track_visibility='onchange', states={'draft': [('readonly', False)]})
-    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
+    method = fields.Selection([('degressive', 'Reducing Method'),
+                               ('linear', 'Straight Line/Linear'),
+                               ('no_depreciation', 'No Depreciation')],
                               track_visibility='onchange',
                               string='Computation Method', required=True, default='degressive',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
@@ -183,7 +185,7 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def compute_depreciation_history(self, date, asset):
-        if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and not asset.asset_type_id.no_depreciation:
+        if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and asset.asset_type_id.method != 'no_depreciation':
             if self.lst_depr_date:
                 no_of_days = (date - self.date_str_format(asset.lst_depr_date)).days
             else:
@@ -222,7 +224,7 @@ class AccountAssetAsset(models.Model):
                         depreciation = asset.depreciation_line_ids.create(vals)
                         if depreciation:
                             asset.create_move(depreciation)
-                            if date.month == 12 and date.day == 31 and  asset.method == 'degressive':
+                            if date.month == 12 and date.day == 31 and asset.method == 'degressive':
                                 asset.write({'lst_depr_date': date.date(),
                                              'depr_base_value': book_val_amount})
                             else:
@@ -236,7 +238,14 @@ class AccountAssetAsset(models.Model):
             if line.move_id:
                 raise UserError(
                     _('This depreciation is already linked to a journal entry! Please post or delete it.'))
+
             category_id = line.asset_id.asset_type_id
+            if not category_id.account_depreciation_id or not category_id.account_depreciation_expense_id.id:
+                raise UserError(
+                    _('Asset Category [{0}] need to set following fields'
+                      ' \n - Depreciation Exp. A/C \n - Accumulated Depreciation A/C'.format(
+                        line.asset_id.asset_type_id.name)))
+
             depreciation_date = self.env.context.get(
                 'depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
