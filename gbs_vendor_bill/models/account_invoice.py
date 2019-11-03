@@ -195,9 +195,12 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_open(self):
-        if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
-        return super(AccountInvoice, self).action_invoice_open()
+        if self.state == 'draft':
+            if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+            return super(AccountInvoice, self).action_invoice_open()
+        else:
+            raise ValidationError(_("[Validation Error] Vendor Bill {} already validated.".format(self.number)))
 
     @api.multi
     def action_move_create(self):
@@ -279,9 +282,10 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        if vals.get('reference'):
-            vals.update({'reference': vals.get('reference').strip()})
-        return super(AccountInvoice, self).write(vals)
+        if self.state=='draft':
+            if vals.get('reference'):
+                vals.update({'reference': vals.get('reference').strip()})
+            return super(AccountInvoice, self).write(vals)
 
     @api.model
     def _needaction_domain_get(self):
