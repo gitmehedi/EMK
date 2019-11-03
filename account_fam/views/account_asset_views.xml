@@ -14,7 +14,7 @@
                 <header>
                     <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"
                             groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
-                    <button name="%(action_asset_allocation_wizard)d" string="Allocation" class="oe_highlight"
+                    <button name="%(action_asset_allocation_wizard)d" string="Allocate" class="oe_highlight"
                             type="action" context="{'allocation':'True'}"
                             groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                             attrs="{'invisible': ['|',('allocation_status','=', True),('state','!=', 'open')]}"/>
