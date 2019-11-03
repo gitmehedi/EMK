@@ -22,7 +22,7 @@ class ReportTrialBalance(models.AbstractModel):
         filters_init = filters[:]
         where_params_init = where_params[:]
         context = self.env.context
-        move_ids = self.env['account.move'].search([('is_cbs', '=', False)])
+        move_ids = self.env['account.move'].search([('is_cbs', '=', True)])
 
         if context['date_to']:
             if context['operating_unit_ids'] or context['ex_operating_unit_ids']:
