@@ -119,6 +119,13 @@ class GBSFileImport(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'draft')]
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state == 'processed':
+                raise ValidationError(_('Processed record can not be deleted.'))
+        return super(GBSFileImport, self).unlink()
+
 
 class GBSFileImportLine(models.Model):
     _name = 'gbs.file.import.line'
@@ -143,23 +150,3 @@ class GBSFileImportLine(models.Model):
     ], string='Type', required=True)
 
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
-
-    @api.constrains('account_no', 'type_journal', 'debit', 'credit')
-    def _check_unique_constrain(self):
-        if self.account_no or self.debit or self.credit:
-            if not self.account_no.isdigit():
-                raise ValidationError('Account No should be number!')
-            if len(self.account_no) not in [13, 16]:
-                raise ValidationError('Account No should be should be 13 or 16!')
-
-    @api.onchange('account_no', 'type_journal')
-    def _onchange_account(self):
-        if self.account_no:
-            if self.type_journal:
-                if len(self.account_no) == 13:
-                    self.type = '01' if self.type_journal == 'cr' else '51'
-                if len(self.account_no) == 16:
-                    self.type = '04' if self.type_journal == 'cr' else '54'
-
-            if len(self.account_no) not in [13, 16]:
-                raise ValidationError('Account No should be should be 13 or 16!')

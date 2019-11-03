@@ -134,7 +134,7 @@ class GBSFileImportWizard(models.TransientModel):
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
         vals = []
         count = 0
-        allow_header = ['date','account','type','amount','narration']
+        allow_header = ['type', 'account', 'branch', 'amount', 'narration', 'date']
         for line in reader:
             if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):
                 raise ValidationError(_("Please check header of the file"))
@@ -144,23 +144,32 @@ class GBSFileImportWizard(models.TransientModel):
             val = {}
             val['import_id'] = move.id
             val['account_no'] = line['account'].strip()
+            val['branch'] = line['branch'].strip()
             line['type'] = line['type'].strip().lower()
 
-            if len(val['account_no']) not in [13, 16] or not val['account_no'].isdigit():
+            if len(val['account_no']) not in [13, 11] or not val['account_no'].isdigit():
                 raise ValidationError(
-                    _("Please check the file with values {0} and line no {1} !".format(val['account_no'], line_no)))
+                    _("Account [{0}] has invalid value in line no {1} !".format(val['account_no'], line_no)))
+
+            if val['branch'] or len(val['account_no']) == 11:
+                if len(val['branch']) != 5 or not val['branch'].isdigit():
+                    raise ValidationError(
+                        _("Branch [{0}] has invalid value with account [{1}] in line no {2} !".format(val['branch'],
+                                                                                                      val['account_no'],
+                                                                                                      line_no)))
+
+                val['account_no'] = val['account_no'] + val['branch']
 
             val['narration'] = line['narration'].strip()
             if not val['narration']:
                 raise ValidationError(
-                    _("Please check the file with values {0} and line no {1} !".format(val['narration'], line_no)))
+                    _("Narration [{0}] has invalid value in line no {1} !".format(val['narration'], line_no)))
 
             date = self.date_validate(line['date'].strip())
             if not date:
                 raise ValidationError(
-                    _(
-                        "Please check the Date format with values {0} and line no {1}! Expected format: 31/12/2000".format(
-                            line['date'], line_no)))
+                    _("Date {0} has invalid value in line no {1} ! Expected format: 31/12/2000".format(
+                        line['date'], line_no)))
             else:
                 val['date'] = datetime.datetime.strptime(line['date'].strip(), '%d/%m/%Y')
 
@@ -168,17 +177,17 @@ class GBSFileImportWizard(models.TransientModel):
 
             if not cus_type:
                 raise ValidationError(
-                    _("Please check the file with values {0} and line no {1} !".format(cus_type, line_no)))
+                    _("Type {0} has invalid value in line no {1} !".format(cus_type, line_no)))
             else:
                 if len(line['account']) == 13:
                     type = '01' if line['type'] == 'cr' else '51'
-                if len(line['account']) == 16:
+                if len(line['account']) == 11:
                     type = '04' if line['type'] == 'cr' else '54'
 
             amount = line['amount'].strip()
             if not amount and not amount.isnumeric():
                 raise ValidationError(
-                    _("Please check the file with values {0} and line no {1} !".format(amount, line_no)))
+                    _("Amount {0} has invalid value in line no {1} !".format(amount, line_no)))
 
             if line['type'] == 'cr':
                 val['credit'] = amount

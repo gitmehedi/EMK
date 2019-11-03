@@ -39,7 +39,7 @@
                         <notebook>
                             <page string="Values">
                                 <field name="import_lines">
-                                    <tree string="List" editable="bottom">
+                                    <tree string="List" delete="0" create="0" edit="0">
                                         <field name="type" invisible="1"/>
                                         <field name="type_journal"/>
                                         <field name="name" invisible="1"/>
