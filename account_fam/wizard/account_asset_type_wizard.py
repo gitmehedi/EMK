@@ -22,7 +22,7 @@ class AccountAssetCategoryWizard(models.TransientModel):
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
-    method_progress_factor = fields.Float(string='Depreciation Factor', default=0.0, )
+    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1,3),default=0.0, )
     journal_id = fields.Many2one('account.journal', string='Journal')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', default=0)
     method_number = fields.Integer(string='Number of Depreciations', default=0)
