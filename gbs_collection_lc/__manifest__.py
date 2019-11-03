@@ -1,5 +1,5 @@
 {
-    "name": "GBS Collection LC",
+    "name": "GBS Collection LC (Unstable)",
     "version": "10.0.0.1",
     "category": "Accounting",
     "author": "Genweb2 Limited",
