@@ -1,0 +1,6 @@
+Service,Partner,Vendor Reference,VAT Selection,Date,TDS Applicable,Branch,Journal,Responsible,Account,Is Provisional Expense,Security Deposit Account,Security Deposit,Invoice Lines/Product,Invoice Lines/Description,Invoice Lines/Branch,Invoice Lines/Sub Operating Unit,Invoice Lines/Cost Centre,Invoice Lines/Account,Invoice Lines/Quantity,Invoice Lines/Unit Price,Invoice Lines/TDS,Invoice Lines/VAT
+,Absolute Limited,absolute123456,General,2019-04-09,True,Principal Branch,Vendor Bill,MTBL Admin 1,Sundry Deposits,FALSE,Security Deposit,,Rent,Rent,Principal Branch,Main Sub Operating Unit 1,NRB,MD House Rent,2,30000,TDS Flat 5%,VAT 5.00%(Exclude)
+,,,,,,,,,,,,,Electricity Charge,Electricity Charge,Principal Branch,Main Sub Operating Unit 1,,Electrical Equipments,3,35000,,
+,,,,,,,,,,,,,Rent,Rent,Ulipur Branch,,,MD House Rent,1,40000,,
+,,,,,,,,,,,,,Rent,Rent,Sylhet Branch,,,MD House Rent,1,50000,,
+Rent,Assist,assist12345678,General,2019-22-09,FALSE,Principal Branch,Vendor Bill,MTBL Admin 1,Sundry Deposits,FALSE,Security Deposit,500,,Computer Monitor,Principal Branch,Main Sub Operating Unit 1,NRB,Computers & Peripherals,1,45000,,VAT 5.00%(Exclude)
