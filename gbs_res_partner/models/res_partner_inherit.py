@@ -134,6 +134,9 @@ class ResPartner(models.Model):
                 self.upazila_id = self.upazila_id if not requested.upazila_id.id else requested.upazila_id.id
                 self.postal_code = self.postal_code if not requested.postal_code.id else requested.postal_code.id
                 self.contact_person = self.contact_person if not requested.contact_person else requested.contact_person
+                self.company_type = self.company_type if not requested.company_type else requested.company_type
+                self.parent_id = self.parent_id if not requested.parent_id else requested.parent_id
+                self.company_id = self.company_id if not requested.company_id else requested.company_id
                 self.designation_id = self.designation_id if not requested.designation_id.id else \
                     requested.designation_id.id
                 if requested.entity_services:
@@ -281,6 +284,9 @@ class HistoryResPartner(models.Model):
     district_id = fields.Many2one('bd.district', string='District')
     upazila_id = fields.Many2one('bd.upazila', string='Upazila/Thana')
     postal_code = fields.Many2one('bd.postal.code', 'Postal Code')
+    company_type = fields.Selection(selection=[('person', 'Individual'), ('company', 'Company')], string='Company Type')
+    parent_id = fields.Many2one('res.partner', 'Company')
+    company_id = fields.Many2one('res.company', 'Company', index=True)
     entity_services = fields.Many2many('product.product', 'service_vendor_history_rel', 'service_id',
                                        'vendor_history_id', string='Service')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
