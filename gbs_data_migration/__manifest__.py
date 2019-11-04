@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+
+{
+    "name": "GBS Data Migration",
+    "summary": "GBS Data Migration",
+    "version": "10.0.0.0.0",
+    'author': 'Genweb2 Limited',
+    'website': 'http://www.genweb2.com',
+    'license': "AGPL-3",
+    "category": "Tools",
+    "depends": [
+        'mail',
+        'account',
+    ],
+    "data": [
+        "wizards/gbs_data_migration_wizard_view.xml",
+        # "views/menu_view.xml",
+        "views/gbs_data_migration_view.xml",
+    ],
+    "application": True,
+    "installable": True,
+}
