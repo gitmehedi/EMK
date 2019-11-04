@@ -53,7 +53,13 @@ class GBSFileImport(models.Model):
             file_path = os.path.join(record.source_path, filename)
             with open(file_path, "w+") as file:
                 for val in self.import_lines:
-                    trn_type = val.type
+                    if len(val.account_no) == 13:
+                        trn_type = '01' if val.type_journal == 'cr' else '51'
+                    elif len(val.account_no) == 16:
+                        trn_type = '04' if val.type_journal == 'cr' else '54'
+                    else:
+                        raise (_("Account contains invalid value"))
+
                     account_no = str(val.account_no).zfill(17)
                     amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                     amount = ''.join(amount.split('.')).zfill(16)
@@ -119,6 +125,13 @@ class GBSFileImport(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'draft')]
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state == 'processed':
+                raise ValidationError(_('Processed record can not be deleted.'))
+        return super(GBSFileImport, self).unlink()
+
 
 class GBSFileImportLine(models.Model):
     _name = 'gbs.file.import.line'
@@ -135,13 +148,6 @@ class GBSFileImportLine(models.Model):
         ('dr', 'DR'),
     ], string='Type', required=True)
 
-    type = fields.Selection([
-        ('01', 'Customer Credit'),
-        ('51', 'Customer Debit '),
-        ('04', 'GL Credit'),
-        ('54', 'GL Debit'),
-    ], string='Type', required=True)
-
     import_id = fields.Many2one('gbs.file.import', 'Import Id', ondelete='cascade')
 
     @api.constrains('account_no', 'type_journal', 'debit', 'credit')
@@ -150,16 +156,5 @@ class GBSFileImportLine(models.Model):
             if not self.account_no.isdigit():
                 raise ValidationError('Account No should be number!')
             if len(self.account_no) not in [13, 16]:
-                raise ValidationError('Account No should be should be 13 or 16!')
+                raise ValidationError("Account [{0}] has invalid value. Account will be 13 or 16 digit.".format(self.account_no))
 
-    @api.onchange('account_no', 'type_journal')
-    def _onchange_account(self):
-        if self.account_no:
-            if self.type_journal:
-                if len(self.account_no) == 13:
-                    self.type = '01' if self.type_journal == 'cr' else '51'
-                if len(self.account_no) == 16:
-                    self.type = '04' if self.type_journal == 'cr' else '54'
-
-            if len(self.account_no) not in [13, 16]:
-                raise ValidationError('Account No should be should be 13 or 16!')

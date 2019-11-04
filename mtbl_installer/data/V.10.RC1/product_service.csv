@@ -1,0 +1,242 @@
+Name,Can be Purchased,Product Type,Internal Category,Expense Account,TDS Rule,VAT,Active,Pending,Status
+Land,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Building,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fixture <Interior Work Office premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fixture <Interior Work ATM>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fixture <Interior Work at Kiosk>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Furniture <Office Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Furniture <Kiosk>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Electrical Equipments <Office Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Electrical Equipments <ATM>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Other Office Equipments (except Computers) at office premises,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Other Office Equipments <at ATM premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Other Office Equipments <at Kiosk premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Other Office Equipments (POS machine),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Computers & Peripherals <Office Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Motor Cars,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Motor Cycles,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Software ,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Basic Salary,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Personal Pay  <Basic>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Salary for Contractual Kiosk Staff <Basic Pay>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+House  Rent Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Conveyance Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Medical Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Entertainment  Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Washing Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Dearness Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Risk  Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Evening Banking Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Discomfort Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Technical Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+House Maintenance Allowance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Medical Reimbursement,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Uniform And Other Apparels,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Utility Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Ordinary Bonus,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Incentive Bonus,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Gratuity,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Leave Fare Assistance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Bank's Contribution to EPF,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+DMD's Remuneration,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Misc Expenses for DST employees <Salary>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Misc Expenses for DST employees Commission,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Leave Encashment,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Rent for Office Premises,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Rent for ATM Premises,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Rent for Kiosk Premises,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Rent for Godown Premises,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Rent for Residential Premises,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+VAT on Rent <Office Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+VAT on Rent <Expenses> ATM,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+VAT on Rent <Expenses> Kiosk,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+VAT on Rent <Expenses> Godown,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+VAT on Rent <Expenses> Residential Premises,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+City Corp./Municipality Taxes,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Trade License Fees,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Excise Duty on Bank's own Deposits with other Banks,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD/DMD's Income Tax,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+VAT/Tax on Other Activities <Expenses>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance for Cash in Transit,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance for Cash in Safe/Counter,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Group Insurance Premium-Life,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance for Bank's Property Office,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance for Bank's Property at ATM,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance for Cash at ATM,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance for Bank's Property at Kiosk,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance for Bank's Property at Godown,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Deposit Insurance Premium,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance Premium on Locker Services,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance Premium on Motor Vehicles Executives,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Insurance Premium on Motor Vehicles Pool,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Electicity Charges <Office Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Electicity Charges ATM,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Electicity Charges Kiosk,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Electicity Charges <Residence>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fuel for Generator,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+WASA Bill (Office),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+WASA Bill (Residence)                                                        ,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Gas Bill,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fuel for Car Executives,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fuel for Car Pool,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Lease Rent <Car>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Security/Auxiliary Services <Branch/ Office>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Security/Auxiliary Services <ATM>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Security/Auxiliary Services <Kiosk>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Security/Auxiliary Services others,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Monthly Wages of Cleaner,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Cash Carrying / Loading Expenses <Branch>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Cash Carrying / Loading Expenses <ATM>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Cash Carrying / Loading Expenses <Kiosk>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Service Charge of Building Rented ,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Misc exp. On Office Maintenance ,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Tree Plants Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Drinking Water Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Material Purchase For Upkeep of Bank,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+"Taxes (Token, Fitness) & Registration cost Motor Vehicle Pool",TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+"Taxes (Token, Fitness)& Registration cost Motor Vehicle Executives",TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+CNG Conversion Cost Motor Vehicle Executives,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+CNG Conversion Cost Motor Vehicle Pool,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Car Loan Instalment Expenses <Employees>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Car hiring charges <Rent> for MV Pool,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Car Allowance <Employee>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Entertainment Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+News Paper & Periodicals,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Clearing House expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+T.A/D.A (Foreign Travel),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+T.A/D.A (Domestic Travel),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Conveyance for official purpose,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Holiday Conveyance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Foreign Bank Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Local Bank other than BB Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Bangladesh Bank Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Foreign Bank Charges in USD <for OBU>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Local Training Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Local Training Expenses <Registration Fee>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Foreign Training Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Foreign Training Expenses <Registration Fee>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Daily Allowances (Training),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Entertainment (Training),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Venue Rent (Training),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Honorarium (Training),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Professional Fees,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+AGM Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Subscription,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Donation,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Reuter Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+CDBL Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fees for Regis. at Joint Stock Comp.,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+All Other Fees,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Business Development Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+CSR Activities,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Branch Opening Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Contribution to MTB Foundation (Expenditure),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Employees Medical Assistance Fund (Expenditure),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+CPV Charge- Payment to Vendor (Retail),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+CPV Charge - Deposit KYC (Retail),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Site Maintenance & Support Service,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Connectivity Charge <Office Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+ Connectivity Charge <ATM>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Connectivity Charge <Kiosk>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Connectivity Charge <POS>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+NID Verification Charge,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Loss on sale of Fixed Assets,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Misc Expenses not classified elsewhere,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+POS Intercharge Reimbursement Fee Paid for,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+bKash Commission,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Amortization Loss on HFT Securities T.Bill,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Revaluation Loss on HFT Securities T.Bill,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Revaluation Loss on HFT Securities Treasury Bond,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Revaluation Loss on HTM Securities Treasury Bond,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Loss on Sale of Treasury Bond,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Loss from Repo (Ttreasury Bond),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Loss on Sale of Treasury Bill,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Loss from Repo (Treasury Bill),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Loss for Exchange                                                               ,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+UPI Charges for Cards,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+UPI Charges for ADC,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Card Transaction Charges <Fees paid for VISA>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Card Transaction Charges <Fees paid for MasterCard>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Card Transaction Charges <Fees paid for MasterCard> ADC,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Card Transaction Charges <Sharing Charges>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Card Transaction Charges <VISA Transaction charges>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Card Transaction Charges <VISA Transaction charges> ADC,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Card Transaction Charges <NPSB>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Operational Loss - Cards,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Exchange Loss -Cards,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Operational Loss,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Penalty of CRR/ SLR,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+ATM Intercharge Reimbursement Fee Paid for,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Agent Banking Float Sharing Commission,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+CRR Cost <for PB>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Auditor's Fees,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Agency Commission on Student File,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Other Fees & Commission USD <OBU>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Building,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Fixture <at office premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Fixture <at ATM premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Fixture <at Kiosk premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Furniture <at office premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Furniture <at Kiosk premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Electrical Equipments <Office Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Electrical Equipments <ATM Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Electrical Equipments <Kiosk Premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Other Office Equipments <at office premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Other Office Equipments <at ATM premises>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Other Office Equipments at Kiosk,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Other Office Equipments <POS Machines>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Computers & Peripherals,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Motor Cars,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Motor Cycles,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Depreciation on Intangible Assets,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Building,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Fixture,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Furniture,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Furniture at Kiosk,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Electrical Equipments,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Other Office Equipments ,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Other Office Equipments ATMs,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Computers & Peripherals,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Motor Cars,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Repairs & Maintenance on Motor Cycles,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Software Maintenance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Postage,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Postage/Courier Service Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Telephone Expenses <Residence>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Telephone Expenses <Office>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Fax/E-Mail Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Telex/Telegraph  Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Mobile Bill Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+SWIFT Charges (Expenses),TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Stamp Charges                                                                  ,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Lawyer's Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Legal Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Legal Stamps Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Court Fees & Charges,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Security Stationery,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Computer Stationery,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Paper & Table Stationary <Petty Stationery>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Paper & Table Stationary <Office>,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Paper & Table Stationary ATM,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Paper & Table Stationary Kiosk,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Paper & Table Stationary POS,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Printed Stationery,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Printing Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Advertisement & Publicity,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+News Paper Advertisements,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Broad Casting Advertisements,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Hoarding/ Neon Signs,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Souvenir/Magazine,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Cut Out Dangler Flex Backdrop etc branding expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Director's Fees,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Parties & Dinner,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+Director's Traveling Expenses,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD Basic,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD House Rent,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD House Maintenance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD Entertainment,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD Festival Bonus,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD Incentive Bonus,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD Leave Fare Assistance,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD Security & Personal Wages,TRUE,Service,All,Preliminary Expenses,,,True,False,approve
+MD Provident Fund,TRUE,Service,All,Preliminary Expenses,,,True,False,approve

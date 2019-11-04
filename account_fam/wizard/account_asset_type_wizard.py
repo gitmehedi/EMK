@@ -15,34 +15,40 @@ class AccountAssetCategoryWizard(models.TransientModel):
         context = self._context
         return self.env[context['active_model']].search([('id', '=', context['active_id'])]).active
 
+    @api.model
+    def default_method(self):
+        context = self._context
+        return self.env[context['active_model']].search([('id', '=', context['active_id'])]).method
+
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
-    method_progress_factor = fields.Float(string='Depreciation Factor', default=0.0, )
+    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1,3),default=0.0, )
     journal_id = fields.Many2one('account.journal', string='Journal')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', default=0)
     method_number = fields.Integer(string='Number of Depreciations', default=0)
-    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
-                              string='Computation Method', default='degressive')
+    method = fields.Selection([('degressive', 'Reducing Method'),
+                               ('linear', 'Straight Line/Linear'),
+                               ('no_depreciation', 'No Depreciation')],default=default_method,
+                              string='Computation Method')
     account_asset_id = fields.Many2one('account.account', string='Asset Account',
                                        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation',
                                                 domain=[('deprecated', '=', False)])
     account_depreciation_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
-                                              string='Accumulated Depreciation A/C',required=False)
+                                              string='Accumulated Depreciation A/C', required=False)
     account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
                                                       domain=[('internal_type', '=', 'other'),
-                                                              ('deprecated', '=', False)],required=False)
+                                                              ('deprecated', '=', False)], required=False)
     account_asset_loss_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                             string='Asset Loss A/C')
     account_asset_gain_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                             string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
-    no_depreciation = fields.Boolean(string="No Depreciation", default=False)
 
-    @api.onchange('no_depreciation')
-    def onchange_no_depreciation(self):
-        if self.no_depreciation:
+    @api.onchange('method')
+    def onchange_method(self):
+        if self.method == 'no_depreciation':
             self.account_depreciation_expense_id = None
             self.account_depreciation_id = None
 
@@ -64,6 +70,11 @@ class AccountAssetCategoryWizard(models.TransientModel):
         if len(name) > 0:
             raise Warning('[Unique Error] Name must be unique!')
 
+        if asset.method=='no_depreciation' and self.method !='no_depreciation' and not self.account_depreciation_id  and not self.account_depreciation_expense_id:
+            raise Warning(_('Current Assets depreciation method was No Depreciation. Please chose following fields \n'
+                            '- Depreciation Exp. A/C\n - Accumulated Depreciation A/C'))
+
+
         journal_id = self.journal_id.id if self.journal_id else None
         depreciation_year = self.depreciation_year if self.depreciation_year else None
         method_number = self.method_number if self.method_number else None
@@ -76,7 +87,6 @@ class AccountAssetCategoryWizard(models.TransientModel):
         account_asset_gain_id = self.account_asset_gain_id.id if self.account_asset_gain_id else None
         asset_sale_suspense_account_id = self.asset_sale_suspense_account_id.id if self.asset_sale_suspense_account_id else None
         method_progress_factor = self.method_progress_factor if self.method_progress_factor else None
-        no_depreciation = self.no_depreciation if self.no_depreciation else None
 
         pending = self.env['history.account.asset.category'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:
@@ -99,11 +109,10 @@ class AccountAssetCategoryWizard(models.TransientModel):
              'account_asset_gain_id': account_asset_gain_id,
              'asset_sale_suspense_account_id': asset_sale_suspense_account_id,
              'method_progress_factor': method_progress_factor,
-             'status': self.status,
-             'no_depreciation': self.no_depreciation
+             'status': self.status
              })
 
         record = self.env['account.asset.category'].search(
             [('id', '=', id), ('state', '!=', 'reject'), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True,'maker_id': self.env.user.id})
+            record.write({'pending': True, 'maker_id': self.env.user.id})

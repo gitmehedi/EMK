@@ -22,7 +22,7 @@ class AccountAssetAsset(models.Model):
     asset_seq = fields.Char(string='Asset Code', track_visibility='onchange')
     batch_no = fields.Char(string='Batch No', readonly=True,
                            track_visibility='onchange', states={'draft': [('readonly', False)]})
-    method_progress_factor = fields.Float(string='Depreciation Factor', readonly=True, default=0.0,
+    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1, 3), readonly=True, default=0.0,
                                           states={'draft': [('readonly', False)]})
     method_number = fields.Integer(string='Number of Depreciations', default=0,
                                    help="The number of depreciations needed to depreciate your asset")
@@ -30,7 +30,9 @@ class AccountAssetAsset(models.Model):
     partner_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0, readonly=True,
                                        track_visibility='onchange', states={'draft': [('readonly', False)]})
-    method = fields.Selection([('degressive', 'Reducing Method'), ('linear', 'Straight Line/Linear')],
+    method = fields.Selection([('degressive', 'Reducing Method'),
+                               ('linear', 'Straight Line/Linear'),
+                               ('no_depreciation', 'No Depreciation')],
                               track_visibility='onchange',
                               string='Computation Method', required=True, default='degressive',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
@@ -59,7 +61,7 @@ class AccountAssetAsset(models.Model):
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
     accumulated_value = fields.Float(string='Accumulated Depr.', compute="_compute_accumulated_value",
-                                     track_visibility='onchange',store=True)
+                                     track_visibility='onchange', store=True)
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
                                      track_visibility='onchange', readonly=True,
@@ -105,9 +107,13 @@ class AccountAssetAsset(models.Model):
 
     @api.multi
     def all_asset_validate(self):
-        assets = self.search([('state', '=', 'open')])
+        assets = self.search([('state','=','open')])
         for asset in assets:
             asset_depr = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
+            code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
+            date = asset.date.split('-')
+            ATAC = '{0}-{1}-MTB-{2}-{3}'.format(date[0], date[1], asset.category_id.code, asset.asset_type_id.code)
+            asset.write({'asset_seq': code.replace('ATAC', ATAC)})
             if asset_depr:
                 lst_depr_date = self.date_str_format(fields.Datetime.now()[:10])
                 usage_date = self.date_str_format(asset.asset_usage_date)
@@ -183,52 +189,50 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def compute_depreciation_history(self, date, asset):
-        if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and not asset.asset_type_id.no_depreciation:
-            # last_depr_date = asset._get_last_depreciation_date()
-            # no_of_days = (date - self.date_str_format(last_depr_date[asset['id']])).days
+        if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and asset.asset_type_id.method != 'no_depreciation':
             if self.lst_depr_date:
                 no_of_days = (date - self.date_str_format(asset.lst_depr_date)).days
             else:
                 no_of_days = (date - self.date_str_format(asset.asset_usage_date)).days
 
-            if asset.method == 'linear':
-                date_delta = (self.date_str_format(asset.date) + relativedelta(
-                    years=asset.depreciation_year) - self.date_str_format(asset.date)).days
-                daily_depr = (asset.value - asset.salvage_value) / date_delta
-            elif asset.method == 'degressive':
-                year = self.date_str_format(asset.date).year
-                date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
-                daily_depr = (asset.depr_base_value * asset.method_progress_factor) / date_delta
+            if no_of_days > 0:
+                if asset.method == 'linear':
+                    date_delta = (self.date_str_format(asset.date) + relativedelta(
+                        years=asset.depreciation_year) - self.date_str_format(asset.date)).days
+                    daily_depr = (asset.value - asset.salvage_value) / date_delta
+                elif asset.method == 'degressive':
+                    year = self.date_str_format(asset.date).year
+                    date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
+                    daily_depr = (asset.depr_base_value * asset.method_progress_factor) / date_delta
 
-            depr_amount = no_of_days * daily_depr
-            cumul_depr = sum([rec.amount for rec in asset.depreciation_line_ids]) + depr_amount
-            book_val_amount = asset.value_residual - depr_amount
+                depr_amount = no_of_days * daily_depr
+                cumul_depr = sum([rec.amount for rec in asset.depreciation_line_ids]) + depr_amount
+                book_val_amount = asset.value_residual - depr_amount
 
-            if depr_amount > 0:
-                vals = {
-                    'amount': depr_amount,
-                    'asset_id': self.id,
-                    'sequence': 1,
-                    'name': (asset.code or '') + '/' + str(1),
-                    'remaining_value': abs(book_val_amount),
-                    'depreciated_value': cumul_depr,
-                    'depreciation_date': date.date(),
-                    'days': no_of_days,
-                    'asset_id': asset.id,
-                }
+                if depr_amount > 0:
+                    vals = {
+                        'amount': depr_amount,
+                        'asset_id': self.id,
+                        'sequence': 1,
+                        'name': (asset.code or '') + '/' + str(1),
+                        'remaining_value': abs(book_val_amount),
+                        'depreciated_value': cumul_depr,
+                        'depreciation_date': date.date(),
+                        'days': no_of_days,
+                        'asset_id': asset.id,
+                    }
 
-                rec = asset.depreciation_line_ids.search(
-                    [('asset_id', '=', vals['asset_id']), ('depreciation_date', '=', date.date())])
-                if not rec:
-                    depreciation = asset.depreciation_line_ids.create(vals)
-                    if depreciation:
-                        asset.create_move(depreciation)
-                        if date.month == 12 and date.day == 31:
-                            asset.write({'lst_depr_date': date.date(),
-                                         'depr_base_value': book_val_amount,
-                                         })
-                        else:
-                            asset.write({'lst_depr_date': date.date()})
+                    rec = asset.depreciation_line_ids.search(
+                        [('asset_id', '=', vals['asset_id']), ('depreciation_date', '=', date.date())])
+                    if not rec:
+                        depreciation = asset.depreciation_line_ids.create(vals)
+                        if depreciation:
+                            asset.create_move(depreciation)
+                            if date.month == 12 and date.day == 31 and asset.method == 'degressive':
+                                asset.write({'lst_depr_date': date.date(),
+                                             'depr_base_value': book_val_amount})
+                            else:
+                                asset.write({'lst_depr_date': date.date()})
 
     @api.multi
     def create_move(self, line):
@@ -238,7 +242,14 @@ class AccountAssetAsset(models.Model):
             if line.move_id:
                 raise UserError(
                     _('This depreciation is already linked to a journal entry! Please post or delete it.'))
+
             category_id = line.asset_id.asset_type_id
+            if not category_id.account_depreciation_id or not category_id.account_depreciation_expense_id.id:
+                raise UserError(
+                    _('Asset Category [{0}] need to set following fields'
+                      ' \n - Depreciation Exp. A/C \n - Accumulated Depreciation A/C'.format(
+                        line.asset_id.asset_type_id.name)))
+
             depreciation_date = self.env.context.get(
                 'depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id

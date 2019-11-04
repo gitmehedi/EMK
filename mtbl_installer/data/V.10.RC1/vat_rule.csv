@@ -1,0 +1,3 @@
+VAT Name,VAT Scope,VAT Computation,VAT Account,VAT Account on Refunds,General Value,Mushok Value,VDS Authority Value,Included in Price,Active,Pending,Status
+VAT 2.00%(Include),Purchases,Percentage of Price,VAT on Expenditure,VAT on Expenditure,2,1.5,1,TRUE,True,False,approve
+VAT 5.00%(Exclude),Purchases,Percentage of Price,VAT on Expenditure,VAT on Expenditure,5,2.5,2,FALSE,True,False,approve

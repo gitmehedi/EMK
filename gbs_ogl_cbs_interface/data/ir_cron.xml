@@ -52,6 +52,6 @@
         <field name="nextcall"
                eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
         <field name="model">payment.instruction</field>
-        <field name="function">invalidate_cache</field>
+        <field name="function">invalidate_payment_cache</field>
     </record>
 </odoo>

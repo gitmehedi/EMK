@@ -24,8 +24,18 @@ class ProductProductWizard(models.TransientModel):
                                          domain=[('type_tax_use', '=', 'purchase')])
     default_code = fields.Char('Internal Reference', index=True)
     type = fields.Selection([('consu', 'Product'), ('service', 'Service'), ('asset', 'Assets')], string='Product Type')
+    asset_category_id = fields.Many2one('account.asset.category', string='Asset Type')
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Category')
-    asset_category_id = fields.Many2one('account.asset.category', string='Asset Category')
+
+    @api.onchange('asset_category_id')
+    def onchange_asset_category(self):
+        res = {}
+        self.asset_type_id=None
+        category_ids = self.env['account.asset.category'].search([('parent_id', '=', self.asset_category_id.id)])
+        res['domain'] = {
+            'asset_type_id': [('id', 'in', category_ids.ids)],
+        }
+        return res
 
     @api.constrains('name')
     def _check_unique_constrain(self):

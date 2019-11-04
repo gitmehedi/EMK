@@ -68,12 +68,12 @@ class ProductProduct(models.Model):
                     self.supplier_taxes_id = [(6, 0, requested.supplier_taxes_id.ids)]
                 if requested.default_code:
                     self.default_code = requested.default_code
-                if requested.type=='asset':
+                if requested.type == 'asset':
                     self.type = requested.type
                     self.asset_category_id = requested.asset_category_id.id
                     self.asset_type_id = requested.asset_type_id.id
                 else:
-                    self.type = requested.type
+                    self.type = requested.type if requested.type else self.type
 
                 self.pending = False
                 self.approver_id = self.env.user.id
@@ -130,11 +130,9 @@ class HistoryProductProduct(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     standard_price = fields.Float('Cost Price')
     account_tds_id = fields.Many2one('tds.rule', string='TDS Rule')
-    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
-                                         string='Vendor Taxes',
-                                         domain=[('type_tax_use', '=', 'purchase')])
+    supplier_taxes_id = fields.Many2many('account.tax', string='VAT', domain=[('type_tax_use', '=', 'purchase')])
     default_code = fields.Char('Internal Reference')
-    type = fields.Selection([('consu','Product'),('service','Service'),('asset','Assets')],string='Product Type')
+    type = fields.Selection([('consu', 'Product'), ('service', 'Service'), ('asset', 'Assets')], string='Product Type')
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Type')
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Category')
     line_id = fields.Many2one('product.product', ondelete='restrict')

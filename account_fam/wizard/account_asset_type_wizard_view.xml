@@ -36,11 +36,11 @@
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="account_depreciation_expense_id"
                                domain="[('internal_type','!=','view')]"
-                               attrs="{'invisible': [('no_depreciation', '=', True )]}"
+                               attrs="{'invisible': [('method', '=', 'no_depreciation')]}"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="account_depreciation_id"
                                domain="[('internal_type','!=','view')]"
-                               attrs="{'invisible': [('no_depreciation', '=', True )]}"
+                               attrs="{'invisible': [('method', '=', 'no_depreciation')]}"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                 </group>
@@ -48,12 +48,9 @@
                     <group string="Depreciation Method">
                         <field name="method" widget="radio"/>
                         <field name="method_progress_factor"
-                               attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                        <field name="method_number" string="Asset Life (In Year)"
-                               attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
-                    </group>
-                    <group string="No Depreciation">
-                        <field name="no_depreciation"/>
+                               attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                        <field name="depreciation_year" string="Asset Life (In Year)"
+                               attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
                     </group>
                 </group>
                 <footer>

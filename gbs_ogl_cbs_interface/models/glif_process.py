@@ -364,14 +364,19 @@ class ServerFileProcess(models.Model):
             if journal_type not in jrnl.keys():
                 raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
 
-            move_id = self.env['account.move'].create({
-                'journal_id': jrnl['CBS'],
-                'date': fields.Datetime.now(),
-                'is_cbs': True,
-                'ref': 'Journal generated from CBS using {0}'.format(file),
-                'line_ids': [],
-                'amount': 0
-            })
+            move_id = self.env['account.move'].search([('ref', '=', file)],limit=1)
+            if not move_id:
+                move_id = self.env['account.move'].create({
+                    'journal_id': jrnl['CBS'],
+                    'date': fields.Datetime.now(),
+                    'is_cbs': True,
+                    'ref': file,
+                    'line_ids': [],
+                    'amount': 0
+                })
+            else:
+                move_id.line_ids.unlink()
+
             for worksheet_index in file_ins:
                 index += 1
                 if len(worksheet_index) > 2:
@@ -531,8 +536,8 @@ class ServerFileProcess(models.Model):
                                             'details': msg})
             except Exception:
                 missmatch = move_id.missmatch_value
-                if move_id.state == 'draft':
-                    move_id.unlink()
+                # if move_id.state == 'draft':
+                #     move_id.unlink()
                 errObj.line_ids.create({'line_id': errObj.id,
                                         'line_no': 'Unknown Error',
                                         'details': 'Cannot create unbalanced journal entry. Amount Variance is {0}'.format(

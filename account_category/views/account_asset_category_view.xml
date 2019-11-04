@@ -75,11 +75,11 @@
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="account_depreciation_expense_id"
                                    domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                   attrs="{'invisible': [('no_depreciation', '=', True )],'required': [('no_depreciation', '=', False )]}"
+                                   attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="account_depreciation_id"
                                    domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                   attrs="{'invisible': [('no_depreciation', '=', True )],'required': [('no_depreciation', '=', False )]}"
+                                   attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                     </group>
@@ -87,12 +87,9 @@
                         <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                             <field name="method" widget="radio"/>
                             <field name="method_progress_factor"
-                                   attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                             <field name="depreciation_year"
-                                   attrs="{'invisible':[('method','=','degressive')], 'required':[('method','=','linear')]}"/>
-                        </group>
-                        <group string="No Depreciation">
-                            <field name="no_depreciation"/>
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
                         </group>
                     </group>
                     <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
@@ -100,8 +97,6 @@
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
-                            <field name="request_date"/>
-                            <field name="change_date"/>
                             <field name="journal_id"/>
                             <field name="account_asset_id"/>
                             <field name="asset_suspense_account_id"/>
@@ -110,12 +105,13 @@
                             <field name="account_asset_loss_id"/>
                             <field name="account_asset_gain_id"/>
                             <field name="asset_sale_suspense_account_id"/>
+                            <field name="method"/>
                             <field name="method_progress_factor"/>
                             <field name="depreciation_year"/>
-                            <field name="method_number"/>
-                            <field name="method"/>
                             <field name="status"/>
                             <field name="state"/>
+                            <field name="request_date"/>
+                            <field name="change_date"/>
                         </tree>
                     </field>
                 </sheet>

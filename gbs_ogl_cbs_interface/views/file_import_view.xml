@@ -6,7 +6,7 @@
             <field name="model">gbs.file.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Bulk Import Data" delete="0" duplicate="0">
+                <form string="Bulk / Manual Journal" delete="0" duplicate="0">
                     <header>
                         <button name="gbs_ogl_cbs_interface.action_gbs_file_import_wizard"
                                 groups="mtbl_access.group_mtbl_sys_admin"
@@ -40,7 +40,6 @@
                             <page string="Values">
                                 <field name="import_lines">
                                     <tree string="List" editable="bottom">
-                                        <field name="type" invisible="1"/>
                                         <field name="type_journal"/>
                                         <field name="name" invisible="1"/>
                                         <field name="account_no"/>
@@ -58,14 +57,16 @@
                                         </header>
                                         <group>
                                             <group>
-                                                <field name="type"/>
+                                                <field name="type_journal"/>
                                                 <field name="account_no"/>
                                                 <field name="narration"/>
                                             </group>
                                             <group>
+                                                <field name="debit"
+                                                       attrs="{'readonly':[('type_journal','=','cr')],'required':[('type_journal','=','dr')]}"/>
+                                                <field name="credit"
+                                                       attrs="{'readonly':[('type_journal','=','dr')],'required':[('type_journal','=','cr')]}"/>
                                                 <field name="date"/>
-                                                <field name="debit"/>
-                                                <field name="credit"/>
                                             </group>
                                         </group>
                                     </form>
@@ -84,7 +85,7 @@
             <field name="name">gbs.file.import.tree</field>
             <field name="model">gbs.file.import</field>
             <field name="arch" type="xml">
-                <tree string="Bulk Import Data"
+                <tree string="Bulk / Manual Journal"
                       decoration-success="state=='draft'" decoration-muted="state=='processed'">
                     <field name="code"/>
                     <field name="file_name" invisible="1"/>
@@ -99,7 +100,7 @@
             <field name="model">gbs.file.import</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Bulk Import Data Search">
+                <search string="Bulk / Manual Journal">
                     <field name="date"/>
                     <group name="group_by">
                         <filter string="Draft" name="state" icon="terp-personal"
@@ -111,7 +112,7 @@
 
 
         <record id="action_gbs_file_import" model="ir.actions.act_window">
-            <field name="name">Bulk Import Data</field>
+            <field name="name">Bulk / Manual Journal</field>
             <field name="res_model">gbs.file.import</field>
             <field name="view_mode">tree,form</field>
             <field name="context">
@@ -119,7 +120,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_gbs_file_import" name="Bulk Data Import"
+        <menuitem id="menu_gbs_file_import" name="Bulk / Manual Journal"
                   parent="account.menu_finance_payables" sequence="50"
                   action="action_gbs_file_import"
                   groups="mtbl_access.group_mtbl_sys_admin"/>

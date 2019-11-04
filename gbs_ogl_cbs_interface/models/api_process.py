@@ -248,7 +248,7 @@ class PaymentInstruction(models.Model):
             raise ValidationError(_("Payment Instruction [{0}] is processing.".format(self.code)))
 
     @api.multi
-    def invalidate_cache(self):
+    def invalidate_payment_cache(self):
         payments = self.search([('is_sync', '=', False), ('state', '=', 'draft')])
         for val in payments:
             if val.code in self._payments:
