@@ -23,32 +23,42 @@ class ResPartnerWizard(models.TransientModel):
     email = fields.Char(string='Email')
     street = fields.Char(string='Street')
     street2 = fields.Char(string='ETC')
-    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',default=lambda self: self.env.user.company_id.country_id.id)
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',
+                                 default=lambda self: self.env.user.company_id.country_id.id)
     tax = fields.Char(string='Trade License')
     vat = fields.Char(string='VAT Registration', size=11)
     bin = fields.Char(string='BIN Number', size=13)
     tin = fields.Char(string='TIN Number', size=12)
     fax = fields.Char(string='Fax', size=16)
     nid = fields.Char(string='NID', size=17)
-    property_account_receivable_id = fields.Many2one('account.account',string='Account Receivable',
+    property_account_receivable_id = fields.Many2one('account.account', string='Account Receivable',
                                                      domain="[('internal_type', '=', 'receivable')]")
-    property_account_payable_id = fields.Many2one('account.account',string='Account Payable',
+    property_account_payable_id = fields.Many2one('account.account', string='Account Payable',
                                                   domain="[('internal_type', '=', 'payable')]")
     vendor_bank_acc = fields.Char(string='Vendor Bank Account')
     division_id = fields.Many2one('bd.division', string='Division')
     district_id = fields.Many2one('bd.district', string='District')
     upazila_id = fields.Many2one('bd.upazila', string='Upazila/Thana')
     postal_code = fields.Many2one('bd.postal.code', 'Postal Code')
+    company_type = fields.Selection(selection=[('person', 'Individual'), ('company', 'Company')], string='Company Type')
+    parent_id = fields.Many2one('res.partner', 'Vendor Type')
+    company_id = fields.Many2one('res.company', 'Company', index=True)
     entity_services = fields.Many2many('product.product', 'service_vendor_wizard_rel', 'service_id',
-                                       'vendor_wizard_id',string='Service')
+                                       'vendor_wizard_id', string='Service')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
     contact_person = fields.Char(string='Contact Person')
+
+    @api.onchange('company_type')
+    def onchange_company_type(self):
+        if self.company_type=='company':
+            self.parent_id=None
 
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
             name = self.env['res.partner'].search(
-                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -57,30 +67,34 @@ class ResPartnerWizard(models.TransientModel):
         if self.mobile and not self.mobile.isdigit():
             raise Warning('[Format Error] Mobile must be numeric!')
 
-    @api.constrains('tax', 'bin', 'tin', 'vat', 'mobile', 'fax','nid')
+    @api.constrains('tax', 'bin', 'tin', 'vat', 'mobile', 'fax', 'nid')
     def _check_numeric_constrain(self):
         if self.tax:
             tax = self.env['res.partner'].search(
-                [('tax', '=ilike', self.tax.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
+                [('tax', '=ilike', self.tax.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(tax) > 1:
                 raise Warning(_('[Unique Error] Trade License must be unique!'))
         if self.bin:
             bin = self.env['res.partner'].search(
-                [('bin', '=ilike', self.bin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
+                [('bin', '=ilike', self.bin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(bin) > 1:
                 raise Warning(_('[Unique Error] BIN Number must be unique!'))
             if len(self.bin) != 13 or not self.bin.isdigit():
                 raise Warning('[Format Error] BIN must be numeric with 13 digit!')
         if self.vat:
             vat = self.env['res.partner'].search(
-                [('vat', '=ilike', self.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
+                [('vat', '=ilike', self.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(vat) > 1:
                 raise Warning(_('[Unique Error] VAT Registration must be unique!'))
             if len(self.vat) != 11 or not self.vat.isdigit():
                 raise Warning('[Format Error] VAT Registration must be numeric with 11 digit!')
         if self.tin:
             tin = self.env['res.partner'].search(
-                [('tin', '=ilike', self.tin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
+                [('tin', '=ilike', self.tin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(tin) > 1:
                 raise Warning(_('[Unique Error] TIN Number must be unique!'))
             if len(self.tin) != 12 or not self.tin.isdigit():
@@ -91,10 +105,11 @@ class ResPartnerWizard(models.TransientModel):
             raise Warning('[Format Error] Fax must be 16 character!')
         if self.nid:
             nid = self.env['res.partner'].search(
-                [('nid', '=ilike', self.nid.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
+                [('nid', '=ilike', self.nid.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(nid) > 1:
                 raise Warning(_('[Unique Error] NID must be unique!'))
-            if len(self.nid) not in (17,13,10):
+            if len(self.nid) not in (17, 13, 10):
                 raise Warning('[Format Error] NID must be 17/13/10 character!')
             if not self.nid.isdigit():
                 raise Warning('[Format Error] NID must be numeric!')
@@ -110,7 +125,10 @@ class ResPartnerWizard(models.TransientModel):
         pending = self.env['history.res.partner'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:
             raise Warning('[Warning] You already have a pending request!')
-
+        company_type = fields.Selection(selection=[('person', 'Individual'), ('company', 'Company')],
+                                        string='Company Type')
+        parent_id = fields.Many2one('res.partner', 'Vendor Type')
+        company_id = fields.Many2one('res.company', 'Company', index=True)
         self.env['history.res.partner'].create(
             {'change_name': self.name,
              'status': self.status,
@@ -136,13 +154,16 @@ class ResPartnerWizard(models.TransientModel):
              'postal_code': self.postal_code.id,
              'designation_id': self.designation_id.id,
              'contact_person': self.contact_person,
+             'company_type': self.company_type if self.company_type else None,
+             'parent_id': self.parent_id.id if self.parent_id else None,
+             'company_id': self.company_id.id if self.company_id else None,
              'entity_services': [(6, 0, self.entity_services.ids)],
              'request_date': fields.Datetime.now(),
              'line_id': id})
         record = self.env['res.partner'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True,'maker_id': self.env.user.id})
+            record.write({'pending': True, 'maker_id': self.env.user.id})
 
     @api.onchange("division_id")
     def onchange_division(self):

@@ -88,12 +88,13 @@ class Branch(models.Model):
         if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
-            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
-                                             limit=1)
+            requested = self.line_ids.search([('state', '=', 'pending'),
+                                              ('line_id', '=', self.id)], order='id desc',limit=1)
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
                     'pending': False,
+                    'branch_type': requested.branch_type if requested.branch_type else self.branch_type,
                     'active': requested.status,
                     'approver_id': self.env.user.id,
                 })
@@ -152,6 +153,8 @@ class HistoryBranch(models.Model):
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
+    branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'), ('rural', 'Rural')],
+                                   string='Location of Branch')
     line_id = fields.Many2one('operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')

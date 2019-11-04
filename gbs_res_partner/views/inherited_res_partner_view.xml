@@ -94,11 +94,35 @@
                           decoration-bf="state in ('pending',)"
                           decoration-danger="state=='reject'">
                         <field name="change_name"/>
+                        <field name="website"/>
+                        <field name="phone"/>
+                        <field name="mobile"/>
+                        <field name="email"/>
+                        <field name="street"/>
+                        <field name="street2"/>
+                        <field name="tax"/>
+                        <field name="vat"/>
+                        <field name="bin"/>
+                        <field name="tin"/>
+                        <field name="fax"/>
+                        <field name="nid"/>
+                        <field name="property_account_receivable_id"/>
+                        <field name="property_account_payable_id"/>
+                        <field name="vendor_bank_acc"/>
+                        <field name="division_id"/>
+                        <field name="district_id"/>
+                        <field name="upazila_id"/>
+                        <field name="postal_code"/>
+                        <field name="company_type"/>
+                        <field name="parent_id"/>
+                        <field name="entity_services"/>
+                        <field name="designation_id"/>
+                        <field name="contact_person"/>
                         <field name="request_date"/>
                         <field name="change_date"/>
                         <field name="status"/>
                         <field name="state"/>
-                    </tree>
+               </tree>
                 </field>
             </xpath>
             <xpath expr="//page[@name='accounting']" position="inside">
