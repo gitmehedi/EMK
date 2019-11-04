@@ -137,7 +137,7 @@ class GBSFileImportWizard(models.TransientModel):
         allow_header = ['type', 'account', 'branch', 'amount', 'narration', 'date']
         for line in reader:
             if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):
-                raise ValidationError(_("Please check header of the file"))
+                raise ValidationError(_("** Header of uploaed file does not match with expected one. \n Please check header of the file."))
 
             count += 1
             line_no = count + 1
@@ -158,6 +158,10 @@ class GBSFileImportWizard(models.TransientModel):
                                                                                                       val['account_no'],
                                                                                                       line_no)))
 
+                if len(val['account_no']) == 13:
+                    raise ValidationError(
+                        _("Account [{0}] has invalid value in line no {1} !".format(val['account_no'], line_no)))
+
                 val['account_no'] = val['account_no'] + val['branch']
 
             val['narration'] = line['narration'].strip()
@@ -173,17 +177,6 @@ class GBSFileImportWizard(models.TransientModel):
             else:
                 val['date'] = datetime.datetime.strptime(line['date'].strip(), '%d/%m/%Y')
 
-            cus_type = line['type'].strip().lower()
-
-            if not cus_type:
-                raise ValidationError(
-                    _("Type {0} has invalid value in line no {1} !".format(cus_type, line_no)))
-            else:
-                if len(line['account']) == 13:
-                    type = '01' if line['type'] == 'cr' else '51'
-                if len(line['account']) == 11:
-                    type = '04' if line['type'] == 'cr' else '54'
-
             amount = line['amount'].strip()
             if not amount and not amount.isnumeric():
                 raise ValidationError(
@@ -197,7 +190,6 @@ class GBSFileImportWizard(models.TransientModel):
                 val['credit'] = 0
                 val['debit'] = amount
                 val['type_journal'] = 'dr'
-            val['type'] = type
 
             vals.append((0, 0, val))
 
