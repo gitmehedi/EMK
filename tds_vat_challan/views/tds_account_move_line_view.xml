@@ -240,14 +240,5 @@
             <field name="key2">client_action_multi</field>
             <field name="multi">True</field>
         </record>
-
-        <!--<act_window id="action_account_invoice_confirm1"-->
-                    <!--multi="True"-->
-                    <!--key2="client_action_multi" name="Generate"-->
-                    <!--groups="account.group_account_manager"-->
-                    <!--res_model="tds.challan.ou.selection.wizard" src_model="account.move.line"-->
-                    <!--view_mode="form" target="new" view_type="form"/>-->
-
-
     </data>
 </odoo>

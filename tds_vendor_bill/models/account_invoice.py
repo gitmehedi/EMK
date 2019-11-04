@@ -20,10 +20,6 @@ class AccountInvoice(models.Model):
                                     store=True, readonly=True, track_visibility='always', copy=False)
     tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='VAT', oldname='tax_line',
                                    readonly=True, states={'draft': [('readonly', False)]}, copy=False)
-    vat_over_tds = fields.Boolean(string='VAT over TDS', default=False,
-                                  readonly=True, states={'draft': [('readonly', False)]},
-                                  help="""TDS will applicable to base price for this bill. 
-                                       VAT will be calculated on TDS+Base price.""")
 
     @api.one
     @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount',
@@ -168,7 +164,7 @@ class AccountInvoiceLine(models.Model):
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
                  'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id',
                  'invoice_id.company_id', 'invoice_id.date_invoice', 'invoice_id.date',
-                 'invoice_id.vat_selection', 'invoice_id.vat_over_tds')
+                 'invoice_id.vat_selection')
     def _compute_price(self):
         if self.account_tds_id.effect_on_base:
             currency = self.invoice_id and self.invoice_id.currency_id or None

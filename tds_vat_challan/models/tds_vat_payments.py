@@ -38,19 +38,11 @@ class TDSVATPayment(models.Model):
         self.suspend_security().action_journal_creation()
         self.account_move_line_ids.write(
             {'is_paid': True, 'is_pending': False, 'is_challan': False, 'pending_for_paid': False})
-        # return {
-        #     'type': 'ir.actions.client',
-        #     'tag': 'reload',
-        # }
 
     @api.multi
     def action_reject(self):
         self.write({'state': 'cancel'})
         self.account_move_line_ids.write({'pending_for_paid': False})
-        # return {
-        #     'type': 'ir.actions.client',
-        #     'tag': 'reload',
-        # }
 
     @api.multi
     def action_journal_creation(self):
