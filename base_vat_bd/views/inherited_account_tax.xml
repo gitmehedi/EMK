@@ -114,7 +114,7 @@
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True}</field>
             <field name="view_id" ref="inherited_view_tax_tree"/>
         </record>
-        <menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="Vats" parent="account.account_account_menu" sequence="1"/>
+        <!--<menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="Vats" parent="account.account_account_menu" sequence="1"/>-->
 
         <record id="inherited_invoice_supplier_form" model="ir.ui.view">
             <field name="name">account.invoice.from</field>
