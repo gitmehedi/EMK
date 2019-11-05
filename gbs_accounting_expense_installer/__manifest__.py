@@ -7,9 +7,9 @@
     'depends': [
                 'gbs_vendor_bill',
                 'base_vat_bd_rebate',
-                'account_tds',
                 'tds_vat_challan',
                 'tds_vendor_bill',
+                'account_tds',
                 ],
 
     'data': [ ],
