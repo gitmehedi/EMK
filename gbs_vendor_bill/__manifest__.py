@@ -18,5 +18,5 @@
         'views/account_invoice_view.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
 }
