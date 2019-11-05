@@ -117,11 +117,11 @@ class AccountInvoice(models.Model):
                 done_taxes.append(tax.id)
         return res
 
-    @api.multi
-    def action_invoice_open(self):
-        if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
-        return super(AccountInvoice, self).action_invoice_open()
+    # @api.multi
+    # def action_invoice_open(self):
+    #     if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
+    #         raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+    #     return super(AccountInvoice, self).action_invoice_open()
 
     @api.multi
     def action_move_create(self):

@@ -5,7 +5,6 @@
     'website': 'http://www.genweb2.com',
     'category': 'Accounting',
     'depends': [
-                'gbs_vendor_bill',
                 'base_vat_bd_rebate',
                 'tds_vat_challan',
                 'tds_vendor_bill',
