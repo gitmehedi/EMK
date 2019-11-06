@@ -121,8 +121,9 @@ class GBSFileImportWizard(models.TransientModel):
         self._err_log += _(
             "Error when processing line '%s'") % data + ':\n' + msg + '\n\n'
 
-    def format_error(self, id, index, text):
-        return "({0},{1},'{2}','{3}'),".format(id, index, text, fields.Datetime.now())
+    @staticmethod
+    def format_error(index, text):
+        return "({0},'{1}','{2}'),".format(index, text, fields.Datetime.now())
 
     @staticmethod
     def format_journal(line):
@@ -145,21 +146,18 @@ class GBSFileImportWizard(models.TransientModel):
             line['amount_currency'],
             line['company_id'])
 
+    @staticmethod
+    def date_validate(date_str):
+        is_valid = True
+        try:
+            datetime.datetime.strptime(date_str, '%Y-%m-%d')
+        except ValueError:
+            is_valid = False
+
+        return is_valid
+
     @api.multi
-    def aml_import(self):
-        if not self.lines:
-            raise ValidationError(_('Please Select File.'))
-
-        self._err_log = ''
-        move = self.env['gbs.data.migration'].browse(self._context['active_id'])
-        lines, header = self._remove_leading_lines(self.lines)
-        header_fields = csv.reader(StringIO.StringIO(header), dialect=self.dialect).next()
-        self._header_fields = self._process_header(header_fields)
-        reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
-        index = 0
-        allow_header = ['dt', 'brnch', 'segment code', 'gl code', 'acquiring channel code', 'servicing channel code',
-                        'cost center code', 'narration', 'cr amt', 'dr amt', 'lcy bal']
-
+    def get_existing_data(self):
         coa = {val.code: val.id for val in
                self.env['account.account'].search([('level_id.name', '=', 'Layer 5'), ('active', '=', True)])}
         jrnl = {val.code: val.id for val in self.env['account.journal'].search([('active', '=', True)])}
@@ -171,7 +169,24 @@ class GBSFileImportWizard(models.TransientModel):
         cc = {val.code: val.id for val in
               self.env['account.analytic.account'].search([('active', '=', True)])}
 
-        errObj = self.env['gbs.migration.error'].create({'name': 'Opening Journal'})
+        return coa, jrnl, branch, currency, ac, sc, sg, cc
+
+    @api.multi
+    def aml_import(self):
+        if not self.lines:
+            raise ValidationError(_('Please Select File.'))
+
+        index = 0
+        self._err_log = ''
+        move = self.env['gbs.data.migration'].browse(self._context['active_id'])
+        lines, header = self._remove_leading_lines(self.lines)
+        header_fields = csv.reader(StringIO.StringIO(header), dialect=self.dialect).next()
+        self._header_fields = self._process_header(header_fields)
+        reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
+        allow_header = ['dt', 'brnch', 'segment code', 'gl code', 'acquiring channel code', 'servicing channel code',
+                        'cost center code', 'narration', 'cr amt', 'dr amt', 'lcy bal']
+
+        coa, jrnl, branch, currency, ac, sc, sg, cc = self.get_existing_data()
         move_id = self.env['account.move'].create({
             'journal_id': jrnl['CBS'],
             'date': fields.Datetime.now(),
@@ -180,6 +195,7 @@ class GBSFileImportWizard(models.TransientModel):
             'line_ids': [],
             'amount': 0
         })
+
         journal_type = 'CBS'
         if journal_type not in jrnl.keys():
             raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
@@ -193,13 +209,15 @@ class GBSFileImportWizard(models.TransientModel):
 
             index += 1
             line_no = index + 1
-            val = {}
+            is_valid = True
+            val = dict()
+
             credit_amt = abs(float(line['cr amt'].strip()))
             debit_amt = abs(float(line['dr amt'].strip()))
             lcy_amt = abs(float(line['lcy bal'].strip()))
-            if credit_amt or debit_amt or lcy_amt:
 
-                # date = self.date_validate(line['dt'].strip())
+            if credit_amt or debit_amt or lcy_amt:
+                date_str = line['dt'].strip()
                 branch_code = line['brnch'].strip()[-3:]
                 sg_code = line['segment code'].strip()
                 gl_code = line['gl code'].strip()
@@ -209,84 +227,48 @@ class GBSFileImportWizard(models.TransientModel):
                 narration = line['narration'].strip()
                 cur_code = line['narration'].strip()[3:6]
 
-                if gl_code in coa.keys():
+                if gl_code not in coa.keys():
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Account [{0}] invalid value'.format(gl_code))
+                if branch_code not in branch.keys():
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Branch [{0}] invalid value'.format(branch_code))
+                if cur_code not in currency.keys():
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Currency [{0}] invalid value'.format(cur_code))
+                if sg_code not in sg.keys() and sg_code != '0':
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Segment [{0}] invalid value'.format(sg_code))
+                if ac_code not in ac.keys() and ac_code != '00':
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Acquiring Channel [{0}] invalid value'.format(ac_code))
+                if sc_code not in sc.keys() and sc_code != '00':
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Servicing Channel [{0}] invalid value'.format(sc_code))
+                if cc_code not in cc.keys() and cc_code != '000':
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Cost Center [{0}] invalid value'.format(cc_code))
+                if not narration:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Narration [{0}] invalid value'.format(narration))
+                if not self.date_validate(date_str):
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Date [{0}] invalid value'.format(date_str))
+
+                if is_valid:
+                    val['move_id'] = move_id.id
+                    val['name'] = narration
                     val['account_id'] = coa[gl_code]
-                else:
-                    errors += self.format_error(errObj.id, line_no, 'Account [{0}] invalid value'.format(gl_code))
-
-                if branch_code in branch.keys():
-                    val['branch_id'] = branch[branch_code]
-                else:
-                    errors += self.format_error(errObj.id, line_no, 'Branch [{0}] invalid value'.format(branch_code))
-
-                if sg_code in sg.keys():
-                    val['segment_id'] = sg[sg_code]
-                else:
-                    if sg_code == '0':
-                        sg['0'] = 'NULL'
-                    else:
-                        errors += self.format_error(errObj.id, line_no, 'Segment [{0}] invalid value'.format(sg_code))
-
-                if ac_code in ac.keys():
-                    val['acquiring_channel_id'] = ac[ac_code]
-                else:
-                    if ac_code == '00':
-                        ac['00'] = 'NULL'
-                    else:
-                        errors += self.format_error(errObj.id, line_no,
-                                                    'Acquiring Channel [{0}] invalid value'.format(ac_code))
-
-                if sc_code in sc.keys():
-                    val['servicing_channel_id'] = sc[sc_code]
-                else:
-                    if sc_code == '00':
-                        sc['00'] = 'NULL'
-                    else:
-                        errors += self.format_error(errObj.id, line_no,
-                                                    'Servicing Channel [{0}] invalid value'.format(sc_code))
-
-                if cc_code in cc.keys():
-                    val['analytic_account_id'] = cc[cc_code]
-                else:
-                    if cc_code == '000':
-                        cc['000'] = 'NULL'
-                    else:
-                        errors += self.format_error(errObj.id, line_no,
-                                                    'Cost Center [{0}] invalid value'.format(cc_code))
-
-                if narration:
-                    val['narration'] = narration
-                else:
-                    errors += self.format_error(errObj.id, line_no, 'Narration [{0}] invalid value'.format(narration))
-
-                if cur_code in currency.keys():
-                    val['currency'] = currency[cur_code]
-                else:
-                    errors += self.format_error(errObj.id, line_no, 'Currency [{0}] invalid value'.format(cur_code))
-
-                dt = line['dt'].split('-')
-                date = '{0}-{1}-{2}'.format(dt[1], dt[2], dt[0])
-                # if date:
-                #     val['date'] = '2019-02-02'
-                # else:
-                #     errors += self.format_error(line_no, 'Date [{0}] invalid value'.format(line['dt']))
-
-                if len(errors) == 0:
-                    val = {
-                        'move_id': move_id.id,
-                        'name': narration,
-                        'account_id': coa[gl_code],
-                        'journal_id': jrnl['CBS'],
-                        'analytic_account_id': cc[cc_code],
-                        'currency_id': currency[cur_code],
-                        'segment_id': sg[sg_code],
-                        'acquiring_channel_id': ac[ac_code],
-                        'servicing_channel_id': sc[sc_code],
-                        'operating_unit_id': branch[branch_code],
-                        'date': date,
-                        'date_maturity': date,
-                        'company_id': self.env.user.company_id.id,
-                    }
+                    val['journal_id'] = jrnl['CBS']
+                    val['analytic_account_id'] = cc[cc_code] if cc_code != '000' else 'NULL'
+                    val['currency_id'] = currency[cur_code]
+                    val['segment_id'] = sg[sg_code] if sg_code != '0' else 'NULL'
+                    val['acquiring_channel_id'] = ac[ac_code] if ac_code != '00' else 'NULL'
+                    val['servicing_channel_id'] = sc[sc_code] if sc_code != '00' else 'NULL'
+                    val['operating_unit_id'] = branch[branch_code]
+                    val['date'] = datetime.datetime.strptime(date_str, '%Y-%m-%d').strftime('%m-%d-%y')
+                    val['date_maturity'] = datetime.datetime.strptime(date_str, '%Y-%m-%d').strftime('%m-%d-%y')
+                    val['company_id'] = self.env.user.company_id.id
 
                     # For BDT Only
                     if cur_code == 'BDT':
@@ -324,32 +306,10 @@ class GBSFileImportWizard(models.TransientModel):
             analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,amount_currency,company_id)  
             VALUES %s""" % journal_entry[:-1]
             self.env.cr.execute(query)
-
-            # if move_id.state == 'draft':
-            #     move_id.sudo().post()
-            #     return move_id
         else:
             file_path = os.path.join('/home/sumon/', 'errors.txt')
-
             with open(file_path, "w+") as file:
                 file.write(errors)
-
-    def date_validate(self, data):
-        if '-' in data:
-            date = data.split('-')
-        else:
-            date = data.split('/')
-
-        if len(date) != 3:
-            return False
-
-        is_valid = True
-        try:
-            datetime.datetime(int(date[2]), int(date[1]), int(date[0]))
-        except ValueError:
-            is_valid = False
-
-        return is_valid
 
 
 class ServerFileError(models.Model):
