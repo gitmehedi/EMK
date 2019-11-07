@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
 <odoo>
-    <record id="gbs_data_migration_wizard_form" model="ir.ui.view">
-        <field name="name">gbs.data.migration.wizard.form</field>
-        <field name="model">gbs.data.migration.wizard</field>
+    <record id="gbs_fam_data_migration_wizard_form" model="ir.ui.view">
+        <field name="name">gbs.fam.data.migration.wizard.form</field>
+        <field name="model">gbs.fam.data.migration.wizard</field>
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Import File">
-                <group string="Please Select File for GBS Data Migration">
+                <group string="Please Select File for FAM Data Migration">
                     <group>
                         <field name="aml_data" filename="aml_fname"/>
                     </group>
@@ -26,10 +26,10 @@
         </field>
     </record>
 
-    <record id="action_gbs_data_migration_wizard" model="ir.actions.act_window">
-        <field name="name">GBS Data Migration</field>
+    <record id="action_gbs_fam_data_migration_wizard" model="ir.actions.act_window">
+        <field name="name">FAM Data Migration</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">gbs.data.migration.wizard</field>
+        <field name="res_model">gbs.fam.data.migration.wizard</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

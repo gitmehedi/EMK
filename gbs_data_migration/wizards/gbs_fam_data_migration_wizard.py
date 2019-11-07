@@ -16,7 +16,7 @@ from odoo.exceptions import ValidationError, Warning
 
 
 class GBSFileImportWizard(models.TransientModel):
-    _name = 'gbs.data.migration.wizard'
+    _name = 'gbs.fam.data.migration.wizard'
 
     aml_data = fields.Binary(string='File')
     aml_fname = fields.Char(string='Filename')
@@ -126,25 +126,37 @@ class GBSFileImportWizard(models.TransientModel):
         return "({0},'{1}','{2}'),".format(index, text, fields.Datetime.now())
 
     @staticmethod
-    def format_journal(line):
-        return "({0},'{1}','{2}',{3},{4},'{5}','{6}',{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}),".format(
-            line['move_id'],
-            line['date'],
-            line['date_maturity'],
-            line['operating_unit_id'],
-            line['account_id'],
-            line['name'],
-            line['name'],
-            line['currency_id'],
-            line['journal_id'],
-            line['analytic_account_id'],
-            line['segment_id'],
-            line['acquiring_channel_id'],
-            line['servicing_channel_id'],
-            line['credit'],
-            line['debit'],
-            line['amount_currency'],
-            line['company_id'])
+    def format_fam(line):
+        return "('{0}',{1},{2},{3},'{4}','{5}','{6}','{7}',{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},'{18}'," \
+               "'{19}','{20}',{21},{22},'{23}',{24},'{25}','{26}',{27}),".format(
+                line['name'],
+                line['category_id'],
+                line['asset_type_id'],
+                line['partner_id'],
+                line['warranty_date'],
+                line['date'],
+                line['asset_usage_date'],
+                line['lst_depr_date'],
+                line['operating_unit_id'],
+                line['current_branch_id'],
+                line['sub_operating_unit_id'],
+                line['cost_centre_id'],
+                line['depr_base_value'],
+                line['value'],
+                line['value_residual'],
+                line['salvage_value'],
+                line['accumulated_value'],
+                line['currency_id'],
+                line['asset_description'],
+                line['note'],
+                line['method'],
+                line['method_progress_factor'],
+                line['company_id'],
+                line['state'],
+                line['method_period'],
+                line['method_time'],
+                line['is_custom_depr'],
+                line['depreciation_year'])
 
     @staticmethod
     def date_validate(date_str):
@@ -174,7 +186,7 @@ class GBSFileImportWizard(models.TransientModel):
             raise ValidationError(_('Please Select File.'))
 
         index = 0
-        errors = ""
+        errors, fam_entry = "", ""
         self._err_log = ''
         move = self.env['gbs.data.migration'].browse(self._context['active_id'])
         lines, header = self._remove_leading_lines(self.lines)
@@ -240,15 +252,15 @@ class GBSFileImportWizard(models.TransientModel):
             cc_code = line['cost centre'].strip()
             currency_code = line['currency'].strip()
             # model = line['model'].strip()
-            depr_base_value = float(line['depr. base value'].strip())
-            cost_value = float(line['cost value'].strip())
-            wdv = float(line['wdv'].strip())
-            salvage_value = float(line['salvage value'].strip())
-            accum_value = float(line['accumulated depreciation'].strip())
+            depr_base_value = float(line['depr. base value'].strip().replace(',', ''))
+            cost_value = float(line['cost value'].strip().replace(',', ''))
+            wdv = float(line['wdv'].strip().replace(',', ''))
+            salvage_value = float(line['salvage value'].strip().replace(',', ''))
+            accum_value = float(line['accumulated depreciation'].strip().replace(',', ''))
             asset_descr = line['asset description'].strip()
             note = line['note'].strip()
             comput_method = line['computation method'].strip()
-            depr_factor = float(line['depreciation factor'].strip())
+            depr_factor = float(line['depreciation factor'].strip().replace(',', ''))
             depr_year = line['asset life (in year)'].strip()
 
             # account.asset.depreciation.line
@@ -264,9 +276,10 @@ class GBSFileImportWizard(models.TransientModel):
             ath_cc_code = line['allocation & transfer history/cost centre'].strip()
             ath_rcv_date = line['allocation & transfer history/receive date'].strip()
 
-            if not asset_code:
-                is_valid = False
-                errors += self.format_error(line_no, 'Asset Code [{0}] invalid value'.format(asset_code))
+            # validation
+            # if not asset_code:
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Asset Code [{0}] invalid value'.format(asset_code))
             if not asset_name:
                 is_valid = False
                 errors += self.format_error(line_no, 'Asset Name [{0}] invalid value'.format(asset_name))
@@ -282,21 +295,21 @@ class GBSFileImportWizard(models.TransientModel):
             if category_code not in aac.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Asset Category Code [{0}] invalid value'.format(category_code))
-            if not batch_no:
-                is_valid = False
-                errors += self.format_error(line_no, 'Batch No [{0}] invalid value'.format(batch_no))
+            # if not batch_no:
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Batch No [{0}] invalid value'.format(batch_no))
             if vendor not in partner.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor))
-            if not invoice:
-                is_valid = False
-                errors += self.format_error(line_no, 'Invoice [{0}] invalid value'.format(invoice))
-            if not model_name:
-                is_valid = False
-                errors += self.format_error(line_no, 'Model [{0}] invalid value'.format(model_name))
-            if not self.date_validate(bill_date):
-                is_valid = False
-                errors += self.format_error(line_no, 'Bill Date [{0}] invalid value'.format(bill_date))
+            # if not invoice:
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Invoice [{0}] invalid value'.format(invoice))
+            # if not model_name:
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Model [{0}] invalid value'.format(model_name))
+            # if not self.date_validate(bill_date):
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Bill Date [{0}] invalid value'.format(bill_date))
             if not self.date_validate(warranty_date):
                 is_valid = False
                 errors += self.format_error(line_no, 'Warranty Date [{0}] invalid value'.format(warranty_date))
@@ -330,41 +343,80 @@ class GBSFileImportWizard(models.TransientModel):
             if not comput_method:
                 is_valid = False
                 errors += self.format_error(line_no, 'Computation Method [{0}] invalid value'.format(comput_method))
-            if not depr_year:
-                is_valid = False
-                errors += self.format_error(line_no, 'Asset Life [{0}] invalid value'.format(depr_year))
+            # if not depr_year:
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Asset Life [{0}] invalid value'.format(depr_year))
 
-            if not self.date_validate(dh_date):
-                is_valid = False
-                errors += self.format_error(line_no, 'Depreciation History Date [{0}] invalid value'.format(dh_date))
+            # if not self.date_validate(dh_date):
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Depreciation History Date [{0}] invalid value'.format(dh_date))
 
-            if ath_from_branch_code not in branch.keys():
-                is_valid = False
-                errors += self.format_error(line_no, 'Form Branch Code [{0}] invalid value'.format(ath_from_branch_code))
-            if ath_to_branch_code not in branch.keys():
-                is_valid = False
-                errors += self.format_error(line_no, 'To Branch Code [{0}] invalid value'.format(cb_code))
-            if ath_cc_code not in cc.keys():
-                is_valid = False
-                errors += self.format_error(line_no, 'Cost Center Code [{0}] invalid value'.format(ath_cc_code))
-            if not self.date_validate(ath_rcv_date):
-                is_valid = False
-                errors += self.format_error(line_no, 'Receive Date [{0}] invalid value'.format(ath_rcv_date))
+            # if ath_from_branch_code not in branch.keys():
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Form Branch Code [{0}] invalid value'.format(ath_from_branch_code))
+            # if ath_to_branch_code not in branch.keys():
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'To Branch Code [{0}] invalid value'.format(cb_code))
+            # if ath_cc_code not in cc.keys():
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Cost Center Code [{0}] invalid value'.format(ath_cc_code))
+            # if not self.date_validate(ath_rcv_date):
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Receive Date [{0}] invalid value'.format(ath_rcv_date))
 
+            # if data is valid, create model object.
             if is_valid:
-                # make obj for account.asset.asset, account.asset.depreciation.line, account.asset.allocation.history
-                # model
-                pass
+                # val['asset_seq'] = asset_code
+                val['name'] = asset_name
+                val['category_id'] = aac[type_code]
+                val['asset_type_id'] = aac[category_code]
+                # val['batch_no'] = batch_no
+                val['partner_id'] = partner[vendor]
+                # val['invoice_id'] = invoice
+                # val['model_name'] = model_name
+                # val['invoice_date'] = bill_date
+                val['warranty_date'] = warranty_date
+                val['date'] = purchase_date
+                val['asset_usage_date'] = usage_date
+                val['lst_depr_date'] = lst_depr_date
 
+                val['operating_unit_id'] = branch[pb_code]
+                val['current_branch_id'] = branch[cb_code]
+                val['sub_operating_unit_id'] = sou[sou_code]
+                val['cost_centre_id'] = cc[cc_code]
 
-        # if len(errors) == 0:
-        #     query = """
-        #     INSERT INTO account_move_line
-        #     (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
-        #     analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,amount_currency,company_id)
-        #     VALUES %s""" % journal_entry[:-1]
-        #     self.env.cr.execute(query)
-        # else:
-        #     file_path = os.path.join('/home/sumon/', 'errors.txt')
-        #     with open(file_path, "w+") as file:
-        #         file.write(errors)
+                val['depr_base_value'] = depr_base_value
+                val['value'] = cost_value
+                val['value_residual'] = wdv
+                val['salvage_value'] = salvage_value
+                val['accumulated_value'] = accum_value
+                val['currency_id'] = currency[currency_code]
+
+                val['asset_description'] = asset_descr
+                val['note'] = note
+
+                val['method'] = comput_method
+                val['method_progress_factor'] = depr_factor
+
+                val['company_id'] = self.env.user.company_id.id
+                val['state'] = 'open'
+                val['method_period'] = 1
+                val['method_time'] = 'number'
+                val['is_custom_depr'] = 'true'
+                val['depreciation_year'] = 0
+
+                fam_entry += self.format_fam(val)
+
+        if len(errors) == 0:
+            query = """
+            INSERT INTO account_asset_asset
+            (name, category_id, asset_type_id, partner_id, warranty_date, date, asset_usage_date, lst_depr_date, 
+            operating_unit_id, current_branch_id, sub_operating_unit_id, cost_centre_id, depr_base_value, value, 
+            value_residual, salvage_value, accumulated_value, currency_id, asset_description, note, method, 
+            method_progress_factor, company_id, state, method_period, method_time, is_custom_depr, depreciation_year)
+            VALUES %s""" % fam_entry[:-1]
+            self.env.cr.execute(query)
+        else:
+            file_path = os.path.join('/home/sumon/', 'errors.txt')
+            with open(file_path, "w+") as file:
+                file.write(errors)

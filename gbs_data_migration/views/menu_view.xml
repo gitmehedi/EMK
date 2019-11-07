@@ -18,6 +18,7 @@
     <menuitem id="menu_fam_data_migration" name="FAM"
               parent="menu_data_migration"
               sequence="40"
-              action="action_gbs_data_migration"
+              action="action_gbs_fam_data_migration"
               groups="mtbl_access.group_mtbl_sys_admin"/>
+
 </odoo>
