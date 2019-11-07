@@ -13,8 +13,10 @@
         'account',
     ],
     "data": [
+        "views/gbs_fam_data_migration_view.xml",
         "wizards/gbs_data_migration_wizard_view.xml",
-        # "views/menu_view.xml",
+        "wizards/gbs_fam_data_migration_wizard_view.xml",
+        "views/menu_view.xml",
         "views/gbs_data_migration_view.xml",
     ],
     "application": True,
