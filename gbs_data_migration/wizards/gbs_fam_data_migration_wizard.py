@@ -126,9 +126,32 @@ class GBSFileImportWizard(models.TransientModel):
         return "({0},'{1}','{2}'),".format(index, text, fields.Datetime.now())
 
     @staticmethod
+    def format_depreciation_line(line):
+        return "({0},'{1}',{2},{3},{4},{5},'{6}','{7}',{8},'{9}'),".format(
+            line['asset_id'],
+            line['depreciation_date'],
+            line['days'],
+            line['amount'],
+            line['depreciated_value'],
+            line['remaining_value'],
+            line['line_type'],
+            line['name'],
+            line['sequence'],
+            line['move_check'])
+
+    @staticmethod
+    def format_allocation_history(line):
+        return "({0},{1},{2},'{3}','{4}'),".format(
+            line['asset_id'],
+            line['from_branch_id'],
+            line['operating_unit_id'],
+            line['receive_date'],
+            line['state'])
+
+    @staticmethod
     def format_fam(line):
         return "('{0}',{1},{2},{3},'{4}','{5}','{6}','{7}',{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},'{18}'," \
-               "'{19}','{20}',{21},{22},'{23}',{24},'{25}','{26}',{27}),".format(
+               "'{19}','{20}',{21},{22},'{23}',{24},'{25}','{26}',{27},'{28}'),".format(
                 line['name'],
                 line['category_id'],
                 line['asset_type_id'],
@@ -156,7 +179,8 @@ class GBSFileImportWizard(models.TransientModel):
                 line['method_period'],
                 line['method_time'],
                 line['is_custom_depr'],
-                line['depreciation_year'])
+                line['depreciation_year'],
+                line['active'])
 
     @staticmethod
     def date_validate(date_str):
@@ -186,7 +210,8 @@ class GBSFileImportWizard(models.TransientModel):
             raise ValidationError(_('Please Select File.'))
 
         index = 0
-        errors, fam_entry = "", ""
+        sequence = 0
+        errors, dh_entry, ath_entry = "", "", ""
         self._err_log = ''
         move = self.env['gbs.data.migration'].browse(self._context['active_id'])
         lines, header = self._remove_leading_lines(self.lines)
@@ -205,6 +230,7 @@ class GBSFileImportWizard(models.TransientModel):
 
         # retrieve existing data from database
         aac, partner, branch, currency, sou, cc, jrnl = self.get_existing_data()
+        cm = {'No Depreciation': 'no_depreciation', 'Reducing': 'degressive', 'Stright Line': 'linear'}
 
         move_id = self.env['account.move'].create({
             'journal_id': jrnl['BILL'],
@@ -259,7 +285,7 @@ class GBSFileImportWizard(models.TransientModel):
             accum_value = float(line['accumulated depreciation'].strip().replace(',', ''))
             asset_descr = line['asset description'].strip()
             note = line['note'].strip()
-            comput_method = line['computation method'].strip()
+            cm_code = line['computation method'].strip()    # computation method
             depr_factor = float(line['depreciation factor'].strip().replace(',', ''))
             depr_year = line['asset life (in year)'].strip()
 
@@ -283,24 +309,30 @@ class GBSFileImportWizard(models.TransientModel):
             if not asset_name:
                 is_valid = False
                 errors += self.format_error(line_no, 'Asset Name [{0}] invalid value'.format(asset_name))
+
             if not asset_type:
                 is_valid = False
                 errors += self.format_error(line_no, 'Asset Type [{0}] invalid value'.format(asset_type))
+
             if type_code not in aac.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Asset Type Code [{0}] invalid value'.format(type_code))
+
             if not asset_category:
                 is_valid = False
                 errors += self.format_error(line_no, 'Asset Category [{0}] invalid value'.format(asset_category))
+
             if category_code not in aac.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Asset Category Code [{0}] invalid value'.format(category_code))
+
             # if not batch_no:
             #     is_valid = False
             #     errors += self.format_error(line_no, 'Batch No [{0}] invalid value'.format(batch_no))
-            if vendor not in partner.keys():
+            if vendor not in partner.keys() and vendor != 'N/A':
                 is_valid = False
                 errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor))
+
             # if not invoice:
             #     is_valid = False
             #     errors += self.format_error(line_no, 'Invoice [{0}] invalid value'.format(invoice))
@@ -313,36 +345,46 @@ class GBSFileImportWizard(models.TransientModel):
             if not self.date_validate(warranty_date):
                 is_valid = False
                 errors += self.format_error(line_no, 'Warranty Date [{0}] invalid value'.format(warranty_date))
+
             if not self.date_validate(purchase_date):
                 is_valid = False
                 errors += self.format_error(line_no, 'Purchase Date [{0}] invalid value'.format(purchase_date))
+
             if not self.date_validate(usage_date):
                 is_valid = False
                 errors += self.format_error(line_no, 'Usage Date [{0}] invalid value'.format(usage_date))
+
             if not self.date_validate(lst_depr_date):
                 is_valid = False
                 errors += self.format_error(line_no, 'Last Depr. Date [{0}] invalid value'.format(lst_depr_date))
+
             if pb_code not in branch.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Purchase Branch Code [{0}] invalid value'.format(pb_code))
+
             if cb_code not in branch.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Current Branch Code [{0}] invalid value'.format(cb_code))
+
             if not sou_name:
                 is_valid = False
                 errors += self.format_error(line_no, 'Sub Operating Unit Name [{0}] invalid value'.format(sou_name))
-            if sou_code not in sou.keys():
-                is_valid = False
-                errors += self.format_error(line_no, 'Sub Operating Unit Code [{0}] invalid value'.format(sou_code))
-            if cc_code not in cc.keys():
-                is_valid = False
-                errors += self.format_error(line_no, 'Cost Center Code [{0}] invalid value'.format(cc_code))
+
+            # if sou_code not in sou.keys():
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Sub Operating Unit Code [{0}] invalid value'.format(sou_code))
+            #
+            # if cc_code not in cc.keys():
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'Cost Center Code [{0}] invalid value'.format(cc_code))
+
             if currency_code not in currency.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Currency Code [{0}] invalid value'.format(currency_code))
-            if not comput_method:
+
+            if cm_code not in cm.keys():
                 is_valid = False
-                errors += self.format_error(line_no, 'Computation Method [{0}] invalid value'.format(comput_method))
+                errors += self.format_error(line_no, 'Computation Method [{0}] invalid value'.format(cm_code))
             # if not depr_year:
             #     is_valid = False
             #     errors += self.format_error(line_no, 'Asset Life [{0}] invalid value'.format(depr_year))
@@ -366,24 +408,24 @@ class GBSFileImportWizard(models.TransientModel):
 
             # if data is valid, create model object.
             if is_valid:
-                # val['asset_seq'] = asset_code
+                code = self.env['ir.sequence'].next_by_code('account.asset.asset.code')
+                usg_date= usage_date.split('/')
+                ATAC = '{0}-{1}-MTB-{2}-{3}'.format(usg_date[2], usg_date[0], aac[type_code], aac[category_code])
+                asset_code = code.replace('ATAC', ATAC)
+                val['asset_seq'] = asset_code
                 val['name'] = asset_name
                 val['category_id'] = aac[type_code]
                 val['asset_type_id'] = aac[category_code]
-                # val['batch_no'] = batch_no
-                val['partner_id'] = partner[vendor]
-                # val['invoice_id'] = invoice
-                # val['model_name'] = model_name
-                # val['invoice_date'] = bill_date
+                val['partner_id'] = partner[vendor] if vendor != 'N/A' else False
+                val['model_name'] = model_name
                 val['warranty_date'] = warranty_date
                 val['date'] = purchase_date
                 val['asset_usage_date'] = usage_date
                 val['lst_depr_date'] = lst_depr_date
-
                 val['operating_unit_id'] = branch[pb_code]
                 val['current_branch_id'] = branch[cb_code]
-                val['sub_operating_unit_id'] = sou[sou_code]
-                val['cost_centre_id'] = cc[cc_code]
+                # val['sub_operating_unit_id'] = sou[sou_code]
+                # val['cost_centre_id'] = cc[cc_code]
 
                 val['depr_base_value'] = depr_base_value
                 val['value'] = cost_value
@@ -395,28 +437,81 @@ class GBSFileImportWizard(models.TransientModel):
                 val['asset_description'] = asset_descr
                 val['note'] = note
 
-                val['method'] = comput_method
+                val['method'] = cm[cm_code]
                 val['method_progress_factor'] = depr_factor
 
+                # required field (external)
                 val['company_id'] = self.env.user.company_id.id
                 val['state'] = 'open'
                 val['method_period'] = 1
                 val['method_time'] = 'number'
-                val['is_custom_depr'] = 'true'
+                val['is_custom_depr'] = True
                 val['depreciation_year'] = 0
+                val['active'] = True
+                val['allocation_status'] = True
 
-                fam_entry += self.format_fam(val)
+                aaa_obj = self.env['account.asset.asset'].create(val)
+
+                dh_obj = dict()
+                dh_obj['asset_id'] = aaa_obj.id
+                dh_obj['depreciation_date'] = lst_depr_date
+                dh_obj['days'] = (datetime.datetime.strptime(lst_depr_date, '%m/%d/%Y') - datetime.datetime.strptime(usage_date, '%m/%d/%Y')).days
+                dh_obj['amount'] = accum_value
+                dh_obj['depreciated_value'] = accum_value
+                dh_obj['remaining_value'] = wdv
+                dh_obj['line_type'] = 'depreciation'
+                dh_obj['name'] = 'Opening Depreciation'
+                dh_obj['sequence'] = 1
+                dh_obj['move_check'] = True
+                dh_obj['move_posted_check'] = True
+
+                dh_entry += self.format_depreciation_line(dh_obj)
+
+                ath_obj = dict()
+                ath_obj['asset_id'] = aaa_obj.id
+                ath_obj['from_branch_id'] = branch[pb_code]
+                ath_obj['operating_unit_id'] = branch[cb_code]
+                # ath_obj['sub_operating_unit_id'] = sou[sou_code]
+                # ath_obj['cost_centre_id'] = cc[cc_code]
+                ath_obj['receive_date'] = usage_date
+                ath_obj['state'] = 'active'
+
+                ath_entry += self.format_allocation_history(ath_obj)
+
+                aaa_obj = None
 
         if len(errors) == 0:
-            query = """
-            INSERT INTO account_asset_asset
-            (name, category_id, asset_type_id, partner_id, warranty_date, date, asset_usage_date, lst_depr_date, 
-            operating_unit_id, current_branch_id, sub_operating_unit_id, cost_centre_id, depr_base_value, value, 
-            value_residual, salvage_value, accumulated_value, currency_id, asset_description, note, method, 
-            method_progress_factor, company_id, state, method_period, method_time, is_custom_depr, depreciation_year)
-            VALUES %s""" % fam_entry[:-1]
-            self.env.cr.execute(query)
+            query_dh = """
+            INSERT INTO account_asset_depreciation_line
+            (asset_id, depreciation_date, days, amount, depreciated_value, remaining_value, line_type, name, sequence, move_check)
+            VALUES %s""" % dh_entry[:-1]
+            self.env.cr.execute(query_dh)
+            #
+            # query_ath = """
+            # INSERT INTO account_asset_allocation_history
+            # (asset_id, from_branch_id, operating_unit_id, sub_operating_unit_id, cost_centre_id, receive_date, state)
+            # VALUES %s""" % ath_entry[:-1]
+            query_ath = """
+            INSERT INTO account_asset_allocation_history
+            (asset_id, from_branch_id, operating_unit_id, receive_date, state)
+            VALUES %s""" % ath_entry[:-1]
+            self.env.cr.execute(query_ath)
+
         else:
-            file_path = os.path.join('/home/sumon/', 'errors.txt')
+            file_path = os.path.join('/home/sumon/', 'fam_errors.txt')
             with open(file_path, "w+") as file:
                 file.write(errors)
+
+        # if len(errors) == 0:
+        #     query = """
+        #     INSERT INTO account_asset_asset
+        #     (name, category_id, asset_type_id, partner_id, warranty_date, date, asset_usage_date, lst_depr_date,
+        #     operating_unit_id, current_branch_id, sub_operating_unit_id, cost_centre_id, depr_base_value, value,
+        #     value_residual, salvage_value, accumulated_value, currency_id, asset_description, note, method,
+        #     method_progress_factor, company_id, state, method_period, method_time, is_custom_depr, depreciation_year,active)
+        #     VALUES %s""" % fam_entry[:-1]
+        #     self.env.cr.execute(query)
+        # else:
+        #     file_path = os.path.join('/home/sumon/', 'fam_errors.txt')
+        #     with open(file_path, "w+") as file:
+        #         file.write(errors)

@@ -76,5 +76,11 @@
                 {"search_default_state":'draft'}
             </field>
         </record>
+
+
+    <menuitem id="menu_fam_data_migration" name="FAM"
+              parent="menu_data_migration"
+              sequence="40"
+              action="action_gbs_fam_data_migration"/>
     </data>
 </odoo>
