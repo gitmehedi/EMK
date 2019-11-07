@@ -67,7 +67,6 @@ Layer 4,15101,Interest Suspenses Account,151,View Type,TRUE,FALSE,Approved
 Layer 4,15201,Clearing House Adjustment,152,View Type,TRUE,FALSE,Approved
 Layer 4,15202,Provision for Tax,152,View Type,TRUE,FALSE,Approved
 Layer 4,15203,Adjusting A/c Credit (Sundry Liab),152,View Type,TRUE,FALSE,Approved
-Layer 4,15203,Sundry Liabilities in FC forOBU,152,View Type,TRUE,FALSE,Approved
 Layer 4,15204,Profit for the Year,152,View Type,TRUE,FALSE,Approved
 Layer 4,15205,Unearned Income,152,View Type,TRUE,FALSE,Approved
 Layer 4,15206,Liabilities under Finance Lease,152,View Type,TRUE,FALSE,Approved
@@ -92,7 +91,8 @@ Layer 4,15224,Bonus Payable,152,View Type,TRUE,FALSE,Approved
 Layer 4,15225,Gratuity Payable,152,View Type,TRUE,FALSE,Approved
 Layer 4,15227,Other Sundry liabilities,152,View Type,TRUE,FALSE,Approved
 Layer 4,15228,Cards payment received in FC,152,View Type,TRUE,FALSE,Approved
-Layer 4,15229,Cards payment received in FC,152,View Type,TRUE,FALSE,Approved
+Layer 4,15229,Cards payment received in FC 2,152,View Type,TRUE,FALSE,Approved
+Layer 4,15232,Parking GL for Misc. purposes in FC,152,View Type,TRUE,FALSE,Approved
 Layer 4,15231,Parking GL for Misc. purposes,152,View Type,TRUE,FALSE,Approved
 Layer 4,15230,Cards refill for MTBL Executive,152,View Type,TRUE,FALSE,Approved
 Layer 4,15226,Share Money Payable,152,View Type,TRUE,FALSE,Approved
@@ -116,6 +116,7 @@ Layer 4,21401,Other Banks & FIs in Bangladesh,214,View Type,TRUE,FALSE,Approved
 Layer 4,21403,Other Banks & FIs outside Bangladesh <FC>,214,View Type,TRUE,FALSE,Approved
 Layer 4,21404,Other Banks & FIs within Bangladesh <FC>,214,View Type,TRUE,FALSE,Approved
 Layer 4,21405,Interest Receivable on Other Banks & FIs in Bangladesh,214,View Type,TRUE,FALSE,Approved
+Layer 4,21406,Interest Receivable on Deposits with Agents Bank,214,View Type,TRUE,FALSE,Approved
 Layer 4,22101,Call Money <BDT>,221,View Type,TRUE,FALSE,Approved
 Layer 4,22102,Call Money <FC>,221,View Type,TRUE,FALSE,Approved
 Layer 4,22103,Interest Receivable on Call Money <BDT>,221,View Type,TRUE,FALSE,Approved
@@ -152,7 +153,6 @@ Layer 4,24305,Agri Continuous Loan [SME],243,View Type,TRUE,FALSE,Approved
 Layer 4,24401,Credit Cards,244,View Type,TRUE,FALSE,Approved
 Layer 4,24402,Credit Cards FC,244,View Type,TRUE,FALSE,Approved
 Layer 4,24501,Interest Receivable on RTL,245,View Type,TRUE,FALSE,Approved
-Layer 4,24502,Interest Receivable on Staff Loans,245,View Type,TRUE,FALSE,Approved
 Layer 4,24503,Interest Reeceivable on C&S Term Loan,245,View Type,TRUE,FALSE,Approved
 Layer 4,24504,Interest Receivable on SME Term Loan excl Agri & MF,245,View Type,TRUE,FALSE,Approved
 Layer 4,24505,Interest Receivable on Agri Term Loan <SME>,245,View Type,TRUE,FALSE,Approved
@@ -169,7 +169,6 @@ Layer 4,24516,Interest Receivable <Miscellaneous>,245,View Type,TRUE,FALSE,Appro
 Layer 4,24517,Interest Receivable on Agri Continuous Loan <SME>,245,View Type,TRUE,FALSE,Approved
 Layer 4,24518,Interest Reeivable on Agri Demand Loan SME,245,View Type,TRUE,FALSE,Approved
 Layer 4,24601,Penal Interest Receivable on RTL,246,View Type,TRUE,FALSE,Approved
-Layer 4,24602,Penal Interest Receivable on Staff Loans,246,View Type,TRUE,FALSE,Approved
 Layer 4,24603,Penal Interest Receivable on Corp & SME Term Loan,246,View Type,TRUE,FALSE,Approved
 Layer 4,24604,Penal Interest Receivable on SME Term Loan excl Agri & MF,246,View Type,TRUE,FALSE,Approved
 Layer 4,24605,Penal Interest Receivable on Agri Term Loan <SME>,246,View Type,TRUE,FALSE,Approved
@@ -178,7 +177,6 @@ Layer 4,24607,Penal Interest Receivable on Corporate & SME Demand Loan FC,246,Vi
 Layer 4,24608,Penal Interest Receivable on SME Demand Loan,246,View Type,TRUE,FALSE,Approved
 Layer 4,24609,Penal Interest Receivable on Retail Continuous Loan,246,View Type,TRUE,FALSE,Approved
 Layer 4,24610,Penal Interest Receivable on Corporate &/ or SME Continuous Loan,246,View Type,TRUE,FALSE,Approved
-Layer 4,24610,Penal Interest Receivable on Corporate & SME Continuous Loan,246,View Type,TRUE,FALSE,Approved
 Layer 4,24611,Penal Interest Receivable on SME Continuous Loan,246,View Type,TRUE,FALSE,Approved
 Layer 4,24613,Penal Interest Receivable on Misc Deman Loans C/S/R,246,View Type,TRUE,FALSE,Approved
 Layer 4,24615,Penal Interest Receivable on Bill Discounting /UPAS/ Buyer's Credit FC (OBU)Foreign,246,View Type,TRUE,FALSE,Approved
@@ -227,15 +225,12 @@ Layer 4,26807,Stock of stationeries,268,View Type,TRUE,FALSE,Approved
 Layer 4,26812,Other Fixed Assets,268,View Type,TRUE,FALSE,Approved
 Layer 4,26808,Transit Account,268,View Type,TRUE,FALSE,Approved
 Layer 4,26809,Deferred Tax Asset,268,View Type,TRUE,FALSE,Approved
-Layer 4,26810,Miscellaneous Other Assets,268,View Type,TRUE,FALSE,Approved
+Layer 4,26811,Miscellaneous Other Assets,268,View Type,TRUE,FALSE,Approved
 Layer 4,26810,Protested Bills,268,View Type,TRUE,FALSE,Approved
 Layer 4,26999,Miscellaneous Assets created for Migration,269,View Type,TRUE,FALSE,Approved
 Layer 4,31101,Interest Earned on RTL,311,View Type,TRUE,FALSE,Approved
-Layer 4,31102,Interest Earned on Staff Loans,311,View Type,TRUE,FALSE,Approved
 Layer 4,31103,Interest Earnedon Corporate Term Loan,311,View Type,TRUE,FALSE,Approved
-Layer 4,31103,Interest Earned on Corporate Term Loan,311,View Type,TRUE,FALSE,Approved
 Layer 4,31104,Interest Earnedon SME Term Loan excl Agri & MF,311,View Type,TRUE,FALSE,Approved
-Layer 4,31104,Interest Earned on SME Term Loan excl Agri & MF,311,View Type,TRUE,FALSE,Approved
 Layer 4,31105,Interest Earned on Agri Term Loan <SME>,311,View Type,TRUE,FALSE,Approved
 Layer 4,31106,Interest Earned on Corporate & SME Demand Loan,311,View Type,TRUE,FALSE,Approved
 Layer 4,31107,Interest Earned on Corporate & SME Demand Loan FC,311,View Type,TRUE,FALSE,Approved
@@ -245,6 +240,7 @@ Layer 4,31110,Interest Earned on Corporate &/ or SME Continuous Loan,311,View Ty
 Layer 4,31111,Interest Earned on SME Continuous Loan,311,View Type,TRUE,FALSE,Approved
 Layer 4,31112,Interest Earned on Misc Demand Loan,311,View Type,TRUE,FALSE,Approved
 Layer 4,31113,Interest Earned on Balance with other Bank (BDT),311,View Type,TRUE,FALSE,Approved
+Layer 4,31114,Interest Earned on Balance with other Bank (BDT) 2,311,View Type,TRUE,FALSE,Approved
 Layer 4,31115,Interest Earned on OBU Loans & Advances,311,View Type,TRUE,FALSE,Approved
 Layer 4,31116,Interest Earned on Credit Cards,311,View Type,TRUE,FALSE,Approved
 Layer 4,31117,Interest Earned on Other Loans & Advances,311,View Type,TRUE,FALSE,Approved
@@ -252,7 +248,6 @@ Layer 4,31118,Interest Earned on Balance with other Bank (FC),311,View Type,TRUE
 Layer 4,31119,Interest Earned on Agri Continuous Loan <SME>,311,View Type,TRUE,FALSE,Approved
 Layer 4,31120,Interest Earned on Agri Continuous Loan SME,311,View Type,TRUE,FALSE,Approved
 Layer 4,31201,Penal Interest Earned on RTL,312,View Type,TRUE,FALSE,Approved
-Layer 4,31202,Penal Interest Earned on Staff Loans,312,View Type,TRUE,FALSE,Approved
 Layer 4,31203,Penal Interest Earnedon Corporate Term Loan,312,View Type,TRUE,FALSE,Approved
 Layer 4,31204,Penal Interest Earnedon SME Term Loan excl Agri & MF,312,View Type,TRUE,FALSE,Approved
 Layer 4,31205,Penal Interest Earned on Agri Term Loan <SME>,312,View Type,TRUE,FALSE,Approved
@@ -275,7 +270,7 @@ Layer 4,31405,Interest Earned on Short Term Placement FC,314,View Type,TRUE,FALS
 Layer 4,31406,Interest Earned on Short Term Placement BDT,314,View Type,TRUE,FALSE,Approved
 Layer 4,31407,Interest on Bangladesh Bank Foreign Currency Clearing A/c,314,View Type,TRUE,FALSE,Approved
 Layer 4,31408,Interest on Placement to Off-Shore Banking Unit FC,314,View Type,TRUE,FALSE,Approved
-Layer 4,31409,Interest Earned on Call Money Placement FC,314,View Type,TRUE,FALSE,Approved
+Layer 4,31409,Interest Earned on Call Money Placement FC 2,314,View Type,TRUE,FALSE,Approved
 Layer 4,32101,Income from Treasury Operations <Govt Sec.>,321,View Type,TRUE,FALSE,Approved
 Layer 4,32201,Income from Treasury Operations <other than Govt Sec.>,322,View Type,TRUE,FALSE,Approved
 Layer 4,32202,Income from Other Investments,322,View Type,TRUE,FALSE,Approved
@@ -288,7 +283,6 @@ Layer 4,33202,Income on Forex Deal,332,View Type,TRUE,FALSE,Approved
 Layer 4,34101,Rental Income,341,View Type,TRUE,FALSE,Approved
 Layer 4,34102,Recoveries of various charges,341,View Type,TRUE,FALSE,Approved
 Layer 4,34103,Income fm Cards operations,341,View Type,TRUE,FALSE,Approved
-Layer 4,34104,Early Settlement Fees <Retail?>,341,View Type,TRUE,FALSE,Approved
 Layer 4,34104,Early Settlement Fees,341,View Type,TRUE,FALSE,Approved
 Layer 4,34105,Loan Processing Fees,341,View Type,TRUE,FALSE,Approved
 Layer 4,34106,Partial Payment Fees,341,View Type,TRUE,FALSE,Approved
@@ -332,7 +326,6 @@ Layer 4,42204,Power  Electricity & Utilities,422,View Type,TRUE,FALSE,Approved
 Layer 4,42205,Lease Rent Expenses,422,View Type,TRUE,FALSE,Approved
 Layer 4,42301,Security  Auxiliary Services and Other Assitance,423,View Type,TRUE,FALSE,Approved
 Layer 4,42303,Office Maintenance,423,View Type,TRUE,FALSE,Approved
-Layer 4,42303,Office Cleaning,423,View Type,TRUE,FALSE,Approved
 Layer 4,42304,Car Expenses,423,View Type,TRUE,FALSE,Approved
 Layer 4,42305,Entertainment,423,View Type,TRUE,FALSE,Approved
 Layer 4,42306,News Paper & Periodicals,423,View Type,TRUE,FALSE,Approved
@@ -357,7 +350,7 @@ Layer 4,42326,Loss on sale of Fixed Assets,423,View Type,TRUE,FALSE,Approved
 Layer 4,42327,Misc Expenses,423,View Type,TRUE,FALSE,Approved
 Layer 4,42328,Investment Expenses,423,View Type,TRUE,FALSE,Approved
 Layer 4,42329,Card Charges,423,View Type,TRUE,FALSE,Approved
-Layer 4,42330,Asim Talukdar: What is this ?? Operational Loss,423,View Type,TRUE,FALSE,Approved
+Layer 4,42330,#ERROR!,423,View Type,TRUE,FALSE,Approved
 Layer 4,42331,Penalty of CRR/SLR,423,View Type,TRUE,FALSE,Approved
 Layer 4,42332,ATM Intercharge Reimbursement Fee Paid for,423,View Type,TRUE,FALSE,Approved
 Layer 4,42333,Agent Banking Float Sharing Commission,423,View Type,TRUE,FALSE,Approved
@@ -405,7 +398,7 @@ Layer 4,61301,Forward Contract Cust Purchase,613,View Type,TRUE,FALSE,Approved
 Layer 4,61302,Forward Contract Cust Sale,613,View Type,TRUE,FALSE,Approved
 Layer 4,62101,Customers' Liability on BG (Inland),621,View Type,TRUE,FALSE,Approved
 Layer 4,62102,Customers' Liability on BG (Foreign),621,View Type,TRUE,FALSE,Approved
-Layer 4,62103,Customers' Liability on BG (Foreign),621,View Type,TRUE,FALSE,Approved
+Layer 4,62103,Customers' Liability on BG (Foreign) 2,621,View Type,TRUE,FALSE,Approved
 Layer 4,62201,Customers' Liability on LC (Inland),622,View Type,TRUE,FALSE,Approved
 Layer 4,62202,Customers' Liability on LC (Foreign),622,View Type,TRUE,FALSE,Approved
 Layer 4,62301,Customers' Liability for Accepted Bills <Inland>,623,View Type,TRUE,FALSE,Approved
@@ -417,8 +410,12 @@ Layer 4,80002,Interest Accrual for WO Loans,800,View Type,TRUE,FALSE,Approved
 Layer 4,90001,Inter Branch SuspenseAccount,900,View Type,TRUE,FALSE,Approved
 Layer 4,90002,Intra Branch SuspenseAccount,900,View Type,TRUE,FALSE,Approved
 Layer 4,90003,Cross Currency Suspense Account,900,View Type,TRUE,FALSE,Approved
-Layer 4,90008,Cross Currency Suspense Account,900,View Type,TRUE,FALSE,Approved
+Layer 4,90008,Cross Currency Suspense Account 2,900,View Type,TRUE,FALSE,Approved
 Layer 4,90004,Currency Position Account <FC>,900,View Type,TRUE,FALSE,Approved
 Layer 4,90005,Exchange Value Account,900,View Type,TRUE,FALSE,Approved
 Layer 4,90006,Inter System Suspense Account BDT,900,View Type,TRUE,FALSE,Approved
 Layer 4,90007,Inter System Suspense Account <FC>,900,View Type,TRUE,FALSE,Approved
+Layer 4,24502,Interest Receivable on Staff Loans,245,View Type,TRUE,FALSE,Approved
+Layer 4,24602,Penal Interest Receivable on Staff Loans,246,View Type,TRUE,FALSE,Approved
+Layer 4,31102,Interest Earned on Staff Loans,311,View Type,TRUE,FALSE,Approved
+Layer 4,31202,Penal Interest Earned on Staff Loans,312,View Type,TRUE,FALSE,Approved
