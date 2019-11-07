@@ -3,6 +3,7 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'account',
+    'sequence': 101,
     'version':'10.1.1.1',
     'depends': [
         'base',
