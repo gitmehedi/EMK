@@ -186,7 +186,6 @@ class GBSFileImportWizard(models.TransientModel):
 
             index += 1
             line_no = index + 1
-            is_valid = True
             val = {}
 
             asset_name = line['asset name'].strip()
@@ -339,44 +338,11 @@ class GBSFileImportWizard(models.TransientModel):
                 print(line_no)
 
         end = time.time()
-        print('Start Time: {0}'.format(start))
-        print('End Time: {0}'.format(end))
         print('Total Execution Time: {0}'.format(end-start))
 
         if len(errors) > 0:
-            file_path = os.path.join('/home/sumon/', 'fam_errors.txt')
+            file_path = os.path.join(os.path.expanduser("~"), "FAM_ERR_" + fields.Datetime.now())
             with open(file_path, "w+") as file:
                 file.write(errors)
 
-        # if len(errors) == 0:
-        #     query_dh = """
-        #     INSERT INTO account_asset_depreciation_line
-        #     (asset_id, depreciation_date, days, amount, depreciated_value, remaining_value, line_type, name, sequence, move_check)
-        #     VALUES %s""" % dh_entry[:-1]
-        #     self.env.cr.execute(query_dh)
-        #
-        # query_ath = """
-        # INSERT INTO account_asset_allocation_history
-        # (asset_id, from_branch_id, operating_unit_id, sub_operating_unit_id, cost_centre_id, receive_date, state)
-        # VALUES %s""" % ath_entry[:-1]
-        # query_ath = """
-        # INSERT INTO account_asset_allocation_history
-        # (asset_id, from_branch_id, operating_unit_id, receive_date, state)
-        # VALUES %s""" % ath_entry[:-1]
-        # self.env.cr.execute(query_ath)
 
-        # print "Total Time: ", end - start
-
-        # if len(errors) == 0:
-        #     query = """
-        #     INSERT INTO account_asset_asset
-        #     (name, category_id, asset_type_id, partner_id, warranty_date, date, asset_usage_date, lst_depr_date,
-        #     operating_unit_id, current_branch_id, sub_operating_unit_id, cost_centre_id, depr_base_value, value,
-        #     value_residual, salvage_value, accumulated_value, currency_id, asset_description, note, method,
-        #     method_progress_factor, company_id, state, method_period, method_time, is_custom_depr, depreciation_year,active)
-        #     VALUES %s""" % fam_entry[:-1]
-        #     self.env.cr.execute(query)
-        # else:
-        #     file_path = os.path.join('/home/sumon/', 'fam_errors.txt')
-        #     with open(file_path, "w+") as file:
-        #         file.write(errors)
