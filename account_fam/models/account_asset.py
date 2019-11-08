@@ -118,13 +118,7 @@ class AccountAssetAsset(models.Model):
     @api.multi
     def validate(self):
         super(AccountAssetAsset, self).validate()
-        if not self.asset_seq and self.date and self.category_id.code:
-            code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
-            date = self.date.split('-')
-            ATAC = '{0}-{1}-MTB-{2}-{3}'.format(date[0], date[1], self.category_id.code, self.asset_type_id.code)
-            self.write({'asset_seq': code.replace('ATAC', ATAC)})
-        else:
-            raise ValidationError(_('Purchase Date or Asset Category is not available.'))
+
 
     @api.multi
     def name_get(self):
