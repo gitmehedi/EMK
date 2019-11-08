@@ -12,10 +12,10 @@
             <!--<field name="category_id" ref="base.module_category_usability"/>-->
         <!--</record>-->
 
-        <!--<record id="payment_approver" model="res.groups">-->
-            <!--<field name="name">Vendor Payment Approver</field>-->
-            <!--<field name="category_id" ref="base.module_category_usability"/>-->
-        <!--</record>-->
+        <record id="payment_approver" model="res.groups">
+            <field name="name">Vendor Payment Approver</field>
+            <field name="category_id" ref="base.module_category_usability"/>
+        </record>
 
     </data>
 </odoo>

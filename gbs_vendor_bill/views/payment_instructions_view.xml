@@ -8,11 +8,11 @@
             <form string="Payment Instruction" create="false" delete="false" edit="false">
                 <header>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" states="draft"/>
+                            class="oe_highlight" states="draft" groups="gbs_vendor_bill.payment_approver"/>
                     <button name="action_reject" string="Reject" type="object"
-                            states="draft"/>
+                            states="draft" groups="gbs_vendor_bill.payment_approver"/>
                     <button name="action_reset" string="Reset" type="object"
-                            states="cancel"/>
+                            states="cancel" groups="gbs_vendor_bill.payment_approver"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
                 </header>
                 <sheet>
