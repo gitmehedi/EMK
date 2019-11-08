@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_invoice_open']" position="attributes">
-                <attribute name="groups">account.group_account_manager</attribute>
+                <attribute name="groups">gbs_vendor_bill.vendor_bill_approver</attribute>
             </xpath>
             <xpath expr="//button[@name='action_invoice_draft']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
