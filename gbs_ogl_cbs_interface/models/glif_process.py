@@ -359,7 +359,7 @@ class ServerFileProcess(models.Model):
             else:
                 errObj.line_ids.unlink()
 
-            errors, journal_entry = "", ""
+            errors, journal_entry,move_date = "", "",""
             journal_type = 'CBS'
             if journal_type not in jrnl.keys():
                 raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
@@ -392,6 +392,9 @@ class ServerFileProcess(models.Model):
                         errors += format_error(errObj.id, index,
                                                'POSTING-DATE or POSTING-TIME [{0}]has invalid value'.format(
                                                    posting_date))
+                    if not move_date:
+                        move_date = rec['POSTING-DATE']
+
 
                     system_date = rec['SYSTEM-DATE']
                     if not system_date:
@@ -526,8 +529,9 @@ class ServerFileProcess(models.Model):
                 if move_id:
                     move_id.amount = debit
                 if move_id.state == 'draft':
+                    move_id.sudo().write({'date':rec['POSTING-DATE']})
                     move_id.sudo().post()
-                    errObj.write({'state': 'resolved'})
+                    errObj.sudo().write({'state': 'resolved'})
                     return move_id
                 else:
                     if debit - credit > 0:

@@ -11,10 +11,6 @@
                         <button name="gbs_data_migration.action_gbs_data_migration_wizard"
                                 groups="mtbl_access.group_mtbl_sys_admin"
                                 type="action" string="Upload" class="oe_highlight"/>
-                        <button name="action_process"
-                                groups="mtbl_access.group_mtbl_sys_admin"
-                                type="object" string="Process" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <div>
@@ -22,15 +18,6 @@
                                 <field name="code"/>
                             </h1>
                         </div>
-                        <group>
-                            <group>
-                                <field name="date" readonly="1"/>
-                                <field name="file_name" invisible="1"/>
-                                <field name="upload_file" filename="file_name" readonly="1"/>
-                            </group>
-
-                        </group>
-
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -43,13 +30,9 @@
             <field name="name">gbs.data.migration.tree</field>
             <field name="model">gbs.data.migration</field>
             <field name="arch" type="xml">
-                <tree string="Bulk / Manual Journal"
-                      decoration-success="state=='draft'" decoration-muted="state=='processed'">
+                <tree>
                     <field name="code"/>
-                    <field name="file_name" invisible="1"/>
                     <field name="date"/>
-                    <field name="upload_file" filename="file_name" readonly="1"/>
-                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -60,10 +43,6 @@
             <field name="arch" type="xml">
                 <search string="Bulk / Manual Journal">
                     <field name="date"/>
-                    <group name="group_by">
-                        <filter string="Draft" name="state" icon="terp-personal"
-                                domain="[('state','=','draft')]"/>
-                    </group>
                 </search>
             </field>
         </record>
@@ -73,42 +52,11 @@
             <field name="name">GL Data Migration</field>
             <field name="res_model">gbs.data.migration</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">
-                {"search_default_state":'draft'}
-            </field>
-        </record>
+       </record>
 
-
-        <menuitem id="menu_gl_data_migration" name="GL"
+        <menuitem id="menu_gl_data_migration" name="GL Opening"
                   parent="menu_data_migration"
-                  sequence="25"
+                  sequence="10" groups="mtbl_access.group_mtbl_sys_admin"
                   action="action_gbs_data_migration"/>
-
-        <!--<menuitem id="menu_gbs_data_migration" name="Accounting Data Migration"-->
-        <!--sequence="50"-->
-        <!--action="action_gbs_data_migration"-->
-        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
-
-        <!--<menuitem id="menu_gbs_data_migration" name="Accounting Data Migration"-->
-        <!--sequence="50"-->
-        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
-
-        <!--<menuitem id="menu_data_migration_operation" name="Data Migration Operation"-->
-        <!--parent="menu_gbs_data_migration"-->
-        <!--sequence="30"-->
-        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
-
-        <!--<menuitem id="gl_bal_data_migration_operation" name="GL"-->
-        <!--parent="menu_data_migration_operation"-->
-        <!--sequence="20"-->
-        <!--action="action_gbs_data_migration"-->
-        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
-
-        <!--<menuitem id="fam_bal_data_migration_operation" name="FAM"-->
-        <!--parent="menu_data_migration_operation"-->
-        <!--sequence="40"-->
-        <!--action="action_gbs_data_migration"-->
-        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
-
     </data>
 </odoo>
