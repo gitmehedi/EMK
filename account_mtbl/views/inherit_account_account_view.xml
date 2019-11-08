@@ -148,8 +148,6 @@
         <record id="account_parent.action_open_account" model="ir.values">
             <field eval="'account.move.line'" name="model"/>
         </record>
-
-
     </data>
 </odoo>
 

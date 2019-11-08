@@ -7,7 +7,7 @@ base.AMD,AMD,AMD,FALSE,FALSE,approve
 base.ANG,ANG,ANG,FALSE,FALSE,approve
 base.AOA,AOA,AOA,FALSE,FALSE,approve
 base.ARS,ARS,ARS,FALSE,FALSE,approve
-base.AUD,AUD,AUD,FALSE,FALSE,approve
+base.AUD,AUD,AUD,TRUE,FALSE,approve
 base.AWG,AWG,AWG,FALSE,FALSE,approve
 base.AZN,AZN,AZN,FALSE,FALSE,approve
 base.BAM,BAM,BAM,FALSE,FALSE,approve

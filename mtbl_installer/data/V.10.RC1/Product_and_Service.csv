@@ -1,0 +1,239 @@
+Name,Can be Purchased,Product Type,Internal Category,Expense Account,Asset Type,Asset Category,Active,Pending,Status
+Bangladesh Institute Of Bank Management,TRUE,service,All,42310001,,,True,False,approve
+ATM Machine,TRUE,asset,All,25103002,32,3214,True,False,approve
+Building,TRUE,asset,All,25101002,12,1202,True,False,approve
+Car Maintenance,TRUE,service,All,42409501,,,True,False,approve
+Cash Deposit Machine,TRUE,asset,All,25103002,32,3216,True,False,approve
+CCTV System,TRUE,asset,All,25103002,32,3212,True,False,approve
+Chair,TRUE,asset,All,25102002,21,2101,True,False,approve
+Coat Stand,TRUE,asset,All,25102002,21,2111,True,False,approve
+Computer CPU,TRUE,asset,All,25104001,41,4102,True,False,approve
+Computer Monitor,TRUE,asset,All,25104001,41,4103,True,False,approve
+Computer & Peripherals,TRUE,asset,All,25104001,41,4102,True,False,approve
+Connectivity,TRUE,service,All,42324001,,,True,False,approve
+Courier Service,TRUE,service,All,42501002,,,True,False,approve
+Directors Fee,TRUE,service,All,42801001,,,True,False,approve
+Door,TRUE,asset,All,25102002,21,2107,True,False,approve
+Drawer Unit,TRUE,asset,All,25102002,21,2103,True,False,approve
+Electric Equipment Others,TRUE,asset,All,25103001,31,3199,True,False,approve
+Electricity Charge,TRUE,service,All,42204001,,,True,False,approve
+Entertainment,TRUE,service,All,42305001,,,True,False,approve
+Fake Note or Cheque Detector,TRUE,asset,All,25103002,32,3211,True,False,approve
+Fan,TRUE,asset,All,25103001,31,3107,True,False,approve
+Fax Machine,TRUE,asset,All,25103001,31,3104,True,False,approve
+Fixture,TRUE,asset,All,25102001,22,2201,True,False,approve
+Fridge,TRUE,asset,All,25103001,31,3109,True,False,approve
+Furniture,TRUE,asset,All,25102002,21,2199,True,False,approve
+Generator,TRUE,asset,All,25103001,31,3105,True,False,approve
+Hoarding/Neon Sign,TRUE,service,All,42703004,,,True,False,approve
+Interior Decoration,TRUE,asset,All,25102001,22,2201,True,False,approve
+Internet Connectivity,TRUE,service,All,42324001,,,True,False,approve
+IPS,TRUE,asset,All,25103001,31,3103,True,False,approve
+KIOSK Furniture,TRUE,asset,All,25102002,21,2112,True,False,approve
+Land,TRUE,asset,All,25101001,11,1101,True,False,approve
+Land & Building,TRUE,asset,All,25101002,12,1201,True,False,approve
+Laptop,TRUE,asset,All,25104001,41,4104,True,False,approve
+Legal Service,TRUE,service,All,42601002,,,True,False,approve
+Locker,TRUE,asset,All,25102002,21,2108,True,False,approve
+Table,TRUE,asset,All,25102002,21,2102,True,False,approve
+Micro oven,TRUE,asset,All,25103001,31,3108,True,False,approve
+Mobile Phone Set,TRUE,asset,All,25103002,32,3207,True,False,approve
+Motor Car,TRUE,asset,All,25105001,51,5101,True,False,approve
+Motor Cycle,TRUE,asset,All,25105002,52,5201,True,False,approve
+Motor Vehicle,TRUE,asset,All,25105001,51,5101,True,False,approve
+Networking,TRUE,asset,All,25103002,32,3204,True,False,approve
+Newspaper Advertisement,TRUE,service,All,42703002,,,True,False,approve
+Note Binding Machine,TRUE,asset,All,25103002,32,3208,True,False,approve
+Note Counting Machine,TRUE,asset,All,25103002,32,3209,True,False,approve
+Note Sorting Machine,TRUE,asset,All,25103002,32,3210,True,False,approve
+Officer Chair,TRUE,asset,All,25102002,21,2101,True,False,approve
+Other Office Equipment,TRUE,asset,All,25103002,32,3208,True,False,approve
+Others Furniture,TRUE,asset,All,25102002,21,2199,True,False,approve
+Photocopier Machine,TRUE,asset,All,25103001,31,3102,True,False,approve
+POS Machine,TRUE,asset,All,25103002,32,3221,True,False,approve
+Printer,TRUE,asset,All,25103002,32,3202,True,False,approve
+Printer-Mini,TRUE,asset,All,25103002,32,3202,True,False,approve
+Professional,TRUE,service,All,42311001,,,True,False,approve
+Projector,TRUE,asset,All,25103001,31,3106,True,False,approve
+Repair & Maintenance- Electrical Equipment,TRUE,service,All,42409301,,,True,False,approve
+Router,TRUE,asset,All,25103002,32,3206,True,False,approve
+Scaner,TRUE,asset,All,25103002,31,3203,True,False,approve
+Repair & Maintenance- Office Equipment,TRUE,service,All,42409302,,,True,False,approve
+Security Service,TRUE,service,All,42301001,,,True,False,approve
+Server,TRUE,asset,All,25104001,41,4101,True,False,approve
+Sofa,TRUE,asset,All,25102002,21,2106,True,False,approve
+Software,TRUE,asset,All,25201001,61,6101,True,False,approve
+Sound System,TRUE,asset,All,25103002,32,3213,True,False,approve
+Air-Conditioner,TRUE,asset,All,25103001,31,3101,True,False,approve
+Stabilazer,TRUE,asset,All,25103001,31,3112,True,False,approve
+Steel Almirah,TRUE,asset,All,25102002,21,2105,True,False,approve
+Steel Cabinet,TRUE,asset,All,25102002,21,2104,True,False,approve
+Steel Rack,TRUE,asset,All,25102002,21,2110,True,False,approve
+TA/DA Local,TRUE,service,All,42308002,,,True,False,approve
+Telephone,TRUE,asset,All,25103002,32,3205,True,False,approve
+Television,TRUE,asset,All,25103001,31,3111,True,False,approve
+UPS,TRUE,asset,All,25103002,32,3201,True,False,approve
+Vault,TRUE,asset,All,25102002,21,2109,True,False,approve
+Water Pump,TRUE,asset,All,25103001,31,3110,True,False,approve
+Workstation,TRUE,asset,All,25102002,21,2199,True,False,approve
+,,,,,,,,,
+,,,,,,,,,
+Fixture <Interior Work>,TRUE,consu,All,25102001,,,True,False,approve
+Electrical Equipments,TRUE,consu,All,25103001,,,True,False,approve
+Other Office Equipments (except Computers),TRUE,consu,All,25103002,,,True,False,approve
+Computers & Peripherals,TRUE,consu,All,25104001,,,True,False,approve
+Motor Cars,TRUE,consu,All,25105001,,,True,False,approve
+Motor Cycles,TRUE,consu,All,25105002,,,True,False,approve
+Basic Salary,TRUE,consu,All,42101001,,,True,False,approve
+Personal Pay <Basic>,TRUE,consu,All,42101002,,,True,False,approve
+Salary for Contractual Kiosk Staff <Basic Pay>,TRUE,consu,All,42101003,,,True,False,approve
+House Rent Allowance,TRUE,consu,All,42102001,,,True,False,approve
+Conveyance Allowance,TRUE,consu,All,42102002,,,True,False,approve
+Medical Allowance,TRUE,consu,All,42102003,,,True,False,approve
+Entertainment Allowance,TRUE,consu,All,42102004,,,True,False,approve
+Washing Allowance,TRUE,consu,All,42102005,,,True,False,approve
+Dearness Allowance,TRUE,consu,All,42102006,,,True,False,approve
+Risk Allowance,TRUE,consu,All,42102007,,,True,False,approve
+Evening Banking Allowance,TRUE,consu,All,42102008,,,True,False,approve
+Discomfort Allowance,TRUE,consu,All,42102009,,,True,False,approve
+Technical Allowance,TRUE,consu,All,42102010,,,True,False,approve
+House Maintenance Allowance,TRUE,consu,All,42102011,,,True,False,approve
+Medical Reimbursement,TRUE,consu,All,42102012,,,True,False,approve
+Uniform And Other Apparels,TRUE,consu,All,42102013,,,True,False,approve
+Utility Charges,TRUE,consu,All,42102014,,,True,False,approve
+Ordinary Bonus,TRUE,consu,All,42103001,,,True,False,approve
+Incentive Bonus,TRUE,consu,All,42103002,,,True,False,approve
+Gratuity,TRUE,consu,All,42104001,,,True,False,approve
+Leave Fare Assistance,TRUE,consu,All,42105001,,,True,False,approve
+Bank's Contribution to EPF,TRUE,consu,All,42106001,,,True,False,approve
+DMD's Remuneration,TRUE,consu,All,42107006,,,True,False,approve
+Misc Expenses for DST employees,TRUE,consu,All,42107007,,,True,False,approve
+Leave Encashment,TRUE,consu,All,42108001,,,True,False,approve
+Rent,TRUE,consu,All,42201001,,,True,False,approve
+VAT on Rent,TRUE,consu,All,42201002,,,True,False,approve
+City Corp./Municipality Taxes,TRUE,consu,All,42202001,,,True,False,approve
+Trade License Fees,TRUE,consu,All,42202002,,,True,False,approve
+Excise Duty on Bank's own Deposits with other Banks,TRUE,consu,All,42202003,,,True,False,approve
+MD/DMD's Income Tax,TRUE,consu,All,42202004,,,True,False,approve
+VAT/Tax on Other Activities <Expenses>,TRUE,consu,All,42202005,,,True,False,approve
+Insurance for Cash in Transit,TRUE,consu,All,42203001,,,True,False,approve
+Insurance for Cash in Safe/Counter,TRUE,consu,All,42203002,,,True,False,approve
+Group Insurance Premium-Life,TRUE,consu,All,42203003,,,True,False,approve
+Insurance,TRUE,consu,All,42203005,,,True,False,approve
+Deposit Insurance Premium,TRUE,consu,All,42203006,,,True,False,approve
+Insurance Premium on Locker Services,TRUE,consu,All,42203007,,,True,False,approve
+Insurance Premium on Motor Vehicles Executives,TRUE,consu,All,42203008,,,True,False,approve
+Insurance Premium on Motor Vehicles Pool,TRUE,consu,All,42203009,,,True,False,approve
+Electicity Charges,TRUE,consu,All,42204001,,,True,False,approve
+Fuel for Generator,TRUE,consu,All,42204002,,,True,False,approve
+WASA Bill (Office),TRUE,consu,All,42204003,,,True,False,approve
+WASA Bill (Residence),TRUE,consu,All,42204003,,,True,False,approve
+Gas Bill,TRUE,consu,All,42204004,,,True,False,approve
+Fuel for Car Executives,TRUE,consu,All,42204005,,,True,False,approve
+Fuel for Car Pool,TRUE,consu,All,42204006,,,True,False,approve
+Lease Rent <Car>,TRUE,consu,All,42205001,,,True,False,approve
+Security/Auxiliary Services,TRUE,consu,All,42301001,,,True,False,approve
+Security/Auxiliary Services others,TRUE,consu,All,42301002,,,True,False,approve
+Monthly Wages of Cleaner,TRUE,consu,All,42301003,,,True,False,approve
+Cash Carrying / Loading Expenses,TRUE,consu,All,42301004,,,True,False,approve
+Service Charge of Building Rented,TRUE,consu,All,42303001,,,True,False,approve
+Misc exp. On Office Maintenance,TRUE,consu,All,42303002,,,True,False,approve
+Tree Plants Expenses,TRUE,consu,All,42303003,,,True,False,approve
+Drinking Water Expenses,TRUE,consu,All,42303004,,,True,False,approve
+Material Purchase For Upkeep of Bank,TRUE,consu,All,42303005,,,True,False,approve
+Taxes (Token  Fitness) & Registration cost Motor Vehicle Pool,TRUE,consu,All,42304001,,,True,False,approve
+Taxes (Token  Fitness)& Registration cost Motor Vehicle Executives,TRUE,consu,All,42304002,,,True,False,approve
+CNG Conversion Cost Motor Vehicle Executives,TRUE,consu,All,42304003,,,True,False,approve
+CNG Conversion Cost Motor Vehicle Pool,TRUE,consu,All,42304004,,,True,False,approve
+Car Loan Instalment Expenses <Employees>,TRUE,consu,All,42304005,,,True,False,approve
+Car hiring charges <Rent> for MV Pool,TRUE,consu,All,42304006,,,True,False,approve
+Car Allowance <Employee>,TRUE,consu,All,42304007,,,True,False,approve
+Entertainment Expenses,TRUE,consu,All,42305001,,,True,False,approve
+News Paper & Periodicals,TRUE,consu,All,42306001,,,True,False,approve
+Clearing House expenses,TRUE,consu,All,42307001,,,True,False,approve
+T.A/D.A (Foreign Travel),TRUE,consu,All,42308001,,,True,False,approve
+T.A/D.A (Domestic Travel),TRUE,consu,All,42308002,,,True,False,approve
+Conveyance for official purpose,TRUE,consu,All,42308003,,,True,False,approve
+Holiday Conveyance,TRUE,consu,All,42308004,,,True,False,approve
+Foreign Bank Charges,TRUE,consu,All,42309001,,,True,False,approve
+Local Bank other than BB Charges,TRUE,consu,All,42309002,,,True,False,approve
+Bangladesh Bank Charges,TRUE,consu,All,42309003,,,True,False,approve
+Foreign Bank Charges in USD <for OBU>,TRUE,consu,All,42309004,,,True,False,approve
+Local Training Expenses,TRUE,consu,All,42310001,,,True,False,approve
+Local Training Expenses <Registration Fee>,TRUE,consu,All,42310001,,,True,False,approve
+Foreign Training Expenses,TRUE,consu,All,42310002,,,True,False,approve
+Foreign Training Expenses <Registration Fee>,TRUE,consu,All,42310002,,,True,False,approve
+Daily Allowances (Training),TRUE,consu,All,42310003,,,True,False,approve
+Entertainment (Training),TRUE,consu,All,42310004,,,True,False,approve
+Venue Rent (Training),TRUE,consu,All,42310005,,,True,False,approve
+Honorarium (Training),TRUE,consu,All,42310006,,,True,False,approve
+Professional Fees,TRUE,consu,All,42311001,,,True,False,approve
+AGM Expenses,TRUE,consu,All,42312001,,,True,False,approve
+Subscription,TRUE,consu,All,42313001,,,True,False,approve
+Donation,TRUE,consu,All,42313002,,,True,False,approve
+Reuter Charges,TRUE,consu,All,42314001,,,True,False,approve
+CDBL Charges,TRUE,consu,All,42315001,,,True,False,approve
+Fees for Regis. at Joint Stock Comp.,TRUE,consu,All,42316002,,,True,False,approve
+All Other Fees,TRUE,consu,All,42316003,,,True,False,approve
+Business Development Expenses,TRUE,consu,All,42317001,,,True,False,approve
+CSR Activities,TRUE,consu,All,42317002,,,True,False,approve
+Branch Opening Expenses,TRUE,consu,All,42317003,,,True,False,approve
+Contribution to MTB Foundation (Expenditure),TRUE,consu,All,42318001,,,True,False,approve
+Employees Medical Assistance Fund (Expenditure),TRUE,consu,All,42319001,,,True,False,approve
+CPV Charge- Payment to Vendor (Retail),TRUE,consu,All,42322001,,,True,False,approve
+CPV Charge - Deposit KYC (Retail),TRUE,consu,All,42322002,,,True,False,approve
+Site Maintenance & Support Service,TRUE,consu,All,42323001,,,True,False,approve
+Connectivity Charge,TRUE,consu,All,42324001,,,True,False,approve
+NID Verification Charge,TRUE,consu,All,42325011,,,True,False,approve
+Loss on sale of Fixed Assets,TRUE,consu,All,42326001,,,True,False,approve
+Misc Expenses not classified elsewhere,TRUE,consu,All,42327001,,,True,False,approve
+POS Intercharge Reimbursement Fee Paid for,TRUE,consu,All,42327002,,,True,False,approve
+bKash Commission,TRUE,consu,All,42327004,,,True,False,approve
+Auditor's Fees,TRUE,consu,All,42335001,,,True,False,approve
+Agency Commission on Student File,TRUE,consu,All,42336001,,,True,False,approve
+Other Fees & Commission USD <OBU>,TRUE,consu,All,42337001,,,True,False,approve
+Repairs & Maintenance on Building,TRUE,consu,All,42409001,,,True,False,approve
+Repairs & Maintenance on Fixture,TRUE,consu,All,42409101,,,True,False,approve
+Repairs & Maintenance on Furniture,TRUE,consu,All,42409102,,,True,False,approve
+Repairs & Maintenance on Electrical Equipments,TRUE,consu,All,42409301,,,True,False,approve
+Repairs & Maintenance on Other Office Equipments,TRUE,consu,All,42409302,,,True,False,approve
+Repairs & Maintenance on Computers & Peripherals,TRUE,consu,All,42409401,,,True,False,approve
+Repairs & Maintenance on Motor Cars,TRUE,consu,All,42409501,,,True,False,approve
+Repairs & Maintenance on Motor Cycles,TRUE,consu,All,42409502,,,True,False,approve
+Software Maintenance,TRUE,consu,All,42409601,,,True,False,approve
+Postage,TRUE,consu,All,42501001,,,True,False,approve
+Postage/Courier Service Charges,TRUE,consu,All,42501002,,,True,False,approve
+Telephone Expenses <Residence>,TRUE,consu,All,42502001,,,True,False,approve
+Telephone Expenses <Office>,TRUE,consu,All,42502001,,,True,False,approve
+Fax/E-Mail Expenses,TRUE,consu,All,42502002,,,True,False,approve
+Telex/Telegraph Expenses,TRUE,consu,All,42502003,,,True,False,approve
+Mobile Bill Expenses,TRUE,consu,All,42502004,,,True,False,approve
+SWIFT Charges (Expenses),TRUE,consu,All,42502005,,,True,False,approve
+Stamp Charges,TRUE,consu,All,42503001,,,True,False,approve
+Lawyer's Charges,TRUE,consu,All,42601001,,,True,False,approve
+Legal Charges,TRUE,consu,All,42601002,,,True,False,approve
+Legal Stamps Charges,TRUE,consu,All,42601003,,,True,False,approve
+Court Fees & Charges,TRUE,consu,All,42601004,,,True,False,approve
+Security Stationery,TRUE,consu,All,42701001,,,True,False,approve
+Computer Stationery,TRUE,consu,All,42701002,,,True,False,approve
+Paper & Table Stationary,TRUE,consu,All,42701003,,,True,False,approve
+Printed Stationery,TRUE,consu,All,42701005,,,True,False,approve
+Printing Expenses,TRUE,consu,All,42702001,,,True,False,approve
+Advertisement & Publicity,TRUE,consu,All,42703001,,,True,False,approve
+News Paper Advertisements,TRUE,consu,All,42703002,,,True,False,approve
+Broad Casting Advertisements,TRUE,consu,All,42703003,,,True,False,approve
+Hoarding/ Neon Signs,TRUE,consu,All,42703004,,,True,False,approve
+Souvenir/Magazine,TRUE,consu,All,42703005,,,True,False,approve
+Cut Out Dangler Flex Backdrop etc branding expenses,TRUE,consu,All,42703006,,,True,False,approve
+Director's Fees,TRUE,consu,All,42801001,,,True,False,approve
+Parties & Dinner,TRUE,consu,All,42801002,,,True,False,approve
+Director's Traveling Expenses,TRUE,consu,All,42801003,,,True,False,approve
+MD Basic,TRUE,consu,All,42901001,,,True,False,approve
+MD House Rent,TRUE,consu,All,42901002,,,True,False,approve
+MD House Maintenance,TRUE,consu,All,42901003,,,True,False,approve
+MD Entertainment,TRUE,consu,All,42901004,,,True,False,approve
+MD Festival Bonus,TRUE,consu,All,42901005,,,True,False,approve
+MD Incentive Bonus,TRUE,consu,All,42901006,,,True,False,approve
+MD Leave Fare Assistance,TRUE,consu,All,42901007,,,True,False,approve
+MD Security & Personal Wages,TRUE,consu,All,42901008,,,True,False,approve
+MD Provident Fund,TRUE,consu,All,42901009,,,True,False,approve

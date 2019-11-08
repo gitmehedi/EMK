@@ -36,18 +36,6 @@ class AssetAllocationWizard(models.TransientModel):
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre')
 
-    # @api.onchange('to_operating_unit_id')
-    # def onchange_operating_unit(self):
-    #     if self.operating_unit_id:
-    #         res = {}
-    #         self.sub_operating_unit_id = 0
-    #         sub_operating = self.env['sub.operating.unit'].search(
-    #             [('operating_unit_id', '=', self.to_operating_unit_id.id)])
-    #         res['domain'] = {
-    #             'sub_operating_unit_id': [('id', 'in', sub_operating.ids)]
-    #         }
-    #         return res
-
     @api.multi
     def allocation(self):
         for rec in self._context['active_ids']:
@@ -113,7 +101,6 @@ class AssetAllocationWizard(models.TransientModel):
 
                     move = self.env['account.move'].create({
                         'ref': asset.code,
-                        'date': self.date or False,
                         'journal_id': asset.category_id.journal_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'sub_operating_unit_id': cur_sub_operating_unit,
@@ -130,6 +117,16 @@ class AssetAllocationWizard(models.TransientModel):
                                  'asset_usage_date': self.date,
                                  'cost_centre_id': self.cost_centre_id.id
                                  })
+
+                    if not asset.asset_seq and asset.date and asset.category_id.code:
+                        code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
+                        date = self.date.split('-')
+                        ATAC = '{0}-{1}-MTB-{2}-{3}'.format(date[0], date[1],
+                                                            asset.category_id.code, asset.asset_type_id.code)
+                        asset.write({'asset_seq': code.replace('ATAC', ATAC)})
+                    else:
+                        raise ValidationError(_('Purchase Date or Asset Category is not available.'))
+
 
                 elif not self.env.context.get('allocation') and asset.allocation_status:
                     from_total_credit = {
@@ -180,8 +177,7 @@ class AssetAllocationWizard(models.TransientModel):
                     }
 
                     move = self.env['account.move'].create({
-                        'ref': asset.code,
-                        'date': self.date or False,
+                        'ref': asset.asset_usage_date,
                         'journal_id': asset.category_id.journal_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'sub_operating_unit_id': cur_sub_operating_unit,
