@@ -307,7 +307,7 @@ class GBSFileImportWizard(models.TransientModel):
             VALUES %s""" % journal_entry[:-1]
             self.env.cr.execute(query)
         else:
-            file_path = os.path.join('/home/sumon/', 'errors.txt')
+            file_path = os.path.join(os.path.expanduser("~"), "GL_" + fields.Datetime.now())
             with open(file_path, "w+") as file:
                 file.write(errors)
 
