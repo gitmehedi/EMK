@@ -14,6 +14,7 @@
         'tds_vat_challan',
     ],
     'data': [
+        'security/security.xml',
         'views/asset_vendor_bills_view.xml',
         'views/payment_instrauction_view.xml',
     ],
