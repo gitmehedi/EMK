@@ -14,6 +14,7 @@
         'gbs_res_partner',
     ],
     'data': [
+        'security/security.xml',
         'data/bill_payment_instruction_scheduler.xml',
         'wizards/bill_payment_instruction_wizard.xml',
         'views/account_config.xml',

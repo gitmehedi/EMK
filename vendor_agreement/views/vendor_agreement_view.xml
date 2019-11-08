@@ -36,24 +36,24 @@
                                     class="oe_highlight"/>
                             <button name="action_validate" type="object"
                                     string="Validate" states="confirm"
-                                    groups="vendor_agreement.group_vendor_agreement_manager"
+                                    groups="vendor_agreement.vendor_agreement_approver"
                                     class="oe_highlight"/>
                             <button name="action_cancel" type="object"
                                     string="Cancel" states="confirm"
-                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
+                                    groups="vendor_agreement.vendor_agreement_approver"/>
                             <button name="action_draft" type="object"
                                     string="Reset to draft" states="cancel"
-                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
+                                    groups="vendor_agreement.vendor_agreement_approver"/>
                             <button string="Amendment" name="action_amendment" states="done"
                                     type="object" class="oe_read_only"
                                     groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
                             <button string="Payment" name="action_payment" type="object" class="oe_read_only"
                                     attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
-                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
+                                    groups="vendor_agreement.vendor_agreement_approver"/>
                             <button string="Approve" name="action_approve_amendment"
                                     type="object" class="oe_highlight"
                                     attrs="{'invisible': [('is_amendment', '=', False)]}"
-                                    groups="vendor_agreement.group_vendor_agreement_manager"/>
+                                    groups="vendor_agreement.vendor_agreement_approver"/>
                             <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                         </header>
                         <sheet>

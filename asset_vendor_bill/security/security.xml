@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="asset_bill_approver" model="res.groups">
+            <field name="name">Asset Bill Approver</field>
+            <field name="category_id" ref="base.module_category_usability"/>
+        </record>
+
+
+
+        <!--<record id="payment_approver" model="res.groups">-->
+            <!--<field name="name">Vendor Payment Approver</field>-->
+            <!--<field name="category_id" ref="base.module_category_usability"/>-->
+        <!--</record>-->
+
+    </data>
+</odoo>
