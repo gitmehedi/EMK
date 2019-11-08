@@ -31,6 +31,7 @@ class AccountAccount(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    gl_type = fields.Selection([('online','Online')], string='GL Type')
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
