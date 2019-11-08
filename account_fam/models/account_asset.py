@@ -107,24 +107,13 @@ class AccountAssetAsset(models.Model):
 
     @api.multi
     def all_asset_validate(self):
-        assets = self.search([('state','=','open')])
+        assets = self.search([('state', '=', 'open')])
         for asset in assets:
             asset_depr = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
-            code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
-            date = asset.date.split('-')
-            ATAC = '{0}-{1}-MTB-{2}-{3}'.format(date[0], date[1], asset.category_id.code, asset.asset_type_id.code)
-            asset.write({'asset_seq': code.replace('ATAC', ATAC)})
             if asset_depr:
-                lst_depr_date = self.date_str_format(fields.Datetime.now()[:10])
-                usage_date = self.date_str_format(asset.asset_usage_date)
-                days = (lst_depr_date - usage_date).days
-                asset.write({'lst_depr_date': lst_depr_date,
-                             'allocation_status': True,
-                             'depr_base_value': asset.value_residual,
-                             'move_posted_check': True})
-                asset_depr.write({'days': days,
-                                  'depreciation_date': lst_depr_date,
-                                  'move_check': True})
+                asset_depr.write({'move_check': True,
+                                  'move_posted_check': True,
+                                  })
 
     @api.multi
     def validate(self):

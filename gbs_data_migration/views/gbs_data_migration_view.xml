@@ -70,7 +70,7 @@
 
 
         <record id="action_gbs_data_migration" model="ir.actions.act_window">
-            <field name="name">Accounting Data Migration</field>
+            <field name="name">GL Data Migration</field>
             <field name="res_model">gbs.data.migration</field>
             <field name="view_mode">tree,form</field>
             <field name="context">
@@ -78,31 +78,37 @@
             </field>
         </record>
 
-        <!--<menuitem id="menu_gbs_data_migration" name="Accounting Data Migration"-->
-                  <!--sequence="50"-->
-                  <!--action="action_gbs_data_migration"-->
-                  <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
+
+        <menuitem id="menu_gl_data_migration" name="GL"
+                  parent="menu_data_migration"
+                  sequence="25"
+                  action="action_gbs_data_migration"/>
 
         <!--<menuitem id="menu_gbs_data_migration" name="Accounting Data Migration"-->
-                  <!--sequence="50"-->
-                  <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
+        <!--sequence="50"-->
+        <!--action="action_gbs_data_migration"-->
+        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
+
+        <!--<menuitem id="menu_gbs_data_migration" name="Accounting Data Migration"-->
+        <!--sequence="50"-->
+        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
 
         <!--<menuitem id="menu_data_migration_operation" name="Data Migration Operation"-->
-                  <!--parent="menu_gbs_data_migration"-->
-                  <!--sequence="30"-->
-                  <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
+        <!--parent="menu_gbs_data_migration"-->
+        <!--sequence="30"-->
+        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
 
         <!--<menuitem id="gl_bal_data_migration_operation" name="GL"-->
-                  <!--parent="menu_data_migration_operation"-->
-                  <!--sequence="20"-->
-                  <!--action="action_gbs_data_migration"-->
-                  <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
+        <!--parent="menu_data_migration_operation"-->
+        <!--sequence="20"-->
+        <!--action="action_gbs_data_migration"-->
+        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
 
         <!--<menuitem id="fam_bal_data_migration_operation" name="FAM"-->
-                  <!--parent="menu_data_migration_operation"-->
-                  <!--sequence="40"-->
-                  <!--action="action_gbs_data_migration"-->
-                  <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
+        <!--parent="menu_data_migration_operation"-->
+        <!--sequence="40"-->
+        <!--action="action_gbs_data_migration"-->
+        <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
 
     </data>
 </odoo>
