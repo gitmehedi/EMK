@@ -364,7 +364,7 @@ class ServerFileProcess(models.Model):
             if journal_type not in jrnl.keys():
                 raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
 
-            move_id = self.env['account.move'].search([('ref', '=', file)],limit=1)
+            move_id = self.env['account.move'].search([('ref', '=', file),('state', '=', 'draft')], limit=1)
             if not move_id:
                 move_id = self.env['account.move'].create({
                     'journal_id': jrnl['CBS'],
@@ -471,6 +471,11 @@ class ServerFileProcess(models.Model):
                     else:
                         lcy_amt = np.float128(decimal_bef + '.' + decimal_after)
                         amount = "{:.2f}".format(lcy_amt)
+
+                    if len(amount) > 16:
+                        errors += format_error(errObj.id, index,
+                                               'LCY-AMT [{0}] has large value than system expected'.format(
+                                                   rec['LCY-AMT']))
 
                     if len(errors) == 0:
                         line = {
