@@ -177,7 +177,7 @@ class GBSFileImportWizard(models.TransientModel):
         # retrieve existing data from database
         aac, partner, branch, currency, sou, cc, jrnl = self.get_existing_data()
         # computation method
-        cm = {'No Depreciation': 'no_depreciation', 'Reducing': 'degressive', 'Straight Line': 'linear'}
+        cm = {'No Depreciation': 'no_depreciation', 'Reducing': 'degressive', 'Stright Line': 'linear'}
 
         for line in reader:
             if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):
@@ -331,8 +331,9 @@ class GBSFileImportWizard(models.TransientModel):
                     'move_check': True,
                     'move_posted_check': True,
                 }
+                if val['method'] != 'no_depreciation':
+                    val['depreciation_line_ids'] = [(0, 0, depreciation_line)]
 
-                val['depreciation_line_ids'] = [(0, 0, depreciation_line)]
                 val['asset_allocation_ids'] = [(0, 0, history_line)]
                 self.env['account.asset.asset'].create(val)
                 print(line_no)
