@@ -21,6 +21,7 @@ class SOAPProcess(models.Model):
                                    required=True, track_visibility='onchange')
     username = fields.Char(string='Username', required=True, track_visibility='onchange')
     password = fields.Char(string='Password', required=True, track_visibility='onchange')
+    teller_no = fields.Char(string='Teller No', required=True, track_visibility='onchange')
     status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name', 'endpoint_fullname')
@@ -62,7 +63,7 @@ class SOAPProcess(models.Model):
         endpoint = self.apiInterfaceMapping(debit, credit)
 
         if endpoint:
-            reqBody = self.genGenericTransferAmountInterfaceForPayment(record)
+            reqBody = self.genGenericTransferAmountInterfaceForPayment(record, endpoint)
             try:
                 resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
                                         auth=(endpoint.username, endpoint.password),
@@ -111,6 +112,8 @@ class SOAPProcess(models.Model):
                 }
                 self.env['soap.process.error'].create(error)
                 return error
+        else:
+            raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
     @api.model
     def action_payment_instruction(self):
@@ -119,7 +122,7 @@ class SOAPProcess(models.Model):
             self.call_payment_api(record)
 
     @api.model
-    def genGenericTransferAmountInterfaceForPayment(self, record):
+    def genGenericTransferAmountInterfaceForPayment(self, record, endpoint):
         credit = record.default_credit_account_id.code if record.default_credit_account_id else None
         c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
         c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
@@ -138,7 +141,7 @@ class SOAPProcess(models.Model):
         data = {
             'InstNum': '003',
             'BrchNum': str('00' + d_ou),
-            'TellerNum': '1107',
+            'TellerNum': endpoint.teller_no,
             'Flag4': 'W',
             'Flag5': 'Y',
             'UUIDSource': 'OGL',

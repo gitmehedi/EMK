@@ -20,6 +20,7 @@
                         <field name="endpoint_port"/>
                         <field name="wsdl_name"/>
                         <field name="status"/>
+                        <field name="teller_no"/>
                     </group>
                     <group string="Credentials">
                         <field name="username"/>
