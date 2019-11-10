@@ -260,8 +260,7 @@
                         <filter string="By Branch" domain="[]" context="{'group_by':'current_branch_id'}"/>
                         <filter string="By Asset Type" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="By Asset Category" domain="[]" context="{'group_by':'asset_type_id'}"/>
-                        <filter string="By Computation Method" domain="[('state','=', 'method')]"
-                                context="{'group_by':'method'}"/>
+                        <filter string="By Computation Method" domain="[]" context="{'group_by':'method'}"/>
                         <filter string="By Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                     </group>
                 </search>
