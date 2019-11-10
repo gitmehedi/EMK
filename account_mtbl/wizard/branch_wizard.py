@@ -17,7 +17,7 @@ class BranchWizard(models.TransientModel):
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
-    branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'), ('rural', 'Rural')],
+    branch_type = fields.Selection([('metro', 'CHO'), ('urban', 'Urban'), ('rural', 'Rural')],
                                    string='Location of Branch')
 
     @api.constrains('name')

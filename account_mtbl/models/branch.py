@@ -26,7 +26,7 @@ class Branch(models.Model):
     partner_id = fields.Many2one('res.partner', 'Partner', required=True, default=lambda self:
     self.env['res.company']._company_default_get('account.account'), readonly=True,
                                  states={'draft': [('readonly', False)]})
-    branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'), ('rural', 'Rural')],
+    branch_type = fields.Selection([('metro', 'CHO'), ('urban', 'Urban'), ('rural', 'Rural')],
                                    string='Location of Branch', track_visibility='onchange', required=True,
                                    readonly=True,
                                    states={'draft': [('readonly', False)]})
@@ -153,7 +153,7 @@ class HistoryBranch(models.Model):
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
-    branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'), ('rural', 'Rural')],
+    branch_type = fields.Selection([('metro', 'CHO'), ('urban', 'Urban'), ('rural', 'Rural')],
                                    string='Location of Branch')
     line_id = fields.Many2one('operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
