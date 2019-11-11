@@ -119,11 +119,15 @@ class AssetAllocationWizard(models.TransientModel):
                                  })
 
                     if not asset.asset_seq and asset.date and asset.category_id.code:
-                        code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
                         date = self.date.split('-')
-                        ATAC = '{0}-{1}-MTB-{2}-{3}'.format(date[0], date[1],
-                                                            asset.category_id.code, asset.asset_type_id.code)
-                        asset.write({'asset_seq': code.replace('ATAC', ATAC)})
+                        count = asset.asset_type_id.asset_count + 1
+                        code = '{0}-{1}-MTB-{2}-{3}-{4}'.format(date[0],
+                                                                date[1].zfill(2),
+                                                                asset.category_id.code,
+                                                                asset.asset_type_id.code,
+                                                                str(count).zfill(5))
+                        asset.write({'asset_seq': code})
+                        asset.asset_type_id.write({'asset_count': count})
                     else:
                         raise ValidationError(_('Purchase Date or Asset Category is not available.'))
 

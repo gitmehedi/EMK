@@ -188,6 +188,7 @@ class GBSFileImportWizard(models.TransientModel):
             line_no = index + 1
             val = {}
 
+            asset_code = line['asset code'].strip()
             asset_name = line['asset name'].strip()
             asset_type = line['asset type'].strip()
             type_code = line['type code'].strip()
@@ -271,10 +272,6 @@ class GBSFileImportWizard(models.TransientModel):
 
             # if data is valid, create model object.
             if len(errors) == 0:
-                code = self.env['ir.sequence'].next_by_code('account.asset.asset.code')
-                usg_date = usage_date.split('/')
-                ATAC = '{0}-{1}-MTB-{2}-{3}'.format(usg_date[2], usg_date[0], type_code, category_code)
-                asset_code = code.replace('ATAC', ATAC)
                 val['asset_seq'] = asset_code
                 val['name'] = asset_name
                 val['category_id'] = aac[type_code]

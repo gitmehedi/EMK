@@ -67,6 +67,7 @@ class AccountAssetCategory(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    asset_count = fields.Integer(default=0)
 
     @api.model
     def create(self, vals):
