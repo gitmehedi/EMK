@@ -1,9 +1,9 @@
 Code,Name,Product,Active,Pending,Status
 101,Office,Land,TRUE,FALSE,approve
 101,Office,Building,TRUE,FALSE,approve
-101,Office,Fixture <Interior Work>,TRUE,FALSE,approve
-201,ATM,Fixture <Interior Work>,TRUE,FALSE,approve
-301,Kiosk,Fixture <Interior Work>,TRUE,FALSE,approve
+,,,,,
+,,,,,
+,,,,,
 101,Office,Furniture,TRUE,FALSE,approve
 301,Kiosk,Furniture,TRUE,FALSE,approve
 101,Office,Electrical Equipments,TRUE,FALSE,approve
@@ -13,35 +13,7 @@ Code,Name,Product,Active,Pending,Status
 301,Kiosk,Other Office Equipments (except Computers),TRUE,FALSE,approve
 601,POS,Other Office Equipments (except Computers),TRUE,FALSE,approve
 101,Office,Computers & Peripherals,TRUE,FALSE,approve
-001,Blank,Motor Cars,TRUE,FALSE,approve
-001,Blank,Motor Cycles,TRUE,FALSE,approve
-001,Blank,Software,TRUE,FALSE,approve
-001,Blank,Basic Salary,TRUE,FALSE,approve
-001,Blank,Personal Pay <Basic>,TRUE,FALSE,approve
-001,Blank,Salary for Contractual Kiosk Staff <Basic Pay>,TRUE,FALSE,approve
-001,Blank,House Rent Allowance,TRUE,FALSE,approve
-001,Blank,Conveyance Allowance,TRUE,FALSE,approve
-001,Blank,Medical Allowance,TRUE,FALSE,approve
-001,Blank,Entertainment Allowance,TRUE,FALSE,approve
-001,Blank,Washing Allowance,TRUE,FALSE,approve
-001,Blank,Dearness Allowance,TRUE,FALSE,approve
-001,Blank,Risk Allowance,TRUE,FALSE,approve
-001,Blank,Evening Banking Allowance,TRUE,FALSE,approve
-001,Blank,Discomfort Allowance,TRUE,FALSE,approve
-001,Blank,Technical Allowance,TRUE,FALSE,approve
-001,Blank,House Maintenance Allowance,TRUE,FALSE,approve
-001,Blank,Medical Reimbursement,TRUE,FALSE,approve
-001,Blank,Uniform And Other Apparels,TRUE,FALSE,approve
-001,Blank,Utility Charges,TRUE,FALSE,approve
-001,Blank,Ordinary Bonus,TRUE,FALSE,approve
-001,Blank,Incentive Bonus,TRUE,FALSE,approve
-001,Blank,Gratuity,TRUE,FALSE,approve
-001,Blank,Leave Fare Assistance,TRUE,FALSE,approve
-001,Blank,Bank's Contribution to EPF,TRUE,FALSE,approve
-001,Blank,DMD's Remuneration,TRUE,FALSE,approve
-001,salary ,Misc Expenses for DST employees,TRUE,FALSE,approve
 002,Commission,Misc Expenses for DST employees,TRUE,FALSE,approve
-001,Blank,Leave Encashment,TRUE,FALSE,approve
 101,Office,Rent,TRUE,FALSE,approve
 201,ATM,Rent,TRUE,FALSE,approve
 301,Kiosk,Rent,TRUE,FALSE,approve
@@ -52,23 +24,11 @@ Code,Name,Product,Active,Pending,Status
 301,Kiosk,VAT on Rent,TRUE,FALSE,approve
 401,Godown,VAT on Rent,TRUE,FALSE,approve
 501,Residential Premises,VAT on Rent,TRUE,FALSE,approve
-001,Blank,City Corp./Municipality Taxes,TRUE,FALSE,approve
-001,Blank,Trade License Fees,TRUE,FALSE,approve
-001,Blank,Excise Duty on Bank's own Deposits with other Banks,TRUE,FALSE,approve
-001,Blank,MD/DMD's Income Tax,TRUE,FALSE,approve
-001,Blank,VAT/Tax on Other Activities <Expenses>,TRUE,FALSE,approve
-001,Blank,Insurance for Cash in Transit,TRUE,FALSE,approve
-001,Blank,Insurance for Cash in Safe/Counter,TRUE,FALSE,approve
-001,Blank,Group Insurance Premium-Life,TRUE,FALSE,approve
 101,Office,Insurance,TRUE,FALSE,approve
 201,ATM,Insurance,TRUE,FALSE,approve
 202,ATM 2,Insurance,TRUE,FALSE,approve
 301,Kiosk,Insurance,TRUE,FALSE,approve
 401,Godown,Insurance,TRUE,FALSE,approve
-001,Blank,Deposit Insurance Premium,TRUE,FALSE,approve
-001,Blank,Insurance Premium on Locker Services,TRUE,FALSE,approve
-001,Blank,Insurance Premium on Motor Vehicles Executives,TRUE,FALSE,approve
-001,Blank,Insurance Premium on Motor Vehicles Pool,TRUE,FALSE,approve
 101,Office,Electicity Charges,TRUE,FALSE,approve
 201,ATM,Electicity Charges,TRUE,FALSE,approve
 301,Kiosk,Electicity Charges,TRUE,FALSE,approve
@@ -76,78 +36,23 @@ Code,Name,Product,Active,Pending,Status
 101,Office,Fuel for Generator,TRUE,FALSE,approve
 101,Office,WASA Bill (Office),TRUE,FALSE,approve
 501,residence,WASA Bill (Residence),TRUE,FALSE,approve
-001,Blank,Gas Bill,TRUE,FALSE,approve
-001,Blank,Fuel for Car Executives,TRUE,FALSE,approve
-001,Blank,Fuel for Car Pool,TRUE,FALSE,approve
-001,Blank,Lease Rent <Car>,TRUE,FALSE,approve
 101,Office,Security/Auxiliary Services,TRUE,FALSE,approve
 201,ATM,Security/Auxiliary Services,TRUE,FALSE,approve
 301,Kiosk,Security/Auxiliary Services,TRUE,FALSE,approve
-001,Blank,Security/Auxiliary Services others,TRUE,FALSE,approve
 101,Office,Monthly Wages of Cleaner,TRUE,FALSE,approve
 101,Office,Cash Carrying / Loading Expenses,TRUE,FALSE,approve
 201,ATM,Cash Carrying / Loading Expenses,TRUE,FALSE,approve
 301,Kiosk,Cash Carrying / Loading Expenses,TRUE,FALSE,approve
-001,Blank,Service Charge of Building Rented,TRUE,FALSE,approve
 101,Office,Misc exp. On Office Maintenance,TRUE,FALSE,approve
 101,office,Tree Plants Expenses,TRUE,FALSE,approve
 101,Office,Drinking Water Expenses,TRUE,FALSE,approve
 101,Office,Material Purchase For Upkeep of Bank,TRUE,FALSE,approve
-001,Blank,Taxes (Token  Fitness) & Registration cost Motor Vehicle Pool,TRUE,FALSE,approve
-001,Blank,Taxes (Token  Fitness)& Registration cost Motor Vehicle Executives,TRUE,FALSE,approve
-001,Blank,CNG Conversion Cost Motor Vehicle Executives,TRUE,FALSE,approve
-001,Blank,CNG Conversion Cost Motor Vehicle Pool,TRUE,FALSE,approve
-001,Blank,Car Loan Instalment Expenses <Employees>,TRUE,FALSE,approve
-001,Blank,Car hiring charges <Rent> for MV Pool,TRUE,FALSE,approve
-001,Blank,Car Allowance <Employee>,TRUE,FALSE,approve
-001,Blank,Entertainment Expenses,TRUE,FALSE,approve
-001,Blank,News Paper & Periodicals,TRUE,FALSE,approve
-001,Blank,Clearing House expenses,TRUE,FALSE,approve
-001,Blank,T.A/D.A (Foreign Travel),TRUE,FALSE,approve
-001,Blank,T.A/D.A (Domestic Travel),TRUE,FALSE,approve
-001,Blank,Conveyance for official purpose,TRUE,FALSE,approve
-001,Blank,Holiday Conveyance,TRUE,FALSE,approve
-001,Blank,Foreign Bank Charges,TRUE,FALSE,approve
-001,Blank,Local Bank other than BB Charges,TRUE,FALSE,approve
-001,Blank,Bangladesh Bank Charges,TRUE,FALSE,approve
-001,Blank,Foreign Bank Charges in USD <for OBU>,TRUE,FALSE,approve
-001,Other than Regn,Local Training Expenses,TRUE,FALSE,approve
 002,Registration,Local Training Expenses <Registration Fee>,TRUE,FALSE,approve
-001,Other than Regn,Foreign Training Expenses,TRUE,FALSE,approve
 002,Registration,Foreign Training Expenses <Registration Fee>,TRUE,FALSE,approve
-001,Blank,Daily Allowances (Training),TRUE,FALSE,approve
-001,Blank,Entertainment (Training),TRUE,FALSE,approve
-001,Blank,Venue Rent (Training),TRUE,FALSE,approve
-001,Blank,Honorarium (Training),TRUE,FALSE,approve
-001,Blank,Professional Fees,TRUE,FALSE,approve
-001,Blank,AGM Expenses,TRUE,FALSE,approve
-001,Blank,Subscription,TRUE,FALSE,approve
-001,Blank,Donation,TRUE,FALSE,approve
-001,Blank,Reuter Charges,TRUE,FALSE,approve
-001,Blank,CDBL Charges,TRUE,FALSE,approve
-001,Blank,Fees for Regis. at Joint Stock Comp.,TRUE,FALSE,approve
-001,Blank,All Other Fees,TRUE,FALSE,approve
-001,Blank,Business Development Expenses,TRUE,FALSE,approve
-001,Blank,CSR Activities,TRUE,FALSE,approve
-001,Blank,Branch Opening Expenses,TRUE,FALSE,approve
-001,Blank,Contribution to MTB Foundation (Expenditure),TRUE,FALSE,approve
-001,Blank,Employees Medical Assistance Fund (Expenditure),TRUE,FALSE,approve
-001,Blank,CPV Charge- Payment to Vendor (Retail),TRUE,FALSE,approve
-001,Blank,CPV Charge - Deposit KYC (Retail),TRUE,FALSE,approve
-001,Blank,Site Maintenance & Support Service,TRUE,FALSE,approve
 101,Office,Connectivity Charge,TRUE,FALSE,approve
 201,ATM,Connectivity Charge,TRUE,FALSE,approve
 301,Kiosk,Connectivity Charge,TRUE,FALSE,approve
 601,POS,Connectivity Charge,TRUE,FALSE,approve
-001,Blank,NID Verification Charge,TRUE,FALSE,approve
-001,Blank,Loss on sale of Fixed Assets,TRUE,FALSE,approve
-001,Blank,Misc Expenses not classified elsewhere,TRUE,FALSE,approve
-001,Blank,POS Intercharge Reimbursement Fee Paid for,TRUE,FALSE,approve
-001,Blank,bKash Commission,TRUE,FALSE,approve
-001,Blank,Auditor's Fees,TRUE,FALSE,approve
-001,Blank,Agency Commission on Student File,TRUE,FALSE,approve
-001,Blank,Other Fees & Commission USD <OBU>,TRUE,FALSE,approve
-001,Blank,Repairs & Maintenance on Building,TRUE,FALSE,approve
 101,Office,Repairs & Maintenance on Fixture,TRUE,FALSE,approve
 101,Office,Repairs & Maintenance on Furniture,TRUE,FALSE,approve
 301,Kiosk,Repairs & Maintenance on Furniture,TRUE,FALSE,approve
@@ -155,46 +60,10 @@ Code,Name,Product,Active,Pending,Status
 101,Office,Repairs & Maintenance on Other Office Equipments,TRUE,FALSE,approve
 201,ATM,Repairs & Maintenance on Other Office Equipments,TRUE,FALSE,approve
 101,Office,Repairs & Maintenance on Computers & Peripherals,TRUE,FALSE,approve
-001,Blank,Repairs & Maintenance on Motor Cars,TRUE,FALSE,approve
-001,Blank,Repairs & Maintenance on Motor Cycles,TRUE,FALSE,approve
-001,Blank,Software Maintenance,TRUE,FALSE,approve
-001,Blank,Postage,TRUE,FALSE,approve
-001,Blank,Postage/Courier Service Charges,TRUE,FALSE,approve
 501,Residence,Telephone Expenses <Residence>,TRUE,FALSE,approve
 101,Office,Telephone Expenses <Office>,TRUE,FALSE,approve
-001,Blank,Fax/E-Mail Expenses,TRUE,FALSE,approve
-001,Blank,Telex/Telegraph Expenses,TRUE,FALSE,approve
 101,Office,Mobile Bill Expenses,TRUE,FALSE,approve
-001,Blank,SWIFT Charges (Expenses),TRUE,FALSE,approve
-001,Blank,Stamp Charges,TRUE,FALSE,approve
-001,Blank,Lawyer's Charges,TRUE,FALSE,approve
-001,Blank,Legal Charges,TRUE,FALSE,approve
-001,Blank,Legal Stamps Charges,TRUE,FALSE,approve
-001,Blank,Court Fees & Charges,TRUE,FALSE,approve
-001,Blank,Security Stationery,TRUE,FALSE,approve
-001,Blank,Computer Stationery,TRUE,FALSE,approve
-001,Petty,Paper & Table Stationary,TRUE,FALSE,approve
 101,Office,Paper & Table Stationary,TRUE,FALSE,approve
 201,ATM,Paper & Table Stationary,TRUE,FALSE,approve
 301,Kiosk,Paper & Table Stationary,TRUE,FALSE,approve
 601,POS,Paper & Table Stationary,TRUE,FALSE,approve
-001,Blank,Printed Stationery,TRUE,FALSE,approve
-001,Blank,Printing Expenses,TRUE,FALSE,approve
-001,Blank,Advertisement & Publicity,TRUE,FALSE,approve
-001,Blank,News Paper Advertisements,TRUE,FALSE,approve
-001,Blank,Broad Casting Advertisements,TRUE,FALSE,approve
-001,Blank,Hoarding/ Neon Signs,TRUE,FALSE,approve
-001,Blank,Souvenir/Magazine,TRUE,FALSE,approve
-001,Blank,Cut Out Dangler Flex Backdrop etc branding expenses,TRUE,FALSE,approve
-001,Blank,Director's Fees,TRUE,FALSE,approve
-001,Blank,Parties & Dinner,TRUE,FALSE,approve
-001,Blank,Director's Traveling Expenses,TRUE,FALSE,approve
-001,Blank,MD Basic,TRUE,FALSE,approve
-001,Blank,MD House Rent,TRUE,FALSE,approve
-001,Blank,MD House Maintenance,TRUE,FALSE,approve
-001,Blank,MD Entertainment,TRUE,FALSE,approve
-001,Blank,MD Festival Bonus,TRUE,FALSE,approve
-001,Blank,MD Incentive Bonus,TRUE,FALSE,approve
-001,Blank,MD Leave Fare Assistance,TRUE,FALSE,approve
-001,Blank,MD Security & Personal Wages,TRUE,FALSE,approve
-001,Blank,MD Provident Fund,TRUE,FALSE,approve
