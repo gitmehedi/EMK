@@ -189,7 +189,7 @@ class GBSFileImportWizard(models.TransientModel):
         coa, jrnl, branch, currency, ac, sc, sg, cc = self.get_existing_data()
         move_id = self.env['account.move'].create({
             'journal_id': jrnl['CBS'],
-            'date': fields.Datetime.now(),
+            'date': '2019-10-29',
             'is_cbs': True,
             'ref': 'Opening Journal Entries',
             'line_ids': [],
@@ -276,7 +276,7 @@ class GBSFileImportWizard(models.TransientModel):
                         val['credit'] = abs(credit_amt)
                         val['amount_currency'] = 0
                     # For OBU Only
-                    elif branch_code == 116 and cur_code == 'USD':
+                    elif branch_code == '116' and cur_code == 'USD':
                         val['debit'] = abs(debit_amt) * 84.75
                         val['credit'] = abs(credit_amt) * 84.75
 
