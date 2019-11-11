@@ -9,6 +9,7 @@
                 <group string="Please Select File for GL Data Migration">
                     <group>
                         <field name="aml_data" filename="aml_fname"/>
+                        <field name="date"/>
                     </group>
                     <group>
                         <field name="aml_fname" readonly="1"/>

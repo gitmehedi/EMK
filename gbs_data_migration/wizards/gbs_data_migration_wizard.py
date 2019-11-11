@@ -30,6 +30,7 @@ class GBSFileImportWizard(models.TransientModel):
                            help="Code Page of the system that has generated the csv file."
                                 "\nE.g. Windows-1252, utf-8")
     note = fields.Text('Log')
+    date = fields.Date(string='Generate Date', required=True)
 
     @api.model
     def _default_codepage(self):
@@ -189,7 +190,7 @@ class GBSFileImportWizard(models.TransientModel):
         coa, jrnl, branch, currency, ac, sc, sg, cc = self.get_existing_data()
         move_id = self.env['account.move'].create({
             'journal_id': jrnl['CBS'],
-            'date': '2019-10-29',
+            'date': self.date,
             'is_cbs': True,
             'ref': 'Opening Journal Entries',
             'line_ids': [],
@@ -214,7 +215,7 @@ class GBSFileImportWizard(models.TransientModel):
 
             credit_amt = abs(float(line['cr amt'].strip()))
             debit_amt = abs(float(line['dr amt'].strip()))
-            lcy_amt = abs(float(line['lcy bal'].strip()))
+            lcy_amt = float(line['lcy bal'].strip())
 
             if credit_amt or debit_amt or lcy_amt:
                 date_str = line['dt'].strip()
