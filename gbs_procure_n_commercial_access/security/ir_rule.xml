@@ -339,8 +339,8 @@
     <record id="ir_rule_stock_picking_allowed_local_purchase" model="ir.rule">
         <field name="model_id" ref="stock.model_stock_picking"/>
         <field name="domain_force">[(1 ,'=', 1)]</field>
-        <field name="name">Stock pickings all allowed to Local Purchase</field>
-        <field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_local_purchase'))]"/>
+        <field name="name">Stock pickings all allowed to Local and Foreign Purchase</field>
+        <field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_local_purchase')),(4,ref('gbs_procure_n_commercial_access.group_imoprt_lc_foreign'))]"/>
         <field eval="0" name="perm_unlink"/>
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
@@ -376,8 +376,8 @@
     <record id="ir_rule_stock_move_allowed_local_purchase" model="ir.rule">
         <field name="model_id" ref="stock.model_stock_move"/>
         <field name="domain_force">[(1 ,'=', 1)]</field>
-        <field name="name">Stock moves from allowed Local Purchase</field>
-        <field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_local_purchase'))]"/>
+        <field name="name">Stock moves from allowed Local and Foreign Purchase</field>
+        <field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_local_purchase')),(4,ref('gbs_procure_n_commercial_access.group_imoprt_lc_foreign'))]"/>
         <field eval="0" name="perm_unlink"/>
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
