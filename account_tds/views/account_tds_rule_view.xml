@@ -113,7 +113,7 @@
         <menuitem id="perent_menu_tds_rule" name="Account TDS" parent="account.account_account_menu"/>
         <menuitem
                 name='Taxes'
-                id='texes_menu' sequence="45"
+                id='texes_menu' sequence="14"
                 parent='account.menu_finance'
                 groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
 
