@@ -102,9 +102,9 @@
         </record>
 
         <!--Inherit Accounting Menus-->
-        <menuitem id="menu_finance_receivables"
+        <menuitem id="account.menu_finance_receivables"
                   name="Sales"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  groups="gbs_application_group.group_account_income,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="account.menu_finance"
                   sequence="2"/>
 

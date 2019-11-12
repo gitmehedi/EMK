@@ -68,10 +68,10 @@
 
 
     <!--Inherit Accounting Menus-->
-    <menuitem id="menu_finance_receivables"
-              name="Sales"
-              parent="account.menu_finance"
-              sequence="2"/>
+    <!--<menuitem id="menu_finance_receivables"-->
+              <!--name="Sales"-->
+              <!--parent="account.menu_finance"-->
+              <!--sequence="2"/>-->
 
     <menuitem action="action_cheque_list_not_honoured"
               id="cheque_list_not_honoured_id"

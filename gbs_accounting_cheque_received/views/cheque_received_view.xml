@@ -96,11 +96,11 @@
 
 
     <!--Inherit Accounting Menus-->
-    <menuitem id="menu_finance_receivables"
-              name="Sales"
-              groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-              parent="account.menu_finance"
-              sequence="2"/>
+    <!--<menuitem id="menu_finance_receivables"-->
+              <!--name="Sales"-->
+              <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+              <!--parent="account.menu_finance"-->
+              <!--sequence="2"/>-->
 
     <menuitem action="accounting_cheque_received_action"
               id="menu_accounting_cheque_received"
