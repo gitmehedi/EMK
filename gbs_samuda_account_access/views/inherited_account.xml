@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="account.menu_finance_entries"
+                  name="Adviser"
+                  parent="account.menu_finance"
+                  sequence="4"
+                  groups="account.group_account_user,account.group_account_manager"/>
+
+        <menuitem id="account.menu_finance_configuration"
+                  name="Configuration"
+                  parent="account.menu_finance"
+                  sequence="15" groups="-account.group_account_invoice"/>
+
+        <menuitem id="account.menu_finance_configuration"
+                  name="Configuration"
+                  parent="account.menu_finance"
+                  sequence="15" groups="account.group_account_manager"/>
+
+        <menuitem action="account_parent.action_account_chart"
+            id="account_parent.menu_action_account_chart"
+            parent="account.menu_finance_entries" sequence="21" groups="account_parent.group_coas_user,account.group_account_user" />
+
+
+    </data>
+</odoo>

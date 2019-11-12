@@ -124,7 +124,7 @@
 
         <menuitem name="Sales"
                   id="sales_team.menu_base_partner"
-                  groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  groups="gbs_application_group.group_account_income,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   web_icon="sale,static/description/icon.png"/>
 
         <menuitem id="custom_menu_products"
