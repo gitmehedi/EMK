@@ -124,6 +124,25 @@ class AccountInvoice(models.Model):
     #     return super(AccountInvoice, self).action_invoice_open()
 
     @api.multi
+    def finalize_invoice_move_lines(self, move_lines):
+        move_lines = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
+        # check the type of invoice
+        if self.type == 'in_invoice':
+            dict_obj = {}
+            for line_tuple in move_lines:
+                account_id = line_tuple[2]['account_id']
+                if account_id not in dict_obj.keys():
+                    dict_obj[account_id] = line_tuple
+                else:
+                    dict_obj[account_id][2]['name'] += ', ' + line_tuple[2]['name']
+                    dict_obj[account_id][2]['debit'] += line_tuple[2]['debit']
+                    dict_obj[account_id][2]['credit'] += line_tuple[2]['credit']
+
+            move_lines = list(dict_obj.values())
+
+        return move_lines
+
+    @api.multi
     def action_move_create(self):
         res = super(AccountInvoice, self.sudo()).action_move_create()
         if res:
