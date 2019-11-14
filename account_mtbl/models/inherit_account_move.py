@@ -32,7 +32,7 @@ class AccountMove(models.Model):
                 self._cr.execute("""\
                                 SELECT  SUM(debit) AS debit,
                                         SUM(credit) AS credit,
-                                        sum(debit) - sum(credit) as missmatch
+                                        sum(credit) - sum(debit) as missmatch
                                 FROM account_move_line                 
                                 WHERE move_id = %s
                                 """ % rec.id)

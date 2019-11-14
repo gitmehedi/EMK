@@ -10,6 +10,7 @@
                         <field name="invoice_id"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="narration"/>
                         <field name="instruction_date" invisible="1"/>
                         <field name="debit_operating_unit_id" invisible="1"
                                options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>

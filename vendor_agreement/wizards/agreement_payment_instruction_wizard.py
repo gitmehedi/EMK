@@ -27,6 +27,7 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
                                  default=lambda self: self.env.context.get('partner_id'))
     type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa', string='Payment To')
     vendor_bank_acc = fields.Char(related='partner_id.vendor_bank_acc', string='Vendor Bank Account')
+    narration = fields.Char(string='Narration', size=30)
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -35,16 +36,6 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
             if line.amount > rem_amount:
                 raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "
                                         "Remaining balance is %s")% (rem_amount))
-
-    # @api.onchange('credit_operating_unit_id')
-    # def _onchange_operating_unit_id(self):
-    #     if self.credit_operating_unit_id:
-    #         self.credit_sub_operating_unit_id = []
-    #         credit_sub_operating_unit_ids = self.env['sub.operating.unit'].search([
-    #             ('operating_unit_id', '=', self.credit_operating_unit_id.id)])
-    #         return {'domain': {
-    #             'credit_sub_operating_unit_id': [('id', 'in', credit_sub_operating_unit_ids.ids)]
-    #         }}
 
     @api.multi
     def action_confirm(self):
@@ -76,5 +67,6 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
             'default_credit_account_id': credit_acc,
             'credit_operating_unit_id': credit_branch,
             'credit_sub_operating_unit_id': credit_sou,
+            'narration': self.narration,
         })
         return {'type': 'ir.actions.act_window_close'}

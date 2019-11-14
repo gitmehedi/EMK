@@ -150,7 +150,7 @@ class SOAPProcess(models.Model):
             'FrmAcct': from_bgl,
             'Amt': record.amount,
             'ToAcct': to_bgl,
-            'StmtNarr': str(record.code),
+            'StmtNarr': str(record.code) +" "+ record.narration,
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                <soapenv:Header/>

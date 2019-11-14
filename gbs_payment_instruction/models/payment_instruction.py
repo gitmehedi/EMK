@@ -29,8 +29,8 @@ class PaymentInstruction(models.Model):
     cbs_response = fields.Text('Response')
     is_sync = fields.Boolean(string='Payment Synced', default=False, track_visibility='onchange')
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
-    state = fields.Selection([('draft', "Draft"), ('approved', "Approved"), ('cancel', "Cancel"), ], default='draft',
-                             string="Status", track_visibility='onchange')
+    state = fields.Selection([('draft', "Draft"), ('approved', "Approved"), ('cancel', "Cancel"), ], default='draft',string="Status", track_visibility='onchange')
+    narration = fields.Text(string="Narration", size=30)
 
     @api.model
     def create(self, vals):

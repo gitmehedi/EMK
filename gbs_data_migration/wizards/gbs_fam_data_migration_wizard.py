@@ -162,22 +162,40 @@ class GBSFileImportWizard(models.TransientModel):
         header_fields = csv.reader(StringIO.StringIO(header), dialect=self.dialect).next()
         self._header_fields = self._process_header(header_fields)
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
-        allow_header = ['asset code', 'asset name', 'asset type', 'type code', 'asset category', 'category code',
-                        'batch no', 'vendor', 'invoice', 'model', 'bill date', 'warranty date', 'purchase date',
-                        'usage date', 'last depr. date', 'purchase branch', 'current branch', 'sub operating unit',
-                        'sou code', 'cost centre', 'currency', 'depr. base value', 'cost value', 'wdv', 'salvage value',
-                        'accumulated depreciation', 'asset description', 'note', 'computation method',
-                        'depreciation factor', 'asset life (in year)', 'depreciation history/date',
-                        'depreciation history/days',
-                        'depreciation history/depreciation', 'depreciation history/cumulative depreciation',
-                        'depreciation history/wdv at date',
-                        'allocation & transfer history/ from branch', 'allocation & transfer history/ to branch',
-                        'allocation & transfer history/cost centre', 'allocation & transfer history/receive date']
+        allow_header = ['asset code',
+                        'asset name',
+                        'asset type',
+                        'asset category',
+                        'batch no',
+                        'vendor',
+                        'invoice',
+                        'model',
+                        'bill date',
+                        'warranty date',
+                        'purchase date',
+                        'usage date',
+                        'last depr. date',
+                        'purchase branch',
+                        'current branch',
+                        'sub operating unit',
+                        'sou code',
+                        'cost centre',
+                        'currency',
+                        'depr. base value',
+                        'cost value',
+                        'wdv',
+                        'salvage value',
+                        'accumulated depreciation',
+                        'asset description',
+                        'note',
+                        'computation method',
+                        'depreciation factor',
+                        'asset life (in year)']
 
         # retrieve existing data from database
         aac, partner, branch, currency, sou, cc, jrnl = self.get_existing_data()
         # computation method
-        cm = {'No Depreciation': 'no_depreciation', 'Reducing': 'degressive', 'Stright Line': 'linear'}
+        cm = {'No Depreciation': 'no_depreciation', 'Reducing': 'degressive', 'Straight Line': 'linear'}
 
         for line in reader:
             if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):

@@ -29,9 +29,9 @@
                     <attribute name="required">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='ref']" position="after">
-                    <field name="total_debit"/>
-                    <field name="total_credit"/>
-                    <field name="missmatch_value"/>
+                    <field name="total_debit" attrs="{'invisible':[('is_cbs','=',False)]}"/>
+                    <field name="total_credit" attrs="{'invisible':[('is_cbs','=',False)]}"/>
+                    <field name="missmatch_value" attrs="{'invisible':[('is_cbs','=',False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='date']" position="attributes">
                     <attribute name="readonly">True</attribute>
@@ -104,7 +104,8 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]"
                            string="Move"/>
                     <field name="date"/>
-                    <filter string="Unposted" name="draft" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
+                    <filter string="Unposted" name="draft" domain="[('state','=','draft')]"
+                            help="Unposted Journal Entries"/>
                     <filter string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                     <separator/>
                     <filter string="Sales" domain="[('journal_id.type','=','sale')]"
@@ -166,10 +167,10 @@
         </record>
 
         <menuitem name="Journal Entries"
-                action="action_account_move_journal_entry_manual"
-                id="menu_action_move_journal_entry_manual"
-                parent="account.menu_action_move_journal_line_form"
-                groups="account.group_account_user"
-                sequence="10"/>
+                  action="action_account_move_journal_entry_manual"
+                  id="menu_action_move_journal_entry_manual"
+                  parent="account.menu_action_move_journal_line_form"
+                  groups="account.group_account_user"
+                  sequence="10"/>
     </data>
 </odoo>
