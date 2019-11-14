@@ -1,40 +1,45 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class PRFromWhereWizard(models.TransientModel):
     _name = 'pr.from.where.wizard'
 
-    purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
-                                   string="Purchase From")
+    purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')], string="Purchase From")
+
+    # today
+    region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="Region Type")
+
+    purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
+                                   string="Purchase By")
+
     @api.multi
     def save_type(self):
+        # validation
+        if self.region_type == 'local' and self.purchase_by == 'tt':
+            raise UserError(_("Invalid Input" + "\nFor Foreign Purchase: Apply LC or TT. " + "\nLocal Purchase: Apply Cash, Credit or LC."))
+
+        elif self.region_type == 'foreign' and (self.purchase_by == 'cash' or self.purchase_by == 'credit'):
+            raise UserError(_("Invalid Input" + "\nFor Foreign Purchase: Apply LC or TT. " + "\nLocal Purchase: Apply Cash, Credit or LC."))
+
         form_id = self.env.context.get('active_id')
         pr_form_pool = self.env['purchase.requisition'].search([('id', '=', form_id)])
+        # check purchase from
         if self.purchase_from == 'own':
-            pr_form_pool.write(
-                {'purchase_from': self.purchase_from})
-            # pr_form_pool.action_approve()
-            res = self.env.ref('gbs_purchase_requisition.purchase_requisition_type_wizard')
-            result = {
-                'name': _('Please Select Region Type and Purchase By before approve'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': res and res.id or False,
-                'res_model': 'purchase.requisition.type.wizard',
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'new',
-                'context': {'active_id': pr_form_pool.id},
-            }
-            return result
+            pr_form_pool.write({'purchase_from': self.purchase_from, 'region_type': self.region_type,
+                                'purchase_by': self.purchase_by, 'state': 'done'})
         else:
-            pr_form_pool.write(
-                {'purchase_from': self.purchase_from, 'state': 'approve_head_procurement'})
+            pr_form_pool.write({'purchase_from': self.purchase_from, 'region_type': self.region_type,
+                                'purchase_by': self.purchase_by, 'state': 'approve_head_procurement'})
+        # get the purchase order for this requisition
+        po_pool_obj = self.env['purchase.order'].search([('requisition_id', '=', form_id)])
+        if po_pool_obj:
+            po_pool_obj.write({'check_po_action_button': True,
+                               'region_type': self.region_type or False,
+                               'purchase_by': self.purchase_by or False})
 
-            return {'type': 'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.act_window_close'}
 
-
-    #
     # @api.multi
     # def cancel_window(self):
     #     form_id = self.env.context.get('active_id')
