@@ -7,10 +7,16 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='operating_unit_id']" position="replace">
             </xpath>
-            <xpath expr="//field[@name='currency_id']" position="after">
+            <xpath expr="//field[@name='reference']" position="after">
                 <field name="operating_unit_id"
                        options="{'no_create': True}"
                        widget="selection" groups="operating_unit.group_multi_operating_unit"/>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="fields_invisible" invisible="1"/>
+                <field name="conversion_rate"
+                       attrs="{'invisible':[('fields_invisible', '==', True)], 'readonly':[('state','in', 'open')]}"
+                       groups="base.group_multi_currency" required="True"/>
             </xpath>
         </field>
     </record>

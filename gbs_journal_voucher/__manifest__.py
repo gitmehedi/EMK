@@ -5,7 +5,7 @@
     'website': 'www.genweb2.com',
     'category': 'Accounting',
     'version': '10.0.0.1',
-    'depends': [],
+    'depends': ['account'],
     'data': [
         'reports/account_move_report.xml',
     ],

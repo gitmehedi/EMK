@@ -28,6 +28,7 @@
                 'gbs_account',
                 "account_standard_report",
                 "gbs_account_journal_log",
+                'gbs_journal_voucher',
                 ],
 
     'data': [ ],
