@@ -18,7 +18,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='pack_operation_product_ids']/tree/field[@name='product_uom_id']" position="after">
-                    <field name="price_unit"/>
+                    <field name="price_unit" groups="stock.group_stock_manager"/>
                 </xpath>
 
                 <xpath expr="//field[@name='pack_operation_product_ids']/tree/button[@name='show_details']" position="replace">

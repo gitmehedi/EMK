@@ -126,6 +126,7 @@ class PurchaseRequisition(models.Model):
             'res_model': 'purchase.requisition.type.wizard',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
+            'context': {'default_region_type': self.region_type, 'default_purchase_by': self.purchase_by},
             'target': 'new',
         }
         return result
