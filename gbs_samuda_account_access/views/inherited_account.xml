@@ -27,5 +27,36 @@
                 id="menu_product_category_for_account"
                 parent="account.menu_finance_payables"
                 sequence="115"/>
+
+
+        <menuitem id="account.menu_finance" name="Accounting"
+                  groups="-account.group_account_user,-account.group_account_manager,-account.group_account_invoice,gbs_application_group.group_account_expense_ho,base_technical_features.group_technical_features"/>
+
+
+
+        <!-- Start For Unit Accountant-->
+        <menuitem id="menu_finance_unit" name="Accounting(Unit)" sequence="35"
+                  groups="gbs_application_group.group_account_expense_unit,base_technical_features.group_technical_features"/>
+
+        <menuitem id="menu_receive_picking_unit_acc_approver"
+              name="Inventory"
+              parent="menu_finance_unit"
+              sequence="20" groups="account.group_account_user"/>
+
+        <menuitem id="menu_unit_acc_approver"
+              name="Accounts Approver" sequence="10"
+              parent="menu_receive_picking_unit_acc_approver"
+              action="stock_picking_extend.action_stock_picking_receive_acc_approver"
+              groups="account.group_account_user"/>
+
+        <menuitem id="menu_picking_unit_mrr_ptp"
+              name="Show MRR"
+              parent="menu_receive_picking_unit_acc_approver"
+              sequence="20"
+              action="stock_picking_mrr.action_stock_picking_mrr"
+              groups="account.group_account_user"/>
+
+        <!-- End For Unit Accountant-->
+
     </data>
 </odoo>
