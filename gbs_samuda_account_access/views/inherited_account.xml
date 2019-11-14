@@ -22,6 +22,10 @@
             id="account_parent.menu_action_account_chart"
             parent="account.menu_finance_entries" sequence="21" groups="account_parent.group_coas_user,account.group_account_user" />
 
-
+        <menuitem
+                action="product.product_category_action_form"
+                id="menu_product_category_for_account"
+                parent="account.menu_finance_payables"
+                sequence="115"/>
     </data>
 </odoo>
