@@ -27,7 +27,7 @@ class AccountMove(models.Model):
     @api.depends('line_ids')
     def _compute_sum(self):
         for rec in self:
-            if rec.journal_id:
+            if rec.is_cbs:
                 prec = self.env['decimal.precision'].precision_get('Account')
                 self._cr.execute("""\
                                 SELECT  SUM(debit) AS debit,

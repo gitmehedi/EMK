@@ -27,7 +27,7 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
                                  default=lambda self: self.env.context.get('partner_id'))
     type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa', string='Payment To')
     vendor_bank_acc = fields.Char(related='partner_id.vendor_bank_acc', string='Vendor Bank Account')
-    narration = fields.Char(string='Narration', size=30)
+    narration = fields.Char(string='Narration', size=50, required=True)
 
     @api.constrains('amount')
     def _check_amount(self):

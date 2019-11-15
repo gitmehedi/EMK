@@ -22,7 +22,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
     credit_account_id = fields.Many2one('account.account', string='Credit Account')
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU')
-    narration = fields.Char(string="Narration", size=30)
+    narration = fields.Char(string="Narration", size=50, required=True)
 
     @api.constrains('amount')
     def _check_amount(self):

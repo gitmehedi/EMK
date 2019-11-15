@@ -21,7 +21,11 @@ class SOAPProcess(models.Model):
                                    required=True, track_visibility='onchange')
     username = fields.Char(string='Username', required=True, track_visibility='onchange')
     password = fields.Char(string='Password', required=True, track_visibility='onchange')
-    teller_no = fields.Char(string='Teller No', required=True, track_visibility='onchange')
+    teller_no = fields.Char(string='Teller Number', required=True, track_visibility='onchange')
+    ins_num = fields.Char(string='Institution Number', required=True, track_visibility='onchange')
+    uuid_source = fields.Char(string='Source of Request', required=True, track_visibility='onchange', default='OGL')
+    flag_4 = fields.Char(string='Flag 4', required=True, track_visibility='onchange',default='W')
+    flag_5 = fields.Char(string='Flag 5', required=True, track_visibility='onchange',default='Y')
     status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name', 'endpoint_fullname')
@@ -139,18 +143,18 @@ class SOAPProcess(models.Model):
             to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
 
         data = {
-            'InstNum': '003',
-            'BrchNum': str('00' + d_ou),
+            'InstNum': endpoint.ins_num,
+            'BrchNum': d_ou.zfill(5),
             'TellerNum': endpoint.teller_no,
-            'Flag4': 'W',
-            'Flag5': 'Y',
-            'UUIDSource': 'OGL',
+            'Flag4': endpoint.flag_4,
+            'Flag5': endpoint.flag_5,
+            'UUIDSource': endpoint.uuid_source,
             'UUIDNUM': str(record.code),
             'UUIDSeqNo': '',
             'FrmAcct': from_bgl,
             'Amt': record.amount,
             'ToAcct': to_bgl,
-            'StmtNarr': str(record.code) +" "+ record.narration,
+            'StmtNarr': record.narration,
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                <soapenv:Header/>

@@ -14,17 +14,27 @@
                         </h4>
                     </div>
                     <group string="API Settings">
-                        <field name="name"/>
-                        <field name="http_method"/>
-                        <field name="endpoint_url"/>
-                        <field name="endpoint_port"/>
-                        <field name="wsdl_name"/>
-                        <field name="status"/>
-                        <field name="teller_no"/>
+                        <group >
+                            <field name="name"/>
+                            <field name="http_method"/>
+                            <field name="endpoint_url"/>
+                            <field name="endpoint_port"/>
+                            <field name="wsdl_name"/>
+                            <field name="status"/>
+                        </group>
                     </group>
-                    <group string="Credentials">
-                        <field name="username"/>
-                        <field name="password" password="True"/>
+                    <group string="Additional Settings">
+                        <group>
+                            <field name="teller_no"/>
+                            <field name="ins_num"/>
+                            <field name="flag_4"/>
+                            <field name="flag_5"/>
+                            <field name="uuid_source"/>
+                        </group>
+                        <group string="Credentials">
+                            <field name="username"/>
+                            <field name="password" password="True"/>
+                        </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
