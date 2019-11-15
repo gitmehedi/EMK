@@ -231,10 +231,10 @@ class PaymentInstruction(models.Model):
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
-            self._payments.append(self.code)
+            self.payment_remove(self.code)
             response = self.env['soap.process'].call_payment_api(payment)
             if 'error_code' in response:
-                self._payments.remove(self.code)
+                self.payment_remove(self.code)
                 err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
                     self.code, response['error_code'], response['error_message'])
                 raise ValidationError(_(err_text))
@@ -248,11 +248,16 @@ class PaymentInstruction(models.Model):
                             else:
                                 val = 1
                             line.write({'amount_residual': ((line.amount_residual) * val) - payment.amount})
-                self._payments.remove(self.code)
+                self.payment_remove(self.code)
             else:
-                self._payments.remove(self.code)
+                self.payment_remove(self.code)
         else:
             raise ValidationError(_("Payment Instruction [{0}] is processing.".format(self.code)))
+
+    @api.multi
+    def payment_remove(self,code):
+        if code in self._payments:
+            self._payments.remove(code)
 
     @api.multi
     def invalidate_payment_cache(self):

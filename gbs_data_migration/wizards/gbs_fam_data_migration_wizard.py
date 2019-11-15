@@ -178,7 +178,6 @@ class GBSFileImportWizard(models.TransientModel):
                         'purchase branch',
                         'current branch',
                         'sub operating unit',
-                        'sou code',
                         'cost centre',
                         'currency',
                         'depr. base value',
@@ -209,9 +208,7 @@ class GBSFileImportWizard(models.TransientModel):
             asset_code = line['asset code'].strip()
             asset_name = line['asset name'].strip()
             asset_type = line['asset type'].strip()
-            type_code = line['type code'].strip()
             asset_category = line['asset category'].strip()
-            category_code = line['category code'].strip()
             vendor = line['vendor'].strip()
             model_name = line['model'].strip()
             warranty_date = line['warranty date'].strip()
@@ -221,7 +218,6 @@ class GBSFileImportWizard(models.TransientModel):
             pb_code = line['purchase branch'].strip()
             cb_code = line['current branch'].strip()
             sou_name = line['sub operating unit'].strip()
-            sou_code = line['sou code'].strip()
             cc_code = line['cost centre'].strip()
             currency_code = line['currency'].strip()
             depr_base_value = float(line['depr. base value'].strip().replace(',', ''))
@@ -231,24 +227,18 @@ class GBSFileImportWizard(models.TransientModel):
             accum_value = float(line['accumulated depreciation'].strip().replace(',', ''))
             asset_descr = line['asset description'].strip()
             note = line['note'].strip()
-            cm_code = line['computation method'].strip()  # computation method
+            cm_code = line['computation method'].strip()
             depr_factor = line['depreciation factor'].strip()
             depr_year = line['asset life (in year)'].strip()
 
             if not asset_name:
                 errors += self.format_error(line_no, 'Asset Name [{0}] invalid value'.format(asset_name))
 
-            if not asset_type:
-                errors += self.format_error(line_no, 'Asset Type [{0}] invalid value'.format(asset_type))
+            if asset_type not in aac.keys():
+                errors += self.format_error(line_no, 'Asset Type Code [{0}] invalid value'.format(asset_type))
 
-            if type_code not in aac.keys():
-                errors += self.format_error(line_no, 'Asset Type Code [{0}] invalid value'.format(type_code))
-
-            if not asset_category:
-                errors += self.format_error(line_no, 'Asset Category [{0}] invalid value'.format(asset_category))
-
-            if category_code not in aac.keys():
-                errors += self.format_error(line_no, 'Asset Category Code [{0}] invalid value'.format(category_code))
+            if asset_category not in aac.keys():
+                errors += self.format_error(line_no, 'Asset Category Code [{0}] invalid value'.format(asset_category))
 
             if not self.date_validate(warranty_date):
                 errors += self.format_error(line_no, 'Warranty Date [{0}] invalid value'.format(warranty_date))
@@ -259,7 +249,7 @@ class GBSFileImportWizard(models.TransientModel):
             if not self.date_validate(usage_date):
                 errors += self.format_error(line_no, 'Usage Date [{0}] invalid value'.format(usage_date))
 
-            if not self.date_validate(lst_depr_date):
+            if not self.date_validate(lst_depr_date) and  cm_code != 'No Depreciation':
                 errors += self.format_error(line_no, 'Last Depr. Date [{0}] invalid value'.format(lst_depr_date))
 
             if pb_code not in branch.keys():
@@ -292,8 +282,8 @@ class GBSFileImportWizard(models.TransientModel):
             if len(errors) == 0:
                 val['asset_seq'] = asset_code
                 val['name'] = asset_name
-                val['category_id'] = aac[type_code]
-                val['asset_type_id'] = aac[category_code]
+                val['category_id'] = aac[asset_type]
+                val['asset_type_id'] = aac[asset_category]
                 val['model_name'] = model_name
                 val['warranty_date'] = warranty_date
                 val['date'] = purchase_date
@@ -331,22 +321,23 @@ class GBSFileImportWizard(models.TransientModel):
                     'state': 'active'
                 }
 
-                days = (datetime.datetime.strptime(lst_depr_date, '%m/%d/%Y') - datetime.datetime.strptime(
-                    usage_date, '%m/%d/%Y'))
-
-                depreciation_line = {
-                    'depreciation_date': lst_depr_date,
-                    'days': days.days,
-                    'amount': accum_value,
-                    'depreciated_value': accum_value,
-                    'remaining_value': wdv,
-                    'line_type': 'depreciation',
-                    'name': 'Opening Depreciation',
-                    'sequence': 1,
-                    'move_check': True,
-                    'move_posted_check': True,
-                }
                 if val['method'] != 'no_depreciation':
+                    days = (datetime.datetime.strptime(lst_depr_date, '%m/%d/%Y') - datetime.datetime.strptime(
+                        usage_date, '%m/%d/%Y'))
+
+                    depreciation_line = {
+                        'depreciation_date': lst_depr_date,
+                        'days': days.days,
+                        'amount': accum_value,
+                        'depreciated_value': accum_value,
+                        'remaining_value': wdv,
+                        'line_type': 'depreciation',
+                        'name': 'Opening Depreciation',
+                        'sequence': 1,
+                        'move_check': True,
+                        'move_posted_check': True,
+                    }
+
                     val['depreciation_line_ids'] = [(0, 0, depreciation_line)]
 
                 val['asset_allocation_ids'] = [(0, 0, history_line)]
