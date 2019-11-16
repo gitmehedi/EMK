@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!--  Inherits HR Contract View-->
+
+			<record id="hr_contract_view_form2" model="ir.ui.view">
+	            <field name="name">hr.contract.form2</field>
+	            <field name="model">hr.contract</field>
+	            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+	            <field name="arch" type="xml">
+	                <data>
+	                	<xpath expr="//notebook/page[1]/group/group[2]/field[@name='working_hours']" position="after">
+	                		<field name="ot_wage"/>
+	                	</xpath>
+	                </data>
+	            </field>
+            </record>
+
+	</data>
+</odoo>
