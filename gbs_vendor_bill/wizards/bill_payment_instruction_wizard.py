@@ -22,7 +22,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
     credit_account_id = fields.Many2one('account.account', string='Credit Account')
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU')
-    narration = fields.Char(string="Narration", size=50, required=True)
+    narration = fields.Char(string="Narration", size=30)
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -31,16 +31,6 @@ class BillPaymentInstructionWizard(models.TransientModel):
             if line.amount > rem_amount:
                 raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "
                                         "Remaining balance is %s") % (rem_amount))
-
-    # @api.onchange('credit_operating_unit_id')
-    # def _onchange_operating_unit_id(self):
-    #     if self.credit_operating_unit_id:
-    #         self.credit_sub_operating_unit_id = []
-    #         credit_sub_operating_unit_ids = self.env['sub.operating.unit'].search([
-    #             ('operating_unit_id', '=', self.credit_operating_unit_id.id)])
-    #         return {'domain': {
-    #             'credit_sub_operating_unit_id': [('id', 'in', credit_sub_operating_unit_ids.ids)]
-    #         }}
 
     @api.multi
     def action_validate(self):

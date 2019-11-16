@@ -119,7 +119,6 @@ class AccountAssetAsset(models.Model):
     def validate(self):
         super(AccountAssetAsset, self).validate()
 
-
     @api.multi
     def name_get(self):
         result = []
@@ -164,11 +163,11 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def _cron_generate_entries(self):
-        date = datetime.today()
-        ungrouped_assets = self.env['account.asset.asset'].search(
-            [('state', '=', 'open'), ('category_id.group_entries', '=', False)])
+        cron_ctx = self.env.ref("account_asset.account_asset_cron")
+        date = datetime.strptime(cron_ctx.nextcall, "%Y-%m-%d %H:%M:%S")
+        ungrouped_assets = self.env['account.asset.asset'].search([('state', '=', 'open')])
         for asset in ungrouped_assets:
-            self.compute_depreciation_history(date, asset)
+            asset.compute_depreciation_history(date, asset)
 
     @api.model
     def compute_depreciation_history(self, date, asset):
