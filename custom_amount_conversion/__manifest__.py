@@ -8,7 +8,6 @@
     'depends': [
         'base',
         'account',
-        'purchase',
         'gbs_collection_batch',
     ],
 
