@@ -28,6 +28,27 @@
                                                 <field name="amount" class="oe_inline" />
                                                 <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
                                             </div>
+
+
+
+                                            <label for="mushok_amount"
+                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}"/>
+                                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}">
+                                                <field name="mushok_amount" class="oe_inline"/>
+                                                <label string="%" class="oe_inline"
+                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                                            </div>
+                                            <label for="vds_amount"
+                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}"/>
+                                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}">
+                                                <field name="vds_amount" class="oe_inline"/>
+                                                <label string="%" class="oe_inline"
+                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                                            </div>
+
+
+
+
                                         </group>
                                         <group attrs="{'invisible':[('amount_type','=', 'group')]}">
                                             <field name="account_id" string="Vat Account"/>
@@ -93,7 +114,7 @@
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True}</field>
             <field name="view_id" ref="inherited_view_tax_tree"/>
         </record>
-        <menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="Vats" parent="account.account_account_menu" sequence="1"/>
+        <!--<menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="Vats" parent="account.account_account_menu" sequence="1"/>-->
 
         <record id="inherited_invoice_supplier_form" model="ir.ui.view">
             <field name="name">account.invoice.from</field>

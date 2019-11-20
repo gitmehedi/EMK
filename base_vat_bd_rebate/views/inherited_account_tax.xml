@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="inherited_view_tax_rebate_form" model="ir.ui.view">
+            <field name="name">inherited.account.tax.rebate.view</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="base_vat_bd.inherited_view_tax_form"/>
+            <field name="priority" eval="31"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_adjustment']" position="after">
+                    <field name="rebate"/>
+                    <field name="rebate_account_id" attrs="{'required': [('rebate', '=', True)]}"
+                           domain="[('internal_type','=','other')]"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

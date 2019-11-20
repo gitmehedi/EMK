@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_tds_challan_selection_wizard" model="ir.ui.view">
+            <field name="name">tds.challan.selection.wizard.form</field>
+            <field name="model">tds.challan.selection.wizard</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="TDS/VAT Challan">
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="product_ids" string="Service"
+                                   placeholder="Services.." widget="many2many_tags"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        </group>
+                        <group>
+                            <field name="supplier_ids" placeholder="Suppliers.."
+                                   widget="many2many_tags"
+                                   domain="[('supplier', '=', True)]"
+                                   context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            <field name="operating_unit_id" placeholder="All"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button icon="fa-cogs" string="Generate" name="generate_action" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="tds_challan_selection_wizard_action_view" model="ir.actions.act_window">
+            <field name="name">TDS/VAT Challan</field>
+            <field name="res_model">tds.challan.selection.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                name="Generate Challan"
+                parent="main_menu_tds_vat"
+                action="tds_challan_selection_wizard_action_view"
+                id="tds_challan_selection_wizard_menu"
+                groups="account_tds.group_tds_manager,account_tds.group_tds_user"
+                sequence="6"/>
+    </data>
+</odoo>

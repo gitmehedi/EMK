@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_tds_rule_form" model="ir.ui.view">
+            <field name="name">tds.rule.form</field>
+            <field name="model">tds.rule</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="TDS Rule">
+                    <header>
+                        <button name="action_confirm" type="object"
+                                string="Confirm" states="draft"
+                                class="oe_highlight" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+                        <button string="Amendment" name="action_amendment" type="object" class="oe_read_only"
+                                attrs="{'invisible': ['|',('state', 'in', ('draft')),('is_amendment', '=', True)]}"
+                                groups="account_tds.group_tds_manager"/>
+                        <button string="Approve" name="action_approve_amendment"
+                                type="object" class="oe_highlight" attrs="{'invisible': [('is_amendment', '=', False)]}"
+                                groups="account_tds.group_tds_manager"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" placeholder="Name"/>
+                                <field name="active"/>
+                                <field name="is_amendment" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="effective_from"/>
+                                <field name="current_version" attrs="{'invisible': [('version_ids','=', [])]}"/>
+                                <field name="operating_unit_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="company_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Definition">
+                                <group>
+                                    <group>
+                                        <field name="type_rate"/>
+                                        <label for="flat_rate" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                        <div attrs="{'invisible':[('type_rate', '!=', 'flat')]}">
+                                            <field name="flat_rate" class="oe_inline"
+                                                   attrs="{'required':[('type_rate', '=','flat')]}"/>
+                                            <label string="%" class="oe_inline"/>
+                                        </div>
+                                        <field name="price_include" attrs="{'invisible':['|',('type_rate', '!=', 'flat'),('price_exclude', '!=', False)]}"/>
+                                        <field name="price_exclude" attrs="{'invisible':['|',('type_rate', '!=', 'flat'),('price_include', '!=', False)]}"/>
+                                        <field name="effect_on_base" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="account_id" domain="[('internal_type','=','other')]"
+                                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    </group>
+                                    <field name="line_ids" nolabel="1" string="Slab Details"
+                                           attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
+                                        <tree string="List" editable="bottom">
+                                            <field name="range_from" placeholder="Enter Numeric Number"/>
+                                            <field name="range_to" placeholder="Enter Numeric Number"/>
+                                            <field name="rate" string="Rate(%)"/>
+                                        </tree>
+                                    </field>
+
+                                </group>
+                            </page>
+                            <page string="Version Details" attrs="{'invisible': [('version_ids','=', [])]}">
+                                <field name="version_ids" ref="view_tds_rule_version_form">
+                                    <tree string="List" decoration-info="state=='pending'" decoration-success="state=='confirm'">
+                                        <field name="name"/>
+                                        <field name="effective_from"/>
+                                        <field name="type_rate"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_tds_rule_tree" model="ir.ui.view">
+            <field name="name">tds.rule.tree</field>
+            <field name="model">tds.rule</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="TDS Rule" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
+                      decoration-bf="state =='confirm'">
+                    <field name="name"/>
+                    <field name="effective_from"/>
+                    <field name="type_rate"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tds_rule_action" model="ir.actions.act_window">
+            <field name="name">TDS Rule</field>
+            <field name="res_model">tds.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem id="perent_menu_tds_rule" name="Account TDS" parent="account.account_account_menu"/>
+        <menuitem
+                name='Taxes'
+                id='texes_menu' sequence="14"
+                parent='account.menu_finance'
+                groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+
+        <menuitem id="menu_tds_rule_item" name="TDS Rule" sequence="18" parent="texes_menu" action="tds_rule_action"
+                  groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+        <menuitem action="account.action_tax_form" id="account.menu_action_tax_form" name="VAT Rule"
+                  parent="texes_menu" sequence="1" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+
+        <record id="view_tds_rule_version_form" model="ir.ui.view">
+            <field name="name">tds.rule.version.form</field>
+            <field name="model">tds.rule.version</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="TDS Version">
+                    <sheet>
+                        <div class="oe_title">
+                            <lebel class="oe_edit_only" for="name" string="Name"/>
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="effective_from"/>
+                                <field name="type_rate"/>
+                                <field name="flat_rate"
+                                       attrs="{'invisible':[('type_rate', '!=', 'flat')],'required':[('type_rate', '=','flat')]}"/>
+                                <field name="price_include" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                <field name="price_exclude" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                            </group>
+                            <group>
+                                <field name="account_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4" attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
+                            <page string="Slab Details">
+                                <field name="version_line_ids">
+                                    <tree string="List" editable="bottom">
+                                        <field name="range_from" placeholder="Enter Numeric Number"/>
+                                        <field name="range_to" placeholder="Enter Numeric Number"/>
+                                        <field name="rate"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

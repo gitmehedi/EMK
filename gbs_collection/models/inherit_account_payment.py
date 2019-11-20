@@ -54,16 +54,24 @@ class InheritAccountPayment(models.Model):
 
     @api.multi
     def get_sale_order_id_list(self):
-        so_ids = set()
+        so_ids = []
         if self.partner_id.id:
-            invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                                     ('state', '=', 'open'), ('so_id', '!=', False),
-                                                                     ('sale_type_id.sale_order_type', 'in',
-                                                                      ['cash', 'credit_sales'])])
-            for inv in invoice_ids:
-                so_ids.add(inv.so_id.id)
+            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id),
+                                                                   ('state', '=', 'done'),
+                                                                   ('type_id.sale_order_type', 'in',
+                                                                    ['cash', 'credit_sales'])])
+            for so in sale_order_ids:
+                # check if so has any invoice in 'open' state.
+                if len(self.env['account.invoice'].sudo().search([('so_id', '=', so.id), ('state', '=', 'open')])) > 0:
+                    so_ids.append(so.id)
+                # check if so type is 'cash' and has not created any invoice yet.
+                elif so.type_id.sale_order_type == 'cash' and len(self.env['account.invoice'].sudo().search(
+                        [('so_id', '=', so.id), ('state', '=', 'paid')])) <= 0:
+                    so_ids.append(so.id)
+                else:
+                    pass
 
-        return list(so_ids)
+        return so_ids
 
     @api.onchange('partner_type')
     def _onchange_partner_type(self):

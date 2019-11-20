@@ -46,6 +46,16 @@
         <field name="category_id" ref="module_category_sale"/>
     </record>
 
+    <record id="group_purchase_product_manager" model="res.groups">
+        <field name="name">Purchase Product Manager</field>
+        <field name="category_id" ref="module_category_sale"/>
+    </record>
+
+    <record id="group_service_product_manager" model="res.groups">
+        <field name="name">Service Manager</field>
+        <field name="category_id" ref="module_category_sale"/>
+    </record>
+
     <record id="group_sales_customer_manager" model="res.groups">
         <field name="name">Customer Manager</field>
         <field name="category_id" ref="module_category_sale"/>
@@ -61,6 +71,24 @@
         <field name="name">Export LC (Foreign)</field>
         <field name="category_id" ref="module_category_sale"/>
         <field name="sequence">80</field>
+    </record>
+
+    <record id="group_account_expense_ho" model="res.groups">
+        <field name="name">Account HO (Expense)</field>
+        <field name="category_id" ref="module_category_sale"/>
+        <field name="sequence">90</field>
+    </record>
+
+    <record id="group_account_expense_unit" model="res.groups">
+        <field name="name">Account Unit (Expense)</field>
+        <field name="category_id" ref="module_category_sale"/>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="group_account_income" model="res.groups">
+        <field name="name">Account (Collection)</field>
+        <field name="category_id" ref="module_category_sale"/>
+        <field name="sequence">110</field>
     </record>
 
     <!--Invisible Group-->

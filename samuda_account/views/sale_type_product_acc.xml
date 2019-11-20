@@ -37,8 +37,8 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <page name="invoicing" position="inside">
-                    <separator string="Credited Account"/>
-                    <field name="sale_type_account_ids" nolabel="1">
+                    <separator string="Credited Account" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
+                    <field name="sale_type_account_ids" nolabel="1" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <tree string="Sale Type Product Account" editable="bottom">
                             <field name="product_id" options="{'no_open':True,'no_create':True}"/>
                             <field name="sale_order_type_id" options="{'no_open':True,'no_create':True}"/>
