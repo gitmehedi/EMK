@@ -21,11 +21,11 @@ class InheritHRPayslip(models.Model):
                 pay_slip_input.append(input.id)
 
         meal_line_pool = self.env['hr.meal.bill.line']
-        meal_data  = meal_line_pool.browse(meal_ids)
+        meal_data = meal_line_pool.browse(meal_ids)
         if meal_data.exists():
             meal_data.write({'state':'adjusted'})
         elif len(meal_ids) > 0:
-            raise ValidationError(_("Meal Bill Date Error For: "+ self.name + " hr_payslip_id :"+ str(self.id) + ". Need to Update 'ref' from hr_pay_slip_input where id is :"+ str(pay_slip_input)+", existing ref : "+ str(meal_ids)))
+            raise ValidationError(_("Meal Bill Data Error For: "+ self.name + " hr_payslip_id :"+ str(self.id) + ". Need to Update 'ref' from hr_pay_slip_input where id is :"+ str(pay_slip_input)+", existing ref : "+ str(meal_ids)))
 
         return res
 
