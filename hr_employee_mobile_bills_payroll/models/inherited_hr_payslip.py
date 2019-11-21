@@ -1,4 +1,5 @@
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError
 
 
 class InheritedHrMobilePayslip(models.Model):
@@ -15,13 +16,18 @@ class InheritedHrMobilePayslip(models.Model):
         res = super(InheritedHrMobilePayslip, self).action_payslip_done()
 
         mobile_ids = []
+        pay_slip_input = []
         for input in self.input_line_ids:
             if input.code == 'MOBILE':
                 mobile_ids.append(int(input.ref))
+                pay_slip_input.append(input.id)
 
         mobile_line_pool = self.env['hr.mobile.bill.line']
         mobile_data = mobile_line_pool.browse(mobile_ids)
-        mobile_data.write({'state': 'adjusted'})
+        if mobile_data.exists():
+            mobile_data.write({'state': 'adjusted'})
+        elif len(mobile_ids) > 0:
+            raise ValidationError(_("Mobile Bill Data Error For: " + self.name + " hr_payslip_id :" + str(self.id) + ". Need to Update 'ref' from hr_pay_slip_input where id is :" + str(pay_slip_input)+", existing ref : " + str(mobile_ids)))
 
         return res
 
