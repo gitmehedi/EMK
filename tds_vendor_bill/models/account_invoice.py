@@ -196,7 +196,7 @@ class AccountInvoiceLine(models.Model):
                     self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
                         self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
                 else:
-                    self.mushok_vds_amount = False
+                    self.mushok_vds_amount = taxes['taxes'][0]['amount']
         else:
             return super(AccountInvoiceLine, self)._compute_price()
 

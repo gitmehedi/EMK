@@ -301,8 +301,10 @@
                 <field name="user_id" invisible="1"/>
                 <field name="date_due" invisible="1"/>
                 <field name="origin" invisible="1"/>
-                <field name="amount_total_signed" string="Total" sum="Total"/>
-                <field name="amount_tax" string="VAT" sum="VAT"/>
+                <field name="amount_total_signed" string="Total" sum="Total" invisible="1"/>
+                <field name="total_amount_with_vat" string="Total" sum="Total"/>
+                <field name="amount_tax" string="VAT" sum="VAT" invisible="1"/>
+                <field name="mushok_vds_amount" string="VAT" sum="VAT"/>
                 <field name="total_tds_amount" string="TDS" sum="TDS"/>
                 <field name="security_deposit" sum="Total"/>
                 <field name="residual_signed" string="To Pay" sum="To Pay"/>
