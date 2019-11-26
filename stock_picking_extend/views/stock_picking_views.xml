@@ -366,8 +366,7 @@
     <menuitem id="menu_receive_picking_acc_approver"
               name="Inventory"
               parent="account.menu_finance"
-              sequence="3"
-              groups="account.group_account_user"/>
+              sequence="3"/>
 
     <menuitem id="menu_acc_approver"
               name="Accounts Approver" sequence="1"
