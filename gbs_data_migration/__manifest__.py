@@ -15,6 +15,7 @@
         'gbs_ogl_cbs_interface',
     ],
     "data": [
+        "data/ir_cron.xml",
         "views/menu_view.xml",
         "views/gbs_fam_data_migration_view.xml",
         "wizards/gbs_data_migration_wizard_view.xml",

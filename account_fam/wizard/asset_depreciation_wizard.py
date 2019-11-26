@@ -20,10 +20,7 @@ class AssetDepreciationWizard(models.TransientModel):
                     if asset.state == 'open' and not asset.depreciation_flag and asset.allocation_status:
                         self.depr_asset(asset)
             else:
-                assets = self.env['account.asset.asset'].search(
-                    [('state', '=', 'open'), ('depreciation_flag', '=', False), ('allocation_status', '=', True)])
-                for asset in assets:
-                    self.depr_asset(asset)
+                self.env['account.asset.asset']._generate_depreciation(self.date)
             return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

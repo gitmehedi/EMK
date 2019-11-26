@@ -20,3 +20,19 @@ class GBSFamDataMigration(models.Model):
                 raise ValidationError(_('Processed record can not be deleted.'))
         return super(GBSFamDataMigration, self).unlink()
 
+    @api.multi
+    def _fam_date_migration(self):
+        assets = self.search([('state', '=', 'open')])
+        for asset in assets:
+            asset_depr = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
+            if asset_depr:
+                asset_depr.write({'move_check': True,
+                                  'move_posted_check': True,
+                                  })
+        self.env.cr.execute("""UPDATE account_asset_category SET asset_count=0""")
+        self.env.cr.execute("""SELECT count(*),asset_type_id  FROM account_asset_asset GROUP BY asset_type_id""")
+        for val in self.env.cr.fetchall():
+            self.env.cr.execute("""UPDATE account_asset_category SET asset_count=%s WHERE id=%s""" % (val[0], val[1]))
+
+
+

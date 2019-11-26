@@ -20,3 +20,5 @@ class GBSDataMigration(models.Model):
                 raise ValidationError(_('Processed record can not be deleted.'))
         return super(GBSDataMigration, self).unlink()
 
+
+
