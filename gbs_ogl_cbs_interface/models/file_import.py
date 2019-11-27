@@ -44,9 +44,6 @@ class GBSFileImport(models.Model):
             raise ValidationError(_(
                 'Debit and Credit value must be same\n - Debit: {0} \n - Credit: {1}'.format(debit, credit)))
 
-        record_date = datetime.strftime(datetime.now(), "%d%m%Y_%H%M%S_")
-        process_date = datetime.strftime(datetime.now(), "%d%m%Y_")
-        unique = str(randint(100, 999))
         filename = self.generate_filename()
 
         def generate_file(record):
