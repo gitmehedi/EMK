@@ -27,7 +27,7 @@ class PaymentInstruction(models.Model):
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU',
                                                    track_visibility='onchange')
     cbs_response = fields.Text('Response')
-    is_sync = fields.Boolean(string='Payment Synced', default=False, track_visibility='onchange')
+    is_sync = fields.Boolean(string='Payment Synced',copy=False, default=False, track_visibility='onchange')
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     state = fields.Selection([('draft', "Draft"), ('approved', "Approved"), ('cancel', "Cancel"), ], default='draft',string="Status", track_visibility='onchange')
     narration = fields.Text(string="Narration", size=30)

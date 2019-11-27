@@ -75,12 +75,13 @@ class AccountAssetAsset(models.Model):
     @api.model_cr
     def init(self):
         self._cr.execute("""
-            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE) 
+            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER) 
             RETURNS VOID AS $$
             DECLARE
                 rec RECORD;
                 query TEXT;
                 move INTEGER;
+                user_id INTEGER;
                 no_days INTEGER;
                 depr_date DATE;
                 depr_amount FLOAT;
@@ -94,73 +95,96 @@ class AccountAssetAsset(models.Model):
                 lin_end INTEGER;
                 cumul_depr FLOAT;
                 book_val_amount FLOAT;
-                where TEXT;
-            BEGIN
-               depr_date = date;
-               
-               query = 'SELECT aaa.*,
-                            aac.id AS category_id,
-                            aac.journal_id,
-                            aac.account_depreciation_id,
-                            aac.account_depreciation_expense_id 
-                        FROM account_asset_asset aaa
-                        LEFT JOIN account_asset_category aac
-                           ON (aaa.asset_type_id = aac.id)
-                        WHERE  aaa.depreciation_flag=False 
-                             AND aaa.allocation_status=True';
-               
-               FOR rec IN EXECUTE query
-               LOOP
+                d_days INTEGER;
+                d_month INTEGER;
+                BEGIN
+                depr_date = date;
+                user_id = user_id;
+            
+                query = 'SELECT aaa.*,
+                        aac.id AS category_id,
+                        aac.journal_id,
+                        aac.account_depreciation_id,
+                        aac.account_depreciation_expense_id 
+                    FROM account_asset_asset aaa
+                    LEFT JOIN account_asset_category aac
+                       ON (aaa.asset_type_id = aac.id)
+                    WHERE  aaa.depreciation_flag=False 
+                         AND aaa.allocation_status=True';
+            
+                FOR rec IN EXECUTE query
+                LOOP
                 IF rec.lst_depr_date IS NOT NULL THEN
                   no_days := (depr_date - rec.lst_depr_date)::integer;
                 ELSE
                   no_days := (depr_date - rec.asset_usage_date)::integer;
                 END IF;
-                
+            
                 IF no_days > 0 AND rec.state='open' AND rec.method !='no_depreciation' THEN
                     IF rec.method = 'linear' THEN
                       linear = make_interval(years := rec.depreciation_year);
                       delta_date = rec.asset_usage_date + linear::interval;
                       delta_days = delta_date - rec.asset_usage_date;
-                      daily_depr = (rec.value - rec.salvage_value) / delta_days;
+                      IF rec.value_residual > 0 THEN
+                         daily_depr = (rec.value - rec.salvage_value) / delta_days;
+                      ELSE
+                         daily_depr = 0;
+                      END IF;
                       
                     ELSEIF rec.method = 'degressive' THEN
                       degr_start = DATE_PART('year', depr_date) || '-01-01';
                       degr_end = DATE_PART('year', depr_date) || '-12-31';
                       delta_days =  degr_end -  degr_start;
                       daily_depr = (rec.depr_base_value * rec.method_progress_factor) / delta_days;
-                      --RAISE NOTICE 'Degressive------%--%--%--%', degr_start,degr_end,delta_days,daily_depr;
                     END IF;
             
                     depr_amount = no_days * daily_depr;
                     cumul_depr = rec.accumulated_value + depr_amount;
                     book_val_amount = rec.value_residual - depr_amount;
                     
+                    IF depr_amount > 0 THEN
                     -- insert data into account.move table
-                    INSERT INTO account_move (ref,company_id,journal_id,currency_id,amount,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,name) 
-                    VALUES (rec.asset_seq,rec.company_id,rec.journal_id,rec.currency_id,depr_amount,depr_date,rec.current_branch_id,1,'draft',False,False,TRUE,'/')
-                    RETURNING account_move.id INTO move;
-                    
-                    -- insert credit amount in account.move.line
-                    INSERT INTO account_move_line (name,ref,journal_id,move_id,user_type_id,company_id,account_id,operating_unit_id,date_maturity,date,debit,credit)
-                    VALUES ('/',rec.asset_seq,rec.journal_id,move,1,rec.company_id,rec.account_depreciation_id,rec.current_branch_id,depr_date,depr_date,depr_amount,0);
-                    -- insert debit amount in account.move.line
-                    INSERT INTO account_move_line (name,ref,journal_id,move_id,user_type_id,company_id,account_id,operating_unit_id,date_maturity,date,debit,credit)
-                    VALUES ('/',rec.asset_seq,rec.journal_id,move,1,rec.company_id,rec.account_depreciation_id,rec.current_branch_id,depr_date,depr_date,0,depr_amount);
-                    
-                    -- insert asset depreciation value in account.asset.depreciation.line
-                    INSERT INTO account_asset_depreciation_line (move_id,asset_id,name,sequence,move_check,move_posted_check,line_type,depreciation_date,days,amount,depreciated_value,remaining_value)
-                    VALUES (move,rec.id,'Depreciation',1,True,True,'depreciation',depr_date,no_days,depr_amount,cumul_depr,book_val_amount);
-            
-                    -- update last_depreciation_date and depreciation_base_value in account.asset.asset
-                    UPDATE account_asset_asset
-                    SET lst_depr_date = depr_date,accumulated_value=cumul_depr,value_residual=book_val_amount
-                    WHERE id = rec.id;
+                        INSERT INTO account_move (name,ref,company_id,journal_id,currency_id,amount,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
+                        VALUES ('/',rec.asset_seq,rec.company_id,rec.journal_id,rec.currency_id,depr_amount,CURRENT_DATE,rec.current_branch_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
+                        RETURNING account_move.id INTO move;
+                        
+                        -- insert credit amount in account.move.line
+                        INSERT INTO account_move_line (name,ref,journal_id,move_id,company_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                        VALUES ('/',rec.asset_seq,rec.journal_id,move,rec.company_id,rec.account_depreciation_id,rec.current_branch_id,depr_date,depr_date,depr_amount,0,user_id,user_id,NOW(),NOW());
+                        -- insert debit amount in account.move.line
+                        INSERT INTO account_move_line (name,ref,journal_id,move_id,company_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                        VALUES ('/',rec.asset_seq,rec.journal_id,move,rec.company_id,rec.account_depreciation_expense_id,rec.current_branch_id,depr_date,depr_date,0,depr_amount,user_id,user_id,NOW(),NOW());
+                        
+                        -- insert asset depreciation value in account.asset.depreciation.line
+                        INSERT INTO account_asset_depreciation_line (move_id,asset_id,name,sequence,move_check,move_posted_check,line_type,depreciation_date,days,amount,depreciated_value,remaining_value,create_uid,write_uid,create_date,write_date)
+                        VALUES (move,rec.id,'Depreciation',1,True,True,'depreciation',depr_date,no_days,depr_amount,cumul_depr,book_val_amount,user_id,user_id,NOW(),NOW());
+                
+                        -- update last_depreciation_date and depreciation_base_value in account.asset.asset
+                
+                        d_days = DATE_PART('days', depr_date);
+                        d_month = DATE_PART('month', depr_date);
+                        IF d_days=31 AND d_month=12 AND rec.method='degressive' THEN
+                            UPDATE account_asset_asset
+                            SET lst_depr_date = depr_date,
+                                accumulated_value=cumul_depr,
+                                value_residual=book_val_amount,
+                                depr_base_value=book_val_amount,
+                                write_uid=user_id,
+                                write_date=NOW()
+                            WHERE id = rec.id;
+                        ELSE
+                            UPDATE account_asset_asset
+                            SET lst_depr_date = depr_date,
+                                accumulated_value=cumul_depr,
+                                value_residual=book_val_amount,
+                                write_uid=user_id,
+                                write_date=NOW()
+                            WHERE id = rec.id;
+                        END IF;
+                    END IF;
                     --RAISE NOTICE '% - %', move, move;
-                ELSE
-                  RAISE NOTICE '% - %', move, move;
                 END IF;
-               END LOOP;
+            END LOOP;
             END;
             $$ LANGUAGE plpgsql;
         """)
@@ -253,7 +277,7 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def _generate_depreciation(self,date):
-        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s')""" % date);
+        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s)""" % (date,self.env.uid));
         vals = self.env['account.move'].search([('state', '=', 'draft')])
         for move in vals:
             if move.name == '/':
@@ -273,7 +297,11 @@ class AccountAssetAsset(models.Model):
                 if asset.method == 'linear':
                     date_delta = (self.date_str_format(asset.date) + relativedelta(
                         years=asset.depreciation_year) - self.date_str_format(asset.date)).days
-                    daily_depr = (asset.value - asset.salvage_value) / date_delta
+                    if asset.value_residual > 0:
+                        daily_depr = (asset.value - asset.salvage_value) / date_delta
+                    else:
+                        daily_depr = 0;
+
                 elif asset.method == 'degressive':
                     year = self.date_str_format(asset.date).year
                     date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1

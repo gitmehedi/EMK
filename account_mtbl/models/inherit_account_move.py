@@ -17,7 +17,7 @@ class AccountMove(models.Model):
                                         states={'posted': [('readonly', True)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
     is_cbs = fields.Boolean(default=False, help='CBS data always sync with OGL using GLIF.')
-    is_sync = fields.Boolean(default=False, help='OGL continuously send data to CBS for journal sync.')
+    is_sync = fields.Boolean(default=False, copy=False,help='OGL continuously send data to CBS for journal sync.')
     is_cr = fields.Boolean(default=False)
     user_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     total_debit = fields.Char(compute='_compute_sum', string="Total Debit")
