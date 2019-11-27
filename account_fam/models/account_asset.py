@@ -279,11 +279,14 @@ class AccountAssetAsset(models.Model):
     def _generate_depreciation(self,date):
         self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s)""" % (date,self.env.uid));
         vals = self.env['account.move'].search([('state', '=', 'draft')])
+        count = 0
         for move in vals:
             if move.name == '/':
                 sequence = move.journal_id.sequence_id
                 new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                 move.write({'name': new_name, 'state': 'posted'})
+                count = count+1
+                print "------------------",count
 
     @api.model
     def compute_depreciation_history(self, date, asset):
