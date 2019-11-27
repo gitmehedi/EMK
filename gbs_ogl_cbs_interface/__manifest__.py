@@ -21,6 +21,7 @@
         "data/default_data.xml",
         "data/ir_cron.xml",
         "data/mail_message_subtype.xml",
+        "views/account_config.xml",
         "views/menu_view.xml",
         "views/glif_process_view.xml",
         "views/glif_process_error_view.xml",

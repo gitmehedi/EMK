@@ -16,3 +16,13 @@ class AccountConfigSettings(models.TransientModel):
             self.company_id.write({'tds_vat_transfer_journal_id': self.tds_vat_transfer_journal_id.id})
         return self.env['ir.values'].sudo().set_default(
             'account.config.settings', 'tds_vat_transfer_journal_id', self.tds_vat_transfer_journal_id.id)
+
+
+
+class ResCompany(models.Model):
+    _inherit = "res.company"
+
+    tds_vat_transfer_account_id = fields.Many2one('account.account', string='Transfer Account',
+                                                  help="Sundry account used when TDS/VAT challan deposited")
+    tds_vat_transfer_journal_id = fields.Many2one('account.journal', string='Transfer Journal',
+                                                  help="Account Journal that used when TDS/VAT challan deposited")

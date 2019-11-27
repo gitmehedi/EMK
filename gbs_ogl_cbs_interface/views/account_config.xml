@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mdmc_bulk_upload_account_config" model="ir.ui.view">
+        <field name="name">view.mdmc.bulk.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="MDMC/BULK Upload" name="grp_tds_vat_challan">
+                    <label for="id" string="Date" groups="account.group_account_user"/>
+                    <div name="tds_vat_challan">
+                        <div>
+                            <label for="MDMC/BULK Upload Date"/>
+                            <field name="batch_date" class="oe_inline"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

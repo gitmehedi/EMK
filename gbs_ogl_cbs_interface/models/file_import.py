@@ -47,7 +47,7 @@ class GBSFileImport(models.Model):
         record_date = datetime.strftime(datetime.now(), "%d%m%Y_%H%M%S_")
         process_date = datetime.strftime(datetime.now(), "%d%m%Y_")
         unique = str(randint(100, 999))
-        filename = "MDC_00001_" + record_date + process_date + unique + ".txt"
+        filename = self.generate_filename()
 
         def generate_file(record):
             file_path = os.path.join(record.source_path, filename)
@@ -132,6 +132,14 @@ class GBSFileImport(models.Model):
                 raise ValidationError(_('Processed record can not be deleted.'))
         return super(GBSFileImport, self).unlink()
 
+    def generate_filename(self):
+        rec_date = self.env.user.company_id.batch_date.split('-')
+        record_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0]) + datetime.strftime(datetime.now(),
+                                                                                                     "%H%M%S_")
+        process_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0])
+        unique = str(randint(100, 999))
+        return "MDC_00001_" + record_date + process_date + unique + ".txt"
+
 
 class GBSFileImportLine(models.Model):
     _name = 'gbs.file.import.line'
@@ -156,5 +164,5 @@ class GBSFileImportLine(models.Model):
             if not self.account_no.isdigit():
                 raise ValidationError('Account No should be number!')
             if len(self.account_no) not in [13, 16]:
-                raise ValidationError("Account [{0}] has invalid value. Account will be 13 or 16 digit.".format(self.account_no))
-
+                raise ValidationError(
+                    "Account [{0}] has invalid value. Account will be 13 or 16 digit.".format(self.account_no))

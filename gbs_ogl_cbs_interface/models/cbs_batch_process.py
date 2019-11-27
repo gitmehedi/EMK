@@ -171,10 +171,7 @@ class GenerateCBSJournal(models.Model):
 
     @api.multi
     def generate_journal(self):
-        record_date = datetime.strftime(datetime.now(), "%d%m%Y_%H%M%S_")
-        process_date = datetime.strftime(datetime.now(), "%d%m%Y_")
-        unique = str(randint(100, 999))
-        filename = "MDC_00001_" + record_date + process_date + unique + ".txt"
+        filename = self.generate_filename()
 
         def generate_file(record):
             move_ids = []
@@ -332,6 +329,13 @@ class GenerateCBSJournal(models.Model):
             formatted_data.append(my_dict)
 
         return formatted_data
+
+    def generate_filename(self):
+        rec_date = self.env.user.company_id.batch_date.split('-')
+        record_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0]) + datetime.strftime(datetime.now(), "%H%M%S_")
+        process_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0])
+        unique = str(randint(100, 999))
+        return "MDC_00001_" + record_date + process_date + unique + ".txt"
 
 
 class GenerateCBSJournalSuccess(models.Model):
