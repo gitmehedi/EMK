@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, shutil, base64, traceback, logging, json
+import os, shutil, base64, traceback, logging, json, re
 from datetime import datetime
 from contextlib import contextmanager
 from odoo import exceptions, models, fields, api, _, tools
@@ -184,7 +184,7 @@ class GenerateCBSJournal(models.Model):
                         trn_type = '54' if val.debit > 0 else '04'
                         amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                         amount = ''.join(amount.split('.')).zfill(16)
-                        narration = val.name[:50]
+                        narration = re.sub(r'[|\n||\r|?|$|.|!]', r' ', val.name[:50])
                         trn_ref_no = ''.join(vals.name.split('/'))[-8:]
                         date_array = val.date.split("-")
                         date = date_array[2] + date_array[1] + date_array[0]
@@ -332,7 +332,8 @@ class GenerateCBSJournal(models.Model):
 
     def generate_filename(self):
         rec_date = self.env.user.company_id.batch_date.split('-')
-        record_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0]) + datetime.strftime(datetime.now(), "%H%M%S_")
+        record_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0]) + datetime.strftime(datetime.now(),
+                                                                                                     "%H%M%S_")
         process_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0])
         unique = str(randint(100, 999))
         return "MDC_00001_" + record_date + process_date + unique + ".txt"

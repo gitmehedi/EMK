@@ -1,4 +1,4 @@
-import os, base64
+import os, base64,re
 
 from random import randint
 from odoo import api, models, fields, _
@@ -63,7 +63,7 @@ class GBSFileImport(models.Model):
                     account_no = str(val.account_no).zfill(17)
                     amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                     amount = ''.join(amount.split('.')).zfill(16)
-                    narration = val.narration[:50]
+                    narration = re.sub(r'[|\n||\r|?|$|.|!]', r' ', val.narration[:50])
                     trn_ref_no = ''.join(self.code.split('/'))[-8:]
                     date_array = val.date if val.date else fields.Datetime.now()[:10]
                     date_array = date_array.split("-")
