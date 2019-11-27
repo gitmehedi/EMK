@@ -254,7 +254,7 @@ class AccountAssetAsset(models.Model):
     @api.model
     def _generate_depreciation(self,date):
         self.env.cr.execute("""SELECT * FROM asset_depreciation('%s')""" % date);
-        vals = self.env['account.move'].search([('state', '=', 'draft')], limit=1000)
+        vals = self.env['account.move'].search([('state', '=', 'draft')])
         for move in vals:
             if move.name == '/':
                 sequence = move.journal_id.sequence_id
