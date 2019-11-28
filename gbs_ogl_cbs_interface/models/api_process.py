@@ -146,7 +146,7 @@ class SOAPProcess(models.Model):
             statement = record.code + " " + record.narration
         else:
             statement = record.code
-            
+
         data = {
             'InstNum': endpoint.ins_num,
             'BrchNum': d_ou.zfill(5),

@@ -149,11 +149,11 @@ class AccountAssetAsset(models.Model):
                         RETURNING account_move.id INTO move;
                         
                         -- insert credit amount in account.move.line
-                        INSERT INTO account_move_line (name,ref,journal_id,move_id,company_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                        VALUES ('/',rec.asset_seq,rec.journal_id,move,rec.company_id,rec.account_depreciation_id,rec.current_branch_id,depr_date,depr_date,depr_amount,0,user_id,user_id,NOW(),NOW());
+                        INSERT INTO account_move_line (name,ref,journal_id,move_id,company_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                        VALUES ('/',rec.asset_seq,rec.journal_id,move,rec.company_id,rec.account_depreciation_id,rec.current_branch_id,rec.cost_centre_id,depr_date,depr_date,depr_amount,0,user_id,user_id,NOW(),NOW());
                         -- insert debit amount in account.move.line
-                        INSERT INTO account_move_line (name,ref,journal_id,move_id,company_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                        VALUES ('/',rec.asset_seq,rec.journal_id,move,rec.company_id,rec.account_depreciation_expense_id,rec.current_branch_id,depr_date,depr_date,0,depr_amount,user_id,user_id,NOW(),NOW());
+                        INSERT INTO account_move_line (name,ref,journal_id,move_id,company_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                        VALUES ('/',rec.asset_seq,rec.journal_id,move,rec.company_id,rec.account_depreciation_expense_id,rec.current_branch_id,rec.cost_centre_id,depr_date,depr_date,0,depr_amount,user_id,user_id,NOW(),NOW());
                         
                         -- insert asset depreciation value in account.asset.depreciation.line
                         INSERT INTO account_asset_depreciation_line (move_id,asset_id,name,sequence,move_check,move_posted_check,line_type,depreciation_date,days,amount,depreciated_value,remaining_value,create_uid,write_uid,create_date,write_date)
