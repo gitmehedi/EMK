@@ -108,6 +108,10 @@ class AttendanceProcessor(models.Model):
                 else:
                     attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
+                    # Check for Personal Leave
+                    if att_utility_pool.checkOnPersonalLeave(employeeId, currDate) is True:
+                        attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+
                 currDate = currDate + day
         else:
             attSummaryLine.is_entered_rostering = 0
