@@ -1,5 +1,5 @@
 from odoo import api, fields, models, tools, _
-# from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class InheritEmployee(models.Model):
@@ -7,7 +7,9 @@ class InheritEmployee(models.Model):
 
     init_pf = fields.Float("Initial Provident Fund")
     pf_amount = fields.Float("PF Amount")
-    pf_lines = fields.One2many('hr.employee.pf.line', 'employee_id', string='PF Lines')
+
+    # Relational fields
+    pf_lines = fields.One2many('hr.employee.pf.line', 'employee_id', string='PF Lines', readonly="True")
 
 
 class EmployeePFLine(models.Model):
@@ -15,6 +17,13 @@ class EmployeePFLine(models.Model):
 
     name = fields.Char("Narration")
     amount = fields.Float("Amount")
+
+    # Relational fields
+    employee_id = fields.Many2one('hr.employee', string="Employee")
+
+    @api.multi
+    def unlink(self):
+        raise UserError(_('You can not delete this.'))
 
 
 class InheritHRPayslip(models.Model):
@@ -24,12 +33,15 @@ class InheritHRPayslip(models.Model):
     def action_payslip_done(self):
         res = super(InheritHRPayslip, self).action_payslip_done()
 
-        pf_line = self.env('hr.employee.pf.line')
+        pf_line = self.env['hr.employee.pf.line']
         for line in self.line_ids:
             if line.code == 'EPMF':
                 vals = {
                     'name': self.name,
-                    'amount': abs(line.total)
+                    'amount': abs(line.total),
+                    'employee_id': self.employee_id.id
                 }
+
+                pf_line.create(vals)
 
         return res
