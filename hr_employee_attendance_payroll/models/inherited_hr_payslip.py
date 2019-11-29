@@ -9,6 +9,10 @@ class InheritedHrAttendancePayslip(models.Model):
 
     _inherit = "hr.payslip"
 
+    @api.model
+    def get_worked_day_lines(self, contract_ids, date_from, date_to):
+        return []
+
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
 
