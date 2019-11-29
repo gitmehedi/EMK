@@ -5,8 +5,16 @@ from odoo.exceptions import UserError, ValidationError
 class InheritEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    @api.one
+    def _compute_total_pf(self):
+        pfa = self.init_pf
+        for line in self.pf_lines:
+            pfa += line.amount
+
+        self.total_pf = pfa
+
     init_pf = fields.Float("Initial Provident Fund")
-    pf_amount = fields.Float("PF Amount")
+    total_pf = fields.Float(compute='_compute_total_pf', string='Total PF')
 
     # Relational fields
     pf_lines = fields.One2many('hr.employee.pf.line', 'employee_id', string='PF Lines', readonly="True")
