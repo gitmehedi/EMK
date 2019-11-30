@@ -59,11 +59,11 @@ class InheritedHrAttendancePayslip(models.Model):
                 })
 
             ### Late Days
-            if summary_line_data.late_days and summary_line_data.late_days >= 0:
+            if summary_line_data.late_days and len(summary_line_data.late_days) >= 0:
                 worked_days_lines += worked_days_lines.new({
                     'code': 'LATEDAYS',
                     'contract_id': self.contract_id.id,
-                    'number_of_days': summary_line_data.late_days or 0,
+                    'number_of_days': len(summary_line_data.late_days) or 0,
                     'name': 'Late Day(s)',
                 })
 
