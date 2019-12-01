@@ -323,12 +323,18 @@ class AccountInvoiceLine(models.Model):
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
         if taxes:
-            if self.invoice_id.vat_selection == 'mushok' and self.invoice_line_tax_ids[0].mushok_amount > 0.0:
-                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
+            if self.invoice_id.vat_selection == 'mushok':
+                if self.invoice_line_tax_ids[0].mushok_amount > 0.0:
+                    self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
                         self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
-            elif self.invoice_id.vat_selection == 'vds_authority' and self.invoice_line_tax_ids[0].vds_amount > 0.0:
-                self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
+                else:
+                    self.mushok_vds_amount = 0
+            elif self.invoice_id.vat_selection == 'vds_authority':
+                if self.invoice_line_tax_ids[0].vds_amount > 0.0:
+                    self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
                         self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+                else:
+                    self.mushok_vds_amount = 0
             else:
                 self.mushok_vds_amount = taxes['taxes'][0]['amount']
 
