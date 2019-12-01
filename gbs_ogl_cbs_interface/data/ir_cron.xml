@@ -27,20 +27,6 @@
         <field name="function">generate_journal</field>
     </record>
 
-    <record id="ir_cron_asset_confirm_scheduler" model="ir.cron">
-        <field name="name">Asset Confirm Scheduler</field>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="active">False</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">months</field>
-        <field name="numbercall">-1</field>
-        <field name="priority">5</field>
-        <field name="nextcall"
-               eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
-        <field name="model">account.asset.asset</field>
-        <field name="function">all_asset_validate</field>
-    </record>
-
     <record id="ir_cron_invalidate_payment_scheduler" model="ir.cron">
         <field name="name">Invalidate Payment Cache</field>
         <field name="user_id" ref="base.user_root"/>

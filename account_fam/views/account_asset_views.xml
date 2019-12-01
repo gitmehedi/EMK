@@ -206,8 +206,8 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="asset_type_id"/>
-                    <field name="date"/>
                     <field name="asset_usage_date"/>
+                    <field name="lst_depr_date"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="value" widget="monetary" sum="value"/>
                     <field name="depr_base_value" widget="monetary" sum="depr_base_value"/>

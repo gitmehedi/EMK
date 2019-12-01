@@ -24,8 +24,8 @@ class SOAPProcess(models.Model):
     teller_no = fields.Char(string='Teller Number', required=True, track_visibility='onchange')
     ins_num = fields.Char(string='Institution Number', required=True, track_visibility='onchange')
     uuid_source = fields.Char(string='Source of Request', required=True, track_visibility='onchange', default='OGL')
-    flag_4 = fields.Char(string='Flag 4', required=True, track_visibility='onchange',default='W')
-    flag_5 = fields.Char(string='Flag 5', required=True, track_visibility='onchange',default='Y')
+    flag_4 = fields.Char(string='Flag 4', required=True, track_visibility='onchange', default='W')
+    flag_5 = fields.Char(string='Flag 5', required=True, track_visibility='onchange', default='Y')
     status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name', 'endpoint_fullname')
@@ -142,6 +142,11 @@ class SOAPProcess(models.Model):
         else:
             to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
 
+        if record.narration:
+            statement = record.code + " " + record.narration
+        else:
+            statement = record.code
+
         data = {
             'InstNum': endpoint.ins_num,
             'BrchNum': d_ou.zfill(5),
@@ -154,7 +159,7 @@ class SOAPProcess(models.Model):
             'FrmAcct': from_bgl,
             'Amt': record.amount,
             'ToAcct': to_bgl,
-            'StmtNarr': record.code +" "+record.narration,
+            'StmtNarr': statement,
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
                <soapenv:Header/>
@@ -255,7 +260,7 @@ class PaymentInstruction(models.Model):
             raise ValidationError(_("Payment Instruction [{0}] is processing.".format(self.code)))
 
     @api.multi
-    def payment_remove(self,code):
+    def payment_remove(self, code):
         if code in self._payments:
             self._payments.remove(code)
 
