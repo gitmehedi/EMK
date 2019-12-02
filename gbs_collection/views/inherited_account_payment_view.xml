@@ -27,7 +27,10 @@
                 </field>
 
                 <field name="payment_date" position="before">
-                    <field name="sale_order_id" widget="many2many_tags" attrs="{'invisible':[('my_menu_check','=',False)]}" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="is_auto_invoice_paid"/>
+                    <field name="sale_order_id" widget="many2many_tags"
+                           attrs="{'invisible':[('my_menu_check','=',False)], 'readonly':[('is_auto_invoice_paid', '=', True)]}"
+                           options="{'no_open': True, 'no_create': True}"/>
                 </field>
 
                 <field name="payment_type" position="replace">

@@ -40,9 +40,13 @@ class InheritAccountPayment(models.Model):
                                  domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
+    is_auto_invoice_paid = fields.Boolean(string='Auto Invoice Paid', track_visibility='onchange')
 
     @api.multi
     def post(self):
+        if self.sale_order_id.ids or self.is_auto_invoice_paid:
+            self.invoice_ids = self.get_invoice_ids()
+        # post payment
         res = super(InheritAccountPayment, self).post()
         for s_id in self.sale_order_id:
             so_objs = self.env['sale.order'].search([('id', '=', s_id.id)])
@@ -51,6 +55,16 @@ class InheritAccountPayment(models.Model):
                 so_id.write({'is_this_so_payment_check': True})
 
         return res
+
+    @api.multi
+    def get_invoice_ids(self):
+        if self.is_auto_invoice_paid:
+            invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
+                                                                     ('state', '=', 'open')])
+        else:
+            invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
+                                                                     ('state', '=', 'open')])
+        return invoice_ids
 
     @api.multi
     def get_sale_order_id_list(self):
@@ -83,3 +97,7 @@ class InheritAccountPayment(models.Model):
     def onchange_partner_id(self):
         id_list = self.get_sale_order_id_list()
         return {'domain': {'sale_order_id': [('id', 'in', id_list)]}}
+
+    @api.onchange('is_auto_invoice_paid')
+    def onchange_is_auto_invoice_paid(self):
+        self.sale_order_id = []
