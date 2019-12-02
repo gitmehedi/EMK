@@ -39,7 +39,7 @@
                             </group>
                             <group>
                                 <field name="is_batch_model" invisible="1"/>
-                                <field name="is_auto_invoice_paid"/>
+                                <field name="is_auto_invoice_paid" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <notebook colspan="4">

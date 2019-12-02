@@ -27,9 +27,9 @@
                 </field>
 
                 <field name="payment_date" position="before">
-                    <field name="is_auto_invoice_paid"/>
+                    <field name="is_auto_invoice_paid" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                     <field name="sale_order_id" widget="many2many_tags"
-                           attrs="{'invisible':[('my_menu_check','=',False)], 'readonly':[('is_auto_invoice_paid', '=', True)]}"
+                           attrs="{'invisible':[('my_menu_check','=',False)], 'readonly':['|',('is_auto_invoice_paid', '=', True), ('state', '!=', 'draft')]}"
                            options="{'no_open': True, 'no_create': True}"/>
                 </field>
 
