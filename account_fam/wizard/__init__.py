@@ -8,3 +8,4 @@ from . import account_asset_type_wizard
 from . import asset_depreciation_wizard
 from . import asset_depreciation_flag_wizard
 from . import asset_confirm_wizard
+from . import asset_filter_wizard
