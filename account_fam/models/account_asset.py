@@ -119,7 +119,7 @@ class AccountAssetAsset(models.Model):
                          AND aaa.allocation_status=True';
                          
                     INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
-                        VALUES ('/','Asset Depreciation date '||depr_date ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
+                        VALUES ('/','Asset depreciation date '||depr_date ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
                         RETURNING account_move.id INTO move;
                 
                     FOR rec IN EXECUTE query
@@ -188,7 +188,7 @@ class AccountAssetAsset(models.Model):
                             aaa.cost_centre_id,
                             aac.account_depreciation_id,
                             aac.account_depreciation_expense_id,
-                            sum(aaa.lst_depr_amount) AS depr_sum
+                            SUM(aaa.lst_depr_amount) AS depr_sum
                         FROM account_asset_asset aaa
                         LEFT JOIN account_asset_category aac
                                ON (aaa.asset_type_id = aac.id)
@@ -206,10 +206,10 @@ class AccountAssetAsset(models.Model):
                     LOOP
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('/',mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
+                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('/',mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
+                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
                         
                     END LOOP;
                     RETURN move;
@@ -304,10 +304,13 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def _generate_depreciation(self, date):
-        journal_id = self.env['account.journal'].search([('name', '=', 'VB Journal')], limit=1)
+        journal_id = self.env['account.journal'].search([('name', '=', 'Vendor Bill')], limit=1)
+        if not journal_id:
+            raise ValidationError(_('Create a journal with name [Vendor Bill]'))
+
         company_id = self.env.user.company_id.id
         opu_id = self.env.user.default_operating_unit_id.id
-        self.env.cr.execute("""SELECT asset_depreciation FROM asset_depreciation('%s',%s,%s,%s,%s)""" % (
+        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s)""" % (
             date, self.env.uid, journal_id.id, opu_id, company_id));
         debit, credit = 0, 0
         for val in self.env.cr.fetchall():

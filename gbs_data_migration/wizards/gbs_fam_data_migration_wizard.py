@@ -311,6 +311,7 @@ class GBSFileImportWizard(models.TransientModel):
                 val['depreciation_year'] = int(depr_year) if depr_year else 0
                 val['active'] = True
                 val['allocation_status'] = True
+                val['lst_depr_amount'] = accum_value
 
                 history_line = {
                     'from_branch_id': branch[pb_code],

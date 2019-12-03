@@ -22,7 +22,7 @@ class GBSFamDataMigration(models.Model):
 
     @api.multi
     def _fam_date_migration(self):
-        assets = self.search([('state', '=', 'open')])
+        assets = self.env['account.asset.asset'].search([('state', '=', 'open')])
         for asset in assets:
             asset_depr = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
             if asset_depr:
