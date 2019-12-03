@@ -76,7 +76,7 @@ class AccountAssetAsset(models.Model):
     @api.model_cr
     def init(self):
         self._cr.execute("""
-            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER) 
+            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER) 
                     RETURNS INTEGER AS $$
                     DECLARE
                     rec RECORD;
@@ -105,6 +105,7 @@ class AccountAssetAsset(models.Model):
                     user_id = user_id;
                     journal_id = journal_id;
                     opu_id = opu_id;
+                    company_id =company_id;
                 
                     query = 'SELECT aaa.*,
                         aac.id AS category_id,
@@ -117,8 +118,8 @@ class AccountAssetAsset(models.Model):
                         WHERE  aaa.depreciation_flag=False 
                          AND aaa.allocation_status=True';
                          
-                    INSERT INTO account_move (name,ref,journal_id,currency_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
-                        VALUES ('/','Depreciation for the month',journal_id,1,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
+                    INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
+                        VALUES ('/','Asset Depreciation date '||depr_date ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
                         RETURNING account_move.id INTO move;
                 
                     FOR rec IN EXECUTE query
@@ -156,8 +157,6 @@ class AccountAssetAsset(models.Model):
                         -- insert data into account.move table
                         INSERT INTO account_asset_depreciation_line (move_id,asset_id,name,sequence,move_check,move_posted_check,line_type,depreciation_date,days,amount,depreciated_value,remaining_value,create_uid,write_uid,create_date,write_date)
                         VALUES (move,rec.id,'Depreciation',1,True,True,'depreciation',depr_date,no_days,depr_amount,cumul_depr,book_val_amount,user_id,user_id,NOW(),NOW());
-                
-                        -- update last_depreciation_date and depreciation_base_value in account.asset.asset
                 
                         d_days = DATE_PART('days', depr_date);
                         d_month = DATE_PART('month', depr_date);
@@ -215,7 +214,7 @@ class AccountAssetAsset(models.Model):
                     END LOOP;
                     RETURN move;
                 END;
-                $$ LANGUAGE plpgsql;
+            $$ LANGUAGE plpgsql;
         """)
 
     @api.model
