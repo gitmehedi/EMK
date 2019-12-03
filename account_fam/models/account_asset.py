@@ -373,9 +373,13 @@ class AccountAssetAsset(models.Model):
                             asset.create_move(depreciation)
                             if date.month == 12 and date.day == 31 and asset.method == 'degressive':
                                 asset.write({'lst_depr_date': date.date(),
-                                             'depr_base_value': book_val_amount})
+                                             'lst_depr_amount':depr_amount,
+                                             'depr_base_value': book_val_amount
+                                            })
                             else:
-                                asset.write({'lst_depr_date': date.date()})
+                                asset.write({'lst_depr_date': date.date(),
+                                            'lst_depr_amount':depr_amount
+                                            })
 
     @api.multi
     def create_move(self, line):
