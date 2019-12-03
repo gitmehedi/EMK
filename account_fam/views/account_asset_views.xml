@@ -92,6 +92,8 @@
                                attrs="{'invisible': [('type','=','sale')]}"/>
                         <field name="accumulated_value" widget="monetary" options="{'currency_field': 'currency_id'}"
                                attrs="{'invisible': [('type','=','sale')]}"/>
+                        <field name="lst_depr_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               attrs="{'invisible': [('type','=','sale')]}"/>
                     </group>
                 </group>
                 <separator string="Asset Description"/>
@@ -206,13 +208,13 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="asset_type_id"/>
+                    <field name="current_branch_id"/>
                     <field name="asset_usage_date"/>
                     <field name="lst_depr_date"/>
-                    <field name="partner_id" string="Vendor"/>
                     <field name="value" widget="monetary" sum="value"/>
-                    <field name="depr_base_value" widget="monetary" sum="depr_base_value"/>
                     <field name="value_residual" widget="monetary" sum="value_residual"/>
                     <field name="accumulated_value" widget="monetary" sum="accumulated_value"/>
+                    <field name="lst_depr_amount" widget="monetary" sum="depr_base_value"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="True"/>
                     <field name="depreciation_flag" invisible="True"/>
@@ -261,7 +263,7 @@
                         <filter string="By Asset Type" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="By Asset Category" domain="[]" context="{'group_by':'asset_type_id'}"/>
                         <filter string="By Computation Method" domain="[]" context="{'group_by':'method'}"/>
-                        <filter string="By Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="By Last Depr. Date" domain="[]" context="{'group_by':'lst_depr_date'}"/>
                     </group>
                 </search>
             </xpath>
