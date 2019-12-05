@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import calendar
-from datetime import datetime
+from datetime import datetime,timedelta
 from datetime import date as DT
 from dateutil.relativedelta import relativedelta
 
@@ -150,6 +150,9 @@ class AccountAssetAsset(models.Model):
                         END IF;
                 
                         depr_amount = no_days * daily_depr;
+                        if depr_amount > rec.value_residual THEN
+                           depr_amount = rec.value_residual;
+                        END IF;
                         cumul_depr = rec.accumulated_value + depr_amount;
                         book_val_amount = rec.value_residual - depr_amount;
                         
@@ -349,6 +352,9 @@ class AccountAssetAsset(models.Model):
                     daily_depr = (asset.depr_base_value * asset.method_progress_factor) / date_delta
 
                 depr_amount = no_of_days * daily_depr
+                if depr_amount > asset.value_residual:
+                    depr_amount = asset.value_residual
+
                 cumul_depr = sum([rec.amount for rec in asset.depreciation_line_ids]) + depr_amount
                 book_val_amount = asset.value_residual - depr_amount
 
