@@ -220,6 +220,114 @@ class AccountAssetAsset(models.Model):
             $$ LANGUAGE plpgsql;
         """)
 
+        self._cr.execute("""
+                CREATE OR REPLACE FUNCTION financial_year_closing2(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER) 
+                RETURNS INTEGER AS $$
+                DECLARE
+                mrec RECORD;
+                forward_query TEXT;
+                reconcile_query TEXT;
+                move INTEGER;
+                level INTEGER;
+                user_id INTEGER;
+                depr_date DATE;
+                depr_amount FLOAT;
+                BEGIN
+                depr_date = date;
+                user_id = user_id;
+                journal_id = journal_id;
+                opu_id = opu_id;
+                company_id =company_id;
+                
+                INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
+                    VALUES ('/','Financial year closing depreciation date '||CURRENT_DATE ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
+                    RETURNING account_move.id INTO move;
+
+                forward_query = 'SELECT journal_id,
+                       currency_id,
+                       analytic_account_id,
+                       account_id,
+                       operating_unit_id,
+                       servicing_channel_id,
+                       acquiring_channel_id,
+                       segment_id,
+                       SUM(amount_residual) AS amount_residual,
+                       SUM(debit) AS debit,
+                       SUM(credit) AS credit,
+                       SUM(amount_currency) AS amount_currency
+                 FROM account_move_line
+                 WHERE account_id IN (SELECT aa.id
+                    FROM account_account aa
+                    LEFT JOIN account_account_type as aat
+                         ON (aa.user_type_id = aat.id)
+                    LEFT JOIN account_account_level aal
+                         ON (aal.id = aa.level_id)
+                    WHERE aat.include_initial_balance = TRUE
+                          AND aa.level_id=6)
+                 GROUP BY journal_id,
+                      currency_id,
+                      analytic_account_id,
+                      account_id,
+                      operating_unit_id,
+                      servicing_channel_id,
+                      acquiring_channel_id,
+                      segment_id';
+                    
+                        
+                FOR mrec IN EXECUTE forward_query
+                LOOP
+                  IF mrec.debit >0 and mrec.credit >0 THEN
+                      -- insert credit amount in account.move.line
+                      INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                      VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
+                      -- insert debit amount in account.move.line
+                      INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                      VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
+                  END IF;
+                END LOOP;
+            
+                reconcile_query = 'SELECT journal_id,
+                       currency_id,
+                       analytic_account_id,
+                       account_id,
+                       operating_unit_id,
+                       servicing_channel_id,
+                       acquiring_channel_id,
+                       segment_id,
+                       SUM(amount_residual) AS amount_residual,
+                       SUM(debit) AS debit,
+                       SUM(credit) AS credit,
+                       SUM(amount_currency) AS amount_currency
+                 FROM account_move_line
+                 WHERE account_id IN (SELECT aa.id
+                    FROM account_account aa
+                    WHERE aa.reconcile = TRUE
+                          AND aa.level_id=6)
+                 GROUP BY journal_id,
+                      currency_id,
+                      analytic_account_id,
+                      account_id,
+                      operating_unit_id,
+                      servicing_channel_id,
+                      acquiring_channel_id,
+                      segment_id';
+                    
+                FOR mrec IN EXECUTE reconcile_query
+                LOOP
+                      IF mrec.debit > 0 and mrec.credit > 0 THEN
+                          -- insert credit amount in account.move.line
+                          INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                          VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
+                              -- insert debit amount in account.move.line
+                          INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                          VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
+                      END IF;
+                END LOOP;
+            RETURN move;
+            END;
+        $$ LANGUAGE plpgsql;
+        """)
+
     @api.model
     def create(self, vals):
         asset = super(AccountAssetAsset, self).create(vals)
