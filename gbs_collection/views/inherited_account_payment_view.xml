@@ -43,11 +43,11 @@
 
                 <field name="partner_type" position="replace">
                     <field name="partner_type" widget="selection" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))],
-                    'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))],
+                    'invisible': 1,
                      'readonly': [('state', 'in', ('draft','posted')), ('my_menu_check','=',True)]}"/>
                 </field>
                 <field name="partner_id" position="replace">
-                    <field name="partner_id"
+                    <field name="partner_id" string="Customer"
                            attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"
                            context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"
                            options="{'no_open': True, 'no_create': True}"/>
