@@ -123,7 +123,7 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Miscellaneous">
+                        <page string="Loan/Exchange">
                             <field name="lc_receivable_miscellaneous_ids" string="Miscellaneous">
                                 <tree string="Tree Views" editable="bottom">
                                     <field name="account_id"/>
