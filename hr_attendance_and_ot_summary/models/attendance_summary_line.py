@@ -12,7 +12,8 @@ class AttendanceSummaryLine(models.Model):
     deduction_days = fields.Integer(string='Late Deduction Day(s)', track_visibility='onchange')
     absent_deduction_days = fields.Integer(string='Absent Deduction Day(s)', track_visibility='onchange')
     leave_days = fields.Integer(string='Leave Days')
-    holidays_days = fields.Integer(string='Holidays Days')
+    unpaid_holidays = fields.Integer(string='Unpaid Holidays')
+    holidays_days = fields.Integer(string='Holidays')
     late_hrs = fields.Float(string='Off Duty Hrs')
     schedule_ot_hrs = fields.Float(string='Schedule OT Hrs')
     cal_ot_hrs = fields.Float(string='Cal OT Hrs')
@@ -33,7 +34,7 @@ class AttendanceSummaryLine(models.Model):
     late_days_count = fields.Integer(string="Late Days", compute="_set_late_days_count")
 
     weekend_days = fields.One2many('hr.attendance.weekend.day', 'att_summary_line_id', string='Weekend Days')
-    weekend_days_count = fields.Integer(string="Weekend Days", compute="_set_weekend_days_count")
+    weekend_days_count = fields.Integer(string="Weekend", compute="_set_weekend_days_count")
     is_entered_rostering = fields.Integer(default=1, required=True)
 
     state = fields.Selection([
@@ -97,7 +98,7 @@ class AttendanceSummaryLine(models.Model):
 
 class TempAttendanceSummaryLine(object):
 
-    def __init__(self, salary_days=0, present_days=0, deduction_days=0, leave_days=0, late_hrs=0,
+    def __init__(self, salary_days=0, present_days=0, deduction_days=0, leave_days=0, unpaid_holidays=0, late_hrs=0,
                  schedule_ot_hrs=0, cal_ot_hrs=0, employee_id=0, absent_days=None, late_days=None, weekend_days=None, holidays_days=0, is_entered_rostering=1):
 
         self.salary_days = salary_days
@@ -105,6 +106,7 @@ class TempAttendanceSummaryLine(object):
         self.deduction_days = deduction_days
         self.leave_days = leave_days
         self.holidays_days = holidays_days
+        self.unpaid_holidays = unpaid_holidays
         self.late_hrs = late_hrs
         self.schedule_ot_hrs = schedule_ot_hrs
         self.cal_ot_hrs = cal_ot_hrs

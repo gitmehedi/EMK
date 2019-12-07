@@ -137,6 +137,11 @@ class AttendanceProcessor(models.Model):
             attSummaryLine.leave_days = attSummaryLine.leave_days + 1
             return attSummaryLine
 
+        # Check for Unpaid Leave
+        if att_utility_pool.checkOnUnpaidLeave(employeeId, currDate) is True:
+            attSummaryLine.unpaid_holidays = attSummaryLine.unpaid_holidays + 1
+            return attSummaryLine
+
         # Check for Un-monitor Employee. Like as: CXO,MD,Driver
         if employee.is_monitor_attendance == False:
             attSummaryLine.present_days = attSummaryLine.present_days + 1
@@ -315,7 +320,9 @@ class AttendanceProcessor(models.Model):
         late_time_pool = self.env['hr.attendance.late.time']
 
         ############## Save Summary Lines ######################
-        salaryDays = noOfDays - len(attSummaryLine.absent_days)
+        absent_days = len(attSummaryLine.absent_days) if attSummaryLine.absent_days else 0
+        # salaryDays = noOfDays - absent_days - attSummaryLine.unpaid_holidays
+        salaryDays = noOfDays
         calOtHours = attSummaryLine.schedule_ot_hrs + get_extra_ot
 
         if attSummaryLine.schedule_ot_hrs > attSummaryLine.late_hrs:
@@ -334,6 +341,7 @@ class AttendanceProcessor(models.Model):
                 'present_days':     attSummaryLine.present_days,
                 'holidays_days':    attSummaryLine.holidays_days,
                 'leave_days':       attSummaryLine.leave_days,
+                'unpaid_holidays':  attSummaryLine.unpaid_holidays,
                 'absent_deduction_days': len(attSummaryLine.absent_days),
                 'deduction_days':   deduction_days,
                 'late_hrs':         attSummaryLine.late_hrs,
@@ -341,8 +349,8 @@ class AttendanceProcessor(models.Model):
                 'cal_ot_hrs':       calOtHours,
                 'extra_ot':         get_extra_ot,
                 'is_entered_rostering': attSummaryLine.is_entered_rostering
-
                 }
+
         res = summary_line_pool.create(vals)
         att_summary_line_id = res.id
 
