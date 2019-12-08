@@ -23,13 +23,12 @@ class AssetFilterWizard(models.TransientModel):
             raise ValidationError("No record found.")
         return  {
             'name': _('Search Assets'),
-            'view_mode': 'tree',
-            'view_id': res_view and res_view.id or False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
             'res_model': 'account.asset.asset',
             'type': 'ir.actions.act_window',
             'target': 'current',
             'domain': [('current_branch_id','=', self.operating_unit_id.id)],
-            'context': {'name': 'Search Assets'}
         }
 
 

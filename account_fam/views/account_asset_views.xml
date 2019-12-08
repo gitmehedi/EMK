@@ -243,6 +243,7 @@
                     <field name="asset_seq" string="Asset Code"/>
                     <field name="date" string="Purchase Date"/>
                     <field name="category_id" string="Category"/>
+                    <field name="current_branch_id" string="Current Branch"/>
                     <field name="state" string="Status"/>
                     <field name="depreciation_flag" string="Awaiting Disposal"/>
                     <field name="allocation_status" string="Allocation Status"/>
