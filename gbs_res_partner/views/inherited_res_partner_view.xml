@@ -7,6 +7,10 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="after">
+                <field name="bin"/>
+                <field name="tin"/>
+                <field name="nid"/>
+                <field name="company_type" string="Vendor Type"/>
                 <field name="state"/>
             </xpath>
             <xpath expr="//tree" position="attributes">
@@ -61,6 +65,10 @@
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
             </xpath>
+            <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="class">[]</attribute>
+            </xpath>
             <xpath expr="//field[@name='function']" position="replace">
                 <field name="contact_person"/>
                 <field name="designation_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
@@ -76,13 +84,17 @@
             </xpath>
             <xpath expr="//field[@name='country_id']" position="after">
                 <field name="division_id" placeholder="Divisions" class="oe_inline"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
                 <field name="district_id" placeholder="Districts" class="oe_inline"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
                 <field name="upazila_id" placeholder="Upazila/Thana" class="oe_inline"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
                 <field name="postal_code" placeholder="Postal Code" class="oe_inline"
-                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/><br></br>
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="entity_services" placeholder="Services..." widget="many2many_tags"
@@ -122,7 +134,7 @@
                         <field name="change_date"/>
                         <field name="status"/>
                         <field name="state"/>
-               </tree>
+                    </tree>
                 </field>
             </xpath>
             <xpath expr="//page[@name='accounting']" position="inside">
@@ -138,17 +150,27 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
-            <filter name="supplier" position="after">
-                <field name="pending" string="Pending"/>
-            </filter>
-            <group name="group_by" position="inside">
-                <filter string="Pending" name="pending" icon="terp-personal"
-                        domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
-                <filter string="Rejected" name="state" icon="terp-personal"
-                        domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
-                <filter string="In-Active" name="state" icon="terp-personal"
-                        domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
-            </group>
+            <xpath expr="//search" position="replace">
+                <search>
+                    <field name="name" string="Vendor Name"/>
+                    <field name="tax"/>
+                    <field name="vat"/>
+                    <field name="bin"/>
+                    <field name="tin"/>
+                    <field name="nid"/>
+                    <field name="company_type" string="Vendor Type"/>
+                    <group name="group_by" position="inside">
+                        <filter string="Vendor" domain="[('is_company','=', False)]"/>
+                        <filter string="Company" domain="[('is_company','=', True)]"/>
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
+            </xpath>
         </field>
     </record>
 
