@@ -15,6 +15,7 @@
     ],
     "data": [
         'security/ir.model.access.csv',
+        "views/default_data.xml",
         "wizard/date_range_generator.xml",
         "wizard/account_period_wizard_view.xml",
         "wizard/account_period_type_wizard_view.xml",

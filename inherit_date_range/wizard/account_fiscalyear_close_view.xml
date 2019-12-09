@@ -13,14 +13,12 @@
                         <group>
                             <field name="close_fy_id" domain="[('state','=','approve')]"
                                    options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            <field name="journal_id"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                             <field name="report_name" invisible="True"/>
                         </group>
                         <group>
                             <field name="start_fy_id" domain="[('state','=','approve')]"
-                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                            <field name="period_id" domain="[(close_fy_id,'=',start_fy_id)]"
-                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                            <field name="journal_id"
                                    options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                         </group>
                     </group>
@@ -45,6 +43,5 @@
         <menuitem action="action_account_fiscalyear_close"
                   id="menu_wizard_fy_close"
                   parent="account_fiscal_year.menu_date_range_accounting"/>
-
     </data>
 </odoo>
