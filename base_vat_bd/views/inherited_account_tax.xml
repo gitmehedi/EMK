@@ -125,7 +125,7 @@
                     <attribute name="string">Vats</attribute>
                 </xpath>
                 <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='name']" position="attributes">
-                    <attribute name="string">Vat / Tax Description</attribute>
+                    <attribute name="string">Narration</attribute>
                 </xpath>
                 <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="attributes">
                     <attribute name="string">Account</attribute>
