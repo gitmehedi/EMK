@@ -36,7 +36,7 @@ class CommercialInvoice(models.AbstractModel):
             'truck_receipt_no': shipment_obj.truck_receipt_no,
             'bl_date': shipment_obj.bl_date,
             'cylinder_details': shipment_obj.cylinder_details,
-            'cylinder_details_label': "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details",
+            'cylinder_details_label': "" if not shipment_obj.cylinder_details else "Cylinder Details",
             'invoice_number_dummy': shipment_obj.invoice_number_dummy,
             'invoice_date_dummy': shipment_obj.invoice_date_dummy,
             'invoice_value': shipment_obj.invoice_value,

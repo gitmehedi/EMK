@@ -33,7 +33,7 @@ class PackingList(models.AbstractModel):
                 'sc_type': shipment_obj.lc_id.sc_type,
                 'shipment_number': shipment_obj.name,
                 'cylinder_details': shipment_obj.cylinder_details,
-                'cylinder_details_label': "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details",
+                'cylinder_details_label': "" if not shipment_obj.cylinder_details else "Cylinder Details",
                 'buyer_address': report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant),
                 'cover_note_no': shipment_obj.lc_id.cover_note_no,
                 'insurance_date': shipment_obj.lc_id.insurance_date,
