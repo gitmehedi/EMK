@@ -20,11 +20,11 @@ class AccountPeriodClose(models.TransientModel):
                     move_ids = self.env['account.move'].search(
                         [('state', '=', 'draft'), ('date', '>=', range['date_start']),
                          ('date', '<=', range['date_end'])])
-                if move_ids:
-                    raise Warning(
-                        _('In order to close a period, you must first approve all journal entries within this period.'))
+                    if move_ids:
+                        raise Warning(
+                            _('In order to close a period, you must first approve all journal entries within this period.'))
 
-                self.env['date.range'].write({'state': 'close'})
+                    range.write({'state': 'close'})
 
         return {'type': 'ir.actions.act_window_close'}
 

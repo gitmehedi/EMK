@@ -13,9 +13,9 @@ class AccountFiscalyearClose(models.TransientModel):
             raise Warning(_('Create a journal type with code [FYC]'))
         return journal
 
-    close_fy_id = fields.Many2one('date.range', string='Close Fiscal Year', required=True)
+    close_fy_id = fields.Many2one('date.range', string='Current Fiscal Year', required=True)
     start_fy_id = fields.Many2one('date.range', string='New Fiscal Year', required=True)
-    journal_id = fields.Many2one('account.journal', string='Opening Entries Journal',
+    journal_id = fields.Many2one('account.journal', string='Journal Type', readonly=True,
                                  default=default_journal, domain="[('type','=','general')]", required=True)
     period_id = fields.Many2one('date.range', string='Opening Entries Period', required=False)
     report_name = fields.Char(string='Name of new entries', required=False, help="Give name of the new entries")
@@ -42,8 +42,8 @@ class AccountFiscalyearClose(models.TransientModel):
         if opening_bal:
             raise Warning(_("A closing balace journal exist. Please remove it first."))
 
-        self.env.cr.execute("""SELECT * FROM financial_year_closing('%s',%s,%s,%s,%s)""" % (
-            curr_date, user_id, journal_id, opu_id, company_id));
+        self.env.cr.execute("""SELECT * FROM financial_year_closing('%s','%s','%s',%s,%s,%s,%s)""" % (
+            end_fy_dst,end_fy_ded,start_fy_dst, user_id, journal_id, opu_id, company_id));
 
         # Please consider reconcile journal
 

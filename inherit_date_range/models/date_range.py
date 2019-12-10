@@ -33,7 +33,7 @@ class DateRange(models.Model):
     @api.model_cr
     def init(self):
         self._cr.execute("""
-                    CREATE OR REPLACE FUNCTION financial_year_closing(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER) 
+                    CREATE OR REPLACE FUNCTION financial_year_closing(dt_start DATE,dt_end DATE,date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER) 
                     RETURNS INTEGER AS $$
                     DECLARE
                     mrec RECORD;
@@ -42,101 +42,115 @@ class DateRange(models.Model):
                     move INTEGER;
                     level INTEGER;
                     user_id INTEGER;
-                    depr_date DATE;
+                    jrn_date DATE;
+                    date_start DATE;
+                    date_end DATE;
                     depr_amount FLOAT;
                     BEGIN
-                    depr_date = date;
+                    jrn_date = date;
+                    date_start = dt_start;
+                    date_end = dt_end;
                     user_id = user_id;
                     journal_id = journal_id;
                     opu_id = opu_id;
-                    company_id =company_id;
+                    company_id = company_id;
 
                     INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
-                        VALUES ('/','Financial year closing depreciation date '||CURRENT_DATE ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
+                        VALUES ('/','Financial Year Closing between date '|| date_start ||' and '|| date_end,journal_id,company_id,jrn_date,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
                         RETURNING account_move.id INTO move;
 
-                    forward_query = 'SELECT journal_id,
-                           currency_id,
-                           analytic_account_id,
-                           account_id,
-                           operating_unit_id,
-                           servicing_channel_id,
-                           acquiring_channel_id,
-                           segment_id,
-                           SUM(amount_residual) AS amount_residual,
-                           SUM(debit) AS debit,
-                           SUM(credit) AS credit,
-                           SUM(amount_currency) AS amount_currency
-                     FROM account_move_line
-                     WHERE account_id IN (SELECT aa.id
-                        FROM account_account aa
-                        LEFT JOIN account_account_type as aat
-                             ON (aa.user_type_id = aat.id)
-                        LEFT JOIN account_account_level aal
-                             ON (aal.id = aa.level_id)
-                        WHERE aat.include_initial_balance = TRUE
-                              AND aa.level_id=6)
-                     GROUP BY journal_id,
-                          currency_id,
-                          analytic_account_id,
-                          account_id,
-                          operating_unit_id,
-                          servicing_channel_id,
-                          acquiring_channel_id,
-                          segment_id';
+                    forward_query = format('SELECT aml.journal_id,
+						aml.currency_id,
+						aml.analytic_account_id,
+						aml.account_id,
+						aml.operating_unit_id,
+						aml.servicing_channel_id,
+						aml.acquiring_channel_id,
+						aml.segment_id,
+						SUM(aml.amount_residual) AS amount_residual,
+						SUM(aml.debit) AS debit,
+						SUM(aml.credit) AS credit,
+						SUM(aml.amount_currency) AS amount_currency
+					FROM account_move am
+					LEFT JOIN account_move_line aml
+					       ON (am.id = aml.move_id)
+					WHERE am.is_cbs=TRUE
+					      AND aml.date BETWEEN $1 AND $2
+					      AND aml.account_id IN (SELECT aa.id
+						FROM account_account aa
+						LEFT JOIN account_account_type as aat
+						     ON (aa.user_type_id = aat.id)
+						LEFT JOIN account_account_level aal
+						     ON (aal.id = aa.level_id)
+						WHERE aa.reconcile = TRUE
+						      AND aa.level_id=6)
+					GROUP BY aml.journal_id,
+						aml.currency_id,
+						aml.analytic_account_id,
+						aml.account_id,
+						aml.operating_unit_id,
+						aml.servicing_channel_id,
+						aml.acquiring_channel_id,
+						aml.segment_id');
 
-
-                    FOR mrec IN EXECUTE forward_query
+		    --RAISE NOTICE '%-%-%-%', jrn_date,date_start,date_end,forward_query;
+		    
+                    FOR mrec IN EXECUTE forward_query USING date_start,date_end
                     LOOP
-                      IF mrec.debit >0 and mrec.credit >0 THEN
+                      IF mrec.debit > 0 and mrec.credit > 0 THEN
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
+                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
+                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
                       END IF;
                     END LOOP;
 
-                    reconcile_query = 'SELECT journal_id,
-                           currency_id,
-                           analytic_account_id,
-                           account_id,
-                           operating_unit_id,
-                           servicing_channel_id,
-                           acquiring_channel_id,
-                           segment_id,
-                           SUM(amount_residual) AS amount_residual,
-                           SUM(debit) AS debit,
-                           SUM(credit) AS credit,
-                           SUM(amount_currency) AS amount_currency
-                     FROM account_move_line
-                     WHERE account_id IN (SELECT aa.id
-                        FROM account_account aa
-                        WHERE aa.reconcile = TRUE
-                              AND aa.level_id=6)
-                     GROUP BY journal_id,
-                          currency_id,
-                          analytic_account_id,
-                          account_id,
-                          operating_unit_id,
-                          servicing_channel_id,
-                          acquiring_channel_id,
-                          segment_id';
+                    reconcile_query = 'SELECT aml.journal_id,
+						aml.currency_id,
+						aml.analytic_account_id,
+						aml.account_id,
+						aml.operating_unit_id,
+						aml.servicing_channel_id,
+						aml.acquiring_channel_id,
+						aml.segment_id,
+						SUM(aml.amount_residual) AS amount_residual,
+						SUM(aml.debit) AS debit,
+						SUM(aml.credit) AS credit,
+						SUM(aml.amount_currency) AS amount_currency
+					FROM account_move am
+					LEFT JOIN account_move_line aml
+					       ON (am.id = aml.move_id)
+					WHERE am.is_cbs=TRUE
+					      AND aml.date BETWEEN $1 AND $2
+					      AND aml.account_id IN (SELECT aa.id
+						FROM account_account aa
+						WHERE aa.reconcile = TRUE
+						      AND is_cbs = TRUE
+						AND aa.level_id=6)
+					GROUP BY aml.journal_id,
+						aml.currency_id,
+						aml.analytic_account_id,
+						aml.account_id,
+						aml.operating_unit_id,
+						aml.servicing_channel_id,
+						aml.acquiring_channel_id,
+						aml.segment_id';
 
-                    FOR mrec IN EXECUTE reconcile_query
+                    FOR mrec IN EXECUTE reconcile_query USING date_start,date_end
                     LOOP
                           IF mrec.debit > 0 and mrec.credit > 0 THEN
                               -- insert credit amount in account.move.line
                               INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                              VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
+                              VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
                                   -- insert debit amount in account.move.line
                               INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                              VALUES ('Depreciation in '|| depr_date,'Depreciation',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,depr_date,depr_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
+                              VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
                           END IF;
-                    END LOOP;
-                RETURN move;
-                END;
+                END LOOP;
+            RETURN move;
+            END;
             $$ LANGUAGE plpgsql;
             """)
     @api.one
