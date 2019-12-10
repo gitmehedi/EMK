@@ -10,7 +10,7 @@ class ResPartner(models.Model):
     name = fields.Char(string='Name',track_visibility='onchange')
     parent_id = fields.Many2one(track_visibility='onchange')
     website = fields.Char(track_visibility='onchange')
-    company_type = fields.Selection(track_visibility='onchange')
+    company_type = fields.Selection(track_visibility='onchange', store=True)
     category_id = fields.Many2many(track_visibility='onchange')
     function = fields.Char(track_visibility='onchange')
     tax = fields.Char(track_visibility='onchange')

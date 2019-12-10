@@ -7,9 +7,11 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="after">
+                <field name="vendor_bank_acc" string="Bank Account"/>
                 <field name="bin"/>
                 <field name="tin"/>
                 <field name="nid"/>
+                <field name="debit"/>
                 <field name="company_type" string="Vendor Type"/>
                 <field name="state"/>
             </xpath>
@@ -112,8 +114,6 @@
                         <field name="email"/>
                         <field name="street"/>
                         <field name="street2"/>
-                        <field name="tax"/>
-                        <field name="vat"/>
                         <field name="bin"/>
                         <field name="tin"/>
                         <field name="fax"/>
@@ -153,8 +153,9 @@
             <xpath expr="//search" position="replace">
                 <search>
                     <field name="name" string="Vendor Name"/>
-                    <field name="tax"/>
-                    <field name="vat"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="vendor_bank_acc" string="Bank Account"/>
                     <field name="bin"/>
                     <field name="tin"/>
                     <field name="nid"/>
@@ -168,6 +169,7 @@
                                 domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
                         <filter string="In-Active" name="state" icon="terp-personal"
                                 domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                        <filter string="Vendor Type" domain="[]" context="{'group_by':'company_type'}"/>
                     </group>
                 </search>
             </xpath>
