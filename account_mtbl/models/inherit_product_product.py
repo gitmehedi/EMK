@@ -37,16 +37,21 @@ class ProductProduct(models.Model):
         if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
-            self.approver_id = self.env.user.id
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+                'approver_id': self.env.user.id,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):
@@ -167,15 +172,21 @@ class ProductTemplate(models.Model):
     @api.one
     def act_approve(self):
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+                'approver_id': self.env.user.id,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):

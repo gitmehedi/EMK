@@ -229,6 +229,7 @@ class AccountAccountTag(models.Model):
                 'state': 'approve',
                 'pending': False,
                 'active': True,
+                'approver_id': self.env.user.id,
             })
 
     @api.one
