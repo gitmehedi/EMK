@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import calendar
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from datetime import date as DT
 from dateutil.relativedelta import relativedelta
 
@@ -133,13 +133,14 @@ class AccountAssetAsset(models.Model):
                 
                     IF no_days > 0 AND rec.state='open' AND rec.method !='no_depreciation' THEN
                         IF rec.method = 'linear' THEN
-                          linear = make_interval(years := rec.depreciation_year);
-                          delta_date = rec.asset_usage_date + linear::interval;
-                          delta_days = delta_date - rec.asset_usage_date;
+                          degr_start = DATE_PART('year', depr_date) || '-01-01';
+                          degr_end = DATE_PART('year', depr_date) || '-12-31';
+                          delta_days =  degr_end -  degr_start + 1;
+
                           IF rec.value_residual > 0 THEN
-                         daily_depr = (rec.value - rec.salvage_value) / delta_days;
+                                daily_depr = (rec.depr_base_value / rec.depreciation_year) / delta_days;
                           ELSE
-                         daily_depr = 0;
+                                daily_depr = 0;
                           END IF;
                           
                         ELSEIF rec.method = 'degressive' THEN
@@ -339,15 +340,16 @@ class AccountAssetAsset(models.Model):
 
             if no_of_days > 0:
                 if asset.method == 'linear':
-                    date_delta = (self.date_str_format(asset.date) + relativedelta(
-                        years=asset.depreciation_year) - self.date_str_format(asset.date)).days
+                    year = date.year
+                    date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
+
                     if asset.value_residual > 0:
-                        daily_depr = (asset.value - asset.salvage_value) / date_delta
+                        daily_depr = (asset.depr_base_value / asset.depreciation_year) / date_delta
                     else:
                         daily_depr = 0;
 
                 elif asset.method == 'degressive':
-                    year = self.date_str_format(asset.date).year
+                    year = date.year
                     date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
                     daily_depr = (asset.depr_base_value * asset.method_progress_factor) / date_delta
 
@@ -379,13 +381,13 @@ class AccountAssetAsset(models.Model):
                             asset.create_move(depreciation)
                             if date.month == 12 and date.day == 31 and asset.method == 'degressive':
                                 asset.write({'lst_depr_date': date.date(),
-                                             'lst_depr_amount':depr_amount,
+                                             'lst_depr_amount': depr_amount,
                                              'depr_base_value': book_val_amount
-                                            })
+                                             })
                             else:
                                 asset.write({'lst_depr_date': date.date(),
-                                            'lst_depr_amount':depr_amount
-                                            })
+                                             'lst_depr_amount': depr_amount
+                                             })
 
     @api.multi
     def create_move(self, line):
