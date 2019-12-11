@@ -80,10 +80,12 @@
                 <field name="total_amount_with_vat" class="oe_subtotal_footer_separator"
                        attrs="{'invisible': [('vat_selection','=','normal')]}"/>
             </field>
-
             <xpath expr="//field[@name='date']" position="after">
                 <field name="security_deposit_account_id"
                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+            </xpath>
+            <xpath expr="//field[@name='date_invoice']" position="before">
+                <field name="total_bill_payable"/>
             </xpath>
         </field>
     </record>
@@ -219,15 +221,14 @@
             </xpath>
             <xpath expr="//field[@name='number']" position="after">
                 <field name="user_id" string="Responsible"/>
+                 <field name="total_bill_payable" sum="total_bill_payable"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="entity_service_id" string="Service"/>
             </xpath>
-            <!--<xpath expr="//field[@name='amount_total_signed']" position="after">-->
             <xpath expr="//field[@name='amount_total_signed']" position="replace">
                 <field name="amount_total_signed" string="Total" sum="Total" invisible="1"/>
                 <field name="total_amount_with_vat" string="Total" sum="Total"/>
-                <!--<field name="amount_tax" string="VAT" sum="Total"/>-->
                 <field name="mushok_vds_amount" string="VAT" sum="Total"/>
             </xpath>
             <xpath expr="//field[@name='number']" position="replace">

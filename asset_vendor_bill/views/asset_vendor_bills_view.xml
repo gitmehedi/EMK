@@ -56,6 +56,7 @@
                             <field name="vat_selection"/>
                         </group>
                         <group>
+                            <field name="total_bill_payable"/>
                             <field name="is_asset" default="True" invisible="True"/>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" string="Bill Date"/>
@@ -177,15 +178,15 @@
                         <page string="Other Info">
                             <group>
                                 <group>
-                                    <field name="operating_unit_id"
+                                    <field name="operating_unit_id" readonly="True"
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                            groups="operating_unit.group_multi_operating_unit"/>
-                                    <field name="journal_id" groups="account.group_account_user"
+                                    <field name="journal_id" groups="account.group_account_user" readonly="True"
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                            attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id"
                                            invisible="1"/>
-                                    <field name="user_id" string="Responsible"
+                                    <field name="user_id" string="Responsible" readonly="True"
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                            name="account_id" groups="account.group_account_manager"
@@ -306,6 +307,7 @@
                 <field name="user_id" invisible="1"/>
                 <field name="date_due" invisible="1"/>
                 <field name="origin" invisible="1"/>
+                <field name="total_bill_payable" sum="total_bill_payable"/>
                 <field name="amount_total_signed" string="Total" sum="Total" invisible="1"/>
                 <field name="total_amount_with_vat" string="Total" sum="Total"/>
                 <field name="amount_tax" string="VAT" sum="VAT" invisible="1"/>

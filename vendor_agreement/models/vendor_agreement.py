@@ -135,7 +135,7 @@ class VendorAgreement(models.Model):
             elif self.start_date >= self.end_date:
                 raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
-    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value')
+    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value','advance_amount')
     def check_pro_advance_amount(self):
         if self.pro_advance_amount or self.adjustment_value or self.service_value:
             if self.pro_advance_amount < 0:
@@ -147,6 +147,13 @@ class VendorAgreement(models.Model):
             elif self.service_value < 0:
                 raise ValidationError(
                     "Please Check Your Service Value!! \n Amount Never Take Negative Value!")
+
+            if self.advance_amount > self.service_value:
+                raise ValidationError(
+                    "Approved Advance should not be greater than Service Value.")
+            if self.adjustment_value > self.advance_amount:
+                raise ValidationError(
+                    "Adjustment Value should not be greater than Approved Advance.")
 
     @api.multi
     def action_payment(self):
