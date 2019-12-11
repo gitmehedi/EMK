@@ -86,7 +86,7 @@
                                             <field name="amount_in_currency"/>
                                             <field name="currency_id"/>
                                             <field name="currency_rate"/>
-                                            <field name="amount_in_company_currency" readonly="False"/>
+                                            <field name="amount_in_company_currency" readonly="False" string="BDT Amount"/>
                                         </group>
                                         <group>
                                         </group>
@@ -104,7 +104,7 @@
                                     <field name="currency_id"
                                            options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="currency_rate"/>
-                                    <field name="amount_in_company_currency" readonly="False"/>
+                                    <field name="amount_in_company_currency" readonly="False" string="BDT Amount"/>
                                 </tree>
                                 <form string="Form Views">
                                     <group>
@@ -116,7 +116,7 @@
                                             <field name="currency_id"
                                                    options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="currency_rate"/>
-                                            <field name="amount_in_company_currency" readonly="False"/>
+                                            <field name="amount_in_company_currency" readonly="False" string="BDT Amount"/>
                                         </group>
                                         <group>
                                         </group>
@@ -133,7 +133,7 @@
                                     <field name="currency_id"
                                            options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="currency_rate"/>
-                                    <field name="amount_in_company_currency"/>
+                                    <field name="amount_in_company_currency" string="BDT Amount"/>
                                 </tree>
                                 <form string="Form Views">
                                     <group>
@@ -144,7 +144,7 @@
                                             <field name="currency_id"
                                                    options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="currency_rate"/>
-                                            <field name="amount_in_company_currency"/>
+                                            <field name="amount_in_company_currency" string="BDT Amount"/>
                                         </group>
                                         <group>
                                         </group>

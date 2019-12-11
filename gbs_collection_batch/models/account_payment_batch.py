@@ -9,7 +9,7 @@ class AccountPaymentBatch(models.Model):
     name = fields.Char(string='Batch Name', required=True, track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True,
+    journal_id = fields.Many2one('account.journal', string='Collection Journal', required=True,
                                  domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
     is_auto_invoice_paid = fields.Boolean(string='Auto Invoice Paid', track_visibility='onchange')
 
