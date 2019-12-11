@@ -54,7 +54,9 @@ class PackingList(models.AbstractModel):
                 }
 
         clean = re.compile('<.*?>')
-        cylinder_details_text = re.sub(clean, '', shipment_obj.cylinder_details)
+        cylinder_details_text = ''
+        if shipment_obj.cylinder_details:
+            cylinder_details_text = re.sub(clean, '', shipment_obj.cylinder_details)
 
         if cylinder_details_text:
             data['cylinder_details'] = shipment_obj.cylinder_details
