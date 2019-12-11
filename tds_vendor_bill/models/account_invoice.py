@@ -81,7 +81,8 @@ class AccountInvoice(models.Model):
             vals = {
                 'invoice_id': self.id,
                 # 'name': line.account_tds_id.name + '/' + line.name,
-                'name': line.name,
+                # 'name': line.name,
+                'name': False,
                 'tds_id': line.account_tds_id.id,
                 'amount': line.tds_amount,
                 'manual': False,

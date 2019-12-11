@@ -28,7 +28,7 @@ class LCReceivablePayment(models.Model):
     amount_in_company_currency = fields.Float(string='Base Amount',readonly=True,store=True,
                                               digits=dp.get_precision('Account'),
                                               track_visibility='onchange',compute='_compute_rate_amounts')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre', ondelete="cascade",
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Profit Centre', ondelete="cascade",
                                           readonly=True, states={'draft': [('readonly', False)]},
                                           track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
@@ -63,7 +63,8 @@ class LCReceivablePayment(models.Model):
                                  domain=[('type', '=', 'lc')],required=True,readonly=True,
                                  states={'draft': [('readonly', False)]},track_visibility='onchange')
     reference = fields.Text(string='Reference', compute='_compute_reference', readonly=True, store=False)
-
+    bank_ref = fields.Char(string='Bank Reference', readonly=True, states={'draft': [('readonly', False)]},
+                           track_visibility='onchange')
     account_move_id = fields.Many2one('account.move', string='Journal Entry', readonly=True,copy=False)
     """ Relational Fields """
     lc_receivable_collection_ids = fields.One2many('lc.receivable.collection', 'collection_parent_id',

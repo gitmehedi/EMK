@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.tools.misc import formatLang
+import re
 
 
 class PackingList(models.AbstractModel):
@@ -32,8 +33,6 @@ class PackingList(models.AbstractModel):
                 'model_type': shipment_obj.lc_id.model_type,
                 'sc_type': shipment_obj.lc_id.sc_type,
                 'shipment_number': shipment_obj.name,
-                'cylinder_details': shipment_obj.cylinder_details,
-                'cylinder_details_label': "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details",
                 'buyer_address': report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant),
                 'cover_note_no': shipment_obj.lc_id.cover_note_no,
                 'insurance_date': shipment_obj.lc_id.insurance_date,
@@ -53,6 +52,14 @@ class PackingList(models.AbstractModel):
                 'count_qty': formatLang(self.env,shipment_obj.count_qty),
                 'count_uom': shipment_obj.count_uom.name,
                 }
+
+        clean = re.compile('<.*?>')
+        cylinder_details_text = re.sub(clean, '', shipment_obj.cylinder_details)
+
+        if cylinder_details_text:
+            data['cylinder_details'] = shipment_obj.cylinder_details
+        else:
+            data['cylinder_details'] = ""
 
         for pi_id in shipment_obj.lc_id.pi_ids:
             pi_id_list.append({'pi_id':pi_id.name,'pack_type':pi_id.pack_type.display_name,'pi_date':report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(pi_id.invoice_date))})
