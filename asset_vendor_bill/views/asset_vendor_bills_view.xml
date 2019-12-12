@@ -189,27 +189,29 @@
                                     <field name="user_id" string="Responsible" readonly="True"
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
-                                           name="account_id" groups="account.group_account_manager"
+                                           name="account_id" groups="account.group_account_manager" invisible="1"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="vendor_account_id" readonly="1"
                                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     <field name="name" invisible="1"/>
                                     <field name="payment_term_id" options="{'no_create': True}"
                                            attrs="{'invisible': [('payment_term_id','=',False)]}"/>
                                 </group>
                                 <group>
-                                    <field name="fiscal_position_id" options="{'no_create': True}"
+                                    <field name="fiscal_position_id" options="{'no_create': True}" readonly="True"
                                            placeholder="Auto-detect" groups="base.group_system"/>
                                     <field name="move_id" groups="account.group_account_manager"
                                            attrs="{'invisible': [('move_id', '=', False)]}"/>
-                                    <field name="date"
+                                    <field name="date" readonly="True"
                                            domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]"
                                            groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}"
                                            groups="base.group_multi_company"/>
-                                    <field name="merged_bill" groups="base.group_system"/>
-                                    <field name="security_deposit_account_id"
+                                    <field name="merged_bill" groups="base.group_system" readonly="True"/>
+                                    <field name="security_deposit_account_id" readonly="True"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="tds_vat_challan_ids" widget="many2many_tags"
-                                           readonly="1" attrs="{'invisible': [('tds_vat_challan_ids','=', [])]}"/>
+                                           readonly="True" attrs="{'invisible': [('tds_vat_challan_ids','=', [])]}"/>
                                 </group>
                             </group>
                         </page>

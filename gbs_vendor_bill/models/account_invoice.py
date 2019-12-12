@@ -47,6 +47,7 @@ class AccountInvoice(models.Model):
                                          store=True, readonly=True, track_visibility='onchange', copy=False)
     date_invoice = fields.Date(default=fields.Datetime.now,states={'draft': [('readonly', True)]})
     total_bill_payable = fields.Float(string='Bill Payable', compute='_computer_bill_payable',store=True)
+    vendor_account_id = fields.Many2one('account.account',string='Account', related='partner_id.property_account_payable_id',store=True)
 
     @api.one
     @api.depends('residual','total_payment_amount','total_payment_approved')

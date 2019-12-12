@@ -13,6 +13,7 @@
             </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="attributes">
                 <attribute name="string">Branch</attribute>
+                <attribute name="readonly">True</attribute>
             </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="after">
                 <field name="sub_operating_unit_id" invisible="1"
@@ -70,7 +71,7 @@
             </field>
             <field name="amount_tax" position="after">
                 <field name="mushok_vds_amount" widget="monetary"
-                       />
+                />
             </field>
             <field name="amount_total" position="replace">
                 <field name="amount_total" class="oe_subtotal_footer_separator"
@@ -84,8 +85,14 @@
                 <field name="security_deposit_account_id"
                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
             </xpath>
+            <xpath expr="//field[@name='security_deposit_account_id']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
             <xpath expr="//field[@name='date_invoice']" position="before">
                 <field name="total_bill_payable"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>
@@ -166,15 +173,22 @@
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='journal_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="readonly">True</attribute>
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='date']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='user_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="readonly">True</attribute>
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='account_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[2]/group/group/field[@name='account_id']" position="after">
+                <field name="vendor_account_id" readonly="1"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
             </xpath>
             <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
@@ -221,7 +235,7 @@
             </xpath>
             <xpath expr="//field[@name='number']" position="after">
                 <field name="user_id" string="Responsible"/>
-                 <field name="total_bill_payable" sum="total_bill_payable"/>
+                <field name="total_bill_payable" sum="total_bill_payable"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="entity_service_id" string="Service"/>
