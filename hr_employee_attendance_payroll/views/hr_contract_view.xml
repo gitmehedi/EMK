@@ -14,6 +14,9 @@
 	                	<!--<xpath expr="//notebook/page[1]/group/group[2]/field[@name='working_hours']" position="after">-->
 	                		<field name="ot_wage"/>
 	                	</xpath>
+						<xpath expr="//field[@name='schedule_pay']" position="after">
+	                		<field name="working_hour"/>
+	                	</xpath>
 	                </data>
 	            </field>
             </record>
