@@ -126,12 +126,6 @@ class AttendanceProcessor(models.Model):
 
         employeeId = employee.id
 
-
-        # Check for Holiday
-        if self.checkOnHolidays(currDate, holidayMap, employee, att_utility_pool) is True:
-            attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
-            return attSummaryLine
-
         # Check for Personal Leave
         if att_utility_pool.checkOnPersonalLeave(employeeId, currDate) is True:
             attSummaryLine.leave_days = attSummaryLine.leave_days + 1
@@ -140,6 +134,11 @@ class AttendanceProcessor(models.Model):
         # Check for Unpaid Leave
         if att_utility_pool.checkOnUnpaidLeave(employeeId, currDate) is True:
             attSummaryLine.unpaid_holidays = attSummaryLine.unpaid_holidays + 1
+            return attSummaryLine
+
+        # Check for Holiday
+        if self.checkOnHolidays(currDate, holidayMap, employee, att_utility_pool) is True:
+            attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
             return attSummaryLine
 
         # Check for Un-monitor Employee. Like as: CXO,MD,Driver

@@ -76,7 +76,7 @@ class InheritedHrAttendancePayslip(models.Model):
                     'name': 'Late Deduction Day(s)',
                 })
 
-            self.worked_days_line_ids = worked_days_lines
+            # self.worked_days_line_ids = worked_days_lines
 
             ### ABS Deduction Days
             if summary_line_data.absent_deduction_days >= 0:
@@ -86,4 +86,15 @@ class InheritedHrAttendancePayslip(models.Model):
                     'number_of_days': summary_line_data.absent_deduction_days or 0,
                     'name': 'ABS Deduction Day(s)',
                 })
+            # self.worked_days_line_ids = worked_days_lines
+
+            ### UNPAID Holidays
+            if summary_line_data.unpaid_holidays >= 0:
+                worked_days_lines += worked_days_lines.new({
+                    'code': 'UNPH',
+                    'contract_id': self.contract_id.id,
+                    'number_of_days': summary_line_data.unpaid_holidays or 0,
+                    'name': 'Unpaid Holiday(s)',
+                })
+
             self.worked_days_line_ids = worked_days_lines
