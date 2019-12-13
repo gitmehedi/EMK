@@ -14,7 +14,7 @@ class InheritAccountPayment(models.Model):
     is_cash_payment = fields.Boolean(string='Cash Payment', default=True)
 
     ## if cash
-    deposited_bank = fields.Many2one('res.bank',string='Deposited Bank', readonly=True, states={'draft': [('readonly', False)]})
+    deposited_bank = fields.Many2one('res.bank',string='Customer Bank', readonly=True, states={'draft': [('readonly', False)]})
     bank_branch = fields.Char(string='Branch', readonly=True,states={'draft': [('readonly', False)]})
     deposit_slip = fields.Char(string='Deposit Slip No.',readonly=True,states={'draft': [('readonly', False)]})
 
@@ -36,7 +36,7 @@ class InheritAccountPayment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id, track_visibility='onchange')
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, track_visibility='onchange')
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True,
+    journal_id = fields.Many2one('account.journal', string='Collection Journal', required=True,
                                  domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
@@ -101,3 +101,18 @@ class InheritAccountPayment(models.Model):
     @api.onchange('is_auto_invoice_paid')
     def onchange_is_auto_invoice_paid(self):
         self.sale_order_id = []
+
+    def _get_counterpart_move_line_vals(self, invoice=False):
+        res = super(InheritAccountPayment, self)._get_counterpart_move_line_vals(self.invoice_ids)
+        if self.is_auto_invoice_paid:
+            name = res['name'].split(':')[0] + ': By Auto Paid'
+            res['name'] = name
+        elif self.sale_order_id.ids:
+            name = res['name'].split(':')[0] + ': '
+            for so in self.sale_order_id:
+                name += so.name + ', '
+            res['name'] = name[:len(name)-2]
+        else:
+            pass
+
+        return res
