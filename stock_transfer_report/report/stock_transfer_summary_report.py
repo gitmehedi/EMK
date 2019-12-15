@@ -108,7 +108,7 @@ class StockTransferSummaryReport(models.AbstractModel):
                 total = dest_location[vals['destination']]['sub-total']
                 # total['name'] = vals['destination']
                 if total['total_out_val']:
-                    total_out_val = float(total['sub_total_val'].replace(',',''))
+                    total_out_val = float(total['total_out_val'].replace(',',''))
                 else:
                     total_out_val = 0.0
 
