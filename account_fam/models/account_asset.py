@@ -150,7 +150,7 @@ class AccountAssetAsset(models.Model):
                           daily_depr = (rec.depr_base_value * rec.method_progress_factor) / delta_days;
                         END IF;
                 
-                        depr_amount = no_days * daily_depr;
+                        depr_amount = ROUND(no_days * daily_depr::numeric,2);
                         if depr_amount > rec.value_residual THEN
                            depr_amount = rec.value_residual;
                         END IF;
