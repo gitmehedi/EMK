@@ -45,6 +45,9 @@
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
                         type="object" class="oe_highlight" groups="stock.group_stock_user,gbs_application_group.group_head_of_plant"/>
             </xpath>
+            <xpath expr="//sheet/group/group/field[@name='backorder_id']" position="after">
+                <field name="approval_comment" invisible="1"/>
+            </xpath>
         </field>
     </record>
 

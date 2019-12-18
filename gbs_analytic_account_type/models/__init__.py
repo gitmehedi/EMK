@@ -1,0 +1,1 @@
+import inherited_analytic_account

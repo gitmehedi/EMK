@@ -185,8 +185,8 @@ class ProcessDeliveryUnDeliveryReport(models.AbstractModel):
 
             attribute = attribute[:-1]
             attribute += ")"
-
-        data[product_id] = {'name': product.product_tmpl_id.name + attribute,
+        name = product.product_tmpl_id.name if product.product_tmpl_id.name else ''
+        data[product_id] = {'name': name + attribute,
                                    'details': [],
                                    'total': {'do_qty': 0,
                                              'begen_un_deli_qty': 0,

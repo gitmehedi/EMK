@@ -11,6 +11,7 @@ class Picking(models.Model):
     check_ac_approve_button = fields.Boolean(default=False,string='AC Button Check',compute='_compute_approve_button',store=True)
     mrr_no = fields.Char('MRR No',track_visibility="onchange")
     mrr_date = fields.Date('MRR date',track_visibility="onchange")
+    approval_comment = fields.Char('Status', track_visibility='onchange')
 
     @api.multi
     @api.depends('receive_type','location_dest_id','check_mrr_button','state')
@@ -40,12 +41,14 @@ class Picking(models.Model):
     @api.multi
     def button_ac_approve(self):
         for picking in self:
+            picking.approval_comment = 'Accounts Validate'
             picking.check_approve_button = True
             picking.check_ac_approve_button = False
 
     @api.multi
     def button_approve(self):
         for picking in self:
+            picking.approval_comment = 'Final Approval'
             picking.check_mrr_button = 'True'
             requested_date = datetime.today().date()
             new_seq = self.env['ir.sequence'].next_by_code_new('material.requisition',requested_date)
