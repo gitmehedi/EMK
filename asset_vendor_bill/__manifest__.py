@@ -7,6 +7,7 @@
     'version': '1.0',
     'category': 'Extra Tools',
     'depends': [
+        'base',
         'account',
         'account_asset',
         'account_fam',
