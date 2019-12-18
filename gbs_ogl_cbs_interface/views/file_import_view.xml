@@ -9,11 +9,11 @@
                 <form string="Bulk / Manual Journal" delete="0" duplicate="0">
                     <header>
                         <button name="gbs_ogl_cbs_interface.action_gbs_file_import_wizard"
-                                groups="mtbl_access.group_mtbl_sys_admin"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_user"
                                 attrs="{'invisible': ['|',('import_lines','!=', []),('state','=', 'processed')]}"
                                 type="action" string="Upload" class="oe_highlight"/>
                         <button name="action_process"
-                                groups="mtbl_access.group_mtbl_sys_admin"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_user"
                                 attrs="{'invisible': ['|',('import_lines','=', []),('state','=', 'processed')]}"
                                 type="object" string="Process" class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>

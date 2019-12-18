@@ -78,11 +78,11 @@ class DateRange(models.Model):
 					      AND aml.date BETWEEN $1 AND $2
 					      AND aml.account_id IN (SELECT aa.id
 						FROM account_account aa
-						LEFT JOIN account_account_type as aat
+						LEFT JOIN account_account_type aat
 						     ON (aa.user_type_id = aat.id)
 						LEFT JOIN account_account_level aal
 						     ON (aal.id = aa.level_id)
-						WHERE aa.reconcile = TRUE
+						WHERE aat.include_initial_balance = TRUE
 						      AND aa.level_id=6)
 					GROUP BY aml.journal_id,
 						aml.currency_id,
@@ -97,7 +97,7 @@ class DateRange(models.Model):
 		    
                     FOR mrec IN EXECUTE forward_query USING date_start,date_end
                     LOOP
-                      IF mrec.debit > 0 and mrec.credit > 0 THEN
+                      IF mrec.debit > 0 or mrec.credit > 0 THEN
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
                           VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
@@ -107,48 +107,6 @@ class DateRange(models.Model):
                       END IF;
                     END LOOP;
 
-                    reconcile_query = 'SELECT aml.journal_id,
-						aml.currency_id,
-						aml.analytic_account_id,
-						aml.account_id,
-						aml.operating_unit_id,
-						aml.servicing_channel_id,
-						aml.acquiring_channel_id,
-						aml.segment_id,
-						SUM(aml.amount_residual) AS amount_residual,
-						SUM(aml.debit) AS debit,
-						SUM(aml.credit) AS credit,
-						SUM(aml.amount_currency) AS amount_currency
-					FROM account_move am
-					LEFT JOIN account_move_line aml
-					       ON (am.id = aml.move_id)
-					WHERE am.is_cbs=TRUE
-					      AND aml.date BETWEEN $1 AND $2
-					      AND aml.account_id IN (SELECT aa.id
-						FROM account_account aa
-						WHERE aa.reconcile = TRUE
-						      AND is_cbs = TRUE
-						AND aa.level_id=6)
-					GROUP BY aml.journal_id,
-						aml.currency_id,
-						aml.analytic_account_id,
-						aml.account_id,
-						aml.operating_unit_id,
-						aml.servicing_channel_id,
-						aml.acquiring_channel_id,
-						aml.segment_id';
-
-                    FOR mrec IN EXECUTE reconcile_query USING date_start,date_end
-                    LOOP
-                          IF mrec.debit > 0 and mrec.credit > 0 THEN
-                              -- insert credit amount in account.move.line
-                              INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                              VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
-                                  -- insert debit amount in account.move.line
-                              INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                              VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
-                          END IF;
-                END LOOP;
             RETURN move;
             END;
             $$ LANGUAGE plpgsql;
