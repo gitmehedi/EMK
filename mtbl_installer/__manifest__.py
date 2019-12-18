@@ -55,6 +55,7 @@
         # "datepicker_disable_autocomplete",
         # "tko_web_sessions_management",
         # "url_access_restriction",
+        # "tko_web_sessions_management",
     ],
     'description': 'Install all modules which is related to MTBL OGL System',
     'installable': True,

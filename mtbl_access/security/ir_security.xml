@@ -31,5 +31,9 @@
         <record id="account_parent.group_coas_user" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
         </record>
+
+        <record id="tko_web_sessions_management.ir_session_menu" model="ir.ui.menu">
+            <field name="parent_id" eval="ref('limit_login_attempts.menu_block_login_users')"/>
+        </record>
     </data>
 </odoo>

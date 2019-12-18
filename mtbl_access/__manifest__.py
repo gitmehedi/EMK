@@ -12,6 +12,8 @@ This application allows you to easily maintain access rights of mtbl process.
         'base',
         'account',
         'account_parent',
+        'tko_web_sessions_management',
+        'limit_login_attempts',
     ],
     'data': [
         'security/ir_security.xml'
