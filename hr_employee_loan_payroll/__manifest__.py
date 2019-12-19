@@ -9,12 +9,13 @@
         This module integrate employees monthly mobile bill with payroll.
     """,
     "depends": [
-         'hr',
+        'hr',
         'hr_payroll',
         'l10n_in_hr_payroll',
         'hr_employee_loan'
     ],
     'data': [
+        'data/hr_payroll_data.xml',
         #'views/inherited_hr_payslip_views.xml'
     ],
     'application': False,

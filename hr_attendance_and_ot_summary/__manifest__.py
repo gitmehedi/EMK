@@ -21,6 +21,7 @@
         'gbs_hr_attendance_utility',
         'gbs_hr_attendance_grace_time',
         'hr_holidays',
+        'hr_unpaid_holidays',
         'hr_holiday_year',
         # 'gbs_hr_calendar',
         'gbs_hr_employee',

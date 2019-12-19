@@ -3,6 +3,7 @@ from odoo import fields, models
 class HrEmployee(models.Model):
 
     _inherit = 'hr.employee'
+    _description = "Employee Blood Group"
 
     blood= fields.Selection([
         ('a-', 'A-'),
