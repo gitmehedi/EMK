@@ -11,7 +11,7 @@ class AttendanceSummaryLine(models.Model):
     present_days = fields.Integer(string='Present Days', required=True)
     deduction_days = fields.Integer(string='Late Deduction Day(s)', track_visibility='onchange')
     absent_deduction_days = fields.Integer(string='Absent Deduction Day(s)', track_visibility='onchange')
-    leave_days = fields.Integer(string='Leave Days')
+    leave_days = fields.Integer(string='Paid Holidays')
     unpaid_holidays = fields.Integer(string='Unpaid Holidays')
     holidays_days = fields.Integer(string='Holidays')
     late_hrs = fields.Float(string='Off Duty Hrs')
