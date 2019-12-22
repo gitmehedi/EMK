@@ -36,7 +36,7 @@ class InheritAccountPayment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id, track_visibility='onchange')
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, track_visibility='onchange')
-    journal_id = fields.Many2one('account.journal', string='Collection Journal', required=True,
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True,
                                  domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')

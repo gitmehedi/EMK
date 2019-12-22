@@ -17,6 +17,9 @@
                            invisible="1"
                     />
                 </xpath>
+                <field name="journal_id" position="replace">
+                    <field name="journal_id" string="Collection Journal" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                </field>
 
                 <field name="payment_type" position="before">
                     <field name="my_menu_check" invisible="1"/>
