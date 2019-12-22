@@ -1,146 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
+        <template id="report_com_bid_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
+            <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="replace">
+                <t t-call="gbs_purchase_rfq.internal_layout_header_cbs"/>
+            </xpath>
+        </template>
+        <template id="internal_layout_header_cbs" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
+            <xpath expr="//div/div[@class='company-info']" position="inside">
+                <h5 class="text-center" style="margin-top:-15px;"><span t-esc="address"/></h5>
+            </xpath>
+        </template>
 
-    <template id="report_com_bid_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
-        <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
-            <attribute name="t-call">gbs_purchase_rfq.internal_layout_header_cbs</attribute>
-        </xpath>
-    </template>
-    <template id="internal_layout_header_cbs" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
-        <xpath expr="//div[@class='company-info']" position="after">
-            <div name="company_address">
-                <h5><span t-esc="address"/></h5>
-            </div>
-        </xpath>
-    </template>
+        <!-- Main template -->
+        <template id="com_bid_report_temp">
+            <t t-call="report.html_container">
+                <t t-call="gbs_purchase_rfq.report_com_bid_temp">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Comparative Study (Price)</h4>
+                                <div class="row" style="padding-top:10px;">
+                                    <div class="col-xs-6">
+                                        <t t-if="data['rfq_date']">
+                                            <strong>Date : </strong>
+                                            <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['rfq_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                        </t>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <t t-if="data['name']">
+                                            <strong>Ref No : </strong>
+                                            <span t-esc="data['name']"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
 
-    <!-- Main template -->
-    <template id="com_bid_report_temp">
-        <t t-call="report.html_container">
-            <t t-call="gbs_purchase_rfq.report_com_bid_temp">
-                <div class="page" style="page-break-inside:auto">
-                    <div class="row mb32" style="padding-top:25px;">
-                        <div class="col-xs-12">
-                            <h4 class="text-center">Comparative Study(Price)</h4>
-                        </div>
-                        <hr></hr>
-                    </div>
-                    <div class="row" style="padding-bottom:10px;">
-                        <div class="col-xs-6">
-                            <t t-if="data['rfq_date']">
-                                <strong>Date : </strong>
-                                <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['rfq_date'],'%Y-%m-%d %H:%M:%S'))"/>
-                                <!--<span t-esc="data['rfq_date']"/>-->
-                            </t>
-                        </div>
-                        <div class="col-xs-6 text-right">
-                            <t t-if="data['name']">
-                                <strong>Ref No : </strong>
-                                <span t-esc="data['name']"/>
-                            </t>
-                        </div>
-                    </div>
-
-                    <table class="table table-report-xs table-bordered table-striped">
-                        <thead>
-                            <tr class="odo-bg-gray">
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['pr_no']"/></th>
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['item']"/></th>
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['req_qty']"/></th>
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['unit']"/></th>
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['last_price']"/></th>
-                                <t t-foreach="header['dynamic']" t-as="dynamic">
-                                    <th colspan="2" style="text-align: center;">
-                                        <t t-esc="dynamic['name']"/>
-                                    </th>
-                                </t>
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['approved_price']"/></th>
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['total']"/></th>
-                                <th rowspan="2" style="text-align: center;"><t t-esc="header['remarks']"/></th>
-                            </tr>
-                            <tr class="odo-bg-gray">
-                                <t t-foreach="header['dynamic']" t-as="sub">
-                                    <th style="text-align: center;">
-                                        <t t-esc="sub_value['supplier']"/>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        Total
-                                    </th>
-                                </t>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="report_objs" t-as="list">
-                                <tr>
-                                    <td class="text-left">
-                                        <span t-esc="list_value['pr_name']"/>
-                                    </td>
-                                    <td class="text-left">
-                                        <span class="text-nowrap" t-esc="list_value['product_name']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span class="text-nowrap" t-esc="list_value['product_ordered_qty']"/>
-                                    </td>
-                                    <td class="text-left">
-                                        <span class="text-nowrap" t-esc="list_value['product_unit']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span class="text-nowrap" t-esc="list_value['last_price']"/>
-                                    </td>
-                                    <t t-foreach="list_value['quotations']" t-as="val">
-                                        <td class="text-left">
-                                            <span t-esc="val_value['price']"/>
-                                        </td>
-                                        <td class="text-left">
-                                            <span t-esc="val_value['total']"/>
-                                        </td>
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th rowspan="2" class="text-center"><t t-esc="header['pr_no']"/></th>
+                                        <th rowspan="2" class="text-center"><t t-esc="header['item']"/></th>
+                                        <th rowspan="2" class="text-center"><t t-esc="header['req_qty']"/></th>
+                                        <th rowspan="2" class="text-center"><t t-esc="header['unit']"/></th>
+                                        <th rowspan="2" class="text-center"><t t-esc="header['last_price']"/></th>
+                                        <t t-foreach="header['dynamic']" t-as="dynamic">
+                                            <th colspan="2" class="text-center">
+                                                <t t-esc="dynamic['name']"/>
+                                            </th>
+                                        </t>
+                                        <th rowspan="2" class="text-center"><t t-esc="header['approved_price']"/></th>
+                                        <th rowspan="2" class="text-center"><t t-esc="header['total']"/></th>
+                                        <th rowspan="2" class="text-center"><t t-esc="header['remarks']"/></th>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <t t-foreach="header['dynamic']" t-as="sub">
+                                            <th class="text-center">
+                                                <t t-esc="sub_value['supplier']"/>
+                                            </th>
+                                            <th class="text-center">
+                                                Total
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_objs" t-as="list">
+                                        <tr>
+                                            <td class="text-left">
+                                                <span t-esc="list_value['pr_name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span class="text-nowrap" t-esc="list_value['product_name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="text-nowrap" t-esc="list_value['product_ordered_qty']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span class="text-nowrap" t-esc="list_value['product_unit']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="text-nowrap" t-esc="list_value['last_price']"/>
+                                            </td>
+                                            <t t-foreach="list_value['quotations']" t-as="val">
+                                                <td class="text-right">
+                                                    <span t-esc="val_value['price']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="val_value['total']"/>
+                                                </td>
+                                            </t>
+                                            <td class="text-right">
+                                                <span class="text-nowrap" t-esc="list_value['approved_price']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="text-nowrap" t-esc="list_value['approved_total']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span class="text-nowrap" t-esc="list_value['remarks']"/>
+                                            </td>
+                                        </tr>
                                     </t>
-                                    <td class="text-right">
-                                        <span class="text-nowrap" t-esc="list_value['approved_price']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span class="text-nowrap" t-esc="list_value['approved_total']"/>
-                                    </td>
-                                    <td class="text-left">
-                                        <span class="text-nowrap" t-esc="list_value['remarks']"/>
-                                    </td>
-                                </tr>
-                            </t>
-                            <tr style="font-weight: bold; background-color: #f5f5f5; border-bottom: 1px solid black;">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <t t-foreach="grand_totals" t-as="total">
-                                    <td class="text-left">
-                                        Total
-                                    </td>
-                                    <td class="text-left">
-                                        <span t-esc="total_value['total_price']"/>
-                                    </td>
-                                </t>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <t t-call="report_layout.report_signing"></t>
-                </div>
+                                    <tr style="font-weight: bold; background-color: #f5f5f5; border-bottom: 1px solid black;">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <t t-foreach="grand_totals" t-as="total">
+                                            <td class="text-left">
+                                                Total
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="total_value['total_price']"/>
+                                            </td>
+                                        </t>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <t t-call="report_layout.report_signing"></t>
+                        </div>
+                    </div>
+                </t>
             </t>
-        </t>
-    </template>
+        </template>
 
-    <report id="report_comparative_bid_study"
-            model="purchase.rfq"
-            string="Comparative Bid Study"
-            name="gbs_purchase_rfq.com_bid_report_temp"
-            file="gbs_purchase_rfq.com_bid_report_temp"
-            menu="True"
-            report_type="qweb-pdf"/>
-
-    <record id="report_comparative_bid_study" model="ir.actions.report.xml">
-        <field name="paperformat_id" ref="report_layout.paperformat_backend_landscape"/>
-    </record>
+        <report id="report_comparative_bid_study"
+                model="purchase.rfq"
+                string="Comparative Bid Study"
+                name="gbs_purchase_rfq.com_bid_report_temp"
+                file="gbs_purchase_rfq.com_bid_report_temp"
+                menu="True"
+                report_type="qweb-pdf"
+                paperformat="report_layout.paperformat_backend_landscape"/>
+    </data>
 </odoo>

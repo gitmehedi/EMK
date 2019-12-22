@@ -3,10 +3,8 @@ from odoo.exceptions import ValidationError,UserError
 from odoo.tools.misc import formatLang
 
 
-
 class ComparativeBidReport(models.AbstractModel):
     _name = 'report.gbs_purchase_rfq.com_bid_report_temp'
-
 
     @api.multi
     def render_html(self, docids, data=None):
@@ -76,8 +74,10 @@ class ComparativeBidReport(models.AbstractModel):
                                 i['total_price'] = i['total_price'] + float(total_pq.replace(',', ''))
 
                             i['total_price'] = formatLang(self.env, i['total_price'])
+                else:
+                    product_row['quotations'].append({'price': None, 'total': None})
 
-        return {'products':product_row_list,'total':grand_total}
+        return {'products': product_row_list, 'total': grand_total}
 
     def get_rfq_data(self, rfq_obj):
         rfq_data = {}
@@ -85,7 +85,6 @@ class ComparativeBidReport(models.AbstractModel):
         rfq_data['rfq_date'] = rfq_obj.rfq_date
 
         return rfq_data
-
 
     def get_dynamic_header(self,pq_list):
         header = {}
@@ -103,7 +102,6 @@ class ComparativeBidReport(models.AbstractModel):
             header['dynamic'].append({'name':val.name,'supplier': val.partner_id.name, 'total': 0})
 
         return header
-
 
     def get_purchase_data(self,rfq_obj):
         sql = """
@@ -125,7 +123,6 @@ class ComparativeBidReport(models.AbstractModel):
 
         return self._cr.fetchall()
 
-
     def get_temp_pq(self, pq_list):
         quotations = []
         for pq in pq_list:
@@ -134,8 +131,6 @@ class ComparativeBidReport(models.AbstractModel):
                 product_line[pq_line.product_id.id] = pq_line.price_unit
             quotations.append(TempPQ(pq.id,pq.name,pq.state,product_line))
         return quotations
-
-
 
 
 class TempPQ(object):

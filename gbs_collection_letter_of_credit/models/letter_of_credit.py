@@ -9,6 +9,6 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_confirm_export(self):
         analytic_account_obj = self.env['account.analytic.account']
-        analytic_account = analytic_account_obj.create({'name': self.name})
+        analytic_account = analytic_account_obj.create({'name': self.name, 'type': 'profit'})
         self.analytic_account_id = analytic_account.id
         return super(LetterOfCredit, self).action_confirm_export()
