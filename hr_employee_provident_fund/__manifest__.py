@@ -12,6 +12,7 @@
         'hr_payroll',
     ],
     'data': [
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': False,

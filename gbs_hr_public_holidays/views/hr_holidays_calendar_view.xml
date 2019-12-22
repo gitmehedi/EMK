@@ -72,7 +72,7 @@
 
 		<!-- Calendar Holiday Action Views -->
 		<record id="action_calendar_holiday_view" model="ir.actions.act_window">
-			<field name="name">Calendar Holiday Type</field>
+			<field name="name">Holiday Calendar</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">calendar.holiday</field>
 			<field name="view_type">form</field>

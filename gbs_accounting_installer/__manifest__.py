@@ -29,6 +29,7 @@
                 "account_standard_report",
                 "gbs_account_journal_log",
                 'gbs_voucher',
+                'account_parent_inherit',
                 ],
 
     'data': [ ],
