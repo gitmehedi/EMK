@@ -144,6 +144,7 @@ class StockInventoryReport(models.AbstractModel):
 				                          ON( pu.id = pt.uom_id ) 
                             WHERE  Date_trunc('day', sm.date) < '%s' 
                                    AND sm.state = 'done' 
+                                   AND pp.active = True
                                    --AND sp.location_type = 'outsource_out' 
                                    AND sm.location_id <> %s
                                    AND sm.location_dest_id = %s
@@ -184,6 +185,7 @@ class StockInventoryReport(models.AbstractModel):
 				                          ON( pu.id = pt.uom_id ) 
                             WHERE  Date_trunc('day', sm.date) < '%s' 
                                    AND sm.state = 'done' 
+				   AND pp.active = True
                                    --AND sp.location_type = 'outsource_in' 
                                    AND sm.location_id = %s
                                    AND sm.location_dest_id <> %s
@@ -221,7 +223,8 @@ class StockInventoryReport(models.AbstractModel):
                                    LEFT JOIN product_uom pu 
 				                          ON( pu.id = pt.uom_id )  
                             WHERE  Date_trunc('day', sm.date) < '%s' 
-                                   AND sm.state = 'done' 
+                                   AND sm.state = 'done'
+				   AND pp.active = True 
                                    AND sm.location_id <> %s
                                    AND sm.location_dest_id = %s 
                                    AND sm.picking_id IS NULL 
@@ -273,7 +276,8 @@ class StockInventoryReport(models.AbstractModel):
                                    LEFT JOIN product_uom pu 
 				                          ON( pu.id = pt.uom_id )  
                             WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
-                                   AND sm.state = 'done' 
+                                   AND sm.state = 'done'
+				   AND pp.active = True 
                                    --AND sp.location_type = 'outsource_out' 
                                    AND sm.location_id <> %s
                                    AND sm.location_dest_id = %s 
@@ -324,7 +328,8 @@ class StockInventoryReport(models.AbstractModel):
                                    LEFT JOIN product_uom pu 
 				                          ON( pu.id = pt.uom_id )  
                             WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
-                                   AND sm.state = 'done' 
+                                   AND sm.state = 'done'
+			           AND pp.active = True 
                                    --AND sp.location_type = 'outsource_out' 
                                    AND sm.location_id = %s
                                    AND sm.location_dest_id <> %s 
@@ -377,6 +382,7 @@ class StockInventoryReport(models.AbstractModel):
                           ON( pu.id = pt.uom_id )  
             WHERE  Date_trunc('day', sm.date) <= '%s' 
                    AND sm.state = 'done' 
+                   AND pp.active = True
                    --AND sp.location_type = 'outsource_out' 
                    AND sm.location_id <> %s 
                    AND sm.location_dest_id = %s 
@@ -416,7 +422,8 @@ class StockInventoryReport(models.AbstractModel):
                    LEFT JOIN product_uom pu 
                           ON( pu.id = pt.uom_id )   
             WHERE  Date_trunc('day', sm.date) <= '%s' 
-                   AND sm.state = 'done' 
+                   AND sm.state = 'done'
+                   AND pp.active = True 
                    --AND sp.location_type = 'outsource_in' 
                    AND sm.location_id = %s
                    AND sm.location_dest_id <> %s
@@ -454,7 +461,8 @@ class StockInventoryReport(models.AbstractModel):
                    LEFT JOIN product_uom pu 
                           ON( pu.id = pt.uom_id )   
             WHERE  Date_trunc('day', sm.date) <= '%s' 
-                   AND sm.state = 'done' 
+                   AND sm.state = 'done'
+                   AND pp.active = True 
                    AND sm.location_id <> %s
                    AND sm.location_dest_id = %s
                    AND pc.id IN %s 
@@ -491,7 +499,8 @@ class StockInventoryReport(models.AbstractModel):
                    LEFT JOIN product_uom pu 
                           ON( pu.id = pt.uom_id )   
             WHERE  Date_trunc('day', sm.date) <= '%s' 
-                   AND sm.state = 'done' 
+                   AND sm.state = 'done'
+                   AND pp.active = True 
                    AND sm.location_id = %s
                    AND sm.location_dest_id <> %s
                    AND pc.id IN %s 
