@@ -6,7 +6,7 @@
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Import File">
-                <group string="Please Select File for Bulk Import Data">
+                <group string="Please Select File for Bulk Import Data. Only CSV file allowed">
                     <group>
                         <field name="aml_data" filename="aml_fname"/>
                     </group>

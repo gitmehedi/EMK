@@ -129,7 +129,11 @@ class GBSFileImportWizard(models.TransientModel):
         self._err_log = ''
         move = self.env['gbs.file.import'].browse(self._context['active_id'])
         lines, header = self._remove_leading_lines(self.lines)
-        header_fields = csv.reader(StringIO.StringIO(header), dialect=self.dialect).next()
+        try:
+            header_fields = csv.reader(StringIO.StringIO(header), dialect=self.dialect).next()
+        except Exception:
+            raise ValidationError(_("Only CSV file is allowed to process."))
+
         self._header_fields = self._process_header(header_fields)
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
         vals = []
