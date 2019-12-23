@@ -93,7 +93,7 @@
                     <t t-esc="widget.pos.company.street || ''"/> <t t-esc="widget.pos.company.street2 || ''"/><br />
                     <t t-esc="widget.pos.company.city || ''"/>-<t t-esc="widget.pos.company.zip || ''"/> , <t t-esc="widget.pos.company.phone|| ''"/><br />
                     VAT Reg. No. <t t-esc="widget.pos.company.vat"/><br />
-                    Musak-11(ka)
+                    Mushak-2.3
                     <br />
                     <br />
                     Shop: <t t-esc="widget.pos.config.name"/><br />
