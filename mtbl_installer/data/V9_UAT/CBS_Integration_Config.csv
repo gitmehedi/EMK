@@ -1,0 +1,4 @@
+"id","dest_path","method","name","source_sftp_private_key","dest_sftp_private_key","source_sftp_password","dest_sftp_password","dest_sftp_port","source_sftp_port","source_sftp_host","dest_sftp_host","source_path","status","type","dest_sftp_user","source_sftp_user"
+"__export__.server_file_process_1","/opt/odoo/destination","Double Middleware Location","GLIF Process","","","genweb2","genweb2","22","22","192.168.1.30","192.168.1.30","/opt/odoo/source","True","GLIF Process","root","root"
+"__export__.server_file_process_3","/opt/odoo/destination","Single Middleware Location","CBS Batch","","","","genweb2","22","22","","192.168.1.30","/opt/odoo/source","True","CBS Batch","root",""
+"__export__.server_file_process_4","/opt/odoo/source","Single Middleware Location","System Date Change","","","","genweb2","22","22","","192.168.1.30","/opt/odoo/source","True","System Date","root",""
