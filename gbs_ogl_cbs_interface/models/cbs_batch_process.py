@@ -26,7 +26,7 @@ class GenerateCBSJournal(models.Model):
     folder = fields.Char(default=lambda self: self._default_path(), string="Local Folder Path",
                          track_visibility='onchange')
     days_to_keep = fields.Integer(required=True, default=0, )
-    method = fields.Selection(selection=[("local", "Local disk"), ("sftp", "FTP Server")], default="sftp",
+    method = fields.Selection(selection=[("local", "Local Location"), ("sftp", "Middleware Location")], default="sftp",
                               required=True, track_visibility='onchange')
 
     source_path = fields.Char(string="Source Path", required=True, track_visibility='onchange')
@@ -166,8 +166,12 @@ class GenerateCBSJournal(models.Model):
                     params["private_key_pass"] = self.dest_sftp_password
             else:
                 params["password"] = self.dest_sftp_password
+        try:
+            conn = pysftp.Connection(**params)
+        except Exception as e:
+            raise ValidationError(_("Operation Error: %s".format(e)))
 
-        return pysftp.Connection(**params)
+        return conn
 
     @api.multi
     def generate_journal(self):
@@ -206,7 +210,10 @@ class GenerateCBSJournal(models.Model):
                 os.remove(file_path)
             return move_ids if os.path.exists(file_path) else False
 
-        for rec in self.env['generate.cbs.journal'].search([('method', '=', 'sftp')]):
+        record = self.env['server.file.process'].search([('method', '=', 'dest_sftp'),
+                                                         ('type', '=', 'batch'),
+                                                         ('status', '=', True)], limit=1)
+        for rec in record:
             with rec.sftp_connection('destination') as destination:
                 dirs = [rec.folder, rec.source_path, rec.dest_path]
                 self.directory_check(dirs)
@@ -339,40 +346,3 @@ class GenerateCBSJournal(models.Model):
         return "MDC_00001_" + record_date + process_date + unique + ".txt"
 
 
-class GenerateCBSJournalSuccess(models.Model):
-    _name = 'generate.cbs.journal.success'
-    _description = "CBS Batch Process Success"
-    _inherit = ["mail.thread", "ir.needaction_mixin"]
-    _order = 'date desc'
-
-    name = fields.Char(string='Name', compute='_compute_name', store=True)
-    date = fields.Datetime(string='Date', default=fields.Datetime.now, required=True)
-    start_date = fields.Datetime(string='Start Datetime', required=True)
-    stop_date = fields.Datetime(string='Stop Datetime', required=True)
-    file_name = fields.Char(string='File Path', required=True)
-    upload_file = fields.Binary(string="Generated File", attachment=True)
-    time = fields.Text(string='Time', compute="_compute_time")
-    status = fields.Boolean(default=False, string='Status')
-    journal_count = fields.Char(string="Total Journals", compute='_compute_journal', store=True)
-    line_ids = fields.One2many('cbs.journal.line', 'line_id', string="Journal")
-    state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
-
-    @api.depends('start_date', 'stop_date')
-    def _compute_time(self):
-        for rec in self:
-            diff = datetime.strptime(rec.stop_date, TIME_FORMAT) - datetime.strptime(rec.start_date, TIME_FORMAT)
-            rec.time = str(diff)
-
-    @api.depends('line_ids')
-    def _compute_journal(self):
-        for rec in self:
-            rec.journal_count = len(rec.line_ids)
-
-
-class CBSJournalLine(models.Model):
-    _name = 'cbs.journal.line'
-    _description = "CBS Journal Line"
-    _inherit = ["mail.thread", "ir.needaction_mixin"]
-
-    line_id = fields.Many2one('generate.cbs.journal.success', ondelete='cascade')
-    move_id = fields.Many2one('account.move', string="Journals")

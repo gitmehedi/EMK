@@ -1,4 +1,4 @@
-import os, base64,re
+import os, base64, re
 
 from random import randint
 from odoo import api, models, fields, _
@@ -78,7 +78,8 @@ class GBSFileImport(models.Model):
                 os.remove(file_path)
             return True if os.path.exists(file_path) else False
 
-        for rec in self.env['generate.cbs.journal'].search([('method', '=', 'sftp')]):
+        for rec in self.env['server.file.process'].search(
+                [('method', '=', 'dest_sftp'), ('type', '=', 'batch'), ('status', '=', True)], limit=1):
             with rec.sftp_connection('destination') as destination:
                 dirs = [rec.folder, rec.source_path, rec.dest_path]
                 self.directory_check(dirs)

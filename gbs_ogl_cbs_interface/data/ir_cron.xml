@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo noupdate="1">
-    <record id="ir_cron_server_file_process_scheduler" model="ir.cron">
+    <record id="ir_cron_glif_process_scheduler" model="ir.cron">
         <field name="name">OGL-CBS GLIF Process Scheduler</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
@@ -11,7 +11,20 @@
         <field name="nextcall"
                eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
         <field name="model">server.file.process</field>
-        <field name="function">action_backup_all</field>
+        <field name="function">glif_process</field>
+    </record>
+
+    <record id="ir_cron_system_date_process_scheduler" model="ir.cron">
+        <field name="name">OGL-CBS System Date Scheduler</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="priority">5</field>
+        <field name="nextcall"
+               eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
+        <field name="model">server.file.process</field>
+        <field name="function">sysdt_process</field>
     </record>
 
     <record id="ir_cron_generate_cbs_journal_scheduler" model="ir.cron">
@@ -23,8 +36,8 @@
         <field name="priority">5</field>
         <field name="nextcall"
                eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
-        <field name="model">generate.cbs.journal</field>
-        <field name="function">generate_journal</field>
+        <field name="model">server.file.process</field>
+        <field name="function">batch_process</field>
     </record>
 
     <record id="ir_cron_invalidate_payment_scheduler" model="ir.cron">

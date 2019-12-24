@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 
 class SOAPProcess(models.Model):
     _name = 'soap.process'
-    _inherit = ["mail.thread"]
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
     _rec_name = 'name'
     _description = 'API Endpoint'
 
@@ -200,6 +200,10 @@ class SOAPProcess(models.Model):
     def format_date(self, val):
         vals = val.split('-')
         return vals[0] + vals[1] + vals[2]
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('status', '=', True)]
 
 
 class ServerFileError(models.Model):

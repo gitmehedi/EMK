@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import os, shutil, base64, traceback, logging, json
+import os, shutil, base64, traceback, logging, re
+import numpy as np
 
 from datetime import datetime
 from datetime import datetime as dt
+from random import randint
 from contextlib import contextmanager
 from odoo import exceptions, models, fields, api, _, tools
 from odoo.exceptions import ValidationError
-import numpy as np
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -21,7 +22,7 @@ except ImportError:  # pragma: no cover
 class ServerFileProcess(models.Model):
     _name = "server.file.process"
     _description = "Configuration of SFTP File Processing"
-    _inherit = "mail.thread"
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
 
     _sql_constraints = [
         ("name_unique", "UNIQUE(name)", "Cannot duplicate a configuration."),
@@ -33,8 +34,6 @@ class ServerFileProcess(models.Model):
     folder = fields.Char(default=lambda self: self._default_path(), string="Local Folder Path",
                          track_visibility='onchange')
     days_to_keep = fields.Integer(required=True, default=0, )
-    method = fields.Selection(selection=[("local", "Local disk"), ("sftp", "Remote SFTP Server")], default="local",
-                              required=True, track_visibility='onchange')
 
     source_path = fields.Char(string="Source Path", required=True, track_visibility='onchange')
     source_sftp_host = fields.Char(string='SFTP Server', track_visibility='onchange')
@@ -49,6 +48,12 @@ class ServerFileProcess(models.Model):
     dest_sftp_user = fields.Char(string='Username', track_visibility='onchange')
     dest_sftp_password = fields.Char(string="SFTP Password")
     dest_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
+    type = fields.Selection([('glif', 'GLIF Process'), ('sys_dt', 'System Date'), ('batch', 'CBS Batch')],
+                            string='Type', required=True)
+    method = fields.Selection(selection=[("local", "Local Location"),
+                                         ("dest_sftp", "Single Middleware Location"),
+                                         ("sftp", "Double Middleware Location")],
+                              default="sftp", required=True, track_visibility='onchange')
     status = fields.Boolean(default=True, string='Status')
 
     @api.constrains('source_path', 'dest_path', 'folder')
@@ -119,73 +124,33 @@ class ServerFileProcess(models.Model):
                     _("Do not save backups on your filestore, or you will "
                       "backup your backups too!"))
 
-    @api.multi
-    def action_sftp_test_connection(self):
-        """Check if the SFTP settings are correct."""
+    @api.model
+    def glif_process(self):
+        """Run all scheduled backups."""
+        integration = self.search([('type', '=', 'glif'), ('status', '=', True)], limit=1)
+        if not integration:
+            raise ValidationError(_("Record is not avaiable with proper configuration"))
+        return integration.glif_generate()
 
-        if self.env.context.get('target') == 'source':
-            connection = 'source'
-        else:
-            connection = 'destination'
+    @api.model
+    def sysdt_process(self):
+        integration = self.search([('type', '=', 'sys_dt'), ('status', '=', True)], limit=1)
+        if not integration:
+            raise ValidationError(_("Record is not avaiable with proper configuration"))
+        return integration.sysdt_update(integration)
 
-        try:
-            # Just open and close the connection
-            with self.sftp_connection(connection):
-                raise exceptions.Warning(_("Connection Test Succeeded!"))
-        except (pysftp.CredentialException,
-                pysftp.ConnectionException,
-                pysftp.SSHException):
-            _logger.info("Connection Test Failed!", exc_info=True)
-            raise exceptions.Warning(_("Connection Test Failed!"))
+    @api.model
+    def batch_process(self):
+        integration = self.search([('type', '=', 'batch'), ('method', '=', 'dest_sftp'), ('status', '=', True)],
+                                  limit=1)
+        if not integration:
+            raise ValidationError(_("Record is not avaiable with proper configuration"))
+        return integration.journal_process()
 
-    @api.one
-    def directory_check(self, dirs):
-        for dir in dirs:
-            if not os.path.isdir(dir):
-                try:
-                    os.makedirs(dir)
-                except OSError:
-                    pass
+    """Function Defination of CRON JOB"""
 
     @api.multi
-    def sftp_connection(self, connection):
-        """Return a new SFTP connection with found parameters."""
-        self.ensure_one()
-        if connection == 'source':
-            params = {
-                "host": self.source_sftp_host,
-                "username": self.source_sftp_user,
-                "port": self.source_sftp_port,
-            }
-            _logger.debug(
-                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
-                extra=params)
-            if self.source_sftp_private_key:
-                params["private_key"] = self.source_sftp_private_key
-                if self.source_sftp_password:
-                    params["private_key_pass"] = self.source_sftp_password
-            else:
-                params["password"] = self.source_sftp_password
-        else:
-            params = {
-                "host": self.dest_sftp_host,
-                "username": self.dest_sftp_user,
-                "port": self.dest_sftp_port,
-            }
-            _logger.debug(
-                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
-                extra=params)
-            if self.dest_sftp_private_key:
-                params["private_key"] = self.dest_sftp_private_key
-                if self.dest_sftp_password:
-                    params["private_key_pass"] = self.dest_sftp_password
-            else:
-                params["password"] = self.dest_sftp_password
-
-        return pysftp.Connection(**params)
-
-    @api.multi
-    def action_backup(self):
+    def glif_generate(self):
 
         for rec in self.filtered(lambda r: r.method == "local"):
             dirs = [rec.source_path, rec.dest_path]
@@ -240,6 +205,120 @@ class ServerFileProcess(models.Model):
                                 continue
                         else:
                             os.remove(local_path)
+
+    @api.multi
+    def journal_process(self):
+        filename = self.generate_filename()
+
+        def generate_file(record):
+            move_ids = []
+            file_path = os.path.join(record.source_path, filename)
+            journals = self.env['account.move'].search(
+                [('is_cbs', '=', False), ('is_sync', '=', False), ('state', '=', 'posted')])
+            with open(file_path, "w+") as file:
+                for vals in journals:
+                    for val in vals.line_ids:
+                        trn_type = '54' if val.debit > 0 else '04'
+                        amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
+                        amount = ''.join(amount.split('.')).zfill(16)
+                        narration = re.sub(r'[|\n||\r|?|$|.|!]', r' ', val.name[:50])
+                        trn_ref_no = ''.join(vals.name.split('/'))[-8:]
+                        date_array = val.date.split("-")
+                        date = date_array[2] + date_array[1] + date_array[0]
+                        cost_centre = str(
+                            "0" + val.analytic_account_id.code) if val.analytic_account_id.code else '0000'
+                        account_no = str(val.account_id.code)
+                        sub_opu = str(val.sub_operating_unit_id.code) if val.sub_operating_unit_id.code else '001'
+                        branch_code = str("00" + val.operating_unit_id.code) if val.operating_unit_id.code else '00001'
+                        bgl = "0{0}{1}{2}".format(account_no, sub_opu, branch_code)
+
+                        journal = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount, narration,
+                                                                                      trn_ref_no, date, cost_centre)
+                        file.write(journal)
+
+                    move_ids.append((0, 0, {'move_id': vals.id}))
+                    vals.write({'is_sync': True})
+
+            if os.stat(file_path).st_size == 0:
+                os.remove(file_path)
+            return move_ids if os.path.exists(file_path) else False
+
+        record = self.env['server.file.process'].search([('method', '=', 'dest_sftp'),
+                                                         ('type', '=', 'batch'),
+                                                         ('status', '=', True)], limit=1)
+        for rec in record:
+            with rec.sftp_connection('destination') as destination:
+                dirs = [rec.folder, rec.source_path, rec.dest_path]
+                self.directory_check(dirs)
+                start_date = fields.Datetime.now()
+                file = generate_file(rec)
+
+                dest_path = os.path.join(rec.dest_path, filename)
+                local_path = os.path.join(rec.source_path, filename)
+
+                if file:
+                    if destination.put(local_path, dest_path):
+                        with open(local_path, "rb") as cbs_file:
+                            encoded_file = base64.b64encode(cbs_file.read())
+                        stop_date = fields.Datetime.now()
+                        success = self.env['generate.cbs.journal.success'].create({'name': filename,
+                                                                                   'start_date': start_date,
+                                                                                   'stop_date': stop_date,
+                                                                                   'upload_file': encoded_file,
+                                                                                   'file_name': filename,
+                                                                                   'line_ids': file,
+                                                                                   })
+                        if success:
+                            os.remove(local_path)
+                        else:
+                            continue
+                    else:
+                        continue
+
+    @api.multi
+    def sysdt_update(self, record):
+        for rec in record:
+            with rec.sftp_connection('destination') as source:
+                dirs = [rec.source_path, rec.dest_path]
+                rec.directory_check(dirs)
+                files = filter(lambda x: x.endswith('BaNCSDATE'), source.listdir(rec.source_path))
+                for file in files:
+                    source_path = os.path.join(rec.dest_path, file)
+                    local_path = os.path.join(rec.source_path, file)
+                    source.get(source_path, localpath=local_path, preserve_mtime=True)
+
+                    with source.open(local_path, 'r') as ins:
+                        for date in ins:
+                            year, month, day = date[:4], date[4:6], date[6:8]
+                            batch_date = "{0}-{1}-{2}".format(year, month, day)
+                            company = self.env['res.company'].search([])
+                            previous_date = company.batch_date
+
+                            try:
+                                company.sudo().write({'batch_date': batch_date})
+                                self.env['ir.values'].sudo().set_default('account.config.settings', 'batch_date',
+                                                                         batch_date)
+                                if company.batch_date == batch_date:
+                                    self.env['system.date.status'].create({'current_date': batch_date,
+                                                                           'previous_date': previous_date,
+                                                                           'state': 'success',
+                                                                           })
+
+                            except Exception:
+                                self.env['system.date.status'].create({'current_date': batch_date,
+                                                                       'previous_date': previous_date,
+                                                                       'state': 'fail',
+                                                                       })
+
+                    os.remove(local_path)
+
+    def generate_filename(self):
+        rec_date = self.env.user.company_id.batch_date.split('-')
+        record_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0]) + datetime.strftime(datetime.now(),
+                                                                                                     "%H%M%S_")
+        process_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0])
+        unique = str(randint(100, 999))
+        return "MDC_00001_" + record_date + process_date + unique + ".txt"
 
     def get_file_path(self, file):
         path = {}
@@ -359,12 +438,12 @@ class ServerFileProcess(models.Model):
             else:
                 errObj.line_ids.unlink()
 
-            errors, journal_entry,move_date = "", "",""
+            errors, journal_entry, move_date = "", "", ""
             journal_type = 'CBS'
             if journal_type not in jrnl.keys():
                 raise Warning(_('[Wanring] Journal type [{0}]is not available.'.format(journal_type)))
 
-            move_id = self.env['account.move'].search([('ref', '=', file),('state', '=', 'draft')], limit=1)
+            move_id = self.env['account.move'].search([('ref', '=', file), ('state', '=', 'draft')], limit=1)
             if not move_id:
                 move_id = self.env['account.move'].create({
                     'journal_id': jrnl['CBS'],
@@ -394,7 +473,6 @@ class ServerFileProcess(models.Model):
                                                    posting_date))
                     if not move_date:
                         move_date = rec['POSTING-DATE']
-
 
                     system_date = rec['SYSTEM-DATE']
                     if not system_date:
@@ -529,7 +607,7 @@ class ServerFileProcess(models.Model):
                 if move_id:
                     move_id.amount = debit
                 if move_id.state == 'draft':
-                    move_id.sudo().write({'date':rec['POSTING-DATE']})
+                    move_id.sudo().write({'date': rec['POSTING-DATE']})
                     move_id.sudo().post()
                     errObj.sudo().write({'state': 'resolved'})
                     return move_id
@@ -554,10 +632,70 @@ class ServerFileProcess(models.Model):
 
         return False
 
-    @api.model
-    def action_backup_all(self):
-        """Run all scheduled backups."""
-        return self.search([]).action_backup()
+    @api.multi
+    def action_sftp_test_connection(self):
+        """Check if the SFTP settings are correct."""
+
+        if self.env.context.get('target') == 'source':
+            connection = 'source'
+        else:
+            connection = 'destination'
+
+        try:
+            # Just open and close the connection
+            with self.sftp_connection(connection):
+                raise exceptions.Warning(_("Connection Test Succeeded!"))
+        except (pysftp.CredentialException,
+                pysftp.ConnectionException,
+                pysftp.SSHException):
+            _logger.info("Connection Test Failed!", exc_info=True)
+            raise exceptions.Warning(_("Connection Test Failed!"))
+
+    @api.one
+    def directory_check(self, dirs):
+        for dir in dirs:
+            if not os.path.isdir(dir):
+                try:
+                    os.makedirs(dir)
+                except OSError:
+                    pass
+
+    @api.multi
+    def sftp_connection(self, connection):
+        """Return a new SFTP connection with found parameters."""
+        self.ensure_one()
+        if connection == 'source':
+            params = {
+                "host": self.source_sftp_host,
+                "username": self.source_sftp_user,
+                "port": self.source_sftp_port,
+            }
+            _logger.debug(
+                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
+                extra=params)
+            if self.source_sftp_private_key:
+                params["private_key"] = self.source_sftp_private_key
+                if self.source_sftp_password:
+                    params["private_key_pass"] = self.source_sftp_password
+            else:
+                params["password"] = self.source_sftp_password
+        else:
+            params = {
+                "host": self.dest_sftp_host,
+                "username": self.dest_sftp_user,
+                "port": self.dest_sftp_port,
+            }
+            _logger.debug(
+                "Trying to connect to sftp://%(username)s@%(host)s:%(port)d",
+                extra=params)
+            if self.dest_sftp_private_key:
+                params["private_key"] = self.dest_sftp_private_key
+                if self.dest_sftp_password:
+                    params["private_key_pass"] = self.dest_sftp_password
+            else:
+                params["password"] = self.dest_sftp_password
+
+        return pysftp.Connection(**params)
 
     @api.multi
     @contextmanager
@@ -621,6 +759,10 @@ class ServerFileProcess(models.Model):
             formatted_data.append(my_dict)
 
         return formatted_data
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('status', '=', True)]
 
 
 class ServerFileError(models.Model):
@@ -688,3 +830,55 @@ class ServerFileSuccess(models.Model):
         for rec in self:
             diff = dt.strptime(rec.stop_date, TIME_FORMAT) - dt.strptime(rec.start_date, TIME_FORMAT)
             rec.time = str(diff)
+
+
+class GenerateCBSJournalSuccess(models.Model):
+    _name = 'generate.cbs.journal.success'
+    _description = "CBS Batch Process Success"
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _order = 'date desc'
+
+    name = fields.Char(string='Name', compute='_compute_name', store=True)
+    date = fields.Datetime(string='Date', default=fields.Datetime.now, required=True)
+    start_date = fields.Datetime(string='Start Datetime', required=True)
+    stop_date = fields.Datetime(string='Stop Datetime', required=True)
+    file_name = fields.Char(string='File Path', required=True)
+    upload_file = fields.Binary(string="Generated File", attachment=True)
+    time = fields.Text(string='Time', compute="_compute_time")
+    status = fields.Boolean(default=False, string='Status')
+    journal_count = fields.Char(string="Total Journals", compute='_compute_journal', store=True)
+    line_ids = fields.One2many('cbs.journal.line', 'line_id', string="Journal")
+    state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
+
+    @api.depends('start_date', 'stop_date')
+    def _compute_time(self):
+        for rec in self:
+            diff = datetime.strptime(rec.stop_date, TIME_FORMAT) - datetime.strptime(rec.start_date, TIME_FORMAT)
+            rec.time = str(diff)
+
+    @api.depends('line_ids')
+    def _compute_journal(self):
+        for rec in self:
+            rec.journal_count = len(rec.line_ids)
+
+
+class CBSJournalLine(models.Model):
+    _name = 'cbs.journal.line'
+    _description = "CBS Journal Line"
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
+
+    line_id = fields.Many2one('generate.cbs.journal.success', ondelete='cascade')
+    move_id = fields.Many2one('account.move', string="Journals")
+
+
+class SystemDateStatus(models.Model):
+    _name = 'system.date.status'
+    _description = "System Date Status"
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _order = 'id desc'
+    _rec_name = 'previous_date'
+
+    previous_date = fields.Date(string='Previous Date', required=True)
+    current_date = fields.Date(string='Current Date', required=True)
+    create_date = fields.Datetime(string='Create Date', default=fields.Datetime.now, required=True)
+    state = fields.Selection([('success', 'Success'), ('fail', 'Failed')], required=True)
