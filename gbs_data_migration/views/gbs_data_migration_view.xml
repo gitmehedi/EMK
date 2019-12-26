@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Bulk / Manual Journal" delete="0" duplicate="0">
                     <header>
-                        <button name="gbs_data_migration.action_gbs_data_migration_wizard"
+                        <button name="%(gbs_data_migration.action_gbs_data_migration_wizard)d"
                                 groups="mtbl_access.group_mtbl_sys_admin"
                                 type="action" string="Upload" class="oe_highlight"/>
                     </header>
