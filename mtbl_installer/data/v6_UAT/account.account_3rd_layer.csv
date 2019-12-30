@@ -1,4 +1,4 @@
-Layer,Code,Name,Parent Account,,Type,active,pending,state
+Layer,Code,Name,Parent Account,,Type,Active,Pending,Status
 Layer 3,111,Capital,11,Capital & Reserve,View Type,1,0,approve
 Layer 3,112,Reserve,11,Capital & Reserve,View Type,1,0,approve
 Layer 3,121,Borrowings under Bangladesh Bank,12,Borrowings,View Type,1,0,approve

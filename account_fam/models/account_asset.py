@@ -1,31 +1,40 @@
 # -*- coding: utf-8 -*-
 
 import calendar
-from datetime import date, datetime
+from datetime import datetime, timedelta
+from datetime import date as DT
 from dateutil.relativedelta import relativedelta
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, tools
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools import float_compare, float_is_zero
+
+DATE_FORMAT = "%Y-%m-%d"
 
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
-    _order = "asset_seq desc,id desc"
+    _order = "id DESC,allocation_status ASC"
 
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'close': [('readonly', False)]})
     category_id = fields.Many2one(string='Asset Type', required=True, change_default=True, readonly=True)
     asset_type_id = fields.Many2one(string='Asset Category', required=True, change_default=True, readonly=True)
-    asset_seq = fields.Char(string='Asset Code', readonly=True, track_visibility='onchange')
-    batch_no = fields.Char(string='Batch No', readonly=True, track_visibility='onchange')
-    method_progress_factor = fields.Float('Depreciation Factor', default=0.2, track_visibility='onchange')
+    asset_seq = fields.Char(string='Asset Code', track_visibility='onchange')
+    batch_no = fields.Char(string='Batch No', readonly=True,
+                           track_visibility='onchange', states={'draft': [('readonly', False)]})
+    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1, 3), readonly=True, default=0.0,
+                                          states={'draft': [('readonly', False)]})
+    method_number = fields.Integer(string='Number of Depreciations', default=0,
+                                   help="The number of depreciations needed to depreciate your asset")
     is_custom_depr = fields.Boolean(default=True, required=True, track_visibility='onchange')
-    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=1,
-                                       track_visibility='onchange')
-    method = fields.Selection([('linear', 'Straight Line/Linear'), ('degressive', 'Reducing Method')],
+    partner_id = fields.Many2one('res.partner', string="Vendor", track_visibility='onchange')
+    depreciation_year = fields.Integer(string='Asset Life (In Year)', required=True, default=0, readonly=True,
+                                       track_visibility='onchange', states={'draft': [('readonly', False)]})
+    method = fields.Selection([('degressive', 'Reducing Method'),
+                               ('linear', 'Straight Line/Linear'),
+                               ('no_depreciation', 'No Depreciation')],
                               track_visibility='onchange',
-                              string='Computation Method', required=True, default='linear',
+                              string='Computation Method', required=True, default='degressive',
                               help="Choose the method to use to compute the amount of depreciation lines.\n"
                                    "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
                                    "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
@@ -38,26 +47,207 @@ class AccountAssetAsset(models.Model):
                              states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Purchase Branch', required=True,
                                         track_visibility='onchange')
-    invoice_date = fields.Date(related='invoice_id.date', string='Invoice Date', track_visibility='onchange')
+    invoice_date = fields.Date(related='invoice_id.date_invoice', string='Bill Date', track_visibility='onchange')
     method_period = fields.Integer(string='One Entry (In Month)', required=True, readonly=True, default=1,
                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    allocation_status = fields.Boolean(default=False, string='Allocation Status', track_visibility='onchange')
     value = fields.Float(string='Cost Value', track_visibility='onchange', readonly=True)
-    value_residual = fields.Float(string='Book Value', track_visibility='onchange')
-    advance_amount = fields.Char(string='Advance Amount', track_visibility='onchange', readonly=True,
-                                 states={'draft': [('readonly', False)]})
+    depr_base_value = fields.Float(string='Depr. Base Value', track_visibility='onchange', readonly=True)
+    value_residual = fields.Float(string='WDV', track_visibility='onchange', store=True)
+    advance_amount = fields.Float(string='Adjusted Amount', track_visibility='onchange', readonly=True,
+                                  states={'draft': [('readonly', False)]})
     current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
                                         track_visibility='onchange')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
+                                            track_visibility='onchange', readonly=True,
+                                            states={'draft': [('readonly', False)]})
+    accumulated_value = fields.Float(string='Accumulated Depr.', compute="_compute_accumulated_value",
+                                     track_visibility='onchange', store=True)
+    asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
+    cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
+                                     track_visibility='onchange', readonly=True,
+                                     states={'draft': [('readonly', False)]})
+    note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
+    allocation_status = fields.Boolean(string='Allocation Status', track_visibility='onchange', default=False)
+    depreciation_flag = fields.Boolean(string='Awaiting Disposal', track_visibility='onchange', default=False)
+    lst_depr_date = fields.Date(string='Last Depr. Date', readonly=True, track_visibility='onchange')
+    lst_depr_amount = fields.Float(string='Last Depr. Amount', readonly=True, track_visibility='onchange', store=True)
+    awaiting_dispose_date = fields.Date(string='Awaiting Dispose Date', readonly=True, track_visibility='onchange')
+
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""
+            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER) 
+                    RETURNS INTEGER AS $$
+                    DECLARE
+                    rec RECORD;
+                    mrec RECORD;
+                    query TEXT;
+                    move_query TEXT;
+                    move INTEGER;
+                    user_id INTEGER;
+                    no_days INTEGER;
+                    depr_date DATE;
+                    depr_amount FLOAT;
+                    delta_days INTEGER;
+                    delta_date DATE;
+                    daily_depr FLOAT;
+                    linear TEXT;
+                    degr_start DATE;
+                    degr_end DATE;
+                    lin_start INTEGER;
+                    lin_end INTEGER;
+                    cumul_depr FLOAT;
+                    book_val_amount FLOAT;
+                    d_days INTEGER;
+                    d_month INTEGER;
+                    BEGIN
+                    depr_date = date;
+                    user_id = user_id;
+                    journal_id = journal_id;
+                    opu_id = opu_id;
+                    company_id =company_id;
+                
+                    query = 'SELECT aaa.*,
+                        aac.id AS category_id,
+                        aac.journal_id,
+                        aac.account_depreciation_id,
+                        aac.account_depreciation_expense_id 
+                        FROM account_asset_asset aaa
+                        LEFT JOIN account_asset_category aac
+                           ON (aaa.asset_type_id = aac.id)
+                        WHERE  aaa.depreciation_flag=False 
+                         AND aaa.allocation_status=True';
+                         
+                    INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
+                        VALUES ('/','Asset depreciation date '||depr_date ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
+                        RETURNING account_move.id INTO move;
+                
+                    FOR rec IN EXECUTE query
+                    LOOP
+                
+                    IF rec.lst_depr_date IS NOT NULL THEN
+                      no_days := (depr_date - rec.lst_depr_date)::integer;
+                    ELSE
+                      no_days := (depr_date - rec.asset_usage_date)::integer;
+                    END IF;
+                
+                    IF no_days > 0 AND rec.state='open' AND rec.method !='no_depreciation' THEN
+                        IF rec.method = 'linear' THEN
+                          degr_start = DATE_PART('year', depr_date) || '-01-01';
+                          degr_end = DATE_PART('year', depr_date) || '-12-31';
+                          delta_days =  degr_end -  degr_start + 1;
+
+                          IF rec.value_residual > 0 THEN
+                                daily_depr = (rec.depr_base_value / rec.depreciation_year) / delta_days;
+                          ELSE
+                                daily_depr = 0;
+                          END IF;
+                          
+                        ELSEIF rec.method = 'degressive' THEN
+                          degr_start = DATE_PART('year', depr_date) || '-01-01';
+                          degr_end = DATE_PART('year', depr_date) || '-12-31';
+                          delta_days =  degr_end -  degr_start + 1;
+                          daily_depr = (rec.depr_base_value * rec.method_progress_factor) / delta_days;
+                        END IF;
+                
+                        depr_amount = ROUND(no_days * daily_depr::numeric,2);
+                        if depr_amount > rec.value_residual THEN
+                           depr_amount = rec.value_residual;
+                        END IF;
+                        cumul_depr = rec.accumulated_value + depr_amount;
+                        book_val_amount = rec.value_residual - depr_amount;
+                        
+                        IF depr_amount > 0 THEN
+                        -- insert data into account.move table
+                        INSERT INTO account_asset_depreciation_line (move_id,asset_id,name,sequence,move_check,move_posted_check,line_type,depreciation_date,days,amount,depreciated_value,remaining_value,create_uid,write_uid,create_date,write_date)
+                        VALUES (move,rec.id,'Depreciation',1,True,True,'depreciation',depr_date,no_days,depr_amount,cumul_depr,book_val_amount,user_id,user_id,NOW(),NOW());
+                
+                        d_days = DATE_PART('days', depr_date);
+                        d_month = DATE_PART('month', depr_date);
+                        IF d_days=31 AND d_month=12 AND rec.method='degressive' THEN
+                            UPDATE account_asset_asset
+                            SET lst_depr_date = depr_date,
+                            lst_depr_amount = depr_amount,
+                            accumulated_value=cumul_depr,
+                            value_residual=book_val_amount,
+                            depr_base_value=book_val_amount,
+                            write_uid=user_id,
+                            write_date=NOW()
+                            WHERE id = rec.id;
+                        ELSE
+                            UPDATE account_asset_asset
+                            SET lst_depr_date = depr_date,
+                            lst_depr_amount = depr_amount,
+                            accumulated_value=cumul_depr,
+                            value_residual=book_val_amount,
+                            write_uid=user_id,
+                            write_date=NOW()
+                            WHERE id = rec.id;
+                        END IF;
+                        END IF;
+                        --RAISE NOTICE '% - %', move, move;
+                    END IF;
+                    END LOOP;
+                    move_query='SELECT aaa.current_branch_id,
+                            aaa.cost_centre_id,
+                            aac.account_depreciation_id,
+                            aac.account_depreciation_expense_id,
+                            SUM(aaa.lst_depr_amount) AS depr_sum
+                        FROM account_asset_asset aaa
+                        LEFT JOIN account_asset_category aac
+                               ON (aaa.asset_type_id = aac.id)
+                        LEFT JOIN account_asset_depreciation_line aadl
+                               ON (aadl.asset_id = aaa.id)
+                        WHERE  aaa.depreciation_flag=False 
+                             AND aaa.allocation_status=True
+                             AND aadl.move_id= '|| move || 
+                         'GROUP BY aaa.current_branch_id,
+                            aaa.cost_centre_id,
+                            aac.account_depreciation_id,
+                            aac.account_depreciation_expense_id
+                          ORDER BY aaa.current_branch_id DESC';
+                    FOR mrec IN EXECUTE move_query
+                    LOOP
+                          -- insert credit amount in account.move.line
+                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
+                          -- insert debit amount in account.move.line
+                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
+                        
+                    END LOOP;
+                    RETURN move;
+                END;
+            $$ LANGUAGE plpgsql;
+        """)
+
+    @api.model
+    def create(self, vals):
+        asset = super(AccountAssetAsset, self).create(vals)
+        return asset
+
+    @api.multi
+    def write(self, vals):
+        res = super(AccountAssetAsset, self).write(vals)
+        return res
 
     @api.constrains('depreciation_year')
     def check_depreciation_year(self):
-        if self.depreciation_year < 1:
-            raise ValidationError(_('Total year cannot be zero or negative value.'))
+        if self.method == 'linear':
+            if self.depreciation_year < 1:
+                raise ValidationError(_('Asset Life cann\'t be zero or negative value.'))
 
     @api.onchange('depreciation_year')
     def onchange_depreciation_year(self):
-        if self.depreciation_year:
-            self.method_number = int(12 * self.depreciation_year)
+        if self.method == 'linear':
+            if self.depreciation_year:
+                self.method_number = int(12 * self.depreciation_year)
+
+    @api.multi
+    @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount')
+    def _compute_accumulated_value(self):
+        for rec in self:
+            rec.accumulated_value = rec.value - rec.value_residual
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -67,14 +257,6 @@ class AccountAssetAsset(models.Model):
     @api.multi
     def validate(self):
         super(AccountAssetAsset, self).validate()
-        if not self.asset_seq:
-            code = self.env['ir.sequence'].next_by_code('account.asset.asset.code') or _('New')
-            ATAC = '{0}-{1}'.format(self.category_id.code, self.asset_type_id.code)
-            self.write({'asset_seq': code.replace('ATAC', ATAC)})
-
-    def depr_date_format(self, depreciation_date):
-        no_of_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
-        return depreciation_date.replace(day=no_of_days)
 
     @api.multi
     def name_get(self):
@@ -101,153 +283,182 @@ class AccountAssetAsset(models.Model):
 
     @api.multi
     def compute_depreciation_board(self):
-        if self.is_custom_depr:
-            self.ensure_one()
+        return False
 
-            posted_depreciation_line_ids = self.depreciation_line_ids.filtered(lambda x: x.move_check).sorted(
-                key=lambda l: l.depreciation_date)
-            unposted_depreciation_line_ids = self.depreciation_line_ids.filtered(lambda x: not x.move_check)
+    @api.multi
+    def _get_last_depreciation_date(self):
+        """
+        @param id: ids of a account.asset.asset objects
+        @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the purchase date of this asset
+        """
+        self.env.cr.execute("""
+                        SELECT a.id as id, COALESCE(MAX(rel.depreciation_date),a.asset_usage_date) AS date
+                        FROM account_asset_asset a
+                        LEFT JOIN account_asset_depreciation_line rel ON (rel.asset_id = a.id)
+                        WHERE a.id IN %s
+                        GROUP BY a.id, rel.depreciation_date """, (tuple(self.ids),))
+        result = dict(self.env.cr.fetchall())
+        return result
 
-            # Remove old unposted depreciation lines. We cannot use unlink() with One2many field
-            commands = [(2, line_id.id, False) for line_id in unposted_depreciation_line_ids]
+    @api.model
+    def _cron_generate_entries(self):
+        cron_ctx = self.env.ref("account_asset.account_asset_cron")
+        date = cron_ctx.nextcall[:10]
+        self._generate_depreciation(date)
 
-            if self.value_residual != 0.0:
-                amount_to_depr = residual_amount = self.value_residual
-                if self.prorata:
-                    # if we already have some previous validated entries, starting date is last entry + method perio
-                    if posted_depreciation_line_ids and posted_depreciation_line_ids[-1].depreciation_date:
-                        last_depreciation_date = datetime.strptime(posted_depreciation_line_ids[-1].depreciation_date,
-                                                                   DF).date()
-                        depreciation_date = last_depreciation_date + relativedelta(months=+self.method_period)
+    @api.model
+    def _generate_depreciation(self, date):
+        journal_id = self.env['account.journal'].search([('name', '=', 'Vendor Bill')], limit=1)
+        if not journal_id:
+            raise ValidationError(_('Create a journal with name [Vendor Bill]'))
+
+        company_id = self.env.user.company_id.id
+        opu_id = self.env.user.default_operating_unit_id.id
+        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s)""" % (
+            date, self.env.uid, journal_id.id, opu_id, company_id));
+        debit, credit = 0, 0
+        for val in self.env.cr.fetchall():
+            move = self.env['account.move'].search([('id', '=', val[0])])
+            for rec in move.line_ids:
+                debit = debit + rec.debit
+                credit = credit + rec.credit
+            if debit == credit and debit > 0 and credit > 0:
+                if move.name == '/':
+                    sequence = move.journal_id.sequence_id
+                    new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
+                    move.write({'name': new_name, 'state': 'posted', 'amount': debit})
+            else:
+                move.unlink()
+
+    @api.model
+    def compute_depreciation_history(self, date, asset):
+        if asset.allocation_status and asset.state == 'open' and not asset.depreciation_flag and asset.asset_type_id.method != 'no_depreciation':
+            if self.lst_depr_date:
+                no_of_days = (date - self.date_str_format(asset.lst_depr_date)).days
+            else:
+                no_of_days = (date - self.date_str_format(asset.asset_usage_date)).days
+
+            if no_of_days > 0:
+                if asset.method == 'linear':
+                    year = date.year
+                    date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
+
+                    if asset.value_residual > 0:
+                        daily_depr = (asset.depr_base_value / asset.depreciation_year) / date_delta
                     else:
-                        depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
-                else:
-                    # depreciation_date = 1st of January of purchase year if annual valuation, 1st of
-                    # purchase month in other cases
-                    if self.method_period >= 12:
-                        if self.company_id.fiscalyear_last_month:
-                            asset_date = date(year=int(self.date[:4]),
-                                              month=self.company_id.fiscalyear_last_month,
-                                              day=self.company_id.fiscalyear_last_day) + \
-                                         relativedelta(days=1) + \
-                                         relativedelta(year=int(self.date[:4]))  # e.g. 2018-12-31 +1 -> 2019
-                        else:
-                            asset_date = datetime.strptime(self.date[:4] + '-01-01', DF).date()
-                    else:
-                        asset_date = datetime.strptime(self.date[:7] + '-01', DF).date()
-                    # if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
-                    if posted_depreciation_line_ids and posted_depreciation_line_ids[-1].depreciation_date:
-                        last_depreciation_date = datetime.strptime(posted_depreciation_line_ids[-1].depreciation_date,
-                                                                   DF).date()
-                        depreciation_date = last_depreciation_date + relativedelta(months=+self.method_period)
-                    else:
-                        depreciation_date = asset_date
+                        daily_depr = 0;
 
-                depreciation_date = self.depr_date_format(depreciation_date)
-                day = depreciation_date.day
-                month = depreciation_date.month
-                year = depreciation_date.year
-                total_days = (year % 4) and 365 or 366
+                elif asset.method == 'degressive':
+                    year = date.year
+                    date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
+                    daily_depr = (asset.depr_base_value * asset.method_progress_factor) / date_delta
 
-                undone_dotation_number = self._compute_board_undone_dotation_nb(depreciation_date, total_days)
-                year_date = depreciation_date.year
-                year_amount = 0
-                remaining_amount = residual_amount
-                for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
-                    sequence = x + 1
-                    if self.method == 'linear':
-                        date_delta = (datetime.strptime(self.date, "%Y-%m-%d") + relativedelta(
-                            years=self.depreciation_year) - datetime.strptime(self.date, "%Y-%m-%d"))
-                        amount = self._compute_board_amount(sequence, residual_amount, amount_to_depr,
-                                                            undone_dotation_number,
-                                                            posted_depreciation_line_ids, date_delta.days,
-                                                            depreciation_date)
-                        amount = self.currency_id.round(amount)
-                        if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
-                            continue
+                depr_amount = no_of_days * daily_depr
+                if depr_amount > asset.value_residual:
+                    depr_amount = asset.value_residual
 
-                        residual_amount -= amount
-                        remaining_amount = residual_amount
-                    elif self.method == 'degressive':
-                        amount = self._compute_board_amount(sequence, residual_amount, amount_to_depr,
-                                                            undone_dotation_number,
-                                                            posted_depreciation_line_ids, total_days, depreciation_date)
-                        amount = self.currency_id.round(amount)
+                cumul_depr = sum([rec.amount for rec in asset.depreciation_line_ids]) + depr_amount
+                book_val_amount = asset.value_residual - depr_amount
 
-                        if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
-                            continue
-
-                        next_year = depreciation_date + relativedelta(days=1)
-                        remaining_amount = remaining_amount - amount
-                        year_amount = year_amount + amount
-                        if year_date != next_year.year:
-                            year_date = next_year.year
-                            residual_amount -= year_amount
-                            year_amount = 0
-                        else:
-                            residual_amount = residual_amount
-
+                if depr_amount > 0:
                     vals = {
-                        'amount': amount,
+                        'amount': depr_amount,
                         'asset_id': self.id,
-                        'sequence': sequence,
-                        'name': (self.code or '') + '/' + str(sequence),
-                        'remaining_value': abs(remaining_amount),
-                        'depreciated_value': self.value - (self.salvage_value + remaining_amount),
-                        'depreciation_date': depreciation_date.strftime(DF),
+                        'sequence': 1,
+                        'name': (asset.code or '') + '/' + str(1),
+                        'remaining_value': abs(book_val_amount),
+                        'depreciated_value': cumul_depr,
+                        'depreciation_date': date.date(),
+                        'days': no_of_days,
+                        'asset_id': asset.id,
                     }
-                    commands.append((0, False, vals))
-                    # Considering Depr. Period as months
-                    depreciation_date = date(year, month, day) + relativedelta(months=+self.method_period)
-                    depreciation_date = self.depr_date_format(depreciation_date)
-                    day = depreciation_date.day
-                    month = depreciation_date.month
-                    year = depreciation_date.year
 
-            self.write({'depreciation_line_ids': commands})
+                    rec = asset.depreciation_line_ids.search(
+                        [('asset_id', '=', vals['asset_id']), ('depreciation_date', '=', date.date())])
+                    if not rec:
+                        depreciation = asset.depreciation_line_ids.create(vals)
+                        if depreciation:
+                            asset.create_move(depreciation)
+                            if date.month == 12 and date.day == 31 and asset.method == 'degressive':
+                                asset.write({'lst_depr_date': date.date(),
+                                             'lst_depr_amount': depr_amount,
+                                             'depr_base_value': book_val_amount
+                                             })
+                            else:
+                                asset.write({'lst_depr_date': date.date(),
+                                             'lst_depr_amount': depr_amount
+                                             })
 
+    @api.multi
+    def create_move(self, line):
+        created_moves = self.env['account.move']
+        prec = self.env['decimal.precision'].precision_get('Account')
+        if line:
+            if line.move_id:
+                raise UserError(
+                    _('This depreciation is already linked to a journal entry! Please post or delete it.'))
+
+            category_id = line.asset_id.asset_type_id
+            if not category_id.account_depreciation_id or not category_id.account_depreciation_expense_id.id:
+                raise UserError(
+                    _('Asset Category [{0}] need to set following fields'
+                      ' \n - Depreciation Exp. A/C \n - Accumulated Depreciation A/C'.format(
+                        line.asset_id.asset_type_id.name)))
+
+            depreciation_date = self.env.context.get(
+                'depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
+            company_currency = line.asset_id.company_id.currency_id
+            current_currency = line.asset_id.currency_id
+            amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
+            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
+            move_line_1 = {
+                'name': asset_name,
+                'account_id': category_id.account_depreciation_id.id,
+                'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
+                'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+                'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
+                'analytic_account_id': line.asset_id.cost_centre_id.id if line.asset_id.cost_centre_id else False,
+                'operating_unit_id': line.asset_id.current_branch_id.id,
+                'sub_operating_unit_id': line.asset_id.sub_operating_unit_id.id if line.asset_id.sub_operating_unit_id else False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+                'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+            }
+            move_line_2 = {
+                'name': asset_name,
+                'account_id': category_id.account_depreciation_expense_id.id,
+                'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
+                'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+                'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
+                'analytic_account_id': line.asset_id.cost_centre_id.id if line.asset_id.cost_centre_id else False,
+                'operating_unit_id': line.asset_id.current_branch_id.id,
+                'sub_operating_unit_id': line.asset_id.sub_operating_unit_id.id if line.asset_id.sub_operating_unit_id else False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
+                'amount_currency': company_currency != current_currency and line.amount or 0.0,
+            }
+            move_vals = {
+                'ref': line.asset_id.asset_seq,
+                'date': fields.Datetime.now(),
+                'journal_id': category_id.journal_id.id,
+                'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
+            }
+            move = self.env['account.move'].create(move_vals)
+            line.write({'move_id': move.id, 'move_check': True})
+            created_moves |= move
+
+        if move.state == 'draft' and line.move_id.id == move.id:
+            move.sudo().post()
             return True
-        else:
-            return super(AccountAssetAsset, self).compute_depreciation_board()
 
-    def _compute_board_amount(self, sequence, residual_amount, amount_to_depr, undone_dotation_number,
-                              posted_depreciation_line_ids, total_days, depreciation_date):
-        if self.is_custom_depr:
-
-            amount = 0
-            if self.method == 'linear':
-                if self.prorata:
-                    no_of_day = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
-                    if sequence == 1:
-                        days = no_of_day - datetime.strptime(self.date, "%Y-%m-%d").day
-                        amount = (self.value_residual / total_days) * days
-                    elif sequence == undone_dotation_number:
-                        amount = residual_amount
-                    else:
-                        days = no_of_day
-                        amount = (self.value_residual / total_days) * days
-            elif self.method == 'degressive':
-                if self.prorata:
-                    if sequence == 1:
-                        if self.method_period % 12 != 0:
-                            date = datetime.strptime(self.date, '%Y-%m-%d')
-                            month_days = calendar.monthrange(date.year, date.month)[1]
-                            days = month_days - date.day
-                            amount = (residual_amount * self.method_progress_factor) / total_days * days
-                        else:
-                            days = (self.company_id.compute_fiscalyear_dates(depreciation_date)[
-                                        'date_to'] - depreciation_date).days + 1
-                            amount = (residual_amount * self.method_progress_factor) / total_days * days
-                    else:
-                        month_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
-                        amount = (residual_amount * self.method_progress_factor) / total_days * month_days
-
-            return amount
-        else:
-            return super(AccountAssetAsset, self)._compute_board_amount(self, sequence, residual_amount, amount_to_depr,
-                                                                        undone_dotation_number,
-                                                                        posted_depreciation_line_ids, total_days,
-                                                                        depreciation_date)
+    @api.multi
+    def _compute_entries(self, date, group_entries=False):
+        depreciation_ids = self.env['account.asset.depreciation.line'].search([
+            ('asset_id', 'in', self.ids), ('depreciation_date', '<=', date),
+            ('move_check', '=', False), ('active', '=', False)])
+        if group_entries:
+            return depreciation_ids.create_grouped_move()
+        return depreciation_ids.create_move()
 
     def onchange_category_id_values(self, category_id):
         if category_id:
@@ -265,53 +476,59 @@ class AccountAssetAsset(models.Model):
                 }
             }
 
+    @api.multi
+    def set_to_close(self, date):
+        for asset in self:
+            if asset.allocation_status and asset.state == 'open' and asset.depreciation_flag:
+                last_depr_date = asset._get_last_depreciation_date()
+                curr_depr_date = self.date_depr_format(date)
+                no_of_days = (curr_depr_date - self.date_str_format(last_depr_date[asset['id']])).days
+                depr_amount = asset.value_residual
+                book_val_amount = asset.value_residual - depr_amount
+
+                vals = {
+                    'amount': asset.value_residual,
+                    'asset_id': self.id,
+                    'sequence': 1,
+                    'name': (asset.code or '') + '/' + str(1),
+                    'remaining_value': abs(book_val_amount),
+                    'depreciated_value': asset.value_residual,
+                    'depreciation_date': curr_depr_date.date(),
+                    'days': no_of_days,
+                    'asset_id': asset.id,
+                }
+
+                depreciation = asset.depreciation_line_ids.create(vals)
+                if depreciation:
+                    if asset.create_move(depreciation):
+                        asset.write({'lst_depr_date': curr_depr_date.date()})
+                        return True
+
+    def date_depr_format(self, date):
+        no_of_days = calendar.monthrange(date.year, date.month)[1]
+        return date.replace(day=no_of_days)
+
+    def date_str_format(self, date):
+        if type(date) is str:
+            return datetime.strptime(date, DATE_FORMAT)
+        elif type(date) is datetime:
+            return "{0}-{1}-{2}".format(date.year, date.month, date.day)
+
 
 class AccountAssetDepreciationLine(models.Model):
     _inherit = 'account.asset.depreciation.line'
 
+    days = fields.Integer(string='Days', required=True)
     line_type = fields.Selection([('depreciation', 'Depreciation'), ('sale', 'Sale'), ('dispose', 'Dispose')],
                                  default='depreciation', required=True, string="Line Type")
+    amount = fields.Float(string='Depreciation')
+    remaining_value = fields.Float(string='WDV at Date')
+    depreciation_date = fields.Date('Date')
 
     @api.multi
     def create_move(self, post_move=True):
-        created_moves = self.env['account.move']
-        prec = self.env['decimal.precision'].precision_get('Account')
-        for line in self:
-            if line.move_id:
-                raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
-            category_id = line.asset_id.category_id
-            depreciation_date = self.env.context.get(
-                'depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
-            company_currency = line.asset_id.company_id.currency_id
-            current_currency = line.asset_id.currency_id
-            amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
-            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
-            current_branch = line.asset_id.current_branch_id
-
-            if self.env.context.get('dispose'):
-                move_vals = self.format_dispose_move(amount, asset_name, category_id, prec, line,
-                                                     company_currency,
-                                                     current_currency, depreciation_date, current_branch)
-                line.write({'line_type': 'dispose'})
-            elif self.env.context.get('sale'):
-                move_vals = self.format_sale_move(amount, asset_name, category_id, prec, line,
-                                                  company_currency,
-                                                  current_currency, depreciation_date, current_branch)
-                line.write({'line_type': 'sale'})
-            else:
-                move_vals = self.format_depreciation_move(amount, asset_name, category_id, prec, line,
-                                                          company_currency,
-                                                          current_currency, depreciation_date, current_branch)
-                line.write({'line_type': 'depreciation'})
-
-            move = self.env['account.move'].create(move_vals)
-            line.write({'move_id': move.id, 'move_check': True})
-            created_moves |= move
-
-        if post_move and created_moves:
-            created_moves.filtered(
-                lambda m: any(m.asset_depreciation_ids.mapped('asset_id.category_id.open_asset'))).post()
-        return [x.id for x in created_moves]
+        self.asset_id.create_move(self)
+        return self.move_check
 
     def format_dispose_move(self, amount, asset_name, category_id, prec, line, company_currency, current_currency,
                             depreciation_date, current_branch):
@@ -321,8 +538,8 @@ class AccountAssetDepreciationLine(models.Model):
             'debit': 0.0,
             'credit': self.asset_id.value if float_compare(self.asset_id.value, 0.0,
                                                            precision_digits=prec) > 0 else 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -331,8 +548,8 @@ class AccountAssetDepreciationLine(models.Model):
             'account_id': category_id.account_depreciation_id.id,
             'credit': 0.0,
             'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }
@@ -342,8 +559,8 @@ class AccountAssetDepreciationLine(models.Model):
             'debit': self.asset_id.value - amount if float_compare(self.asset_id.value - amount, 0.0,
                                                                    precision_digits=prec) > 0 else 0.0,
             'credit': 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -368,8 +585,8 @@ class AccountAssetDepreciationLine(models.Model):
                 'account_id': category_id.account_asset_gain_id.id,
                 'debit': 0.0,
                 'credit': gain if float_compare(gain, 0.0, precision_digits=prec) > 0 else 0.0,
-                'journal_id': category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+                'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
@@ -380,8 +597,8 @@ class AccountAssetDepreciationLine(models.Model):
                 'account_id': category_id.account_asset_loss_id.id,
                 'debit': loss if float_compare(loss, 0.0, precision_digits=prec) > 0 else 0.0,
                 'credit': 0.0,
-                'journal_id': category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+                'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
@@ -391,8 +608,8 @@ class AccountAssetDepreciationLine(models.Model):
             'debit': 0.0,
             'credit': self.asset_id.value if float_compare(self.asset_id.value, 0.0,
                                                            precision_digits=prec) > 0 else 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -402,8 +619,8 @@ class AccountAssetDepreciationLine(models.Model):
             'credit': 0.0,
             'debit': self.asset_id.value - amount if float_compare(self.asset_id.value - amount, 0.0,
                                                                    precision_digits=prec) > 0 else 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }
@@ -413,8 +630,8 @@ class AccountAssetDepreciationLine(models.Model):
             'account_id': category_id.asset_sale_suspense_account_id.id,
             'debit': sales.sale_value if float_compare(sales.sale_value, 0.0, precision_digits=prec) > 0 else 0.0,
             'credit': 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -433,8 +650,8 @@ class AccountAssetDepreciationLine(models.Model):
             'account_id': category_id.account_depreciation_id.id,
             'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
             'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
         }
@@ -443,8 +660,8 @@ class AccountAssetDepreciationLine(models.Model):
             'account_id': category_id.account_depreciation_expense_id.id,
             'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
             'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
-            'journal_id': category_id.journal_id.id,
-            'partner_id': line.asset_id.partner_id.id,
+            'journal_id': category_id.journal_id.id if category_id.journal_id else False,
+            'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
             'amount_currency': company_currency != current_currency and line.amount or 0.0,
         }

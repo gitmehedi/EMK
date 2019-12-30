@@ -42,7 +42,7 @@ class AccountMove(models.Model):
                 self._generate_debit_move_line(acc_inv_line_obj, date, move_obj.id,account_move_line_obj)
                 self._generate_credit_move_line(acc_journal_objs,acc_inv_line_obj,date,move_obj.id,account_move_line_obj)
 
-            move_obj.post()
+            move_obj.sudo().post()
 
         acc_inv_line_objs.write({'is_pro_expd':True})
         return True

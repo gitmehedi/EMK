@@ -12,7 +12,7 @@ class AccountInvoiceLine(models.Model):
 
     @api.onchange('asset_category_id')
     def onchange_asset_category_id(self):
-        super(AccountInvoiceLine,self).onchange_asset_category_id()
+        super(AccountInvoiceLine, self).onchange_asset_category_id()
         if self.asset_category_id:
             self.asset_type_id = self.product_id.product_tmpl_id.asset_type_id
 
@@ -31,14 +31,15 @@ class AccountInvoiceLine(models.Model):
     def asset_create(self):
         if self.asset_category_id:
             asset_value = self.price_subtotal / self.quantity
-            batch_seq = {val:key for key,val in enumerate(self.invoice_id.invoice_line_ids.ids)}
+            batch_seq = {val: key for key, val in enumerate(self.invoice_id.invoice_line_ids.ids)}
             for rec in range(0, int(self.quantity)):
                 vals = {
-                    'name': self.name,
+                    'name': self.asset_name or '/',
                     'code': self.invoice_id.number or False,
                     'category_id': self.asset_category_id.id,
                     'asset_type_id': self.asset_type_id.id,
                     'value': asset_value,
+                    'depr_base_value': asset_value,
                     'partner_id': self.invoice_id.partner_id.id,
                     'company_id': self.invoice_id.company_id.id,
                     'currency_id': self.invoice_id.company_currency_id.id,
@@ -47,7 +48,9 @@ class AccountInvoiceLine(models.Model):
                     'current_branch_id': self.invoice_id.operating_unit_id.id,
                     'operating_unit_id': self.invoice_id.operating_unit_id.id,
                     'prorata': True,
-                    'batch_no': "{0}-{1}".format(self.invoice_id.number,batch_seq[self.id])
+                    'batch_no': "{0}-{1}".format(self.invoice_id.number, batch_seq[self.id]),
+                    'cost_centre_id': self.account_analytic_id.id if self.account_analytic_id else None,
+                    'sub_operating_unit_id': self.sub_operating_unit_id.id if self.sub_operating_unit_id else None,
                 }
                 changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['asset_type_id'])
                 vals.update(changed_vals['value'])

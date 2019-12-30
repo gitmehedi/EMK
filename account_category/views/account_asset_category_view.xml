@@ -7,40 +7,43 @@
             <form string="Account Asset Category" edit="0" duplicate="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
-                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
-                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
                     <button name="%(account_fam.action_account_asset_category_wizard)d" string="Edit" type="action"
-                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                            class="oe_highlight"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                            groups="mtbl_access.group_mtbl_sys_admin"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                             attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <button name="act_reject_pending" string="Reject" type="object"
-                            groups="mtbl_access.group_mtbl_sys_admin"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
                             attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <button name="act_draft" string="Set to Draft" type="object" states="reject"
-                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1>
-                            <field name="code" readonly='True'/>
-                        </h1>
-                        <label for="name" string="Asset Category" class="oe_edit_only"
+                        <label for="name" string="Name"
                                attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
                                attrs="{'invisible': [('type','==','purchase')]}"/>
                         <h1>
                             <field name="name" placeholder="e.g. Lenovo"/>
                         </h1>
-                        <label for="parent_id" string="Asset Type" class="oe_edit_only"
-                               attrs="{'invisible': [('type','!=','purchase')]}"/>
+                        <label for="parent_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <h1>
                             <field name="parent_id" required="True"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                    domain="[('parent_id','=',False)]"/>
+                        </h1>
+                    </div>
+                    <div class="oe_title pull-left">
+                        <label for="code" string="Code"/>
+                        <h1>
+                            <field name="code"/>
                         </h1>
                     </div>
                     <div>
@@ -59,54 +62,34 @@
                             <field name="asset_suspense_account_id"
                                    domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="account_depreciation_expense_id"
+                            <field name="account_asset_loss_id"
                                    domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                         <group>
-                            <field name="account_depreciation_id"
-                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="account_asset_loss_id"
-                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="account_asset_gain_id"
                                    domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="asset_sale_suspense_account_id"
                                    domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_depreciation_expense_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                   attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_depreciation_id"
+                                   domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                   attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                     </group>
                     <group>
-                        <group string="Periodicity">
-                            <field name="method_time" string="Time Method Based On" widget="radio"
-                                   attrs="{'invisible': ['|',('type','!=','purchase'),('is_custom_depr','=',True)]}"/>
-                            <label for="depreciation_year" string="Asset Life (In Year)"/>
-                            <div>
-                                <field name="depreciation_year" nolabel="1" class="oe_inline"
-                                       attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
-                            </div>
-                            <field name="method_number" string="Number of Entries" invisible="1"
-                                   attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)]}"/>
-                            <label for="method_period"/>
-                            <div>
-                                <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}"
-                                       class="oe_inline"/>
-                            </div>
-                            <field name="method_end"
-                                   attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
-                        </group>
-                        <group string="Additional Options" attrs="{'invisible': [('is_custom_depr','=',True)]}">
-                            <field name="open_asset"/>
-                            <field name="group_entries"/>
-                        </group>
                         <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                             <field name="method" widget="radio"/>
                             <field name="method_progress_factor"
-                                   attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                            <field name="prorata"
-                                   attrs="{'invisible': ['|',('method_time','=','end'),('is_custom_depr','=',True)]}"/>
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="depreciation_year"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
                         </group>
                     </group>
                     <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
@@ -114,10 +97,21 @@
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
-                            <field name="request_date"/>
-                            <field name="change_date"/>
+                            <field name="journal_id"/>
+                            <field name="account_asset_id"/>
+                            <field name="asset_suspense_account_id"/>
+                            <field name="account_depreciation_id"/>
+                            <field name="account_depreciation_expense_id"/>
+                            <field name="account_asset_loss_id"/>
+                            <field name="account_asset_gain_id"/>
+                            <field name="asset_sale_suspense_account_id"/>
+                            <field name="method"/>
+                            <field name="method_progress_factor"/>
+                            <field name="depreciation_year"/>
                             <field name="status"/>
                             <field name="state"/>
+                            <field name="request_date"/>
+                            <field name="change_date"/>
                         </tree>
                     </field>
                 </sheet>
@@ -206,7 +200,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_account_asset_type">
-        <field name="name">Asset Category</field>
+        <field name="name">Fixed Assets Category</field>
         <field name="res_model">account.asset.category</field>
         <field name="domain">[('type', '=', 'purchase'),('parent_id','!=',False)]</field>
         <field name="view_type">form</field>
@@ -237,7 +231,7 @@
     </record>
 
     <menuitem parent="account_fam.sub_configuration_menu" id="menu_action_account_asset_type"
-              action="action_account_asset_type" sequence="1"/>
+              action="action_account_asset_type" sequence="10"/>
 
     <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
         <field name="domain">[('type', '=', 'purchase'),('parent_id','=',False)]</field>

@@ -17,8 +17,7 @@
     'category': 'Accounting & Finance',
     'depends': [
         'agreement_account',
-        'gbs_payment_instruction',
-        'account_invoice_merge_operating_unit',
+        'gbs_vendor_bill',
     ],
     'data': [
         'security/ir_rule.xml',
@@ -29,6 +28,7 @@
         'wizards/invoice_merge_view.xml',
         'views/vendor_agreement_view.xml',
         'views/account_invoice_view.xml',
+        'views/payment_instrauction_view.xml',
     ],
     'installable': True,
     'application': True,

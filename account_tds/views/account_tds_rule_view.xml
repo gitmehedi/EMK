@@ -25,10 +25,14 @@
                                 <field name="name" placeholder="Name"/>
                                 <field name="active"/>
                                 <field name="is_amendment" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
                             </group>
                             <group>
                                 <field name="effective_from"/>
                                 <field name="current_version" attrs="{'invisible': [('version_ids','=', [])]}"/>
+                                <field name="operating_unit_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -42,7 +46,13 @@
                                                    attrs="{'required':[('type_rate', '=','flat')]}"/>
                                             <label string="%" class="oe_inline"/>
                                         </div>
-                                        <field name="price_include" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                        <field name="price_include" invisible="True"/>
+                                        <field name="price_exclude" attrs="{'invisible':['|',('type_rate', '!=', 'flat'),('price_include', '!=', False)]}"/>
+                                        <field name="effect_on_base" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="account_id" domain="[('internal_type','=','other')]"
+                                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     </group>
                                     <field name="line_ids" nolabel="1" string="Slab Details"
                                            attrs="{'invisible':[('type_rate', '!=', 'slab')]}">
@@ -52,14 +62,7 @@
                                             <field name="rate" string="Rate(%)"/>
                                         </tree>
                                     </field>
-                                </group>
-                            </page>
-                            <page string="Accounting">
-                                <group>
-                                    <group>
-                                        <field name="account_id" domain="[('internal_type','=','other')]"
-                                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    </group>
+
                                 </group>
                             </page>
                             <page string="Version Details" attrs="{'invisible': [('version_ids','=', [])]}">
@@ -136,7 +139,8 @@
                                 <field name="type_rate"/>
                                 <field name="flat_rate"
                                        attrs="{'invisible':[('type_rate', '!=', 'flat')],'required':[('type_rate', '=','flat')]}"/>
-                                <field name="price_include" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
+                                <field name="price_include" invisible="True"/>
+                                <field name="price_exclude" attrs="{'invisible':[('type_rate', '!=', 'flat')]}"/>
                             </group>
                             <group>
                                 <field name="account_id"

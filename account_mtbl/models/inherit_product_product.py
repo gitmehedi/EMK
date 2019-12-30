@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
@@ -20,6 +20,8 @@ class ProductProduct(models.Model):
                              string='Status', track_visibility='onchange')
     line_ids = fields.One2many('history.product.product', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.one
     def act_draft(self):
@@ -32,19 +34,29 @@ class ProductProduct(models.Model):
 
     @api.one
     def act_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+                'approver_id': self.env.user.id,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
@@ -61,8 +73,15 @@ class ProductProduct(models.Model):
                     self.supplier_taxes_id = [(6, 0, requested.supplier_taxes_id.ids)]
                 if requested.default_code:
                     self.default_code = requested.default_code
+                if requested.type == 'asset':
+                    self.type = requested.type
+                    self.asset_category_id = requested.asset_category_id.id
+                    self.asset_type_id = requested.asset_type_id.id
+                else:
+                    self.type = requested.type if requested.type else self.type
 
                 self.pending = False
+                self.approver_id = self.env.user.id
                 requested.state = 'approve'
                 requested.change_date = fields.Datetime.now()
 
@@ -80,7 +99,8 @@ class ProductProduct(models.Model):
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -115,10 +135,11 @@ class HistoryProductProduct(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     standard_price = fields.Float('Cost Price')
     account_tds_id = fields.Many2one('tds.rule', string='TDS Rule')
-    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
-                                         string='Vendor Taxes',
-                                         domain=[('type_tax_use', '=', 'purchase')])
-    default_code = fields.Char('Internal Reference', index=True)
+    supplier_taxes_id = fields.Many2many('account.tax', string='VAT', domain=[('type_tax_use', '=', 'purchase')])
+    default_code = fields.Char('Internal Reference')
+    type = fields.Selection([('consu', 'Product'), ('service', 'Service'), ('asset', 'Assets')], string='Product Type')
+    asset_type_id = fields.Many2one('account.asset.category', string='Asset Type')
+    asset_category_id = fields.Many2one('account.asset.category', string='Asset Category')
     line_id = fields.Many2one('product.product', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')
@@ -151,15 +172,21 @@ class ProductTemplate(models.Model):
     @api.one
     def act_approve(self):
         if self.state == 'draft':
-            self.active = True
-            self.pending = False
-            self.state = 'approve'
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+                'approver_id': self.env.user.id,
+            })
 
     @api.one
     def act_reject(self):
         if self.state == 'draft':
-            self.state = 'reject'
-            self.pending = False
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
 
     @api.one
     def act_approve_pending(self):
@@ -199,7 +226,8 @@ class ProductTemplate(models.Model):
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

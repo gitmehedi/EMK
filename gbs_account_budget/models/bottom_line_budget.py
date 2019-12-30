@@ -1,5 +1,5 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _, SUPERUSER_ID
+from odoo.exceptions import UserError,ValidationError
 
 class BottomLineBudget(models.Model):
     _name = "bottom.line.budget"
@@ -20,9 +20,8 @@ class BottomLineBudget(models.Model):
     confirm_date = fields.Datetime(string='Confirm Date', readonly=True, track_visibility='onchange')
     approve_date = fields.Datetime(string='Approve Date', readonly=True, track_visibility='onchange')
     creating_user_id = fields.Many2one('res.users', 'Responsible', readonly=True, track_visibility='onchange',
-                                       default=lambda self: self.env.user)
-    approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange',
-                                       default=lambda self: self.env.user)
+                                       default=lambda self: self.env.user.id)
+    approved_user_id = fields.Many2one('res.users', 'Approved By', readonly=True, track_visibility='onchange')
     active = fields.Boolean(default=True,track_visibility='onchange')
     total_planned_amount = fields.Float('Total Planned Amount', compute='_compute_planned_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
@@ -44,37 +43,43 @@ class BottomLineBudget(models.Model):
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|',
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|',
                  ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning(_('[Unique Error] Name must be unique!'))
 
     @api.multi
     def action_budget_confirm(self):
-        vals = {'state': 'confirm',
-                'confirm_date': fields.Datetime.now(),
-                }
-        self.write(vals)
-        self.bottom_line_budgets.write({'state': 'confirm'})
+        if self.state == 'draft':
+            vals = {'state': 'confirm',
+                    'confirm_date': fields.Datetime.now(),
+                    }
+            self.write(vals)
+            self.bottom_line_budgets.write({'state': 'confirm'})
 
     @api.multi
     def action_budget_approve(self):
-        vals = {'state': 'approve',
-                'approve_date': fields.Datetime.now(),
-                'approved_user_id': self.env.user.id
-                }
-        self.write(vals)
-        self.bottom_line_budgets.write({'state': 'approve'})
+        if self.env.user.id == self.creating_user_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+        if self.state == 'confirm':
+            vals = {'state': 'approve',
+                    'approve_date': fields.Datetime.now(),
+                    'approved_user_id': self.env.user.id
+                    }
+            self.write(vals)
+            self.bottom_line_budgets.write({'state': 'approve'})
 
     @api.multi
     def action_budget_draft(self):
-        self.write({'state': 'draft'})
-        self.bottom_line_budgets.write({'state': 'draft'})
+        if self.state =='cancel':
+            self.write({'state': 'draft'})
+            self.bottom_line_budgets.write({'state': 'draft'})
 
     @api.multi
     def action_budget_cancel(self):
-        self.write({'state': 'cancel'})
-        self.bottom_line_budgets.write({'state': 'cancel'})
+        if self.state == 'confirm':
+            self.write({'state': 'cancel'})
+            self.bottom_line_budgets.write({'state': 'cancel'})
 
     @api.multi
     def unlink(self):

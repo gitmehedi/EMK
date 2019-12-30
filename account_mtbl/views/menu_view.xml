@@ -82,8 +82,9 @@
     </record>
 
     <record id="account.menu_account_reports" model="ir.ui.menu">
-        <field name="action" eval="False"/>
-        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+        <field name="parent_id" eval="ref('account.menu_finance')"/>
+        <field name="sequence">24</field>
     </record>
 
     <menuitem id="account.menu_config_multi_currency" name="Multi-Currencies"

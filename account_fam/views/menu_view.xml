@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Fixed Assets Main Menus -->
     <menuitem id="main_fixed_asset_menu" name="Fixed Assets" sequence="100"
               web_icon="account_fam,static/description/icon.png"
               groups=""/>
 
-    <!-- Assets Main Menus -->
-    <menuitem id="sub_assets_menu" name="Assets" sequence="10"
+    <menuitem id="sub_assets_menu" name="Fixed Assets" sequence="10"
               parent="account_fam.main_fixed_asset_menu" groups=""/>
+
+
 
     <record id="account_asset.menu_action_account_asset_asset_form" model="ir.ui.menu">
         <field name="parent_id" eval="ref('account_fam.sub_assets_menu')"/>
@@ -19,18 +19,32 @@
         <field name="sequence">20</field>
     </record>
 
-
-    <!-- Assets Reports Menu -->
     <menuitem id="sub_reports_menu" name="Reports" sequence="20"
               parent="account_fam.main_fixed_asset_menu" groups=""/>
 
     <record id="account_asset.menu_action_asset_asset_report" model="ir.ui.menu">
+        <field name="name">Fixed Assets</field>
         <field name="parent_id" eval="ref('account_fam.sub_reports_menu')"/>
         <field name="sequence">10</field>
     </record>
 
+    <record id="account_asset.menu_action_account_asset_asset_form" model="ir.ui.menu">
+        <field name="name">Fixed Assets (Draft)</field>
+         <field name="sequence">5</field>
+    </record>
 
-    <!-- Assets Cofiguration Menus -->
+    <record id="account_asset.action_account_asset_asset_form" model="ir.actions.act_window">
+        <field name="name">Fixed Assets</field>
+    </record>
+
+    <record id="account_asset.menu_action_account_asset_asset_list_normal_purchase" model="ir.ui.menu">
+        <field name="name">Fixed Asset Types</field>
+    </record>
+
+    <record id="account_asset.action_account_asset_asset_list_normal_purchase" model="ir.actions.act_window">
+        <field name="name">Fixed Asset Types</field>
+    </record>
+
     <menuitem id="sub_configuration_menu" name="Configurations" sequence="30"
               parent="account_fam.main_fixed_asset_menu" groups=""/>
 
@@ -41,5 +55,7 @@
         <field name="parent_id" eval="ref('account_fam.sub_configuration_menu')"/>
         <field name="sequence">10</field>
     </record>
-
+    <record id="account_asset.menu_asset_depreciation_confirmation_wizard" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+    </record>
 </odoo>

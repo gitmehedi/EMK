@@ -34,9 +34,3 @@
         <field name="target">new</field>
     </record>
 </odoo>
-
-
-<!--<div attrs="{'invisible':[('reverse_option','!=','op3')]}" class="oe_grey" colspan="4">-->
-    <!--There are some payment instruction with this invoice.-->
-    <!--So reverse payment instruction will generate.-->
-<!--</div>-->

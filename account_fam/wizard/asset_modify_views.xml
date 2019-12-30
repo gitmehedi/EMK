@@ -5,23 +5,23 @@
         <field name="inherit_id" ref="account_asset.asset_modify_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="replace">
-                <form string="Modify Asset">
-                    <group string="Asset Durations to Modify">
+                <form string="Modify Assets">
+                    <group>
                         <group>
                             <field name="asset_method_time" invisible="1"/>
-                            <field name="method"/>
-                            <field name="method_progress_factor" attrs="{'invisible': [('method', '=', 'linear')]}"/>
-                            <field name="depreciation_year"/>
-                            <field name="method_number" invisible="1" attrs="{'invisible': [('asset_method_time', '=', 'end')]}"/>
+                            <field name="method" widget="radio"/>
+                            <field name="method_progress_factor"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="depreciation_year" string="Asset Life (In Year)"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                            <field name="adjusted_depr_amount"/>
                         </group>
                         <group>
                             <field name="name"/>
-                            <field name="method_end" attrs="{'invisible': [('asset_method_time', '=', 'number')]}"/>
-                            <field name="method_period" invisible="True"/>months
                         </group>
                     </group>
                     <footer>
-                        <button name="modify" string="Modify" type="object" class="btn-primary"/>
+                        <button name="modify" string="Change Method" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>

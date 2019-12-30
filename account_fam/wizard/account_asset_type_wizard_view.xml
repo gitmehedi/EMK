@@ -13,6 +13,46 @@
                         <field name="status"/>
                     </group>
                 </group>
+                <group string="Journal Entries">
+                    <group>
+                        <field name="journal_id"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="account_asset_id"
+                               domain="[('internal_type','!=','view')]"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="asset_suspense_account_id"
+                               domain="[('internal_type','!=','view')]"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="asset_sale_suspense_account_id"
+                               domain="[('internal_type','!=','view')]"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                    </group>
+                    <group>
+                        <field name="account_asset_loss_id"
+                               domain="[('internal_type','!=','view')]"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="account_asset_gain_id"
+                               domain="[('internal_type','!=','view')]"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="account_depreciation_expense_id"
+                               domain="[('internal_type','!=','view')]"
+                               attrs="{'invisible': [('method', '=', 'no_depreciation')]}"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="account_depreciation_id"
+                               domain="[('internal_type','!=','view')]"
+                               attrs="{'invisible': [('method', '=', 'no_depreciation')]}"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Depreciation Method">
+                        <field name="method" widget="radio"/>
+                        <field name="method_progress_factor"
+                               attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                        <field name="depreciation_year" string="Asset Life (In Year)"
+                               attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                    </group>
+                </group>
                 <footer>
                     <button name="act_change_name" string="Change Request" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-default" special="cancel"/>

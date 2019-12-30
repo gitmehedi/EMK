@@ -26,7 +26,7 @@ class AccountJournalWizard(models.TransientModel):
     def _check_unique_constrain(self):
         if self.name:
             name = self.env['account.journal'].search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -49,4 +49,4 @@ class AccountJournalWizard(models.TransientModel):
         record = self.env['account.journal'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})

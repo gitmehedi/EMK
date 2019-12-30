@@ -13,8 +13,9 @@ from odoo.tools import float_compare, float_is_zero
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
 
+    method_progress_factor = fields.Float('Depreciation Factor', digits=(1,3),default=0.0, track_visibility='onchange')
     category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
-    parent_id = fields.Many2one('account.asset.category', string="Asset Type", ondelete="restrict",
+    parent_id = fields.Many2one('account.asset.category', string="Asset Type Name", ondelete="restrict",
                                 track_visibility='onchange')
 
     @api.onchange('parent_id')
@@ -23,8 +24,8 @@ class AccountAssetCategory(models.Model):
             self.journal_id = self.parent_id.journal_id
             self.asset_suspense_account_id = self.parent_id.asset_suspense_account_id
             self.account_asset_id = self.parent_id.account_asset_id
-            self.account_depreciation_id = self.parent_id.account_depreciation_id
-            self.account_depreciation_expense_id = self.parent_id.account_depreciation_expense_id
+            self.account_depreciation_id = self.parent_id.account_depreciation_id if self.parent_id.account_depreciation_id else None
+            self.account_depreciation_expense_id = self.parent_id.account_depreciation_expense_id if self.parent_id.account_depreciation_expense_id else None
             self.account_asset_loss_id = self.parent_id.account_asset_loss_id
             self.account_asset_gain_id = self.parent_id.account_asset_gain_id
             self.asset_sale_suspense_account_id = self.parent_id.asset_sale_suspense_account_id
@@ -33,6 +34,7 @@ class AccountAssetCategory(models.Model):
             self.method_period = self.parent_id.method_period
             self.method_number = self.parent_id.method_number
             self.method_progress_factor = self.parent_id.method_progress_factor
+            self.code = self.parent_id.code
 
     @api.model
     def create(self, vals):

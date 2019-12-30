@@ -41,7 +41,9 @@
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="rate"/>
-                                <field name="pending" invisible="True"/>
+                                <field name="pending" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
                             </group>
 
                             <group>
@@ -107,7 +109,7 @@
                     <field name="pending" string="Pending"/>
                     <field name="code" string="Code"/>
                     <group string="Group By">
-                        <filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>
+                        <!--<filter name="operating_unit_id" string="Branch" context="{'group_by': 'operating_unit_id'}"/>-->
                         <filter string="Pending" name="pending" icon="terp-personal"
                                 domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                         <filter string="Rejected" name="state" icon="terp-personal"

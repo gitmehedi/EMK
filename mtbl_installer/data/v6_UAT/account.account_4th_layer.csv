@@ -1,4 +1,4 @@
-Layer,Code,Name,Parent Account,,Type,active,pending,state
+Layer,Code,Name,Parent Account,,Type,Active,Pending,Status
 Layer 4,11101,Paid up Capital,111,Capital,View Type,1,0,approve
 Layer 4,11201,General Reserve,112,Reserve,View Type,1,0,approve
 Layer 4,11202,Statutory Reserve,112,Reserve,View Type,1,0,approve
@@ -390,7 +390,7 @@ Layer 4,31105,Interest Earned on Agri Term Loan <SME>,311,Interest Earned,View T
 Layer 4,24605,Penal Interest Receivable on Agri Term Loan <SME>,246,Penal Interest Receivables,View Type,1,0,approve
 Layer 4,24505,Interest Receivable on Agri Term Loan <SME>,245,Interest Receivable,View Type,1,0,approve
 Layer 4,24611,Penal Interest Receivable on SME Continuous Loan,246,Penal Interest Receivables,View Type,1,0,approve
-Layer 4,24613,Penal Interest Receivable on Misc Deman Loans C/S/R,246,Penal Interest Receivables,View Type,1,0,approve
+Layer 4,24613,Penal Interest Receivable on Misc Deman LoansC/S/R,246,Penal Interest Receivables,View Type,1,0,approve
 Layer 4,51301,Forward Contract Cust Purchase,513,Forward Contract,View Type,1,0,approve
 Layer 4,51302,Forward Contract Cust Sale,513,Forward Contract,View Type,1,0,approve
 Layer 4,61301,Forward Contract Cust Purchase,613,Forward Contract,View Type,1,0,approve

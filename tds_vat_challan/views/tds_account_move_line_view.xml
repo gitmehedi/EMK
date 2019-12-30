@@ -97,7 +97,9 @@
                 ('is_pending', '=', False),
                 ('is_challan', '=', False),
                 ('pending_for_paid', '=', False),
-                ('is_paid', '=', False)]</field>
+                ('is_paid', '=', False),
+                ('credit', '>', 0)]
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing for payable.
@@ -116,7 +118,9 @@
                 ('is_pending', '=', True),
                 ('is_challan', '=', False),
                 ('pending_for_paid', '=', False),
-                ('is_paid', '=', False)]</field>
+                ('is_paid', '=', False),
+                ('credit', '>', 0)]
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing in pending.
@@ -135,7 +139,9 @@
                 ('is_pending', '=', False),
                 ('is_challan', '=', False),
                 ('pending_for_paid', '=', False),
-                ('is_paid', '=', True)]</field>
+                ('is_paid', '=', True),
+                ('credit', '>', 0)]
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing in pending payment approval.
@@ -234,14 +240,5 @@
             <field name="key2">client_action_multi</field>
             <field name="multi">True</field>
         </record>
-
-        <!--<act_window id="action_account_invoice_confirm1"-->
-                    <!--multi="True"-->
-                    <!--key2="client_action_multi" name="Generate"-->
-                    <!--groups="account.group_account_manager"-->
-                    <!--res_model="tds.challan.ou.selection.wizard" src_model="account.move.line"-->
-                    <!--view_mode="form" target="new" view_type="form"/>-->
-
-
     </data>
 </odoo>

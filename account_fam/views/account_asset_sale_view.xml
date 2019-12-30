@@ -39,7 +39,8 @@
                         <page string="Assets">
                             <field name="line_ids" string="Sale Assets">
                                 <tree string="Tree Views" editable="bottom">
-                                    <field name="asset_id" domain="[('state','=','open')]"
+                                    <field name="asset_id"
+                                           domain="[('state','=','open'),('depreciation_flag','=',True)]"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="cost_value"/>
                                     <field name="asset_value"/>
@@ -109,7 +110,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_account_asset_sale">
-        <field name="name">Asset Sale</field>
+        <field name="name">Fixed Assets Sale</field>
         <field name="res_model">account.asset.sale</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -117,7 +118,7 @@
         <field name="search_view_id" ref="view_account_asset_disposal_search"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to start a new Asset Sell.
+                Click to start a new Fixed Assets Sell.
             </p>
         </field>
     </record>

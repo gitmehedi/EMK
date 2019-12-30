@@ -8,7 +8,7 @@
             <field name="date_invoice" position="after">
                 <field name="is_tds_applicable"/>
                 <field name="inapplicable_type"
-                       attrs="{'invisible':[('is_tds_applicable','=',True)],'required': [('is_tds_applicable', '=', False)]}"/>
+                       attrs="{'invisible':[('is_tds_applicable','=',True)]}"/>
             </field>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
@@ -26,6 +26,11 @@
             <xpath expr="//field[@name='residual']" position="after">
                 <field name="total_tds_amount" class="oe_subtotal_footer_separator"
                        attrs="{'invisible': [('is_tds_applicable', '=', False)]}" widget="monetary"/>
+                <field name="security_deposit" class="oe_subtotal_footer_separator"
+                       widget="monetary"/>
+            </xpath>
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="after">
+                <field name="tds_id" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -35,8 +40,10 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="gbs_vendor_bill.inherited_invoice_supplier_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='amount_tax']" position="after">
-                <field name="total_tds_amount" string="TDS"/>
+            <!--<xpath expr="//field[@name='amount_tax']" position="after">-->
+            <xpath expr="//field[@name='mushok_vds_amount']" position="after">
+                <field name="total_tds_amount" string="TDS" sum="Total"/>
+                <field name="security_deposit" sum="Total"/>
             </xpath>
         </field>
     </record>

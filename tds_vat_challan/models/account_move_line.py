@@ -37,6 +37,7 @@ class AccountMoveLine(models.Model):
                 if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without pending you can not make undo this!'))
                 rec.is_pending = False
+                rec.is_tdsvat_payable = True
             return {
                 'type': 'ir.actions.client',
                 'tag': 'reload',
@@ -46,6 +47,7 @@ class AccountMoveLine(models.Model):
                 if rec.is_pending == False or rec.is_paid == True or rec.is_challan == True or rec.pending_for_paid == True:
                     raise ValidationError(_('Without pending you can not make undo this!'))
                 rec.is_pending = False
+                rec.is_tdsvat_payable = True
             return {
                 'type': 'ir.actions.client',
                 'tag': 'reload',
@@ -92,6 +94,11 @@ class AccountMoveLine(models.Model):
 
         res_view = self.env.ref('tds_vat_challan.tds_vat_challan_form_view')
 
+        if records[0].tax_type == 'tds':
+            pre_name = 'MTB-TC'
+        else:
+            pre_name = 'MTB-VC'
+
         result = {
             'name': _('Challan Item'),
             'view_type': 'form',
@@ -102,55 +109,8 @@ class AccountMoveLine(models.Model):
             'nodestroy': True,
             'target': 'current',
             'context': {'acc_move_line_ids': records.ids,
-                        'name': records[0].tax_type.upper() + ' Challan ' + fields.Date.context_today(self),
+                        'name': pre_name+'-'+fields.Date.context_today(self),
                         'currency_id': records[0].env.user.company_id.currency_id.id,
                         },
         }
         return result
-
-
-    # @api.multi
-    # def action_challan_generate_open(self, records):
-    #     vendor_ids = []
-    #     product_ids = []
-    #
-    #     for rec in records:
-    #         if rec.is_paid is False:
-    #             raise ValidationError(_('With out payment instruction,challan can not generate!'))
-    #         else:
-    #             vendor_ids.append(rec.partner_id.id)
-    #             product_ids.append(rec.product_id.id)
-    #
-    #     if False in product_ids:
-    #         raise ValidationError(_('Those records have no service!'))
-    #
-    #     tax_type = ''
-    #     tax_type_list = [i.tax_type for i in records]
-    #     if 'tds' in tax_type_list and 'vat' in tax_type_list:
-    #         raise ValidationError(_('Please select same type("TDS/VAT") records!'))
-    #     else:
-    #         tax_type = tax_type_list[0]
-    #
-    #     from_date = min([i.date for i in records])
-    #     to_date = max([i.date for i in records])
-    #     res = self.env.ref('tds_vat_challan.view_tds_challan_selection_wizard')
-    #
-    #     result = {
-    #         'name': _('Challan Generate'),
-    #         'view_type': 'form',
-    #         'view_mode': 'form',
-    #         'view_id': res and res.id or False,
-    #         'res_model': 'tds.challan.selection.wizard',
-    #         'type': 'ir.actions.act_window',
-    #         'nodestroy': True,
-    #         'target': 'new',
-    #         'context': {'records': records and records.ids or False,
-    #                     'vendor_ids': vendor_ids or False,
-    #                     'product_ids': product_ids or False,
-    #                     'tax_type': tax_type or False,
-    #                     'from_date': from_date or False,
-    #                     'to_date': to_date or False,
-    #                     },
-    #     }
-    #
-    #     return result

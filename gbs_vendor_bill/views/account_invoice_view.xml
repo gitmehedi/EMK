@@ -6,13 +6,17 @@
         <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_invoice_open']" position="attributes">
-                <attribute name="groups">account.group_account_manager</attribute>
+                <attribute name="groups">gbs_vendor_bill.vendor_bill_approver</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_invoice_draft']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
             </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="attributes">
                 <attribute name="string">Branch</attribute>
+                <attribute name="readonly">True</attribute>
             </xpath>
             <xpath expr="//field[@name='operating_unit_id']" position="after">
-                <field name="sub_operating_unit_id"
+                <field name="sub_operating_unit_id" invisible="1"
                        options="{'no_create': True}" widget="selection"
                        groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
@@ -26,6 +30,7 @@
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
                 <field name="price_subtotal_without_vat"/>
+                <field name="mushok_vds_amount" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -51,6 +56,9 @@
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="replace">
                 <field name="amount" sum="Total"/>
             </xpath>
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='amount']" position="after">
+                <field name="mushok_vds_amount" invisible="1"/>
+            </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
@@ -61,6 +69,31 @@
             <field name="reference" position="after">
                 <field name="vat_selection"/>
             </field>
+            <field name="amount_tax" position="after">
+                <field name="mushok_vds_amount" widget="monetary"
+                />
+            </field>
+            <field name="amount_total" position="replace">
+                <field name="amount_total" class="oe_subtotal_footer_separator"
+                       attrs="{'invisible': [('vat_selection','!=','normal')]}"/>
+            </field>
+            <field name="amount_total" position="after">
+                <field name="total_amount_with_vat" class="oe_subtotal_footer_separator"
+                       attrs="{'invisible': [('vat_selection','=','normal')]}"/>
+            </field>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="security_deposit_account_id"
+                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+            </xpath>
+            <xpath expr="//field[@name='security_deposit_account_id']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_invoice']" position="before">
+                <field name="total_bill_payable"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -70,16 +103,16 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="before">
-                <field name="entity_service_id" string="Service"
-                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                <field name="entity_service_id" domain="[('type','in',('service','consu'))]"
+                       options='{"no_open": True,"no_create": True, "no_create_edit": True}'/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="domain">[('supplier','=',True),('entity_services','=',entity_service_id)]</attribute>
+                <attribute name="domain">[('supplier','=',True),('state','=','approve')]</attribute>
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="replace">
                 <button name="action_payment_instruction" type="object" states="open"
-                        string="Payment Instruction" class="oe_highlight" groups="account.group_account_invoice"/>
+                        string="Payment Instruction" class="oe_highlight" groups="account.group_account_user"/>
             </xpath>
             <xpath expr="//notebook/page[2]" position="after">
                 <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
@@ -88,17 +121,12 @@
                             <field name="sequence" widget="handle"/>
                             <field name="instruction_date"/>
                             <field name="partner_id"/>
-                            <field name="default_debit_account_id" invisible="1"/>
-                            <field name="default_credit_account_id" invisible="1"/>
                             <field name="amount"/>
+                            <field name="default_debit_account_id"/>
+                            <field name="vendor_bank_acc"/>
+                            <field name="default_credit_account_id"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="state" invisible="1"/>
-                            <button name="action_approve" string="Approve" type="object"
-                                    class="oe_highlight" states="draft"/>
-                            <button name="action_reject" string="Reject" type="object"
-                                    class="oe_highlight" states="draft"/>
-                            <button name="action_reset" string="Reset" type="object"
-                                    class="oe_highlight" states="cancel"/>
+                            <field name="state" string="Status"/>
                             <field name="is_sync" invisible="1"/>
                             <button name="sync" string="Sync" type="action"
                                     icon="fa fa-check text-success"
@@ -132,11 +160,12 @@
                             <field name="payment_approver" invisible="1"/>
                         </group>
                     </group>
-                    <!--attrs="{'invisible': [('payment_line_ids', '=', [])]}"-->
                 </page>
             </xpath>
             <xpath expr="//notebook/page[1]/field/tree/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="domain">[('type','in',('service','consu'))]</attribute>
+                <attribute name="required">1</attribute>
             </xpath>
             <xpath expr="//notebook/page[1]/field/tree/field[@name='analytic_tag_ids']" position="attributes">
                 <attribute name="invisible">True</attribute>
@@ -144,26 +173,37 @@
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='journal_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[2]/group/group/field[@name='date']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='user_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="readonly">True</attribute>
             </xpath>
             <xpath expr="//notebook/page[2]/group/group/field[@name='account_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[2]/group/group/field[@name='account_id']" position="after">
+                <field name="vendor_account_id" readonly="1"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
             </xpath>
             <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
             <xpath expr="//field[@name='date']" position="after">
-                <field name="provisional_expense"/>
+                <!--<field name="provisional_expense"/>-->
                 <field name="merged_bill" groups="base.group_system"/>
             </xpath>
             <xpath expr="//field[@name='date_due']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
-            <!--<xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">-->
-                <!--<attribute name="groups">base.group_system</attribute>-->
-            <!--</xpath>-->
+            <xpath expr="//field[@name='tax_line_ids']" position="after">
+                <label for="provisional_expense"/>
+                <field name="provisional_expense"/>
+            </xpath>
         </field>
     </record>
 
@@ -173,8 +213,9 @@
         <field name="inherit_id" ref="account.invoice_supplier_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-success">state == 'draft'</attribute>
                 <attribute name="decoration-success">state == 'open'</attribute>
-                <attribute name="decoration-muted">state == 'paid'</attribute>
+                <attribute name="decoration-muted">state in('paid','cancel')</attribute>
                 <attribute name="decoration-bf">state in ('open','paid')</attribute>
             </xpath>
             <xpath expr="//field[@name='reference']" position="attributes">
@@ -189,12 +230,102 @@
             <xpath expr="//field[@name='origin']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='amount_total_signed']" position="after">
-                <field name="amount_tax" string="VAT"/>
+            <xpath expr="//field[@name='number']" position="attributes">
+                <attribute name="string">Bill No</attribute>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="after">
+                <field name="user_id" string="Responsible"/>
+                <field name="total_bill_payable" sum="total_bill_payable"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="entity_service_id" string="Service"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total_signed']" position="replace">
+                <field name="amount_total_signed" string="Total" sum="Total" invisible="1"/>
+                <field name="total_amount_with_vat" string="Total" sum="Total"/>
+                <field name="mushok_vds_amount" string="VAT" sum="Total"/>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="number" string="Bill No"/>
             </xpath>
         </field>
     </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">gbs.account.invoice.search</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="string">Responsible</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_partner_id']" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_partner_id']" position="after">
+                <filter string="Service" name="vendor_service"
+                        context="{'group_by': 'entity_service_id'}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="account.action_invoice_tree2" model="ir.actions.act_window">
+        <field name="domain">
+            [('type','in',('in_invoice', 'in_refund')),
+            ('state','in',('draft','cancel')),
+            ('is_asset','=',0)]
+        </field>
+        <field name="context">
+            {'default_type': 'in_invoice',
+            'type': 'in_invoice',
+            'journal_type': 'purchase',
+            'search_default_draft':1,}
+        </field>
+    </record>
+
+    <record id="action_invoice_tree2_validated" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice','in_refund')),
+            ('state','in',('open','paid')),('is_asset','=',0)]
+        </field>
+        <field name="context">{'default_type': 'in_invoice','type': 'in_invoice',
+            'journal_type': 'purchase','search_default_status':1}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new vendor bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_invoice_supplier_tree1_view1_validated" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="account.invoice_supplier_tree"/>
+        <field name="act_window_id" ref="action_invoice_tree2_validated"/>
+    </record>
+
+    <record id="action_invoice__supplier_tree1_view2_validated" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account.invoice_supplier_form"/>
+        <field name="act_window_id" ref="action_invoice_tree2_validated"/>
+    </record>
+
+    <menuitem action="action_invoice_tree2_validated" id="menu_action_invoice_tree2_validated"
+              name="Vendor Bills (Validated)" parent="account.menu_finance_payables" sequence="20"/>
+
 </odoo>
-<!--icon="fa fa-thumbs-up text-success"-->
-<!--icon="fa fa-thumbs-down text-danger"-->
-<!--icon="fa fa-undo text-warning"-->

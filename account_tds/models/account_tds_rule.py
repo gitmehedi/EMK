@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -19,9 +19,8 @@ class TDSRules(models.Model):
                                   states={'confirm': [('readonly', True)]})
     line_ids = fields.One2many('tds.rule.line', 'tds_rule_id', string='Rule Details',
                                states={'confirm': [('readonly', True)]})
-    effective_from = fields.Date(string='Effective Date', required=True,default=fields.Date.today(),
+    effective_from = fields.Date(string='Effective Date', required=True,default=fields.Datetime.now,
                                  track_visibility='onchange', states={'confirm': [('readonly', True)]})
-
     type_rate = fields.Selection([
         ('flat', 'Flat Rate'),
         ('slab', 'Slab'),
@@ -31,12 +30,22 @@ class TDSRules(models.Model):
     price_include = fields.Boolean(string='Included in Price', default=False,
                                    track_visibility='onchange', states={'confirm': [('readonly', True)]},
                                    help="Check this if the price you use on the product and invoices includes this TAX.")
+    price_exclude = fields.Boolean(string='Excluded in Price', default=False,
+                                   track_visibility='onchange', states={'confirm': [('readonly', True)]},
+                                   help="Check this if the price you use on the product and invoices excludes this TAX.")
+    effect_on_base = fields.Boolean(string='Effect On Base Price', default=False,
+                                    track_visibility='onchange', states={'confirm': [('readonly', True)]},
+                                    help="Check this if the TDS effect on base price.")
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
     ], default='draft',string="Status",track_visibility='onchange')
     is_amendment = fields.Boolean(default=False, string="Is Amendment",
                                   help="Take decision that, this agreement is amendment.")
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
+                                        states = {'confirm': [('readonly', True)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
@@ -46,7 +55,7 @@ class TDSRules(models.Model):
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -88,16 +97,16 @@ class TDSRules(models.Model):
                         for line in rec.line_ids:
                             if line.range_from >= line.range_to:
                                 raise ValidationError(
-                                    "Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
+                                    "Please Check Your Slab Range!! \n 'From Range' never be greater than or equal to 'To Range'")
                             elif line.rate < 0:
                                 raise ValidationError(
-                                    "Please Check Your Slab's TDS Rate!! \n Rate Never Take Negative Value!")
+                                    "Please Check Your Slab's Rate!! \n Rate never take negative value!")
                             elif line.range_from < 0:
                                 raise ValidationError(
-                                    "Please Check Your Slab's TDS Rate!! \n Rate Never Take Negative Value!")
+                                    "Please Check Your Slab's 'From Range'!! \n 'From Range' never take negative value!")
                             elif line.range_to < 0:
                                 raise ValidationError(
-                                    "Please Check Your Slab's TDS Rate!! \n Rate Never Take Negative Value!")
+                                    "Please Check Your Slab's 'To Range'!! \n 'To Range' never take negative value!")
 
     @api.onchange('type_rate')
     def _check_type_rate(self):
@@ -107,29 +116,32 @@ class TDSRules(models.Model):
     @api.multi
     def action_confirm(self):
         for rec in self:
+            if rec.env.user.id == rec.maker_id.id and rec.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
             num = 1
-            seq = self.name + ' / 000' + str(num)
+            seq = rec.name + ' / 000' + str(num)
             res = {
                 'name': seq,
                 'active': rec.active,
                 'effective_from': rec.effective_from,
-                'account_id': self.account_id.id,
+                'account_id': rec.account_id.id,
                 'type_rate': rec.type_rate,
                 'flat_rate': rec.flat_rate,
                 'rel_id': rec.id,
                 'state': 'confirm',
+                'approver_id': rec.env.user.id,
             }
-            self.version_ids += self.env['tds.rule.version'].create(res)
-        if self.type_rate == 'slab':
-            for rule in self.line_ids:
-                line_res = {
-                    'range_from': rule.range_from,
-                    'range_to': rule.range_to,
-                    'rate': rule.rate,
-                    'rel_id': rule.id
-                }
-                self.version_ids.version_line_ids += self.env['tds.rule.version.line'].create(line_res)
-        self.state = 'confirm'
+            rec.version_ids += self.env['tds.rule.version'].create(res)
+            if rec.type_rate == 'slab':
+                for rule in rec.line_ids:
+                    line_res = {
+                        'range_from': rule.range_from,
+                        'range_to': rule.range_to,
+                        'rate': rule.rate,
+                        'rel_id': rule.id
+                    }
+                    rec.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
+            rec.state = 'confirm'
 
     @api.multi
     def action_amendment(self):
@@ -158,12 +170,15 @@ class TDSRules(models.Model):
                         'line_ids': slab_list,
                         'flat_rate': self.flat_rate or False,
                         'price_include': self.price_include or False,
+                        'price_exclude': self.price_exclude or False,
                         },
         }
         return result
 
     @api.multi
     def action_approve_amendment(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.is_amendment == True:
             requested = self.version_ids.search([('state', '=', 'pending'),
                                                  ('tds_version_rule_id', '=', self.id)],
@@ -173,10 +188,12 @@ class TDSRules(models.Model):
                     'effective_from': requested.effective_from,
                     'type_rate': requested.type_rate,
                     'account_id': requested.account_id.id,
+                    'approver_id': self.env.user.id,
                 })
                 if requested.type_rate == 'flat' and requested.flat_rate:
                     self.flat_rate = requested.flat_rate
                     self.price_include = requested.price_include
+                    self.price_exclude = requested.price_exclude
                 elif requested.type_rate == 'slab' and requested.version_line_ids:
                     vals = []
                     for ver_line in requested.version_line_ids:
@@ -201,7 +218,7 @@ class TDSRules(models.Model):
     def _check_unique_constrain(self):
         if self.name:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -233,6 +250,8 @@ class TDSRuleVersion(models.Model):
         ('pending', "Pending"),
         ('confirm', "Confirmed")], default='pending', string="Status")
     price_include = fields.Boolean(string='Included in Price', default=False)
+    price_exclude = fields.Boolean(string='Excluded in Price', default=False)
+
 
 class TDSRuleLine(models.Model):
     _name = 'tds.rule.line'
@@ -268,7 +287,6 @@ class TDSRuleVersionLine(models.Model):
     range_from = fields.Integer(string='From Range', required=True)
     range_to = fields.Integer(string='To Range', required=True)
     rate = fields.Float(string='Rate', required=True, digits=(12,2))
-
 
     # automated version for previous
     # @api.model

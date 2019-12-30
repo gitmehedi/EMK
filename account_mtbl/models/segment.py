@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from psycopg2 import IntegrityError
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import Warning, ValidationError
 
 
@@ -20,17 +20,21 @@ class Segment(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
-                             string='Status',track_visibility='onchange')
+                             string='Status', track_visibility='onchange')
     line_ids = fields.One2many('history.segment', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
         if self.name or self.code:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             code = self.search(
-                [('code', '=ilike', self.code.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
             if len(code) > 1:
@@ -89,11 +93,14 @@ class Segment(models.Model):
 
     @api.one
     def act_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.write({
                 'state': 'approve',
                 'pending': False,
                 'active': True,
+                'approver_id': self.env.user.id,
             })
 
     @api.one
@@ -107,6 +114,8 @@ class Segment(models.Model):
 
     @api.one
     def act_approve_pending(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
@@ -115,6 +124,7 @@ class Segment(models.Model):
                     'name': self.name if not requested.change_name else requested.change_name,
                     'pending': False,
                     'active': requested.status,
+                    'approver_id': self.env.user.id,
                 })
                 requested.write({
                     'state': 'approve',
@@ -159,4 +169,4 @@ class HistorySegment(models.Model):
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('segment', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending',string='Status')
+                             default='pending', string='Status')

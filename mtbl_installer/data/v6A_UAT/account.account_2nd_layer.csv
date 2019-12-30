@@ -1,0 +1,24 @@
+Layer,Code,Name,Parent Account,Parent Name,Type,active,pending,state
+Layer 2,11,Capital & Reserve,1,Liability,View Type,TRUE,FALSE,approve
+Layer 2,12,Borrowings,1,Liability,View Type,TRUE,FALSE,approve
+Layer 2,13,Deposits,1,Liability,View Type,TRUE,FALSE,approve
+Layer 2,14,Bond,1,Liability,View Type,TRUE,FALSE,approve
+Layer 2,15,Other Liabilities,1,Liability,View Type,TRUE,FALSE,approve
+Layer 2,21,Cash & Bank Balance,2,Asset,View Type,TRUE,FALSE,approve
+Layer 2,22,Money at Call & Short Notice,2,Asset,View Type,TRUE,FALSE,approve
+Layer 2,23,Investments,2,Asset,View Type,TRUE,FALSE,approve
+Layer 2,24,Loans & Advances,2,Asset,View Type,TRUE,FALSE,approve
+Layer 2,25,Fixed Assets,2,Asset,View Type,TRUE,FALSE,approve
+Layer 2,26,Other Assets,2,Asset,View Type,TRUE,FALSE,approve
+Layer 2,31,Interest Income,3,Income,View Type,TRUE,FALSE,approve
+Layer 2,32,Income fm Investments,3,Income,View Type,TRUE,FALSE,approve
+Layer 2,33,"Comm, Exch & Brokerage",3,Income,View Type,TRUE,FALSE,approve
+Layer 2,34,Other Operating Income,3,Income,View Type,TRUE,FALSE,approve
+Layer 2,41,Interest Expenses,4,Expenditure,View Type,TRUE,FALSE,approve
+Layer 2,42,Non-Interest Expenses,4,Expenditure,View Type,TRUE,FALSE,approve
+Layer 2,43,Provisions,4,Expenditure,View Type,TRUE,FALSE,approve
+Layer 2,51,Contra,5,Contra & Contingent <L>,View Type,TRUE,FALSE,approve
+Layer 2,52,Contingent,5,Contra & Contingent <L>,View Type,TRUE,FALSE,approve
+Layer 2,61,Contra,6,Contra & Contingent <A>,View Type,TRUE,FALSE,approve
+Layer 2,62,Contingent,6,Contra & Contingent <A>,View Type,TRUE,FALSE,approve
+Layer 2,90,System,9,System,View Type,TRUE,FALSE,approve

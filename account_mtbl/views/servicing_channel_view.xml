@@ -31,6 +31,8 @@
                         </group>
                         <group>
                             <field name="code"/>
+                            <field name="maker_id" invisible="1"/>
+                            <field name="approver_id" invisible="1"/>
                         </group>
                     </group>
                     <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">

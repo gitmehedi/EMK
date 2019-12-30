@@ -7,14 +7,17 @@
     'version': '1.0',
     'category': 'Extra Tools',
     'depends': [
+        'base',
         'account',
         'account_asset',
         'account_fam',
         'account_category',
-        'tds_vendor_bill',
+        'tds_vat_challan',
     ],
     'data': [
+        'security/security.xml',
         'views/asset_vendor_bills_view.xml',
+        'views/payment_instrauction_view.xml',
     ],
     'installable': True,
     'application': True,

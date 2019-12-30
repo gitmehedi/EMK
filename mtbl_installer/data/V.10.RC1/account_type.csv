@@ -1,0 +1,23 @@
+id,name,type,Bring Accounts Balance Forward,Active,Pending,Status
+account_parent.data_account_type_view,View Type,View,Yes,True,False,approve
+account.data_account_type_receivable,Receivable,Receivable,Yes,True,False,approve
+account.data_account_type_payable,Payable,Payable,Yes,True,False,approve
+account.data_account_type_other_income,Liabilities: Office Accounts,Regular,Yes,True,False,approve
+account.data_account_type_non_current_liabilities,Treasury Liabilities,Regular,Yes,True,False,approve
+account.data_account_type_non_current_assets,Liabilities: Customer Accounts,Regular,Yes,True,False,approve
+account.data_account_type_revenue,Interest Payable Accounts,Regular,Yes,True,False,approve
+account.data_account_type_fixed_assets,No BGL only CGL,Regular,Yes,True,False,approve
+account.data_account_type_expenses,Assets: Office Accounts,Regular,Yes,True,False,approve
+account.data_account_type_equity,Assets: Customer Accounts,Regular,No,True,False,approve
+account.data_account_type_depreciation,Treasury Asset,Regular,No,True,False,approve
+account.data_unaffected_earnings,Interest Receivable Accounts,Regular,No,True,False,approve
+account.data_account_type_current_liabilities,Income Accounts,Regular,No,True,False,approve
+account.data_account_type_current_assets,Treasury Income,Regular,Yes,True,False,approve
+account.data_account_type_credit_card,Expenditure Accounts,Regular,Yes,True,False,approve
+account.data_account_type_direct_costs,Tresury Expenditure,Regular,Yes,True,False,approve
+account.data_account_type_liquidity,Contra Accounts,Regular,Yes,True,False,approve
+account.data_account_type_prepayments,Contingent Accounts,Regular,Yes,True,False,approve
+,Contra Liabilities,Regular,Yes,True,False,approve
+,Contra Asset,Regular,Yes,True,False,approve
+,Contingent Liability,Regular,Yes,True,False,approve
+,Contingent Asset,Regular,Yes,True,False,approve

@@ -23,7 +23,10 @@ class TDSRulesWizard(models.TransientModel):
     flat_rate = fields.Float(string='Rate', size=3, default=lambda self: self.env.context.get('flat_rate'))
     price_include = fields.Boolean(string='Included in Price',
                                    default=lambda self: self.env.context.get('price_include'),
-                                   help="Check this if the price you use on the product and invoices includes this TAX.")
+                                   help="Check this if the price you use on the product and invoice includes this TAX.")
+    price_exclude = fields.Boolean(string='Excluded in Price',
+                                   default=lambda self: self.env.context.get('price_exclude'),
+                                   help="Check this if the price you use on the product and invoice exclude this TAX.")
 
     @api.multi
     def generate_rule(self):
@@ -39,6 +42,7 @@ class TDSRulesWizard(models.TransientModel):
             'type_rate': self.type_rate,
             'flat_rate': self.flat_rate,
             'price_include': self.price_include,
+            'price_exclude': self.price_exclude,
             'rel_id': self.id,
         }
         rule_list.version_ids += self.env['tds.rule.version'].create(rule_obj)
@@ -51,8 +55,7 @@ class TDSRulesWizard(models.TransientModel):
                     'rel_id': rule.id
                 }
                 rule_list.version_ids[-1].version_line_ids += self.env['tds.rule.version.line'].create(line_res)
-        return rule_list.write({'is_amendment':True})
-
+        return rule_list.write({'is_amendment':True,'maker_id': self.env.user.id})
 
     @api.constrains('effective_from')
     def _check_effective_from(self):
@@ -79,25 +82,25 @@ class TDSRulesWizard(models.TransientModel):
                     for line in rec.line_ids:
                         if line.range_from >= line.range_to:
                             raise ValidationError(
-                                "Please Check Your Slab Range!! \n 'Range From' Never Be Greater Than or Equal 'Range To'")
+                                "Please Check Your Slab Range!! \n 'From Range' Never Be Greater Than or Equal to 'To Range'")
                         elif line.rate < 0:
                             raise ValidationError(
-                                "Please Check Your Slab's Tds Rate!! \n Rate never take  negative value!")
+                                "Please Check Your Slab's Rate!! \n Rate never take negative value!")
                         elif line.range_from < 0:
                             raise ValidationError(
-                                "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                                "Please Check Your Slab's 'From Range'!! \n 'From Range' never take negative value!")
                         elif line.range_to < 0:
                             raise ValidationError(
-                                "Please Check Your Slab's Tds Rate!! \n Rate Never Take Negative Value!")
+                                "Please Check Your Slab's 'To Range'!! \n 'To Range' never take negative value!")
 
 
 class TDSRuleWizardLine(models.TransientModel):
     _name = 'tds.rule.wizard.line'
 
     tds_rule_wiz_id = fields.Many2one('tds.rule.wizard')
-    range_from = fields.Integer(string='From Range', required=True)
-    range_to = fields.Integer(string='To Range', required=True)
-    rate = fields.Float(string='Rate', required=True, digits=(12, 2))
+    range_from = fields.Integer(string='From Range')
+    range_to = fields.Integer(string='To Range')
+    rate = fields.Float(string='Rate', digits=(12, 2))
 
     @api.constrains('range_from', 'range_to')
     def _check_time(self):

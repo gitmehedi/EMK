@@ -17,12 +17,14 @@ class SubOperatingUnitWizard(models.TransientModel):
 
     status = fields.Boolean(string='Active', default=default_status)
     name = fields.Char(string='Requested Name')
+    # operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    product_id = fields.Many2one('product.product', string='Product')
 
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
             name = self.env['sub.operating.unit'].search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -39,8 +41,12 @@ class SubOperatingUnitWizard(models.TransientModel):
             raise Warning('[Warning] You already have a pending request!')
 
         self.env['history.sub.operating.unit'].create(
-            {'change_name': self.name, 'status': self.status, 'request_date': fields.Datetime.now(), 'line_id': id})
+            {'change_name': self.name,
+             'product_id': self.product_id.id,
+             'status': self.status,
+             'request_date': fields.Datetime.now(),
+             'line_id': id})
         record = self.env['sub.operating.unit'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})

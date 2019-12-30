@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+
+    <record id="mail_message_subtype_success" model="mail.message.subtype">
+        <field name="name">API Processing Successful</field>
+        <field name="description">File Processing succeeded.</field>
+        <field name="res_model">server.file.process</field>
+        <field name="default" eval="False" />
+    </record>
+
+    <record id="mail_message_subtype_failure" model="mail.message.subtype">
+        <field name="name">API Processing Failed</field>
+        <field name="description">File Processing failed.</field>
+        <field name="res_model">server.file.process</field>
+        <field name="default" eval="True" />
+    </record>
+</odoo>

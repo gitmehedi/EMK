@@ -1,0 +1,81 @@
+Name,Code,Active,Pending,Status,Branch
+General Banking,501,True,False,Approved,For All Branches
+Cash Department,502,True,False,Approved,For All Branches
+Foreign Exchange,503,True,False,Approved,For All Branches
+Credit Department,504,True,False,Approved,For All Branches
+Branch (other Departments),505,True,False,Approved,For All Branches
+Retail Banking Division,601,True,False,Approved,001
+Retail Finance Centre,602,True,False,Approved,001
+NRB & Inward Remittance Unit,603,True,False,Approved,001
+Card Operations Unit,610,True,False,Approved,001
+Card Sales Office-Dhaka,611,True,False,Approved,099
+Card Sales Office-Chattagram,612,True,False,Approved,099
+Card Division,613,True,False,Approved,099
+Privilege Banking Dept.,650,True,False,Approved,107
+Privilege Centre-Gulshan,651,True,False,Approved,107
+Privilege Centre-Uttara,652,True,False,Approved,107
+Privilege Centre-Banani,653,True,False,Approved,107
+Privilege Centre-Baridhara,654,True,False,Approved,107
+Privilege Centre-Chittagong,655,True,False,Approved,107
+Privilege Centre-Motijheel,656,True,False,Approved,107
+Privilege Centre-Panthapath,657,True,False,Approved,107
+Privilege Centre-Tejgaon,658,True,False,Approved,107
+Corporate Banking Unit 1,701,True,False,Approved,001
+Cash Management Unit,702,True,False,Approved,001
+Sustainable Finance Unit(SFU),703,True,False,Approved,001
+SME- CRM Department ,801,True,False,Approved,001
+ICC Division,902,True,False,Approved,001
+Group Finance,905,True,False,Approved,001
+Airport Lounge Chattagram,906,True,False,Approved,114
+Airport Lounge Dhaka,907,True,False,Approved,114
+ITS Division,908,True,False,Approved,001
+Group Legal Affairs Division,909,True,False,Approved,001
+Payments System Unit,913,True,False,Approved,001
+Liability Operations Unit,914,True,False,Approved,001
+MTB Operations Division,915,True,False,Approved,001
+Board Division,916,True,False,Approved,001
+AML & CFT division,918,True,False,Approved,001
+CIB Department,919,True,False,Approved,001
+Credit Administration Department,920,True,False,Approved,001
+Credit Monitoring Department,921,True,False,Approved,001
+Credit Risk management Division,922,True,False,Approved,001
+Engineering Department,923,True,False,Approved,001
+Group Security & Fire Safety Department,924,True,False,Approved,001
+Human Resource Division,925,True,False,Approved,001
+IT Security Department,926,True,False,Approved,001
+MDs Secretariat,927,True,False,Approved,001
+MTB Collection Unit for SME  Retail and Cards,928,True,False,Approved,001
+MTB Communication Department,929,True,False,Approved,001
+MTB Financial Institutions Services,930,True,False,Approved,001
+MTB Infrastructure Division,931,True,False,Approved,001
+MTB Tower Office,932,True,False,Approved,001
+Reconciliation Department,933,True,False,Approved,001
+Research & Development Dept.,934,True,False,Approved,001
+Risk Management Division,935,True,False,Approved,001
+Security & Printing Department,936,True,False,Approved,001
+Share Department,937,True,False,Approved,001
+Special Asset Management Department,938,True,False,Approved,001
+Trainning Institute,940,True,False,Approved,001
+Transport Department,941,True,False,Approved,001
+Dhaka Divisional Office,942,True,False,Approved,001
+Ctg Divisional Office,943,True,False,Approved,001
+Other Divisional Office,944,True,False,Approved,001
+MTB Digital Banking Division ,945,True,False,Approved,001
+MTB Operational Analytics Department,946,True,False,Approved,001
+MTB Service Quality Department,947,True,False,Approved,001
+MTB Investor Relations Dept.,948,True,False,Approved,001
+MTB Centralized Report. Unit,949,True,False,Approved,001
+MNC Banking Unit,950,True,False,Approved,001
+Branch Operations Unit,951,True,False,Approved,001
+MTB Banking Booth Op. & Gov. Unit,952,True,False,Approved,001
+Asset Operations Unit,953,True,False,Approved,001
+System  Policies  Procedure  Process Unit,954,True,False,Approved,001
+Centralized Bond Management Unit,955,True,False,Approved,001
+Operational Risk Assurance Unit,956,True,False,Approved,001
+MTB Square Office,957,True,False,Approved,001
+Airport Lounge Sylhet,958,True,False,Approved,114
+Airport Lounge Office,959,True,False,Approved,114
+MTB CBS Transformation (MCT) ,998,True,False,Approved,001
+MTB OBU,,,,,001
+Agent Banking Operations Unit,,,,,001
+ADC,,,,,115

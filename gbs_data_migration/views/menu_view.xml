@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="menu_data_migration" name="Data Migration"
+              parent="gbs_ogl_cbs_interface.main_interface"
+              groups="mtbl_access.group_mtbl_sys_admin" sequence="99"/>
+
+</odoo>

@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
@@ -26,26 +26,32 @@ class Branch(models.Model):
     partner_id = fields.Many2one('res.partner', 'Partner', required=True, default=lambda self:
     self.env['res.company']._company_default_get('account.account'), readonly=True,
                                  states={'draft': [('readonly', False)]})
-    branch_type = fields.Selection([('metro', 'Metro'), ('urban', 'Urban'), ('rural', 'Rural')],
+    branch_type = fields.Selection([('metro', 'CHO'), ('urban', 'Urban'), ('rural', 'Rural')],
                                    string='Location of Branch', track_visibility='onchange', required=True,
                                    readonly=True,
                                    states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('history.operating.unit', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
         if self.name or self.code:
             name = self.search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             code = self.search(
-                [('code', '=ilike', self.code.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
             if len(code) > 1:
                 raise Warning('[Unique Error] Code must be unique!')
             if not self.code.isdigit():
                 raise Warning(_('[Format Error] Code must be numeric!'))
+            if len(self.code) != 3:
+                raise Warning('[Format Error] Code must be 3 character!')
 
     @api.one
     def act_draft(self):
@@ -58,11 +64,14 @@ class Branch(models.Model):
 
     @api.one
     def act_approve(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.write({
                 'state': 'approve',
                 'pending': False,
                 'active': True,
+                'approver_id': self.env.user.id,
             })
 
     @api.one
@@ -76,14 +85,18 @@ class Branch(models.Model):
 
     @api.one
     def act_approve_pending(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
         if self.pending == True:
-            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
-                                             limit=1)
+            requested = self.line_ids.search([('state', '=', 'pending'),
+                                              ('line_id', '=', self.id)], order='id desc',limit=1)
             if requested:
                 self.write({
                     'name': self.name if not requested.change_name else requested.change_name,
                     'pending': False,
+                    'branch_type': requested.branch_type if requested.branch_type else self.branch_type,
                     'active': requested.status,
+                    'approver_id': self.env.user.id,
                 })
                 requested.write({
                     'state': 'approve',
@@ -140,6 +153,8 @@ class HistoryBranch(models.Model):
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
+    branch_type = fields.Selection([('metro', 'CHO'), ('urban', 'Urban'), ('rural', 'Rural')],
+                                   string='Location of Branch')
     line_id = fields.Many2one('operating.unit', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')

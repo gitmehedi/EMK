@@ -32,11 +32,14 @@
                                 <group>
                                     <field name="name"/>
                                     <field name="type"/>
+                                    <field name="asset_liability_id"/>
                                     <field name="pending" invisible="True"/>
                                 </group>
                                 <group>
                                     <field name="include_initial_balance"
                                            groups="base.group_system"/>
+                                    <field name="maker_id" invisible="1"/>
+                                    <field name="approver_id" invisible="1"/>
                                 </group>
                             </group>
                             <separator string="Description"/>
@@ -68,6 +71,7 @@
             <field name="inherit_id" ref="account.view_account_type_tree"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
+                    <field name="asset_liability_id"/>
                     <field name="state"/>
                 </field>
                 <xpath expr="//tree" position="attributes">

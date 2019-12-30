@@ -4,13 +4,13 @@
         <record id="seq_account_asset_asset" model="ir.sequence">
             <field name="name">Account Asset Asset Code</field>
             <field name="code">account.asset.asset.code</field>
-            <field name="prefix">%(year)s-%(month)s-MTB-ATAC-</field>
+            <field name="prefix">ATAC-</field>
             <field name="padding">4</field>
             <field name="number_increment" eval="1"/>
             <field name="company_id" eval="False"/>
         </record>
         <record id="seq_asset_disposal" model="ir.sequence">
-            <field name="name">Account Asset Disposal</field>
+            <field name="name">Account Asset Written-Off</field>
             <field name="code">account.asset.disposal</field>
             <field name="prefix">MTB/DISP/%(year)s/%(month)s/</field>
             <field name="padding">4</field>

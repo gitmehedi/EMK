@@ -11,12 +11,16 @@
     "depends": [
         "date_range",
         "account_fiscal_year",
+        "mtbl_access",
     ],
     "data": [
         'security/ir.model.access.csv',
+        "views/default_data.xml",
         "wizard/date_range_generator.xml",
         "wizard/account_period_wizard_view.xml",
         "wizard/account_period_type_wizard_view.xml",
+        "wizard/account_period_close_view.xml",
+        "wizard/account_fiscalyear_close_view.xml",
         "views/menu_view.xml",
         "views/date_range_view.xml",
         "views/date_range_type_view.xml",

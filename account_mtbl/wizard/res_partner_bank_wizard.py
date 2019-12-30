@@ -23,7 +23,7 @@ class ResPartnerBAnkWizard(models.TransientModel):
     def _check_unique_constrain(self):
         if self.acc_number:
             acc_number = self.env['res.partner.bank'].search(
-                [('acc_number', '=ilike', self.acc_number.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('acc_number', '=ilike', self.acc_number.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(acc_number) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

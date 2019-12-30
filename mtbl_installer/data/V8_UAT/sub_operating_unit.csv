@@ -1,0 +1,135 @@
+Code,Name,Branch,Active,Pending,Status
+001,Sub Operating Unit 1,Principal Branch,True,False,approve
+001,Sub Operating Unit 1,Panthapath Branch,True,False,approve
+001,Sub Operating Unit 1,Babu Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Agrabad Branch,True,False,approve
+001,Sub Operating Unit 1,Sonargaon Branch,True,False,approve
+001,Sub Operating Unit 1,Uttara Model Town Branch,True,False,approve
+001,Sub Operating Unit 1,Progati Sarani Branch,True,False,approve
+001,Sub Operating Unit 1,CDA Avenue Branch,True,False,approve
+001,Sub Operating Unit 1,Sreenagar Branch,True,False,approve
+001,Sub Operating Unit 1,Pallabi Branch,True,False,approve
+001,Sub Operating Unit 1,Dilkusha Branch,True,False,approve
+001,Sub Operating Unit 1,Khatungonj Branch,True,False,approve
+001,Sub Operating Unit 1,Dhanmondi Branch,True,False,approve
+001,Sub Operating Unit 1,Aman Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Bashundhara City Branch,True,False,approve
+001,Sub Operating Unit 1,Chandra Branch,True,False,approve
+001,Sub Operating Unit 1,Jubilee Road Branch,True,False,approve
+001,Sub Operating Unit 1,Nazirhat Branch,True,False,approve
+001,Sub Operating Unit 1,Chokoria Branch,True,False,approve
+001,Sub Operating Unit 1,Pabna Branch,True,False,approve
+001,Sub Operating Unit 1,Gulshan Branch,True,False,approve
+001,Sub Operating Unit 1,Sylhet Branch,True,False,approve
+001,Sub Operating Unit 1,Moulvi Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Savar Branch,True,False,approve
+001,Sub Operating Unit 1,Fulbaria Branch,True,False,approve
+001,Sub Operating Unit 1,Madaripur Branch,True,False,approve
+001,Sub Operating Unit 1,Dholaikhal Branch,True,False,approve
+001,Sub Operating Unit 1,Raipur Branch,True,False,approve
+001,Sub Operating Unit 1,Aganagar Branch,True,False,approve
+001,Sub Operating Unit 1,Joypurhat Branch,True,False,approve
+001,Sub Operating Unit 1,Narayanganj Branch,True,False,approve
+001,Sub Operating Unit 1,Rangpur Branch,True,False,approve
+001,Sub Operating Unit 1,Banani Branch,True,False,approve
+001,Sub Operating Unit 1,Kushtia Branch,True,False,approve
+001,Sub Operating Unit 1,Gournadi Branch,True,False,approve
+001,Sub Operating Unit 1,Tongi Branch,True,False,approve
+001,Sub Operating Unit 1,Elephant Road Branch,True,False,approve
+001,Sub Operating Unit 1,Feni Branch,True,False,approve
+001,Sub Operating Unit 1,Dania Branch,True,False,approve
+001,Sub Operating Unit 1,Bogura Branch,True,False,approve
+001,Sub Operating Unit 1,Dhorkora Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Mohammadpur Branch,True,False,approve
+001,Sub Operating Unit 1,Rajshahi Branch,True,False,approve
+001,Sub Operating Unit 1,Alankar Mor Branch,True,False,approve
+001,Sub Operating Unit 1,MTB Centre Corporate Branch,True,False,approve
+001,Sub Operating Unit 1,Cox's Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Chawk Moghaltuli Branch,True,False,approve
+001,Sub Operating Unit 1,Jashore Branch,True,False,approve
+001,Sub Operating Unit 1,Gazipur Branch,True,False,approve
+001,Sub Operating Unit 1,Baridhara Branch,True,False,approve
+001,Sub Operating Unit 1,Cumilla Branch,True,False,approve
+001,Sub Operating Unit 1,Oxygen Mor Branch,True,False,approve
+001,Sub Operating Unit 1,Mymensingh Branch,True,False,approve
+001,Sub Operating Unit 1,Habiganj Branch,True,False,approve
+001,Sub Operating Unit 1,Kerani Hat Branch,True,False,approve
+001,Sub Operating Unit 1,Tejgaon Branch,True,False,approve
+001,Sub Operating Unit 1,Thakurgaon Branch,True,False,approve
+001,Sub Operating Unit 1,Shahparan Gate Branch,True,False,approve
+001,Sub Operating Unit 1,Karnaphuli EPZ Branch,True,False,approve
+001,Sub Operating Unit 1,Bashundhara Branch,True,False,approve
+001,Sub Operating Unit 1,Shah Mokhdum Avenue Branch,True,False,approve
+001,Sub Operating Unit 1,Brahmanbaria Branch,True,False,approve
+001,Sub Operating Unit 1,Kapasia Branch,True,False,approve
+001,Sub Operating Unit 1,Meghna Branch,True,False,approve
+001,Sub Operating Unit 1,Khilpara Branch,True,False,approve
+001,Sub Operating Unit 1,Kamrangir Char Branch,True,False,approve
+001,Sub Operating Unit 1,Kakrail Branch,True,False,approve
+001,Sub Operating Unit 1,Narayanganj BSCIC Branch,True,False,approve
+001,Sub Operating Unit 1,Naogaon Branch,True,False,approve
+001,Sub Operating Unit 1,Gobindaganj Branch,True,False,approve
+001,Sub Operating Unit 1,Dinajpur Branch,True,False,approve
+001,Sub Operating Unit 1,Chattogram Medical College Branch,True,False,approve
+001,Sub Operating Unit 1,Mirpur Branch,True,False,approve
+001,Sub Operating Unit 1,Kadair Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Jamirdia Masterbari Branch,True,False,approve
+001,Sub Operating Unit 1,Kalurghat Industrial Area Branch,True,False,approve
+001,Sub Operating Unit 1,Ashulia Branch,True,False,approve
+001,Sub Operating Unit 1,Monipur Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Tangail Branch,True,False,approve
+001,Sub Operating Unit 1,Sirajganj Branch,True,False,approve
+001,Sub Operating Unit 1,Dumni Branch,True,False,approve
+001,Sub Operating Unit 1,Baraipara Branch,True,False,approve
+001,Sub Operating Unit 1,Khulna Branch,True,False,approve
+001,Sub Operating Unit 1,Abu Torab Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Muradpur Branch,True,False,approve
+001,Sub Operating Unit 1,MTB Tower Branch,True,False,approve
+001,Sub Operating Unit 1,Bormi Branch,True,False,approve
+001,Sub Operating Unit 1,Bagher Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Barishal Branch,True,False,approve
+001,Sub Operating Unit 1,Laldighirpar Branch,True,False,approve
+001,Sub Operating Unit 1,Madhabdi Branch,True,False,approve
+001,Sub Operating Unit 1,Goalmari Bazar Branch,True,False,approve
+001,Sub Operating Unit 1,Malibagh Chowdhurypara Branch,True,False,approve
+001,Sub Operating Unit 1,Faridpur Branch,True,False,approve
+001,Sub Operating Unit 1,Ulipur Branch,True,False,approve
+001,Sub Operating Unit 1,Hemayetpur Branch,True,False,approve
+001,Sub Operating Unit 1,Sarkerhat Branch,True,False,approve
+001,Sub Operating Unit 1,100,True,False,approve
+001,Sub Operating Unit 1,101,True,False,approve
+001,Sub Operating Unit 1,102,True,False,approve
+001,Sub Operating Unit 1,103,True,False,approve
+001,Sub Operating Unit 1,104,True,False,approve
+001,Sub Operating Unit 1,105,True,False,approve
+001,Sub Operating Unit 1,106,True,False,approve
+001,Sub Operating Unit 1,107,True,False,approve
+001,Sub Operating Unit 1,108,True,False,approve
+001,Sub Operating Unit 1,109,True,False,approve
+001,Sub Operating Unit 1,110,True,False,approve
+001,Sub Operating Unit 1,111,True,False,approve
+001,Sub Operating Unit 1,112,True,False,approve
+001,Sub Operating Unit 1,113,True,False,approve
+001,Sub Operating Unit 1,114,True,False,approve
+001,Sub Operating Unit 1,115,True,False,approve
+001,Sub Operating Unit 1,116,True,False,approve
+001,Sub Operating Unit 1,Haidergonj SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Dagon Bhuiyan SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Laksam SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Naria SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Kaliganj SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Ramchandrapur Bazar SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Gaffargaon SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Ishwardi SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Belkuchi SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Nazumeah Hat SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Dhanbari SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Hasnabad SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Syedpur SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Sarulia Bazar SME/ Agri Branch,True,False,approve
+001,Sub Operating Unit 1,Mawna Branch,True,False,approve
+001,Sub Operating Unit 1,Mirpur-2 Branch,True,False,approve
+001,Sub Operating Unit 1,Rahattarpool Branch,True,False,approve
+001,Sub Operating Unit 1,601,True,False,approve
+001,Sub Operating Unit 1,701,True,False,approve
+001,Sub Operating Unit 1,901,True,False,approve

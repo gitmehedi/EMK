@@ -22,7 +22,7 @@ class ServicingChannelWizard(models.TransientModel):
     def _check_unique_constrain(self):
         if self.name:
             name = self.env['servicing.channel'].search(
-                [('name', '=ilike', self.name.strip()), '|', ('active', '=', True), ('active', '=', False)])
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
@@ -43,4 +43,4 @@ class ServicingChannelWizard(models.TransientModel):
         record = self.env['servicing.channel'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])
         if record:
-            record.write({'pending': True})
+            record.write({'pending': True,'maker_id': self.env.user.id})
