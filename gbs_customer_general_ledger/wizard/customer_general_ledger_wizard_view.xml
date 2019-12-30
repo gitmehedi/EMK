@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="customer_general_ledger_wizard_view" model="ir.ui.view">
+			<field name="name">customer.general.ledger.wizard</field>
+			<field name="model">customer.general.ledger.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+						<group>
+							<field name="target_move" widget="radio"/>
+						</group>
+						<group></group>
+						<group>
+							<field name="display_account" widget="radio"/>
+						</group>
+						<group></group>
+                        <group>
+                            <field name="date_from"/>
+                        </group>
+						<group>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name ="button_export_xlsx" string="Export" type="object" class="oe_highlight"/>
+<!--                        <button name ="button_print_pdf" string="Print" type="object" class="oe_highlight"/>-->
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+
+        <record id="action_customer_general_ledger_wizard_menu" model="ir.actions.act_window">
+			<field name="name">General Ledger (Customer)</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">customer.general.ledger.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="customer_general_ledger_wizard_view"/>
+			<field name="target">new</field>
+		</record>
+
+		<record id="action_customer_general_ledger_wizard_values" model="ir.values">
+			<field name="model_id" ref="account.model_res_partner" />
+			<field name="name">General Ledger (Customer)</field>
+			<field name="key2">client_print_multi</field>
+			<field name="value" eval="'ir.actions.act_window,' +str(ref('action_customer_general_ledger_wizard_menu'))" />
+			<field name="key">action</field>
+			<field name="model">res.partner</field>
+		</record>
+
+    </data>
+</odoo>
