@@ -140,7 +140,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         sheet.set_column('G:G', 15)
 
         # SHEET HEADER
-        sheet.merge_range('A1:G6', '', center)
+        sheet.merge_range('A1:F6', '', center)
         sheet.write_rich_string('A1', font_12, docs.company_id.name, '\n', font_10, docs.company_id.street, '\n',
                                 font_10, docs.company_id.street2, '\n', font_10, docs.company_id.city + '-' + docs.company_id.zip, '\n\n',
                                 font_12, docs.name, bold, '\n Date: ', font_10, obj.date_from + ' To ' + obj.date_to, center)
@@ -150,10 +150,10 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         sheet.write(row, col, 'Date', th_cell_center)
         sheet.write(row, col + 1, 'Particulars', th_cell_center)
         sheet.write(row, col + 2, 'Ref', th_cell_center)
-        sheet.write(row, col + 3, 'Debit', th_cell_center)
-        sheet.write(row, col + 4, 'Credit', th_cell_center)
+        sheet.write(row, col + 3, 'Dr.', th_cell_center)
+        sheet.write(row, col + 4, 'Cr.', th_cell_center)
         sheet.write(row, col + 5, 'Balance', th_cell_center)
-        sheet.write(row, col + 6, 'Currency', th_cell_center)
+        # sheet.write(row, col + 6, 'Currency', th_cell_center)
 
         # TABLE BODY
         row += 1
@@ -167,7 +167,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                     sheet.write(row, col + 3, rec['debit'], total_format)
                     sheet.write(row, col + 4, rec['credit'], total_format)
                     sheet.write(row, col + 5, rec['balance'], total_format)
-                    sheet.write(row, col + 6, amount_currency, currency_format)
+                    # sheet.write(row, col + 6, amount_currency, currency_format)
                     row += 1
                 else:
                     sheet.write(row, col, rec['ldate'], td_cell_center)
@@ -176,14 +176,14 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                     sheet.write(row, col + 3, rec['debit'], no_format)
                     sheet.write(row, col + 4, rec['credit'], no_format)
                     sheet.write(row, col + 5, rec['balance'], no_format)
-                    sheet.write(row, col + 6, amount_currency, currency_format)
+                    # sheet.write(row, col + 6, amount_currency, currency_format)
                     row += 1
 
             sheet.merge_range(row, col, row, col + 2, 'Closing Balance', td_cell_center_bold)
             sheet.write(row, col + 3, account['debit'], total_format)
             sheet.write(row, col + 4, account['credit'], total_format)
             sheet.write(row, col + 5, account['balance'], total_format)
-            sheet.write(row, col + 6, '', total_format)
+            # sheet.write(row, col + 6, '', total_format)
             row += 1
 
 

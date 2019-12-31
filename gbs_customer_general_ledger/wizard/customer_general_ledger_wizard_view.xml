@@ -9,18 +9,17 @@
                     <group>
 						<group>
 							<field name="target_move" widget="radio"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="date_from"/>
 						</group>
-						<group></group>
 						<group>
 							<field name="display_account" widget="radio"/>
+							<field name="date_to"/>
 						</group>
-						<group></group>
-                        <group>
-                            <field name="date_from"/>
-                        </group>
-						<group>
-                            <field name="date_to"/>
-                        </group>
                     </group>
                     <footer>
                         <button name ="button_export_xlsx" string="Export" type="object" class="oe_highlight"/>

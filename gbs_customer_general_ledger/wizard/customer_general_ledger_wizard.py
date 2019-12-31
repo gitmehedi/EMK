@@ -12,6 +12,7 @@ class CustomerGeneralLedgerWizard(models.TransientModel):
     display_account = fields.Selection([('all', 'All'), ('movement', 'With movements'),
                                         ('not_zero', 'With balance is not equal to 0'), ],
                                        string='Display Accounts', required=True, default='movement')
+    hide_field = fields.Boolean(string='Hide')
 
     @api.multi
     def button_export_xlsx(self):
