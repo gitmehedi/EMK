@@ -1,5 +1,6 @@
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
+from odoo.tools.misc import formatLang
 
 
 class CustomerGeneralLedgerXLSX(ReportXlsx):
@@ -45,15 +46,18 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         filters = filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
 
         # Get move lines base on sql query and Calculate the total balance of move lines
-        sql = ('''SELECT l.id AS lid, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
-            m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name\
-            FROM account_move_line l\
-            JOIN account_move m ON (l.move_id=m.id)\
-            LEFT JOIN res_currency c ON (l.currency_id=c.id)\
-            LEFT JOIN res_partner p ON (l.partner_id=p.id)\
-            JOIN account_journal j ON (l.journal_id=j.id)\
-            JOIN account_account acc ON (l.account_id = acc.id) \
-            WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
+        sql = ('''SELECT l.id AS lid, invl.price_unit, invl.quantity AS qty, u.name AS unit_name, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
+                    m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name\
+                    FROM account_move_line l\
+                    JOIN account_move m ON (l.move_id=m.id)\
+                    LEFT JOIN res_currency c ON (l.currency_id=c.id)\
+                    LEFT JOIN res_partner p ON (l.partner_id=p.id)\
+                    LEFT JOIN account_invoice i ON (m.id =i.move_id)\
+                    LEFT JOIN account_invoice_line invl ON (i.id=invl.invoice_id)\
+                    LEFT JOIN product_uom u ON (invl.uom_id=u.id)\
+                    JOIN account_journal j ON (l.journal_id=j.id)\
+                    JOIN account_account acc ON (l.account_id = acc.id) \
+                    WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, invl.price_unit, invl.quantity, u.name, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
         params = (tuple(accounts.ids),) + tuple(where_params)
         cr.execute(sql, params)
 
@@ -131,16 +135,18 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         sheet = workbook.add_worksheet('General Ledger')
 
         # SET CELL WIDTH
-        sheet.set_column('A:A', 15)
-        sheet.set_column('B:B', 25)
-        sheet.set_column('C:C', 20)
-        sheet.set_column('D:D', 15)
-        sheet.set_column('E:E', 15)
-        sheet.set_column('F:F', 15)
-        sheet.set_column('G:G', 15)
+        sheet.set_column('A:A', 10)
+        sheet.set_column('B:B', 6)
+        sheet.set_column('C:C', 30)
+        sheet.set_column('D:D', 18)
+        sheet.set_column('E:E', 10)
+        sheet.set_column('F:F', 10)
+        sheet.set_column('G:G', 13)
+        sheet.set_column('H:H', 13)
+        sheet.set_column('I:I', 13)
 
         # SHEET HEADER
-        sheet.merge_range('A1:F6', '', center)
+        sheet.merge_range('A1:I6', '', center)
         sheet.write_rich_string('A1', font_12, docs.company_id.name, '\n', font_10, docs.company_id.street, '\n',
                                 font_10, docs.company_id.street2, '\n', font_10, docs.company_id.city + '-' + docs.company_id.zip, '\n\n',
                                 font_12, docs.name, bold, '\n Date: ', font_10, obj.date_from + ' To ' + obj.date_to, center)
@@ -148,42 +154,50 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         # TABLE HEADER
         row, col = 7, 0
         sheet.write(row, col, 'Date', th_cell_center)
-        sheet.write(row, col + 1, 'Particulars', th_cell_center)
-        sheet.write(row, col + 2, 'Ref', th_cell_center)
-        sheet.write(row, col + 3, 'Dr.', th_cell_center)
-        sheet.write(row, col + 4, 'Cr.', th_cell_center)
-        sheet.write(row, col + 5, 'Balance', th_cell_center)
-        # sheet.write(row, col + 6, 'Currency', th_cell_center)
+        sheet.write(row, col + 1, 'Type', th_cell_center)
+        sheet.write(row, col + 2, 'Particulars', th_cell_center)
+        sheet.write(row, col + 3, 'Ref', th_cell_center)
+        sheet.write(row, col + 4, 'Qty', th_cell_center)
+        sheet.write(row, col + 5, 'Rate', th_cell_center)
+        sheet.write(row, col + 6, 'Dr.', th_cell_center)
+        sheet.write(row, col + 7, 'Cr.', th_cell_center)
+        sheet.write(row, col + 8, 'Balance', th_cell_center)
 
         # TABLE BODY
         row += 1
         for account in accounts_result:
             for rec in account['move_lines']:
-                currency_format = workbook.add_format({'num_format': '#,###0.00' + ' ' + rec['currency_code'], 'size': 10, 'border': 1}) if rec['amount_currency'] > 0 else no_format
-                amount_currency = rec['amount_currency'] if rec['amount_currency'] > 0 else ''
-
                 if init_balance and rec['lname'] == 'Opening Balance':
-                    sheet.merge_range(row, col, row, col + 2, rec['lname'], td_cell_center_bold)
-                    sheet.write(row, col + 3, rec['debit'], total_format)
-                    sheet.write(row, col + 4, rec['credit'], total_format)
-                    sheet.write(row, col + 5, rec['balance'], total_format)
-                    # sheet.write(row, col + 6, amount_currency, currency_format)
+                    sheet.merge_range(row, col, row, col + 5, rec['lname'], td_cell_center_bold)
+                    sheet.write(row, col + 6, rec['debit'], total_format)
+                    sheet.write(row, col + 7, rec['credit'], total_format)
+                    sheet.write(row, col + 8, rec['balance'], total_format)
                     row += 1
                 else:
+                    rate_format = workbook.add_format(
+                        {'num_format': '#,###0.00' + ' ' + rec['currency_code'], 'size': 10, 'border': 1}) if rec[
+                        'currency_code'] else no_format
+
+                    qty_str = formatLang(self.env, rec['qty']) if rec['qty'] else rec['qty']
+                    qty_str = qty_str + ' ' + rec['unit_name'] if rec['unit_name'] else qty_str
+
+                    journal_type = 'Sales' if rec['debit'] > 0 else 'Receipt'
+
                     sheet.write(row, col, rec['ldate'], td_cell_center)
-                    sheet.write(row, col + 1, rec['lname'], td_cell_left)
-                    sheet.write(row, col + 2, rec['move_name'], td_cell_left)
-                    sheet.write(row, col + 3, rec['debit'], no_format)
-                    sheet.write(row, col + 4, rec['credit'], no_format)
-                    sheet.write(row, col + 5, rec['balance'], no_format)
-                    # sheet.write(row, col + 6, amount_currency, currency_format)
+                    sheet.write(row, col + 1, journal_type, td_cell_left)
+                    sheet.write(row, col + 2, rec['lname'], td_cell_left)
+                    sheet.write(row, col + 3, rec['move_name'], td_cell_left)
+                    sheet.write(row, col + 4, qty_str, td_cell_right)
+                    sheet.write(row, col + 5, rec['price_unit'], rate_format)
+                    sheet.write(row, col + 6, rec['debit'], no_format)
+                    sheet.write(row, col + 7, rec['credit'], no_format)
+                    sheet.write(row, col + 8, rec['balance'], no_format)
                     row += 1
 
-            sheet.merge_range(row, col, row, col + 2, 'Closing Balance', td_cell_center_bold)
-            sheet.write(row, col + 3, account['debit'], total_format)
-            sheet.write(row, col + 4, account['credit'], total_format)
-            sheet.write(row, col + 5, account['balance'], total_format)
-            # sheet.write(row, col + 6, '', total_format)
+            sheet.merge_range(row, col, row, col + 5, 'Closing Balance', td_cell_center_bold)
+            sheet.write(row, col + 6, account['debit'], total_format)
+            sheet.write(row, col + 7, account['credit'], total_format)
+            sheet.write(row, col + 8, account['balance'], total_format)
             row += 1
 
 
