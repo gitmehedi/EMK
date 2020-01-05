@@ -76,6 +76,7 @@ class LCReceivablePayment(models.Model):
     lc_receivable_miscellaneous_ids = fields.One2many('lc.receivable.miscellaneous', 'miscellaneous_parent_id',
                                                       string='Miscellaneous', readonly=True,
                                                       states={'draft': [('readonly', False)]})
+    narration = fields.Text(string='Narration', required=True, readonly=True, states={'draft': [('readonly', False)]})
 
     @api.onchange('lc_id')
     def onchange_lc_id(self):
@@ -192,7 +193,8 @@ class LCReceivablePayment(models.Model):
             amount_currency = self.invoice_amount if self.currency_id.id != self.company_id.currency_id.id else 0
             move_line_vals = []
             account_id = self.invoice_ids[0].account_id.id
-            name = "Customer Payment"
+            # name = "Customer Payment"
+            name = self.narration
             credit_move_obj = self._generate_credit_move_line(account_move_id, account_id, credit_amount, amount_currency, name)
             move_line_vals.append(credit_move_obj)
             for line in acc_move_line_list:

@@ -58,6 +58,7 @@
                             <field name="currency_id"/>
                             <field name="currency_rate"/>
                             <field name="amount_in_company_currency"/>
+                            <field name="narration"/>
                         </group>
                         <button name="action_analytic_create" string="Create Analytic"
                                 attrs="{'invisible': [('analytic_acc_create', '=', False)]}"

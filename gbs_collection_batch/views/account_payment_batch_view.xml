@@ -53,6 +53,7 @@
                                                domain="[(partner_type, '=', True), ('parent_id', '=', False)]"
                                                string="Customer"/>
                                         <field name="journal_id" invisible="1"/>
+                                        <field name="narration"/>
                                         <field name="deposited_bank" options="{'no_open': True, 'no_create': True}"/>
                                         <field name="bank_branch"/>
                                         <field name="sale_order_domain_ids" widget="many2many_tags" invisible="1"/>
