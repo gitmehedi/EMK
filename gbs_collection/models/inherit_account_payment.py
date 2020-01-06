@@ -41,7 +41,7 @@ class InheritAccountPayment(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
     is_auto_invoice_paid = fields.Boolean(string='Auto Invoice Paid', track_visibility='onchange')
-    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]})
+    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     @api.multi
     def post(self):
@@ -87,6 +87,11 @@ class InheritAccountPayment(models.Model):
                     pass
 
         return so_ids
+
+    @api.onchange('narration')
+    def onchange_narration(self):
+        if self.narration:
+            self.narration = self.narration.strip()
 
     @api.onchange('partner_type')
     def _onchange_partner_type(self):

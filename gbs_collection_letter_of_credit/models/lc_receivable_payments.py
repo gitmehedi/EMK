@@ -1,5 +1,5 @@
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons import decimal_precision as dp
 
 
@@ -76,7 +76,12 @@ class LCReceivablePayment(models.Model):
     lc_receivable_miscellaneous_ids = fields.One2many('lc.receivable.miscellaneous', 'miscellaneous_parent_id',
                                                       string='Miscellaneous', readonly=True,
                                                       states={'draft': [('readonly', False)]})
-    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]})
+    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
+
+    @api.onchange('narration')
+    def onchange_narration(self):
+        if self.narration:
+            self.narration = self.narration.strip()
 
     @api.onchange('lc_id')
     def onchange_lc_id(self):
