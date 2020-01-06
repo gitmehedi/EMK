@@ -41,7 +41,7 @@ class InheritAccountPayment(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
     is_auto_invoice_paid = fields.Boolean(string='Auto Invoice Paid', track_visibility='onchange')
-    narration = fields.Text(string='Narration', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.multi
     def post(self):
@@ -105,7 +105,8 @@ class InheritAccountPayment(models.Model):
 
     def _get_counterpart_move_line_vals(self, invoice=False):
         res = super(InheritAccountPayment, self)._get_counterpart_move_line_vals(self.invoice_ids)
-        res['name'] = self.narration
+        if self.narration and len(self.narration.strip()) > 0:
+            res['name'] = self.narration.strip()
         # if self.is_auto_invoice_paid:
         #     name = res['name'].split(':')[0] + ': By Auto Paid'
         #     res['name'] = name
