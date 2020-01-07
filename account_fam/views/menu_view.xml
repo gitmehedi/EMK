@@ -29,7 +29,7 @@
     </record>
 
     <record id="account_asset.menu_action_account_asset_asset_form" model="ir.ui.menu">
-        <field name="name">Fixed Assets (Draft)</field>
+        <field name="name">Stock of Fixed Assets</field>
          <field name="sequence">5</field>
     </record>
 
