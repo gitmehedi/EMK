@@ -8,7 +8,7 @@
                 <tree decoration-info="state=='draft'" decoration-muted="state=='reconciled'" edit="false">
                     <field name="payment_date"/>
                     <field name="name"/>
-                    <field name="journal_id"/>
+                    <field name="journal_id" string="Bank Name"/>
                     <field name="payment_method_id"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="amount" sum="Amount"/>
@@ -47,7 +47,7 @@
                         <group>
                             <group>
                                 <field name="partner_id" string="Vendor" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
-                                <field name="journal_id" string="Payment Journal" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="journal_id" string="Bank Name" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="cheque_info_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>

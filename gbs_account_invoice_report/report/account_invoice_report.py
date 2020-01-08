@@ -146,17 +146,31 @@ class GBSAccountInvoiceReport(models.Model):
         """
         return from_str
 
+    @staticmethod
+    def subtract_date(date_now, year=0, month=0):
+        dt = fields.Date.from_string(date_now)
+        year, month = divmod(year * 12 + month, 12)
+        if dt.month <= month:
+            year = dt.year - year - 1
+            month = dt.month - month + 12
+        else:
+            year = dt.year - year
+            month = dt.month - month
+        return dt.replace(year=year, month=month)
+
     def _where(self):
         date_now = fields.Date.today()
-        year_now = fields.Date.from_string(date_now).year
-        to_month_num = fields.Date.from_string(date_now).month
-        from_month_num = fields.Date.from_string(date_now).month - 2
-        last_day = calendar.monthrange(year_now, to_month_num)
-        to_month_format = str(year_now)+'-'+str(to_month_num)+'-'+str(last_day[1])
-        from_month_format = str(year_now)+'-'+str(from_month_num)+'-01'
+        date_from = self.subtract_date(date_now, month=2)
+        # From date string
+        date_from_str = str(date_from.year) + '-' + str(date_from.month) + '-01'
+        date_to = fields.Date.from_string(date_now)
+        _, last_day = calendar.monthrange(date_to.year, date_to.month)
+        # To date string
+        date_to_str = str(date_to.year) + '-' + str(date_to.month) + '-' + str(last_day)
+
         where_str = """
                WHERE ai.state in ('open','paid') AND pt.active = true AND ai.date_invoice BETWEEN '%s' and '%s'
-        """ % (from_month_format, to_month_format)
+        """ % (date_from_str, date_to_str)
         return where_str
 
     def _group_by(self):
