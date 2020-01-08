@@ -30,6 +30,9 @@
                 "gbs_account_journal_log",
                 'gbs_voucher',
                 'account_parent_inherit',
+                'gbs_analytic_account_type',
+                'gbs_account_payment_narration',
+                'gbs_general_ledger_customer',
                 ],
 
     'data': [ ],

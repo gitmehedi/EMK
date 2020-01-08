@@ -17,11 +17,11 @@ class CustomerGeneralLedgerWizard(models.TransientModel):
     @api.multi
     def button_export_xlsx(self):
         self.ensure_one()
-        return self.env['report'].get_action(self, report_name='gbs_customer_general_ledger.customer_general_ledger_xlsx')
+        return self.env['report'].get_action(self, report_name='gbs_general_ledger_customer.customer_general_ledger_xlsx')
 
     @api.multi
     def button_print_pdf(self):
         data = dict()
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
-        return self.env['report'].get_action(self, 'gbs_customer_general_ledger.customer_general_ledger_pdf', data=data)
+        return self.env['report'].get_action(self, 'gbs_general_ledger_customer.customer_general_ledger_pdf', data=data)

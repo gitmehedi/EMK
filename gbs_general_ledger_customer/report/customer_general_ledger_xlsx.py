@@ -201,4 +201,4 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
             row += 1
 
 
-CustomerGeneralLedgerXLSX('report.gbs_customer_general_ledger.customer_general_ledger_xlsx', 'customer.general.ledger.wizard', parser=report_sxw.rml_parse)
+CustomerGeneralLedgerXLSX('report.gbs_general_ledger_customer.customer_general_ledger_xlsx', 'customer.general.ledger.wizard', parser=report_sxw.rml_parse)

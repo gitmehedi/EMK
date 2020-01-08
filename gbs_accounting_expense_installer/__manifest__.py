@@ -9,6 +9,7 @@
                 'tds_vat_challan',
                 'tds_vendor_bill',
                 'account_tds',
+                'gbs_vendor_payment',
                 ],
 
     'data': [ ],

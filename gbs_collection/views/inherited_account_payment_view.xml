@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="inherited_account_payment_invoice_form_view" model="ir.ui.view">
-            <field name="name">inherited.account.payment.invoice.form.view</field>
-            <field name="model">account.payment</field>
-            <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//sheet/group/group/field[@name='communication']" position="after">
-                    <field name="narration"/>
-                </xpath>
-            </field>
-        </record>
-
         <!--Inherit Payments form view-->
         <record id="inherited_acc_payment_view" model="ir.ui.view">
             <field name="name">Account.payment.view.form</field>
@@ -83,10 +72,6 @@
 
                 <field name="journal_id" position="after">
                     <field name="is_entry_receivable_cleared_payments" invisible="1"/>
-                </field>
-
-                <field name="communication" position="after">
-                    <field name="narration" required="1"/>
                 </field>
 
                 <xpath expr="//sheet" position="after">
