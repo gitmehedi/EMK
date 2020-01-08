@@ -87,6 +87,11 @@ class InheritAccountPayment(models.Model):
 
         return so_ids
 
+    @api.onchange('narration')
+    def onchange_narration(self):
+        if self.narration:
+            self.narration = self.narration.strip()
+
     @api.onchange('partner_type')
     def _onchange_partner_type(self):
         res = super(InheritAccountPayment, self)._onchange_partner_type()
@@ -101,18 +106,3 @@ class InheritAccountPayment(models.Model):
     @api.onchange('is_auto_invoice_paid')
     def onchange_is_auto_invoice_paid(self):
         self.sale_order_id = []
-
-    def _get_counterpart_move_line_vals(self, invoice=False):
-        res = super(InheritAccountPayment, self)._get_counterpart_move_line_vals(self.invoice_ids)
-        if self.is_auto_invoice_paid:
-            name = res['name'].split(':')[0] + ': By Auto Paid'
-            res['name'] = name
-        elif self.sale_order_id.ids:
-            name = res['name'].split(':')[0] + ': '
-            for so in self.sale_order_id:
-                name += so.name + ', '
-            res['name'] = name[:len(name)-2]
-        else:
-            pass
-
-        return res

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Register Payment Form View -->
+        <record id="inherited_account_payment_register_form" model="ir.ui.view">
+            <field name="name">inherited.account.payment.register.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group/field[@name='communication']" position="after">
+                    <field name="payment_narration"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Customer Collection Form View -->
+        <record id="inherited_account_payment_collection_form" model="ir.ui.view">
+            <field name="name">inherited.account.payment.collection.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="gbs_collection.inherited_acc_payment_view"/>
+            <field name="arch" type="xml">
+                <field name="sale_order_id" position="after">
+                    <field name="payment_narration" required="1"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Customer Collection Batch Form View -->
+        <record id="inherited_account_payment_collection_batch_form" model="ir.ui.view">
+            <field name="name">inherited.account.payment.collection.batch.form</field>
+            <field name="model">account.payment.batch</field>
+            <field name="inherit_id" ref="gbs_collection_batch.view_account_payment_batch_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook/page/field[@name='payment_ids']/tree/field[@name='partner_id']"  position="after">
+                    <field name="payment_narration" required="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vendor Payment Form View -->
+        <record id="inherited_account_payment_vendor_form" model="ir.ui.view">
+            <field name="name">inherited.account.payment.vendor.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="gbs_vendor_payment.view_account_vendor_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group/field[@name='payment_transaction_id']"  position="after">
+                    <field name="payment_narration" required="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

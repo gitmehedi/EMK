@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_customer_general_ledger_xlsx" model="ir.actions.report.xml">
+            <field name="name">General Ledger (Customer)</field>
+            <field name="model">customer.general.ledger.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">gbs_general_ledger_customer.customer_general_ledger_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>

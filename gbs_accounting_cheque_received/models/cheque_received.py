@@ -78,6 +78,16 @@ class ChequeReceived(models.Model):
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
     cheque_no = fields.Char(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     is_entry_receivable_cleared = fields.Boolean(string='Is this entry cleared receivable?')
+    narration = fields.Text(string='Narration', states={'returned': [('readonly', True)],
+                                                        'dishonoured': [('readonly', True)],
+                                                        'honoured': [('readonly', True)],
+                                                        'received': [('readonly', True)],
+                                                        'deposited': [('readonly', True)]}, track_visibility='onchange')
+
+    @api.onchange('narration')
+    def onchange_narration(self):
+        if self.narration:
+            self.narration = self.narration.strip()
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
@@ -296,15 +306,16 @@ class ChequeReceived(models.Model):
     def _get_counterpart_move_line_vals(self):
         name = ''
         if self.partner_type == 'customer':
-            name += _("Customer Payment By Check") if self.payment_type == 'inbound' else _("Customer Refund By Check")
+            # name += _("Customer Payment By Check") if self.payment_type == 'inbound' else _("Customer Refund By Check")
+            name = self.narration
         else:
             name += _("Vendor Refund By Check") if self.payment_type == 'inbound' else _("Vendor Payment By Check")
 
-        if self.sale_order_id.ids:
-            name += ': '
-            for so in self.sale_order_id:
-                name += so.name + ', '
-            name = name[:len(name)-2]
+        # if self.sale_order_id.ids:
+        #     name += ': '
+        #     for so in self.sale_order_id:
+        #         name += so.name + ', '
+        #     name = name[:len(name)-2]
 
         if self.partner_id.id:
             destination_account_id = self.partner_id.property_account_receivable_id.id \

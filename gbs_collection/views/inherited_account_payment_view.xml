@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <!--Inherit Payments form view-->
         <record id="inherited_acc_payment_view" model="ir.ui.view">
             <field name="name">Account.payment.view.form</field>
