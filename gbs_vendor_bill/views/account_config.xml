@@ -6,17 +6,6 @@
         <field name="inherit_id" ref="account.view_account_config_settings"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='accounting']" position="after">
-                <group string="Security Deposit" name="security_deposit_account">
-                    <label for="id" string="Configuration" groups="account.group_account_user"/>
-                    <div name="security_deposit_account">
-                        <div>
-                            <label for="security_deposit_account_id"/>
-                            <field name="security_deposit_account_id" domain="[('internal_type','=','other')]"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
-                                   class="oe_inline"/>
-                        </div>
-                    </div>
-                </group>
                 <group string="Head Branch" name="head_branch">
                     <label for="id" string="Configuration" groups="account.group_account_user"/>
                     <div name="head_branch_id">

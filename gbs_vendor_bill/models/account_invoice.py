@@ -1,23 +1,19 @@
 from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+import itertools
+from operator import itemgetter
 
 
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'ir.needaction_mixin']
 
-    operating_unit_id = fields.Many2one('operating.unit', 'Branch',
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid),
                                         readonly=True, required=True,
                                         states={'draft': [('readonly', False)]})
-    security_deposit = fields.Float('Security Deposit', track_visibility='onchange', copy=False,
-                                    readonly=True, states={'draft': [('readonly', False)]})
-    security_deposit_account_id = fields.Many2one('account.account', string='Security Deposit Account',
-                                                  default=lambda
-                                                      self: self.env.user.company_id.security_deposit_account_id.id,
-                                                  required=True, readonly=True, states={'draft': [('readonly', False)]})
     vat_selection = fields.Selection([('normal', 'General'),
                                       ('mushok', 'Mushok-6.3'),
                                       ('vds_authority', 'VDS Authority'),
@@ -78,9 +74,9 @@ class AccountInvoice(models.Model):
         if res:
             if self.vat_selection in ['mushok', 'vds_authority']:
                 res.update(
-                    {'product_id': line.product_id.id, 'name': line.name, 'mushok_vds_amount': line.mushok_vds_amount})
+                    {'product_id': line.product_id.id, 'name': False, 'mushok_vds_amount': line.mushok_vds_amount})
             else:
-                res.update({'product_id': line.product_id.id, 'name': line.name})
+                res.update({'product_id': line.product_id.id, 'name': False})
         return res
 
     @api.model
@@ -123,35 +119,50 @@ class AccountInvoice(models.Model):
                 done_taxes.append(tax.id)
         return res
 
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        if self.security_deposit > 0.0:
-            for line in move_lines:
-                if line[2]['name'] == '/':
-                    line[2]['credit'] = line[2]['credit'] - self.security_deposit
-            if self.env.user.company_id.head_branch_id:
-                branch_id = self.env.user.company_id.head_branch_id.id
-            else:
-                branch_id = self.operating_unit_id.id
-            security_deposit_values = {
-                'account_id': self.security_deposit_account_id.id,
-                # 'analytic_account_id': self.invoice_line_ids[0].account_analytic_id.id,
-                'credit': self.security_deposit,
-                'date_maturity': self.date_due,
-                'debit': False,
-                'invoice_id': self.id,
-                'name': self.invoice_line_ids[0].name,
-                'operating_unit_id': branch_id,
-                'partner_id': self.partner_id.id,
-            }
-            move_lines.append((0, 0, security_deposit_values))
-        return move_lines
+    # @api.multi
+    # def action_invoice_open(self):
+    #     if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
+    #         raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+    #     return super(AccountInvoice, self).action_invoice_open()
 
     @api.multi
     def action_invoice_open(self):
-        if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+        sorted_inv_line_ids = sorted(self.invoice_line_ids, key=itemgetter('account_id'))
+        for key, group in itertools.groupby(sorted_inv_line_ids, key=lambda x: x['account_id']):
+            has_narration = False
+            for inv_line_id in list(group):
+                if inv_line_id.name:
+                    has_narration = True
+
+            if not has_narration:
+                raise ValidationError(_("Must have narration for an unique account in Bill records."))
+
         return super(AccountInvoice, self).action_invoice_open()
+
+    @api.multi
+    def finalize_invoice_move_lines(self, move_lines):
+        move_lines = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
+        # check the type of invoice
+        if self.type == 'in_invoice':
+            dict_obj = {}
+            for line_tuple in move_lines:
+                account_id = line_tuple[2]['account_id']
+                if account_id not in dict_obj.keys():
+                    dict_obj[account_id] = line_tuple
+                else:
+                    if dict_obj[account_id][2]['name'] and line_tuple[2]['name']:
+                        dict_obj[account_id][2]['name'] += ', ' + line_tuple[2]['name']
+                    elif not dict_obj[account_id][2]['name'] and line_tuple[2]['name']:
+                        dict_obj[account_id][2]['name'] = line_tuple[2]['name']
+                    else:
+                        pass
+
+                    dict_obj[account_id][2]['debit'] += line_tuple[2]['debit']
+                    dict_obj[account_id][2]['credit'] += line_tuple[2]['credit']
+
+            move_lines = list(dict_obj.values())
+
+        return move_lines
 
     @api.multi
     def action_move_create(self):
@@ -163,7 +174,8 @@ class AccountInvoice(models.Model):
                 account_move_line = account_move.line_ids.search(
                     [('name', '=', '/'), ('move_id', '=', account_move.id)])
                 if account_move_line:
-                    account_move_line.write({'name': self.invoice_line_ids[0].name})
+                    name = self.invoice_line_ids.search([('name', '!=', False), ('invoice_id', '=', self.id)])[0].name
+                    account_move_line.write({'name': name})
         return res
 
     @api.multi
@@ -220,6 +232,7 @@ class AccountInvoiceLine(models.Model):
             else:
                 self.mushok_vds_amount = False
 
+    name = fields.Text(string='Narration', required=False)
     price_subtotal = fields.Monetary(string='Amount With Vat',
                                      store=True, readonly=True, compute='_compute_price')
     price_subtotal_without_vat = fields.Monetary(string='Amount',
@@ -233,6 +246,12 @@ class AccountInvoiceLine(models.Model):
     invoice_line_tax_ids = fields.Many2many(string='VAT')
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price',store=True, readonly=True, copy=False)
     narration = fields.Text('Narration')
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        res = super(AccountInvoiceLine, self)._onchange_product_id()
+        self.name = False
+        return res
 
 
 class AccountInvoiceTax(models.Model):

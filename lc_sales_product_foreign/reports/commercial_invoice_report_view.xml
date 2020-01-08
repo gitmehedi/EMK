@@ -240,12 +240,14 @@
                                 In Words: <span t-esc="data['currency_id']"/> <strong t-esc="amt_to_word"/> <strong>only</strong>
                             </p>
                             <hr class="hr-xs mb-5"/>
-                            <div class="text-left">
-                                <p class="mb-5"><u><strong t-esc="data['cylinder_details_label']"/></u></p>
-                                <ul class="cylinder">
-                                    <li class="cylinder-item" t-raw="data['cylinder_details']"/>
-                                </ul>
-                            </div>
+                            <t t-if="data['cylinder_details']">
+                                <div class="text-left">
+                                    <p class="mb-5"><u><strong>Cylinder Details</strong></u></p>
+                                    <ul class="cylinder">
+                                        <li class="cylinder-item" t-raw="data['cylinder_details']"/>
+                                    </ul>
+                                </div>
+                            </t>
                             <br/>
 
                             <div class="text-right">

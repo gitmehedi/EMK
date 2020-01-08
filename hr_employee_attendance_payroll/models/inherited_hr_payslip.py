@@ -3,11 +3,15 @@ from odoo import api, fields, models, tools, _
 
 class InheritedHrAttendancePayslip(models.Model):
     """
-    Inherit HR Payslip models and add onchange functionality on 
+    Inherit HR Payslip models and add onchange functionality on
     employee_id
     """
 
     _inherit = "hr.payslip"
+
+    @api.model
+    def get_worked_day_lines(self, contract_ids, date_from, date_to):
+        return []
 
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
@@ -54,6 +58,15 @@ class InheritedHrAttendancePayslip(models.Model):
                     'name': 'OT Hours',
                 })
 
+            ### Late Days
+            if summary_line_data.late_days and len(summary_line_data.late_days) >= 0:
+                worked_days_lines += worked_days_lines.new({
+                    'code': 'LATEDAYS',
+                    'contract_id': self.contract_id.id,
+                    'number_of_days': len(summary_line_data.late_days) or 0,
+                    'name': 'Late Day(s)',
+                })
+
             ### Late Deduction Days
             if summary_line_data.deduction_days >= 0:
                 worked_days_lines += worked_days_lines.new({
@@ -62,7 +75,8 @@ class InheritedHrAttendancePayslip(models.Model):
                     'number_of_days': summary_line_data.deduction_days or 0,
                     'name': 'Late Deduction Day(s)',
                 })
-            self.worked_days_line_ids = worked_days_lines
+
+            # self.worked_days_line_ids = worked_days_lines
 
             ### ABS Deduction Days
             if summary_line_data.absent_deduction_days >= 0:
@@ -72,11 +86,15 @@ class InheritedHrAttendancePayslip(models.Model):
                     'number_of_days': summary_line_data.absent_deduction_days or 0,
                     'name': 'ABS Deduction Day(s)',
                 })
+            # self.worked_days_line_ids = worked_days_lines
+
+            ### UNPAID Holidays
+            if summary_line_data.unpaid_holidays >= 0:
+                worked_days_lines += worked_days_lines.new({
+                    'code': 'UNPH',
+                    'contract_id': self.contract_id.id,
+                    'number_of_days': summary_line_data.unpaid_holidays or 0,
+                    'name': 'Unpaid Holiday(s)',
+                })
+
             self.worked_days_line_ids = worked_days_lines
-
-
-
-
-
-
-

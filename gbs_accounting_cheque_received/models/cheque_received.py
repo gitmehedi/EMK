@@ -1,6 +1,5 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-
 import datetime
 
 
@@ -22,6 +21,8 @@ class ChequeReceived(models.Model):
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], default='customer')
     payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True,
                                     default='inbound')
+    invoice_ids = fields.Many2many('account.invoice', 'account_invoice_check_received_rel', 'cheque_received_id',
+                                   'invoice_id', string="Invoices", copy=False, readonly=True)
 
     @api.multi
     def _get_name(self):
@@ -61,7 +62,6 @@ class ChequeReceived(models.Model):
                                          'honoured': [('readonly', True)], 'received': [('readonly', True)],
                                          'deposited': [('readonly', True)]})
 
-
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
                                  default=lambda self: self.env.user.company_id, readonly='True',
@@ -78,20 +78,35 @@ class ChequeReceived(models.Model):
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
     cheque_no = fields.Char(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     is_entry_receivable_cleared = fields.Boolean(string='Is this entry cleared receivable?')
+    narration = fields.Text(string='Narration', states={'returned': [('readonly', True)],
+                                                        'dishonoured': [('readonly', True)],
+                                                        'honoured': [('readonly', True)],
+                                                        'received': [('readonly', True)],
+                                                        'deposited': [('readonly', True)]}, track_visibility='onchange')
+
+    @api.onchange('narration')
+    def onchange_narration(self):
+        if self.narration:
+            self.narration = self.narration.strip()
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        for ds in self:
-            so_id_list = []
-            if ds.partner_id:
-                so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
-                                                                ('state', '=', 'done')])
-                if so_objs:
-                    for so_obj in so_objs:
-                        so_id_list.append(so_obj.id)
+        so_ids = []
+        if self.partner_id.id:
+            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id),
+                                                                   ('state', '=', 'done')])
+            for so in sale_order_ids:
+                # check if so has any invoice in 'open' state.
+                if len(self.env['account.invoice'].sudo().search([('so_id', '=', so.id), ('state', '=', 'open')])) > 0:
+                    so_ids.append(so.id)
+                # check if so type is 'cash' and has not created any invoice yet.
+                elif so.type_id.sale_order_type == 'cash' and len(self.env['account.invoice'].sudo().search(
+                        [('so_id', '=', so.id), ('state', '=', 'paid')])) <= 0:
+                    so_ids.append(so.id)
+                else:
+                    pass
 
-                return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
-
+        return {'domain': {'sale_order_id': [('id', 'in', so_ids)]}}
 
     @api.multi
     def _get_payment_method(self):
@@ -129,8 +144,6 @@ class ChequeReceived(models.Model):
                 if self.currency_id != self.journal_id.company_id.currency_id:
                     raise ValidationError('Payment Journal Currency and Cheque Received Currency must be same')
 
-
-
     @api.constrains('cheque_amount')
     def _check_negative_amount_value(self):
         if self.cheque_amount < 0:
@@ -139,9 +152,9 @@ class ChequeReceived(models.Model):
         if self.cheque_amount == 0:
             raise ValidationError('The payment amount must be greater than zero')
 
-    # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
     @api.multi
     def updateCustomersCreditLimit(self):
+        # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
         for cust in self:
             res_partner_credit_limit = cust.env['res.partner.credit.limit'].search(
                 [('partner_id', '=', cust.partner_id.id),
@@ -158,104 +171,19 @@ class ChequeReceived(models.Model):
                 else:
                     res_partner_credit_limit.write({'remaining_credit_limit': update_cust_credits})
 
-    @api.multi
-    def action_honoured(self):
-        for cash in self:
-            cash.action_journal_entry_bank()
-
-            for s_id in cash.sale_order_id:
-                so_objs = cash.env['sale.order'].search([('id','=',s_id.id)])
-
-                for so_id in so_objs:
-                    so_id.write({'is_this_so_payment_check':True})
-
-            cash.state = 'honoured'
-
-    @api.multi
-    def action_journal_entry_bank(self):
-
-        for cr in self:
-            line_ids = []
-            debit_sum = 0.0
-            credit_sum = 0.0
-            date = cr.date_on_cheque
-
-            move_dict = {
-                'journal_id': cr.journal_id.id,
-                'date': date,
-            }
-
-            debit_account_id = cr.journal_id.default_debit_account_id
-            credit_account_id = cr.partner_id.property_account_receivable_id
-
-            if debit_account_id:
-
-                amount_currency = 0
-                debit_amount = cr.cheque_amount > 0.0 and cr.cheque_amount or 0.0
-                credit_amount = cr.cheque_amount < 0.0 and -cr.cheque_amount or 0.0
-                currency_id = cr.journal_id.currency_id.id
-
-                if cr.journal_id.currency_id:
-                    if cr.journal_id.currency_id != cr.company_id.currency_id:
-                        amount_currency = cr.cheque_amount
-                        amount = amount_currency / cr.journal_id.currency_id.rate
-                        debit_amount = amount > 0.0 and amount or 0.0
-                        credit_amount = amount < 0.0 and -amount or 0.0
-
-                debit_line = (0, 0, {
-                    'name': debit_account_id.name,
-                   # 'partner_id': cr.partner_id.id,
-                    'account_id': debit_account_id.id,
-                    'journal_id': cr.journal_id.id,
-                    'currency_id': currency_id,
-                    'amount_currency': amount_currency,
-                    'date': date,
-                    'debit': debit_amount,
-                    'credit': credit_amount,
-                    'cheque_received_id': cr.id,
-                })
-
-                line_ids.append(debit_line)
-                debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
-
-            if credit_account_id:
-
-                amount_currency = 0
-                debit_amount = cr.cheque_amount < 0.0 and -cr.cheque_amount or 0.0
-                credit_amount = cr.cheque_amount > 0.0 and cr.cheque_amount or 0.0
-                currency_id = cr.journal_id.currency_id.id
-
-                if cr.journal_id.currency_id:
-                    if cr.journal_id.currency_id != cr.company_id.currency_id:
-                        amount_currency = cr.cheque_amount
-                        amount = amount_currency / cr.journal_id.currency_id.rate
-                        debit_amount = amount < 0.0 and -amount or 0.0
-                        credit_amount = amount > 0.0 and amount or 0.0
-
-                credit_line = (0, 0, {
-                    'name': credit_account_id.name,
-                    'partner_id': cr.partner_id.id,
-                    'account_id': credit_account_id.id,
-                    'journal_id': cr.journal_id.id,
-                    'currency_id': currency_id,
-                    'amount_currency': -amount_currency,  # amount_currency is negative when it is in credit
-                    'date': date,
-                    'debit': debit_amount,
-                    'credit': credit_amount,
-                })
-                line_ids.append(credit_line)
-                credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
-
-        move_dict['line_ids'] = line_ids
-        move = self.env['account.move'].create(move_dict)
-        move.post()
-
-
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('accounting.cheque.received') or '/'
         vals['name'] = seq
         return super(ChequeReceived, self).create(vals)
+
+    @api.multi
+    def unlink(self):
+        """ delete function """
+        for rec in self:
+            if rec.state == 'honoured':
+                raise UserError(_("You can not delete a check received which is in honoured state."))
+        return super(ChequeReceived, self).unlink()
 
     @api.multi
     def action_received(self):
@@ -291,3 +219,144 @@ class ChequeReceived(models.Model):
     def action_returned_to_customer(self):
         for cr in self:
             cr.state = 'returned'
+
+    @api.multi
+    def action_honoured(self):
+        for rec in self:
+            if rec.sale_order_id.ids:
+                rec.invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
+                                                                             ('state', '=', 'open')])
+            amount = rec.cheque_amount * (rec.payment_type == 'outbound' and 1 or -1)
+            move = rec._create_journal_entry(amount)
+
+            for s_id in rec.sale_order_id:
+                so_objs = rec.env['sale.order'].search([('id', '=', s_id.id)])
+                for so_id in so_objs:
+                    so_id.write({'is_this_so_payment_check': True})
+
+            rec.write({'state': 'honoured'})
+
+    @api.multi
+    def _create_journal_entry(self, amount):
+        aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
+
+        invoice_currency = False
+        if self.invoice_ids and all([x.currency_id == self.invoice_ids[0].currency_id for x in self.invoice_ids]):
+            # if all the invoices selected share the same currency, record the payment in that currency too
+            invoice_currency = self.invoice_ids[0].currency_id
+
+        debit, credit, amount_currency, currency_id = aml_obj.with_context(
+            date=self.date_on_cheque).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id,
+                                                            invoice_currency)
+
+        move = self.env['account.move'].create({
+            'date': self.date_on_cheque,
+            'company_id': self.company_id.id,
+            'journal_id': self.journal_id.id,
+        })
+
+        # Write line corresponding to invoice payment
+        counterpart_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, move.id, False)
+        counterpart_aml_dict.update(self._get_counterpart_move_line_vals())
+        counterpart_aml_dict.update({'currency_id': currency_id})
+        counterpart_aml = aml_obj.create(counterpart_aml_dict)
+
+        self.invoice_ids.register_payment(counterpart_aml)
+
+        # Write counterpart lines
+        if not self.currency_id != self.company_id.currency_id:
+            amount_currency = 0
+        liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
+        liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
+        aml_obj.create(liquidity_aml_dict)
+
+        # post account move
+        move.post()
+
+        return move
+
+    def _get_move_vals(self, journal=None):
+        """ Return dict to create the payment move
+        """
+        journal = journal or self.journal_id
+        if not journal.sequence_id:
+            raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
+        if not journal.sequence_id.active:
+            raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
+        name = journal.with_context(ir_sequence_date=self.date_on_cheque).sequence_id.next_by_id()
+        return {
+            'name': name,
+            'date': self.date_on_cheque,
+            'company_id': self.company_id.id,
+            'journal_id': journal.id,
+        }
+
+    def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
+        """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)
+        """
+        return {
+            'partner_id': self.payment_type in ('inbound', 'outbound') and self.env['res.partner']._find_accounting_partner(self.partner_id).id or False,
+            'invoice_id': invoice_id and invoice_id.id or False,
+            'move_id': move_id,
+            'debit': debit,
+            'credit': credit,
+            'amount_currency': amount_currency or False,
+        }
+
+    def _get_counterpart_move_line_vals(self):
+        name = ''
+        if self.partner_type == 'customer':
+            # name += _("Customer Payment By Check") if self.payment_type == 'inbound' else _("Customer Refund By Check")
+            name = self.narration
+        else:
+            name += _("Vendor Refund By Check") if self.payment_type == 'inbound' else _("Vendor Payment By Check")
+
+        # if self.sale_order_id.ids:
+        #     name += ': '
+        #     for so in self.sale_order_id:
+        #         name += so.name + ', '
+        #     name = name[:len(name)-2]
+
+        if self.partner_id.id:
+            destination_account_id = self.partner_id.property_account_receivable_id.id \
+                if self.partner_type == 'customer' else self.partner_id.property_account_payable_id.id
+
+        return {
+            'name': name,
+            'account_id': destination_account_id,
+            'journal_id': self.journal_id.id,
+            'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
+            'cheque_received_id': self.id,
+        }
+
+    def _get_liquidity_move_line_vals(self, amount):
+        vals = {
+            'name': self.name,
+            'account_id': self.payment_type == 'outbound' and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id,
+            'cheque_received_id': self.id,
+            'journal_id': self.journal_id.id,
+            'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
+        }
+
+        # If the journal has a currency specified, the journal item need to be expressed in this currency
+        if self.journal_id.currency_id and self.currency_id != self.journal_id.currency_id:
+            amount = self.currency_id.with_context(date=self.payment_date).compute(amount, self.journal_id.currency_id)
+            debit, credit, amount_currency, dummy = self.env['account.move.line'].with_context(date=self.payment_date).compute_amount_fields(amount, self.journal_id.currency_id, self.company_id.currency_id)
+            vals.update({
+                'amount_currency': amount_currency,
+                'currency_id': self.journal_id.currency_id.id,
+            })
+
+        return vals
+
+    @api.multi
+    def button_journal_entries(self):
+        return {
+            'name': _('Journal Items'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move.line',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': [('cheque_received_id', 'in', self.ids)],
+        }

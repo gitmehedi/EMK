@@ -14,7 +14,7 @@ class InheritAccountPayment(models.Model):
     is_cash_payment = fields.Boolean(string='Cash Payment', default=True)
 
     ## if cash
-    deposited_bank = fields.Many2one('res.bank',string='Deposited Bank', readonly=True, states={'draft': [('readonly', False)]})
+    deposited_bank = fields.Many2one('res.bank',string='Customer Bank', readonly=True, states={'draft': [('readonly', False)]})
     bank_branch = fields.Char(string='Branch', readonly=True,states={'draft': [('readonly', False)]})
     deposit_slip = fields.Char(string='Deposit Slip No.',readonly=True,states={'draft': [('readonly', False)]})
 
@@ -36,13 +36,18 @@ class InheritAccountPayment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id, track_visibility='onchange')
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, track_visibility='onchange')
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True,
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True,
                                  domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
+    is_auto_invoice_paid = fields.Boolean(string='Auto Invoice Paid', track_visibility='onchange')
+    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     @api.multi
     def post(self):
+        if self.sale_order_id.ids or self.is_auto_invoice_paid:
+            self.invoice_ids = self.get_invoice_ids()
+        # post payment
         res = super(InheritAccountPayment, self).post()
         for s_id in self.sale_order_id:
             so_objs = self.env['sale.order'].search([('id', '=', s_id.id)])
@@ -53,17 +58,40 @@ class InheritAccountPayment(models.Model):
         return res
 
     @api.multi
-    def get_sale_order_id_list(self):
-        so_ids = set()
-        if self.partner_id.id:
+    def get_invoice_ids(self):
+        if self.is_auto_invoice_paid:
             invoice_ids = self.env['account.invoice'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                                     ('state', '=', 'open'), ('so_id', '!=', False),
-                                                                     ('sale_type_id.sale_order_type', 'in',
-                                                                      ['cash', 'credit_sales'])])
-            for inv in invoice_ids:
-                so_ids.add(inv.so_id.id)
+                                                                     ('state', '=', 'open')])
+        else:
+            invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
+                                                                     ('state', '=', 'open')])
+        return invoice_ids
 
-        return list(so_ids)
+    @api.multi
+    def get_sale_order_id_list(self):
+        so_ids = []
+        if self.partner_id.id:
+            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id),
+                                                                   ('state', '=', 'done'),
+                                                                   ('type_id.sale_order_type', 'in',
+                                                                    ['cash', 'credit_sales'])])
+            for so in sale_order_ids:
+                # check if so has any invoice in 'open' state.
+                if len(self.env['account.invoice'].sudo().search([('so_id', '=', so.id), ('state', '=', 'open')])) > 0:
+                    so_ids.append(so.id)
+                # check if so type is 'cash' and has not created any invoice yet.
+                elif so.type_id.sale_order_type == 'cash' and len(self.env['account.invoice'].sudo().search(
+                        [('so_id', '=', so.id), ('state', '=', 'paid')])) <= 0:
+                    so_ids.append(so.id)
+                else:
+                    pass
+
+        return so_ids
+
+    @api.onchange('narration')
+    def onchange_narration(self):
+        if self.narration:
+            self.narration = self.narration.strip()
 
     @api.onchange('partner_type')
     def _onchange_partner_type(self):
@@ -75,3 +103,24 @@ class InheritAccountPayment(models.Model):
     def onchange_partner_id(self):
         id_list = self.get_sale_order_id_list()
         return {'domain': {'sale_order_id': [('id', 'in', id_list)]}}
+
+    @api.onchange('is_auto_invoice_paid')
+    def onchange_is_auto_invoice_paid(self):
+        self.sale_order_id = []
+
+    def _get_counterpart_move_line_vals(self, invoice=False):
+        res = super(InheritAccountPayment, self)._get_counterpart_move_line_vals(self.invoice_ids)
+        if self.narration and len(self.narration.strip()) > 0:
+            res['name'] = self.narration.strip()
+        # if self.is_auto_invoice_paid:
+        #     name = res['name'].split(':')[0] + ': By Auto Paid'
+        #     res['name'] = name
+        # elif self.sale_order_id.ids:
+        #     name = res['name'].split(':')[0] + ': '
+        #     for so in self.sale_order_id:
+        #         name += so.name + ', '
+        #     res['name'] = name[:len(name)-2]
+        # else:
+        #     pass
+
+        return res

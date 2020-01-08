@@ -9,13 +9,14 @@ class AccountPaymentBatch(models.Model):
     name = fields.Char(string='Batch Name', required=True, track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')],
                              readonly=True, default='draft', copy=False, string="Status", track_visibility='onchange')
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True,
+    journal_id = fields.Many2one('account.journal', string='Collection Journal', required=True,
                                  domain=[('type', 'in', ('bank', 'cash'))], track_visibility='onchange')
+    is_auto_invoice_paid = fields.Boolean(string='Auto Invoice Paid', track_visibility='onchange')
 
     """ Relational field"""
     payment_ids = fields.One2many('account.payment', 'batch_id', string='Customer Collection')
 
-    is_batch_model = fields.Boolean(store=False, compute='_check_is_batch_model')
+    is_batch_model = fields.Boolean(store=False, compute='compute_is_batch_model')
 
     _sql_constraints = [('name_unique', 'unique(name)', 'The Batch name must be unique!')]
 
@@ -34,6 +35,8 @@ class AccountPaymentBatch(models.Model):
             if rec.state != 'draft':
                 raise UserError(_("Only a draft payment batch can be posted. "
                                   "Trying to post a payment batch in state %s.") % rec.state)
+            elif not rec.payment_ids.ids:
+                raise UserError(_("Trying to post a payment batch without any collection."))
             else:
                 for ap in rec.payment_ids:
                     if ap.state != 'posted':
@@ -42,11 +45,15 @@ class AccountPaymentBatch(models.Model):
                 rec.write({'state': 'posted'})
 
     @api.onchange('journal_id')
-    def _onchange_journal_id(self):
+    def onchange_journal_id(self):
+        self.payment_ids = []
+
+    @api.onchange('is_auto_invoice_paid')
+    def onchange_is_auto_invoice_paid(self):
         self.payment_ids = []
 
     @api.depends('journal_id')
-    def _check_is_batch_model(self):
+    def compute_is_batch_model(self):
         self.is_batch_model = True
 
     @api.multi
@@ -85,17 +92,3 @@ class InheritAccountPayment(models.Model):
             if not self.batch_id.journal_id:
                 raise UserError(_("You must select a payment journal."))
         return res
-
-    @api.multi
-    def get_invoice_ids(self):
-        invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
-                                                                ('state', '=', 'open')])
-        return invoice_ids
-
-    @api.multi
-    def post(self):
-        if self.sale_order_id.ids:
-            self.invoice_ids = self.get_invoice_ids()
-
-        result = super(InheritAccountPayment, self).post()
-        return result

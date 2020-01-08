@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_vendor_payment_tree" model="ir.ui.view">
+            <field name="name">account.vendor.payment.tree</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state=='draft'" decoration-muted="state=='reconciled'" edit="false">
+                    <field name="payment_date"/>
+                    <field name="name"/>
+                    <field name="journal_id" string="Bank Name"/>
+                    <field name="payment_method_id"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="amount" sum="Amount"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_vendor_payment_form" model="ir.ui.view">
+            <field name="name">account.vendor.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
+                        <button name="cancel" attrs="{'invisible': [('state', '=', 'draft')]}" string="Cancel" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="posted,reconciled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="button_journal_entries"
+                                    string="Journal Items" type="object"
+                                    groups="account.group_account_manager"
+                                    attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
+                            <field name="move_line_ids" invisible="1"/>
+                            <button class="oe_stat_button" name="button_invoices"
+                                    string="Invoices" type="object"
+                                    attrs="{'invisible':[('has_invoices','=',False)]}" icon="fa-bars"/>
+                            <field name="has_invoices" invisible="1"/>
+                        </div>
+                        <field name="id" invisible="1"/>
+                        <div class="oe_title" attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" string="Vendor" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
+                                <field name="journal_id" string="Bank Name" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="cheque_info_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <label for="amount"/>
+                                <div name="amount_div" class="o_row">
+                                    <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </div>
+
+                                <field name="payment_type" widget="radio" invisible="1"/>
+                                <field name="partner_type" widget="selection" invisible="1"/>
+                                <field name="payment_method_code" invisible="1"/>
+                                <field name="hide_payment_method" invisible="1"/>
+                                <field name="check_amount_in_words" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="payment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="communication" attrs="{'invisible': [('state', '!=', 'draft'), ('communication', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="payment_transaction_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_vendor_payment" model="ir.actions.act_window">
+            <field name="name">Vendor Payments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier'}</field>
+            <field name="domain">[('partner_type', '=', 'supplier')]</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_account_payment_vendor_tree">
+             <field name="sequence" eval="1"/>
+             <field name="view_mode">tree</field>
+             <field name="view_id" ref="view_account_vendor_payment_tree"/>
+             <field name="act_window_id" ref="action_account_vendor_payment"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_account_payment_vendor_form">
+             <field name="sequence" eval="2"/>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_account_vendor_payment_form"/>
+             <field name="act_window_id" ref="action_account_vendor_payment"/>
+        </record>
+
+        <menuitem
+                action="action_account_vendor_payment"
+                id="menu_action_account_vendor_payment"
+                name="Vendor Payments"
+                parent="account.menu_finance_payables"
+                sequence="30"
+                groups="account.group_account_user"/>
+
+    </data>
+</odoo>

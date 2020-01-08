@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.tools.misc import formatLang
-
+import re
 
 class CommercialInvoice(models.AbstractModel):
     _name = 'report.lc_sales_product_foreign.report_commercial_invoice'
@@ -35,8 +35,6 @@ class CommercialInvoice(models.AbstractModel):
             'insurance_policy_date': shipment_obj.lc_id.insurance_policy_date,
             'truck_receipt_no': shipment_obj.truck_receipt_no,
             'bl_date': shipment_obj.bl_date,
-            'cylinder_details': shipment_obj.cylinder_details,
-            'cylinder_details_label': "" if shipment_obj.cylinder_details == '<p><br></p>' else "Cylinder Details",
             'invoice_number_dummy': shipment_obj.invoice_number_dummy,
             'invoice_date_dummy': shipment_obj.invoice_date_dummy,
             'invoice_value': shipment_obj.invoice_value,
@@ -53,6 +51,17 @@ class CommercialInvoice(models.AbstractModel):
             'second_party_bank': shipment_obj.lc_id.second_party_bank,
             'currency_id': shipment_obj.lc_id.currency_id.name,
         }
+
+        clean = re.compile('<.*?>')
+        cylinder_details_text = ''
+        if shipment_obj.cylinder_details:
+            cylinder_details_text = re.sub(clean, '', shipment_obj.cylinder_details)
+
+        if cylinder_details_text:
+            data['cylinder_details'] = shipment_obj.cylinder_details
+        else:
+            data['cylinder_details'] = ""
+
         for pi_id in shipment_obj.lc_id.pi_ids:
             pi_id_list.append({'pi_id': pi_id.name, 'pack_type': pi_id.pack_type.display_name,
                                'pi_date': report_utility_pool.getERPDateFormat(

@@ -489,9 +489,28 @@ class AttendanceUtility(models.TransientModel):
 
     def checkOnPersonalLeave(self, employeeId, startDate):
 
-        query_str = """SELECT COUNT(id) FROM hr_holidays
-                           WHERE employee_id = %s AND type='remove' AND state IN ('validate1','validate') AND
-                           %s BETWEEN date_from::DATE AND date_to::DATE"""
+        query_str = """SELECT COUNT(h.id) FROM hr_holidays h
+                        LEFT JOIN hr_holidays_status hhs ON hhs.id = h.holiday_status_id
+                        WHERE h.employee_id = %s AND h.type='remove' 
+                        AND h.state IN ('validate1','validate') AND 
+                        (hhs.unpaid IS NULL OR hhs.unpaid =FALSE) AND
+                        %s BETWEEN h.date_from::DATE AND h.date_to::DATE"""
+
+        self._cr.execute(query_str, (employeeId, startDate))
+        count = self._cr.fetchall()
+        if count[0][0] > 0:
+            return True
+        else:
+            return False
+
+    def checkOnUnpaidLeave(self, employeeId, startDate):
+
+        query_str = """SELECT COUNT(h.id) FROM hr_holidays h
+                                LEFT JOIN hr_holidays_status hhs ON hhs.id = h.holiday_status_id
+                                WHERE h.employee_id = %s AND h.type='remove' 
+                                AND h.state IN ('validate1','validate') AND 
+                                hhs.unpaid = TRUE AND
+                                %s BETWEEN h.date_from::DATE AND h.date_to::DATE"""
 
         self._cr.execute(query_str, (employeeId, startDate))
         count = self._cr.fetchall()

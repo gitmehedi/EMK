@@ -89,13 +89,16 @@ class MrrReport(models.AbstractModel):
                     po_line_objs = po.order_line.filtered(lambda r: r.product_id.id == move.product_id.id)
                     if po_line_objs:
                         pack_obj = {}
+                        # calculate discount amount
+                        dis_amt = (po_line_objs[0].price_unit * po_line_objs[0].discount) / 100
                         pack_obj['product_id'] = move.product_id.name
                         pack_obj['pr_no'] = po.origin
                         pack_obj['mrr_quantity'] = move.qty_done
                         pack_obj['product_uom_id'] = move.product_uom_id.name
                         pack_obj['price_unit'] = formatLang(self.env, po_line_objs[0].price_unit)
-                        pack_obj['sub_amount'] = formatLang(self.env, move.qty_done * po_line_objs[0].price_unit)
-                        pack_obj['amount'] = move.qty_done * po_line_objs[0].price_unit
+                        pack_obj['sub_amount'] = formatLang(self.env, move.qty_done * (po_line_objs[0].price_unit - dis_amt))
+                        pack_obj['discount'] = po_line_objs[0].discount
+                        pack_obj['amount'] = move.qty_done * (po_line_objs[0].price_unit - dis_amt)
                         total_amount.append(pack_obj['amount'])
                         pack_list.append(pack_obj)
         else:
@@ -111,6 +114,7 @@ class MrrReport(models.AbstractModel):
                 pack_obj['product_uom_id'] = move.product_uom_id.name
                 pack_obj['price_unit'] = formatLang(self.env, move.product_id.standard_price)
                 pack_obj['sub_amount'] = formatLang(self.env, move.qty_done * move.product_id.standard_price)
+                pack_obj['discount'] = False
                 pack_obj['amount'] = move.qty_done * move.product_id.standard_price
                 total_amount.append(pack_obj['amount'])
                 pack_list.append(pack_obj)

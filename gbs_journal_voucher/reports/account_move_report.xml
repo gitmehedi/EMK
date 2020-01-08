@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="report_account_move_menu"
+            string="Journal Voucher"
+            model="account.move"
+            report_type="qweb-pdf"
+            file="gbs_journal_voucher.account_move_report"
+            name="gbs_journal_voucher.account_move_report"
+            paperformat="report_layout.paperformat_backend_portrait"
+        />
+
+        <template id="account_move_report">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                     <t t-foreach="docs" t-as="doc">
+                         <div class="page" style="page-break-inside:auto;">
+                            <div class="row">
+                                <style type="text/css">
+                                    .report-title { text-align:center; }
+                                    .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+                                <div class="clearfix">
+                                    <h4 class="report-title">Journal Voucher</h4>
+                                    <br/>
+                                    <div class="row" style="padding-bottom:5px;">
+                                        <div class="col-xs-6">
+                                            <span>No : </span>
+                                            <strong t-field="doc.name"/>
+                                            <br/>
+                                            <span>Reference : </span>
+                                            <strong t-field="doc.ref"/>
+                                        </div>
+                                        <div class="col-xs-6 text-right">
+                                            <span>Date : </span>
+                                            <strong t-esc="time.strftime('%d-%b-%Y',time.strptime(doc.date,'%Y-%m-%d'))"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table class="table table-report-ms table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th class="text-center" style="width:30%;">Account</th>
+                                            <th class="text-center" style="width:25%;">Vendor</th>
+                                            <th class="text-center">Particulars</th>
+                                            <th class="text-center">Debit</th>
+                                            <th class="text-center">Credit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.line_ids" t-as="line">
+                                            <tr>
+                                                <td><span t-field="line.account_id"/></td>
+                                                <td><span t-field="line.partner_id"/></td>
+                                                <td><span t-field="line.name"/></td>
+                                                <td class="text-right"><span t-field="line.debit"/></td>
+                                                <td class="text-right"><span t-field="line.credit"/></td>
+                                            </tr>
+                                        </t>
+                                        <tr>
+                                            <td class="text-left" colspan="2">
+                                                <strong>On Account of : </strong><span t-field="doc.narration"/>
+                                            </td>
+                                            <td class="text-right"><strong>Total</strong></td>
+                                            <td class="text-right"><strong t-field="doc.amount"/></td>
+                                            <td class="text-right"><strong t-field="doc.amount"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="table" style="margin-top:50px;">
+                                    <tr>
+                                        <td class="text-center">Prepared By</td>
+                                        <td class="text-center">Checked By</td>
+                                        <td class="text-center">Verified By</td>
+                                        <td class="text-center">Authorised By</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="padding-top:1cm">
+                                            ....................
+                                        </td>
+                                        <td class="text-center" style="padding-top:1cm">
+                                            ....................
+                                        </td>
+                                        <td class="text-center" style="padding-top:1cm">
+                                            ....................
+                                        </td>
+                                        <td class="text-center" style="padding-top:1cm">
+                                            ....................
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                     </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

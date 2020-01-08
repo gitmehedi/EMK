@@ -6,7 +6,7 @@
         <field name="priority" eval="17"/>
         <field name="inherit_id" ref="gbs_vendor_bill.inherit_invoice_supplier_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='security_deposit_account_id']" position="after">
+            <xpath expr="//field[@name='date']" position="after">
                 <field name="tds_vat_challan_ids" widget="many2many_tags"
                        readonly="1" attrs="{'invisible': [('tds_vat_challan_ids','=', [])]}"/>
             </xpath>

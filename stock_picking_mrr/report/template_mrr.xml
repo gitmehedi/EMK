@@ -61,14 +61,14 @@
                             <table class="table table-report table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th>Sl#</th>
-                                        <th>Code &amp; Item Description</th>
-                                        <th>PR No</th>
-                                        <th>Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Rate</th>
-                                        <th>Discount</th>
-                                        <th>Amount</th>
+                                        <th class="text-center">Sl#</th>
+                                        <th class="text-center">Code &amp; Item Description</th>
+                                        <th class="text-center">PR No</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Discount (%)</th>
+                                        <th class="text-center">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,17 +77,17 @@
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
                                             <td><span t-esc="l['pr_no']"/></td>
-                                            <td><span t-esc="l['mrr_quantity']"/></td>
+                                            <td class="text-right"><span t-esc="l['mrr_quantity']"/></td>
                                             <td><span t-esc="l['product_uom_id']"/></td>
-                                            <td><span t-esc="l['price_unit']"/></td>
-                                            <td></td>
-                                            <td><span t-esc="l['sub_amount']"/></td>
+                                            <td class="text-right"><span t-esc="l['price_unit']"/></td>
+                                            <td class="text-right"><span t-esc="l['discount']"/></td>
+                                            <td class="text-right"><span t-esc="l['sub_amount']"/></td>
                                         </tr>
                                     </t>
                                     <tr>
                                         <td colspan="7"><strong>Amount in words : </strong> <span t-esc="amt_to_word"/></td>
                                         <!--<td class="text-right"><strong>Total</strong></td>-->
-                                        <td><strong>Total : </strong><span t-esc="total_amount"/></td>
+                                        <td class="text-right"><strong>Total : </strong><span t-esc="total_amount"/></td>
                                     </tr>
                                 </tbody>
                             </table>

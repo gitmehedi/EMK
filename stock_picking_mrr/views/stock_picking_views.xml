@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- inherited tree view -->
+    <record id="inherit_view_stock_picking_tree2" model="ir.ui.view">
+        <field name="name">inherit.view.picking.tree2</field>
+        <field name="model">stock.picking</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="/tree/field[@name='name']" position="after">
+                <field name="mrr_no"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- inherited search view -->
+    <record id="view_picking_internal_search2" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search2</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='name']" position="after">
+                <field name="mrr_no"/>
+            </xpath>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_picking_form_inherit_mrr">
         <field name="name">stock.picking.inherit.mrr.form</field>
         <field name="model">stock.picking</field>
@@ -19,6 +44,9 @@
 
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
                         type="object" class="oe_highlight" groups="stock.group_stock_user,gbs_application_group.group_head_of_plant"/>
+            </xpath>
+            <xpath expr="//sheet/group/group/field[@name='backorder_id']" position="after">
+                <field name="approval_comment" invisible="1"/>
             </xpath>
         </field>
     </record>

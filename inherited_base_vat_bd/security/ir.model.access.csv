@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-
-access_account_tax_usr,access_account_tax_usr,inherited_base_vat_bd.model_account_tax,account.group_account_user,1,1,1,0

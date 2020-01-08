@@ -16,6 +16,7 @@
         'hr_attendance_and_ot_summary',
     ],
     'data': [
+        'views/hr_contract_view.xml',
     ],
     'installable': True,
     'application': True,

@@ -2,14 +2,14 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
-class InheritAccountInvoice(models.Model):
+class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     conversion_rate = fields.Float(string='Conversion Rate')
 
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
-        res = super(InheritAccountInvoice, self)._onchange_currency_id()
+        res = super(AccountInvoice, self)._onchange_currency_id()
         if self.currency_id:
             to_currency = self.company_id.currency_id
             from_currency = self.currency_id.with_context(
@@ -25,7 +25,7 @@ class InheritAccountInvoice(models.Model):
             from_currency = currency.with_context(
                 date=fields.Date.context_today(self))
             vals['conversion_rate'] = to_currency.round(to_currency.rate / from_currency.rate)
-        res = super(InheritAccountInvoice, self).create(vals)
+        res = super(AccountInvoice, self).create(vals)
         return res
 
     @api.depends('currency_id')
@@ -46,6 +46,6 @@ class InheritAccountInvoice(models.Model):
         rec = self.with_context(payment_conversion_rate=self.conversion_rate) \
             if self.currency_id.id != self.company_id.currency_id.id else self
 
-        res = super(InheritAccountInvoice, rec).action_invoice_open()
+        res = super(AccountInvoice, rec).action_invoice_open()
 
         return res

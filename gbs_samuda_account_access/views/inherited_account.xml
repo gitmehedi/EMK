@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="account.menu_finance_entries"
+                  name="Adviser"
+                  parent="account.menu_finance"
+                  sequence="4"
+                  groups="account.group_account_user,account.group_account_manager"/>
+
+        <menuitem id="account.menu_finance_configuration"
+                  name="Configuration"
+                  parent="account.menu_finance"
+                  sequence="15" groups="-account.group_account_invoice"/>
+
+        <menuitem id="account.menu_finance_configuration"
+                  name="Configuration"
+                  parent="account.menu_finance"
+                  sequence="15" groups="account.group_account_manager"/>
+
+        <menuitem action="account_parent.action_account_chart"
+            id="account_parent.menu_action_account_chart"
+            parent="account.menu_finance_entries" sequence="21" groups="account_parent.group_coas_user,account.group_account_user" />
+
+        <menuitem
+                action="product.product_category_action_form"
+                id="menu_product_category_for_account"
+                parent="account.menu_finance_payables"
+                sequence="115"/>
+
+
+        <menuitem id="account.menu_finance" name="Accounting"
+                  groups="-account.group_account_user,-account.group_account_manager,-account.group_account_invoice,gbs_application_group.group_account_expense_ho,gbs_application_group.group_account_income,base_technical_features.group_technical_features"/>
+
+        <menuitem id="account.menu_finance_payables"
+                  name="Purchases"
+                  parent="account.menu_finance"
+                  groups="gbs_application_group.group_account_expense_ho"
+                  sequence="3"/>
+
+        <!-- Start For Unit Accountant-->
+        <menuitem id="menu_finance_unit" name="Accounting(Unit)" sequence="35"
+                  groups="gbs_application_group.group_account_expense_unit,base_technical_features.group_technical_features"/>
+
+        <menuitem id="menu_receive_picking_unit_acc_approver"
+              name="Inventory"
+              parent="menu_finance_unit"
+              sequence="20" groups="account.group_account_user"/>
+
+        <menuitem id="menu_unit_acc_approver"
+              name="Accounts Approver" sequence="10"
+              parent="menu_receive_picking_unit_acc_approver"
+              action="stock_picking_extend.action_stock_picking_receive_acc_approver"
+              groups="account.group_account_user"/>
+
+        <menuitem id="menu_picking_unit_mrr_ptp"
+              name="Show MRR"
+              parent="menu_receive_picking_unit_acc_approver"
+              sequence="20"
+              action="stock_picking_mrr.action_stock_picking_mrr"
+              groups="account.group_account_user"/>
+
+        <!--<menuitem id="stock_picking_extend.menu_receive_picking_acc_approver"-->
+              <!--name="Inventory"-->
+              <!--parent="account.menu_finance"-->
+              <!--sequence="3"-->
+              <!--groups="-account.group_account_user,gbs_application_group.group_account_expense_ho"/>-->
+
+        <!-- End For Unit Accountant-->
+
+    </data>
+</odoo>
