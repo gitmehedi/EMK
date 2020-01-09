@@ -10,7 +10,6 @@ class AccountAnalyticAccount(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            aaa_objs = self.search(
-                [('name', '=', self.name), ('active', '=', True)])
-            if aaa_objs.ids:
+            aaa_objs = self.search([('name', '=', self.name), ('active', '=', True)])
+            if len(aaa_objs.ids) > 1:
                 raise ValidationError('The Analytic Account Name must be unique!')
