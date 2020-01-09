@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
 
-    type = fields.Selection([('cost', 'Cost'), ('profit', 'Profit')], string='Type')
+    type = fields.Selection([('cost', 'Cost Center'), ('profit', 'Profit Center'), ('revenue', 'Revenue Center'), ('investment', 'Investment Center')], string='Type')
 
     @api.constrains('name')
     def _check_unique_constrain(self):
