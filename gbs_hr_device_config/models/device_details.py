@@ -202,7 +202,7 @@ class DeviceDetail(models.Model):
                         "Attendance only pull from a specific server. Please check attendance settings or contact administrator.")
                 else:
                     raise ValidationError("Unable to connect the " + self.server + " server. Please check the configuration.")
-            elif len(error_message) > 0:
+            elif len(str(error_message)) > 0:
                 raise ValidationError(error_message)
             else:
                 res = self.env.ref('gbs_hr_device_config.success_msg_wizard_id')

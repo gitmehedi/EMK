@@ -283,7 +283,7 @@ class AttendanceUtility(models.TransientModel):
                                 resource_calendar_attendance
                             WHERE
                                 calendar_id = %s
-                            ORDER BY dayofweek ASC"""
+                            ORDER BY dayofweek ASC, id DESC"""
 
         self._cr.execute(cal_att_query, (shiftId,))
         shiftLines = self._cr.fetchall()
