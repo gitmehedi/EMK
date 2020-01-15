@@ -52,7 +52,8 @@ class ProductGateIn(models.Model):
                         'location_dest_id': location_dest_id.id,
                         'challan_bill_no': self.challan_bill_no,
                         'partner_id': self.partner_id.id,
-                        'origin': self.name,
+                        # 'origin': self.name,
+                        'origin': self.ship_id.lc_id.name,
                     }
                     if self.company_id:
                         vals = dict(res, company_id=self.company_id.id)
