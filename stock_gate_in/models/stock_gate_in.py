@@ -1,5 +1,4 @@
 import datetime
-
 from odoo import models, fields, api,_
 
 
@@ -88,12 +87,6 @@ class ProductGateIn(models.Model):
                 move_obj.create(moves)
 
         return picking_id
-
-    # @api.multi
-    # def action_get_stock_picking(self):
-    #     action = self.env.ref('stock.action_picking_tree_all').read([])[0]
-    #     action['domain'] = ['|', ('id', '=', self.picking_id.id), ('origin', '=', self.name)]
-    #     return action
 
     @api.multi
     def action_get_stock_picking(self):

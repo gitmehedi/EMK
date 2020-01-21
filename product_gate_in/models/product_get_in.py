@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-
 from odoo import models, fields, api,_
 from odoo.exceptions import UserError
 
 
 class ProductGateIn(models.Model):
     _name = 'product.gate.in'
-
+    _order = 'date desc, name desc, id desc'
 
     name = fields.Char(string='Name', index=True, readonly=True)
     create_by = fields.Char('Carried By',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
@@ -39,7 +38,7 @@ class ProductGateIn(models.Model):
         ('confirm', "Confirm"),
     ], default='draft',track_visibility='onchange')
 
-    #change state, update line data, update 'purchase.shipment' model state
+    # change state, update line data, update 'purchase.shipment' model state
     @api.multi
     def action_confirm(self):
         self.state = 'confirm'

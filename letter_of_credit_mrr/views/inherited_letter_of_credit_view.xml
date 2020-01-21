@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <record id="inherited_view_local_credit_form" model="ir.ui.view">
+            <field name="name">inherited.letter.credit.form</field>
+            <field name="model">letter.credit</field>
+            <field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                    <button name="%(action_lc_stock_picking_mrr)d" type="action" class="oe_stat_button" icon="fa-list-alt"
+                                attrs="{'invisible': [('state', 'not in', ('progress', 'done', 'cancel'))]}"
+                                context="{'name': name}" string="MRR">
+                        </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
