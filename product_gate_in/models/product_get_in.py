@@ -22,21 +22,31 @@ class ProductGateIn(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
-                            states={'confirm': [('readonly', True)]},
-                            domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
+                              states={'confirm': [('readonly', True)]},
+                              domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
     partner_id = fields.Many2one('res.partner', string='Supplier')
 
     date = fields.Date(string="Date",readonly=True, states={'draft': [('readonly', False)]},required=True)
-    receive_type = fields.Selection([
-        ('lc', "LC"),
-        ('others', "Others"),
-
-    ],readonly=True,required=True,states={'draft': [('readonly', False)]},track_visibility='onchange')
+    receive_type = fields.Selection([('lc', "LC"), ('others', "Others")], readonly=True,
+                                    required=True,states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
     ], default='draft',track_visibility='onchange')
+
+    # NSF=Not Store Field
+    lc_id = fields.Many2one('letter.credit', string='LC Number', store=False, search='_search_shipment_lc_id')
+
+    @api.model
+    def _search_shipment_lc_id(self, operator, value):
+        res = []
+        lc_ids = self.env['letter.credit'].search([('name', operator, value)])
+        ship_ids = self.env['purchase.shipment'].search([('lc_id', 'in', lc_ids.ids)])
+        gate_in_ids = self.env['product.gate.in'].search([('ship_id', 'in', ship_ids.ids)])
+        res.append(('id', 'in', gate_in_ids.ids))
+
+        return res
 
     # change state, update line data, update 'purchase.shipment' model state
     @api.multi

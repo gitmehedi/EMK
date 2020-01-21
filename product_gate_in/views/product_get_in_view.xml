@@ -81,11 +81,23 @@
             </field>
         </record>
 
+        <record id="view_product_gate_in_search" model="ir.ui.view">
+            <field name="name">product.gate.in.search</field>
+            <field name="model">product.gate.in</field>
+            <field name="arch" type="xml">
+                <search string="Search Gate In">
+                    <field name="name"/>
+                    <field name="lc_id"/>
+                </search>
+            </field>
+        </record>
+
         <!-- actions opening views on models -->
         <record model="ir.actions.act_window" id="product_gate_in_action_window">
             <field name="name">Product Gate In</field>
             <field name="res_model">product.gate.in</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_product_gate_in_search"/>
         </record>
 
         <!-- actions views for gate in button box -->
