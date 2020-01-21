@@ -28,13 +28,22 @@ class AssetAllocationWizard(models.TransientModel):
         else:
             return fields.Datetime.now()
 
+    def default_status(self):
+        if 'allocation' in self.env.context:
+            return self.env.context['allocation']
+        else:
+            return False
+
+
     asset_user = fields.Char("Asset User")
     date = fields.Date(string='Allocation/Transfer Date', required=True, default=default_date)
+    warranty_date = fields.Date(string='Warranty Date')
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre')
+    is_allocate = fields.Boolean(default=default_status)
 
     @api.multi
     def allocation(self):
@@ -115,7 +124,8 @@ class AssetAllocationWizard(models.TransientModel):
                                  'current_branch_id': self.to_operating_unit_id.id,
                                  'sub_operating_unit_id': sub_operating_unit,
                                  'asset_usage_date': self.date,
-                                 'cost_centre_id': self.cost_centre_id.id
+                                 'cost_centre_id': self.cost_centre_id.id,
+                                 'warranty_date': self.warranty_date
                                  })
 
                     if not asset.asset_seq and asset.date and asset.category_id.code:

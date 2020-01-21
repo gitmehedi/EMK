@@ -283,7 +283,7 @@
               action="action_account_asset_asset_form_open" sequence="6" groups="account.group_account_user"/>
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_confirmed">
-        <field name="name">Stock of Fixed Assets</field>
+        <field name="name">Fixed Assets (Draft)</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
