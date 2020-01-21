@@ -35,8 +35,8 @@ class AccountFiscalyearClose(models.TransientModel):
         if self.start_fy_id.id == self.close_fy_id.id:
             raise Warning(_("Close Fiscal Year and Start Fiscal Year shouldn\'t be same."))
 
-        if (curr_date < end_fy_dst) or (curr_date > end_fy_ded):
-            raise Warning(_("Closing Fiscal Year should be current year."))
+        # if (curr_date < end_fy_dst) or (curr_date > end_fy_ded):
+        #     raise Warning(_("Closing Fiscal Year should be current year."))
 
         opening_bal = self.env['account.move'].search([('journal_id.code', '=', 'FYC'), ('state', '=', 'draft')])
         if opening_bal:
