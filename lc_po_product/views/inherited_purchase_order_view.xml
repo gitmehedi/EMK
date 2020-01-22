@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- inherited purchase order form view -->
+        <record id="inherited_view_purchase_order_form" model="ir.ui.view">
+            <field name="name">inherited.purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="gbs_purchase_order.inherit_purchase_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="po_lc_id" attrs="{'invisible': [('purchase_by', 'not in', ['lc', 'tt'])]}"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- inherited purchase order search view -->
+        <record id="inherited_view_purchase_order_filter" model="ir.ui.view">
+            <field name="name">inherited.purchase.order.filter</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="gbs_purchase_order.inherit_request_quotation_select"/>
+            <field name="arch" type="xml">
+                <field name="requisition_id" position="after">
+                    <field name="po_lc_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
