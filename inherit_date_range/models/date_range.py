@@ -100,10 +100,10 @@ class DateRange(models.Model):
                       IF mrec.debit > 0 or mrec.credit > 0 THEN
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.credit,0,user_id,user_id,NOW(),NOW());
+                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.debit,0,user_id,user_id,NOW(),NOW());
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,0,mrec.debit,user_id,user_id,NOW(),NOW());
+                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,0,mrec.credit,user_id,user_id,NOW(),NOW());
                       END IF;
                     END LOOP;
 
