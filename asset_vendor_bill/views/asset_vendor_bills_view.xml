@@ -152,8 +152,7 @@
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="amount_untaxed" string="Without VAT Amount"/>
                                     <field name="amount_tax" string="VAT"/>
-                                    <field name="mushok_vds_amount" widget="monetary"
-                                           attrs="{'invisible': [('vat_selection','=','normal')]}"/>
+                                    <field name="mushok_vds_amount" widget="monetary"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('vat_selection','!=','normal')]}"/>
                                     <field name="total_amount_with_vat" class="oe_subtotal_footer_separator"
@@ -161,6 +160,8 @@
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    <field name="agreement_adjusted_amount" class="oe_subtotal_footer_separator"
+                                           attrs="{'invisible': [('agreement_id', '=', False)]}" widget="monetary"/>
                                     <field name="total_tds_amount" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('is_tds_applicable', '=', False)]}"
                                            widget="monetary"/>
@@ -169,6 +170,7 @@
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
+                                    <field name="commercial_partner_id" invisible="1"/>
                                 </group>
                             </group>
                             <div>
