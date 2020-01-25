@@ -3,7 +3,8 @@ from odoo.exceptions import ValidationError,UserError
 
 
 class Holidays(models.Model):
-    _inherit = 'hr.holidays'
+    _name = 'hr.holidays'
+    _inherit = ['hr.holidays','mail.thread']
 
     @api.one
     @api.constrains('number_of_days_temp')
@@ -25,6 +26,16 @@ class Holidays(models.Model):
         res = super(Holidays, self).write(values)
         return res
 
+    @api.multi
+    def btn_action_approve(self):
+        res = super(Holidays, self).btn_action_approve()
+        for holiday in self:
+            if holiday.holiday_type != 'category' and not holiday.parent_id:
+                if holiday.sudo(SUPERUSER_ID).pending_approver and \
+                        holiday.sudo(SUPERUSER_ID).pending_approver.user_id:
+                    self.message_post(body="",
+                                      partner_ids=[holiday.sudo(SUPERUSER_ID).pending_approver.user_id.partner_id.id])
+        return res
 
     @api.multi
     def _notify_approvers(self):
@@ -32,14 +43,18 @@ class Holidays(models.Model):
         # self.ensure_one()
         for holiday in self:
             if holiday.holiday_type != 'category' and not holiday.parent_id:
-                approvers = holiday.employee_id._get_employee_manager()
-                if not approvers:
-                    return True
-                for approver in approvers:
-                    holiday.sudo(SUPERUSER_ID).add_follower(approver.id)
-                    if approver.sudo(SUPERUSER_ID).user_id:
-                        holiday.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-                            [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+                # approvers = holiday.employee_id._get_employee_manager()
+                # if not approvers:
+                #     return True
+                # for approver in approvers:
+                #     holiday.sudo(SUPERUSER_ID).add_follower(approver.id)
+                #     if approver.sudo(SUPERUSER_ID).user_id:
+                #         holiday.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+                #             [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+                if holiday.sudo(SUPERUSER_ID).pending_approver and \
+                        holiday.sudo(SUPERUSER_ID).pending_approver.user_id:
+                    self.message_post(body="",
+                                      partner_ids=[holiday.sudo(SUPERUSER_ID).pending_approver.user_id.partner_id.id])
         return True
 
     @api.multi
