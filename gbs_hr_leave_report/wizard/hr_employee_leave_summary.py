@@ -46,8 +46,8 @@ class HREmpLeaveSummary(models.TransientModel):
     @api.constrains('to_date','from_date')
     def _check_date(self):
         if self.to_date and self.from_date:
-            if self.from_date >= self.to_date:
-                raise Warning("[Error] To Date must be greater than From Date!")
+            if self.from_date > self.to_date:
+                raise Warning("[Error] To Date must be greater than or equal to From Date!")
 
     @api.constrains('to_date','from_date','year_id')
     def _check_year(self):

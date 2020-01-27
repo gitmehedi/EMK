@@ -1,6 +1,6 @@
 import datetime
-
 from odoo import models, fields, api,_
+
 
 class ProductGateIn(models.Model):
     _inherit = 'product.gate.in'
@@ -35,7 +35,9 @@ class ProductGateIn(models.Model):
                         [('code', '=', 'incoming'),('warehouse_id.operating_unit_id', '=', self.operating_unit_id.id),
                          ('default_location_dest_id', '=', location_dest_id.id)] , order='id ASC', limit=1)
 
-                    pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    pick_name = self.env['stock.picking.type'].browse(picking_type.id).sequence_id.next_by_id()
+
                     res = {
                         'receive_type': self.receive_type,
                         'transfer_type': 'receive',
@@ -46,13 +48,15 @@ class ProductGateIn(models.Model):
                         'company_id': self.company_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'state': 'draft',
-                        'name': self.name,
+                        # 'name': self.name,
+                        # 'origin': self.name,
+                        'name': pick_name,
+                        'origin': self.ship_id.lc_id.name,
                         'date': date_planned,
                         'location_id': location_id.id,
                         'location_dest_id': location_dest_id.id,
                         'challan_bill_no': self.challan_bill_no,
                         'partner_id': self.partner_id.id,
-                        'origin': self.name,
                     }
                     if self.company_id:
                         vals = dict(res, company_id=self.company_id.id)
@@ -62,8 +66,10 @@ class ProductGateIn(models.Model):
                         picking_id = picking.id
 
                 moves = {
-                    'name': self.name,
-                    'origin': self.name or self.picking_id.name,
+                    # 'name': self.name,
+                    # 'origin': self.name or self.picking_id.name,
+                    'name': line.product_id.name,
+                    'origin': self.ship_id.lc_id.name,
                     'location_id': location_id.id,
                     'location_dest_id': location_dest_id.id,
                     'picking_id': picking_id or False,
@@ -74,6 +80,7 @@ class ProductGateIn(models.Model):
                     'date': date_planned,
                     'date_expected': date_planned,
                     'picking_type_id': picking_type.id,
+                    'warehouse_id': picking_type.warehouse_id.id,
                     'state': 'draft',
 
                 }
@@ -84,5 +91,5 @@ class ProductGateIn(models.Model):
     @api.multi
     def action_get_stock_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read([])[0]
-        action['domain'] = ['|', ('id', '=', self.picking_id.id), ('origin', '=', self.name)]
+        action['domain'] = ['|', ('id', '=', self.picking_id.id), ('origin', '=', self.ship_id.lc_id.name)]
         return action
