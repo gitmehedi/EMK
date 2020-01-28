@@ -11,7 +11,7 @@ class CalendarHoliday(models.Model):
     
     """many2one fields """ 
     
-    year_id = fields.Many2one('account.fiscalyear', string="Calender Year")
+    year_id = fields.Many2one('date.range', string="Leave Year",domain ="[('type_id.holiday_year', '=', True)]")
     
     """ Selection fields """
      
