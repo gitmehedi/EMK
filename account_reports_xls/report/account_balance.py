@@ -34,18 +34,29 @@ class ReportTrialBalance(models.AbstractModel):
             del where_params_init[index]
 
         if context['date_from']:
-            filters_init = filters_init.replace('>=', '<')
+            fy_start = where_params_init[0][-5:]
+            if fy_start == '01-01':
+                filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
+                                                    '("account_move_line"."date" <= %s) AND ("account_move_line"."date" >= %s) AND is_opening=TRUE')
+            else:
+                filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
+                                                    '("account_move_line"."date" < %s) AND ("account_move_line"."date" >= %s)')
 
+        if context['date_from'] and context['date_to']:
+            where_params_init.append(where_params_init[0][:4] + "-01-01")
+        elif context['date_from'] and not context['date_to']:
+            where_params_init.append(where_params_init[0][:4] + "-01-01")
+            where_params.insert(0, where_params[0][:4] + "-12-31")
         # compute the balance, debit and credit for the provided accounts
 
         if context['date_from']:
             if len(move_ids) > 0:
-                filters = " AND move_id IN %s " + filters
+                filters = " AND move_id IN %s AND is_opening IS NOT True " + filters
                 filters_init = " AND move_id IN %s " + filters_init
                 params = (tuple(accounts.ids),) + (tuple(move_ids.ids),) + tuple(where_params) + (
                     tuple(accounts.ids),) + (tuple(move_ids.ids),) + tuple(where_params_init)
             else:
-                filters = " AND move_id IS NULL " + filters
+                filters = " AND move_id IS NULL AND is_opening IS NOT True " + filters
                 filters_init = " AND move_id IS NULL " + filters_init
                 params = (tuple(accounts.ids),) + tuple(where_params) + (tuple(accounts.ids),) + tuple(
                     where_params_init)
@@ -77,10 +88,10 @@ class ReportTrialBalance(models.AbstractModel):
                       "WHERE aal.name='Layer 5'"
         else:
             if len(move_ids) > 0:
-                filters = " AND move_id IN %s " + filters
+                filters = " AND move_id IN %s AND is_opening IS NOT True " + filters
                 params = (tuple(accounts.ids),) + (tuple(move_ids.ids),) + tuple(where_params)
             else:
-                filters = " AND move_id IS NULL " + filters
+                filters = " AND move_id IS NULL AND is_opening IS NOT True " + filters
                 params = (tuple(accounts.ids),) + tuple(where_params)
 
             request = (

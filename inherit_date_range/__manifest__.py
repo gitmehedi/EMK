@@ -24,6 +24,7 @@
         "views/menu_view.xml",
         "views/date_range_view.xml",
         "views/date_range_type_view.xml",
+        "views/account_config.xml",
     ],
     "qweb": [
         "static/src/xml/date_range.xml",

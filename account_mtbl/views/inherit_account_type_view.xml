@@ -71,7 +71,7 @@
             <field name="inherit_id" ref="account.view_account_type_tree"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
-                    <field name="asset_liability_id"/>
+                    <field name="include_initial_balance"/>
                     <field name="state"/>
                 </field>
                 <xpath expr="//tree" position="attributes">
