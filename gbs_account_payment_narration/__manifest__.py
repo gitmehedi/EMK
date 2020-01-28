@@ -5,6 +5,7 @@
     'category': 'Account',
     'version': '10.1.1.1',
     'depends': [
+        'account_operating_unit',
         'gbs_collection_batch',
         'gbs_vendor_payment',
     ],

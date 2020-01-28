@@ -52,8 +52,7 @@ class MrrReport(models.AbstractModel):
             pack_list = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['pack_list']
             total_amount = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['total_amount']
 
-                    
-        total = sum(total_amount)
+        total = round(sum(total_amount),2)
         amt_to_word = self.env['res.currency'].amount_to_word(float(total))
         po_no_str = ''
         if po_no:
