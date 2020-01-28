@@ -13,7 +13,7 @@ class AccountFiscalyearClose(models.TransientModel):
             raise Warning(_('Create a journal type with code [FYC]'))
         return journal
 
-    close_fy_id = fields.Many2one('date.range', string='Current Fiscal Year',required=True,
+    close_fy_id = fields.Many2one('date.range', string='Current Fiscal Year', required=True,
                                   domain="[('state','=','approve'),('type_id.fiscal_year','=','True')]")
     start_fy_id = fields.Many2one('date.range', string='New Fiscal Year', required=True,
                                   domain="[('state','=','approve'),('type_id.fiscal_year','=','True')]")
@@ -44,10 +44,15 @@ class AccountFiscalyearClose(models.TransientModel):
         if opening_bal:
             raise Warning(_("A closing balace journal exist. Please remove it first."))
 
-        
-        self.env.cr.execute("""SELECT * FROM financial_year_closing('%s','%s','%s',%s,%s,%s,%s)""" % (
-            end_fy_dst, end_fy_ded, start_fy_dst, user_id, journal_id, opu_id, company_id));
-
-        # Please consider reconcile journal
+        if self.env.user.company_id.eoy_type == 'banking':
+            self.env.cr.execute("""SELECT * FROM profit_loss_calculation('%s','%s','%s',%s,%s,%s,%s)""" % (
+                end_fy_dst, end_fy_ded, end_fy_ded, user_id, journal_id, opu_id, company_id));
+            self.env.cr.execute("""SELECT * FROM financial_year_closing('%s','%s','%s',%s,%s,%s,%s)""" % (
+                end_fy_dst, end_fy_ded, start_fy_dst, user_id, journal_id, opu_id, company_id));
+        else:
+            move_id = self.env.cr.execute("""SELECT * FROM financial_year_closing('%s','%s','%s',%s,%s,%s,%s)""" % (
+                end_fy_dst, end_fy_ded, start_fy_dst, user_id, journal_id, opu_id, company_id));
+            self.env.cr.execute("""SELECT * FROM profit_loss_calculation('%s','%s','%s',%s,%s,%s,%s)""" % (
+                end_fy_dst, end_fy_ded, start_fy_ded, user_id, journal_id, opu_id, company_id));
 
         return {'type': 'ir.actions.act_window_close'}
