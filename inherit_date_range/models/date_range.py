@@ -100,10 +100,10 @@ class DateRange(models.Model):
                       IF mrec.debit > 0 or mrec.credit > 0 THEN
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_opening)
-                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.debit,0,user_id,user_id,NOW(),NOW(),TRUE);
+                          VALUES ('Year Closing between Date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,mrec.debit,0,user_id,user_id,NOW(),NOW(),TRUE);
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,servicing_channel_id,acquiring_channel_id,segment_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_opening)
-                          VALUES ('Financial Year Closing between date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,0,mrec.credit,user_id,user_id,NOW(),NOW(),TRUE);
+                          VALUES ('Year Closing Between Date '||date_start||' and '|| date_end,'Financial Year Closing',company_id,journal_id,move,mrec.account_id,mrec.operating_unit_id,mrec.analytic_account_id,mrec.servicing_channel_id,mrec.acquiring_channel_id,mrec.segment_id,jrn_date,jrn_date,0,mrec.credit,user_id,user_id,NOW(),NOW(),TRUE);
                       END IF;
                     END LOOP;
 
@@ -142,7 +142,7 @@ class DateRange(models.Model):
                                 company_id = company_id;
             
                                 INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,is_opening,create_uid,write_uid,create_date,write_date) 
-                                    VALUES ('/','Retain Earnings between date '|| date_start ||' and '|| date_end,journal_id,company_id,jrn_date,opu_id,user_id,'draft',TRUE,False,TRUE,TRUE,user_id,user_id,NOW(),NOW())
+                                    VALUES ('/','Profit Between Date '|| date_start ||' and '|| date_end,journal_id,company_id,jrn_date,opu_id,user_id,'draft',TRUE,False,TRUE,TRUE,user_id,user_id,NOW(),NOW())
                                     RETURNING account_move.id INTO move;
             
                                 forward_query = format('SELECT aml.operating_unit_id,
@@ -186,10 +186,10 @@ class DateRange(models.Model):
                           
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Profit and Loss between date'||date_start||' and '|| date_end,'Profit and Loss',company_id,journal_id,move,retain_earning_id,opu_id,jrn_date,jrn_date,debit,credit,user_id,user_id,NOW(),NOW());
+                          VALUES ('Profit Between Date '||date_start||' and '|| date_end,'Profit and Loss ',company_id,journal_id,move,retain_earning_id,opu_id,jrn_date,jrn_date,debit,credit,user_id,user_id,NOW(),NOW());
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Profit and Loss between date '||date_start||' and '|| date_end,'Profit and Loss',company_id,journal_id,move,general_id,mrec.operating_unit_id,jrn_date,jrn_date,credit,debit,user_id,user_id,NOW(),NOW());
+                          VALUES ('Profit Between Date '||date_start||' and '|| date_end,'Profit and Loss ',company_id,journal_id,move,general_id,mrec.operating_unit_id,jrn_date,jrn_date,credit,debit,user_id,user_id,NOW(),NOW());
                                   
                         END LOOP;
             
