@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round as round
+from odoo.exceptions import ValidationError
 
 
 class AccountInvoice(models.Model):
@@ -32,6 +33,15 @@ class AccountInvoice(models.Model):
         for invoice in self:
             if invoice.is_tds_applicable:
                 invoice.total_tds_amount = sum(line.amount for line in self.tax_line_ids if line.tds_id)
+
+    @api.constrains('total_tds_amount')
+    def _check_total_tds(self):
+        date_range_objs = self.env['date.range'].search(
+            [('date_start', '<=', self.date), ('date_end', '>=', self.date), ('type_id.tds_year', '=', True),
+             ('active', '=', True)],
+            order='id DESC', limit=1)
+        if not date_range_objs:
+            raise ValidationError(_("Please create a TDS/VAT Year for current date."))
 
     @api.onchange('is_tds_applicable')
     def _onchange_is_tds_applicable(self):
@@ -67,8 +77,6 @@ class AccountInvoice(models.Model):
                     line._calculate_tds_value(pre_invoice_line_list)
                 else:
                     line._calculate_tds_value()
-        else:
-            pass
 
     def _update_tax_line_vals(self,line):
         if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
