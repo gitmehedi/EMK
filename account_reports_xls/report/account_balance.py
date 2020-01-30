@@ -49,7 +49,6 @@ class ReportTrialBalance(models.AbstractModel):
             index = where_params_init.index(context['date_from'])
             where_params_init.insert(index + 1, context['date_from'][:4] + "-01-01")
 
-
         if context['date_from']:
             if len(move_ids) > 0:
                 filters = " AND move_id IN %s AND account_move_line.is_opening IS NOT True " + filters
@@ -135,7 +134,8 @@ class ReportTrialBalance(models.AbstractModel):
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
-        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search(
+            [('level_id.name', '=', 'Layer 5')])
         account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
 
         docargs = {
