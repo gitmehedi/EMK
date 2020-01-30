@@ -47,8 +47,13 @@ class AccountFiscalyearClose(models.TransientModel):
         if self.env.user.company_id.eoy_type == 'banking':
             self.env.cr.execute("""SELECT * FROM profit_loss_calculation('%s','%s','%s',%s,%s,%s,%s)""" % (
                 end_fy_dst, end_fy_ded, end_fy_ded, user_id, journal_id, opu_id, company_id));
-            self.env.cr.execute("""SELECT * FROM financial_year_closing('%s','%s','%s',%s,%s,%s,%s)""" % (
-                end_fy_dst, end_fy_ded, start_fy_dst, user_id, journal_id, opu_id, company_id));
+            move_id = self.env.cr.fetchall()
+            move_ins = self.env['account.move'].search([('id', '=', move_id)])
+            if move_ins:
+                move_ins.post()
+                if move_ins.state == 'posted':
+                    self.env.cr.execute("""SELECT * FROM financial_year_closing('%s','%s','%s',%s,%s,%s,%s)""" % (
+                        end_fy_dst, end_fy_ded, start_fy_dst, user_id, journal_id, opu_id, company_id));
         else:
             move_id = self.env.cr.execute("""SELECT * FROM financial_year_closing('%s','%s','%s',%s,%s,%s,%s)""" % (
                 end_fy_dst, end_fy_ded, start_fy_dst, user_id, journal_id, opu_id, company_id));
