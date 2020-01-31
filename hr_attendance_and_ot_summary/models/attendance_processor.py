@@ -99,15 +99,14 @@ class AttendanceProcessor(models.Model):
                 if alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
                     alterDayDutyTime = alterTimeMap.get(self.getStrFromDate(currDate))
                     attendanceDayList = att_utility_pool.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap, employeeId)
-                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, alterDayDutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool)
+                    altCurrDate = datetime.datetime.strptime(alterDayDutyTime.startDutyTime.strftime('%Y-%m-%d'), '%Y-%m-%d')
+                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, altCurrDate, alterDayDutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool)
 
                 elif dutyTimeMap.get(self.getStrFromDate(currDate)): # Check this date is week end or not. If it is empty, then means this day is weekend
                     currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
                     attendanceDayList = att_utility_pool.getAttendanceListByDay(attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap)
                     attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool)
                 else:
-                    attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
-
                     # Check for Holiday
                     if self.checkOnHolidays(currDate, holidayMap, employee, att_utility_pool) is True:
                         attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
@@ -123,7 +122,7 @@ class AttendanceProcessor(models.Model):
                         attSummaryLine.unpaid_holidays = attSummaryLine.unpaid_holidays + 1
                         # return attSummaryLine
                     else:
-                        print("")
+                        attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
                 currDate = currDate + day
         else:
