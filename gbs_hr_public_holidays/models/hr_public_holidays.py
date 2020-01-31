@@ -3,11 +3,14 @@ import time
 
 from datetime import date
 from odoo import fields, models, api,exceptions
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class HrPublicHolidays(models.Model):
     _name = 'hr.holidays.public'
-    _description = 'Public Holidays'
+    _inherit = ['mail.thread']
+    _description = 'Organization Holidays'
     _rec_name = 'name'
     _order = "id"
 
@@ -42,12 +45,59 @@ class HrPublicHolidays(models.Model):
 
     @api.multi
     def geneare_yearly_calendar(self):
+        _logger.info("Calling function geneare_yearly_calendar")
+
+        if not self.year_id.date_start:
+            raise exceptions.ValidationError("Please provide start date of fiscal year")
+        if not self.year_id.date_end:
+            raise exceptions.ValidationError("Please provide end date of fiscal year")
+
         vals = {}
         chd_obj = self.env["calendar.holiday"]
+
+        ### Delete existing records
         data = chd_obj.search([('year_id', '=', self.year_id.id)])
 
         if data:
             data.unlink()
+            _logger.info("Deleted existing records")
+
+        #####################################################################
+
+        ### Generate Weekly Holidays
+        start_date = self.year_id.date_start.split('-')
+        end_date = self.year_id.date_end.split('-')
+
+        days = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2])) - datetime.datetime(
+            int(start_date[0]), int(start_date[1]), int(start_date[2]))
+
+        noOfDays = days.days + 1
+        curTime = time.mktime(
+            datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2])).timetuple())
+
+        _logger.info(str(len(self.weekly_details_ids)) + " Weekly Holidays is found")
+        for val in self.weekly_details_ids:
+            vals['name'] = "Weekly Holiday"
+            vals['type'] = "weekly"
+            vals['color'] = "Yellow"
+            vals['status'] = True
+            vals['year_id'] = self.year_id.id
+
+            for i in range(noOfDays):
+                searchTime = (i * 86400 + curTime)
+                dayName = datetime.datetime.fromtimestamp(int(searchTime))
+                if dayName.strftime('%A') == val.weekly_type.title():
+                    vals['date'] = dayName
+                    chd_obj.create(vals)
+                    _logger.info(str(dayName) + " Weekly Holidays is created")
+
+
+        #####################################################################
+
+        ### Generate Public Holidays
+
+        i = 0
+        _logger.info(str(len(self.public_details_ids)) + " Public Holidays will be created")
 
         for val in self.public_details_ids:
             vals['name'] = val.name
@@ -57,36 +107,10 @@ class HrPublicHolidays(models.Model):
             vals['status'] = True
 
             chd_obj.create(vals)
+            i = i + 1
+            _logger.info(str(i) + ") " + str(val.date) + " Public Holidays is created")
 
-        for val in self.weekly_details_ids:
-            vals['name'] = "Weekly Holiday"
-            vals['type'] = "weekly"
-            vals['color'] = "Yellow"
-            vals['status'] = True
-            vals['year_id'] = self.year_id.id
-
-            if not self.year_id.date_start:
-                raise exceptions.ValidationError("Please provide start date of fiscal year")
-            if not self.year_id.date_end:
-                raise exceptions.ValidationError("Please provide end date of fiscal year")
-
-            start_date = self.year_id.date_start.split('-')
-            end_date = self.year_id.date_end.split('-')
-
-            days = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2])) - datetime.datetime(
-                int(start_date[0]), int(start_date[1]), int(start_date[2]))
-
-            noOfDays = days.days + 1
-            curTime = time.mktime(
-                datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2])).timetuple())
-
-            for i in range(noOfDays):
-                searchTime = (i * 86400 + curTime)
-                dayName = datetime.datetime.fromtimestamp(int(searchTime))
-                if dayName.strftime('%A') == val.weekly_type.title():
-                    vals['date'] = dayName
-                    chd_obj.create(vals)
-
+        #####################################################################
         return True
 
     # @api.one
