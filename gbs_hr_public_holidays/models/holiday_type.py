@@ -11,7 +11,7 @@ class CalendarHolidayType(models.Model):
     status = fields.Boolean(string='Status', default=True)
 
     """ many2one fields """ 
-    year_id = fields.Many2one('account.fiscalyear', string="Calender Year")
+    year_id = fields.Many2one('date.range', string="Leave Year",domain ="[('type_id.holiday_year', '=', True)]")
 
     """ one2many fields """
     public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id')
