@@ -310,8 +310,8 @@ class HrManualAttendance(models.Model):
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             att_domain =[
-                ('check_in', '<', h.check_out),
-                ('check_out', '>', h.check_in),
+                ('check_in', '>', h.check_out),
+                ('check_out', '<', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
             ]
