@@ -96,7 +96,8 @@ class HrManualAttendance(models.Model):
     def action_confirm(self):
         if self.filtered(lambda manual_attendance: manual_attendance.state != 'draft'):
             raise UserError(_('Manual Attendance request must be in Draft state ("To Submit") in order to confirm it.'))
-        self.line_ids.write({'state': 'confirm'})
+        # self.line_ids.write({'state': 'confirm'})
+        self.line_ids.action_confirm()
         return self.write({'state': 'confirm'})
 
     @api.multi
