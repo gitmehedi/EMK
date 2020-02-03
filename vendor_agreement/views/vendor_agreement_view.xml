@@ -44,7 +44,8 @@
                             <button name="action_draft" type="object"
                                     string="Reset to draft" states="cancel"
                                     groups="vendor_agreement.vendor_agreement_approver"/>
-                            <button string="Payment Instruction" name="action_payment" type="object" class="oe_highlight"
+                            <button string="Payment Instruction" name="action_payment" type="object"
+                                    class="oe_highlight"
                                     attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                                     groups="vendor_agreement.vendor_agreement_approver"/>
                             <button string="Amendment" name="action_amendment" states="done"
@@ -77,7 +78,7 @@
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
                                     <field name="company_id" groups="base.group_multi_company"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="account_id" domain="[('internal_type','=','other')]"
+                                    <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="operating_unit_id"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>

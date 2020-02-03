@@ -14,7 +14,7 @@ class VendorAgreement(models.Model):
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
                                  states={'draft': [('readonly', False)]})
     product_id = fields.Many2one('product.product', string='Service/Product', required=True, readonly=True,
-                                 track_visibility='onchange',states={'draft': [('readonly', False)]},
+                                 track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Agreement Service.")
     start_date = fields.Date(string='Start Date', default=fields.Date.context_today, required=True, readonly=True,
                              track_visibility='onchange', states={'draft': [('readonly', False)]})
@@ -38,6 +38,7 @@ class VendorAgreement(models.Model):
                                       track_visibility='onchange', help="Remaining Amount to adjustment.")
     account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                 domain=[('level_id.name', '=', 'Layer 5')],
                                  help="Account for the agreement.")
     acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
                                         ondelete='restrict')
@@ -109,13 +110,12 @@ class VendorAgreement(models.Model):
         for record in self:
             if record.state == 'done':
                 if record.advance_amount and record.total_payment_amount \
-                    and record.advance_amount <= record.total_payment_amount:
+                        and record.advance_amount <= record.total_payment_amount:
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
             else:
                 record.payment_btn_visible = False
-
 
     @api.model
     def create(self, vals):
@@ -135,7 +135,7 @@ class VendorAgreement(models.Model):
             elif self.start_date >= self.end_date:
                 raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
-    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value','advance_amount')
+    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value', 'advance_amount')
     def check_pro_advance_amount(self):
         if self.pro_advance_amount or self.adjustment_value or self.service_value:
             if self.pro_advance_amount < 0:
@@ -274,7 +274,7 @@ class VendorAgreement(models.Model):
         for agr in self:
             name = agr.name
             if agr.product_id:
-                name = u'%s[%s]' % (agr.name,agr.product_id.name)
+                name = u'%s[%s]' % (agr.name, agr.product_id.name)
             res.append((agr.id, name))
         return res
 
