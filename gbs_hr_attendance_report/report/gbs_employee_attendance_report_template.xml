@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <report
+            id="employee_attendance_report"
+            string="Employee Attendance Report"
+            model="hr.attendance"
+            report_type="qweb-pdf"
+            file="gbs_hr_attendance_report.gbs_employee_attendance_doc"
+            name="gbs_hr_attendance_report.gbs_employee_attendance_doc"
+            menu="False"
+            paperformat="report_layout.paperformat_backend_portrait"
+        />
+        <template id="gbs_employee_attendance_doc">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label>Employee :</label>
+                                <span t-esc="data['name']"/>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <label>Date From :</label>
+                                <span t-esc="data['date_from']"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label>Department :</label>
+                                <span t-esc="data['dept']"/>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <label>Date To :</label>
+                                <span t-esc="data['date_to']"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label>Designation :</label>
+                                <span t-esc="data['designation']"/>
+                            </div>
+                            <div class="col-xs-6"></div>
+                        </div>
+                        <table class="table table-report-xs table-bordered table-striped">
+                            <thead>
+                                <th>S.N.</th>
+                                <th>Duty Date</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="cio_data" t-as="list">
+                                    <tr>
+                                        <td><span t-esc="list_index+1"/> </td>
+                                        <td><span t-esc="list_value['duty_date']"/></td>
+                                        <td><span t-esc="list_value['check_in']"/></td>
+                                        <td><span t-esc="list_value['check_out']"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

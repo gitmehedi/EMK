@@ -30,6 +30,8 @@
         'wizard/attendance_error_summary.xml',
         'report/gbs_hr_attendance_report_template.xml',
         'report/attendance_error_summary_report.xml',
+        'wizard/employee_attendance_wizard.xml',
+        'report/gbs_employee_attendance_report_template.xml'
     ],
 
     'summary': 'Generates check in and check out related report of employee(s)',

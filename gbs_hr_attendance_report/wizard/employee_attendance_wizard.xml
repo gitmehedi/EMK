@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_employee_attendance_wizard_form" model="ir.ui.view">
+            <field name="name">employee.attendance.wizard.form</field>
+            <field name="model">gbs.employee.attendance.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Employee Attendance Report">
+                    <group>
+                        <group>
+                            <field name="compute_field" invisible="1"/>
+                            <field name="employee_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"
+                                   attrs="{'readonly': [('compute_field', '=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="process_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_employee_attendance_wizard_form" model="ir.actions.act_window">
+            <field name="name">Employee Attendance Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">gbs.employee.attendance.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                name="Employee Attendance Summary"
+                parent="hr_attendance.menu_hr_attendance_report"
+                action="action_employee_attendance_wizard_form"
+                id="menu_employee_attendance_report"/>
+    </data>
+</odoo>
