@@ -217,11 +217,11 @@ class DateRange(models.Model):
                 
                       sum= sum + ABS(mrec.profit);
                       
-                      INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                      VALUES ('Profit Between Date '||date_start||' and '|| date_end,'Profit and Loss ',company_id,journal_id,move,profit_fy_id,opu_id,jrn_date,jrn_date,debit,credit,user_id,user_id,NOW(),NOW());
+                      INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_profit)
+                      VALUES ('Profit Between Date '||date_start||' and '|| date_end,'Profit and Loss ',company_id,journal_id,move,profit_fy_id,opu_id,jrn_date,jrn_date,debit,credit,user_id,user_id,NOW(),NOW(),TRUE);
                       
-                      INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                      VALUES ('Profit Between Date '||date_start||' and '|| date_end,'Profit and Loss ',company_id,journal_id,move,general_id,mrec.operating_unit_id,jrn_date,jrn_date,credit,debit,user_id,user_id,NOW(),NOW());
+                      INSERT INTO account_move_line (name,ref,company_id,journal_id,move_id,account_id,operating_unit_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_profit)
+                      VALUES ('Profit Between Date '||date_start||' and '|| date_end,'Profit and Loss ',company_id,journal_id,move,general_id,mrec.operating_unit_id,jrn_date,jrn_date,credit,debit,user_id,user_id,NOW(),NOW(),TRUE);
                           
                     END LOOP;
                 

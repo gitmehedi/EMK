@@ -12,6 +12,7 @@ class AccountBalanceReport(models.TransientModel):
     ex_operating_unit_ids = fields.Many2many('operating.unit', 'account_balance_report_ex_operating_unit_rel',
                                              'account_id', 'operating_unit_id', string='Branch (Exclude)',
                                              required=False, default=[])
+    include_profit_loss = fields.Boolean(string="Include Profit/Loss", default=False)
 
     @api.constrains('date_from', 'date_to')
     def check_date(self):
@@ -38,11 +39,12 @@ class AccountBalanceReport(models.TransientModel):
         data2['form'] = self.read(['ex_operating_unit_ids'])[0]
         result['ex_operating_unit_ids'] = 'ex_operating_unit_ids' in data2['form'] and \
                                           data2['form']['ex_operating_unit_ids'] or False
+        result['include_profit_loss'] = self.include_profit_loss
         return result
 
     def _print_report(self, data):
         ex_operating_units = ', '.join([ou.name for ou in self.ex_operating_unit_ids])
-        data['form'].update({'ex_operating_units': ex_operating_units})
+        data['form'].update({'ex_operating_units': ex_operating_units,'include_profit_loss':self.include_profit_loss})
         return super(AccountBalanceReport, self)._print_report(data)
 
     @api.multi

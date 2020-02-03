@@ -18,6 +18,7 @@ class TrialBalanceXLSX(ReportXlsx):
             'journal_ids': docs['journal_ids'].ids,
             'state': docs['target_move'],
             'strict_range': True,
+            'include_profit_loss': docs['include_profit_loss'],
         }
         account_res = self.env['report.account.report_trialbalance'].with_context(used_context)._get_accounts(
             accounts, display_account)

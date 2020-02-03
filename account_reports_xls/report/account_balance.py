@@ -24,6 +24,10 @@ class ReportTrialBalance(models.AbstractModel):
         context = self.env.context
         move_ids = self.env['account.move'].search([('is_cbs', '=', True)])
 
+        if not context['include_profit_loss']:
+            filters_init = filters_init + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
+            filters = filters + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
+
         if context['date_to']:
             if context['operating_unit_ids'] or context['ex_operating_unit_ids']:
                 filters_init = filters_init.replace('AND  ("account_move_line"."date" <= %s)', '')

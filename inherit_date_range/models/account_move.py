@@ -11,3 +11,4 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     is_opening = fields.Boolean(string='Is Opening', default=False)
+    is_profit = fields.Boolean(string='Is Profit', default=False)
