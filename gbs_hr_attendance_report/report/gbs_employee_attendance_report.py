@@ -31,9 +31,9 @@ class EmployeeAttendanceReport(models.AbstractModel):
         for data in cio_list:
             cio_data[seq] = {}
             rec = cio_data[seq]
-            rec['check_in'] = str(data[0])[11:] if data[2] else str(data[0])
-            rec['check_out'] = str(data[1])[11:] if data[2] else str(data[1])
-            rec['duty_date'] = str(data[2]) if data[2] else "N/A"
+            rec['check_in'] = str(data[0]) if data[0] else ''
+            rec['check_out'] = str(data[1]) if data[1] else ''
+            rec['duty_date'] = str(data[2]) if data[2] else ''
             seq += 1
         return cio_data
 
@@ -45,10 +45,10 @@ class EmployeeAttendanceReport(models.AbstractModel):
                duty_date
         FROM hr_attendance
         WHERE employee_id = %s
-              AND check_in >= %s
-              AND check_out <= %s 
-        ORDER BY duty_date
-        ''' % (emo_id, from_date, to_date))
+              AND ((check_in BETWEEN %s AND %s)
+              OR (check_out BETWEEN %s AND %s))
+        ORDER BY check_in
+        ''' % (emo_id, from_date, to_date, from_date, to_date))
         result = self._cr.fetchall()
 
         return result

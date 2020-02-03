@@ -15,6 +15,7 @@
             <t t-call="report.html_container">
                 <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside: auto">
+                        <h3 class="report-title">Employe Attendance Summary</h3>
                         <div class="row">
                             <div class="col-xs-6">
                                 <label>Employee :</label>
