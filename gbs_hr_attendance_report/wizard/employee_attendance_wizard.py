@@ -17,7 +17,7 @@ class GbsEmployeeAttendanceWizard(models.TransientModel):
     @api.depends('employee_id')
     def get_user(self):
         res_user = self.env['res.users'].search([('id', '=', self._uid)])
-        if res_user.has_group('hr_attendance.group_hr_attendance_user') and not res_user.has_group('hr_attendance.group_hr_attendance_manager'):
+        if not res_user.has_group('hr_attendance.group_hr_attendance_manager'):
             self.compute_field = True
         else:
             self.compute_field = False
