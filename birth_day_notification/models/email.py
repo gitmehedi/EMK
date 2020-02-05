@@ -29,8 +29,8 @@ class ReminderVisa(models.Model):
         email_to = self.env['hr.employee'].browse(emp_id).work_email
         if template_browse:
             values = template_browse.generate_email(emp_id, fields=None)
-            values['email_to'] = email_to
-            values['email_from'] = su_id.email
+            # values['email_to'] = email_to
+            # values['email_from'] = su_id.email
             values['res_id'] = False
             if not values['email_to'] and not values['email_from']:
                 pass
@@ -61,8 +61,8 @@ class ReminderVisa(models.Model):
         email_to = self.env['hr.employee'].browse(emp_id).work_email
         if template_browse:
             values = template_browse.generate_email(emp_id, fields=None)
-            values['email_to'] = email_to
-            values['email_from'] = su_id.email
+            # values['email_to'] = email_to
+            # values['email_from'] = su_id.email
             values['res_id'] = False
             if not values['email_to'] and not values['email_from']:
                 pass
