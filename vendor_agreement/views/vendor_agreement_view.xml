@@ -110,25 +110,26 @@
                                     <field name="is_remaining" invisible="1"/>
                                 </group>
                             </group>
+
+                            <separator string="Notes"/>
+                            <field name="description"/>
                             <notebook>
-                                <page string="Notes">
-                                    <field name="description"/>
-                                </page>
-                                <page string="Invoices" class="oe_page_title"
+                                <page string="Vendor Bills" class="oe_page_title"
                                       attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
-                                    <group string="Vendor Bills" name="in_invoices">
+                                    <group name="in_invoices">
                                         <field name="in_invoice_ids" colspan="4" nolabel="1">
                                             <tree string="Invoices">
+                                                <field name="number" string="Bill No"/>
                                                 <field name="partner_id" string="Vendor"/>
-                                                <field name="user_id" string="Responsible"/>
                                                 <field name="date_invoice" string="Bill Date"/>
-                                                <field name="number" string="Bill Number"/>
+                                                <field name="user_id"  string="Responsible" />
+                                                <field name="total_bill_payable"/>
                                                 <field name="amount_total_signed" string="Total"/>
                                                 <field name="residual_signed" string="To Pay"/>
                                                 <field name="agreement_adjusted_amount" string="Adjusted"/>
                                                 <field name="state"/>
                                             </tree>
-                                            <from string="Invoice">
+                                            <from string="Vendor Bills">
                                                 <group>
                                                     <group>
                                                         <field name="partner_id"/>
