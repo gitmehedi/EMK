@@ -4,11 +4,11 @@ from odoo.exceptions import UserError, ValidationError
 
 class VendorAgreement(models.Model):
     _name = "agreement"
-    _order = 'name desc'
+    _order = 'name desc,state asc'
     _inherit = ["agreement", 'mail.thread', 'ir.needaction_mixin']
 
-    code = fields.Char(required=False, copy=False)
-    name = fields.Char(required=False, track_visibility='onchange')
+    code = fields.Char(required=False, copy=False, string='Agreement No')
+    name = fields.Char(required=False, track_visibility='onchange', string='Agreement No')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=True,
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
@@ -40,8 +40,6 @@ class VendorAgreement(models.Model):
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  domain=[('level_id.name', '=', 'Layer 5')],
                                  help="Account for the agreement.")
-    acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
-                                        ondelete='restrict')
     description = fields.Text('Notes', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
@@ -50,6 +48,11 @@ class VendorAgreement(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, track_visibility='onchange',
                                  states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('agreement'))
+    acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
+                                        ondelete='restrict')
+    line_ids = fields.One2many('agreement.line', 'line_id', copy=False, ondelete='restrict')
+    type = fields.Selection([('single', 'Single'), ('multi', 'Multi')], default='Type')
+
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed"),
@@ -119,9 +122,6 @@ class VendorAgreement(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].get('name')
-        vals['name'] = seq
-
         return super(VendorAgreement, self).create(vals)
 
     @api.constrains('start_date', 'end_date')
@@ -181,8 +181,10 @@ class VendorAgreement(models.Model):
     @api.one
     def action_confirm(self):
         if self.state == 'draft':
+            sequence = self.env['ir.sequence'].get('name')
             self.write({
                 'state': 'confirm',
+                'name': sequence,
             })
 
     @api.one
@@ -299,3 +301,27 @@ class VendorAgreementHistory(models.Model):
     state = fields.Selection([
         ('pending', "Pending"),
         ('confirm', "Confirmed")], default='pending', string="Status")
+
+
+class VendorAgreementLine(models.Model):
+    _name = "agreement.line"
+    _order = 'id desc'
+
+    partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
+                                 domain=[('parent_id', '=', False), ('supplier', '=', True)])
+    product_id = fields.Many2one('product.product', string='Service', required=True)
+    adjustment_value = fields.Float(string="Adjustment Value", required=True)
+    service_value = fields.Float(string="Service Value", required=True)
+    advance_amount = fields.Float(string="Approved Advance", required=True)
+    adjusted_amount = fields.Float(string="Adjusted Amount")
+    outstanding_amount = fields.Float(string="Outstanding Amount")
+    account_id = fields.Many2one('account.account', string="Agreement Account",
+                                 domain=[('level_id.name', '=', 'Layer 5')])
+    acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
+                                  default=lambda self: self.env.user.company_id.currency_id.id)
+    company_id = fields.Many2one('res.company', string='Company',
+                                 default=lambda self: self.env['res.company']._company_default_get('agreement'))
+    is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True, store=True, string="Is Remaining")
+    is_amendment = fields.Boolean(default=False, string="Is Amendment", )
+    line_id = fields.Many2one('agreement', required=True, string='Agreement')

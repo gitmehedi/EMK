@@ -10,13 +10,13 @@
                     <tree string="Agreements"
                           decoration-info="state=='draft'" decoration-success="state=='confirm'"
                           decoration-bf="state in ('confirm','done')" decoration-muted="state=='done'">
-                        <field name="name" string="Agreement reference"/>
+                        <field name="name"/>
                         <field name="partner_id" string="Vendor"/>
                         <field name="product_id" string="Service"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
-                        <field name="advance_amount"/>
-                        <field name="adjusted_amount"/>
+                        <field name="advance_amount" sum="advance_amount"/>
+                        <field name="adjusted_amount" sum="adjusted_amount"/>
                         <field name="state"/>
                     </tree>
                 </xpath>
@@ -279,21 +279,15 @@
                 <xpath expr="//search" position="replace">
                     <search string="Search Agreements">
                         <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
-                               string="Name or Number"/>
+                               string="Agreement No"/>
                         <field name="partner_id" string="Vendor"/>
-                        <field name="product_id"/>
+                        <field name="product_id" string="Service"/>
                         <field name="start_date"/>
-                        <field name="end_date"/>
-                        <field name="pro_advance_amount"/>
-                        <field name="adjustment_value"/>
-                        <field name="service_value"/>
-                        <field name="advance_amount"/>
-                        <field name="adjusted_amount"/>
+                        <field name="state" string="Status"/>
                         <separator/>
-                        <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                         <group name="groupby">
-                            <filter name="partner_groupby" string="Vendor"
-                                    context="{'group_by': 'partner_id'}"/>
+                            <filter string="By Vendor" name="partner_groupby" domain=""  context="{'group_by': 'partner_id'}"/>
+                            <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
                         </group>
                     </search>
                 </xpath>
@@ -305,7 +299,7 @@
             <field name="res_model">agreement</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','single')]</field>
-            <field name="context">{'default_type':'single'}</field>
+            <field name="context">{'default_type':'single','search_default_state':1}</field>
         </record>
 
         <record id="agreement_multi_action" model="ir.actions.act_window">
@@ -313,7 +307,7 @@
             <field name="res_model">agreement</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','multi')]</field>
-            <field name="context">{'default_type':'multi'}</field>
+            <field name="context">{'default_type':'multi','search_default_state':1}</field>
         </record>
 
         <menuitem id="agreement_account.agreement_menu" action="agreement_single_action"
@@ -322,7 +316,7 @@
                   parent="account.menu_finance_payables" sequence="30"/>
 
         <menuitem id="agreement_multi_menu" action="agreement_multi_action"
-                  name="Vendor Agreements (Multi)"
+                  name="Vendor Agreements (Rent)"
                   groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
                   parent="account.menu_finance_payables" sequence="35"/>
 
