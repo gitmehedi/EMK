@@ -46,7 +46,7 @@ class AccountInvoice(models.Model):
     total_amount_with_vat = fields.Float('Total', compute='_compute_total_amount_with_vat',
                                          store=True, readonly=True, track_visibility='onchange', copy=False)
     date_invoice = fields.Date(default=fields.Datetime.now,states={'draft': [('readonly', True)]})
-    total_bill_payable = fields.Float(string='Bill Payable', compute='_computer_bill_payable',store=True)
+    total_bill_payable = fields.Float(string='Net Payable', compute='_computer_bill_payable',store=True)
     vendor_account_id = fields.Many2one('account.account',string='Account', related='partner_id.property_account_payable_id',store=True)
 
     @api.one
