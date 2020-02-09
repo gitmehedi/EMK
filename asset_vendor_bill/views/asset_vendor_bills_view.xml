@@ -337,7 +337,7 @@
             ,('state','in',('draft','cancel'))]
         </field>
         <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
-            'in_invoice','journal_type': 'purchase','search_default_draft':1,}
+            'in_invoice','journal_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
@@ -381,7 +381,7 @@
             ,('state','in',('open','paid'))]
         </field>
         <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type': 'in_invoice',
-            'journal_type': 'purchase','search_default_status':1}
+            'journal_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
