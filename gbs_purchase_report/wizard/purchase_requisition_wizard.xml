@@ -51,7 +51,7 @@
                 name="PR Summary Report"
                 action="action_purchase_requisition_wizard"
                 id="menu_purchase_requisition_report"
-                parent="purchase.purchase_report"
+                parent="purchase_mrr_report"
                 sequence="10"/>
     </data>
 </odoo>

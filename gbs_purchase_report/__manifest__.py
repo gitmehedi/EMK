@@ -10,6 +10,7 @@
         'report_layout',
     ],
     'data': [
+        'views/pr_menu.xml',
         'reports/purchase_requisition_report.xml',
         'wizard/purchase_requisition_wizard.xml',
     ],

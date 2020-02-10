@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem id="purchase_mrr_report" name="Reports" parent="purchase.menu_purchase_root" sequence="10"
+        groups="purchase.group_purchase_user,stock.group_stock_user"/>
+
+        <menuitem id="purchase.purchase_report" name="Purchase Analysis" parent="purchase_mrr_report" sequence="99"
+        groups="-purchase.group_purchase_manager,base_technical_features.group_technical_features" action="purchase.action_purchase_order_report_all"/>
+    </data>
+</odoo>
