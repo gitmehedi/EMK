@@ -4,9 +4,11 @@
 
         <!-- Sequence Records -->
         <record id="seq_agreement" model="ir.sequence">
-            <field name="name">agreement</field>
-            <field name="code">name</field>
-            <field name="prefix">VA/</field>
+            <field name="name">Vendor Agreement</field>
+            <field name="code">agreement</field>
+            <field name="prefix">VA/%(range_year)s/</field>
+             <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
             <field name="padding">5</field>
         </record>
 

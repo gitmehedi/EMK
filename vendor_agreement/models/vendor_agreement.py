@@ -181,7 +181,14 @@ class VendorAgreement(models.Model):
     @api.one
     def action_confirm(self):
         if self.state == 'draft':
-            sequence = self.env['ir.sequence'].get('name')
+            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+
+            if self.type == 'multi':
+                if not self.line_ids:
+                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+
+            sequence = self.env['ir.sequence'].next_by_code('agreement') or ''
             self.write({
                 'state': 'confirm',
                 'name': sequence,
@@ -189,9 +196,13 @@ class VendorAgreement(models.Model):
 
     @api.one
     def action_validate(self):
-        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'confirm':
+            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+            if self.type == 'multi':
+                if not self.line_ids:
+                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+
             self.write({
                 'state': 'done',
                 'approver_id': self.env.user.id,
