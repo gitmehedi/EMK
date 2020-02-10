@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- wizard -->
+        <record id="view_purchase_requisition_wizard" model="ir.ui.view">
+			<field name="name">purchase.requisition.wizard</field>
+			<field name="model">purchase.requisition.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+                        <group>
+                            <field name="pr_no"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="date_from"/>
+                        </group>
+                        <group>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="type"/>
+                        </group>
+                        <group>
+                            <field name="operating_unit_ids" required="1" widget="many2many_tags" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </group>
+                        <group>
+                            <field name="is_only_pending"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+
+        <!-- action -->
+        <record id="action_purchase_requisition_wizard" model="ir.actions.act_window">
+			<field name="name">Purchase Requisition Summary Report</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.requisition.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+        <!-- menu -->
+        <menuitem
+                name="PR Summary Report"
+                action="action_purchase_requisition_wizard"
+                id="menu_purchase_requisition_report"
+                parent="purchase.purchase_report"
+                sequence="10"/>
+    </data>
+</odoo>
