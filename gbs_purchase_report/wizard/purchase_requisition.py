@@ -7,18 +7,28 @@ class PurchaseRequisitionWizard(models.TransientModel):
     _name = 'purchase.requisition.wizard'
 
     pr_no = fields.Char(string='Purchase Req. No.')
-    date_from = fields.Date("Date From", required=True)
-    date_to = fields.Date("Date To", required=True)
+    date_from = fields.Date(string='Date From')
+    date_to = fields.Date(string='Date To')
     type = fields.Selection([('all', 'All'), ('local', 'Local'), ('foreign', 'Foreign')], string='Type', default='all')
     operating_unit_ids = fields.Many2many('operating.unit', string='Operating Unit', default=lambda self: self.env.user.default_operating_unit_id)
     is_only_pending = fields.Boolean(string='Only Pending')
 
-    @api.constrains('date_from', 'date_to')
+    @api.constrains('date_from', 'date_to', 'pr_no')
     def _check_date_validation(self):
-        if self.date_from > self.date_to:
-            raise ValidationError(_("From date must be less then To date."))
-        elif (datetime.strptime(self.date_to, '%Y-%m-%d') - datetime.strptime(self.date_from, '%Y-%m-%d')).days > 365:
-            raise ValidationError(_("Maximum date range is one year."))
+        if not self.pr_no and not self.date_from and not self.date_to:
+            raise ValidationError(_("Give requisition no. or date range or both."))
+
+        elif self.date_from and self.date_to:
+            if self.date_from > self.date_to:
+                raise ValidationError(_("From date must be less then To date."))
+            elif (datetime.strptime(self.date_to, '%Y-%m-%d') - datetime.strptime(self.date_from, '%Y-%m-%d')).days > 365:
+                raise ValidationError(_("Maximum date range is one year."))
+
+        elif self.date_from and not self.date_to:
+            raise ValidationError(_("Fill To date."))
+
+        elif not self.date_from and self.date_to:
+            raise ValidationError(_("Fill From date."))
 
     @api.onchange('operating_unit_ids')
     def _onchange_operating_unit_ids(self):
@@ -38,7 +48,7 @@ class PurchaseRequisitionWizard(models.TransientModel):
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
         data['type'] = self.type
-        data['operating_unit_ids'] = "(" + str(self.operating_unit_ids.ids[0]) + ")" if len(self.operating_unit_ids.ids) ==1 else str(tuple(self.operating_unit_ids.ids))
+        data['operating_unit_ids'] = tuple(self.operating_unit_ids.ids)
         data['operating_unit_name'] = self.get_operating_unit_name()
         data['is_only_pending'] = self.is_only_pending
 

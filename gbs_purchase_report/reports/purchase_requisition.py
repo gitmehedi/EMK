@@ -9,7 +9,7 @@ class PurchaseRequisitionReport(models.AbstractModel):
                     pr.id AS requisition_id,
                     pr.name AS requisition_name,
                     prl.product_id AS product_id,
-                    pr.requisition_date AS requisition_date,
+                    DATE(pr.requisition_date) AS requisition_date,
                     tbl_temp.mrr_no AS mrr_no,
                     pp.default_code AS internal_ref,
                     pt.name AS product_name,
@@ -48,7 +48,7 @@ class PurchaseRequisitionReport(models.AbstractModel):
                             GROUP BY
                                 pr.id)) AS tbl_temp ON tbl_temp.requisition_id = pr.id
                 WHERE
-                    DATE(pr.requisition_date) BETWEEN %s AND %s
+                    pr.operating_unit_id IN (%s)
     """
 
     @api.multi
@@ -75,18 +75,19 @@ class PurchaseRequisitionReport(models.AbstractModel):
 
         if data['pr_no']:
             self.sql_str += " AND pr.name = '%s'" % (data['pr_no'])
+        if data['date_from'] and data['date_to']:
+            self.sql_str += " AND DATE(pr.requisition_date) BETWEEN '%s' AND '%s'" % (data['date_from'], data['date_to'])
         if data['type'] != 'all':
             self.sql_str += " AND pr.region_type = '%s'" % (data['type'])
-        if data['operating_unit_ids']:
-            self.sql_str += " AND pr.operating_unit_id IN %s" % (data['operating_unit_ids'])
         if data['is_only_pending']:
             self.sql_str += " AND (prl.product_ordered_qty - COALESCE(prl.mrr_qty, 0)) <> 0"
 
         # ORDER BY
-        self.sql_str += " ORDER BY pr.id, prl.product_id, pr.requisition_date"
+        self.sql_str += " ORDER BY pr.id, prl.product_id, DATE(pr.requisition_date)"
 
         # QUERY EXECUTION
-        self._cr.execute(self.sql_str, (data['date_from'], data['date_to']))
+        # self._cr.execute(self.sql_str, (data['date_from'], data['date_to']))
+        self._cr.execute(self.sql_str, (data['operating_unit_ids']))
 
         # FETCH DATA, MAKE REPORT DATA OBJECT
         for val in self._cr.fetchall():

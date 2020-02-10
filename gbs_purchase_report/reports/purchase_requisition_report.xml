@@ -48,10 +48,12 @@
                                                 </t>
                                             </li>
                                             <li>
-                                                <strong>Date : </strong>
-                                                <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
-                                                <strong> to </strong>
-                                                <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                                <t t-if="data['date_from'] and data['date_to']">
+                                                    <strong>Date : </strong>
+                                                    <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+                                                    <strong> to </strong>
+                                                    <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                                </t>
                                             </li>
                                         </ul>
                                     </div>
