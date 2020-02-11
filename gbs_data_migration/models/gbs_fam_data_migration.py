@@ -1,4 +1,3 @@
-
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
 
@@ -34,5 +33,6 @@ class GBSFamDataMigration(models.Model):
         for val in self.env.cr.fetchall():
             self.env.cr.execute("""UPDATE account_asset_category SET asset_count=%s WHERE id=%s""" % (val[0], val[1]))
 
-
-
+    @api.multi
+    def _api_call(self):
+        self.env.cr.execute("""UPDATE payment_instruction SET is_sync=True,state='approved' WHERE state='draft'""")
