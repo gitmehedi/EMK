@@ -91,8 +91,7 @@ class VendorAgreement(models.Model):
     def _compute_payment_amount(self):
         for va in self:
             va.total_payment_amount = sum(line.amount for line in va.payment_line_ids if line.state not in ['cancel'])
-            va.total_payment_approved = sum(
-                line.amount for line in va.payment_line_ids if line.state in ['approved'])
+            va.total_payment_approved = sum(line.amount for line in va.payment_line_ids if line.state in ['approved'])
 
     @api.one
     @api.depends('adjusted_amount', 'total_payment_approved')

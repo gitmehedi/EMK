@@ -35,4 +35,6 @@ class GBSFamDataMigration(models.Model):
 
     @api.multi
     def _api_call(self):
-        self.env.cr.execute("""UPDATE payment_instruction SET is_sync=True,state='approved' WHERE state='draft'""")
+        api = self.env['payment.instruction'].search([('state', '=', 'draft')])
+        for line in api:
+            line.write({'state': 'approved', 'is_sync': True})
