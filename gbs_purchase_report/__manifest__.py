@@ -15,7 +15,7 @@
         'wizard/purchase_requisition_wizard.xml',
     ],
 
-    'summary': 'Purchase Requisition Report',
+    'summary': 'Purchase Requisition Summary Report',
     'installable': True,
     'application': False,
 }

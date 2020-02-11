@@ -4,7 +4,7 @@
         <report
                 id="action_report_purchase_requisition"
                 model="purchase.requisition"
-                string="Purchase Requisition Report"
+                string="Purchase Requisition Summary Report"
                 report_type="qweb-pdf"
                 menu="False"
                 name="gbs_purchase_report.report_purchase_requisition"
@@ -21,7 +21,7 @@
                                 .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
                             </style>
                             <div class="clearfix">
-                                <h4 class="report-title">Purchase Requisition Report</h4>
+                                <h4 class="report-title">Purchase Requisition Summary Report</h4>
                                 <br/>
                                 <div class="row" style="padding-bottom:5px;">
                                     <div class="col-xs-6">
