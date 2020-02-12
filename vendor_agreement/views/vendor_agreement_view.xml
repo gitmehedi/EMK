@@ -165,7 +165,7 @@
                                                 <field name="total_bill_payable"/>
                                                 <field name="amount_total_signed" string="Total"/>
                                                 <field name="residual_signed" string="To Pay"/>
-                                                <field name="agreement_adjusted_amount" string="Adjusted"/>
+                                                <field name="agreement_adjusted_amount" string="Adjusted" sum="agreement_adjusted_amount"/>
                                                 <field name="state"/>
                                             </tree>
                                             <form string="Vendor Bills">
