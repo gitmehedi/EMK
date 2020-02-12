@@ -20,9 +20,9 @@
         'gbs_vendor_bill',
     ],
     'data': [
+        'data/data.xml',
         'security/ir_rule.xml',
         'security/ir.model.access.csv',
-        'data/data.xml',
         'wizards/amendment_agreement.xml',
         'wizards/agreement_payment_instruction_wizard.xml',
         'wizards/invoice_merge_view.xml',

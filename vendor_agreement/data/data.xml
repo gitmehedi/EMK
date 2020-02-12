@@ -7,7 +7,7 @@
             <field name="name">Vendor Agreement</field>
             <field name="code">agreement</field>
             <field name="prefix">VA/%(range_year)s/</field>
-             <field eval="1" name="number_next"/>
+            <field eval="1" name="number_next"/>
             <field eval="1" name="number_increment"/>
             <field name="padding">5</field>
         </record>
@@ -27,5 +27,16 @@
             <field name="prefix">VA-</field>
             <field name="padding">5</field>
         </record>
+
+        <act_window id="action_rent_agreement_wizard"
+                    name="Generate Rent Payment"
+                    res_model="agreement"
+                    src_model="agreement"
+                    view_type="form"
+                    view_mode="form"
+                    key2="client_action_multi"
+                    target="new"
+                    groups=""/>
+
     </data>
 </odoo>

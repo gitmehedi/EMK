@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="agreement_account.agreement_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="replace">
-                    <tree string="Agreements"
+                    <tree string="Agreements" duplicate="0"
                           decoration-info="state=='draft'" decoration-success="state=='confirm'"
                           decoration-bf="state in ('confirm','done')" decoration-muted="state=='done'">
                         <field name="name"/>
@@ -31,7 +31,7 @@
             <field name="inherit_id" ref="agreement_account.agreement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form string="Agreement">
+                    <form string="Agreement" duplicate="0">
                         <header>
                             <button name="action_confirm" type="object"
                                     string="Confirm" states="draft"

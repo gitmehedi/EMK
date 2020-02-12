@@ -50,8 +50,6 @@ class VendorAgreement(models.Model):
                                  default=lambda self: self.env['res.company']._company_default_get('agreement'))
     acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
                                         ondelete='restrict')
-    line_ids = fields.One2many('agreement.line', 'line_id', copy=False, ondelete='restrict')
-
     agreement_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ], string='Type', required=True,
                                       default='purchase', invisible=True)
     is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True, store=True, string="Is Remaining",
@@ -77,7 +75,8 @@ class VendorAgreement(models.Model):
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
                                          string="Is Visible")
-
+    line_ids = fields.One2many('agreement.line', 'line_id', copy=False, ondelete='restrict', readonly=True,
+                               required=True, states={'draft': [('readonly', False)]})
     type = fields.Selection([('single', 'Single'), ('multi', 'Multi')], default='Type')
 
     state = fields.Selection([
@@ -334,3 +333,5 @@ class VendorAgreementLine(models.Model):
     is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True, store=True, string="Is Remaining")
     is_amendment = fields.Boolean(default=False, string="Is Amendment", )
     line_id = fields.Many2one('agreement', required=True, string='Agreement')
+    rent_price = fields.Float(string='Rent Price', required=True)
+    rent_qty = fields.Float(string='Rent Qty', required=True)
