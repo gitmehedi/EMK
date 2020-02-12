@@ -9,11 +9,11 @@ class VendorAgreement(models.Model):
 
     code = fields.Char(required=False, copy=False, string='Agreement No')
     name = fields.Char(required=False, track_visibility='onchange', string='Agreement No')
-    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=True,
+    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=False,
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
                                  states={'draft': [('readonly', False)]})
-    product_id = fields.Many2one('product.product', string='Service/Product', required=True, readonly=True,
+    product_id = fields.Many2one('product.product', string='Service/Product', required=False, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Agreement Service.")
     start_date = fields.Date(string='Start Date', default=fields.Date.context_today, required=True, readonly=True,
@@ -51,14 +51,6 @@ class VendorAgreement(models.Model):
     acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
                                         ondelete='restrict')
     line_ids = fields.One2many('agreement.line', 'line_id', copy=False, ondelete='restrict')
-    type = fields.Selection([('single', 'Single'), ('multi', 'Multi')], default='Type')
-
-    state = fields.Selection([
-        ('draft', "Draft"),
-        ('confirm', "Confirmed"),
-        ('done', "Done"),
-        ('cancel', "Canceled")], default='draft', string="Status",
-        track_visibility='onchange')
 
     agreement_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ], string='Type', required=True,
                                       default='purchase', invisible=True)
@@ -85,6 +77,15 @@ class VendorAgreement(models.Model):
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
                                          string="Is Visible")
+
+    type = fields.Selection([('single', 'Single'), ('multi', 'Multi')], default='Type')
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirm', "Confirmed"),
+        ('done', "Done"),
+        ('cancel', "Canceled")], default='draft', string="Status",
+        track_visibility='onchange')
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
@@ -319,14 +320,12 @@ class VendorAgreementLine(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)])
-    product_id = fields.Many2one('product.product', string='Service', required=True)
+    product_id = fields.Many2one('product.product', string='Service', required=True, domain=[('type', '=', 'rent')])
     adjustment_value = fields.Float(string="Adjustment Value", required=True)
     service_value = fields.Float(string="Service Value", required=True)
     advance_amount = fields.Float(string="Approved Advance", required=True)
     adjusted_amount = fields.Float(string="Adjusted Amount")
     outstanding_amount = fields.Float(string="Outstanding Amount")
-    account_id = fields.Many2one('account.account', string="Agreement Account",
-                                 domain=[('level_id.name', '=', 'Layer 5')])
     acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id.id)

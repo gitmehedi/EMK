@@ -5,6 +5,9 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou"/>
         <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="duplicate">0</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_invoice_open']" position="attributes">
                 <attribute name="groups">gbs_vendor_bill.vendor_bill_approver</attribute>
             </xpath>

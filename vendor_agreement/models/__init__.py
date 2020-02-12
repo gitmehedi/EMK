@@ -1,3 +1,4 @@
-import vendor_agreement
-import account_invoice
-import payment_instruction
+from . import vendor_agreement
+from . import account_invoice
+from . import payment_instruction
+from . import product_template

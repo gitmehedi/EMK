@@ -27,6 +27,7 @@
         'wizards/agreement_payment_instruction_wizard.xml',
         'wizards/invoice_merge_view.xml',
         'views/vendor_agreement_view.xml',
+        'views/rent_agreement_view.xml',
         'views/account_invoice_view.xml',
         'views/payment_instrauction_view.xml',
     ],
