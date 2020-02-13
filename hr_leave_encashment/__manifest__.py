@@ -15,7 +15,7 @@
         'hr',
         'hr_holidays',
         ],
-    'summary': 'Earned leave encashment process is calculated ',
+    'summary': 'Earned leave encashment process is calculated(Do Not Sure What are the purpose of this module) ',
     'description': 
     """This module gives opportunity to decide user either he wants to encash his/her earned 
             leave ot not'""",        
