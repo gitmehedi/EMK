@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.tools.misc import formatLang
+import datetime
 
 
 class PurchaseRequisitionReport(models.AbstractModel):
@@ -96,7 +97,8 @@ class PurchaseRequisitionReport(models.AbstractModel):
                 report_data[val[0]]['requisition_name'] = val[1]
                 report_data[val[0]]['products'] = []
 
-                report_data[val[0]]['products'].append({'date': val[3],
+                date_str = datetime.datetime.strptime(val[3], '%Y-%m-%d').strftime('%d-%m-%Y')
+                report_data[val[0]]['products'].append({'date': date_str,
                                                         'mrr_no': val[4],
                                                         'internal_ref': val[5],
                                                         'product_name': val[6],
@@ -107,7 +109,8 @@ class PurchaseRequisitionReport(models.AbstractModel):
                                                         'due_qty': float(val[11])})
 
             else:
-                report_data[val[0]]['products'].append({'date': val[3],
+                date_str = datetime.datetime.strptime(val[3], '%Y-%m-%d').strftime('%d-%m-%Y')
+                report_data[val[0]]['products'].append({'date': date_str,
                                                         'mrr_no': val[4],
                                                         'internal_ref': val[5],
                                                         'product_name': val[6],

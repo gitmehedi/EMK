@@ -51,7 +51,7 @@
                                                 <t t-if="data['date_from'] and data['date_to']">
                                                     <strong>Date : </strong>
                                                     <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
-                                                    <strong> to </strong>
+                                                    <strong> To </strong>
                                                     <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
                                                 </t>
                                             </li>
@@ -63,15 +63,15 @@
                             <table class="table table-report-xs table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th class="text-center" style="width:7%;">Date</th>
+                                        <th class="text-center" style="width:5%;">Date</th>
                                         <th class="text-center" style="width:14%;">MRR No</th>
-                                        <th class="text-center" style="width:9%;">Internal Ref</th>
-                                        <th class="text-center" style="width:18%;">Product Name</th>
-                                        <th class="text-center" style="width:16%;">Narration</th>
+                                        <th class="text-center" style="width:7%;">Internal Ref</th>
+                                        <th class="text-center" style="width:26%;">Product Name</th>
+                                        <th class="text-center" style="width:24%;">Narration</th>
                                         <th class="text-center" style="width:6%;">Unit</th>
-                                        <th class="text-center" style="width:10%;">PR Qty</th>
-                                        <th class="text-center" style="width:10%;">MRR Qty</th>
-                                        <th class="text-center" style="width:10%;">Due Qty</th>
+                                        <th class="text-center" style="width:6%;">PR Qty</th>
+                                        <th class="text-center" style="width:6%;">MRR Qty</th>
+                                        <th class="text-center" style="width:6%;">Due Qty</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,17 +88,17 @@
                                                 </td>
                                                 <td class="text-left">
                                                     <t t-foreach="product_obj['mrr_no']" t-as="mrr_no">
-                                                        <span class="text-nowrap" t-esc="mrr_no"/><br/>
+                                                        <span t-esc="mrr_no"/><br/>
                                                     </t>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="text-nowrap" t-esc="product_obj['internal_ref']"/>
+                                                    <span t-esc="product_obj['internal_ref']"/>
                                                 </td>
                                                 <td class="text-left">
-                                                    <span class="text-nowrap" t-esc="product_obj['product_name']"/>
+                                                    <span t-esc="product_obj['product_name']"/>
                                                 </td>
                                                 <td class="text-left">
-                                                    <span class="text-nowrap" t-esc="product_obj['narration']"/>
+                                                    <span t-esc="product_obj['narration']"/>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="text-nowrap" t-esc="product_obj['unit']"/>
