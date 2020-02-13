@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_rent_payment_instruction_wizard" model="ir.ui.view">
+        <field name="name">rent.payment.instruction.wizard.form</field>
+        <field name="model">rent.payment.instruction.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rent Payment Instruction">
+                <group>
+                    <group>
+                        <field name="rent_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Confirm" name="action_confirm" type="object"
+                            confirm="Are you sure to generate payment instruction?" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

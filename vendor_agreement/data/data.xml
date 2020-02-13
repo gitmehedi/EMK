@@ -29,14 +29,12 @@
         </record>
 
         <act_window id="action_rent_agreement_wizard"
-                    name="Generate Rent Payment"
-                    res_model="agreement"
+                    name="Rent Agreement"
                     src_model="agreement"
+                    res_model="rent.payment.instruction.wizard"
                     view_type="form"
                     view_mode="form"
                     key2="client_action_multi"
-                    target="new"
-                    groups=""/>
-
+                    target="new"/>
     </data>
 </odoo>
