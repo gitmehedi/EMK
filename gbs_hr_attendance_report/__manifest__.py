@@ -11,7 +11,7 @@
         'gbs_hr_employee',
         'hr_employee_operating_unit',
         'gbs_hr_attendance_utility',
-        'gbs_hr_device_config',
+        #'gbs_hr_device_config',
         'report_layout',
     ],
     'data': [
