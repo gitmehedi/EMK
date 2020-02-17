@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.tools.misc import formatLang
+from collections import OrderedDict
 import datetime
 
 
@@ -25,29 +26,33 @@ class PurchaseRequisitionReport(models.AbstractModel):
                     LEFT JOIN product_product AS pp ON pp.id = prl.product_id
                     LEFT JOIN product_template AS pt ON pt.id = pp.product_tmpl_id
                     LEFT JOIN product_uom AS pu ON pu.id = prl.product_uom_id
-                    LEFT JOIN ((SELECT
-                                pr.id AS requisition_id,
-                                array_agg(sp.mrr_no) AS mrr_no
-                            FROM
-                                stock_picking AS sp
-                                JOIN purchase_order AS po ON po.name = sp.origin AND po.purchase_by IN ('cash', 'credit', 'tt')
-                                JOIN purchase_requisition AS pr ON pr.id = po.requisition_id
-                            WHERE
-                                sp.check_mrr_button = true
-                            GROUP BY
-                                pr.id)
-                            UNION ALL
-                            (SELECT
-                                pr.id AS requisition_id,
-                                array_agg(sp.mrr_no) AS mrr_no
-                            FROM
-                                po_lc_rel AS plr
-                                JOIN purchase_order AS po ON po.id = plr.po_id AND po.purchase_by = 'lc'
-                                JOIN purchase_requisition AS pr ON pr.id = po.requisition_id
-                                JOIN letter_credit AS lc ON lc.id = plr.lc_id
-                                JOIN stock_picking AS sp ON sp.origin = lc.name AND sp.check_mrr_button = true
-                            GROUP BY
-                                pr.id)) AS tbl_temp ON tbl_temp.requisition_id = pr.id
+                    LEFT JOIN ((SELECT 
+                                    tbl_map.pr_line_id,
+                                    array_agg(sp.mrr_no) AS mrr_no
+                                FROM 
+                                    po_pr_line_rel tbl_map
+                                    LEFT JOIN purchase_order_line po_line ON po_line.id = tbl_map.po_line_id
+                                    LEFT JOIN purchase_order po ON po.id = po_line.order_id
+                                    LEFT JOIN stock_picking sp ON sp.origin = po.name
+                                WHERE 
+                                    po.purchase_by IN ('cash', 'credit', 'tt') AND sp.check_mrr_button = true
+                                GROUP BY
+                                    tbl_map.pr_line_id)
+                                UNION ALL
+                                (SELECT 
+                                    tbl_map.pr_line_id,
+                                    array_agg(sp.mrr_no) AS mrr_no
+                                FROM 
+                                    po_pr_line_rel tbl_map
+                                    LEFT JOIN purchase_order_line po_line ON po_line.id = tbl_map.po_line_id
+                                    LEFT JOIN purchase_order po ON po.id = po_line.order_id 
+                                    LEFT JOIN po_lc_rel tbl_map2 ON tbl_map2.po_id = po.id
+                                    LEFT JOIN letter_credit lc ON lc.id = tbl_map2.lc_id
+                                    LEFT JOIN stock_picking sp ON sp.origin = lc.name
+                                WHERE 
+                                    po.purchase_by = 'lc' AND sp.check_mrr_button = true
+                                GROUP BY
+                                    tbl_map.pr_line_id)) AS tbl_temp ON tbl_temp.pr_line_id = prl.id
                 WHERE
                     pr.operating_unit_id IN (%s)
     """
@@ -72,7 +77,7 @@ class PurchaseRequisitionReport(models.AbstractModel):
     @api.multi
     def get_data(self, data):
         # REPORT DATA (dictionary)
-        report_data = {}
+        report_data = OrderedDict()
 
         if data['pr_no']:
             self.sql_str += " AND pr.name = '%s'" % (data['pr_no'])
@@ -84,7 +89,7 @@ class PurchaseRequisitionReport(models.AbstractModel):
             self.sql_str += " AND (prl.product_ordered_qty - COALESCE(prl.mrr_qty, 0)) <> 0"
 
         # ORDER BY
-        self.sql_str += " ORDER BY pr.id, prl.product_id, DATE(pr.requisition_date)"
+        self.sql_str += " ORDER BY DATE(pr.requisition_date), pr.id"
 
         # QUERY EXECUTION
         # self._cr.execute(self.sql_str, (data['date_from'], data['date_to']))
