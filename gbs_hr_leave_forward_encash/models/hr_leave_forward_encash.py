@@ -25,7 +25,7 @@ class LeaveForwardEncash(models.Model):
     
     line_ids = fields.One2many('hr.leave.forward.encash.line','parent_id', string="Line Ids")
 
-    exe_leave_year = fields.Many2one('date.range', string="Execution Year", required='True')
+    exe_leave_year = fields.Many2one('date.range', string="Execution(Current) Year", required='True', domain="[('type_name', '=','Holiday Year' )]")
 
     company_id = fields.Many2one('res.company', string='Company', required='True',
                                  default=lambda self: self.env['res.company']._company_default_get())
@@ -71,10 +71,9 @@ class LeaveForwardEncash(models.Model):
 
     @api.model
     def _default_leave(self):
-        return self.env['date.range'].search([], limit=1)
+        return self.env['date.range'].search([('type_name', '=','Holiday Year' )], limit=1)
 
-    carry_forward_year = fields.Many2one('date.range', string="Encashment Year", default=_default_leave,
-                                         required='True')
+    carry_forward_year = fields.Many2one('date.range', string="Encashment(Last) Year", required='True', domain="[('type_name', '=','Holiday Year' )]")
 
     @api.constrains('name')
     def _check_unique_constraint(self):

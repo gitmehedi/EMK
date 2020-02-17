@@ -18,7 +18,7 @@
         'hr_holidays_leave_year',
       #  'hr_earned_leave',
         ],
-    'summary': 'Leave carry forward process is calculated ',
+    'summary': 'Leave carry forward process is calculated(Not Sure What are the purpose of this module) ',
     'description': 
     """This module gives opportunity to decide user either he wants to carry forward his/her leaves
             leave ot not'""",        
