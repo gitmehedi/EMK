@@ -23,6 +23,7 @@
         'data/data.xml',
         'security/ir_rule.xml',
         'security/ir.model.access.csv',
+        'views/menu.xml',
         'wizards/amendment_agreement_view.xml',
         'wizards/agreement_payment_instruction_wizard_view.xml',
         'wizards/rent_payment_instruction_wizard_view.xml',

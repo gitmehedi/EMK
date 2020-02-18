@@ -284,6 +284,6 @@
         <menuitem id="agreement_account.agreement_menu" action="vendor_agreement_action"
                   name="Vendor Agreements"
                   groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
-                  parent="account.menu_finance_payables" sequence="30"/>
+                  parent="menu_agreements" sequence="30"/>
     </data>
 </odoo>

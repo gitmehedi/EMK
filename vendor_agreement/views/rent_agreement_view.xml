@@ -312,6 +312,6 @@
 
         <menuitem id="rent_agreement_menu" action="rent_agreement_action"
                   name="Rent Agreements" groups="base.group_no_one"
-                  parent="account.menu_finance_payables" sequence="35"/>
+                  parent="menu_agreements" sequence="35"/>
     </data>
 </odoo>
