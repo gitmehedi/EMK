@@ -3,8 +3,8 @@ from odoo.exceptions import ValidationError
 from datetime import datetime
 
 
-class PurchaseRequisitionWizard(models.TransientModel):
-    _name = 'purchase.requisition.wizard'
+class PurchaseRequisitionSummaryWizard(models.TransientModel):
+    _name = 'purchase.requisition.summary.wizard'
 
     pr_no = fields.Char(string='Purchase Req. No.')
     date_from = fields.Date(string='Date From')
@@ -52,4 +52,4 @@ class PurchaseRequisitionWizard(models.TransientModel):
         data['operating_unit_name'] = self.get_operating_unit_name()
         data['is_only_pending'] = self.is_only_pending
 
-        return self.env['report'].get_action(self, 'gbs_purchase_report.report_purchase_requisition', data=data)
+        return self.env['report'].get_action(self, 'purchase_reports.report_pr_summary', data=data)

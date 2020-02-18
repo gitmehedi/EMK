@@ -4,8 +4,8 @@ from collections import OrderedDict
 import datetime
 
 
-class PurchaseRequisitionReport(models.AbstractModel):
-    _name = 'report.gbs_purchase_report.report_purchase_requisition'
+class PurchaseRequisitionSummaryReport(models.AbstractModel):
+    _name = 'report.purchase_reports.report_pr_summary'
 
     sql_str = """SELECT
                     pr.id AS requisition_id,
@@ -66,7 +66,7 @@ class PurchaseRequisitionReport(models.AbstractModel):
             'formatLang': self.format_lang,
         }
 
-        return self.env['report'].render('gbs_purchase_report.report_purchase_requisition', docargs)
+        return self.env['report'].render('purchase_reports.report_pr_summary', docargs)
 
     @api.multi
     def format_lang(self, value):

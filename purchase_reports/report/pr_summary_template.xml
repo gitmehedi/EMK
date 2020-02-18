@@ -2,16 +2,16 @@
 <odoo>
     <data>
         <report
-                id="action_report_purchase_requisition"
+                id="action_report_pr_summary"
                 model="purchase.requisition"
                 string="Purchase Requisition Summary Report"
                 report_type="qweb-pdf"
                 menu="False"
-                name="gbs_purchase_report.report_purchase_requisition"
-                file="gbs_purchase_report.report_purchase_requisition"
+                name="purchase_reports.report_pr_summary"
+                file="purchase_reports.report_pr_summary"
                 paperformat="report_layout.paperformat_backend_landscape"
         />
-        <template id="report_purchase_requisition">
+        <template id="report_pr_summary">
             <t t-call="report.html_container">
                  <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto;">

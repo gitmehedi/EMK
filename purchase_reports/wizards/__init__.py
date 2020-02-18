@@ -1,3 +1,5 @@
 import pending_purchase_report_wizard
 import purchase_matrial_req_wizard
 import purchase_summary_wizards
+import pr_summary_wizard
+import pr_summary_wizard_2
