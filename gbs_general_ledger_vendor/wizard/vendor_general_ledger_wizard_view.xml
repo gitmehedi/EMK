@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="vendor_general_ledger_wizard_view" model="ir.ui.view">
+			<field name="name">vendor.general.ledger.wizard</field>
+			<field name="model">vendor.general.ledger.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+						<group>
+							<field name="target_move" widget="radio"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="date_from"/>
+						</group>
+						<group>
+							<field name="display_account" widget="radio"/>
+							<field name="date_to"/>
+						</group>
+                    </group>
+                    <footer>
+                        <button name ="button_export_xlsx" string="Export" type="object" class="oe_highlight"/>
+<!--                        <button name ="button_print_pdf" string="Print" type="object" class="oe_highlight"/>-->
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+
+		<act_window id="action_vendor_general_ledger_wizard"
+            key2="client_print_multi"
+            name="General Ledger (Vendor)"
+            res_model="vendor.general.ledger.wizard"
+            src_model="res.partner"
+            groups="account.group_account_manager"
+            view_mode="form" target="new" view_type="form" />
+
+    </data>
+</odoo>

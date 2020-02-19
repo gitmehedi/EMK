@@ -13,9 +13,12 @@
         'report/pending_purchase_templates.xml',
         'report/purchase_matrial_req_template.xml',
         'report/purchase_summary_template.xml',
+        'report/pr_summary_template.xml',
         'wizards/pending_purchase_report_wizard.xml',
         'wizards/purchase_matrial_req_wizard.xml',
         'wizards/purchase_summary_wizards.xml',
+        'wizards/pr_summary_wizard.xml',
+        'wizards/pr_summary_wizard_2.xml',
         'view/menu_items.xml',
     ],
     

@@ -1,5 +1,4 @@
 from odoo import api, fields, models, _
-from datetime import datetime
 
 
 class HrLeaveSummaryReport(models.AbstractModel):
@@ -56,20 +55,6 @@ class HrLeaveSummaryReport(models.AbstractModel):
                 'avail': 0,
                 'balance': 0
             } for v in header}} for val in self._cr.fetchall()}
-        #-----
-        year = int(data['year_id'])
-
-        year_obj = self.env['date.range'].search([('id', '=', year)])
-
-        if data['from_date']:
-            from_date = "'"+str(data['from_date'])+"'"
-        else:
-            from_date = "'"+str(year_obj.date_start)+"'"
-        if data['to_date']:
-            to_date = "'"+str(data['to_date'])+"'"
-        else:
-            to_date = "'"+str(year_obj.date_end)+"'"
-        #------
 
         sql = '''
                 SELECT he.id,
@@ -88,16 +73,16 @@ class HrLeaveSummaryReport(models.AbstractModel):
                        AND he.department_id   %s
                        AND hhl.leave_year_id=%s
                        AND hhl.state='validate'
-                       AND hhl.date_from >= %s
-                       AND hhl.date_to <= %s
                 GROUP  BY he.name_related, 
                           he.id, 
                           hhls.id,
                           hhl.type
-                ''' % (data['operating_unit_id'], department, data['year_id'], from_date, to_date)
+                ''' % (data['operating_unit_id'], department, data['year_id'])
+
         self._cr.execute(sql)
         for record in self._cr.fetchall():
             rec = leaves[record[0]]['leave'][record[2]]
+
             rec['balance'] = rec['balance'] + record[4]
             if record[1] == 'remove':
                 rec['avail'] = rec['avail'] + abs(record[4])
