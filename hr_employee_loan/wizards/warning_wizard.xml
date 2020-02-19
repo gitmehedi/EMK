@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_loan_apply_warning" model="ir.ui.view">
+        <field name="name">Loan Warning</field>
+        <field name="model">hr.employee.loan.apply.warning</field>
+        <field name="arch" type="xml">
+            <form string="Warning" version="7.0">
+                <group>
+                    <label string="The requested Principal Amount is bigger than the Max Limit. Do you want to continue?"/>
+                </group>
+                <footer>
+                    <button name="action_apply" string="Yes" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_loan_approve_warning" model="ir.ui.view">
+        <field name="name">Loan Warning</field>
+        <field name="model">hr.employee.loan.approve.warning</field>
+        <field name="arch" type="xml">
+            <form string="Warning" version="7.0">
+                <group>
+                    <label string="The requested Principal Amount is bigger than the Max Limit. Do you want to continue?"/>
+                </group>
+                <footer>
+                    <button name="action_approve" string="Yes" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

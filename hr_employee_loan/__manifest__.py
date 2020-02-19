@@ -16,6 +16,7 @@
         'views/hr_employee_loan_view.xml',
         'views/hr_employee_loan_type_view.xml',
         'reports/hr_employee_loan_report.xml',
+        'wizards/warning_wizard.xml'
     ],
     
     'summary': 'Calculates Employees Loan',

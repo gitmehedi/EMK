@@ -1,4 +1,4 @@
-from odoo import models, fields,_
+from odoo import models, fields,exceptions,_
 import datetime
 from dateutil.relativedelta import relativedelta
 from odoo import api
@@ -55,9 +55,9 @@ class HrEmployeeLoanRequest(models.Model):
                                   required=True, ondelete='cascade', index=True,
                                   states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     department_id = fields.Many2one('hr.department', string="Department",ondelete='cascade', related="employee_id.department_id")
-    employee_loan_proof_ids = fields.Many2many('hr.employee.loan.proof', string='Proofs',
+    employee_loan_proof_ids = fields.Many2many('hr.employee.loan.proof', string='Proofs',relation='employee_loan_proof_rel',
                                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
-    employee_loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string='Policies',
+    employee_loan_policy_ids = fields.Many2many('hr.employee.loan.policy', relation='employee_loan_policy_rel', string='Policies',
                                     states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company',ondelete='cascade', default=lambda self: self.env.user.company_id, readonly='True')
     user_id = fields.Many2one('res.users', string='User')
@@ -82,9 +82,9 @@ class HrEmployeeLoanRequest(models.Model):
     def onchange_loan_type_id(self):
         if self.loan_type_id and self.loan_type_id.loan_proof_ids:
             self.employee_loan_proof_ids = self.loan_type_id.loan_proof_ids
-            
+
         if self.loan_type_id and self.loan_type_id.loan_policy_ids:
-            self.employee_loan_policy_ids = self.loan_type_id.loan_policy_ids  
+            self.employee_loan_policy_ids = self.loan_type_id.loan_policy_ids
         
     @api.multi
     def action_confirm(self):
@@ -97,17 +97,106 @@ class HrEmployeeLoanRequest(models.Model):
         self.disbursement_date = datetime.datetime.now()
 
     @api.multi
+    def check_policy(self, loan_id, state):
+        warning = False
+        warning_msg = "Warning!!!Please check the following issues!!!\n"
+        blocker = False
+        blocker_msg = "Loan Request can not be applied because of the following reasons:\n"
+
+        for policy in loan_id.employee_loan_policy_ids:
+            rec = {
+                'loan_amount': loan_id.principal_amount,
+                'policy': policy,
+                'employee_id': loan_id.employee_id.id
+            }
+            if policy.check_on_application and state == "apply":
+
+                result = self._check_individual_policy(rec)
+
+                if result:
+                    if not result['state']:
+                        if policy.check_on_application_blocker_type == 'warning':
+                            warning = True
+                            warning_msg = warning_msg+"\n"+result['msg']
+                        elif policy.check_on_application_blocker_type == 'blocker':
+                            blocker = True
+                            blocker_msg = blocker_msg+"\n"+result['msg']
+
+            elif policy.check_on_approval and state == "approve":
+
+                result = self._check_individual_policy(rec)
+
+                if result:
+                    if not result['state']:
+                        if policy.check_on_approval_blocker_type == 'warning':
+                            warning = True
+                            warning_msg = warning_msg+"\n"+result['msg']
+                        elif policy.check_on_approval_blocker_type == 'blocker':
+                            blocker = True
+                            blocker_msg = blocker_msg+"\n"+result['msg']
+            else:
+                pass
+        res = {
+            'warning': warning,
+            'blocker': blocker,
+            'warning_msg': warning_msg,
+            'blocker_msg': blocker_msg
+        }
+        return res
+
+    @api.multi
     def action_draft(self):
         for loan in self:
-            loan.state = 'applied'
-            loan.applied_date = datetime.datetime.now()
-            loan.name = self.env['ir.sequence'].get('emp_code_id')
+            if loan.principal_amount <= 0 or loan.installment_amount <= 0:
+                raise ValidationError(_('Principle Amount and Installment Amount must be greater than Zero!!!'))
+            check_state = "apply"
+            policy_data = self.check_policy(loan, check_state)
+            if policy_data['blocker']:
+                raise ValidationError(_(policy_data['blocker_msg']))
+            elif policy_data['warning']:
+                return {
+                    'id': 'view_loan_apply_warning',
+                    'name': 'Loan Warning',
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'hr.employee.loan.apply.warning',
+                    'view_mode': 'form',
+                    'view_type': 'form',
+                    'target': 'new'
+                }
+            else:
+                self.action_apply(loan)
+
+    @api.multi
+    def action_apply(self, loan):
+        loan.state = 'applied'
+        loan.applied_date = datetime.datetime.now()
+        loan.name = self.env['ir.sequence'].get('emp_code_id')
+
 
     @api.multi
     def action_done(self):
         for loan in self:
-            loan.state = 'approved'
-            loan.approved_date = datetime.datetime.now()
+            check_state = "approve"
+            policy_data = self.check_policy(loan, check_state)
+            if policy_data['blocker']:
+                raise ValidationError(_(policy_data['blocker_msg']))
+            elif policy_data['warning']:
+                return {
+                    'id': 'view_loan_approve_warning',
+                    'name': 'Loan Warning',
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'hr.employee.loan.approve.warning',
+                    'view_mode': 'form',
+                    'view_type': 'form',
+                    'target': 'new'
+                }
+            else:
+                self.action_approve(loan)
+
+    @api.multi
+    def action_approve(self, loan):
+        loan.state = 'approved'
+        loan.approved_date = datetime.datetime.now()
 
     @api.multi
     def generate_schedules(self):
@@ -153,6 +242,53 @@ class HrEmployeeLoanRequest(models.Model):
                 raise UserError(_('You can not delete this.'))
             loan.line_ids.unlink()
         return super(HrEmployeeLoanRequest,self).unlink()
+
+    @api.model
+    def create(self, values):
+        rec = super(HrEmployeeLoanRequest, self).create(values)
+        policy = values['employee_loan_policy_ids']
+        proof = values['employee_loan_proof_ids']
+        for val in policy:
+            self._cr.execute("INSERT INTO employee_loan_policy_rel (hr_employee_loan_id, hr_employee_loan_policy_id) values(%s, %s)",
+                                     tuple([rec.id, val[1]]))
+        # for vals in proof:
+        #     proof_id = vals[1]
+        #     self._cr.execute("INSERT INTO employee_loan_proof_rel (hr_employee_loan_id, hr_employee_loan_proof_id) values(%s, %s)",
+        #                              tuple([rec.id, proof_id]))
+        return rec
+
+    def _check_individual_policy(self, loan_info):
+        policy = loan_info['policy']
+        loan_amount = loan_info['loan_amount']
+        res = {}
+        if policy.basis_id=='flat':
+            if policy.value<loan_amount:
+                res['state'] = False
+                res['msg'] = "Policy On Max Limit:"+"\n"+"--Principal Amount is exceeding the Maximum Loan Limit"
+
+                return res
+
+        elif policy.basis_id=='percentage':
+            emp_id = loan_info['employee_id']
+            self._cr.execute("SELECT employee_id,wage FROM hr_contract WHERE employee_id = {0} ORDER BY date_start DESC LIMIT 1".format(emp_id))
+            query_data = self._cr.fetchall()
+            if query_data[0]:
+                employee_wage = query_data[0][1]
+            max_limit = (employee_wage*policy.value)/100
+            if max_limit<loan_info['loan_amount']:
+                res['state'] = False
+                res['msg'] = "Policy On Percentage of Wage:"+"\n"+"--Principal Amount is exceeding the Maximum Limit according to the wage of your latest contract"
+
+                return res
+
+        else:
+            res['state'] = True
+            res['msg'] = None
+            return res
+
+
+
+
 
 
 
