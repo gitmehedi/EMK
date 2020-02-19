@@ -9,7 +9,8 @@
 				<sheet>
                     <group>
                         <group>
-                            <field name="employee_id" options="{'no_open': True,'no_create': True, 'no_create_edit':True}"/>
+							<field name="compute_field" invisible="1"/>
+                            <field name="employee_id" options="{'no_open': True,'no_create': True, 'no_create_edit':True}" attrs="{'readonly': [('compute_field', '=', True)]}"/>
                         </group>
                     </group>
 				</sheet>

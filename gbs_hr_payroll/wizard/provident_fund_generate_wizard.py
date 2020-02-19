@@ -3,7 +3,19 @@ from odoo import models, fields, api
 class ProvidentFundWizard(models.TransientModel):
     _name = "provident.fund.wizard"
 
-    employee_id = fields.Many2one('hr.employee', string="Employee Name", required=True)
+    def _current_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
+    employee_id = fields.Many2one('hr.employee', string="Employee Name", required=True, default=_current_employee)
+    compute_field = fields.Boolean(string="check field", compute='get_user')
+
+    @api.depends('employee_id')
+    def get_user(self):
+        res_user = self.env['res.users'].search([('id', '=', self._uid)])
+        if not res_user.has_group('hr.group_hr_user') or not res_user.has_group('hr.group_hr_manager'):
+            self.compute_field = True
+        else:
+            self.compute_field = False
 
     @api.multi
     def process_print(self):
