@@ -16,7 +16,7 @@ class PurchaseRequisitionSummaryWizard2(models.TransientModel):
     @api.constrains('date_from', 'date_to', 'pr_no')
     def _check_date_validation(self):
         if not self.pr_no and not self.date_from and not self.date_to:
-            raise ValidationError(_("Give requisition no. or date range or both."))
+            raise ValidationError(_("Give Requisition No. or Between Date."))
 
         elif self.date_from and self.date_to:
             if self.date_from > self.date_to:

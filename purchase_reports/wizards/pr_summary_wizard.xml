@@ -62,11 +62,11 @@
                 action="purchase.action_purchase_order_report_all"/>
 
         <menuitem
-                name="PR Summary"
+                name="PR Summary: Unit"
                 action="action_pr_summary_wizard"
                 id="menu_pr_summary_report"
-                parent="custom_purchase_report_menu"
+                parent="stock.menu_warehouse_report"
                 groups="stock.group_stock_user"
-                sequence="10"/>
+                sequence="5"/>
     </data>
 </odoo>
