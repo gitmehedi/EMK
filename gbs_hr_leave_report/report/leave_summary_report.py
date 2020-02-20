@@ -88,8 +88,8 @@ class HrLeaveSummaryReport(models.AbstractModel):
                        AND he.department_id   %s
                        AND hhl.leave_year_id=%s
                        AND hhl.state='validate'
-                       AND hhl.date_from >= %s
-                       AND hhl.date_to <= %s
+                       AND CASE WHEN hhl.date_from IS NOT NULL THEN hhl.date_from>=%s ELSE hhl.date_from IS NULL END 
+					   AND CASE WHEN hhl.date_to IS NOT NULL THEN hhl.date_to<=%s ELSE hhl.date_to IS NULL END 
                 GROUP  BY he.name_related, 
                           he.id, 
                           hhls.id,
