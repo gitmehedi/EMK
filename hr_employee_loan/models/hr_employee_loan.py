@@ -251,10 +251,10 @@ class HrEmployeeLoanRequest(models.Model):
         for val in policy:
             self._cr.execute("INSERT INTO employee_loan_policy_rel (hr_employee_loan_id, hr_employee_loan_policy_id) values(%s, %s)",
                                      tuple([rec.id, val[1]]))
-        # for vals in proof:
-        #     proof_id = vals[1]
-        #     self._cr.execute("INSERT INTO employee_loan_proof_rel (hr_employee_loan_id, hr_employee_loan_proof_id) values(%s, %s)",
-        #                              tuple([rec.id, proof_id]))
+        for vals in proof:
+            proof_id = vals[1]
+            self._cr.execute("INSERT INTO employee_loan_proof_rel (hr_employee_loan_id, hr_employee_loan_proof_id) values(%s, %s)",
+                                     tuple([rec.id, proof_id]))
         return rec
 
     def _check_individual_policy(self, loan_info):
