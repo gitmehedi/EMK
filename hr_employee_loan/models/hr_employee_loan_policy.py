@@ -22,7 +22,20 @@ class HrEmployeeLoanPolicy(models.Model):
         ], string = 'Policy Type')
 
     basis_id = fields.Selection([
-        ('flat', 'Fix Amount')], string = 'Basis')
+        ('flat', 'Fix Amount'),
+        ('percentage', 'Percentage On Contract')], string = 'Basis')
+
+    """Check-On Fields"""
+    check_on_application = fields.Boolean(string='Check On Application', default=False)
+    check_on_application_blocker_type = fields.Selection([
+            ('warning', 'Warning'),
+            ('blocker', 'Blocker')
+        ], 'Application Blocker Type')
+    check_on_approval = fields.Boolean(string='Check On Approval', default=False)
+    check_on_approval_blocker_type = fields.Selection([
+        ('warning', 'Warning'),
+        ('blocker', 'Blocker')
+    ], 'Approval Blocker Type')
 
 
 

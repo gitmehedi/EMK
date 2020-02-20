@@ -15,9 +15,13 @@
 							<field name="policy_type_id" />
 							<field name="basis_id" />
 							<field name="value" />
+							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
 						</group>
 						<group>
-							<field name="company_id" readonly="1" groups="base.group_multi_company"/>	
+							<field name="check_on_application"/>
+							<field name="check_on_application_blocker_type" attrs="{'invisible': [('check_on_application', '=', False)]}"/>
+							<field name="check_on_approval"/>
+							<field name="check_on_approval_blocker_type" attrs="{'invisible': [('check_on_approval', '=', False)]}"/>
 						</group>
 					</group>
 					<notebook position="inside" invisible="1">
@@ -25,7 +29,7 @@
 							<field name="employee_tag_ids" />	
 						</page>
 						<page string="Employee's">
-							<field name="employee_ids" />		
+							<field name="employee_ids"/>
 						</page>
 					</notebook>
 					</sheet>
