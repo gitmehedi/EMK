@@ -6,7 +6,7 @@ class FinalSettlement(models.Model):
     _rec_name = 'employee_id'
     _description = 'Employee Exit Full & Final Settlement'
 
-    employee_code = fields.Char('Employee Code',related='employee_id.employee_number',readonly=True)
+    employee_code = fields.Char('Employee Code',related='employee_id.identification_id',readonly=True)
     employee_id = fields.Many2one('hr.employee',string = 'Employee',required=True, track_visibility='onchange',domain = [('state', '=', 'relieved')])
     emp_designation = fields.Many2one('hr.job', string='Designation', related='employee_id.job_id',readonly=True)
     joining_date = fields.Date(related='employee_id.initial_employment_date', string='Date of Join', readonly=True)
