@@ -6,8 +6,7 @@ class EmployeeEixtInterview(models.Model):
     _rec_name = 'employee_id'
     _description = 'Employee Exit Interview'
 
-
-    employee_code = fields.Char('Employee Code',related='employee_id.employee_number',readonly=True)
+    employee_code = fields.Char('Employee Code',related='employee_id.identification_id',readonly=True)
     location = fields.Char('Location',related='employee_id.work_location', readonly=True)
     joining_date = fields.Date(related='employee_id.initial_employment_date', string='Date Of Join', readonly=True)
     resignation_date = fields.Date(string='Date of Resignation',readonly=True)
@@ -45,8 +44,6 @@ class EmployeeEixtInterview(models.Model):
             self.resignation_date = emp.req_date
         else:
             pass
-
-
 
     @api.multi
     def action_reset(self):
