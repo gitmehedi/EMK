@@ -97,4 +97,13 @@ class InheritedHrAttendancePayslip(models.Model):
                     'name': 'Unpaid Holiday(s)',
                 })
 
+            ### Not in Service Days
+            if summary_line_data.nis_days > 0:
+                worked_days_lines += worked_days_lines.new({
+                    'code': 'NIS',
+                    'contract_id': self.contract_id.id,
+                    'number_of_days': summary_line_data.nis_days or 0,
+                    'name': 'Not-in-Service Day(s)',
+                })
+
             self.worked_days_line_ids = worked_days_lines
