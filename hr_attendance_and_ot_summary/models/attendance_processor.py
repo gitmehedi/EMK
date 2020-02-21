@@ -72,6 +72,11 @@ class AttendanceProcessor(models.Model):
         hr_employee_pool = self.env['hr.employee']
 
         employee = hr_employee_pool.search(['&', ('id', '=', employeeId), '|', ('active', '=', True), ('active', '=', False)])
+        if len(employee.initial_employment_date)>0:
+            initial_employment_date = self.getDateFromStr(employee.initial_employment_date)
+        else:
+            initial_employment_date = False
+
         day = datetime.timedelta(days=1)
 
         # Get Date from Account Period
@@ -93,7 +98,12 @@ class AttendanceProcessor(models.Model):
         attSummaryLine = TempAttendanceSummaryLine()
 
         if len(dutyTimeMap) != 0: # Check Rostering data are centered or not
+
             currDate = startDate
+            if initial_employment_date and initial_employment_date > currDate:
+                attSummaryLine.nis_days = (initial_employment_date - currDate).days
+                currDate = initial_employment_date
+
             while currDate <= endDate:
 
                 if alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
@@ -110,17 +120,15 @@ class AttendanceProcessor(models.Model):
                     # Check for Holiday
                     if self.checkOnHolidays(currDate, holidayMap, employee, att_utility_pool) is True:
                         attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
-                        # return attSummaryLine
 
                     # Check for Personal Leave
                     elif att_utility_pool.checkOnPersonalLeave(employeeId, currDate) is True:
                         attSummaryLine.leave_days = attSummaryLine.leave_days + 1
-                        # return attSummaryLine
 
                     # Check for Unpaid Leave
                     elif att_utility_pool.checkOnUnpaidLeave(employeeId, currDate) is True:
                         attSummaryLine.unpaid_holidays = attSummaryLine.unpaid_holidays + 1
-                        # return attSummaryLine
+
                     else:
                         attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
@@ -348,6 +356,7 @@ class AttendanceProcessor(models.Model):
                 'att_summary_id':   summaryId,
                 'salary_days':      salaryDays,
                 'present_days':     attSummaryLine.present_days,
+                'nis_days':         attSummaryLine.nis_days,
                 'holidays_days':    attSummaryLine.holidays_days,
                 'leave_days':       attSummaryLine.leave_days,
                 'unpaid_holidays':  attSummaryLine.unpaid_holidays,

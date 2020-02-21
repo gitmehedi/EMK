@@ -90,17 +90,19 @@
 								<field name="employee_id" readonly='1'/>
 								<field name="state" invisible='1'/>
 								<field name="department_id" readonly='1'/>
-								<field name="salary_days" readonly='1'/>
-								<field name="present_days" readonly='1'/>
-								<field name="absent_days_count" invisible='1'/>
-								<field name="absent_count" readonly='1'/>
-								<field name="absent_deduction_days" groups="hr.group_hr_manager"/>
+								<field name="salary_days" string="Sal. Days" readonly='1'/>
+								<field name="present_days" string="Pr. Days" readonly='1'/>
+								<field name="weekend_days_count" readonly='1'/>
+
+								<field name="absent_days_count" string="Abs. Days" invisible='1'/>
+								<field name="absent_count" string="Abs. Days" readonly='1'/>
+								<field name="absent_deduction_days" string="Abs. Ded. Days" groups="hr.group_hr_manager"/>
 								<field name="late_days_count" readonly='1'/>
 								<field name="holidays_days" readonly='1'/>
 								<field name="leave_days" readonly='1'/>
-								<field name="unpaid_holidays" readonly='1'/>
-								<field name="weekend_days_count" readonly='1'/>
-								<field name="deduction_days" groups="hr.group_hr_manager"/>
+								<field name="unpaid_holidays" string="Unp. Holidays" readonly='1'/>
+								<field name="deduction_days" string="Lt. Ded. Days" groups="hr.group_hr_manager"/>
+								<field name="nis_days" string="NIS Days" readonly='1'/>
 								<field name="late_hrs" readonly='1' widget="float_time"/>
 								<field name="schedule_ot_hrs" readonly='1' widget="float_time"/>
 								<field name="cal_ot_hrs" readonly='1' widget="float_time"/>
