@@ -21,5 +21,16 @@
                 </data>
             </field>
         </record>
+
+        <record id="hr_employee_view_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.seniority</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_employee_seniority.hr_employee_view_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/field[@name='initial_employment_date']" position="after">
+                    <field name="last_employment_date"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

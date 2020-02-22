@@ -72,10 +72,15 @@ class AttendanceProcessor(models.Model):
         hr_employee_pool = self.env['hr.employee']
 
         employee = hr_employee_pool.search(['&', ('id', '=', employeeId), '|', ('active', '=', True), ('active', '=', False)])
-        if len(employee.initial_employment_date)>0:
+        if employee.initial_employment_date and len(employee.initial_employment_date) > 0:
             initial_employment_date = self.getDateFromStr(employee.initial_employment_date)
         else:
             initial_employment_date = False
+
+        if employee.last_employment_date and len(employee.last_employment_date) > 0:
+            last_employment_date = self.getDateFromStr(employee.last_employment_date)
+        else:
+            last_employment_date = False
 
         day = datetime.timedelta(days=1)
 
@@ -101,8 +106,12 @@ class AttendanceProcessor(models.Model):
 
             currDate = startDate
             if initial_employment_date and initial_employment_date > currDate:
-                attSummaryLine.nis_days = (initial_employment_date - currDate).days
+                attSummaryLine.nis_days = attSummaryLine.nis_days + (initial_employment_date - currDate).days
                 currDate = initial_employment_date
+
+            if last_employment_date and last_employment_date < endDate:
+                attSummaryLine.nis_days = attSummaryLine.nis_days + (endDate - last_employment_date).days
+                endDate = last_employment_date
 
             while currDate <= endDate:
 

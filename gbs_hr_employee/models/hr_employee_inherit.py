@@ -9,7 +9,14 @@ class HrEmployee(models.Model):
     tin = fields.Char(string='TIN')
 
     employee_sequence = fields.Integer("Employee Sequence")
+    last_employment_date = fields.Date(
+        string='Last Date of Employment',
+        help='Date of last employment.',
+    )
     total_pf = fields.Float(compute='_compute_total_pf', string='Total PF')
+
+    #### Need to implement _compute_months_service considering the last employement date
+    # def _compute_months_service(self):
     
     @api.multi
     def name_get(self):
