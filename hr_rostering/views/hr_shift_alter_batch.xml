@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <!--tree view-->
+        <record id="hr_shift_alter_batch_tree" model="ir.ui.view">
+			<field name="name">hr_shift_alter_batch_tree</field>
+			<field name="model">hr.shift.alter.batch</field>
+			<field name="arch" type="xml">
+				<tree string="Alter Rostering Batch">
+                    <field name="name"/>
+					<field name="alter_date" />
+					<field name="duty_start" />
+					<field name="duty_end" />
+					<field name="is_included_ot" />
+					<field name="ot_start"/>
+					<field name="ot_end"/>
+					<field name="grace_time" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+        <!--form view-->
+        <record id="hr_shift_alter_batch_form" model="ir.ui.view">
+			<field name="name">hr_shift_alter_batch_form</field>
+			<field name="model">hr.shift.alter.batch</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Alter Rostering Batch" delete ="0" create = "0">
+				 	<header>
+	                    <button string="Confirm" name="action_confirm" states="draft"
+                                type="object" class="oe_highlight"/>
+						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
+								attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                     	<button string="Reject" name="action_reject" states="confirmed" type="object"
+                                attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                    	<!--<button string="Reset to Draft" name="action_draft" type="object" states="confirmed"-->
+                                <!--groups="hr_attendance.group_hr_attendance_user"/>-->
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
+                	</header>
+					<sheet>
+						<group>
+							<group>
+                                <!--<field name="number" attrs="{'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')]} "/>-->
+								<field name="name" invisible="1"/>
+								<field name="description"/>
+								<field name="alter_date" attrs="{'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')]}"/>
+								<field name="duty_start" attrs="{'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')]}"/>
+								<field name="duty_end" attrs="{'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')]}"/>
+							</group>
+							<group>
+								<field name="is_included_ot" attrs="{'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')]}"/>
+								<field name="ot_start" attrs="{ 'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')],
+																'invisible': [('is_included_ot', '=', False)],
+																'required': [('is_included_ot', '=', True)]}"/>
+								<field name="ot_end"
+									   attrs="{ 'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')],
+									   			'invisible': [('is_included_ot', '=', False)],
+									   			'required': [('is_included_ot', '=', True)]}"/>
+								<field name="grace_time" attrs="{'readonly':['|','|', ('state','=','approved'),('state','=','confirmed'),('state','=','refuse')]}"/>
+							</group>
+						</group>
+                        <notebook>
+							<page string="Employees" groups="hr.group_hr_user">
+								<field name="shift_emp_ids" groups="hr.group_hr_user">
+									<tree>
+										<field name="name" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+	                </sheet>
+				</form>
+			</field>
+		</record>
+        <!--search view-->
+        <record id="view_hr_shift_alter_batch_filter" model="ir.ui.view">
+            <field name="name">hr.shift.alter.batch.filter</field>
+            <field name="model">hr.shift.alter.batch</field>
+            <field name="arch" type="xml">
+                <search string="Search Alter Rostering Batch">
+					<field name="shift_emp_ids"/>
+                    <filter name="to_approval" string="To Approval" domain="[('state','=','confirmed')]"/>
+				</search>
+            </field>
+        </record>
+        <record id="hr_shift_alter_batch_action" model="ir.actions.act_window">
+            <field name="name">Alter Rostering Batch</field>
+            <field name="res_model">hr.shift.alter.batch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_hr_shift_alter_batch_filter"/>
+        </record>
+
+		<record id="seq_hr_shift_alter_batch" model="ir.sequence">
+            <field name="name">Alter Batch Sequences</field>
+            <field name="code">hr.shift.alter.batch</field>
+			<field name="active">TRUE</field>
+            <field name="prefix">ARB</field>
+            <field name="padding">6</field>
+			<field name="number_next">1</field>
+			<field name="number_increment">1</field>
+        </record>
+
+
+        <menuitem id="menu_hr_alter_shift_batch" name="Alter Rostering Batch" action="hr_shift_alter_batch_action" parent="menu_hr_alter"
+					 sequence="15"/>
+    </data>
+</openerp>

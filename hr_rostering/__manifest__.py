@@ -13,6 +13,7 @@
         'views/hr_shifting_history.xml',
         'views/hr_shift_alter_view.xml',
         'views/hr_shift_employee_batch_views.xml',
+        'views/hr_shift_alter_batch.xml'
     ],
     'depends': [
         'hr',
