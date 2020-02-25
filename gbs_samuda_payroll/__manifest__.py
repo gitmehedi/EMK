@@ -6,7 +6,7 @@
     'website': 'http://www.genweb2.com',
     'category': 'payroll',
     'depends': [],
-    'data': [git ],
+    'data': [],
     'description': 'this module describes about the payroll of samuda',
     'installable': True,
     'applicable' : True,
