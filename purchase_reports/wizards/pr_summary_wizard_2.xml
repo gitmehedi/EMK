@@ -47,7 +47,7 @@
 
         <!-- menu -->
         <menuitem
-                name="PR Summary"
+                name="PR Summary: All Unit"
                 action="action_pr_summary_wizard_2"
                 id="menu_pr_summary_report_2"
                 parent="custom_purchase_report_menu"
