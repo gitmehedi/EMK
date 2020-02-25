@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--form view-->
+        <record id="hr_holiday_allowance_form" model="ir.ui.view">
+            <field name="name">hr.holiday.allowance.form</field>
+            <field name="model">hr.holiday.allowance</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Holiday Allowance" delete ="0" create = "0">
+                    <header>
+	                    <button string="Confirm" name="action_confirm" states="draft"
+                                type="object" class="oe_highlight" confirm="Are you sure you want to Confirm this?"/>
+						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
+								attrs="{'invisible': [('state', '!=', 'confirmed')]}" confirm="Are you sure you want to Approve this?"/>
+                     	<button string="Cancel" name="action_cancel" states="confirmed" type="object"
+                                attrs="{'invisible': [('state', '!=', 'confirmed')]}" confirm="Are you sure you want to Cancel this?"/>
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
+                	</header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code" invisible="1"/>
+                                <field name="description" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="allowance_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+							<page string="Employees">
+								<field name="allowance_line" attrs="{'readonly': [('state', '!=', 'draft')]}">
+									<tree string="Employees" editable="bottom">
+										<field name="employee_id"/>
+                                        <field name="emp_allowance_date" readonly="1"/>
+                                        <field name="state" invisible="1"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+                        <div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--tree view-->
+        <record id="hr_holiday_allowance_tree" model="ir.ui.view">
+            <field name="name">hr.holiday.allowance.tree</field>
+            <field name="model">hr.holiday.allowance</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Holiday Allowance">
+                    <field name="code"/>
+					<field name="allowance_date"/>
+					<field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <!--search view-->
+        <record id="hr_holiday_allowance_search" model="ir.ui.view">
+            <field name="name">hr.holiday.allowance.filter</field>
+            <field name="model">hr.holiday.allowance</field>
+            <field name="arch" type="xml">
+                <search string="Confirmed">
+                    <filter name="confirm_allowance" string="Confirmed Allowance" domain="[('state','=','confirmed')]"/>
+                	<separator/>
+                    <filter name="approved_allowance" string="Approved Allowance" domain="[('state','=','approved')]"/>
+				</search>
+            </field>
+        </record>
+        <!--action view-->
+        <record id="action_hr_holiday_allowance_view" model="ir.actions.act_window">
+            <field name="name">Draft Holiday Allowance</field>
+            <field name="res_model">hr.holiday.allowance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hr_holiday_allowance_search"/>
+            <field name="context">{}</field>
+        </record>
+        <!--sequence for name-->
+        <record id="seq_hr_holiday_allowance" model="ir.sequence">
+            <field name="name">Holiday Allowance Sequences</field>
+            <field name="code">hr.holiday.allowance</field>
+			<field name="active">TRUE</field>
+            <field name="prefix">HA</field>
+            <field name="padding">4</field>
+			<field name="number_increment">1</field>
+        </record>
+        <menuitem id="menu_holiday_allowance" name="Holiday Allowance" parent="hr.menu_hr_root"
+					 sequence="93"/>
+        <menuitem id="menu_holiday_allowance_button" name="Holiday Allowance"
+                  parent="menu_holiday_allowance" action="action_hr_holiday_allowance_view"
+                  sequence="5"/>
+    </data>
+</odoo>

@@ -5,6 +5,7 @@ from openerp.exceptions import UserError, ValidationError
 class HRShiftAlterBatch(models.Model):
     _name = 'hr.shift.alter.batch'
     _inherit = ['mail.thread']
+    _description = 'HR Alter Roster Batch'
 
     name = fields.Char("Batch Name", required=True, readonly=True, copy=False, default='/')
     description = fields.Char(string='Description', required=False)
@@ -33,7 +34,7 @@ class HRShiftAlterBatch(models.Model):
     def action_confirm(self):
         for record in self:
             if not record.shift_emp_ids:
-                raise ValidationError(_('Please select at least one employee!!'))
+                raise ValidationError(_('Please select at least one employee before confirming!!'))
             record.state = 'confirmed'
 
     @api.multi
