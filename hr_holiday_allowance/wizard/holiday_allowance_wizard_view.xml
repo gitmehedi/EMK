@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_holiday_allowance_wizard" model="ir.ui.view">
+            <field name="name">HR Holiday Allowance</field>
+            <field name="model">hr.holiday.allowance.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Employees">
+                    <group col="3">
+                        <group><field name="allowance_date" readonly="1"/></group>
+                    </group>
+                    <group colspan="4" >
+                        <separator string="Employees" colspan="4"/>
+                        <newline/>
+                        <field name="employee_ids" nolabel="1">
+                        	<tree string="List" editable="bottom">
+                        		<field name="name"/>
+                        		<field name="operating_unit_id"/>
+                                <field name="company_id"/>
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                        	</tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button icon="fa-cogs" string="Generate" name="generate_record" type="object" class="oe_highlight"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_holiday_allowance_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Allowance Batch</field>
+            <field name="res_model">hr.holiday.allowance.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_hr_holiday_allowance_wizard"/>
+            <field name="context">{'default_allowance_date': context.get('allowance_date', False)}</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+
+</odoo>

@@ -5,6 +5,7 @@
     'category': 'Human Resources',
     'version': '1.0',
     'data': [
+        'wizard/holiday_allowance_wizard_view.xml',
         'views/holiday_allowance_view.xml'
     ],
     'depends': [

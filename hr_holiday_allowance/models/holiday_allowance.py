@@ -52,6 +52,12 @@ class HrHolidayAllowance(models.Model):
         vals['code'] = number
         return super(HrHolidayAllowance, self).create(vals)
 
+    def unlink(self):
+        for line in self:
+            if line.state != "draft":
+                raise exceptions.UserError(
+                    ('Cannot delete a record which is in state \'%s\'.') % (line.state,))
+        return super(HrHolidayAllowance, self).unlink()
 
 
 
@@ -59,7 +65,7 @@ class HrHolidayAllowanceLine(models.Model):
 
     _name = 'hr.holiday.allowance.line'
 
-    employee_id = fields.Many2one('hr.employee',string="Employee",
+    employee_id = fields.Many2one('hr.employee',string="Employee", required=True,
                                   states={'draft': [('readonly', False)],
                                          'confirmed': [('readonly', True)],
                                          'approved': [('readonly', True)],
@@ -72,4 +78,25 @@ class HrHolidayAllowanceLine(models.Model):
         ('approved', "Approved"),
         ('cancel', 'Cancelled')
     ], default='draft', track_visibility='onchange')
+
+    def unlink(self):
+        for line in self:
+            if line.state != "draft":
+                raise exceptions.UserError(
+                    ('Cannot delete a Allowance Line which is in state \'%s\'.') % (line.state))
+        return super(HrHolidayAllowanceLine, self).unlink()
+
+    @api.constrains('employee_id')
+    def __check_employee_id_validation(self):
+        active_id = self.env.context.get('active_id')
+        self._cr.execute(
+            "SELECT employee_id FROM hr_holiday_allowance_line WHERE id != %s AND holiday_allowance_id = %s",
+            tuple([self.id, active_id]))
+        emp_data = self._cr.fetchall()
+        if emp_data:
+            emp_list = [data[0] for data in emp_data]
+            if self.employee_id.id in emp_list:
+                raise ValidationError(_(
+                    "This employee is already selected: %s!!") % (
+                    self.employee_id.name))
 
