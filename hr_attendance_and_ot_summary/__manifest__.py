@@ -31,6 +31,7 @@
         'hr_overtime_requisition',
         'hr_employee_seniority',
         'hr_attendance_settings',
+        'hr_holiday_allowance',
         'report_layout'
     ],
     

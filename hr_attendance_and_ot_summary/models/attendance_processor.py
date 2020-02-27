@@ -113,33 +113,39 @@ class AttendanceProcessor(models.Model):
                 attSummaryLine.nis_days = attSummaryLine.nis_days + (endDate - last_employment_date).days
                 endDate = last_employment_date
 
+            # 'hr.holiday.allowance'
+            holidayAlwMap = att_utility_pool.getHolidayAlwByEmployee(employeeId, currDate, endDate)
+
             while currDate <= endDate:
 
-                if alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
+                # Check for Personal Leave
+                if att_utility_pool.checkOnPersonalLeave(employeeId, currDate) is True:
+                    attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+
+                # Check for Unpaid Leave
+                elif att_utility_pool.checkOnUnpaidLeave(employeeId, currDate) is True:
+                    attSummaryLine.unpaid_holidays = attSummaryLine.unpaid_holidays + 1
+
+                elif alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
                     alterDayDutyTime = alterTimeMap.get(self.getStrFromDate(currDate))
                     attendanceDayList = att_utility_pool.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap, employeeId)
                     altCurrDate = datetime.datetime.strptime(alterDayDutyTime.startDutyTime.strftime('%Y-%m-%d'), '%Y-%m-%d')
                     attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, altCurrDate, alterDayDutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool)
+
+                elif holidayAlwMap.get(currDate.strftime('%Y-%m-%d')):
+                    currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
+                    print ""
+
+                # Check for Public Holiday
+                elif self.checkOnHolidays(currDate, holidayMap, employee, att_utility_pool) is True:
+                    attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
 
                 elif dutyTimeMap.get(self.getStrFromDate(currDate)): # Check this date is week end or not. If it is empty, then means this day is weekend
                     currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
                     attendanceDayList = att_utility_pool.getAttendanceListByDay(attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap)
                     attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool)
                 else:
-                    # Check for Holiday
-                    if self.checkOnHolidays(currDate, holidayMap, employee, att_utility_pool) is True:
-                        attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
-
-                    # Check for Personal Leave
-                    elif att_utility_pool.checkOnPersonalLeave(employeeId, currDate) is True:
-                        attSummaryLine.leave_days = attSummaryLine.leave_days + 1
-
-                    # Check for Unpaid Leave
-                    elif att_utility_pool.checkOnUnpaidLeave(employeeId, currDate) is True:
-                        attSummaryLine.unpaid_holidays = attSummaryLine.unpaid_holidays + 1
-
-                    else:
-                        attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
+                    attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
                 currDate = currDate + day
         else:

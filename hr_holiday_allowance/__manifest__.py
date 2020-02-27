@@ -10,11 +10,11 @@
         'views/holiday_allowance_view.xml'
     ],
     'depends': [
-        'gbs_hr_payroll'
+        'hr_payroll'
     ],
 
     'description':
         "This module enables employee Holiday Allowance",
     'installable': True,
-    'application': True,
+    'application': False,
 }

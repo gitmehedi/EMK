@@ -5,12 +5,22 @@ from odoo.exceptions import UserError, ValidationError
 
 class HrHolidayAllowance(models.Model):
     _name = 'hr.holiday.allowance'
-    _description = 'Hr Holiday Allowance'
+    _description = 'Holiday Allowance'
     _inherit = ['mail.thread']
     _rec_name = 'code'
 
     code = fields.Char("Allowance Code", required=True, readonly=True, copy=False, default='New')
     allowance_date = fields.Date("Allowance Date", required=True,
+                                 states={'draft': [('readonly', False)],
+                                         'confirmed': [('readonly', True)],
+                                         'approved': [('readonly', True)],
+                                         'cancel': [('readonly', True)]})
+    start_time = fields.Datetime("Start Time", required=False,
+                                 states={'draft': [('readonly', False)],
+                                         'confirmed': [('readonly', True)],
+                                         'approved': [('readonly', True)],
+                                         'cancel': [('readonly', True)]})
+    end_time = fields.Datetime("End Time", required=False,
                                  states={'draft': [('readonly', False)],
                                          'confirmed': [('readonly', True)],
                                          'approved': [('readonly', True)],

@@ -68,6 +68,19 @@ class AttendanceUtility(models.TransientModel):
         # self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
         return dutyTimeMap
 
+    def getHolidayAlwByEmployee(self, employeeID, fromDate, toDate):
+        result = {}
+
+        lines = self.env['hr.holiday.allowance.line'].search([('emp_allowance_date', '>=', fromDate),
+                                                             ('emp_allowance_date', '<=', toDate),
+                                                             ('state', '=', 'approved'),
+                                                             ('employee_id', '=', employeeID)])
+        if lines:
+            for l in lines:
+                result[l.emp_allowance_date] = True
+
+        return result
+
     def isSetRosterByEmployeeId(self, employeeId, preStartDate, postEndDate):
         # Getting Shift Ids for an employee
         self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate, preStartDate, postEndDate))
