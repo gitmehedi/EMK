@@ -10,11 +10,7 @@
         'views/holiday_allowance_view.xml'
     ],
     'depends': [
-        'hr',
-        'resource',
-        'operating_unit',
-        'hr_employee_operating_unit',
-        'gbs_hr_package'
+        'gbs_hr_payroll'
     ],
 
     'description':
