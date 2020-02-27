@@ -46,6 +46,13 @@ class HrHolidayAllowance(models.Model):
             for line in record.allowance_line:
                 line.write({'state': 'approved'})
 
+    @api.multi
+    def action_cancel(self):
+        for record in self:
+            record.state = 'cancel'
+            for line in record.allowance_line:
+                line.write({'state': 'cancel'})
+
     @api.model
     def create(self, vals):
         number = self.env['ir.sequence'].sudo().next_by_code('hr.holiday.allowance') or 'New'

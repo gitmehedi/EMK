@@ -5,6 +5,7 @@
     'category': 'Human Resources',
     'version': '1.0',
     'data': [
+        'security/ir.model.access.csv',
         'wizard/holiday_allowance_wizard_view.xml',
         'views/holiday_allowance_view.xml'
     ],
@@ -13,8 +14,7 @@
         'resource',
         'operating_unit',
         'hr_employee_operating_unit',
-        'gbs_hr_package',
-        'hr_holidays_multi_levels_approval',
+        'gbs_hr_package'
     ],
 
     'description':
