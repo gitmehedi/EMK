@@ -21,7 +21,7 @@
         'gbs_hr_holiday_hour',
         # 'gbs_hr_evaluation',
         'hr_attendance_and_ot_summary',
-        'hr_attendance_dashboard',
+        # 'hr_attendance_dashboard',
         'hr_attendance_settings',
         'hr_earned_leave',
         'hr_employee_attendance_payroll',
