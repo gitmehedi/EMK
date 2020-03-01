@@ -124,6 +124,19 @@ class AttendanceUtility(models.TransientModel):
 
         return employeeAttMap
 
+    def getDailyAttByDateAndDept(self, requestedDate, dept_id):
+        att_query = """SELECT employee_id, MIN(check_in) + interval '6h' AS check_in FROM hr_attendance att
+                        JOIN hr_employee emp ON emp.id = att.employee_id
+                        WHERE duty_date = %s AND emp.department_id = %s
+                        GROUP BY employee_id ORDER BY employee_id"""
+        self._cr.execute(att_query, (requestedDate, dept_id))
+        attLines = self._cr.fetchall()
+        employeeAttMap = {}
+        for i, att in enumerate(attLines):
+            employeeAttMap[att[0]] = self.getDateTimeFromStr(att[1])
+
+        return employeeAttMap
+
 
     def buildAlterDutyTimeForDailyAtt(self,startDate, endDate, employeeId):
         att_query = """SELECT alter_date, (duty_start+ interval '6h') AS duty_start,

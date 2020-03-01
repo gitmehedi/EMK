@@ -8,8 +8,8 @@
         #'report/report_paperformat.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
-        'views/attendance_summary_view.xml',
         'wizards/attendance_summary_wizard_views.xml',
+        'views/attendance_summary_view.xml',
         'report/hr_attendance_summary_report_template.xml',
         'report/hr_attendance_summary_report_view.xml',
 
