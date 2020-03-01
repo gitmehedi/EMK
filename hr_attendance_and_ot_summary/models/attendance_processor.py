@@ -153,9 +153,29 @@ class AttendanceProcessor(models.Model):
 
         noOfDays = (endDate - startDate).days + 1
 
+        attSummaryLine = self.checkConsecutiveAbsence(attSummaryLine)
+
         get_extra_ot = self.getExtraOT(startDate, endDate, employeeId)
 
         self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine, get_extra_ot)
+
+    def checkConsecutiveAbsence(self, attSummaryLine):
+
+        if len(attSummaryLine.absent_days) > 1:
+            day1 = datetime.timedelta(days=1)
+            weekend_days = []
+            consecutive = False
+            for wkd in attSummaryLine.weekend_days:
+                weekend_days.append(wkd.date)
+            for abs_day in attSummaryLine.absent_days:
+                if (abs_day.date + day1) in weekend_days:
+                    consecutive = True
+                    next_expected_abs = abs_day.date + day1 + day1
+
+                if consecutive and (abs_day.date == next_expected_abs):
+                    attSummaryLine.absent_days.append(TempAbsentDay(abs_day.date - day1))
+
+        return attSummaryLine
 
     def makeDecision(self, attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool):
 
