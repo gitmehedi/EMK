@@ -64,9 +64,9 @@
 
 					</style>
 					<header>
-						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
+						<button name="%(hr_attendance_and_ot_summary.attendance_summary_wizard_action_view)d"
 							type="action" string="Generated" states="draft" context="{'operating_unit_id': operating_unit_id}"/>
-						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view" context="{'operating_unit_id': operating_unit_id}"
+						<button name="%(hr_attendance_and_ot_summary.attendance_summary_wizard_action_view)d" context="{'operating_unit_id': operating_unit_id}"
 							 type="action" string="Re Generate" states="confirmed"/>
   						<button name="action_draft" type="object" string="Set to Draft" states="confirmed,approved"/>
                         <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
