@@ -1,9 +1,29 @@
+from odoo import _
+from odoo.exceptions import UserError
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 from odoo.tools.misc import formatLang
 
 
 class CustomerGeneralLedgerXLSX(ReportXlsx):
+
+    def _get_fiscal_year_date_range(self, date_from):
+        cr = self.env.cr
+
+        date_start, date_end = False, False
+
+        sql = """SELECT dr.date_start, dr.date_end 
+                 FROM date_range dr 
+                 LEFT JOIN date_range_type drt ON drt.id = dr.type_id 
+                 WHERE drt.fiscal_year = true AND dr.date_start <= %s AND dr.date_end >= %s"""
+
+        cr.execute(sql, (date_from, date_from))
+
+        for row in cr.dictfetchall():
+            date_start = row['date_start']
+            date_end = row['date_end']
+
+        return date_start, date_end
 
     def _get_account_move_entry(self, accounts, init_balance, display_account, used_context):
         cr = self.env.cr
@@ -12,28 +32,71 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
-            init_tables, init_where_clause, init_where_params = aml_obj.with_context(used_context, date_from=used_context['date_from'], date_to=False, initial_bal=True)._query_get()
-            init_wheres = [""]
-            if init_where_clause.strip():
-                init_wheres.append(init_where_clause.strip())
-            init_filters = " AND ".join(init_wheres)
-            filters = init_filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
-            sql = ("""SELECT 0 AS lid, l.account_id AS account_id, '' AS ldate, '' AS lcode, NULL AS amount_currency, '' AS lref, 'Opening Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance, '' AS lpartner_id,\
-                        '' AS move_name, '' AS mmove_id, '' AS currency_code,\
-                        NULL AS currency_id,\
-                        '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,\
-                        '' AS partner_name\
-                        FROM account_move_line l\
-                        LEFT JOIN account_move m ON (l.move_id=m.id)\
-                        LEFT JOIN res_currency c ON (l.currency_id=c.id)\
-                        LEFT JOIN res_partner p ON (l.partner_id=p.id)\
-                        LEFT JOIN account_invoice i ON (m.id =i.move_id)\
-                        JOIN account_journal j ON (l.journal_id=j.id)\
-                        WHERE l.account_id IN %s""" + filters + ' GROUP BY l.account_id')
-            params = (tuple(accounts.ids),) + tuple(init_where_params)
+            fy_date_start, fy_date_end = self._get_fiscal_year_date_range(used_context['date_from'])
+
+            if not fy_date_start and not fy_date_end:
+                raise UserError(_('Not found date range of fiscal year'))
+
+            journal_ids = self.env['account.journal'].search([('type', '=', 'situation')])
+
+            init_balance_line = {'lid': 0, 'lpartner_id': '', 'account_id': accounts.ids[0], 'invoice_type': '',
+                                 'invoice_id': '', 'currency_id': None, 'move_name': '', 'lname': 'Opening Balance',
+                                 'debit': 0.0, 'credit': 0.0, 'balance': 0.0, 'mmove_id': '', 'partner_name': '',
+                                 'currency_code': '', 'lref': '', 'amount_currency': None, 'invoice_number': '',
+                                 'lcode': '', 'ldate': ''}
+
+            # OPENING BALANCE
+            sql = """SELECT 
+                            l.account_id AS account_id, 
+                            COALESCE(SUM(l.debit),0.0) AS debit, 
+                            COALESCE(SUM(l.credit),0.0) AS credit, 
+                            COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance     
+                        FROM 
+                            account_move_line l
+                            LEFT JOIN account_move m ON (l.move_id=m.id)
+                            LEFT JOIN res_partner p ON (l.partner_id=p.id)
+                            JOIN account_journal j ON (l.journal_id=j.id)
+                        WHERE 
+                            l.account_id IN %s AND l.move_id=m.id AND l.date BETWEEN %s AND %s 
+                            AND l.journal_id IN %s AND m.state=%s 
+                        GROUP BY l.account_id"""
+
+            params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids), 'posted')
             cr.execute(sql, params)
+
             for row in cr.dictfetchall():
-                move_lines[row.pop('account_id')].append(row)
+                init_balance_line['account_id'] = row['account_id']
+                init_balance_line['debit'] = row['debit']
+                init_balance_line['credit'] = row['credit']
+                init_balance_line['balance'] = row['balance']
+
+            # ADD BALANCE WITH OPENING BALANCE
+            sql = """SELECT 
+                            l.account_id AS account_id, 
+                            COALESCE(SUM(l.debit),0.0) AS debit, 
+                            COALESCE(SUM(l.credit),0.0) AS credit, 
+                            COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance     
+                        FROM 
+                            account_move_line l
+                            LEFT JOIN account_move m ON (l.move_id=m.id)
+                            LEFT JOIN res_currency c ON (l.currency_id=c.id)
+                            LEFT JOIN res_partner p ON (l.partner_id=p.id)
+                            LEFT JOIN account_invoice i ON (m.id =i.move_id)
+                            JOIN account_journal j ON (l.journal_id=j.id)
+                        WHERE 
+                            l.account_id IN %s AND l.move_id=m.id AND l.date < %s AND l.date >= %s 
+                            AND l.journal_id IN %s AND m.state=%s 
+                        GROUP BY l.account_id
+            """
+            params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), 'posted')
+            cr.execute(sql, params)
+
+            for row in cr.dictfetchall():
+                init_balance_line['debit'] += row['debit']
+                init_balance_line['credit'] += row['credit']
+                init_balance_line['balance'] += row['balance']
+
+            move_lines[init_balance_line.pop('account_id')].append(init_balance_line)
 
         sql_sort = 'l.date, l.move_id'
 
@@ -94,7 +157,8 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         accounts = docs.property_account_receivable_id
         display_account = obj.display_account
-        journal_ids = self.env['account.journal'].search([])
+        journal_ids = self.env['account.journal'].search([('type', '!=', 'situation')])
+
         init_balance = True
 
         # create context dictionary
@@ -108,7 +172,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         used_context['strict_range'] = True if obj.date_from else False
         used_context['lang'] = self.env.context.get('lang') or 'en_US'
 
-        # get result data
+        # result data
         accounts_result = self._get_account_move_entry(accounts, init_balance, display_account, used_context)
 
         # FORMAT
