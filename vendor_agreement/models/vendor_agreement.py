@@ -177,6 +177,23 @@ class VendorAgreement(models.Model):
                         },
         }
 
+    @api.multi
+    def action_rent_payment(self):
+
+        res = self.env.ref('vendor_agreement.view_rent_payment_instruction_wizard')
+
+        return {
+            'name': _('Payment Instruction'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'rent.payment.instruction.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {},
+        }
+
     @api.one
     def action_confirm(self):
         if self.state == 'draft':
