@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <menuitem  id="employees_dashboard_menu"
+               parent="hr_attendance.menu_hr_attendance_root"
+               sequence="0"
+               name="Dashboard"
+               action="custom_sales_dashboard_action"
+               groups="hr_attendance.group_hr_attendance_user"
+        />
+    </data>
+</odoo>

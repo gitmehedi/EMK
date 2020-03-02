@@ -13,6 +13,7 @@
     'data': [
         'views/hr_attendance_dashboard_view.xml',
         'views/inherited_att_employee_list_view.xml',
+        'views/menu.xml',
         # 'security/ir.model.access.csv',
     ],
 

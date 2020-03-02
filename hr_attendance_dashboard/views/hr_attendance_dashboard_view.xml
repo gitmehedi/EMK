@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record model="ir.ui.view" id="view_attendance_dashboard_kanban">
         <field name="name">hr.attendance.dashboard.kanban</field>
@@ -131,11 +132,4 @@
         </field>
     </record>
 
-    <menuitem  id="employees_dashboard_menu"
-               parent="hr_attendance.menu_hr_attendance_root"
-               sequence="0"
-               name="Dashboard"
-               action="custom_sales_dashboard_action"
-               groups="hr_attendance.group_hr_attendance_user,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo"
-    />
 </odoo>
