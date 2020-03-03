@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<template id="report_att_summ_temp">
+			<t t-call="report_layout.gbs_internal_layout">
+				<t t-call="report.html_container">
+					<div class="page">
+						<div class="row">
+							<h3 class="text-center" style="margin-bottom:20px">Attendance Summary Report</h3>
+							<div class="row">
+								<div class="col-xs-6 text-left">
+									<ul class="list-inline mb-5">
+										<li>
+											<label>Company : </label>
+											<span t-esc="company"></span>
+										</li>
+										<li>
+											<label>Operating Unit : </label>
+											<span t-esc="operating_unit"></span>
+										</li>
+									</ul>
+								</div>
+
+								<div class="col-xs-6 text-right">
+									<ul class="list-inline mb-5">
+										<li>
+											<label>Period From : </label>
+											<span t-esc="data['date_from']"></span>
+										</li>
+										<li>
+											<label>To : </label>
+											<span t-esc="data['date_to']"></span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<table class="table table-report-xs table-bordered table-striped">
+								<thead>
+									<tr class="odo-bg-gray">
+										<th>SN</th>
+										<th>Employee</th>
+										<th>Designation</th>
+										<!--<th>Salary Days</th>-->
+										<!--<th>Present Days</th>-->
+										<!--<th>Working Hours</th>-->
+										<th>Absent Days</th>
+										<!--<th>Absent Deduction Day(s)</th>-->
+										<th>Late Days</th>
+										<!--<th>Late Deduction Day(s)</th>-->
+										<!--<th>Leave Days</th>-->
+										<!--<th>Weekend</th>-->
+										<!--<th>Holidays</th>-->
+										<!--<th>Off Duty Hrs</th>-->
+										<!--<th>Schedule OT Hours</th>-->
+										<!--<th>OT Hours Calculation</th>-->
+									</tr>
+								</thead>
+								<tbody>
+
+									<t t-foreach="docs" t-as="k">
+										<t t-if="k['val']">
+											<td class="odo-bg-info" t-att-colspan="docs_len">
+												<strong t-esc="k['name']"></strong>
+											</td>
+
+											<t t-foreach="k['val']" t-as="o">
+												<tr>
+													<td>
+														<span t-esc="o['sn']"></span>
+													</td>
+													<td>
+														<span class="text-nowrap" t-esc="o['emp_name']"></span>
+													</td>
+													<td>
+														<span class="text-nowrap" t-esc="o['designation']"></span>
+													</td>
+													<!--<td>-->
+														<!--<span t-esc="o['salary_days']"></span>-->
+													<!--</td>-->
+													<!--<td>-->
+														<!--<span t-esc="o['present_days']"></span>-->
+													<!--</td>-->
+													<!--<td>-->
+														<!--<span t-esc="o['tot_work_hours']"></span>-->
+													<!--</td>-->
+													<td>
+														<span t-esc="o['absent_days']"></span>
+													</td>
+													<!--<td>-->
+														<!--<span t-esc="o['absent_deduction_days']"></span>-->
+													<!--</td>-->
+													<td>
+														<span t-esc="o['late_days']"></span>
+													</td>
+													<!--<td>-->
+														<!--<span t-esc="o['deduction_days']"></span>-->
+													<!--</td>-->
+													<!--<td>-->
+														<!--<span t-esc="o['leave_days']"></span>-->
+													<!--</td>-->
+													<!--<td>-->
+														<!--<span t-esc="o['weekend_days_count']"></span>-->
+													<!--</td>-->
+													<!--<td>-->
+														<!--<span t-esc="o['holidays_days']"></span>-->
+													<!--</td>-->
+
+													<!--<td>-->
+														<!--<span t-esc="o['late_hrs']"></span>-->
+													<!--</td>-->
+													<!--<td>-->
+														<!--<span t-esc="o['schedule_ot_hrs']"></span>-->
+													<!--</td>-->
+													<!--<td>-->
+														<!--<span t-esc="o['cal_ot_hrs']"></span>-->
+													<!--</td>-->
+
+												</tr>
+											</t>
+										</t>
+									</t>
+								</tbody>
+							</table>
+						</div>
+						<t t-call="report_layout.report_signing"></t>
+					</div>
+				</t>
+			</t>
+
+		</template>
+	</data>
+</openerp>

@@ -13,6 +13,7 @@
         'gbs_hr_attendance_utility',
         #'gbs_hr_device_config',
         'report_layout',
+        'hr_attendance_and_ot_summary'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -31,7 +32,10 @@
         'report/gbs_hr_attendance_report_template.xml',
         'report/attendance_error_summary_report.xml',
         'wizard/employee_attendance_wizard.xml',
-        'report/gbs_employee_attendance_report_template.xml'
+        'report/gbs_employee_attendance_report_template.xml',
+        'report/attendance_summary_report_view.xml',
+        'report/attendance_summary_report_template.xml',
+        'wizard/attendance_summary_report_wizard_view.xml'
     ],
 
     'summary': 'Generates check in and check out related report of employee(s)',

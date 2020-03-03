@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+        	id="report_attendance_summary"
+            string="Attendance Summary"
+            model="hr.attendance"
+            report_type="qweb-pdf"
+            file="gbs_hr_attendance_report.report_att_summ_temp"
+            name="gbs_hr_attendance_report.report_att_summ_temp"
+            paperformat="report_layout.paperformat_backend_portrait"
+			attachment_use="False"
+			menu="False"/>
+    </data>
+</odoo>

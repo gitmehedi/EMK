@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_attendance_summary_report_wizard_form" model="ir.ui.view">
+            <field name="name">attendance.summary.report.wizard.form</field>
+            <field name="model">attendance.summary.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Attendance Summary Report">
+                    <group>
+                        <group>
+                            <field name="multi_company" invisible="1"/>
+                            <field name="company_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"
+                                   attrs="{'readonly': [('multi_company', '=', True)]}"/>
+                            <field name="operating_unit_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"
+                                   widget="many2many_tags"/>
+                            <field name="department_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"
+                                   widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="process_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_attendance_summary_report_wizard_form" model="ir.actions.act_window">
+            <field name="name">Attendance Summary Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">attendance.summary.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                name="Attendance Summary Report"
+                parent="hr_attendance.menu_hr_attendance_report"
+                action="action_attendance_summary_report_wizard_form"
+                id="menu_attendance_summary_report"
+                sequence="40"/>
+    </data>
+</odoo>
