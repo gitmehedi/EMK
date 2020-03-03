@@ -1,5 +1,3 @@
-from odoo import _
-from odoo.exceptions import UserError
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 from odoo.tools.misc import formatLang
@@ -33,12 +31,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
             fy_date_start, fy_date_end = self._get_fiscal_year_date_range(used_context['date_from'])
-
-            if not fy_date_start and not fy_date_end:
-                raise UserError(_('Not found date range of fiscal year'))
-
             journal_ids = self.env['account.journal'].search([('type', '=', 'situation')])
-
             init_balance_line = {'lid': 0, 'lpartner_id': '', 'account_id': accounts.ids[0], 'invoice_type': '',
                                  'invoice_id': '', 'currency_id': None, 'move_name': '', 'lname': 'Opening Balance',
                                  'debit': 0.0, 'credit': 0.0, 'balance': 0.0, 'mmove_id': '', 'partner_name': '',
@@ -153,12 +146,12 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         return account_res
 
     def generate_xlsx_report(self, workbook, data, obj):
+
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         accounts = docs.property_account_receivable_id
         display_account = obj.display_account
         journal_ids = self.env['account.journal'].search([('type', '!=', 'situation')])
-
         init_balance = True
 
         # create context dictionary
@@ -182,6 +175,9 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         font_12 = workbook.add_format({'bold': True, 'size': 12})
         no_format = workbook.add_format({'num_format': '#,###0.00', 'size': 10, 'border': 1})
         total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 10, 'border': 1})
+
+        name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
+        address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
         # table header cell format
         th_cell_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
@@ -210,10 +206,13 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         sheet.set_column('I:I', 13)
 
         # SHEET HEADER
-        sheet.merge_range('A1:I6', '', center)
-        sheet.write_rich_string('A1', font_12, docs.company_id.name, '\n', font_10, docs.company_id.street, '\n',
-                                font_10, docs.company_id.street2, '\n', font_10, docs.company_id.city + '-' + docs.company_id.zip, '\n\n',
-                                font_12, docs.name, bold, '\n Date: ', font_10, obj.date_from + ' To ' + obj.date_to, center)
+        sheet.merge_range(0, 0, 0, 8, docs.company_id.name, name_format)
+        sheet.merge_range(1, 0, 1, 8, docs.company_id.street, address_format)
+        sheet.merge_range(2, 0, 2, 8, docs.company_id.street2, address_format)
+        sheet.merge_range(3, 0, 3, 8, docs.company_id.city + '-' + docs.company_id.zip, address_format)
+        sheet.merge_range(4, 0, 4, 8, "Customer General Ledger", name_format)
+        sheet.merge_range(5, 0, 5, 2, "Customer Name: " + docs.name, bold)
+        sheet.merge_range(5, 6, 5, 8, "Date: " + obj.date_from + " To " + obj.date_to, font_10)
 
         # TABLE HEADER
         row, col = 7, 0

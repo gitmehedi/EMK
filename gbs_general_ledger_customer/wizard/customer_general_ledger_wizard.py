@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import ValidationError
 
 
 class CustomerGeneralLedgerWizard(models.TransientModel):
@@ -13,6 +14,17 @@ class CustomerGeneralLedgerWizard(models.TransientModel):
                                         ('not_zero', 'With balance is not equal to 0'), ],
                                        string='Display Accounts', required=True, default='movement')
     hide_field = fields.Boolean(string='Hide')
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_validation(self):
+        if self.date_from > self.date_to:
+            raise ValidationError(_("From date must be less then To date."))
+        else:
+            dr_obj = self.env['date.range'].search(
+                [('type_id.fiscal_year', '=', True), ('date_start', '<=', self.date_from),
+                 ('date_end', '>=', self.date_from)])
+            if not dr_obj.date_start and not dr_obj.date_end:
+                raise ValidationError(_("Date range of fiscal year does not exist."))
 
     @api.multi
     def button_export_xlsx(self):
