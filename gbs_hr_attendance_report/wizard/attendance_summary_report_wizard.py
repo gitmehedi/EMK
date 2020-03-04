@@ -9,6 +9,7 @@ class AttendanceSummaryReportWizard(models.TransientModel):
     operating_unit_id = fields.Many2many('operating.unit', string='Operating Unit', domain="[('company_id', '=', company_id)]")
     date_from = fields.Date('From', required=True)
     date_to = fields.Date('To', required=True)
+    employee_tag_ids = fields.Many2many('hr.employee.category', string='Employee Tag')
 
     multi_company = fields.Boolean(string="check field", compute='get_multi_company_user')
 
@@ -27,20 +28,22 @@ class AttendanceSummaryReportWizard(models.TransientModel):
         data['company_id'] = self.company_id.id
         if not self.department_id:
             dept_env = self.env['hr.department'].search([('company_id', '=', self.company_id.id)])
-            dept_ids = [dept.id for dept in dept_env]
-            data['department_id'] = dept_ids
+            data['department_id'] = dept_env.ids
         else:
-            data['department_id'] = [record.id for record in self.department_id]
+            data['department_id'] = self.department_id.ids
         if not self.operating_unit_id:
             ou_env = self.env['operating.unit'].search([('company_id', '=', self.company_id.id)])
-            ou_ids = [ou.id for ou in ou_env]
-            data['operating_unit_id'] = ou_ids
+            data['operating_unit_id'] = ou_env.ids
             ou_name = 'All'
         else:
-            data['operating_unit_id'] = [record.id for record in self.operating_unit_id]
+            data['operating_unit_id'] = self.operating_unit_id.ids
             for record in self.operating_unit_id:
-                ou_name += str(record.name) + ' '
-
+                ou_name += str(record.name) + '  '
+        if not self.employee_tag_ids:
+            tag_ids = []
+            data['emp_tag_ids'] = tag_ids
+        else:
+            data['emp_tag_ids'] = self.employee_tag_ids.ids
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
         data['company_name'] = self.company_id.name

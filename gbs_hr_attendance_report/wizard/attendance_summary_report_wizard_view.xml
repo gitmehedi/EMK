@@ -18,6 +18,9 @@
                             <field name="department_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"
                                    widget="many2many_tags"/>
+                            <field name="employee_tag_ids"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"
+                                   widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="date_from"/>
