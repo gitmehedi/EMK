@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="make_invisible" model="res.groups">
+            <field name="name">Invisible</field>
+        </record>
+
+        <record id="account.group_account_user" model="res.groups">
+            <field name="groups_id" eval="[(3,ref('account.group_account_user'))]"/>
+        </record>
+
+        <record model="ir.module.category" id="base.module_category_accounting_and_finance">
+            <field name="name">Accounting</field>
+            <field name="sequence">75</field>
+        </record>
+
+        <record id="account.group_account_user" model="res.groups">
+            <field name="name">Branch User</field>
+        </record>
+
+        <record id="account.group_account_manager" model="res.groups">
+            <field name="name">Group Finance</field>
+        </record>
+
+        <record id="group_mtbl_sys_admin" model="res.groups">
+            <field name="name">System Settings</field>
+            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="implied_ids" eval="[(4, ref('account.group_account_manager'))]"/>
+        </record>
+
+        <record id="account_parent.group_coas_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+        </record>
+
+        <record id="tko_web_sessions_management.ir_session_menu" model="ir.ui.menu">
+            <field name="parent_id" eval="ref('limit_login_attempts.menu_block_login_users')"/>
+        </record>
+    </data>
+</odoo>
