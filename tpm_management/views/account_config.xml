@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mdmc_bulk_upload_account_config" model="ir.ui.view">
+        <field name="name">view.mdmc.bulk.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="Transfer Pricing Mechanism (TPM)" name="grp_tds_vat_challan">
+                    <label for="id" string="General Account" groups="account.group_account_user"/>
+                    <div name="general_journal_id">
+                        <div>
+                            <field name="general_journal_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Income Account" groups="account.group_account_user"/>
+                    <div name="tpm_income_journal_id">
+                        <div>
+                            <field name="tpm_income_journal_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Expense Account" groups="account.group_account_user"/>
+                    <div name="tpm_expense_journal_id">
+                        <div>
+                            <field name="tpm_expense_journal_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Impact Period" groups="account.group_account_user"/>
+                    <div name="impact_count">
+                        <div>
+                            <field name="impact_count" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="impact_unit" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

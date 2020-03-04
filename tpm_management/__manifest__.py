@@ -15,6 +15,7 @@ Transfer Pricing Mechanism.
     ],
     'data': [
         # 'security/ir_security.xml'
+        'views/account_config.xml'
     ],
     'installable': True,
     'application': True,
