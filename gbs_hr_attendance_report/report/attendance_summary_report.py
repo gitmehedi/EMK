@@ -46,7 +46,7 @@ class AttendanceSummaryReport(models.AbstractModel):
                                                    ('operating_unit_id', 'in', data['operating_unit_id']),
                                                    ('department_id', 'in', data['department_id'])])
 
-        filtered_emp_list = emp_objs.filtered(lambda x: set(data['emp_tag_ids']).issubset(set(x.category_ids.ids)))
+        filtered_emp_list = emp_objs.filtered(lambda x: len(set(data['emp_tag_ids']).intersection(set(x.category_ids.ids))) > 0)
 
         if filtered_emp_list:
             report_data = []
