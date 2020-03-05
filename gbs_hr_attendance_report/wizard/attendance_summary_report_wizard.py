@@ -40,8 +40,8 @@ class AttendanceSummaryReportWizard(models.TransientModel):
             for record in self.operating_unit_id:
                 ou_name += str(record.name) + '  '
         if not self.employee_tag_ids:
-            tag_ids = []
-            data['emp_tag_ids'] = tag_ids
+            tag_ids = self.env['hr.employee.category'].search([])
+            data['emp_tag_ids'] = tag_ids.ids
         else:
             data['emp_tag_ids'] = self.employee_tag_ids.ids
         data['date_from'] = self.date_from
