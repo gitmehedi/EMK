@@ -15,20 +15,25 @@ class FinalSettlement(models.Model):
     payment_ids = fields.One2many('final.settlement.payments','payment_id', string='Salary',track_visibility='onchange')
     deduction_ids = fields.One2many('final.settlement.deduction','deduction_id', string='Salary',track_visibility='onchange')
     payment_total_amount = fields.Float(string='Total Payment', readonly=True, compute='_compute_payment', store=True)
-    deduction_total_amount = fields.Float(string='Total Deduction', readonly=True, compute='_compute_payment', store=True)
+    deduction_total_amount = fields.Float(string='Total Deduction', readonly=True, compute='_compute_deduction', store=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange', compute='_compute_total_amount', store=True)
 
     @api.multi
     @api.depends('payment_ids')
     def _compute_payment(self):
-        self.payment_total_amount = self.deduction_total_amount = 0.0
+        self.payment_total_amount = 0.0
         for pay in self.payment_ids:
             self.payment_total_amount += pay.amount
+
+    @api.multi
+    @api.depends('deduction_ids')
+    def _compute_deduction(self):
+        self.deduction_total_amount = 0.0
         for deduc in self.deduction_ids:
             self.deduction_total_amount += deduc.amount
 
     @api.multi
-    @api.depends('payment_ids')
+    @api.depends('payment_ids', 'deduction_ids')
     def _compute_total_amount(self):
        self.total_amount = self.payment_total_amount - self.deduction_total_amount
 
