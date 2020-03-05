@@ -9,6 +9,9 @@ class ResCompany(models.Model):
     tpm_expense_journal_id = fields.Many2one('account.account', string='Expense Journal', required=True)
     impact_count = fields.Integer(string='Expense Journal', required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
+    impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
+    income_rate = fields.Float(string='Income Rate', required=True)
+    expense_rate = fields.Float(string='Expense Rate', required=True)
 
 
 class AccountConfigSettings(models.TransientModel):
@@ -40,6 +43,8 @@ class AccountConfigSettings(models.TransientModel):
                                              domain="[('level_id.name','=','Layer 5')]")
     impact_count = fields.Integer(string='Expense Journal', default=1, required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], default='days', required=True)
+    income_rate = fields.Integer(string='Income Rate', size=2, required=True)
+    expense_rate = fields.Integer(string='Expense Rate', size=2, required=True)
 
     @api.multi
     def set_general_journal_id(self):
@@ -73,3 +78,15 @@ class AccountConfigSettings(models.TransientModel):
         if self.impact_unit:
             self.company_id.write({'impact_unit': self.impact_unit})
         return self.env['ir.values'].sudo().set_default('account.config.settings', 'impact_unit', self.impact_unit)
+
+    @api.multi
+    def set_income_rate(self):
+        if self.income_rate:
+            self.company_id.write({'income_rate': self.income_rate})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'income_rate', self.income_rate)
+
+    @api.multi
+    def set_expense_rate(self):
+        if self.expense_rate:
+            self.company_id.write({'expense_rate': self.expense_rate})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'expense_rate', self.expense_rate)

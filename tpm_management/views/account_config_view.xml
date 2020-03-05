@@ -37,6 +37,20 @@
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
+                    <label for="id" string="Income Rate" groups="account.group_account_user"/>
+                    <div name="income_rate">
+                        <div>
+                            <field name="income_rate" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>%
+                        </div>
+                    </div>
+                    <label for="id" string="Expense Rate" groups="account.group_account_user"/>
+                    <div name="expense_rate">
+                        <div>
+                            <field name="expense_rate" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>%
+                        </div>
+                    </div>
                 </group>
             </xpath>
         </field>
