@@ -17,6 +17,14 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
 
         requested_date = data['required_date']
+
+        # short lave count
+        from_date = str(str(data['required_date']) + ' 00:00:00')
+        to_date = str(str(data['required_date']) + ' 23:59:59')
+        short_leave_obj = self.env['hr.short.leave'].search([('date_from', '>=', from_date),
+                                                             ('date_to', '<=', to_date),
+                                                             ('state', '=', 'validate')])
+
         curr_time_gmt =  datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
@@ -27,6 +35,10 @@ class GetDailyAttendanceReport(models.AbstractModel):
             operating_unit_id = data['operating_unit_id']
             unit = op_pool.search([('id','=',operating_unit_id)])
             companyName = unit.company_id.name
+            # short leave count
+            filtered_short_leave_obj = short_leave_obj.filtered(lambda x: x.employee_id.operating_unit_id.id == operating_unit_id)
+            short_leave_count = len(filtered_short_leave_obj)
+
             att_summary = self.getSummaryByUnit(unit, data, graceTime,  emp_pool, att_utility_pool, current_time)
             att_summary_list.append(att_summary)
         else:
@@ -45,7 +57,8 @@ class GetDailyAttendanceReport(models.AbstractModel):
             'created_on': curr_time_gmt,
             'company_name': companyName,
             'att_summary_list': att_summary_list,
-            'operating_unit':data['operating_unit_id']
+            'operating_unit':data['operating_unit_id'],
+            'short_leave_count': short_leave_count
         }
 
         return self.env['report'].render('gbs_hr_attendance_report.report_daily_att_doc', docargs)
