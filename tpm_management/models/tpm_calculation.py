@@ -15,8 +15,7 @@ class TPMManagementModel(models.Model):
                        states={'draft': [('readonly', False)]})
     branch_id = fields.Many2one('operating.unit', string='Branch', readonly=True,
                                 states={'draft': [('readonly', False)]}, required=True)
-    date = fields.Date(string='Date', default=fields.Date.today, readonly=True,
-                       states={'draft': [('readonly', False)]}, required=True)
+    date = fields.Date(string='Date', default=fields.Date.today, readonly=True, required=True)
     line_ids = fields.One2many('tpm.calculation.line', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
@@ -24,10 +23,12 @@ class TPMManagementModel(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              string='Status', track_visibility='onchange')
 
-    @api.constrains
+    @api.constrains("date")
     def check_date(self):
         if self.date:
-            obj = self.search([()])
+            obj = self.search([('date', '=', self.date)])
+            if len(obj) > 0:
+                raise ValidationError(_("Same date TPM is not possible."))
 
     @api.one
     def act_draft(self):
@@ -76,8 +77,8 @@ class TPMManagementModel(models.Model):
             expense_journal = company.tpm_expense_journal_id.id
             impact_count = company.impact_count
             impact_unit = company.impact_unit
-            income_rate = company.income_rate/100
-            expense_rate = company.expense_rate/100
+            income_rate = company.income_rate / 100
+            expense_rate = company.expense_rate / 100
             branch = self.env['operating.unit'].search([('active', '=', True), ('pending', '=', False)])
 
             query = """SELECT operating_unit_id AS branch,

@@ -365,7 +365,7 @@
         <field name="act_window_id" ref="action_asset_vendor_bill_draft"/>
     </record>
 
-    <menuitem id="sub_assets_vendor_menu" name="Fixed Assets Operations" sequence="15"
+    <menuitem id="sub_assets_vendor_menu" name="Vendor Operations" sequence="15"
               parent="account_fam.main_fixed_asset_menu" groups=""/>
 
     <menuitem action="action_asset_vendor_bill_draft" id="menu_asset_action_invoice_tree2_draft"

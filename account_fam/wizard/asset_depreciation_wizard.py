@@ -9,21 +9,38 @@ class AssetDepreciationWizard(models.TransientModel):
     _name = 'asset.depreciation.wizard'
 
     date = fields.Date(string='Date', required=True, default=fields.Datetime.now)
-    sure = fields.Selection([('yes','Yes'),('no','No')],string='Double Check Execute Date?', required=True)
+    sure = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='Double Check Execute Date?', required=True)
 
     @api.multi
     def depreciate(self):
-        if self.sure=='yes':
+        if self.sure == 'yes':
+            lines = []
             if 'active_ids' in self._context:
                 assets = self.env['account.asset.asset'].browse(self._context['active_ids'])
                 for asset in assets:
                     if asset.state == 'open' and not asset.depreciation_flag and asset.allocation_status:
-                        self.depr_asset(asset)
+                        move = self.depr_asset(asset)
+                        if move:
+                            line = {
+                                'journal_id': move.id,
+                                'amount': move.amount,
+                            }
+                            lines.append((0, 0, line))
             else:
-                self.env['account.asset.asset']._generate_depreciation(self.date)
+                move = self.env['account.asset.asset']._generate_depreciation(self.date)
+                if move:
+                    line = {
+                        'journal_id': move.id,
+                        'amount': move.amount,
+                    }
+                    lines.append((0, 0, line))
+
+            if len(lines) > 0:
+                self.env['account.asset.depreciation.history'].create({'date': self.date, 'line_ids': lines})
+
             return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
     def depr_asset(self, asset):
         date = datetime.strptime(self.date, "%Y-%m-%d")
-        asset.compute_depreciation_history(date, asset)
+        return asset.compute_depreciation_history(date, asset)

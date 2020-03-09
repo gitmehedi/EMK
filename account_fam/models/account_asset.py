@@ -119,7 +119,7 @@ class AccountAssetAsset(models.Model):
                          AND aaa.allocation_status=True';
                          
                     INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
-                        VALUES ('/','Asset depreciation date '||depr_date ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,TRUE,user_id,user_id,NOW(),NOW())
+                        VALUES ('/','Asset depreciation date '||depr_date ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,False,user_id,user_id,NOW(),NOW())
                         RETURNING account_move.id INTO move;
                 
                     FOR rec IN EXECUTE query
@@ -308,9 +308,9 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def _generate_depreciation(self, date):
-        journal_id = self.env['account.journal'].search([('name', '=', 'Vendor Bill')], limit=1)
+        journal_id = self.env.user.company_id.fa_journal_id
         if not journal_id:
-            raise ValidationError(_('Create a journal with name [Vendor Bill]'))
+            raise ValidationError(_('Configure Fixed Asset Journal from Settings.'))
 
         company_id = self.env.user.company_id.id
         opu_id = self.env.user.default_operating_unit_id.id
@@ -323,12 +323,11 @@ class AccountAssetAsset(models.Model):
                 debit = debit + rec.debit
                 credit = credit + rec.credit
             if debit == credit and debit > 0 and credit > 0:
-                if move.name == '/':
-                    sequence = move.journal_id.sequence_id
-                    new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
-                    move.write({'name': new_name, 'state': 'posted', 'amount': debit})
+                move.write({'amount': debit})
+                return move
             else:
                 move.unlink()
+                return False
 
     @api.model
     def compute_depreciation_history(self, date, asset):
@@ -378,7 +377,7 @@ class AccountAssetAsset(models.Model):
                     if not rec:
                         depreciation = asset.depreciation_line_ids.create(vals)
                         if depreciation:
-                            asset.create_move(depreciation)
+                            move = asset.create_move(depreciation)
                             if date.month == 12 and date.day == 31 and asset.method == 'degressive':
                                 asset.write({'lst_depr_date': date.date(),
                                              'lst_depr_amount': depr_amount,
@@ -388,6 +387,7 @@ class AccountAssetAsset(models.Model):
                                 asset.write({'lst_depr_date': date.date(),
                                              'lst_depr_amount': depr_amount
                                              })
+                            return move
 
     @api.multi
     def create_move(self, line):
@@ -448,8 +448,7 @@ class AccountAssetAsset(models.Model):
             created_moves |= move
 
         if move.state == 'draft' and line.move_id.id == move.id:
-            move.sudo().post()
-            return True
+            return move
 
     @api.multi
     def _compute_entries(self, date, group_entries=False):

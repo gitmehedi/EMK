@@ -14,7 +14,9 @@ class AccountAssetCategory(models.Model):
     code = fields.Char(string='Code', size=4, required=True)
     active = fields.Boolean(default=True, track_visibility='onchange')
     name = fields.Char(required=True, index=True, string="Asset Type", size=200, track_visibility='onchange')
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, track_visibility='onchange')
+    journal_id = fields.Many2one('account.journal', string='Journal', readonly=True,
+                                 default=lambda self: self.env.user.company_id.fa_journal_id.id, required=True,
+                                 track_visibility='onchange')
     method_period = fields.Integer(string='One Entry (In Month)', default=1, track_visibility='onchange',
                                    help="State here the time between 2 depreciations, in months", required=True)
 
@@ -149,7 +151,7 @@ class AccountAssetCategory(models.Model):
 
     @api.onchange('method')
     def onchange_method(self):
-        if self.method=='no_depreciation':
+        if self.method == 'no_depreciation':
             self.account_depreciation_expense_id = None
             self.account_depreciation_id = None
 
@@ -243,7 +245,6 @@ class AccountAssetCategory(models.Model):
                 if requested.asset_sale_suspense_account_id:
                     line['account_depreciation_expense_id'] = requested.account_depreciation_expense_id.id
 
-
                 self.write(line)
                 requested.write({
                     'state': 'approve',
@@ -289,7 +290,7 @@ class HistoryAccountAssetCategory(models.Model):
     line_id = fields.Many2one('account.asset.category', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending')
-    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1,3), default=0.0, )
+    method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1, 3), default=0.0, )
     journal_id = fields.Many2one('account.journal', string='Journal')
     depreciation_year = fields.Integer(string='Asset Life (In Year)', default=0)
     method_number = fields.Integer(string='Number of Depreciations', default=0)
@@ -312,4 +313,3 @@ class HistoryAccountAssetCategory(models.Model):
                                             string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
-

@@ -7,5 +7,8 @@ from . import account_invoice_line
 from . import account_asset_allocation_history
 from . import account_asset_disposal
 from . import account_asset_sale
+from . import account_asset_depreciation_history
+from . import account_config
+
 
 

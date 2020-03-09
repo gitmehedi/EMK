@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
     <menuitem id="main_fixed_asset_depreciation_menu" name="Execute Asset Depreciation"
-              parent="sub_assets_menu" sequence="50" action="action_asset_depreciation_wizard"
+              parent="menu_action_account_asset_operation" sequence="10" action="action_asset_depreciation_wizard"
               groups="grp_fixasset_manager"/>
 </odoo>

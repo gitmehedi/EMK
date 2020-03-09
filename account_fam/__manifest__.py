@@ -35,6 +35,8 @@
         'views/account_asset_type_view.xml',
         'views/account_invoice_line.xml',
         'views/account_move_view.xml',
+        'views/account_asset_depreciation_history_view.xml',
+        'views/account_config.xml',
     ],
     'installable': True,
     'application': True,
