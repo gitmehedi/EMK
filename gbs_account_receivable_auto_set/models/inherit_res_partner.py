@@ -69,14 +69,18 @@ class InheritResPartner(models.Model):
     @api.multi
     def unlink(self):
         for rec in self:
-            # get account id
-            if rec.customer:
-                account_account_id = rec.property_account_receivable_id
-            elif rec.supplier:
-                account_account_id = rec.property_account_payable_id
-            else:
-                # if cnf agent
-                account_account_id = rec.property_account_payable_id
+            if not rec.parent_id.id:
+                # get account id
+                if rec.customer:
+                    account_account_id = rec.property_account_receivable_id
+                elif rec.supplier:
+                    account_account_id = rec.property_account_payable_id
+                else:
+                    # if cnf agent
+                    account_account_id = rec.property_account_payable_id
 
-            if super(InheritResPartner, rec).unlink():
-                res = account_account_id.unlink() if account_account_id.id else False
+                if super(InheritResPartner, rec).unlink():
+                    res = account_account_id.unlink() if account_account_id.id else False
+
+            else:
+                res = super(InheritResPartner, rec).unlink()
