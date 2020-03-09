@@ -31,6 +31,7 @@ class GBSFileImportWizard(models.TransientModel):
                                 "\nE.g. Windows-1252, utf-8")
     note = fields.Text('Log')
     date = fields.Date(string='Generate Date', required=True)
+    dollar_rate = fields.Float(string='Dollar Rate', required=True)
 
     @api.model
     def _default_codepage(self):
@@ -278,8 +279,8 @@ class GBSFileImportWizard(models.TransientModel):
                         val['amount_currency'] = 0
                     # For OBU Only
                     elif branch_code == '116' and cur_code == 'USD':
-                        val['debit'] = abs(debit_amt) * 84.75
-                        val['credit'] = abs(credit_amt) * 84.75
+                        val['debit'] = abs(debit_amt) * self.dollar_rate
+                        val['credit'] = abs(credit_amt) * self.dollar_rate
 
                         if credit_amt > 0:
                             val['amount_currency'] = credit_amt

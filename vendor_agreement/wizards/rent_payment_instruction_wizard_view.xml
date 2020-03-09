@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_rent_payment_instruction_wizard" model="ir.ui.view">
+        <field name="name">rent.payment.instruction.wizard.form</field>
+        <field name="model">rent.payment.instruction.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rent Payment Instruction">
+                <group>
+                    <group>
+                        <field name="rent_id" readonly="True"
+                               options="{'no_create_edit':True,'no_edit':True,'no_open':True}"/>
+                    </group>
+                </group>
+                <field name="line_ids">
+                    <tree editable="top">
+                        <field name="type"/>
+                        <field name="partner_id" options="{'no_create_edit':True,'no_edit':True,'no_open':True}"/>
+                        <field name="vendor_bank_acc"/>
+                        <field name="credit_account_id"
+                               options="{'no_create_edit':True,'no_edit':True,'no_open':True}"/>
+                        <field name="debit_operating_unit_id"
+                               options="{'no_create_edit':True,'no_edit':True,'no_open':True}"/>
+                        <field name="credit_operating_unit_id"
+                               options="{'no_create_edit':True,'no_edit':True,'no_open':True}"/>
+                        <field name="advance_amount"/>
+                        <field name="total_payment_approved"/>
+                        <field name="amount"/>
+                        <field name="narration"/>
+                        <field name="currency_id" invisible="True"/>
+                        <field name="instruction_date" invisible="True"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Confirm" name="action_confirm" type="object"
+                            confirm="Are you sure to generate payment instruction?" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

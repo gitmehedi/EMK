@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round as round
+from odoo.exceptions import ValidationError
 
 
 class AccountInvoice(models.Model):
@@ -26,12 +27,20 @@ class AccountInvoice(models.Model):
                                        VAT will be calculated on TDS+Base price.""")
 
     @api.one
-    @api.depends('invoice_line_ids.account_tds_id','invoice_line_ids.tds_amount',
-                 'is_tds_applicable','tax_line_ids.amount')
+    @api.depends('invoice_line_ids.account_tds_id', 'invoice_line_ids.tds_amount',
+                 'is_tds_applicable', 'tax_line_ids.amount')
     def _compute_total_tds(self):
         for invoice in self:
             if invoice.is_tds_applicable:
                 invoice.total_tds_amount = sum(line.amount for line in self.tax_line_ids if line.tds_id)
+
+    @api.constrains('total_tds_amount')
+    def _check_total_tds(self):
+        date_range_objs = self.env['date.range'].search(
+            [('date_start', '<=', self.date_invoice), ('date_end', '>=', self.date_invoice),
+             ('type_id.tds_year', '=', True), ('active', '=', True)], order='id DESC', limit=1)
+        if not date_range_objs:
+            raise ValidationError(_("Please create a TDS/VAT Year for current date."))
 
     @api.onchange('is_tds_applicable')
     def _onchange_is_tds_applicable(self):
@@ -67,10 +76,8 @@ class AccountInvoice(models.Model):
                     line._calculate_tds_value(pre_invoice_line_list)
                 else:
                     line._calculate_tds_value()
-        else:
-            pass
 
-    def _update_tax_line_vals(self,line):
+    def _update_tax_line_vals(self, line):
         if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
             if line.account_tds_id.operating_unit_id:
                 op_unit_id = line.account_tds_id.operating_unit_id.id
@@ -153,7 +160,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    tds_amount = fields.Float('TDS Value',copy=False)
+    tds_amount = fields.Float('TDS Value', copy=False)
     account_tds_id = fields.Many2one('tds.rule', string='TDS',
                                      domain="[('active', '=', True),('state', '=','confirm' )]")
 
@@ -177,10 +184,12 @@ class AccountInvoiceLine(models.Model):
             price_with_tds = price + tds
             taxes = False
             if self.invoice_line_tax_ids:
-                taxes = self.invoice_line_tax_ids.compute_all(price_with_tds, currency, self.quantity, product=self.product_id,
+                taxes = self.invoice_line_tax_ids.compute_all(price_with_tds, currency, self.quantity,
+                                                              product=self.product_id,
                                                               partner=self.invoice_id.partner_id)
             self.price_subtotal = taxes['total_included'] if taxes else self.quantity * price_with_tds
-            self.price_subtotal_without_vat = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price_with_tds
+            self.price_subtotal_without_vat = price_subtotal_signed = taxes[
+                'total_excluded'] if taxes else self.quantity * price_with_tds
 
             if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
                 price_subtotal_signed = self.invoice_id.currency_id.with_context(
@@ -207,7 +216,7 @@ class AccountInvoiceLine(models.Model):
         else:
             return super(AccountInvoiceLine, self)._compute_price()
 
-    @api.onchange('account_tds_id','price_subtotal_without_vat','invoice_id.total_tds_amount')
+    @api.onchange('account_tds_id', 'price_subtotal_without_vat', 'invoice_id.total_tds_amount')
     def _onchange_account_tds_id(self):
         if self.account_tds_id:
             return self.invoice_id._update_tds()
@@ -222,7 +231,7 @@ class AccountInvoiceLine(models.Model):
                 pro_base_val = self.price_subtotal_without_vat
             if self.account_tds_id.type_rate == 'flat':
                 if self.account_tds_id.price_include:
-                    self.tds_amount = pro_base_val-(pro_base_val/(1+self.account_tds_id.flat_rate / 100))
+                    self.tds_amount = pro_base_val - (pro_base_val / (1 + self.account_tds_id.flat_rate / 100))
                 elif self.account_tds_id.price_exclude:
                     self.tds_amount = (pro_base_val / (1 - self.account_tds_id.flat_rate / 100)) - pro_base_val
                 else:
@@ -236,13 +245,15 @@ class AccountInvoiceLine(models.Model):
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
                         break
                     elif pre_invoice_line_list:
-                        total_amount = pro_base_val + sum(int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
+                        total_amount = pro_base_val + sum(
+                            int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
                         if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
-                            remaining_tds_amount = total_tds_amount - sum(int(i.tds_amount) for i in pre_invoice_line_list)
-                            if remaining_tds_amount<0.0:
+                            remaining_tds_amount = total_tds_amount - sum(
+                                int(i.tds_amount) for i in pre_invoice_line_list)
+                            if remaining_tds_amount < 0.0:
                                 self.tds_amount = 0.0
-                            elif remaining_tds_amount>pro_base_val:
+                            elif remaining_tds_amount > pro_base_val:
                                 self.tds_amount = pro_base_val
                             else:
                                 self.tds_amount = remaining_tds_amount
@@ -259,11 +270,13 @@ class AccountInvoiceLine(models.Model):
                 pre_total_tds += pre_invoice_line_obj.tds_amount
                 # pre_total_base_amount += (pre_invoice_line_obj.price_unit * pre_invoice_line_obj.quantity)
                 if pre_invoice_line_obj.account_tds_id.price_include:
-                    pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat-(pre_invoice_line_obj.price_subtotal_without_vat*(self.account_tds_id.flat_rate / 100)))
+                    pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat - (
+                            pre_invoice_line_obj.price_subtotal_without_vat * (
+                            self.account_tds_id.flat_rate / 100)))
                 else:
                     pre_total_base_amount += (pre_invoice_line_obj.price_subtotal_without_vat)
             pre_rate = (pre_total_tds * 100) / pre_total_base_amount
-            if current_rate > round(pre_rate,False):
+            if current_rate > round(pre_rate, False):
                 remain_tds_amount = ((pre_total_base_amount * current_rate) / 100) - pre_total_tds
         return remain_tds_amount
 

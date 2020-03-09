@@ -75,7 +75,7 @@ class AccountAccount(models.Model):
                 self.user_type_id = None
                 parents = self.search([('level_id', '=', self.level_id.parent_id.id)])
                 res['domain'] = {
-                    'parent_id': [('id', 'in', parents.ids), ('internal_type', '=', 'view')],
+                    'parent_id': [('id', 'in', parents.ids)],
                 }
                 return res
 

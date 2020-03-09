@@ -7,7 +7,8 @@ class TrialBalanceXLSX(ReportXlsx):
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = docs['display_account']
-        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search(
+            [('level_id.name', '=', 'Layer 5')])
         used_context = {
             'lang': self.env.context['lang'],
             'operating_unit_ids': docs['operating_unit_ids'].ids,
@@ -17,6 +18,7 @@ class TrialBalanceXLSX(ReportXlsx):
             'journal_ids': docs['journal_ids'].ids,
             'state': docs['target_move'],
             'strict_range': True,
+            'include_profit_loss': docs['include_profit_loss'],
         }
         account_res = self.env['report.account.report_trialbalance'].with_context(used_context)._get_accounts(
             accounts, display_account)

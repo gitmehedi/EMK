@@ -803,7 +803,7 @@ class ServerFileErrorDetails(models.Model):
     _inherit = ["mail.thread"]
     _order = 'id asc'
 
-    process_date = fields.Datetime(default=fields.Datetime.now)
+    process_date = fields.Datetime(string="Process Date", default=fields.Datetime.now)
     line_no = fields.Char(string='Line No')
     status = fields.Boolean(default=False, string='Status')
     details = fields.Text(string='Error Details')

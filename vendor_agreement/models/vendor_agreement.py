@@ -4,17 +4,17 @@ from odoo.exceptions import UserError, ValidationError
 
 class VendorAgreement(models.Model):
     _name = "agreement"
-    _order = 'name desc'
+    _order = 'name desc,state asc'
     _inherit = ["agreement", 'mail.thread', 'ir.needaction_mixin']
 
-    code = fields.Char(required=False, copy=False)
-    name = fields.Char(required=False, track_visibility='onchange')
-    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=True,
+    code = fields.Char(required=False, copy=False, string='Agreement No')
+    name = fields.Char(required=False, track_visibility='onchange', string='Agreement No')
+    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=False,
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
                                  states={'draft': [('readonly', False)]})
-    product_id = fields.Many2one('product.product', string='Service/Product', required=True, readonly=True,
-                                 track_visibility='onchange',states={'draft': [('readonly', False)]},
+    product_id = fields.Many2one('product.product', string='Service/Product', required=False, readonly=True,
+                                 track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Agreement Service.")
     start_date = fields.Date(string='Start Date', default=fields.Date.context_today, required=True, readonly=True,
                              track_visibility='onchange', states={'draft': [('readonly', False)]})
@@ -38,9 +38,8 @@ class VendorAgreement(models.Model):
                                       track_visibility='onchange', help="Remaining Amount to adjustment.")
     account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                 domain=[('level_id.name', '=', 'Layer 5')],
                                  help="Account for the agreement.")
-    acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
-                                        ondelete='restrict')
     description = fields.Text('Notes', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
@@ -49,13 +48,8 @@ class VendorAgreement(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, track_visibility='onchange',
                                  states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('agreement'))
-    state = fields.Selection([
-        ('draft', "Draft"),
-        ('confirm', "Confirmed"),
-        ('done', "Done"),
-        ('cancel', "Canceled")], default='draft', string="Status",
-        track_visibility='onchange')
-
+    acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id', readonly=True, copy=False,
+                                        ondelete='restrict')
     agreement_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ], string='Type', required=True,
                                       default='purchase', invisible=True)
     is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True, store=True, string="Is Remaining",
@@ -81,14 +75,23 @@ class VendorAgreement(models.Model):
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
                                          string="Is Visible")
+    line_ids = fields.One2many('agreement.line', 'line_id', copy=False, ondelete='restrict', readonly=True,
+                               required=True, states={'draft': [('readonly', False)]})
+    type = fields.Selection([('single', 'Single'), ('multi', 'Multi')], default='Type')
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirm', "Confirmed"),
+        ('done', "Done"),
+        ('cancel', "Canceled")], default='draft', string="Status",
+        track_visibility='onchange')
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
     def _compute_payment_amount(self):
         for va in self:
             va.total_payment_amount = sum(line.amount for line in va.payment_line_ids if line.state not in ['cancel'])
-            va.total_payment_approved = sum(
-                line.amount for line in va.payment_line_ids if line.state in ['approved'])
+            va.total_payment_approved = sum(line.amount for line in va.payment_line_ids if line.state in ['approved'])
 
     @api.one
     @api.depends('adjusted_amount', 'total_payment_approved')
@@ -109,19 +112,15 @@ class VendorAgreement(models.Model):
         for record in self:
             if record.state == 'done':
                 if record.advance_amount and record.total_payment_amount \
-                    and record.advance_amount <= record.total_payment_amount:
+                        and record.advance_amount <= record.total_payment_amount:
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
             else:
                 record.payment_btn_visible = False
 
-
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].get('name')
-        vals['name'] = seq
-
         return super(VendorAgreement, self).create(vals)
 
     @api.constrains('start_date', 'end_date')
@@ -135,7 +134,7 @@ class VendorAgreement(models.Model):
             elif self.start_date >= self.end_date:
                 raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
-    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value','advance_amount')
+    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value', 'advance_amount')
     def check_pro_advance_amount(self):
         if self.pro_advance_amount or self.adjustment_value or self.service_value:
             if self.pro_advance_amount < 0:
@@ -178,18 +177,48 @@ class VendorAgreement(models.Model):
                         },
         }
 
+    @api.multi
+    def action_rent_payment(self):
+
+        res = self.env.ref('vendor_agreement.view_rent_payment_instruction_wizard')
+
+        return {
+            'name': _('Payment Instruction'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'rent.payment.instruction.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {},
+        }
+
     @api.one
     def action_confirm(self):
         if self.state == 'draft':
+            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+
+            if self.type == 'multi':
+                if not self.line_ids:
+                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+
+            sequence = self.env['ir.sequence'].next_by_code('agreement') or ''
             self.write({
                 'state': 'confirm',
+                'name': sequence,
             })
 
     @api.one
     def action_validate(self):
-        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'confirm':
+            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+            if self.type == 'multi':
+                if not self.line_ids:
+                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+
             self.write({
                 'state': 'done',
                 'approver_id': self.env.user.id,
@@ -274,7 +303,7 @@ class VendorAgreement(models.Model):
         for agr in self:
             name = agr.name
             if agr.product_id:
-                name = u'%s[%s]' % (agr.name,agr.product_id.name)
+                name = u'%s[%s]' % (agr.name, agr.product_id.name)
             res.append((agr.id, name))
         return res
 
@@ -299,3 +328,27 @@ class VendorAgreementHistory(models.Model):
     state = fields.Selection([
         ('pending', "Pending"),
         ('confirm', "Confirmed")], default='pending', string="Status")
+
+
+class VendorAgreementLine(models.Model):
+    _name = "agreement.line"
+    _order = 'id desc'
+
+    partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
+                                 domain=[('parent_id', '=', False), ('supplier', '=', True)])
+    product_id = fields.Many2one('product.product', string='Service', required=True, domain=[('type', '=', 'rent')])
+    adjustment_value = fields.Float(string="Adjustment Value", required=True)
+    service_value = fields.Float(string="Service Value", required=True)
+    advance_amount = fields.Float(string="Approved Advance", required=True)
+    adjusted_amount = fields.Float(string="Adjusted Amount")
+    outstanding_amount = fields.Float(string="Outstanding Amount")
+    acc_move_line_ids = fields.One2many('account.move.line', 'agreement_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
+                                  default=lambda self: self.env.user.company_id.currency_id.id)
+    company_id = fields.Many2one('res.company', string='Company',
+                                 default=lambda self: self.env['res.company']._company_default_get('agreement'))
+    is_remaining = fields.Boolean(compute='_compute_is_remaining', default=True, store=True, string="Is Remaining")
+    is_amendment = fields.Boolean(default=False, string="Is Amendment", )
+    line_id = fields.Many2one('agreement', required=True, string='Agreement')
+    rent_price = fields.Float(string='Rent Price', required=True)
+    rent_qty = fields.Float(string='Rent Qty', required=True)

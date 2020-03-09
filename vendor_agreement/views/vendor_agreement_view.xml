@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="inherited_agreement_tree" model="ir.ui.view">
+        <record id="vendor_agreement_tree" model="ir.ui.view">
             <field name="name">inherited_agreement_tree_view</field>
             <field name="model">agreement</field>
             <field name="inherit_id" ref="agreement_account.agreement_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="replace">
-                    <tree string="Agreements"
+                    <tree string="Agreements" duplicate="0"
                           decoration-info="state=='draft'" decoration-success="state=='confirm'"
                           decoration-bf="state in ('confirm','done')" decoration-muted="state=='done'">
-                        <field name="name" string="Agreement reference"/>
+                        <field name="name"/>
                         <field name="partner_id" string="Vendor"/>
                         <field name="product_id" string="Service"/>
+                        <field name="operating_unit_id"/>
+                        <field name="account_id"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
-                        <field name="advance_amount"/>
-                        <field name="adjusted_amount"/>
+                        <field name="advance_amount" sum="advance_amount"/>
+                        <field name="adjusted_amount" sum="adjusted_amount"/>
                         <field name="state"/>
                     </tree>
                 </xpath>
             </field>
         </record>
-        <record id="inherited_agreement_form" model="ir.ui.view">
+
+        <record id="vendor_agreement_form" model="ir.ui.view">
             <field name="name">inherited_agreement_form_view</field>
             <field name="model">agreement</field>
             <field name="inherit_id" ref="agreement_account.agreement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form string="Agreement">
+                    <form string="Agreement" duplicate="0">
                         <header>
                             <button name="action_confirm" type="object"
                                     string="Confirm" states="draft"
@@ -44,7 +47,8 @@
                             <button name="action_draft" type="object"
                                     string="Reset to draft" states="cancel"
                                     groups="vendor_agreement.vendor_agreement_approver"/>
-                            <button string="Payment Instruction" name="action_payment" type="object" class="oe_highlight"
+                            <button string="Payment Instruction" name="action_payment" type="object"
+                                    class="oe_highlight"
                                     attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                                     groups="vendor_agreement.vendor_agreement_approver"/>
                             <button string="Amendment" name="action_amendment" states="done"
@@ -71,34 +75,33 @@
                             </div>
                             <group name="main">
                                 <group name="left">
-                                    <field name="partner_id" string="Vendor"
+                                    <field name="partner_id" string="Vendor" required="True"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="product_id" string="Service"
+                                    <field name="product_id" string="Service" required="True"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
                                     <field name="company_id" groups="base.group_multi_company"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="account_id" domain="[('internal_type','=','other')]"
+                                    <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="operating_unit_id"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="start_date"/>
                                     <field name="end_date"/>
+                                    <field name="description"/>
                                     <field name="is_amendment" invisible="1"/>
                                     <field name="payment_btn_visible" invisible="1"/>
                                     <field name="maker_id" invisible="1"/>
                                     <field name="approver_id" invisible="1"/>
+                                    <field name="type" invisible="1"/>
                                 </group>
                                 <group name="right">
                                     <field name="pro_advance_amount" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="advance_amount" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
-                                    <field name="agreement_type" widget="radio" invisible="1"/>
-                                    <field name="code" invisible="1"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="adjustment_value" widget="monetary"
-                                           options="{'currency_field': 'currency_id'}"/>
                                     <field name="service_value" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="adjustment_value" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="total_payment_approved" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
@@ -106,41 +109,49 @@
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="outstanding_amount" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
+                                    <field name="agreement_type" widget="radio" invisible="1"/>
+                                    <field name="code" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
                                     <field name="is_remaining" invisible="1"/>
                                 </group>
                             </group>
                             <notebook>
-                                <page string="Notes">
-                                    <field name="description"/>
-                                </page>
-                                <page string="Invoices" class="oe_page_title"
+                                <page string="Vendor Bills" class="oe_page_title"
                                       attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
-                                    <group string="Vendor Bills" name="in_invoices">
+                                    <group name="in_invoices">
                                         <field name="in_invoice_ids" colspan="4" nolabel="1">
-                                            <tree string="Invoices">
+                                            <tree string="Vendor Bills">
+                                                <field name="number" string="Bill No"/>
                                                 <field name="partner_id" string="Vendor"/>
-                                                <field name="user_id" string="Responsible"/>
                                                 <field name="date_invoice" string="Bill Date"/>
-                                                <field name="number" string="Bill Number"/>
+                                                <field name="user_id" string="Responsible"/>
+                                                <field name="total_bill_payable"/>
                                                 <field name="amount_total_signed" string="Total"/>
                                                 <field name="residual_signed" string="To Pay"/>
-                                                <field name="agreement_adjusted_amount" string="Adjusted"/>
+                                                <field name="agreement_adjusted_amount" string="Adjusted"
+                                                       sum="agreement_adjusted_amount"/>
                                                 <field name="state"/>
                                             </tree>
-                                            <from string="Invoice">
+                                            <form string="Vendor Bills">
+                                                <header>
+                                                    <field name="state" widget="statusbar"
+                                                           statusbar_visible="draft,open,paid"/>
+                                                </header>
                                                 <group>
                                                     <group>
-                                                        <field name="partner_id"/>
-                                                        <field name="user_id"/>
-                                                        <field name="date_invoice"/>
+                                                        <field name="number" string="Bill No"/>
+                                                        <field name="partner_id" string="Vendor"/>
+                                                        <field name="date_invoice" string="Bill Date"/>
+                                                        <field name="user_id" string="Responsible"/>
                                                     </group>
                                                     <group>
-                                                        <field name="amount_total_signed"/>
-                                                        <field name="residual_signed"/>
-                                                        <field name="agreement_adjusted_amount"/>
+                                                        <field name="total_bill_payable"/>
+                                                        <field name="amount_total_signed" string="Total"/>
+                                                        <field name="residual_signed" string="To Pay"/>
+                                                        <field name="agreement_adjusted_amount" string="Adjusted"/>
                                                     </group>
                                                 </group>
-                                            </from>
+                                            </form>
                                         </field>
                                     </group>
                                 </page>
@@ -180,7 +191,6 @@
                                         </form>
                                     </field>
                                     <group>
-                                        <group></group>
                                         <group class="oe_subtotal_footer oe_right">
                                             <field name="total_payment_amount" class="oe_subtotal_footer_separator"
                                                    widget="monetary"/>
@@ -225,7 +235,7 @@
             </field>
         </record>
 
-        <record id="agreement_search_inherited" model="ir.ui.view">
+        <record id="vendor_agreement_search" model="ir.ui.view">
             <field name="name">agreement.search.view</field>
             <field name="model">agreement</field>
             <field name="inherit_id" ref="agreement_account.agreement_search"/>
@@ -233,55 +243,47 @@
                 <xpath expr="//search" position="replace">
                     <search string="Search Agreements">
                         <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
-                               string="Name or Number"/>
+                               string="Agreement No"/>
                         <field name="partner_id" string="Vendor"/>
-                        <field name="product_id"/>
+                        <field name="product_id" string="Service"/>
                         <field name="start_date"/>
-                        <field name="end_date"/>
-                        <field name="pro_advance_amount"/>
-                        <field name="adjustment_value"/>
-                        <field name="service_value"/>
-                        <field name="advance_amount"/>
-                        <field name="adjusted_amount"/>
+                        <field name="state" string="Status"/>
                         <separator/>
-                        <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                         <group name="groupby">
-                            <filter name="partner_groupby" string="Vendor"
+                            <filter string="By Vendor" name="partner_groupby" domain=""
                                     context="{'group_by': 'partner_id'}"/>
+                            <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
                         </group>
                     </search>
                 </xpath>
             </field>
         </record>
 
-
-        <!-- Sequence Records -->
-        <record id="seq_agreement" model="ir.sequence">
-            <field name="name">agreement</field>
-            <field name="code">name</field>
-            <field name="prefix">VA-</field>
-            <field name="padding">5</field>
+        <record id="vendor_agreement_action" model="ir.actions.act_window">
+            <field name="name">Vendor Agreements</field>
+            <field name="res_model">agreement</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','single')]</field>
+            <field name="context">{'default_type':'single','search_default_state':1}</field>
         </record>
 
-        <menuitem id="agreement_account.agreement_menu" action="agreement_account.agreement_action"
+        <record id="vendor_aggrement_action_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="vendor_agreement_tree"/>
+            <field name="act_window_id" ref="vendor_agreement_action"/>
+        </record>
+
+        <record id="vendor_aggrement_action_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="vendor_agreement_form"/>
+            <field name="act_window_id" ref="vendor_agreement_action"/>
+        </record>
+
+        <menuitem id="agreement_account.agreement_menu" action="vendor_agreement_action"
                   name="Vendor Agreements"
                   groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
-                  parent="account.menu_finance_payables" sequence="30"/>
-
-
-        <!-- inherit 'invoice supplier form' from agreement_account to add domain -->
-        <record id="invoice_supplier_form" model="ir.ui.view">
-            <field name="name">agreement.supplier.invoice</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="agreement_account.invoice_supplier_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='agreement_id']" position="replace">
-                    <field name="agreement_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
-                           domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase'),('state','=','done'),('is_remaining','=',True)]"
-                           context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
-                </xpath>
-            </field>
-        </record>
-
+                  parent="menu_agreements" sequence="30"/>
     </data>
 </odoo>

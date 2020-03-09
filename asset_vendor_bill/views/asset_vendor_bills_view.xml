@@ -5,7 +5,7 @@
         <field name="model">account.invoice</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <form string="Vendor Bill">
+            <form string="Vendor Bill" duplicate="0">
                 <header>
                     <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate"
                             class="oe_highlight" groups="asset_vendor_bill.asset_bill_approver"/>
@@ -152,8 +152,7 @@
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="amount_untaxed" string="Without VAT Amount"/>
                                     <field name="amount_tax" string="VAT"/>
-                                    <field name="mushok_vds_amount" widget="monetary"
-                                           attrs="{'invisible': [('vat_selection','=','normal')]}"/>
+                                    <field name="mushok_vds_amount" widget="monetary"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('vat_selection','!=','normal')]}"/>
                                     <field name="total_amount_with_vat" class="oe_subtotal_footer_separator"
@@ -161,6 +160,8 @@
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    <field name="agreement_adjusted_amount" class="oe_subtotal_footer_separator"
+                                           attrs="{'invisible': [('agreement_id', '=', False)]}" widget="monetary"/>
                                     <field name="total_tds_amount" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('is_tds_applicable', '=', False)]}"
                                            widget="monetary"/>
@@ -169,6 +170,7 @@
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
+                                    <field name="commercial_partner_id" invisible="1"/>
                                 </group>
                             </group>
                             <div>
@@ -335,7 +337,7 @@
             ,('state','in',('draft','cancel'))]
         </field>
         <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
-            'in_invoice','journal_type': 'purchase','search_default_draft':1,}
+            'in_invoice','journal_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
@@ -379,7 +381,7 @@
             ,('state','in',('open','paid'))]
         </field>
         <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type': 'in_invoice',
-            'journal_type': 'purchase','search_default_status':1}
+            'journal_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">

@@ -24,6 +24,10 @@ class ReportTrialBalance(models.AbstractModel):
         context = self.env.context
         move_ids = self.env['account.move'].search([('is_cbs', '=', True)])
 
+        if not context['include_profit_loss']:
+            filters_init = filters_init + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
+            filters = filters + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
+
         if context['date_to']:
             if context['operating_unit_ids'] or context['ex_operating_unit_ids']:
                 filters_init = filters_init.replace('AND  ("account_move_line"."date" <= %s)', '')
@@ -34,18 +38,29 @@ class ReportTrialBalance(models.AbstractModel):
             del where_params_init[index]
 
         if context['date_from']:
-            filters_init = filters_init.replace('>=', '<')
+            fy_start = context['date_from'][-5:]
+            if fy_start == '01-01':
+                filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
+                                                    '("account_move_line"."date" <= %s) AND ("account_move_line"."date" >= %s) AND account_move_line.is_opening=TRUE')
+            else:
+                filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
+                                                    '("account_move_line"."date" < %s) AND ("account_move_line"."date" >= %s)')
 
-        # compute the balance, debit and credit for the provided accounts
+        if context['date_from'] and context['date_to']:
+            index = where_params_init.index(context['date_from'])
+            where_params_init.insert(index + 1, context['date_from'][:4] + "-01-01")
+        elif context['date_from'] and not context['date_to']:
+            index = where_params_init.index(context['date_from'])
+            where_params_init.insert(index + 1, context['date_from'][:4] + "-01-01")
 
         if context['date_from']:
             if len(move_ids) > 0:
-                filters = " AND move_id IN %s " + filters
+                filters = " AND move_id IN %s AND account_move_line.is_opening IS NOT True " + filters
                 filters_init = " AND move_id IN %s " + filters_init
                 params = (tuple(accounts.ids),) + (tuple(move_ids.ids),) + tuple(where_params) + (
                     tuple(accounts.ids),) + (tuple(move_ids.ids),) + tuple(where_params_init)
             else:
-                filters = " AND move_id IS NULL " + filters
+                filters = " AND move_id IS NULL AND account_move_line.is_opening IS NOT True " + filters
                 filters_init = " AND move_id IS NULL " + filters_init
                 params = (tuple(accounts.ids),) + tuple(where_params) + (tuple(accounts.ids),) + tuple(
                     where_params_init)
@@ -77,10 +92,10 @@ class ReportTrialBalance(models.AbstractModel):
                       "WHERE aal.name='Layer 5'"
         else:
             if len(move_ids) > 0:
-                filters = " AND move_id IN %s " + filters
+                filters = " AND move_id IN %s AND account_move_line.is_opening IS NOT True " + filters
                 params = (tuple(accounts.ids),) + (tuple(move_ids.ids),) + tuple(where_params)
             else:
-                filters = " AND move_id IS NULL " + filters
+                filters = " AND move_id IS NULL AND account_move_line.is_opening IS NOT True " + filters
                 params = (tuple(accounts.ids),) + tuple(where_params)
 
             request = (
@@ -123,7 +138,8 @@ class ReportTrialBalance(models.AbstractModel):
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
-        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search(
+            [('level_id.name', '=', 'Layer 5')])
         account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
 
         docargs = {

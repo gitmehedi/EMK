@@ -21,3 +21,5 @@ account.data_account_type_prepayments,Contingent Accounts,Regular,Yes,True,False
 ,Contra Asset,Regular,Yes,True,False,approve
 ,Contingent Liability,Regular,Yes,True,False,approve
 ,Contingent Asset,Regular,Yes,True,False,approve
+,Assets: Office Accounts/ Cust Acctts,Regular,Yes,True,False,approve
+,Non-Balance Sheet Items,Regular,Yes,True,False,approve

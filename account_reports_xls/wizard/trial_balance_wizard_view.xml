@@ -7,8 +7,17 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//footer/button[@name='check_report']" position="after">
-                    <button name="button_export_xlsx" type="object" string="Export XLSX"/>
+                    <button name="button_export_xlsx" type="object" string="Export XLSX" class="oe_highlight" />
                     or
+                </xpath>
+                <xpath expr="//field[@name='date_from']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='display_account']" position="after">
+                    <field name="include_profit_loss"/>
+                </xpath>
+                <xpath expr="//field[@name='date_to']" position="attributes">
+                    <attribute name="required">True</attribute>
                 </xpath>
                 <field name="operating_unit_ids" position="after">
                     <field name="ex_operating_unit_ids" widget="many2many_tags" options="{'no_create': True}"/>

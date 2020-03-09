@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="rent_agreement_tree" model="ir.ui.view">
+            <field name="name">rent_agreement_tree_view</field>
+            <field name="model">agreement</field>
+            <field name="arch" type="xml">
+                <tree string="Agreements" duplicate="0"
+                      decoration-info="state=='draft'" decoration-success="state=='confirm'"
+                      decoration-bf="state in ('confirm','done')" decoration-muted="state=='done'">
+                    <field name="name"/>
+                    <field name="operating_unit_id"/>
+                    <field name="account_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="advance_amount" sum="advance_amount"/>
+                    <field name="adjusted_amount" sum="adjusted_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="rent_agreement_form" model="ir.ui.view">
+            <field name="name">rent_agreement_form_view</field>
+            <field name="model">agreement</field>
+            <field name="arch" type="xml">
+                <form string="Agreement" duplicate="0">
+                    <header>
+                        <button name="action_confirm" type="object"
+                                string="Confirm" states="draft"
+                                groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
+                                class="oe_highlight"/>
+                        <button name="action_validate" type="object"
+                                string="Validate" states="confirm"
+                                groups="vendor_agreement.vendor_agreement_approver"
+                                class="oe_highlight"/>
+                        <button name="action_cancel" type="object"
+                                string="Cancel" states="confirm"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button name="action_draft" type="object"
+                                string="Reset to draft" states="cancel"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="Payment Instruction" name="action_rent_payment" type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="Amendment" name="action_amendment" states="done"
+                                type="object" class="oe_read_only"
+                                groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
+                        <button string="Approve" name="action_approve_amendment"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': [('is_amendment', '=', False)]}"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" states="done">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
+                        <group name="main">
+                            <group name="left">
+                                <field name="operating_unit_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="description"/>
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="is_amendment" invisible="1"/>
+                                <field name="payment_btn_visible" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
+                                <field name="type" invisible="1"/>
+                            </group>
+                            <group name="right">
+                                <field name="pro_advance_amount" widget="monetary"
+                                       string="Total Proposed"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="advance_amount" widget="monetary" string="Total Approved Advance"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="service_value" widget="monetary" string="Total Service Value"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="adjustment_value" widget="monetary" string="Total Adjustment Value"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_payment_approved" widget="monetary" string="Total Advance Paid"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="adjusted_amount" readonly="1" widget="monetary"
+                                       string="Total Adjusted Amount"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="outstanding_amount" widget="monetary" string="Total Outstanding Amount"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="agreement_type" widget="radio" invisible="1"/>
+                                <field name="code" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="is_remaining" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Agreements">
+                                <field name="line_ids">
+                                    <tree string="Agreements" editable="top">
+                                        <field name="partner_id"
+                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                                        <field name="product_id"
+                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                                        <field name="rent_price" sum="rent_price"/>
+                                        <field name="rent_qty" sum="rent_qty"/>
+                                        <field name="service_value" sum="service_value"/>
+                                        <field name="advance_amount" sum="advance_amount"/>
+                                        <field name="adjusted_amount" sum="adjusted_amount" readonly="True"/>
+                                        <field name="outstanding_amount" sum="outstanding_amount" readonly="True"/>
+                                        <field name="adjustment_value" sum="adjustment_value"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="is_remaining" invisible="1"/>
+                                        <field name="is_amendment" invisible="1"/>
+                                    </tree>
+                                    <form string="Agreements">
+                                        <group>
+                                            <group>
+                                                <field name="partner_id"/>
+                                                <field name="product_id"/>
+                                                <field name="rent_price"/>
+                                                <field name="rent_qty"/>
+                                            </group>
+                                            <group>
+                                                <field name="adjustment_value"/>
+                                                <field name="service_value"/>
+                                                <field name="advance_amount"/>
+                                                <field name="adjusted_amount"/>
+                                                <field name="outstanding_amount"/>
+                                                <field name="currency_id" invisible="1"/>
+                                                <field name="company_id" invisible="1"/>
+                                                <field name="is_remaining" invisible="1"/>
+                                                <field name="is_amendment" invisible="1"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Vendor Bills" class="oe_page_title"
+                                  attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
+                                <group name="in_invoices">
+                                    <field name="in_invoice_ids" colspan="4" nolabel="1">
+                                        <tree string="Vendor Bills">
+                                            <field name="number" string="Bill No"/>
+                                            <field name="partner_id" string="Vendor"/>
+                                            <field name="date_invoice" string="Bill Date"/>
+                                            <field name="user_id" string="Responsible"/>
+                                            <field name="total_bill_payable"/>
+                                            <field name="amount_total_signed" string="Total"/>
+                                            <field name="residual_signed" string="To Pay"/>
+                                            <field name="agreement_adjusted_amount" string="Adjusted"
+                                                   sum="agreement_adjusted_amount"/>
+                                            <field name="state"/>
+                                        </tree>
+                                        <form string="Vendor Bills">
+                                            <header>
+                                                <field name="state" widget="statusbar"
+                                                       statusbar_visible="draft,open,paid"/>
+                                            </header>
+                                            <group>
+                                                <group>
+                                                    <field name="number" string="Bill No"/>
+                                                    <field name="partner_id" string="Vendor"/>
+                                                    <field name="date_invoice" string="Bill Date"/>
+                                                    <field name="user_id" string="Responsible"/>
+                                                </group>
+                                                <group>
+                                                    <field name="total_bill_payable"/>
+                                                    <field name="amount_total_signed" string="Total"/>
+                                                    <field name="residual_signed" string="To Pay"/>
+                                                    <field name="agreement_adjusted_amount" string="Adjusted"/>
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Payments" class="oe_page_title"
+                                  attrs="{'invisible': [('state', '!=', 'done')]}">
+                                <field name="payment_line_ids" string="Payments" readonly="1">
+                                    <tree string="Payment lines">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="instruction_date"/>
+                                        <field name="partner_id"/>
+                                        <field name="amount"/>
+                                        <field name="default_debit_account_id"/>
+                                        <field name="default_credit_account_id"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="state" string="Status"/>
+                                        <field name="is_sync" invisible="1"/>
+                                        <button name="sync" string="Sync" type="action"
+                                                icon="fa fa-check text-success"
+                                                attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                                        <button name="not_sync" string="Not Sync" type="action"
+                                                icon="fa-times-circle text-danger"
+                                                attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                                    </tree>
+                                    <form string="Payment">
+                                        <group>
+                                            <group>
+                                                <field name="agreement_id"/>
+                                                <field name="instruction_date"/>
+                                                <field name="partner_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="amount"/>
+                                                <field name="currency_id"/>
+                                                <field name="is_sync" invisible="1"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                                <group>
+                                    <group class="oe_subtotal_footer oe_right">
+                                        <field name="total_payment_amount" class="oe_subtotal_footer_separator"
+                                               widget="monetary"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="History" class="oe_page_title"
+                                  attrs="{'invisible': [('state', '!=', 'done')]}">
+                                <field name="history_line_ids" string="History" readonly="1">
+                                    <tree string="History lines"
+                                          decoration-info="state=='pending'" decoration-success="state=='confirm'">
+                                        <field name="end_date"/>
+                                        <field name="account_id"/>
+                                        <field name="adjustment_value"/>
+                                        <field name="service_value"/>
+                                        <field name="advance_amount_add"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                    <form string="History">
+                                        <group>
+                                            <group>
+                                                <field name="end_date"/>
+                                                <field name="account_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="adjustment_value"/>
+                                                <field name="service_value"/>
+                                                <field name="advance_amount_add"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="rent_agreement_search" model="ir.ui.view">
+            <field name="name">agreement.search.view</field>
+            <field name="model">agreement</field>
+            <field name="arch" type="xml">
+                <search string="Search Agreements">
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
+                           string="Agreement No"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="product_id" string="Service"/>
+                    <field name="start_date"/>
+                    <field name="state" string="Status"/>
+                    <separator/>
+                    <group name="groupby">
+                        <filter string="By Vendor" name="partner_groupby" domain=""
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="rent_agreement_action" model="ir.actions.act_window">
+            <field name="name">Rent Agreements</field>
+            <field name="res_model">agreement</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','multi')]</field>
+            <field name="context">{'default_type':'multi','search_default_state':1}</field>
+        </record>
+
+        <record id="rent_agreement_action_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="rent_agreement_tree"/>
+            <field name="act_window_id" ref="rent_agreement_action"/>
+        </record>
+
+        <record id="rent_agreement_action_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="rent_agreement_form"/>
+            <field name="act_window_id" ref="rent_agreement_action"/>
+        </record>
+
+        <menuitem id="rent_agreement_menu" action="rent_agreement_action"
+                  name="Rent Agreements" groups="base.group_no_one"
+                  parent="menu_agreements" sequence="35"/>
+    </data>
+</odoo>
