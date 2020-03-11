@@ -14,7 +14,7 @@ class Picking(models.Model):
         if po_obj:
             move_id_list = self.update_pr_line_mrr(po_obj, move_id_list)
         else:
-            po_obj_list = self.env['letter.credit'].search([('name', '=', self.origin)]).po_ids
+            po_obj_list = self.env['letter.credit'].search([('name', '=', self.origin), ('state', '!=', 'cancel')]).po_ids
             for po_obj in po_obj_list:
                 move_id_list = self.update_pr_line_mrr(po_obj, move_id_list)
         return res
