@@ -92,20 +92,6 @@
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_fixed_assets_view0')]"/>
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_non_current_assets_view0')]"/>
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
             <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_liabilities_view0')]"/>
         </function>
         <value eval="{'noupdate': True}" />
@@ -141,28 +127,34 @@
 
     <!-- BALANCE SHEET -->
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'Bank and Cash Accounts'), ('code','=', 'BA')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_bank_view0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_bank_view0')]"/>
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'Receivables'), ('code','=', 'REC')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_receivable0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_receivable0')]"/>
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'Current Assets'), ('code','=', 'CAS')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_current_assets0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_current_assets0')]"/>
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'Prepayments'), ('code','=', 'PRE')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_prepayements0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_prepayements0')]"/>
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'Current Liabilities'), ('code','=', 'CL1')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_current_liabilities1'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_current_liabilities1')]"/>
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'Payables'), ('code','=', 'CL2')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_current_liabilities_payable'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_current_liabilities_payable')]"/>
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'CURRENT YEAR EARNINGS'), ('code','=', 'UNAFFECTED_EARNINGS')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_current_year_earnings0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_current_year_earnings0')]"/>
 
-    <delete model="account.financial.html.report.line" search="[('name', '=', 'RETAINED EARNINGS'), ('code','=', 'RETAINED_EARNINGS')]"/>
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_retained_earnings0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_retained_earnings0')]"/>
+
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_fixed_assets_view0'))]"/>
+    <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_fixed_assets_view0')]"/>
+
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_non_current_assets_view0'))]"/>
+    <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_non_current_assets_view0')]"/>
 
 </odoo>
