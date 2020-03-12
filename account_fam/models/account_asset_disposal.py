@@ -58,10 +58,12 @@ class AccountAssetDisposal(models.Model):
             raise Warning(_('[Warning] Dispose List should not be empty.'))
 
         if self.state == 'draft':
-            self.state = 'approve'
-            self.approve_date = fields.Datetime.now()
-            self.approve_user_id = self.env.user.id
-            self.name = self.env['ir.sequence'].next_by_code('account.asset.disposal') or _('New')
+            self.write({
+                'name': self.env['ir.sequence'].next_by_code('account.asset.disposal') or _('New'),
+                'state': 'approve',
+                'approve_date': fields.Datetime.now(),
+                'approve_user_id': self.env.user.id,
+            })
 
     @api.one
     def action_dispose(self):
@@ -74,9 +76,11 @@ class AccountAssetDisposal(models.Model):
                     rec.write({'journal_entry': 'post', 'move_id': dispose.id})
                     response = rec.asset_id.set_to_close(date)
 
-            self.state = 'dispose'
-            self.dispose_date = fields.Datetime.now()
-            self.dispose_user_id = self.env.user.id
+            self.write({
+                'state': 'dispose',
+                'dispose_date': fields.Datetime.now(),
+                'dispose_user_id': self.env.user.id,
+            })
 
     def generate_move(self, asset):
         prec = self.env['decimal.precision'].precision_get('Account')
@@ -99,7 +103,8 @@ class AccountAssetDisposal(models.Model):
             'name': asset.display_name,
             'account_id': asset.asset_type_id.account_depreciation_id.id,
             'credit': 0.0,
-            'debit': asset.accumulated_value if float_compare(asset.accumulated_value, 0.0, precision_digits=prec) > 0 else 0.0,
+            'debit': asset.accumulated_value if float_compare(asset.accumulated_value, 0.0,
+                                                              precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
@@ -111,7 +116,8 @@ class AccountAssetDisposal(models.Model):
             'name': asset.display_name,
             'account_id': asset.asset_type_id.account_asset_loss_id.id,
             'credit': 0.0,
-            'debit': asset.value_residual if float_compare(asset.value_residual, 0.0, precision_digits=prec) > 0 else 0.0,
+            'debit': asset.value_residual if float_compare(asset.value_residual, 0.0,
+                                                           precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
@@ -119,6 +125,7 @@ class AccountAssetDisposal(models.Model):
             'currency_id': company_currency != current_currency and current_currency.id or False,
         }
 
+        # if credit >0 and debit>
         return self.env['account.move'].create({
             'ref': asset.code,
             'date': fields.Datetime.now() or False,
@@ -156,5 +163,7 @@ class AccountAssetDisposalLine(models.Model):
     @api.onchange('asset_id')
     def onchange_asset(self):
         if self.asset_id:
-            self.asset_value = self.asset_id.value_residual
-            self.depreciation_value = self.asset_id.value - self.asset_id.value_residual
+            depreciated_value = sum([val.amount for val in self.asset_id.depreciation_line_ids])
+            self.depreciation_value = depreciated_value
+            self.asset_value = self.asset_id.value_residual - depreciated_value
+

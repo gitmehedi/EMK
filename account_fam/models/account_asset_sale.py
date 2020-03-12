@@ -59,10 +59,12 @@ class AccountAssetSale(models.Model):
             raise Warning(_("[Warning] Sale List should not be empty."))
 
         if self.state == 'draft':
-            self.state = 'approve'
-            self.approve_date = fields.Datetime.now()
-            self.approve_user_id = self.env.user.id
-            self.name = self.env['ir.sequence'].next_by_code('account.asset.sale') or _('New')
+            self.write({
+                'state': 'approve',
+                'approve_date': fields.Datetime.now(),
+                'approve_user_id': self.env.user.id,
+                'name': self.env['ir.sequence'].next_by_code('account.asset.sale') or _('New'),
+            })
 
     @api.one
     def action_sale(self):
@@ -75,9 +77,11 @@ class AccountAssetSale(models.Model):
                     rec.write({'journal_entry': 'post', 'move_id': sell.id})
                     response = rec.asset_id.set_to_close(date)
 
-            self.state = 'sale'
-            self.sale_date = fields.Datetime.now()
-            self.sale_user_id = self.env.user.id
+            self.write({
+                'state': 'sale',
+                'sale_date': fields.Datetime.now(),
+                'sale_user_id': self.env.user.id,
+            })
 
     def generate_move(self, asset, rec):
         prec = self.env['decimal.precision'].precision_get('Account')
@@ -101,7 +105,7 @@ class AccountAssetSale(models.Model):
             'account_id': asset.asset_type_id.account_depreciation_id.id,
             'credit': 0.0,
             'debit': float("{0:.2f}".format(asset.accumulated_value)) if float_compare(asset.accumulated_value, 0.0,
-                                                              precision_digits=prec) > 0 else 0.0,
+                                                                                       precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
@@ -142,7 +146,7 @@ class AccountAssetSale(models.Model):
             'account_id': asset.asset_type_id.asset_sale_suspense_account_id.id,
             'credit': 0.0,
             'debit': rec.sale_value if float_compare(rec.sale_value, 0.0,
-                                                           precision_digits=prec) > 0 else 0.0,
+                                                     precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
@@ -186,7 +190,9 @@ class AccountAssetSaleLine(models.Model):
     move_id = fields.Many2one('account.move', string='Journal')
 
     @api.onchange('asset_id')
-    def onchange_asset(self):
+    def onchange_asset_id(self):
         if self.asset_id:
-            self.asset_value = self.asset_id.value_residual
-            self.depreciation_value = self.asset_id.value - self.asset_id.value_residual
+            depreciated_value = sum([val.amount for val in self.asset_id.depreciation_line_ids])
+            self.depreciation_value = depreciated_value
+            self.asset_value = self.asset_id.value_residual - depreciated_value
+

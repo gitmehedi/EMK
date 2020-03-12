@@ -479,11 +479,17 @@ class AccountAssetAsset(models.Model):
     def set_to_close(self, date):
         for asset in self:
             if asset.allocation_status and asset.state == 'open' and asset.depreciation_flag:
-                last_depr_date = asset._get_last_depreciation_date()
+                last_depr_date = asset.lst_depr_date
                 curr_depr_date = self.date_depr_format(date)
-                no_of_days = (curr_depr_date - self.date_str_format(last_depr_date[asset['id']])).days
+
                 depr_amount = asset.value_residual
                 book_val_amount = asset.value_residual - depr_amount
+
+                if last_depr_date:
+                    no_of_days = (curr_depr_date - self.date_str_format(last_depr_date)).days
+                else:
+                    no_of_days = 0
+
 
                 vals = {
                     'amount': asset.value_residual,
@@ -500,8 +506,10 @@ class AccountAssetAsset(models.Model):
                 depreciation = asset.depreciation_line_ids.create(vals)
                 if depreciation:
                     if asset.create_move(depreciation):
-                        asset.write({'lst_depr_date': curr_depr_date.date()})
+                        asset.write({'lst_depr_date': curr_depr_date.date(),
+                                     'state': 'close'})
                         return True
+
 
     def date_depr_format(self, date):
         no_of_days = calendar.monthrange(date.year, date.month)[1]
