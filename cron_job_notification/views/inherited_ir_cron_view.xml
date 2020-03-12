@@ -6,7 +6,7 @@
             <field name="model">ir.cron</field>
             <field name="inherit_id" ref="base.ir_cron_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='priority']" position="after">
+                <xpath expr="//field[@name='function']" position="after">
                     <field name="is_success_notification"/>
                     <field name="is_failure_notification"/>
                 </xpath>
