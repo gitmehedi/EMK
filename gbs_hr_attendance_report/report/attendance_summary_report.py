@@ -65,7 +65,7 @@ class AttendanceSummaryReport(models.AbstractModel):
                 report_summary['absent_days'] = len(filtered_absent_data_obj)
 
                 late_data_obj = self.env['hr.attendance.late.day'].search([('date', '>=', data['date_from']),
-                                                                               ('date', '<=', data['date_to'])])
+                                                                           ('date', '<=', data['date_to'])])
                 filtered_late_data_obj = late_data_obj.filtered(
                     lambda x: x.att_summary_line_id.employee_id.id == record.id and x.att_summary_line_id.state == 'approved')
                 report_summary['late_days'] = len(filtered_late_data_obj)

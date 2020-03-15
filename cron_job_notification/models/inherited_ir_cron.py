@@ -80,9 +80,7 @@ class IrCron(models.Model):
 
     @api.model
     def _callback(self, model_name, method_name, args, job_id):
-        # print('called')
-        # values = super(IrCron, self)._callback(model_name, method_name, args, job_id)
-        # print('executed')
+        #overwriting the base module function of ir.cron model
         """ Run the method associated to a given job
 
                 It takes care of logging and exception handling.
@@ -114,6 +112,7 @@ class IrCron(models.Model):
                         end_time = time.time()
                         _logger.debug('%.3fs (%s, %s)', end_time - start_time, model_name, method_name)
                     self.pool.signal_caches_change()
+                    #sending success notification
                     self.success_mail_reminder(cron_obj)
                 else:
                     _logger.warning("Method '%s.%s' does not exist.", model_name, method_name)
@@ -123,6 +122,7 @@ class IrCron(models.Model):
             _logger.exception("Call of self.env[%r].%s(*%r) failed in Job #%s",
                               model_name, method_name, args, job_id)
             self._handle_callback_exception(model_name, method_name, args, job_id, e)
+            #sending failure notification
             self.failure_mail_reminder(cron_obj)
 
 

@@ -3,16 +3,13 @@
     <data noupdate="1">
         <record id="cron_job_success_notification" model="mail.template">
             <field name="name">Cron Job Success Notification</field>
-            <!--<field name="email_from">${object.company_id and object.company_id.email or ''}</field>-->
-            <field name="subject">${object.name} successfully run!!!</field>
-            <!--<field name="email_to">${object.email|safe}</field>-->
-            <!--<field name="lang">${object.lang}</field>-->
+            <field name="subject">${object.name} have successfully executed!!!</field>
             <field name="model_id" ref="base.model_ir_cron"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html">
                 <![CDATA[
 	      <p>Dear Concern,</p>
-	      <p>Your cron job ${object.name} have successfully run</p>
+	      <p>Your cron job ${object.name} have successfully execyted</p>
 	      <p>The next schedule is at ${object.nextcall}</p>
 	    ]]>
             </field>
@@ -21,16 +18,13 @@
 
         <record id="cron_job_failure_notification" model="mail.template">
             <field name="name">Cron Job Failure Notification</field>
-            <!--<field name="email_from">${object.company_id and object.company_id.email or ''}</field>-->
-            <field name="subject">${object.name} successfully run!!!</field>
-            <!--<field name="email_to">${object.email|safe}</field>-->
-            <field name="lang">${object.lang}</field>
+            <field name="subject">${object.name} have falied to execute!!!</field>
             <field name="model_id" ref="base.model_ir_cron"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html">
                 <![CDATA[
 	      <p>Dear Concern,</p>
-	      <p>Your cron job scheduled at ${object.name} have failed to run</p>
+	      <p>Your cron job scheduled at ${object.name} have failed to execute</p>
 	      <p>The next schedule is at ${object.nextcall}</p>
 	    ]]>
             </field>

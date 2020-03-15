@@ -18,9 +18,9 @@
 	                </div>
                 </xpath>
 
-                <xpath expr="//button" position="after">
-                    <button name="mail_reminder" type="object" string="Test Email" class="oe_highlight"/>
-                </xpath>
+                <!--<xpath expr="//button" position="after">-->
+                    <!--<button name="mail_reminder" type="object" string="Test Email" class="oe_highlight"/>-->
+                <!--</xpath>-->
             </field>
         </record>
     </data>
