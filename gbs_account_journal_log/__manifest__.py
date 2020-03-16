@@ -4,10 +4,12 @@
     'website': 'www.genweb2.com',
     'category': 'accounts',
     'version': '10.1.1.1',
+    'sequence': 31,
     'depends': [
         'account',
     ],
     'data': [
+        'views/account_journal_view.xml',
         'views/inherit_account_move_view.xml',
         'views/inherit_account_move_line_view.xml',
     ],

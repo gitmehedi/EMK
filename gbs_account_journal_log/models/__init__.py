@@ -1,2 +1,3 @@
 import inherit_account_move_line
 import inherit_account_move
+import account_journal
