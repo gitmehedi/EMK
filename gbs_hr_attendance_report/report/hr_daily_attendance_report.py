@@ -19,13 +19,17 @@ class GetDailyAttendanceReport(models.AbstractModel):
         requested_date = data['required_date']
 
         # short lave count
-        from_date = str(str(data['required_date']) + ' 00:00:00')
-        to_date = str(str(data['required_date']) + ' 23:59:59')
-        short_leave_obj = self.env['hr.short.leave'].search([('date_from', '>=', from_date),
-                                                             ('date_to', '<=', to_date),
+        # from_date = str(str(data['required_date']) + ' 00:00:00')
+        # to_date = str(str(data['required_date']) + ' 23:59:59')
+        from_date_str = str(str(data['required_date']) + ' 00:00:00')
+        to_date_str = str(str(data['required_date']) + ' 23:59:59')
+        from_date = datetime.datetime.strptime(from_date_str, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6)
+        to_date = datetime.datetime.strptime(to_date_str, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6)
+        short_leave_obj = self.env['hr.short.leave'].search([('date_from', '>=', str(from_date)),
+                                                             ('date_to', '<=', str(to_date)),
                                                              ('state', '=', 'validate')])
 
-        curr_time_gmt =  datetime.datetime.now()
+        curr_time_gmt = datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
 
