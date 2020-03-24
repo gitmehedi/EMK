@@ -59,11 +59,15 @@ class AccountInvoice(models.Model):
         if date_range_objs:
             if isinstance(self.id, models.NewId):
                 invoice_objs = self.search(
-                    [('partner_id', '=', self.partner_id.id), ('is_tds_applicable', '=', True),
+                    [('partner_id', '=', self.partner_id.id),
+                     ('is_tds_applicable', '=', True),
+                     ('state','in',['open','paid']),
                      ('date', '>=', date_range_objs.date_start), ('date', '<=', date_range_objs.date_end)])
             else:
                 invoice_objs = self.search(
-                    [('id', '!=', self.id), ('partner_id', '=', self.partner_id.id), ('is_tds_applicable', '=', True),
+                    [('id', '!=', self.id), ('is_tds_applicable', '=', True),
+                     ('partner_id', '=', self.partner_id.id),
+                     ('state', 'in', ['open', 'paid']),
                      ('date', '>=', date_range_objs.date_start), ('date', '<=', date_range_objs.date_end)])
             for line in self.invoice_line_ids:
                 if invoice_objs:
