@@ -21,7 +21,7 @@
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
                 <field name="account_tds_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                <field name="tds_amount"/>
+                <field name="tds_amount" />
             </xpath>
             <xpath expr="//field[@name='residual']" position="after">
                 <field name="total_tds_amount" class="oe_subtotal_footer_separator"

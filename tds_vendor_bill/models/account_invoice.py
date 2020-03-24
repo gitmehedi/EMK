@@ -80,19 +80,15 @@ class AccountInvoice(models.Model):
                             if invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
                                 pre_invoice_line_list.append(invoice_line_obj)
 
-                    # line._calculate_tds_value(pre_invoice_line_list)
-                    # pre_invoice_line_list.append(line)
-
                     appplicable_list = tds_acc_dict.get(line.account_tds_id.id, False)
                     if appplicable_list:
-                        line._calculate_tds_value(pre_invoice_line_list)
-                        pre_invoice_line_list.append(appplicable_list)
-                        tds_acc_dict[line.account_tds_id.id] = appplicable_list
+                        line._calculate_tds_value(appplicable_list)
+                        pre_invoice_line_list.append(line)
+                        tds_acc_dict[line.account_tds_id.id] = pre_invoice_line_list
                     else:
                         line._calculate_tds_value(pre_invoice_line_list)
-                        pre_invoice_line_list.append(appplicable_list)
-                        line_list = [line]
-                        tds_acc_dict[line.account_tds_id.id] = line_list
+                        pre_invoice_line_list.append(line)
+                        tds_acc_dict[line.account_tds_id.id] = pre_invoice_line_list
                 else:
                     appplicable_list = tds_acc_dict.get(line.account_tds_id.id, False)
                     if appplicable_list:
@@ -242,7 +238,8 @@ class AccountInvoiceLine(models.Model):
         else:
             return super(AccountInvoiceLine, self)._compute_price()
 
-    @api.onchange('account_tds_id', 'price_subtotal_without_vat', 'invoice_id.total_tds_amount')
+    @api.onchange('price_unit', 'account_tds_id',
+                  'price_subtotal_without_vat', 'invoice_id.total_tds_amount')
     def _onchange_account_tds_id(self):
         if self.account_tds_id:
             return self.invoice_id._update_tds()
@@ -269,16 +266,15 @@ class AccountInvoiceLine(models.Model):
 
             else:
                 for tds_slab_rule_obj in self.account_tds_id.line_ids:
-                    if not pre_invoice_line_list and self.invoice_id.total_tds_amount >= tds_slab_rule_obj.range_from and self.invoice_id.total_tds_amount <= tds_slab_rule_obj.range_to:
+                    if not pre_invoice_line_list and tds_slab_rule_obj.range_from <= pro_base_val <= tds_slab_rule_obj.range_to:
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
-                        break
+                        return self.tds_amount
                     elif pre_invoice_line_list:
                         total_amount = pro_base_val + sum(
                             int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
-                        if total_amount >= tds_slab_rule_obj.range_from and total_amount <= tds_slab_rule_obj.range_to:
+                        if tds_slab_rule_obj.range_from <= total_amount <= tds_slab_rule_obj.range_to:
                             total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
-                            remaining_tds_amount = total_tds_amount - sum(
-                                int(i.tds_amount) for i in pre_invoice_line_list)
+                            remaining_tds_amount = total_tds_amount - sum(i.tds_amount for i in pre_invoice_line_list)
                             if remaining_tds_amount < 0.0:
                                 self.tds_amount = 0.0
                             elif remaining_tds_amount > pro_base_val and not isinstance(self.invoice_id.id,
@@ -289,7 +285,7 @@ class AccountInvoiceLine(models.Model):
                                 self.tds_amount = pro_base_val
                             else:
                                 self.tds_amount = remaining_tds_amount
-                            break
+                            return self.tds_amount
                     else:
                         self.tds_amount = 0.0
         return self.tds_amount
