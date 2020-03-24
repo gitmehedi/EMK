@@ -61,7 +61,7 @@ class AccountInvoice(models.Model):
                 invoice_objs = self.search(
                     [('partner_id', '=', self.partner_id.id),
                      ('is_tds_applicable', '=', True),
-                     ('state','in',['open','paid']),
+                     ('state', 'in', ['open', 'paid']),
                      ('date', '>=', date_range_objs.date_start), ('date', '<=', date_range_objs.date_end)])
             else:
                 invoice_objs = self.search(
@@ -69,17 +69,39 @@ class AccountInvoice(models.Model):
                      ('partner_id', '=', self.partner_id.id),
                      ('state', 'in', ['open', 'paid']),
                      ('date', '>=', date_range_objs.date_start), ('date', '<=', date_range_objs.date_end)])
+
+            tds_acc_dict = {}
+
             for line in self.invoice_line_ids:
                 if invoice_objs:
                     pre_invoice_line_list = []
                     for invoice_obj in invoice_objs:
                         for invoice_line_obj in invoice_obj.invoice_line_ids:
-                            # if invoice_line_obj.product_id.id == line.product_id.id and invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
                             if invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
                                 pre_invoice_line_list.append(invoice_line_obj)
-                    line._calculate_tds_value(pre_invoice_line_list)
+
+                    # line._calculate_tds_value(pre_invoice_line_list)
+                    # pre_invoice_line_list.append(line)
+
+                    appplicable_list = tds_acc_dict.get(line.account_tds_id.id, False)
+                    if appplicable_list:
+                        line._calculate_tds_value(pre_invoice_line_list)
+                        pre_invoice_line_list.append(appplicable_list)
+                        tds_acc_dict[line.account_tds_id.id] = appplicable_list
+                    else:
+                        line._calculate_tds_value(pre_invoice_line_list)
+                        pre_invoice_line_list.append(appplicable_list)
+                        line_list = [line]
+                        tds_acc_dict[line.account_tds_id.id] = line_list
                 else:
-                    line._calculate_tds_value()
+                    appplicable_list = tds_acc_dict.get(line.account_tds_id.id, False)
+                    if appplicable_list:
+                        line._calculate_tds_value(appplicable_list)
+                        appplicable_list.append(line)
+                        tds_acc_dict[line.account_tds_id.id] = appplicable_list
+                    else:
+                        line._calculate_tds_value()
+                        tds_acc_dict[line.account_tds_id.id] = [line]
 
     def _update_tax_line_vals(self, line):
         if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
@@ -240,12 +262,14 @@ class AccountInvoiceLine(models.Model):
                     self.tds_amount = (pro_base_val / (1 - self.account_tds_id.flat_rate / 100)) - pro_base_val
                 else:
                     self.tds_amount = pro_base_val * self.account_tds_id.flat_rate / 100
+
                 if pre_invoice_line_list:
                     remaining_pre_tds = self.previous_tds_value(self.account_tds_id.flat_rate, pre_invoice_line_list)
                     self.tds_amount = self.tds_amount + remaining_pre_tds
+
             else:
                 for tds_slab_rule_obj in self.account_tds_id.line_ids:
-                    if not pre_invoice_line_list and pro_base_val >= tds_slab_rule_obj.range_from and pro_base_val <= tds_slab_rule_obj.range_to:
+                    if not pre_invoice_line_list and self.invoice_id.total_tds_amount >= tds_slab_rule_obj.range_from and self.invoice_id.total_tds_amount <= tds_slab_rule_obj.range_to:
                         self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
                         break
                     elif pre_invoice_line_list:
@@ -257,7 +281,11 @@ class AccountInvoiceLine(models.Model):
                                 int(i.tds_amount) for i in pre_invoice_line_list)
                             if remaining_tds_amount < 0.0:
                                 self.tds_amount = 0.0
-                            elif remaining_tds_amount > pro_base_val:
+                            elif remaining_tds_amount > pro_base_val and not isinstance(self.invoice_id.id,
+                                                                                        models.NewId):
+                                self.tds_amount = pro_base_val
+                            elif remaining_tds_amount > pro_base_val and isinstance(self.invoice_id.id,
+                                                                                        models.NewId):
                                 self.tds_amount = pro_base_val
                             else:
                                 self.tds_amount = remaining_tds_amount
