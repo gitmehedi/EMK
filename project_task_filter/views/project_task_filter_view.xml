@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="inherit_view_task_search_form" model="ir.ui.view">
+            <field name="name">project.task.search.form.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='draft']" position="before">
+                    <filter string="Open Stage" name="open_stage" domain="[('stage_id.closed', '=', False)]"/>
+                    <seperator/>
+                </xpath>
+            </field>
+        </record>
+        <record id="project.action_view_task" model="ir.actions.act_window">
+            <field name="context">{'search_default_my_tasks': 1, 'search_default_open_stage': 1}</field>
+        </record>
+    </data>
+</odoo>
