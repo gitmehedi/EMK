@@ -147,9 +147,10 @@ class VendorAgreement(models.Model):
                 raise ValidationError(
                     "Please Check Your Service Value!! \n Amount Never Take Negative Value!")
 
-            if self.advance_amount > self.service_value:
-                raise ValidationError(
-                    "Approved Advance should not be greater than Service Value.")
+            # if self.advance_amount > self.service_value:
+            #     raise ValidationError(
+            #         "Approved Advance should not be greater than Service Value.")
+
             if self.adjustment_value > self.advance_amount:
                 raise ValidationError(
                     "Adjustment Value should not be greater than Approved Advance.")
