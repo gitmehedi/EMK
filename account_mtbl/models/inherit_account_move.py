@@ -52,10 +52,10 @@ class AccountMove(models.Model):
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         return super(AccountMove, self).post()
 
-    # @api.constrains('date')
-    # def _check_date(self):
-    #     if self.date > fields.Date.today(pytz.timezone(self.env.user.tz)):
-    #         raise ValidationError(_('Journal Date should not be greater than current datetime.'))
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date > fields.Date.today(pytz.timezone(self.env.user.tz)):
+            raise ValidationError(_('Journal Date should not be greater than current datetime.'))
 
 
 class AccountMoveLine(models.Model):
