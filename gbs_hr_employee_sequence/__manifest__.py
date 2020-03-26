@@ -32,7 +32,7 @@ Keep Track of Length of Employment
     'license': 'AGPL-3',
     'depends': [
         'hr',
-        'gbs_hr_security',
+        # 'gbs_hr_security',
     ],
     "external_dependencies": {
         'python': ['dateutil'],
