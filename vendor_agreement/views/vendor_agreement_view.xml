@@ -33,6 +33,8 @@
                 <xpath expr="//form" position="replace">
                     <form string="Agreement" duplicate="0">
                         <header>
+                            <field name="is_amendment" invisible="1"/>
+
                             <button name="action_confirm" type="object"
                                     string="Confirm" states="draft"
                                     groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
@@ -51,8 +53,9 @@
                                     class="oe_highlight"
                                     attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                                     groups="vendor_agreement.vendor_agreement_approver"/>
-                            <button string="Amendment" name="action_amendment" states="done"
+                            <button string="Amendment" name="action_amendment"
                                     type="object" class="oe_read_only"
+                                    attrs="{'invisible': ['|',('is_amendment', '=', True),('state', 'in', ('draft','confirm','cancel'))]}"
                                     groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
                             <button string="Approve" name="action_approve_amendment"
                                     type="object" class="oe_highlight"
@@ -95,8 +98,8 @@
                                     <field name="type" invisible="1"/>
                                 </group>
                                 <group name="right">
-                                    <field name="pro_advance_amount" widget="monetary"
-                                           options="{'currency_field': 'currency_id'}"/>
+<!--                                    <field name="pro_advance_amount" widget="monetary"-->
+<!--                                           options="{'currency_field': 'currency_id'}"/>-->
                                     <field name="advance_amount" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="service_value" widget="monetary"

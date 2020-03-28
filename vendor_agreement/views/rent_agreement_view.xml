@@ -84,9 +84,9 @@
                                 <field name="type" invisible="1"/>
                             </group>
                             <group name="right">
-                                <field name="pro_advance_amount" widget="monetary"
-                                       string="Total Proposed"
-                                       options="{'currency_field': 'currency_id'}"/>
+<!--                                <field name="pro_advance_amount" widget="monetary"-->
+<!--                                       string="Total Proposed"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
                                 <field name="advance_amount" widget="monetary" string="Total Approved Advance"
                                        options="{'currency_field': 'currency_id'}"/>
                                 <field name="service_value" widget="monetary" string="Total Service Value"

@@ -20,9 +20,9 @@ class VendorAgreement(models.Model):
                              track_visibility='onchange', states={'draft': [('readonly', False)]})
     end_date = fields.Date(string='End Date', readonly=True, track_visibility='onchange',
                            states={'draft': [('readonly', False)]})
-    pro_advance_amount = fields.Float(string="Proposed Amount", readonly=True,
-                                      track_visibility='onchange', states={'draft': [('readonly', False)]},
-                                      help="Proposed advance amount. Initially proposed amount raise by vendor.")
+    # pro_advance_amount = fields.Float(string="Proposed Amount", readonly=True,
+    #                                   track_visibility='onchange', states={'draft': [('readonly', False)]},
+    #                                   help="Proposed advance amount. Initially proposed amount raise by vendor.")
     adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
                                     help="Adjustment amount which will be adjust in bill.")
@@ -134,13 +134,13 @@ class VendorAgreement(models.Model):
             elif self.start_date >= self.end_date:
                 raise ValidationError("Agreement 'End Date' never be less than or equal to 'Start Date'.")
 
-    @api.constrains('pro_advance_amount', 'adjustment_value', 'service_value', 'advance_amount')
+    @api.constrains('adjustment_value', 'service_value', 'advance_amount')
     def check_pro_advance_amount(self):
-        if self.pro_advance_amount or self.adjustment_value or self.service_value:
-            if self.pro_advance_amount < 0:
-                raise ValidationError(
-                    "Please Check Your Proposed Advance Amount!! \n Amount Never Take Negative Value!")
-            elif self.adjustment_value < 0:
+        if self.adjustment_value or self.service_value:
+            # if self.pro_advance_amount < 0:
+            #     raise ValidationError(
+            #         "Please Check Your Proposed Advance Amount!! \n Amount Never Take Negative Value!")
+            if self.adjustment_value < 0:
                 raise ValidationError(
                     "Please Check Your Adjustment Value!! \n Amount Never Take Negative Value!")
             elif self.service_value < 0:
@@ -258,7 +258,7 @@ class VendorAgreement(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {'end_date': self.end_date or False,
-                        'pro_advance_amount': self.pro_advance_amount or False,
+                        # 'pro_advance_amount': self.pro_advance_amount or False,
                         'adjustment_value': self.adjustment_value or False,
                         'service_value': self.service_value or False,
                         'account_id': self.account_id.id or False
