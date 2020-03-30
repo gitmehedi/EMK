@@ -146,29 +146,26 @@ class HrEmployeeLoanRequest(models.Model):
 
                 result = self._check_individual_policy(rec)
 
-                if result:
-                    if not result['state']:
-                        if policy.check_on_application_blocker_type == 'warning':
-                            warning = True
-                            warning_msg = warning_msg + "\n" + result['msg']
-                        elif policy.check_on_application_blocker_type == 'blocker':
-                            blocker = True
-                            blocker_msg = blocker_msg + "\n" + result['msg']
+                if not result['state']:
+                    if policy.application_blocker_type == 'warning':
+                        warning = True
+                        warning_msg = warning_msg + "\n" + result['msg']
+                    elif policy.application_blocker_type == 'blocker':
+                        blocker = True
+                        blocker_msg = blocker_msg + "\n" + result['msg']
 
             elif policy.check_on_approval and state == "approve":
 
                 result = self._check_individual_policy(rec)
 
-                if result:
-                    if not result['state']:
-                        if policy.check_on_approval_blocker_type == 'warning':
-                            warning = True
-                            warning_msg = warning_msg + "\n" + result['msg']
-                        elif policy.check_on_approval_blocker_type == 'blocker':
-                            blocker = True
-                            blocker_msg = blocker_msg + "\n" + result['msg']
-            else:
-                pass
+                if not result['state']:
+                    if policy.approval_blocker_type == 'warning':
+                        warning = True
+                        warning_msg = warning_msg + "\n" + result['msg']
+                    elif policy.approval_blocker_type == 'blocker':
+                        blocker = True
+                        blocker_msg = blocker_msg + "\n" + result['msg']
+
         res = {
             'warning': warning,
             'blocker': blocker,
@@ -277,31 +274,31 @@ class HrEmployeeLoanRequest(models.Model):
     def _check_individual_policy(self, loan_info):
         policy = loan_info['policy']
         loan_amount = loan_info['loan_amount']
-        res = {}
-        if policy.basis_id == 'flat':
-            if policy.value < loan_amount:
-                res['state'] = False
-                res['msg'] = "Policy On Max Limit:" + "\n" + "--Principal Amount is exceeding the Maximum Loan Limit"
+        state = True
+        msg = ""
 
-                return res
+        if policy.policy_type_id == 'flat':
+            if policy.basis_id == 'flat':
+                if policy.value < loan_amount:
+                    state = False
+                    msg = msg + "Policy On Max Limit:" + "\n" + "--Principal Amount is exceeding the Maximum Loan Limit"
 
-        elif policy.basis_id == 'percentage':
-            emp_id = loan_info['employee_id']
-            self._cr.execute(
-                "SELECT employee_id,wage FROM hr_contract WHERE employee_id = {0} ORDER BY date_start DESC LIMIT 1".format(
-                    emp_id))
-            query_data = self._cr.fetchall()
-            if query_data[0]:
-                employee_wage = query_data[0][1]
-            max_limit = (employee_wage * policy.value) / 100
-            if max_limit < loan_info['loan_amount']:
-                res['state'] = False
-                res[
-                    'msg'] = "Policy On Percentage of Wage:" + "\n" + "--Principal Amount is exceeding the Maximum Limit according to the wage of your latest contract"
+            elif policy.basis_id == 'percentage':
+                emp_id = loan_info['employee_id']
+                self._cr.execute(
+                    "SELECT employee_id,wage FROM hr_contract WHERE employee_id = {0} ORDER BY date_start DESC LIMIT 1".format(
+                        emp_id))
+                query_data = self._cr.fetchall()
+                if query_data[0]:
+                    employee_wage = query_data[0][1]
+                max_limit = (employee_wage * policy.value) / 100
+                if max_limit < loan_info['loan_amount']:
+                    state = False
+                    msg = msg + "Policy On Percentage of Wage:" + "\n" +\
+                                 "--Principal Amount is exceeding the Maximum Limit according to the wage of your latest contract"
 
-                return res
-
-        else:
-            res['state'] = True
-            res['msg'] = None
-            return res
+        res = {
+            'state': state,
+            'msg': msg
+        }
+        return res
