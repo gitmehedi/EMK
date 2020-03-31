@@ -45,12 +45,13 @@ class AccountInvoice(models.Model):
                                      store=True, readonly=True, track_visibility='onchange', copy=False)
     total_amount_with_vat = fields.Float('Total', compute='_compute_total_amount_with_vat',
                                          store=True, readonly=True, track_visibility='onchange', copy=False)
-    date_invoice = fields.Date(default=fields.Datetime.now,states={'draft': [('readonly', True)]})
-    total_bill_payable = fields.Float(string='Net Payable', compute='_computer_bill_payable',store=True)
-    vendor_account_id = fields.Many2one('account.account',string='Account', related='partner_id.property_account_payable_id',store=True)
+    date_invoice = fields.Date(default=fields.Datetime.now, states={'draft': [('readonly', True)]})
+    total_bill_payable = fields.Float(string='Net Payable', compute='_computer_bill_payable', store=True)
+    vendor_account_id = fields.Many2one('account.account', string='Account',
+                                        related='partner_id.property_account_payable_id', store=True)
 
     @api.one
-    @api.depends('residual','total_payment_amount','total_payment_approved')
+    @api.depends('residual', 'total_payment_amount', 'total_payment_approved')
     def _computer_bill_payable(self):
         self.total_bill_payable = self.residual + self.total_payment_approved
 
@@ -206,9 +207,58 @@ class AccountInvoice(models.Model):
         if self.state == 'draft':
             if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+
+            total_tds = self.total_tds()
+
+            for val in self.invoice_line_ids:
+                for tds_rule in val.account_tds_id.line_ids:
+                    if tds_rule.range_from <= total_tds[val.account_tds_id.id]['total_amount'] <= tds_rule.range_to:
+                        actual_tds = total_tds[val.account_tds_id.id]['total_amount'] * tds_rule.rate / 100
+                        miss_tds = actual_tds - total_tds[val.account_tds_id.id]['prev_tds']
+                        rate = miss_tds/total_tds[val.account_tds_id.id]['price']
+                        val.tds_amount = val.price_subtotal_without_vat * rate
+
             return super(AccountInvoice, self).action_invoice_open()
         else:
             raise ValidationError(_("[Validation Error] Vendor Bill {} already validated.".format(self.number)))
+
+    def total_tds(self):
+        vals = {}
+        date_range = self.env['date.range'].search(
+            [('date_start', '<=', self.date), ('date_end', '>=', self.date), ('type_id.tds_year', '=', True),
+             ('active', '=', True)],
+            order='id DESC', limit=1)
+
+        prev_inv = self.search(
+            [('partner_id', '=', self.partner_id.id),
+             ('is_tds_applicable', '=', True),
+             ('state', 'in', ['open', 'paid']),
+             ('date', '>=', date_range.date_start), ('date', '<=', date_range.date_end)])
+
+        tds_rate = self.env['tds.rule'].search([('type_rate', '=', 'slab')])
+        inv_line = self.invoice_line_ids.search(
+            [('invoice_id', 'in', prev_inv.ids + [self.id]), ('account_tds_id', 'in', tds_rate.ids)])
+
+        for rec in inv_line:
+            base_value = rec.quantity * rec.price_unit
+            prev_tds = rec.tds_amount if rec.invoice_id.id != self.id else 0
+            curr_tds = rec.tds_amount if rec.invoice_id.id == self.id else 0
+            price = rec.quantity * rec.price_unit if rec.invoice_id.id == self.id else 0
+
+            if rec.account_tds_id.id in vals:
+                vals[rec.account_tds_id.id]['total_amount'] = vals[rec.account_tds_id.id]['total_amount'] + base_value
+                vals[rec.account_tds_id.id]['prev_tds'] = vals[rec.account_tds_id.id]['prev_tds'] + prev_tds
+                vals[rec.account_tds_id.id]['curr_tds'] = vals[rec.account_tds_id.id]['curr_tds'] + curr_tds
+                vals[rec.account_tds_id.id]['price'] = vals[rec.account_tds_id.id]['price'] + price
+            else:
+                vals[rec.account_tds_id.id] = {
+                    'total_amount': base_value,
+                    'prev_tds': prev_tds,
+                    'curr_tds': curr_tds,
+                    'price': price
+                }
+
+        return vals
 
     @api.multi
     def action_move_create(self):
@@ -290,7 +340,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        if self.state=='draft':
+        if self.state == 'draft':
             if vals.get('reference'):
                 vals.update({'reference': vals.get('reference').strip()})
             return super(AccountInvoice, self).write(vals)
@@ -334,13 +384,13 @@ class AccountInvoiceLine(models.Model):
             if self.invoice_id.vat_selection == 'mushok':
                 if self.invoice_line_tax_ids[0].mushok_amount > 0.0:
                     self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
+                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
                 else:
                     self.mushok_vds_amount = 0
             elif self.invoice_id.vat_selection == 'vds_authority':
                 if self.invoice_line_tax_ids[0].vds_amount > 0.0:
                     self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
                 else:
                     self.mushok_vds_amount = 0
             else:
