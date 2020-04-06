@@ -116,6 +116,12 @@
                                     <field name="code" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="is_remaining" invisible="1"/>
+                                    <field name="vat_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="tds_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="security_deposit"/>
+
                                 </group>
                             </group>
                             <notebook>

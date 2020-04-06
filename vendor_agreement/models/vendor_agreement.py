@@ -86,6 +86,15 @@ class VendorAgreement(models.Model):
         ('cancel', "Canceled")], default='draft', string="Status",
         track_visibility='onchange')
 
+    #vat_tds_and_security_deposit_field
+
+    vat_id = fields.Many2one('account.tax', string='VAT', readonly=True, states={'draft': [('readonly', False)]})
+    tds_id = fields.Many2one('tds.rule', string='TDS', readonly=True, states={'draft': [('readonly', False)]})
+    security_deposit = fields.Float(string="Security Deposit(%)", readonly=True,
+                                    track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                    help="Security Deposit.")
+
+
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
     def _compute_payment_amount(self):
