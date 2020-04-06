@@ -209,14 +209,29 @@ class AccountInvoice(models.Model):
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
             total_tds = self.total_tds()
+            tax_line = {}
 
             for val in self.invoice_line_ids:
                 for tds_rule in val.account_tds_id.line_ids:
                     if tds_rule.range_from <= total_tds[val.account_tds_id.id]['total_amount'] <= tds_rule.range_to:
                         actual_tds = total_tds[val.account_tds_id.id]['total_amount'] * tds_rule.rate / 100
                         miss_tds = actual_tds - total_tds[val.account_tds_id.id]['prev_tds']
-                        rate = miss_tds/total_tds[val.account_tds_id.id]['price']
-                        val.tds_amount = val.price_subtotal_without_vat * rate
+                        rate = miss_tds / total_tds[val.account_tds_id.id]['price']
+                        tds_amount = round(val.price_subtotal_without_vat * rate, 2)
+
+                        if tds_amount > val.price_subtotal_without_vat:
+                            tds_amount = val.price_subtotal_without_vat
+
+                        val.tds_amount = tds_amount
+
+                        if val.product_id.id not in tax_line:
+                            tax_line[val.product_id.id] = tds_amount
+                        else:
+                            tax_line[val.product_id.id] = tax_line[val.product_id.id] + tds_amount
+
+            for tax in self.tax_line_ids:
+                if tax.tds_id:
+                    tax.amount = tax_line[tax.product_id.id]
 
             return super(AccountInvoice, self).action_invoice_open()
         else:
@@ -226,8 +241,7 @@ class AccountInvoice(models.Model):
         vals = {}
         date_range = self.env['date.range'].search(
             [('date_start', '<=', self.date), ('date_end', '>=', self.date), ('type_id.tds_year', '=', True),
-             ('active', '=', True)],
-            order='id DESC', limit=1)
+             ('active', '=', True)], order='id DESC', limit=1)
 
         prev_inv = self.search(
             [('partner_id', '=', self.partner_id.id),
@@ -240,10 +254,10 @@ class AccountInvoice(models.Model):
             [('invoice_id', 'in', prev_inv.ids + [self.id]), ('account_tds_id', 'in', tds_rate.ids)])
 
         for rec in inv_line:
-            base_value = rec.quantity * rec.price_unit
+            base_value = rec.price_subtotal_without_vat
             prev_tds = rec.tds_amount if rec.invoice_id.id != self.id else 0
             curr_tds = rec.tds_amount if rec.invoice_id.id == self.id else 0
-            price = rec.quantity * rec.price_unit if rec.invoice_id.id == self.id else 0
+            price = rec.price_subtotal_without_vat if rec.invoice_id.id == self.id else 0
 
             if rec.account_tds_id.id in vals:
                 vals[rec.account_tds_id.id]['total_amount'] = vals[rec.account_tds_id.id]['total_amount'] + base_value

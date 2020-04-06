@@ -32,7 +32,12 @@ class AccountInvoice(models.Model):
     def _compute_total_tds(self):
         for invoice in self:
             if invoice.is_tds_applicable:
-                invoice.total_tds_amount = sum(line.amount for line in self.tax_line_ids if line.tds_id)
+                total_tds = sum(line.amount for line in self.tax_line_ids if line.tds_id)
+
+                if total_tds > invoice.amount_untaxed:
+                    invoice.total_tds_amount = invoice.amount_untaxed
+                else:
+                    invoice.total_tds_amount = total_tds
 
     @api.constrains('total_tds_amount')
     def _check_total_tds(self):
@@ -70,7 +75,7 @@ class AccountInvoice(models.Model):
                      ('state', 'in', ['open', 'paid']),
                      ('date', '>=', date_range_objs.date_start), ('date', '<=', date_range_objs.date_end)])
 
-            tds_acc_dict = {}
+            appplicable_list = []
 
             for line in self.invoice_line_ids:
                 if invoice_objs:
@@ -80,24 +85,11 @@ class AccountInvoice(models.Model):
                             if invoice_line_obj.account_tds_id.id == line.account_tds_id.id:
                                 pre_invoice_line_list.append(invoice_line_obj)
 
-                    appplicable_list = tds_acc_dict.get(line.account_tds_id.id, False)
-                    if appplicable_list:
-                        line._calculate_tds_value(appplicable_list)
-                        pre_invoice_line_list.append(line)
-                        tds_acc_dict[line.account_tds_id.id] = pre_invoice_line_list
-                    else:
-                        line._calculate_tds_value(pre_invoice_line_list)
-                        pre_invoice_line_list.append(line)
-                        tds_acc_dict[line.account_tds_id.id] = pre_invoice_line_list
+                    appplicable_list.append(line)
+                    line._calculate_tds_value(pre_invoice_line_list + appplicable_list)
                 else:
-                    appplicable_list = tds_acc_dict.get(line.account_tds_id.id, False)
-                    if appplicable_list:
-                        line._calculate_tds_value(appplicable_list)
-                        appplicable_list.append(line)
-                        tds_acc_dict[line.account_tds_id.id] = appplicable_list
-                    else:
-                        line._calculate_tds_value()
-                        tds_acc_dict[line.account_tds_id.id] = [line]
+                    appplicable_list.append(line)
+                    line._calculate_tds_value(appplicable_list)
 
     def _update_tax_line_vals(self, line):
         if line.account_tds_id and self.type in ('out_invoice', 'in_invoice'):
@@ -252,6 +244,7 @@ class AccountInvoiceLine(models.Model):
                 pro_base_val = self.quantity * self.price_unit
             else:
                 pro_base_val = self.price_subtotal_without_vat
+
             if self.account_tds_id.type_rate == 'flat':
                 if self.account_tds_id.price_include:
                     self.tds_amount = pro_base_val - (pro_base_val / (1 + self.account_tds_id.flat_rate / 100))
@@ -266,26 +259,29 @@ class AccountInvoiceLine(models.Model):
 
             else:
                 for tds_slab_rule_obj in self.account_tds_id.line_ids:
-                    if not pre_invoice_line_list and tds_slab_rule_obj.range_from <= pro_base_val <= tds_slab_rule_obj.range_to:
-                        self.tds_amount = pro_base_val * tds_slab_rule_obj.rate / 100
-                        return self.tds_amount
-                    elif pre_invoice_line_list:
-                        total_amount = pro_base_val + sum(
-                            int(i.price_subtotal_without_vat) for i in pre_invoice_line_list)
+                    if pre_invoice_line_list:
+                        total_amount = sum([i.price_subtotal_without_vat for i in pre_invoice_line_list])
+                    else:
+                        total_amount = 0
+
+                    if pre_invoice_line_list:
                         if tds_slab_rule_obj.range_from <= total_amount <= tds_slab_rule_obj.range_to:
-                            total_tds_amount = total_amount * tds_slab_rule_obj.rate / 100
-                            remaining_tds_amount = total_tds_amount - sum(i.tds_amount for i in pre_invoice_line_list)
-                            if remaining_tds_amount < 0.0:
-                                self.tds_amount = 0.0
-                            elif remaining_tds_amount > pro_base_val and not isinstance(self.invoice_id.id,
-                                                                                        models.NewId):
-                                self.tds_amount = pro_base_val
-                            elif remaining_tds_amount > pro_base_val and isinstance(self.invoice_id.id,
-                                                                                        models.NewId):
-                                self.tds_amount = pro_base_val
+                            total_tds = total_amount * tds_slab_rule_obj.rate / 100
+
+                            if len(pre_invoice_line_list) == 1:
+                                tds = pro_base_val * tds_slab_rule_obj.rate / 100
                             else:
-                                self.tds_amount = remaining_tds_amount
-                            return self.tds_amount
+                                remaining_tds = total_tds - sum(
+                                    [val.tds_amount for val in pre_invoice_line_list if val.id != self.id])
+                                if remaining_tds < 0.0:
+                                    tds = 0.0
+                                elif remaining_tds > pro_base_val:
+                                    tds = pro_base_val
+                                else:
+                                    tds = remaining_tds
+
+                            self.tds_amount = tds
+                            # return remaining_tds
                     else:
                         self.tds_amount = 0.0
         return self.tds_amount
