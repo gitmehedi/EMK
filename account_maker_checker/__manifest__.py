@@ -10,7 +10,8 @@
     "depends": [
         'base',
         'mail',
-        'account'
+        'account',
+        'account_mtbl'
     ],
     "data": [
         'wizard/account_account_wizard_view.xml',
