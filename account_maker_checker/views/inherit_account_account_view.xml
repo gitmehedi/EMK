@@ -83,9 +83,9 @@
                             <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>
                             <filter string="Pending" name="pending" icon="terp-personal"
                                     domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
-                            <filter string="Rejected" name="state" icon="terp-personal"
+                            <filter string="Rejected" name="rejected" icon="terp-personal"
                                     domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
-                            <filter string="In-Active" name="state" icon="terp-personal"
+                            <filter string="In-Active" name="inactive" icon="terp-personal"
                                     domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                         </group>
                     </search>
@@ -94,7 +94,7 @@
         </record>
         <record id="account.action_account_form" model="ir.actions.act_window">
             <field name="domain">[]</field>
-            <field name="context">{ "search_default_active":'False', "search_default_pending":'True' }</field>
+            <field name="context">{"search_default_pending":'True'}</field>
         </record>
     </data>
 </odoo>
