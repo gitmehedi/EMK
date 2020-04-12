@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="gbs_account_reports_backend" inherit_id="web.assets_backend">
+      <xpath expr="." position="inside">
+          <script type="text/javascript" src="/gbs_account_reports/static/src/js/gbs_account_reports_backend.js"></script>
+      </xpath>
+    </template>
+</odoo>
