@@ -6,7 +6,7 @@ class VendorSecurityDeposit(models.Model):
     _description = 'Vendor Security Deposit'
 
     name = fields.Char(required=False, track_visibility='onchange', string='Deposit Name')
-    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=True,
+    partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
                                  states={'draft': [('readonly', False)]})
@@ -15,7 +15,7 @@ class VendorSecurityDeposit(models.Model):
     amount = fields.Float(string="Amount", readonly=True,
                           track_visibility='onchange', states={'draft': [('readonly', False)]},
                           help="amount to be deposited to vendor for security deposit purpose")
-    Adjusted_amount = fields.Float(string="Adjusted Amount", readonly=True,
+    adjusted_amount = fields.Float(string="Adjusted Amount", readonly=True, default=0,
                                    track_visibility='onchange', states={'draft': [('readonly', False)]})
     return_ids = fields.One2many('vendor.security.return.line', 'vsd_id',
                                  string='Security Return Lines')
@@ -23,4 +23,5 @@ class VendorSecurityDeposit(models.Model):
         ('draft', "Pending"),
         ('done', "Closed")], default='draft', string="Status",
         track_visibility='onchange')
+
 

@@ -11,31 +11,37 @@
                     <header>
 	                    <button string="Confirm" name="action_confirm" states="draft"
                                 type="object" class="oe_highlight"/>
-						<button string="Validate" name="action_done" type="object" class="oe_highlight"
+						<button string="Validate" name="action_approve" type="object" class="oe_highlight"
 								attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
                      	<button string="Cancel" name="action_cancel" states="confirmed" type="object"
                                 attrs="{'invisible': [('state', '!=', 'confirm')]}" confirm="Are you sure you want to Cancel this?"/>
-                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
                 	</header>
                     <sheet>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="partner_id"
                                        options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
-                                <field name="vsd_ids" widget="many2many_tags"/>
+                                <field name="vsd_ids" widget="many2many_tags"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"
+                                       domain="[('partner_id', 'in', [partner_id]), ('state', '=', 'draft')]"/>
                             </group>
                             <group>
                                 <field name="amount"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Return Line">
-                                <field name="line_ids" nolabel="1">
-                                    <tree string="Return Line" create="false">
-                                        <field name="return_id"/>
-                                        <field name="vsd_id"/>
-                                        <field name="date"/>
-                                        <field name="amount"/>
+                            <page string="Details" attrs="{'invisible': [('state', 'in', ('draft', 'confirm'))]}">
+                                <field name="line_ids" nolabel="1" readonly="True" mode="tree">
+                                    <tree string="Return Line" create="0" edit="0" editable="bottom" options="{'no_open': True}">
+                                        <field name="vsd_id" readonly="1"/>
+                                        <field name="date" readonly="1"/>
+                                        <field name="amount" readonly="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -73,7 +79,7 @@
                 	<separator/>
                     <filter name="confirm_sd" string="Confirmed" domain="[('state','=','confirm')]"/>
                 	<separator/>
-                    <filter name="approved_sd" string="Approved" domain="[('state','=','done')]"/>
+                    <filter name="approved_sd" string="Approved" domain="[('state','=','approve')]"/>
 				</search>
             </field>
         </record>
