@@ -9,6 +9,7 @@ from . import account_asset_disposal
 from . import account_asset_sale
 from . import account_asset_depreciation_history
 from . import account_config
+from . import asset_depreciation_method_change_request
 
 
 

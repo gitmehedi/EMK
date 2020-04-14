@@ -37,6 +37,7 @@
         'views/account_move_view.xml',
         'views/account_asset_depreciation_history_view.xml',
         'views/account_config.xml',
+        'views/asset_depreciation_method_change_request_view.xml'
     ],
     'installable': True,
     'application': True,
