@@ -17,6 +17,11 @@ class VendorSecurityReturn(models.Model):
                                'return_id', 'deposit_id', string='Security Deposits',
                                domain=[('state', '=', 'draft')],
                                readonly=True, states={'draft': [('readonly', False)]})
+    optional_vsd_ids = fields.Many2many('vendor.security.deposit',
+                                        'vendor_security_deposit_return_optional_rel',
+                                        'return_id', 'deposit_id',
+                                        string='Security Deposits',readonly=True,
+                                        states={'draft': [('readonly', False)]})
     amount = fields.Float(string="Amount", readonly=True,
                           track_visibility='onchange',
                           states={'draft': [('readonly', False)]})
@@ -31,23 +36,27 @@ class VendorSecurityReturn(models.Model):
 
     @api.onchange('vsd_ids')
     def _onchange_amount(self):
-        for object in self:
+        for rec in self:
             amount = 0
-            if object.vsd_ids:
-                for vsd in object.vsd_ids:
+            if rec.vsd_ids:
+                for vsd in rec.vsd_ids:
                     remaining_vsd_amount = vsd.amount - vsd.adjusted_amount
                     amount = amount + remaining_vsd_amount
-                self.amount = amount
+                rec.amount = amount
+
+    @api.onchange('vsd_ids')
+    def _onchange_vsd_ids(self):
+        self.optional_vsd_ids = self.vsd_ids
 
     @api.multi
     def action_confirm(self):
-        for item in self:
-            if not item.vsd_ids:
+        for rec in self:
+            if not rec.vsd_ids:
                 raise ValidationError("No Vendor Security Deposit is selected")
-            if not item.amount>0:
+            if not rec.amount>0:
                 raise ValidationError("Amount must be greater than Zero")
             name = self.env['ir.sequence'].sudo().next_by_code('vendor.security.return') or 'New'
-            item.write({
+            rec.write({
                 'state': 'confirm',
                 'name': name
             })
@@ -55,15 +64,15 @@ class VendorSecurityReturn(models.Model):
     @api.multi
     def action_approve(self):
         security_return_line_obj = self.env['vendor.security.return.line']
-        for item in self:
-            remaining_balance = self.amount
-            if item.vsd_ids:
-                for vsd in item.vsd_ids:
+        for rec in self:
+            remaining_balance = rec.amount
+            if rec.vsd_ids:
+                for vsd in rec.vsd_ids:
                     security_deposit_obj = self.env['vendor.security.deposit'].sudo().search([('id', '=', vsd.id)])
                     remaining_vsd_balance = vsd.amount - vsd.adjusted_amount
                     line_vals = {
                         'vsd_id': vsd.id,
-                        'return_id': item.id,
+                        'return_id': rec.id,
                         'date': fields.datetime.now()
                     }
                     if remaining_balance >= remaining_vsd_balance:
@@ -85,15 +94,15 @@ class VendorSecurityReturn(models.Model):
                         })
                         break
 
-            item.write({
+            rec.write({
                 'state': 'approve'
             })
 
     @api.multi
     def action_cancel(self):
         for rec in self:
-            if self.state == 'confirm':
-                self.write({'state': 'cancel'})
+            if rec.state == 'confirm':
+                rec.write({'state': 'cancel'})
 
     @api.multi
     def unlink(self):

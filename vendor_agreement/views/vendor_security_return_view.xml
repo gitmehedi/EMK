@@ -29,7 +29,11 @@
                                        options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
                                 <field name="vsd_ids" widget="many2many_tags"
                                        options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"
-                                       domain="[('partner_id', 'in', [partner_id]), ('state', '=', 'draft')]"/>
+                                       domain="[('partner_id', 'in', [partner_id]), ('state', '=', 'draft')]"
+                                       attrs="{'invisible': [('state', '=', 'approve')]}"/>
+                                <field name="optional_vsd_ids" widget="many2many_tags"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"
+                                       attrs="{'invisible': [('state', 'in', ('draft','confirm','cancel'))]}"/>
                             </group>
                             <group>
                                 <field name="amount"/>
