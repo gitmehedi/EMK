@@ -210,10 +210,10 @@ class AccountAssetAsset(models.Model):
                     LOOP
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
+                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
+                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
                         
                     END LOOP;
                     RETURN move;
