@@ -8,19 +8,27 @@ class VendorSecurityReturn(models.Model):
     _description = 'Vendor Security Return'
     _order = 'name desc'
 
+    @api.multi
+    def _get_partner_ids(self):
+        partner_list = []
+        partner_obj = self.env['vendor.security.deposit'].sudo().search([('state', '=', 'draft')])
+        for obj in partner_obj:
+            if obj.partner_id.id not in partner_list:
+                partner_list.append(obj.partner_id.id)
+        return [(6, 0, partner_list)]
+
     name = fields.Char(required=False, track_visibility='onchange', string='Name', default='Draft VSR')
+    filtered_partner_ids = fields.Many2many('res.partner', default=lambda self: self._get_partner_ids())
     partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
-                                 track_visibility='onchange',
-                                 domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
+                                 track_visibility='onchange', readonly=True,
                                  states={'draft': [('readonly', False)]})
     vsd_ids = fields.Many2many('vendor.security.deposit', 'vendor_security_deposit_return_rel',
                                'return_id', 'deposit_id', string='Security Deposits',
-                               domain=[('state', '=', 'draft')],
                                readonly=True, states={'draft': [('readonly', False)]})
     optional_vsd_ids = fields.Many2many('vendor.security.deposit',
                                         'vendor_security_deposit_return_optional_rel',
                                         'return_id', 'deposit_id',
-                                        string='Security Deposits',readonly=True,
+                                        string='Security Deposits', readonly=True,
                                         states={'draft': [('readonly', False)]})
     amount = fields.Float(string="Amount", readonly=True,
                           track_visibility='onchange',
@@ -43,6 +51,8 @@ class VendorSecurityReturn(models.Model):
                     remaining_vsd_amount = vsd.amount - vsd.adjusted_amount
                     amount = amount + remaining_vsd_amount
                 rec.amount = amount
+            else:
+                rec.amount = 0
 
     @api.onchange('vsd_ids')
     def _onchange_vsd_ids(self):
@@ -53,7 +63,7 @@ class VendorSecurityReturn(models.Model):
         for rec in self:
             if not rec.vsd_ids:
                 raise ValidationError("No Vendor Security Deposit is selected")
-            if not rec.amount>0:
+            if not rec.amount > 0:
                 raise ValidationError("Amount must be greater than Zero")
             name = self.env['ir.sequence'].sudo().next_by_code('vendor.security.return') or 'New'
             rec.write({
