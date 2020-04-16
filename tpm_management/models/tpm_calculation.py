@@ -23,12 +23,12 @@ class TPMManagementModel(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              string='Status', track_visibility='onchange')
 
-    @api.constrains("date")
-    def check_date(self):
-        if self.date:
-            obj = self.search([('date', '=', self.date)])
-            if len(obj) > 0:
-                raise ValidationError(_("Same date TPM is not possible."))
+    # @api.constrains("date")
+    # def check_date(self):
+    #     if self.date:
+    #         obj = self.search([('date', '=', self.date)])
+    #         if len(obj) > 0:
+    #             raise ValidationError(_("Same date TPM is not possible."))
 
     @api.one
     def act_draft(self):
@@ -72,9 +72,10 @@ class TPMManagementModel(models.Model):
     def calculate_tpm(self):
         if self.state == 'approve':
             company = self.env.user.company_id
-            general_account = company.general_journal_id.id
-            income_journal = company.tpm_income_journal_id.id
-            expense_journal = company.tpm_expense_journal_id.id
+            journal  = company.journal_id.id
+            general_account = company.tpm_general_account_id.id
+            income_journal = company.tpm_income_account_id.id
+            expense_journal = company.tpm_expense_account_id.id
             impact_count = company.impact_count
             impact_unit = company.impact_unit
             income_rate = company.income_rate / 100
@@ -93,7 +94,6 @@ class TPMManagementModel(models.Model):
             self.env.cr.execute(query)
             for bal in self.env.cr.fetchall():
                 branch_id = bal[0]
-                journal = 1
                 if bal[3] > 0:
                     cr_account = income_journal
                     dr_amount = general_account
