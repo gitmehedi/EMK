@@ -11,12 +11,14 @@
                         <group>
                             <field name="name" placeholder="Name"/>
                             <field name="type"/>
-                            <field name="status"/>
+                            <field name="sys_file_name" attrs="{'invisible':[('type','!=','sys_dt')],'required':[('type','=','sys_dt')]}"/>
+
                         </group>
                         <group>
                             <field name="method"/>
                             <field name="folder"
                                    attrs="{'invisible': [('method', '!=', 'sftp')],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="status"/>
                         </group>
                     </group>
                     <group>
