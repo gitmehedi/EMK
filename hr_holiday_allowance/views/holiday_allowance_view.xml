@@ -77,7 +77,7 @@
         </record>
         <!--action view-->
         <record id="action_hr_holiday_allowance_view" model="ir.actions.act_window">
-            <field name="name">Draft Holiday Allowance</field>
+            <field name="name">Holiday Allowance</field>
             <field name="res_model">hr.holiday.allowance</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_account_form" model="ir.ui.view">
+            <field name="name">view.account.form.view</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="edit">0</attribute>
+                    <attribute name="duplicate">0</attribute>
+                </xpath>
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <field name="pending" invisible="True"/>
+                        <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" type="object" states="draft"/>
+                        <button name="%(account_maker_checker.action_account_account_wizard)d" string="Edit"
+                                type="action"
+                                class="oe_highlight"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                        <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
+                        <button name="act_reject_pending" string="Reject" type="object"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
+                        <button name="act_draft" string="Set to Draft" type="object" states="reject"/>
+                        <field name="state" widget="statusbar" invisible="True"/>
+                    </header>
+                </xpath>
+                <xpath expr="//sheet" position="inside">
+                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
+                        <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                              decoration-bf="state in ('pending',)"
+                              decoration-danger="state=='reject'">
+                            <field name="change_name"/>
+                            <field name="request_date"/>
+                            <field name="change_date"/>
+                            <field name="status"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </xpath>
+
+                <xpath expr="//sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <record id="inherit_view_account_list" model="ir.ui.view">
+            <field name="name">inherit.account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree string="Chart of Accounts" decoration-info="state=='draft'"
+                          decoration-success="state=='approve'"
+                          decoration-danger="state=='reject'"
+                          decoration-bf="state in ('approve',)" duplicate="0">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="user_type_id"/>
+                        <field name="state"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+        <record id="inherit_view_account_search" model="ir.ui.view">
+            <field name="name">inherit.account.account.search</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="replace">
+                    <search>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]"
+                               string="Account"/>
+                        <filter string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
+                        <filter string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
+                        <field name="user_type_id"/>
+                        <group string="Group By">
+                            <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>
+                            <filter string="Pending" name="pending" icon="terp-personal"
+                                    domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                            <filter string="Rejected" name="rejected" icon="terp-personal"
+                                    domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                            <filter string="In-Active" name="inactive" icon="terp-personal"
+                                    domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                        </group>
+                    </search>
+                </xpath>
+            </field>
+        </record>
+        <record id="account.action_account_form" model="ir.actions.act_window">
+            <field name="domain">[]</field>
+            <field name="context">{"search_default_pending":'True'}</field>
+        </record>
+    </data>
+</odoo>
