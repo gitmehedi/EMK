@@ -10,15 +10,14 @@ class VendorSecurityReturn(models.Model):
 
     @api.multi
     def _get_partner_ids(self):
-        partner_list = []
         partner_obj = self.env['vendor.security.deposit'].sudo().search([('state', '=', 'draft')])
-        for obj in partner_obj:
-            if obj.partner_id.id not in partner_list:
-                partner_list.append(obj.partner_id.id)
+        partner_list = list({obj.partner_id.id for obj in partner_obj})
         return [(6, 0, partner_list)]
 
     name = fields.Char(required=False, track_visibility='onchange', string='Name', default='Draft VSR')
-    filtered_partner_ids = fields.Many2many('res.partner', default=lambda self: self._get_partner_ids())
+    filtered_partner_ids = fields.Many2many('res.partner', 'res_partner_vendor_security_return_rel',
+                                            'vendor_security_return_id', 'res_partner_id',
+                                            default=lambda self: self._get_partner_ids())
     partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
                                  track_visibility='onchange', readonly=True,
                                  states={'draft': [('readonly', False)]})
@@ -30,8 +29,7 @@ class VendorSecurityReturn(models.Model):
                                         'return_id', 'deposit_id',
                                         string='Security Deposits', readonly=True,
                                         states={'draft': [('readonly', False)]})
-    amount = fields.Float(string="Amount", readonly=True,
-                          track_visibility='onchange',
+    amount = fields.Float(string="Amount", readonly=True, track_visibility='onchange',
                           states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('vendor.security.return.line', 'return_id',
                                string='Security Return Lines')
@@ -103,6 +101,9 @@ class VendorSecurityReturn(models.Model):
                             'adjusted_amount': new_vsd_adjusted_amount
                         })
                         break
+
+            self._cr.execute('DELETE FROM res_partner_vendor_security_return_rel WHERE vendor_security_return_id={}'
+                             .format(self.id))
 
             rec.write({
                 'state': 'approve'
