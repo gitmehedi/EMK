@@ -4,6 +4,7 @@ from odoo.http import request
 import pyodbc
 import datetime
 from datetime import timedelta
+from odoo import SUPERUSER_ID
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -95,10 +96,10 @@ class DeviceDetail(models.Model):
         cursor = None
         is_rigth_url = False
         try:
-            app_url = http.request.env['ir.config_parameter'].get_param('web.base.url').strip()
-            if self.is_live_server(app_url) == False:
-                raise ValidationError(
-                    "Attendance only pull from a specific server. Please check attendance settings or contact administrator.")
+            # app_url = http.request.env['ir.config_parameter'].get_param('web.base.url').strip()
+            # if self.is_live_server(app_url) == False:
+            #     raise ValidationError(
+            #         "Attendance only pull from a specific server. Please check attendance settings or contact administrator.")
 
             is_rigth_url = True
             conn = pyodbc.connect('DRIVER=' + driver +';PORT=1433;SERVER=' +
@@ -147,11 +148,10 @@ class DeviceDetail(models.Model):
         is_rigth_url = False
         try:
 
-            app_url = http.request.env['ir.config_parameter'].get_param('web.base.url').strip()
-            if self.is_live_server(app_url) == False:
-                raise ValidationError(
-                    'You can not pull date from this server, please check "Server Base URL" or contact admin.')
-
+            # app_url = http.request.env['ir.config_parameter'].get_param('web.base.url').strip()
+            # if self.is_live_server(app_url) == False:
+            #     raise ValidationError(
+            #         'You can not pull date from this server, please check "Server Base URL" or contact admin.')
 
             is_rigth_url = True
             hr_att_device_pool = self.env['hr.attendance.device.detail']
