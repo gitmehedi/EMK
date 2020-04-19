@@ -76,20 +76,36 @@
                                     <field name="name" readonly="1" nolabel="1"/>
                                 </h1>
                             </div>
-                            <group name="main">
+                            <group name="main" width="70%">
                                 <group name="left">
                                     <field name="partner_id" string="Vendor" required="True"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <label string="Effective Period"/>
+                                    <div>
+                                        <field name="start_date" class="oe_inline"/>
+                                        <label string=" To" class="oe_inline"/>
+                                        <field name="end_date" class="oe_inline"/>
+                                    </div>
+                                    <field name="operating_unit_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="sub_operating_unit_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="product_id" string="Service" required="True"
-                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="additional_service"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="company_id" groups="base.group_multi_company"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="operating_unit_id"
+                                    <field name="vat_id"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="start_date"/>
-                                    <field name="end_date"/>
+                                    <field name="tds_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="security_deposit"/>
+                                    <field name="rent_type"/>
+                                    <field name="area"/>
+                                    <field name="rate"/>
                                     <field name="description"/>
                                     <field name="is_amendment" invisible="1"/>
                                     <field name="payment_btn_visible" invisible="1"/>
@@ -104,6 +120,8 @@
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="service_value" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
+                                    <field name="additional_service_value" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
                                     <field name="adjustment_value" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
                                     <field name="total_payment_approved" widget="monetary"
@@ -116,12 +134,6 @@
                                     <field name="code" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="is_remaining" invisible="1"/>
-                                    <field name="vat_id"
-                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="tds_id"
-                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="security_deposit"/>
-
                                 </group>
                             </group>
                             <notebook>
