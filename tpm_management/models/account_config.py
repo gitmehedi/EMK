@@ -4,9 +4,10 @@ from odoo import api, fields, models, _
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    general_journal_id = fields.Many2one('account.account', string='General Journal', required=True)
-    tpm_income_journal_id = fields.Many2one('account.account', string='Income Journal', required=True)
-    tpm_expense_journal_id = fields.Many2one('account.account', string='Expense Journal', required=True)
+    journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True)
+    tpm_general_account_id = fields.Many2one('account.account', string='General Journal', required=True)
+    tpm_income_account_id = fields.Many2one('account.account', string='Income Journal', required=True)
+    tpm_expense_account_id = fields.Many2one('account.account', string='Expense Journal', required=True)
     impact_count = fields.Integer(string='Expense Journal', required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
@@ -17,14 +18,17 @@ class ResCompany(models.Model):
 class AccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
 
-    def _get_default_general_journal_id(self):
-        return self.env.user.company_id.general_journal_id
+    def _get_default_journal_id(self):
+        return self.env.user.company_id.journal_id
 
-    def _get_default_tpm_income_journal_id(self):
-        return self.env.user.company_id.tpm_income_journal_id
+    def _get_default_tpm_general_account_id(self):
+        return self.env.user.company_id.tpm_general_account_id
 
-    def _get_default_tpm_expense_journal_id(self):
-        return self.env.user.company_id.tpm_expense_journal_id
+    def _get_default_tpm_income_account_id(self):
+        return self.env.user.company_id.tpm_income_account_id
+
+    def _get_default_tpm_expense_account_id(self):
+        return self.env.user.company_id.tpm_expense_account_id
 
     def _get_default_impact_count(self):
         return self.env.user.company_id.impact_count
@@ -32,14 +36,17 @@ class AccountConfigSettings(models.TransientModel):
     def _get_default_impact_unit(self):
         return self.env.user.company_id.impact_unit
 
-    general_journal_id = fields.Many2one('account.account', string='Retain Earnings', required=True,
-                                         default=lambda self: self._get_default_general_journal_id(),
+    journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True,
+                                 default=lambda self: self._get_default_journal_id())
+
+    tpm_general_account_id = fields.Many2one('account.account', string='General Account', required=True,
+                                         default=lambda self: self._get_default_tpm_general_account_id(),
                                          domain="[('level_id.name','=','Layer 5')]")
-    tpm_income_journal_id = fields.Many2one('account.account', string='Retain Earnings', required=True,
-                                            default=lambda self: self._get_default_tpm_income_journal_id(),
+    tpm_income_account_id = fields.Many2one('account.account', string='Income Account', required=True,
+                                            default=lambda self: self._get_default_tpm_income_account_id(),
                                             domain="[('level_id.name','=','Layer 5')]")
-    tpm_expense_journal_id = fields.Many2one('account.account', string='General Account', required=True,
-                                             default=lambda self: self._get_default_tpm_expense_journal_id(),
+    tpm_expense_account_id = fields.Many2one('account.account', string='Expense Account', required=True,
+                                             default=lambda self: self._get_default_tpm_expense_account_id(),
                                              domain="[('level_id.name','=','Layer 5')]")
     impact_count = fields.Integer(string='Expense Journal', default=1, required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], default='days', required=True)
@@ -47,25 +54,31 @@ class AccountConfigSettings(models.TransientModel):
     expense_rate = fields.Integer(string='Expense Rate', size=2, required=True)
 
     @api.multi
-    def set_general_journal_id(self):
-        if self.general_journal_id:
-            self.company_id.write({'general_journal_id': self.general_journal_id.id})
-        return self.env['ir.values'].sudo().set_default('account.config.settings', 'general_journal_id',
-                                                        self.general_journal_id.id)
+    def set_journal_id(self):
+        if self.journal_id:
+            self.company_id.write({'journal_id': self.journal_id.id})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'journal_id',
+                                                        self.journal_id.id)
+    @api.multi
+    def set_tpm_general_account_id(self):
+        if self.tpm_general_account_id:
+            self.company_id.write({'tpm_general_account_id': self.tpm_general_account_id.id})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_general_account_id',
+                                                        self.tpm_general_account_id.id)
 
     @api.multi
-    def set_tpm_income_journal_id(self):
-        if self.tpm_income_journal_id:
-            self.company_id.write({'tpm_income_journal_id': self.tpm_income_journal_id.id})
-        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_income_journal_id',
-                                                        self.tpm_income_journal_id.id)
+    def set_tpm_income_account_id(self):
+        if self.tpm_income_account_id:
+            self.company_id.write({'tpm_income_account_id': self.tpm_income_account_id.id})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_income_account_id',
+                                                        self.tpm_income_account_id.id)
 
     @api.multi
-    def set_tpm_expense_journal_id(self):
-        if self.tpm_expense_journal_id:
-            self.company_id.write({'tpm_expense_journal_id': self.tpm_expense_journal_id.id})
-        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_expense_journal_id',
-                                                        self.tpm_expense_journal_id.id)
+    def set_tpm_expense_account_id(self):
+        if self.tpm_expense_account_id:
+            self.company_id.write({'tpm_expense_account_id': self.tpm_expense_account_id.id})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_expense_account_id',
+                                                        self.tpm_expense_account_id.id)
 
     @api.multi
     def set_impact_count(self):

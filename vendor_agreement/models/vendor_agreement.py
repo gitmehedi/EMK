@@ -36,11 +36,11 @@ class VendorAgreement(models.Model):
                                    help="Total amount which are already adjusted in bill.")
     outstanding_amount = fields.Float(string="Outstanding Amount", compute='_compute_outstanding_amount', readonly=True,
                                       track_visibility='onchange', help="Remaining Amount to adjustment.")
-    account_id = fields.Many2one('account.account', string="Agreement Account", required=True, readonly=True,
+    account_id = fields.Many2one('account.account', string="GL Account", required=True, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  domain=[('level_id.name', '=', 'Layer 5')],
                                  help="Account for the agreement.")
-    description = fields.Text('Notes', readonly=True, track_visibility='onchange',
+    description = fields.Text('Particulars', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
@@ -86,14 +86,44 @@ class VendorAgreement(models.Model):
         ('cancel', "Canceled")], default='draft', string="Status",
         track_visibility='onchange')
 
-    #vat_tds_and_security_deposit_field
-
     vat_id = fields.Many2one('account.tax', string='VAT', readonly=True, states={'draft': [('readonly', False)]})
     tds_id = fields.Many2one('tds.rule', string='TDS', readonly=True, states={'draft': [('readonly', False)]})
-    security_deposit = fields.Float(string="Security Deposit(%)", readonly=True,
+    security_deposit = fields.Float(string="Security Deposit", readonly=True,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
                                     help="Security Deposit.")
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
+    rent_type = fields.Selection([
+        ('general', "General Rent"),
+        ('govt_premise', "Govt. Premise Rent")], string="Rent Type", required=True,
+        track_visibility='onchange')
+    area = fields.Float(string='Area(ft)', readonly=True, states={'draft': [('readonly', False)]})
+    rate = fields.Float(string='Rate(ft)', readonly=True, states={'draft': [('readonly', False)]})
+    additional_service = product_id = fields.Many2one('product.product', string='Additional Service',
+                                                      required=False, readonly=True, track_visibility='onchange',
+                                                      states={'draft': [('readonly', False)]}, help="Additional Service.")
+    additional_service_value = fields.Float(string="Ad. Service Value", readonly=True,
+                                            track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                            help="Additional Service value.")
+    additional_advance_amount = fields.Float(string="Ad. Approved Advance", readonly=True,
+                                             track_visibility='onchange', help="Additional Advance Amount.")
+    total_advance_amount = fields.Float(string="Total Approved Advance", readonly=True,
+                                        compute="_compute_total_advance_amount", store=True,
+                                        track_visibility='onchange', help="Total Advance Amount.")
+    total_service_value = fields.Float(string="Total Service Value", readonly=True,
+                                       compute="_compute_total_service_value", store=True,
+                                       track_visibility='onchange', help="Total Service Value")
 
+    @api.one
+    @api.depends('advance_amount', 'additional_advance_amount')
+    def _compute_total_advance_amount(self):
+        for record in self:
+            record.total_advance_amount = record.advance_amount + record.additional_advance_amount
+
+    @api.one
+    @api.depends('service_value', 'additional_service_value')
+    def _compute_total_service_value(self):
+        for record in self:
+            record.total_service_value = record.service_value + record.additional_service_value
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
