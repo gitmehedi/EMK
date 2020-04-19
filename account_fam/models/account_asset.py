@@ -72,6 +72,7 @@ class AccountAssetAsset(models.Model):
     lst_depr_date = fields.Date(string='Last Depr. Date', readonly=True, track_visibility='onchange')
     lst_depr_amount = fields.Float(string='Last Depr. Amount', readonly=True, track_visibility='onchange', store=True)
     awaiting_dispose_date = fields.Date(string='Awaiting Dispose Date', readonly=True, track_visibility='onchange')
+    dmc_date = fields.Date(string='DMC Date', readonly=True, track_visibility='onchange')
 
     @api.model_cr
     def init(self):
@@ -490,7 +491,6 @@ class AccountAssetAsset(models.Model):
                 else:
                     no_of_days = 0
 
-
                 vals = {
                     'amount': asset.value_residual,
                     'asset_id': self.id,
@@ -509,7 +509,6 @@ class AccountAssetAsset(models.Model):
                         asset.write({'lst_depr_date': curr_depr_date.date(),
                                      'state': 'close'})
                         return True
-
 
     def date_depr_format(self, date):
         no_of_days = calendar.monthrange(date.year, date.month)[1]
