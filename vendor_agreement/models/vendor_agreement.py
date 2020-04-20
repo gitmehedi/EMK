@@ -240,9 +240,9 @@ class VendorAgreement(models.Model):
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
-            if self.type == 'multi':
-                if not self.line_ids:
-                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+            # if self.type == 'multi':
+            #     if not self.line_ids:
+            #         raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
 
             sequence = self.env['ir.sequence'].next_by_code('agreement') or ''
             self.write({
@@ -255,9 +255,10 @@ class VendorAgreement(models.Model):
         if self.state == 'confirm':
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
-            if self.type == 'multi':
-                if not self.line_ids:
-                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+
+            # if self.type == 'multi':
+            #     if not self.line_ids:
+            #         raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
 
             self.write({
                 'state': 'done',
