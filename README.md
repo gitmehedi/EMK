@@ -1,12 +1,12 @@
 # Genweb2 Business Solution [GBS]
 Table of Contents
 =================
-* [Application Architecture](application-architecture)
-   * [Three Tier Server Installation](three-tier-server-installation)
-      * [Client/Web Server](client/web-server)
-      * [Application Server](application-server)
-      * [Database Server](database-server)
-* [Database Clean Query](database-clean-query)
+* [Application Architecture](#application-architecture)
+   * [Three Tier Server Installation](#three-tier-server-installation)
+      * [Client/Web Server](#client/web-server)
+      * [Application Server](#application-server)
+      * [Database Server](#database-server)
+* [Database Clean Query](#database-clean-query)
 
 ## Application Architecture
 
