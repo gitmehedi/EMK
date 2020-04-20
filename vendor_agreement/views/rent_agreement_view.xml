@@ -44,12 +44,20 @@
                                 class="oe_highlight"
                                 attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
-                        <button string="Amendment" name="action_amendment" states="done"
+                        <button string="Amendment" name="action_amendment"
                                 type="object" class="oe_read_only"
+                                attrs="{'invisible': ['|',('is_amendment', '=', True),('state', 'in', ('draft','confirm','cancel'))]}"
                                 groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
                         <button string="Approve" name="action_approve_amendment"
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': [('is_amendment', '=', False)]}"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="reject" name="action_reject_amendment"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': [('is_amendment', '=', False)]}"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="inactive" name="action_inactive_agreement"
+                                type="object" class="oe_highlight"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
@@ -84,6 +92,7 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="additional_service"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="billing_type"/>
                                 <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="vat_id"
