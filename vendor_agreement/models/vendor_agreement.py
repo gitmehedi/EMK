@@ -112,9 +112,9 @@ class VendorAgreement(models.Model):
     total_service_value = fields.Float(string="Total Service Value", readonly=True,
                                        compute="_compute_total_service_value", store=True,
                                        track_visibility='onchange', help="Total Service Value")
-    billing_type = fields.Selection([
+    billing_period = fields.Selection([
         ('monthly', "Monthly"),
-        ('yearly', "Yearly")], string="Rent Type", required=True,
+        ('yearly', "Yearly")], string="Billing Period", required=True,
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.one

@@ -92,7 +92,7 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="additional_service"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="billing_type"/>
+                                <field name="billing_period"/>
                                 <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="vat_id"
