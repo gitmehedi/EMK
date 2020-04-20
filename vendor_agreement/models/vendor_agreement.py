@@ -112,6 +112,10 @@ class VendorAgreement(models.Model):
     total_service_value = fields.Float(string="Total Service Value", readonly=True,
                                        compute="_compute_total_service_value", store=True,
                                        track_visibility='onchange', help="Total Service Value")
+    billing_period = fields.Selection([
+        ('monthly', "Monthly"),
+        ('yearly', "Yearly")], string="Billing Period", required=True,
+        track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.one
     @api.depends('advance_amount', 'additional_advance_amount')
@@ -325,6 +329,42 @@ class VendorAgreement(models.Model):
                     'approver_id': self.env.user.id,
                 })
                 requested.write({'state': 'confirm'})
+
+    @api.multi
+    def action_reject_amendment(self):
+        res = self.env.ref('vendor_agreement.agreement_warning_wizard_view')
+        return {
+            'name': _('Warning'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'agreement.warning.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {
+                'default_text': 'Are you sure to reject the amendment?',
+                'default_warning_type': 'reject_amendment'
+            }
+        }
+
+    @api.multi
+    def action_inactive_agreement(self):
+        res = self.env.ref('vendor_agreement.agreement_warning_wizard_view')
+        return {
+            'name': _('Warning'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'agreement.warning.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {
+                'default_text': 'Are you sure to inactive the agreement?' or False,
+                'default_warning_type': 'inactive_agreement' or False
+            }
+        }
 
     @api.constrains('name')
     def _check_unique_constrain(self):
