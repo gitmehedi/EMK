@@ -96,8 +96,8 @@ class VendorAgreement(models.Model):
         ('general', "General Rent"),
         ('govt_premise', "Govt. Premise Rent")], string="Rent Type", required=True,
         track_visibility='onchange')
-    area = fields.Float(string='Area(ft)', readonly=True, states={'draft': [('readonly', False)]})
-    rate = fields.Float(string='Rate(ft)', readonly=True, states={'draft': [('readonly', False)]})
+    area = fields.Float(string='Area (ft)', readonly=True, states={'draft': [('readonly', False)]})
+    rate = fields.Float(string='Rate (ft)', readonly=True, states={'draft': [('readonly', False)]})
     additional_service = product_id = fields.Many2one('product.product', string='Additional Service',
                                                       required=False, readonly=True, track_visibility='onchange',
                                                       states={'draft': [('readonly', False)]}, help="Additional Service.")

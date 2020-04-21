@@ -92,7 +92,7 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="additional_service"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="billing_period"/>
+
                                 <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="vat_id"
@@ -101,6 +101,7 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="security_deposit"/>
                                 <field name="rent_type"/>
+                                <field name="billing_period"/>
                                 <field name="area"/>
                                 <field name="rate"/>
                                 <field name="description"/>
