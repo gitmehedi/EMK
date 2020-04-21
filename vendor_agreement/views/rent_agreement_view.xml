@@ -44,9 +44,7 @@
                                 class="oe_highlight"
                                 attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
-                        <button string="Receive Outstanding Advance" name="action_receive_outstanding_advance"
-                                type="object" class="oe_highlight" states="done"
-                                groups="vendor_agreement.vendor_agreement_approver"/>
+
                         <button string="Amendment" name="action_amendment"
                                 type="object" class="oe_read_only"
                                 attrs="{'invisible': ['|',('is_amendment', '=', True),('state', 'in', ('draft','confirm','cancel'))]}"
@@ -59,9 +57,10 @@
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': [('is_amendment', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
-                        <button string="inactive" name="action_inactive_agreement"
-                                type="object" class="oe_highlight"
-                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="Inactive" name="action_inactive_agreement"
+                                type="object" groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="Receive Outstanding Advance" name="action_receive_outstanding_advance"
+                                type="object" states="done" groups="vendor_agreement.vendor_agreement_approver"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
