@@ -1,5 +1,5 @@
 from odoo import api, models, fields, _
-from odoo import exceptions
+import datetime
 
 class AttendanceSummaryReport(models.AbstractModel):
     _name = "report.gbs_hr_attendance_report.report_att_summ_temp"
@@ -70,12 +70,34 @@ class AttendanceSummaryReport(models.AbstractModel):
                     lambda x: x.att_summary_line_id.employee_id.id == record.id and x.att_summary_line_id.state == 'approved')
                 report_summary['late_days'] = len(filtered_late_data_obj)
 
+                ot_data_obj = self.env['hr.ot.requisition'].search([('state', '=', 'approved'),
+                                                                    ('employee_id', '=', record.id),
+                                                                    ('from_datetime', '>=', data['date_from']),
+                                                                    ('from_datetime', '<=', data['date_to']),
+                                                                    ('to_datetime', '>=', data['date_from']),
+                                                                    ('to_datetime', '<=', data['date_to'])])
+                ot_data = '00:00'
+                if ot_data_obj:
+                    ot_data = self._get_total_ot_hours(ot_data_obj)
+                report_summary['ot_hours'] = ot_data if ot_data else 0.0
+
                 report_data.append(report_summary)
 
             return report_data
 
         else:
             return False
+
+    def _get_total_ot_hours(self, ot_data_obj):
+        seconds = 0
+        for obj in ot_data_obj:
+            start_dt = fields.Datetime.from_string(obj.from_datetime)
+            finish_dt = fields.Datetime.from_string(obj.to_datetime)
+            diff = finish_dt-start_dt
+            seconds = seconds + float(diff.total_seconds())
+        hours = float(seconds/3600)
+        result = '{0:02.0f}:{1:02.0f}'.format(*divmod(hours * 60, 60))
+        return result
 
 
 
