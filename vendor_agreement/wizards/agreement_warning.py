@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 
-class HrLoanApplyWarning(models.TransientModel):
+class AgreementWarning(models.TransientModel):
 
     _name = "agreement.warning.wizard"
 

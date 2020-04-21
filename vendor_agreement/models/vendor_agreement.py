@@ -366,6 +366,25 @@ class VendorAgreement(models.Model):
             }
         }
 
+    @api.multi
+    def action_receive_outstanding_advance(self):
+
+        res = self.env.ref('vendor_agreement.view_receive_outstanding_advance_wizard')
+
+        return {
+            'name': _('Receive Outstanding Advance'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'receive.outstanding.advance.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {
+                'amount': self.outstanding_amount or 0.0
+            }
+        }
+
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
