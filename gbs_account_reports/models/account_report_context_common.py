@@ -4,7 +4,12 @@ from odoo import models, fields, api, _
 class AccountFinancialReportContext(models.TransientModel):
     _inherit = "account.financial.html.report.context"
 
-    operating_unit_ids = fields.Many2many('operating.unit')
+    @api.model
+    def _default_operating_unit_ids(self):
+        unit_ids = self.env['operating.unit'].search([])
+        return unit_ids
+
+    operating_unit_ids = fields.Many2many('operating.unit', default=lambda s: s._default_operating_unit_ids())
     available_operating_unit_ids = fields.Many2many('operating.unit', compute='_compute_available_operating_unit_ids')
 
     @api.multi
