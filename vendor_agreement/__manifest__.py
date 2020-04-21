@@ -35,7 +35,8 @@
         'views/vendor_security_return_view.xml',
         'wizards/agreement_warning_view.xml',
         'views/vendor_bill_generation_view.xml',
-        'wizards/receive_outstanding_advance_wizard_view.xml'
+        'wizards/receive_outstanding_advance_wizard_view.xml',
+        'views/receive_outstanding_advance.xml'
 
     ],
     'installable': True,

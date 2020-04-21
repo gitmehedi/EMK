@@ -1,5 +1,4 @@
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
 
 
 class RecieveOutstandingAdvance(models.Model):
@@ -26,3 +25,24 @@ class RecieveOutstandingAdvance(models.Model):
         sequence = self.env['ir.sequence'].next_by_code('receive.outstanding.advance') or ''
         values['name'] = sequence
         return super(RecieveOutstandingAdvance, self).create(values)
+
+    @api.multi
+    def action_confirm(self):
+        for rec in self:
+            rec.write({
+                'state': 'confirm'
+            })
+
+    @api.multi
+    def action_approve(self):
+        for rec in self:
+            rec.write({
+                'state': 'approve'
+            })
+
+    @api.multi
+    def action_cancel(self):
+        for rec in self:
+            rec.write({
+                'state': 'cancel'
+            })
