@@ -353,8 +353,12 @@
             <field name="act_window_id" ref="rent_agreement_action"/>
         </record>
 
+        <menuitem id="menu_rent_operations_main" name="Rent Operations" sequence="101"/>
+        <menuitem id="menu_rent_operations" name="Rent Operations"
+                  sequence="1" parent="menu_rent_operations_main"/>
+
         <menuitem id="rent_agreement_menu" action="rent_agreement_action"
-                  name="Rent Agreements" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
-                  parent="menu_agreements" sequence="35"/>
+                  name="Rental Agreements" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
+                  parent="menu_rent_operations" sequence="35"/>
     </data>
 </odoo>
