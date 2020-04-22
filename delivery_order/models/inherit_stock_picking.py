@@ -182,7 +182,7 @@ class InheritStockPicking(models.Model):
                 # date_done = datetime.strptime(self.date_done, '%Y-%m-%d %H:%M:%S').date()
                 curr_date = datetime.now().date()
                 if shipment_date < curr_date:
-                    raise UserError(_("Unable to deliver Goods due 'LC Shipment Date' Expired. Please contact to appropriate person for LC Shipment Date Amendment. After that you can deliver the Goods."))
+                    raise UserError(_("Unable to deliver Goods due to 'LC Shipment Date' Expired. Please contact to appropriate person for LC Shipment Date Amendment. After that you can deliver the Goods."))
 
         res = super(InheritStockPicking, self).do_new_transfer()
 
