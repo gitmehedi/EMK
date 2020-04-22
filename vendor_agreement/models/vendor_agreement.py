@@ -23,10 +23,10 @@ class VendorAgreement(models.Model):
     # pro_advance_amount = fields.Float(string="Proposed Amount", readonly=True,
     #                                   track_visibility='onchange', states={'draft': [('readonly', False)]},
     #                                   help="Proposed advance amount. Initially proposed amount raise by vendor.")
-    adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
+    adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True, default=0.0,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
                                     help="Adjustment amount which will be adjust in bill.")
-    service_value = fields.Float(string="Service Value", required=True, readonly=True,
+    service_value = fields.Float(string="Service Value", required=True, readonly=True, default=0.0,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Service value.")
     advance_amount = fields.Float(string="Approved Advance", required=True, readonly=True,
