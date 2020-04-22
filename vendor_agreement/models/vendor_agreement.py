@@ -91,11 +91,12 @@ class VendorAgreement(models.Model):
     security_deposit = fields.Float(string="Security Deposit", readonly=True,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
                                     help="Security Deposit.")
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
+                                            readonly=True, states={'draft': [('readonly', False)]})
     rent_type = fields.Selection([
         ('general', "General Rent"),
         ('govt_premise', "Govt. Premise Rent")], string="Rent Type", required=True,
-        track_visibility='onchange')
+        track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     area = fields.Float(string='Area (ft)', readonly=True, states={'draft': [('readonly', False)]})
     rate = fields.Float(string='Rate (ft)', readonly=True, states={'draft': [('readonly', False)]})
     additional_service = product_id = fields.Many2one('product.product', string='Additional Service',
@@ -360,6 +361,7 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
+            'active_id': self.id,
             'context': {
                 'default_text': 'Are you sure to inactive the agreement?' or False,
                 'default_warning_type': 'inactive_agreement' or False

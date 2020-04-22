@@ -16,7 +16,7 @@
                     <field name="warning_type" invisible="1"/>
                     <button name="action_reject" string="Yes" type="object"
                             class="oe_highlight" attrs="{'invisible': [('warning_type', '=', 'inactive_agreement')]}"/>
-                    <button name="action_reject" string="Yes" type="object"
+                    <button name="action_inactive" string="Yes" type="object"
                             class="oe_highlight" attrs="{'invisible': [('warning_type', '=', 'reject_amendment')]}"/>
                     or
                     <button string="No" class="oe_link" special="cancel"/>

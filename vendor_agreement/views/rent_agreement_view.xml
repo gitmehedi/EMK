@@ -42,12 +42,12 @@
                                 groups="vendor_agreement.vendor_agreement_approver"/>
                         <button string="Payment Instruction" name="action_rent_payment" type="object"
                                 class="oe_highlight"
-                                attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                                attrs="{'invisible': ['|', ('payment_btn_visible', '=', False), ('active', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
 
                         <button string="Amendment" name="action_amendment"
                                 type="object" class="oe_read_only"
-                                attrs="{'invisible': ['|',('is_amendment', '=', True),('state', 'in', ('draft','confirm','cancel'))]}"
+                                attrs="{'invisible': ['|', '|', ('is_amendment', '=', True), ('state', 'in', ('draft','confirm','cancel')), ('active', '=', False)]}"
                                 groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
                         <button string="Approve" name="action_approve_amendment"
                                 type="object" class="oe_highlight"
@@ -57,10 +57,13 @@
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': [('is_amendment', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
-                        <button string="Inactive" name="action_inactive_agreement"
-                                type="object" groups="vendor_agreement.vendor_agreement_approver"/>
                         <button string="Receive Outstanding Advance" name="action_receive_outstanding_advance"
-                                type="object" states="done" groups="vendor_agreement.vendor_agreement_approver"/>
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', ('active', '=', False), ('state', 'in', ('draft','confirm','cancel'))]}"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="Inactive" name="action_inactive_agreement"
+                                attrs="{'invisible': [('active', '=', False)]}"
+                                type="object" groups="vendor_agreement.vendor_agreement_approver"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
