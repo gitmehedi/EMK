@@ -281,7 +281,7 @@
         </record>
 
         <record id="vendor_agreement_action" model="ir.actions.act_window">
-            <field name="name">Vendor Agreements</field>
+            <field name="name">Vendor Advances</field>
             <field name="res_model">agreement</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','single')]</field>
@@ -303,8 +303,8 @@
         </record>
 
         <menuitem id="agreement_account.agreement_menu" action="vendor_agreement_action"
-                  name="Vendor Agreements"
+                  name="Vendor Advances"
                   groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
-                  parent="menu_agreements" sequence="30"/>
+                  parent="account.menu_finance_payables" sequence="30"/>
     </data>
 </odoo>
