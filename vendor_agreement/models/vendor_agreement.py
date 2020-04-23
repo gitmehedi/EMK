@@ -99,9 +99,9 @@ class VendorAgreement(models.Model):
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     area = fields.Float(string='Area (ft)', readonly=True, states={'draft': [('readonly', False)]})
     rate = fields.Float(string='Rate (ft)', readonly=True, states={'draft': [('readonly', False)]})
-    additional_service = product_id = fields.Many2one('product.product', string='Additional Service',
-                                                      required=False, readonly=True, track_visibility='onchange',
-                                                      states={'draft': [('readonly', False)]}, help="Additional Service.")
+    additional_service = fields.Many2one('product.product', string='Additional Service',
+                                         required=False, readonly=True, track_visibility='onchange',
+                                         states={'draft': [('readonly', False)]}, help="Additional Service.")
     additional_service_value = fields.Float(string="Ad. Service Value", readonly=True,
                                             track_visibility='onchange', states={'draft': [('readonly', False)]},
                                             help="Additional Service value.")
@@ -248,8 +248,11 @@ class VendorAgreement(models.Model):
             # if self.type == 'multi':
             #     if not self.line_ids:
             #         raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
-
-            sequence = self.env['ir.sequence'].next_by_code('agreement') or ''
+            sequence = ''
+            if self.type == 'single':
+                sequence = self.env['ir.sequence'].next_by_code('agreement') or ''
+            if self.type == 'multi':
+                sequence = self.env['ir.sequence'].next_by_code('rent.agreement') or ''
             self.write({
                 'state': 'confirm',
                 'name': sequence,
@@ -264,6 +267,8 @@ class VendorAgreement(models.Model):
             # if self.type == 'multi':
             #     if not self.line_ids:
             #         raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+
+            self.create_journal()
 
             self.write({
                 'state': 'done',
@@ -409,6 +414,67 @@ class VendorAgreement(models.Model):
             res.append((agr.id, name))
         return res
 
+    def create_journal(self):
+        journal_id = self.env.ref('vendor_agreement.vendor_advance_journal')
+        ogl_data = {}
+        ogl_data['journal_id'] = journal_id.id
+        ogl_data['date'] = fields.date.today()
+        ogl_data['operating_unit_id'] = journal_id.operating_unit_id.id
+        ogl_data['state'] = 'posted'
+        ogl_data['name'] = self.name
+
+        journal_item_data = []
+        debit_item = [
+            0, 0, {
+                'name': self.description or 'Vendor Advance',
+                'ref': self.name,
+                'date': fields.date.today(),
+                'account_id': self.account_id.id,
+                'operating_unit_id': self.operating_unit_id.id,
+                'debit': self.advance_amount,
+                'credit': 0.0,
+                'due_date': fields.date.today()
+
+            }
+        ]
+        journal_item_data.append(debit_item)
+
+        supplier_credit_amount = self.advance_amount
+        account_conf_pool = self.env['account.config.settings'].search([], order='id desc', limit=1)
+        if self.security_deposit and self.security_deposit > 0:
+            deposit_credit_item = [
+                0, 0, {
+                    'name': self.description or 'Vendor Advance',
+                    'ref': self.name,
+                    'date': fields.date.today(),
+                    'account_id': account_conf_pool.security_deposit_account_id.id,
+                    'operating_unit_id': account_conf_pool.head_branch_id.id,
+                    'debit': 0.0,
+                    'credit': self.security_deposit,
+                    'due_date': fields.date.today()
+
+                }
+            ]
+            journal_item_data.append(deposit_credit_item)
+            supplier_credit_amount = supplier_credit_amount - self.security_deposit
+
+        supplier_credit_item = [
+            0, 0, {
+                'name': self.description or 'Vendor Advance',
+                'ref': self.name,
+                'date': fields.date.today(),
+                'account_id': self.partner_id.property_account_payable_id.id,
+                'operating_unit_id': journal_id.operating_unit_id.id,
+                'debit': 0.0,
+                'credit': supplier_credit_amount,
+                'due_date': fields.date.today()
+
+            }
+        ]
+        journal_item_data.append(supplier_credit_item)
+        ogl_data['line_ids'] = journal_item_data
+
+        self.env['account.move'].create(ogl_data)
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
