@@ -32,33 +32,31 @@
                             <group>
                                 <field name="journal_id"
                                        options="{'no_create':True,'no_create_edit':True}"/>
-                                <field name="total_profit"/>
-                                <field name="total_loss"/>
+                                <field name="total_income"/>
+                                <field name="total_expense"/>
                                 <field name="balance"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Branch Profit/Loss">
+                            <page string="Branch-wise Details">
                                 <field name="line_ids">
-                                    <tree decoration-success="pl_status=='profit'"
-                                          decoration-danger="pl_status=='loss'">
+                                    <tree decoration-success="pl_status=='income'"
+                                          decoration-danger="pl_status=='expense'">
                                         <field name="branch_id"/>
-                                        <field name="date"/>
                                         <field name="pl_status"/>
-                                        <field name="profit" sum="profit"/>
-                                        <field name="loss" sum="loss"/>
+                                        <field name="income" sum="income"/>
+                                        <field name="expense" sum="expense"/>
                                     </tree>
                                     <form>
                                         <sheet>
                                             <group>
                                                 <group>
                                                     <field name="name"/>
-                                                    <field name="date"/>
                                                 </group>
                                                 <group>
                                                     <field name="pl_status"/>
-                                                    <field name="profit"/>
-                                                    <field name="loss"/>
+                                                    <field name="income"/>
+                                                    <field name="expense"/>
                                                 </group>
                                             </group>
                                         </sheet>
@@ -87,8 +85,8 @@
                     <field name="name"/>
                     <field name="branch_id"/>
                     <field name="date"/>
-                    <field name="total_profit"/>
-                    <field name="total_loss"/>
+                    <field name="total_income"/>
+                    <field name="total_expense"/>
                     <field name="balance"/>
                     <field name="journal_id"/>
                     <field name="state"/>

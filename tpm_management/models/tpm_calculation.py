@@ -13,9 +13,9 @@ class TPMManagementModel(models.Model):
     branch_id = fields.Many2one('operating.unit', string='Branch', readonly=True,
                                 states={'draft': [('readonly', False)]}, required=True)
     date = fields.Date(string='Date', default=fields.Date.today, readonly=True, required=True)
-    total_profit = fields.Float(string="Total Profit", compute="_compute_profit_loss")
-    total_loss = fields.Float(string="Total Loss", compute="_compute_profit_loss")
-    balance = fields.Float(string="Difference", compute="_compute_profit_loss")
+    total_income = fields.Float(string="Total Income", compute="_compute_income_expense")
+    total_expense = fields.Float(string="Total Expense", compute="_compute_income_expense")
+    balance = fields.Float(string="Difference", compute="_compute_income_expense")
     journal_id = fields.Many2one('account.move', string='Journal Entry', readonly=True)
     line_ids = fields.One2many('tpm.calculation.line', 'line_id', string='Lines', readonly=True)
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
@@ -36,11 +36,11 @@ class TPMManagementModel(models.Model):
 
     @api.multi
     @api.depends('line_ids')
-    def _compute_profit_loss(self):
+    def _compute_income_expense(self):
         for rec in self:
-            rec.total_profit = sum([val.profit for val in rec.line_ids])
-            rec.total_loss = sum([val.loss for val in rec.line_ids])
-            rec.balance = abs(rec.total_profit - rec.total_loss)
+            rec.total_income = sum([val.income for val in rec.line_ids])
+            rec.total_expense = sum([val.expense for val in rec.line_ids])
+            rec.balance = abs(rec.total_income - rec.total_expense)
 
     @api.one
     def act_draft(self):
@@ -80,9 +80,9 @@ class TPMManagementModel(models.Model):
 
                 self.line_ids.create({
                     'name': self.id,
-                    'profit': credit_amount,
-                    'loss': debit_amount,
-                    'pl_status': 'profit' if bal[3] > 0 else 'loss',
+                    'income': credit_amount,
+                    'expense': debit_amount,
+                    'pl_status': 'income' if bal[3] > 0 else 'expense',
                     'branch_id': branch_id,
                     'date': fields.Datetime.now(),
                     'line_id': self.id,
@@ -127,9 +127,9 @@ class TPMManagementModel(models.Model):
                     'name': name,
                     'date': date,
                     'date_maturity': date,
-                    'account_id': income_account if rec.profit > 0 else general_account,
-                    'debit': rec.profit,
-                    'credit': rec.loss,
+                    'account_id': income_account if rec.income > 0 else general_account,
+                    'debit': rec.income,
+                    'credit': rec.expense,
                     'journal_id': journal,
                     'operating_unit_id': rec.branch_id.id,
                     'currency_id': current_currency,
@@ -141,9 +141,9 @@ class TPMManagementModel(models.Model):
                     'name': name,
                     'date': date,
                     'date_maturity': date,
-                    'account_id': general_account if rec.profit > 0 else expense_account,
-                    'credit': rec.profit,
-                    'debit': rec.loss,
+                    'account_id': general_account if rec.income > 0 else expense_account,
+                    'credit': rec.income,
+                    'debit': rec.expense,
                     'journal_id': journal,
                     'operating_unit_id': rec.branch_id.id,
                     'currency_id': current_currency,
@@ -215,9 +215,9 @@ class TPMManagementLineModel(models.Model):
     _order = 'id desc'
 
     name = fields.Char(string="Name")
-    profit = fields.Float(string='Profit Amount', digits=(14, 2))
-    loss = fields.Float(string='Loss Amount', digits=(14, 2))
+    income = fields.Float(string='Income Amount', digits=(14, 2))
+    expense = fields.Float(string='Expense Amount', digits=(14, 2))
     branch_id = fields.Many2one('operating.unit', string='Branch', required=True)
     date = fields.Date(string='Date', default=fields.Date.today, required=True)
     line_id = fields.Many2one("tpm.calculation", string='Line')
-    pl_status = fields.Selection([('profit', 'Profit'), ('loss', 'Loss')], string='Profit/Loss')
+    pl_status = fields.Selection([('income', 'Income'), ('expense', 'Expense')], string='Income/Expense')
