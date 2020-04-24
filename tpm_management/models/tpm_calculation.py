@@ -100,8 +100,8 @@ class TPMManagementModel(models.Model):
                 self.env.cr.execute(query)
                 for bal in self.env.cr.fetchall():
                     branch_id = bal[0]
-                    if bal[3] == 0:
-                        continue
+                    # if bal[3] == 0:
+                    #     continue
 
                     if bal[3] > 0:
                         debit_amount = 0.0
