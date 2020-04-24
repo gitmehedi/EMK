@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
@@ -12,7 +13,10 @@ class TPMManagementModel(models.Model):
     name = fields.Char('Name', size=200, track_visibility='onchange', readonly=True)
     branch_id = fields.Many2one('operating.unit', string='Branch', readonly=True,
                                 states={'draft': [('readonly', False)]}, required=True)
-    date = fields.Date(string='Date', default=fields.Date.today, readonly=True, required=True)
+    date = fields.Date(string='From Date', default=fields.Date.today, required=True, readonly=True,
+                       states={'draft': [('readonly', False)]})
+    to_date = fields.Date(string='To Date', default=fields.Date.today, required=True, readonly=True,
+                          states={'draft': [('readonly', False)]})
     total_income = fields.Float(string="Total Income", compute="_compute_income_expense")
     total_expense = fields.Float(string="Total Expense", compute="_compute_income_expense")
     balance = fields.Float(string="Difference", compute="_compute_income_expense")
@@ -55,40 +59,83 @@ class TPMManagementModel(models.Model):
             self.line_ids.unlink()
             company = self.env.user.company_id
             general_account = company.tpm_general_account_id.id
-            income_rate = company.income_rate / 100
-            expense_rate = company.expense_rate / 100
+            days = 360
+            income_rate = (company.income_rate / 100) / days
+            expense_rate = (company.expense_rate / 100) / days
             branch = self.env['operating.unit'].search([('active', '=', True), ('pending', '=', False)])
+            branch_lines = {}
+            for val in branch:
+                branch_lines[val.id] = []
 
-            query = """SELECT operating_unit_id AS branch,
-                            SUM(debit) AS debit,
-                            SUM(credit) AS credit,
-                            SUM(debit) - SUM(credit) AS balance 
-                        FROM account_move_line
-                        WHERE account_id=%s AND operating_unit_id IN %s
-                        GROUP BY operating_unit_id 
-                        ORDER BY operating_unit_id ASC; """ % (general_account, tuple(branch.ids))
+            d1 = datetime.strptime(self.date, "%Y-%m-%d")
+            d2 = datetime.strptime(self.to_date, "%Y-%m-%d")
+            no_of_days = (d2 - d1).days + 1
+            for day in range(0, no_of_days):
+                start_date = d1 + timedelta(days=day)
+                end_date = d2 + timedelta(days=day)
 
-            self.env.cr.execute(query)
-            for bal in self.env.cr.fetchall():
-                branch_id = bal[0]
-                if bal[3] > 0:
-                    debit_amount = 0.0
-                    credit_amount = round(bal[3] * income_rate, 2)
-                else:
-                    debit_amount = round(abs(bal[3] * expense_rate), 2)
-                    credit_amount = 0.0
+                query = """SELECT aa.id,
+                                   COALESCE(trial.credit, 0) AS credit,
+                                   COALESCE(trial.debit, 0) AS debit,
+                                   (COALESCE(trial.credit, 0) - COALESCE(trial.debit, 0) + COALESCE(init.balance, 0)) AS balance,
+                                   COALESCE(init.balance, 0) AS init_bal
+                            FROM operating_unit aa
+                            LEFT JOIN (SELECT operating_unit_id AS id,
+                                              COALESCE(Sum(debit), 0) AS debit,
+                                              COALESCE(Sum(credit), 0) AS credit
+                                       FROM account_move_line
+                                       WHERE account_id=%s
+                                         AND (account_move_line.date >= '%s'
+                                              AND account_move_line.date <= '%s') 
+                                       GROUP  BY operating_unit_id) trial ON (trial.id = aa.id)
+                            LEFT JOIN (SELECT operating_unit_id AS id,
+                                              COALESCE((SUM(credit) - SUM(debit)), 0) AS balance
+                                       FROM account_move_line
+                                       WHERE account_id=%s
+                                         AND (account_move_line.date > '%s'
+                                              AND account_move_line.date <= '%s')
+                                       GROUP  BY operating_unit_id) init ON (init.id = aa.id)""" % (
+                    general_account, start_date, end_date, general_account, start_date, end_date)
 
-                self.line_ids.create({
+                self.env.cr.execute(query)
+                for bal in self.env.cr.fetchall():
+                    branch_id = bal[0]
+                    if bal[3] == 0:
+                        continue
+
+                    if bal[3] > 0:
+                        debit_amount = 0.0
+                        credit_amount = round(bal[3] * income_rate, 2)
+                    else:
+                        debit_amount = round(abs(bal[3] * expense_rate), 2)
+                        credit_amount = 0.0
+
+                    line = {
+                        'income': credit_amount,
+                        'expense': debit_amount,
+                        'pl_status': 'income' if bal[3] > 0 else 'expense',
+                        'branch_id': branch_id,
+                        'date': start_date,
+                        'branch_line_id': 0,
+                    }
+                    branch_lines[bal[0]].append(line)
+
+            for key, value in branch_lines.items():
+                line = self.line_ids.create({
                     'name': self.id,
                     'income': credit_amount,
                     'expense': debit_amount,
                     'pl_status': 'income' if bal[3] > 0 else 'expense',
-                    'branch_id': branch_id,
-                    'date': fields.Datetime.now(),
+                    'branch_id': key,
+                    'from_date': self.date,
+                    'to_date': self.to_date,
                     'line_id': self.id,
                 })
+                for val in value:
+                    val['branch_line_id'] = line.id
+                    line.branch_line_ids.create(val)
 
-                self.state = 'calculate'
+            # self.state = 'calculate'
 
     @api.multi
     def act_confirm(self):
@@ -215,9 +262,32 @@ class TPMManagementLineModel(models.Model):
     _order = 'id desc'
 
     name = fields.Char(string="Name")
+    income = fields.Float(string='Income Amount', compute='_compute_income_expense', digits=(14, 2))
+    expense = fields.Float(string='Expense Amount', compute='_compute_income_expense', digits=(14, 2))
+    branch_id = fields.Many2one('operating.unit', string='Branch', required=True)
+    from_date = fields.Date(string='From Date', required=True)
+    to_date = fields.Date(string='To Date', required=True)
+    line_id = fields.Many2one("tpm.calculation", string='Line')
+    pl_status = fields.Selection([('income', 'Income'), ('expense', 'Expense')], compute='_compute_income_expense',
+                                 string='Income/Expense')
+    branch_line_ids = fields.One2many('tpm.branch.calculation.line', 'branch_line_id')
+
+    @api.multi
+    @api.depends('branch_line_ids')
+    def _compute_income_expense(self):
+        for rec in self:
+            rec.income = sum([val.income for val in rec.branch_line_ids])
+            rec.expense = sum([val.expense for val in rec.branch_line_ids])
+            rec.pl_status = 'income' if rec.income > rec.expense else 'expense'
+
+
+class TPMBranchManagementLineModel(models.Model):
+    _name = 'tpm.branch.calculation.line'
+    _order = 'date ASC'
+
     income = fields.Float(string='Income Amount', digits=(14, 2))
     expense = fields.Float(string='Expense Amount', digits=(14, 2))
     branch_id = fields.Many2one('operating.unit', string='Branch', required=True)
     date = fields.Date(string='Date', default=fields.Date.today, required=True)
-    line_id = fields.Many2one("tpm.calculation", string='Line')
+    branch_line_id = fields.Many2one('tpm.calculation.line')
     pl_status = fields.Selection([('income', 'Income'), ('expense', 'Expense')], string='Income/Expense')

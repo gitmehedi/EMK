@@ -28,6 +28,7 @@
                                 <field name="branch_id"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="date"/>
+                                <field name="to_date"/>
                             </group>
                             <group>
                                 <field name="journal_id"
@@ -51,7 +52,9 @@
                                         <sheet>
                                             <group>
                                                 <group>
-                                                    <field name="name"/>
+                                                    <field name="branch_id"/>
+                                                    <field name="from_date"/>
+                                                    <field name="to_date"/>
                                                 </group>
                                                 <group>
                                                     <field name="pl_status"/>
@@ -59,6 +62,22 @@
                                                     <field name="expense"/>
                                                 </group>
                                             </group>
+
+                                            <field name="branch_line_ids">
+                                                <tree decoration-success="pl_status=='income'"
+                                                      decoration-danger="pl_status=='expense'">
+                                                    <field name="date"/>
+                                                    <field name="pl_status"/>
+                                                    <field name="income" sum="income"/>
+                                                    <field name="expense" sum="expense"/>
+                                                </tree>
+                                                <form>
+                                                    <field name="branch_id"/>
+                                                    <field name="pl_status"/>
+                                                    <field name="income"/>
+                                                    <field name="expense"/>
+                                                </form>
+                                            </field>
                                         </sheet>
                                     </form>
                                 </field>
