@@ -72,7 +72,7 @@ class TPMManagementModel(models.Model):
             no_of_days = (d2 - d1).days + 1
             for day in range(0, no_of_days):
                 start_date = d1 + timedelta(days=day)
-                end_date = d2 + timedelta(days=day)
+                end_date = d1 + timedelta(days=day)
 
                 query = """SELECT aa.id,
                                    COALESCE(trial.credit, 0) AS credit,
@@ -123,9 +123,6 @@ class TPMManagementModel(models.Model):
             for key, value in branch_lines.items():
                 line = self.line_ids.create({
                     'name': self.id,
-                    'income': credit_amount,
-                    'expense': debit_amount,
-                    'pl_status': 'income' if bal[3] > 0 else 'expense',
                     'branch_id': key,
                     'from_date': self.date,
                     'to_date': self.to_date,
