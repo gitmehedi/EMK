@@ -8,7 +8,7 @@ class VendorAgreement(models.Model):
     _inherit = ["agreement", 'mail.thread', 'ir.needaction_mixin']
 
     code = fields.Char(required=False, copy=False, string='Agreement No')
-    name = fields.Char(required=False, track_visibility='onchange', string='Agreement No')
+    name = fields.Char(required=False, track_visibility='onchange', string='Agreement No', default='/')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=False,
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
@@ -440,15 +440,14 @@ class VendorAgreement(models.Model):
         journal_item_data.append(debit_item)
 
         supplier_credit_amount = self.advance_amount
-        account_conf_pool = self.env['account.config.settings'].search([], order='id desc', limit=1)
         if self.security_deposit and self.security_deposit > 0:
             deposit_credit_item = [
                 0, 0, {
                     'name': self.description or 'Vendor Advance',
                     'ref': self.name,
                     'date': fields.date.today(),
-                    'account_id': account_conf_pool.security_deposit_account_id.id,
-                    'operating_unit_id': account_conf_pool.head_branch_id.id,
+                    'account_id': self.company_id.security_deposit_account_id.id,
+                    'operating_unit_id': self.company_id.head_branch_id.id,
                     'debit': 0.0,
                     'credit': self.security_deposit,
                     'due_date': fields.date.today()
