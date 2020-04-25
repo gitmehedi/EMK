@@ -58,6 +58,13 @@
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>%
                         </div>
                     </div>
+                    <label for="id" string="Days in Year" groups="account.group_account_user"/>
+                    <div name="days_in_fy">
+                        <div>
+                            <field name="days_in_fy" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
                 </group>
             </xpath>
         </field>
