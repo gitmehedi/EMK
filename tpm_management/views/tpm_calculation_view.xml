@@ -53,13 +53,12 @@
                                             <group>
                                                 <group>
                                                     <field name="branch_id"/>
-                                                    <field name="from_date"/>
-                                                    <field name="to_date"/>
+                                                    <field name="pl_status"/>
+
                                                 </group>
                                                 <group>
-                                                    <field name="pl_status"/>
-                                                    <field name="income"/>
-                                                    <field name="expense"/>
+                                                    <field name="from_date"/>
+                                                    <field name="to_date"/>
                                                 </group>
                                             </group>
 
@@ -67,15 +66,27 @@
                                                 <tree decoration-success="pl_status=='income'"
                                                       decoration-danger="pl_status=='expense'">
                                                     <field name="date"/>
+                                                    <field name="balance"/>
                                                     <field name="pl_status"/>
+                                                    <field name="income_rate"/>
                                                     <field name="income" sum="income"/>
+                                                    <field name="expense_rate"/>
                                                     <field name="expense" sum="expense"/>
                                                 </tree>
                                                 <form>
-                                                    <field name="branch_id"/>
-                                                    <field name="pl_status"/>
-                                                    <field name="income"/>
-                                                    <field name="expense"/>
+                                                    <group>
+                                                        <group>
+                                                            <field name="date"/>
+                                                            <field name="pl_status"/>
+                                                            <field name="balance"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="income_rate"/>
+                                                            <field name="expense_rate"/>
+                                                            <field name="income"/>
+                                                            <field name="expense"/>
+                                                        </group>
+                                                    </group>
                                                 </form>
                                             </field>
                                         </sheet>
