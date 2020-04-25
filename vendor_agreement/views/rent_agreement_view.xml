@@ -85,7 +85,8 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <label string="Effective Period"/>
                                     <div>
-                                        <field name="start_date" class="oe_inline"/>
+                                        <field name="start_date" class="oe_inline"
+                                               attrs="{'required': [('type', '=', 'multi')]}"/>
                                         <label string=" To" class="oe_inline"/>
                                         <field name="end_date" class="oe_inline"/>
                                     </div>
@@ -105,8 +106,8 @@
                                 <field name="tds_id"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="security_deposit"/>
-                                <field name="rent_type"/>
-                                <field name="billing_period"/>
+                                <field name="rent_type" attrs="{'required': [('type', '=', 'multi')]}"/>
+                                <field name="billing_period" attrs="{'required': [('type', '=', 'multi')]}"/>
                                 <field name="area"/>
                                 <field name="rate"/>
                                 <field name="description"/>

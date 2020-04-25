@@ -92,8 +92,8 @@
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="product_id" string="Service" required="True"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-<!--                                    <field name="additional_service"-->
-<!--                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
+                                    <field name="additional_service" invisible="1"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="company_id" groups="base.group_multi_company"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
@@ -103,9 +103,10 @@
                                     <field name="tds_id"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="security_deposit"/>
-<!--                                    <field name="rent_type"/>-->
-<!--                                    <field name="area"/>-->
-<!--                                    <field name="rate"/>-->
+                                    <field name="rent_type" invisible="1"/>
+                                    <field name="billing_period" invisible="1"/>
+                                    <field name="area" invisible="1"/>
+                                    <field name="rate" invisible="1"/>
                                     <field name="description"/>
                                     <field name="is_amendment" invisible="1"/>
                                     <field name="payment_btn_visible" invisible="1"/>

@@ -16,7 +16,7 @@ class VendorAgreement(models.Model):
     product_id = fields.Many2one('product.product', string='Service/Product', required=False, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Agreement Service.")
-    start_date = fields.Date(string='Start Date', default=fields.Date.context_today, required=True, readonly=True,
+    start_date = fields.Date(string='Start Date', default=fields.Date.context_today, readonly=True,
                              track_visibility='onchange', states={'draft': [('readonly', False)]})
     end_date = fields.Date(string='End Date', readonly=True, track_visibility='onchange',
                            states={'draft': [('readonly', False)]})
@@ -95,7 +95,7 @@ class VendorAgreement(models.Model):
                                             readonly=True, states={'draft': [('readonly', False)]})
     rent_type = fields.Selection([
         ('general', "General Rent"),
-        ('govt_premise', "Govt. Premise Rent")], string="Rent Type", required=True,
+        ('govt_premise', "Govt. Premise Rent")], string="Rent Type",
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     area = fields.Float(string='Area (ft)', readonly=True, states={'draft': [('readonly', False)]})
     rate = fields.Float(string='Rate (ft)', readonly=True, states={'draft': [('readonly', False)]})
@@ -115,7 +115,7 @@ class VendorAgreement(models.Model):
                                        track_visibility='onchange', help="Total Service Value")
     billing_period = fields.Selection([
         ('monthly', "Monthly"),
-        ('yearly', "Yearly")], string="Billing Period", required=True,
+        ('yearly', "Yearly")], string="Billing Period",
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.one
