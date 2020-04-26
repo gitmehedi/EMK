@@ -23,4 +23,10 @@ class VendorSecurityDeposit(models.Model):
         ('done', "Closed")], default='draft', string="Status", readonly=True,
         track_visibility='onchange')
 
+    @api.model
+    def create(self, values):
+        sequence = self.env['ir.sequence'].next_by_code('vendor.security.deposit') or ''
+        values['name'] = sequence
+        return super(VendorSecurityDeposit, self).create(values)
+
 

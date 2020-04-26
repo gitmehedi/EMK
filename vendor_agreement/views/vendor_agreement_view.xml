@@ -54,8 +54,7 @@
                                     attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                                     groups="vendor_agreement.vendor_agreement_approver"/>
                             <button string="Amendment" name="action_amendment"
-                                    type="object" class="oe_read_only"
-                                    attrs="{'invisible': ['|',('is_amendment', '=', True),('state', 'in', ('draft','confirm','cancel'))]}"
+                                    type="object" class="oe_read_only" invisible="1"
                                     groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
                             <button string="Approve" name="action_approve_amendment"
                                     type="object" class="oe_highlight"

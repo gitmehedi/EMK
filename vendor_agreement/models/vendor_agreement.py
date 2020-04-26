@@ -88,7 +88,7 @@ class VendorAgreement(models.Model):
 
     vat_id = fields.Many2one('account.tax', string='VAT', readonly=True, states={'draft': [('readonly', False)]})
     tds_id = fields.Many2one('tds.rule', string='TDS', readonly=True, states={'draft': [('readonly', False)]})
-    security_deposit = fields.Float(string="Security Deposit", readonly=True,
+    security_deposit = fields.Float(string="Security Deposit", readonly=True, default=0.0,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
                                     help="Security Deposit.")
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
@@ -117,6 +117,15 @@ class VendorAgreement(models.Model):
         ('monthly', "Monthly"),
         ('yearly', "Yearly")], string="Billing Period",
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    calculative_advance = fields.Float('Calculative Advance', readonly=True,
+                                       compute="_compute_advance_without_sd", store=True,
+                                       help="This is the advance amount after deducting security deposit, Vat and Tax")
+
+    @api.one
+    @api.depends('advance_amount', 'security_deposit')
+    def _compute_advance_without_sd(self):
+        for record in self:
+            record.calculative_advance = self.advance_amount - self.security_deposit
 
     @api.one
     @api.depends('advance_amount', 'additional_advance_amount')
@@ -213,7 +222,7 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'amount': self.advance_amount - self.total_payment_amount or 0.0,
+            'context': {'amount': self.calculative_advance - self.total_payment_amount or 0.0,
                         'advance_amount': self.advance_amount or 0.0,
                         'total_payment_approved': self.total_payment_approved or 0.0,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
@@ -267,7 +276,14 @@ class VendorAgreement(models.Model):
             # if self.type == 'multi':
             #     if not self.line_ids:
             #         raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
-
+            if self.type == 'single':
+                security_deposit_env = self.env['vendor.security.deposit']
+                security_deposit_env.create({
+                    'partner_id': self.partner_id.id,
+                    'amount': self.security_deposit,
+                    'account_id': self.company_id.security_deposit_account_id.id,
+                    'state': 'draft'
+                })
             self.create_journal()
 
             self.write({
@@ -440,22 +456,23 @@ class VendorAgreement(models.Model):
         journal_item_data.append(debit_item)
 
         supplier_credit_amount = self.advance_amount
-        if self.security_deposit and self.security_deposit > 0:
-            deposit_credit_item = [
-                0, 0, {
-                    'name': self.description or 'Vendor Advance',
-                    'ref': self.name,
-                    'date': fields.date.today(),
-                    'account_id': self.company_id.security_deposit_account_id.id,
-                    'operating_unit_id': self.company_id.head_branch_id.id,
-                    'debit': 0.0,
-                    'credit': self.security_deposit,
-                    'due_date': fields.date.today()
+        if self.type == 'single':
+            if self.security_deposit and self.security_deposit > 0:
+                deposit_credit_item = [
+                    0, 0, {
+                        'name': self.description or 'Vendor Advance',
+                        'ref': self.name,
+                        'date': fields.date.today(),
+                        'account_id': self.company_id.security_deposit_account_id.id,
+                        'operating_unit_id': self.company_id.head_branch_id.id,
+                        'debit': 0.0,
+                        'credit': self.security_deposit,
+                        'due_date': fields.date.today()
 
-                }
-            ]
-            journal_item_data.append(deposit_credit_item)
-            supplier_credit_amount = supplier_credit_amount - self.security_deposit
+                    }
+                ]
+                journal_item_data.append(deposit_credit_item)
+                supplier_credit_amount = supplier_credit_amount - self.security_deposit
 
         supplier_credit_item = [
             0, 0, {
@@ -474,6 +491,7 @@ class VendorAgreement(models.Model):
         ogl_data['line_ids'] = journal_item_data
 
         self.env['account.move'].create(ogl_data)
+
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
