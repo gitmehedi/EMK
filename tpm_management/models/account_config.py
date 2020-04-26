@@ -51,8 +51,8 @@ class AccountConfigSettings(models.TransientModel):
                                              domain="[('level_id.name','=','Layer 5')]")
     impact_count = fields.Integer(string='Expense Journal', default=1, required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], default='days', required=True)
-    income_rate = fields.Integer(string='Income Rate', size=2, required=True)
-    expense_rate = fields.Integer(string='Expense Rate', size=2, required=True)
+    income_rate = fields.Float(string='Income Rate',  required=True)
+    expense_rate = fields.Float(string='Expense Rate', required=True)
     days_in_fy = fields.Integer(string='Days in Year', size=3, required=True, default=360)
 
     @api.multi

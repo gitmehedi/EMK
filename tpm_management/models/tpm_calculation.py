@@ -116,17 +116,17 @@ class TPMManagementModel(models.Model):
                     branch_id = bal[0]
 
                     if bal[3] > 0:
-                        debit_amount = 0.0
-                        credit_amount = round(bal[3] * income_rate, 2)
-                    else:
                         debit_amount = round(abs(bal[3] * expense_rate), 2)
                         credit_amount = 0.0
+                    else:
+                        debit_amount = 0.0
+                        credit_amount = round(abs(bal[3]) * income_rate, 2)
 
                     line = {
                         'income': credit_amount,
                         'expense': debit_amount,
                         'balance': bal[3],
-                        'pl_status': 'income' if bal[3] > 0 else 'expense',
+                        'pl_status': 'expense' if bal[3] > 0 else 'income',
                         'branch_id': branch_id,
                         'date': start_date,
                         'income_rate': company.income_rate,
@@ -147,7 +147,7 @@ class TPMManagementModel(models.Model):
                     val['branch_line_id'] = line.id
                     line.branch_line_ids.create(val)
 
-            self.write({'state': 'calculate'})
+            # self.write({'state': 'calculate'})
 
     @api.multi
     def act_confirm(self):
@@ -314,7 +314,7 @@ class TPMBranchManagementLineModel(models.Model):
     balance = fields.Float(string='Balance', digits=(14, 2))
     branch_id = fields.Many2one('operating.unit', string='Branch', required=True)
     date = fields.Date(string='Date', required=True)
-    income_rate = fields.Integer(string='Income Rate (%)', required=True)
-    expense_rate = fields.Integer(string='Expense Rate (%)', required=True)
+    income_rate = fields.Float(string='Income Rate (%)', required=True)
+    expense_rate = fields.Float(string='Expense Rate (%)', required=True)
     branch_line_id = fields.Many2one('tpm.calculation.line')
     pl_status = fields.Selection([('income', 'Income'), ('expense', 'Expense')], string='Income/Expense')
