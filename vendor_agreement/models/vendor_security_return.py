@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -39,6 +39,25 @@ class VendorSecurityReturn(models.Model):
         ('approve', "Approved"),
         ('cancel', "Canceled")], default='draft', string="Status",
         track_visibility='onchange')
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, track_visibility='onchange',
+                                 states={'draft': [('readonly', False)]},
+                                 default=lambda self: self.env['res.company']._company_default_get())
+    description = fields.Text('Particulars', readonly=True, track_visibility='onchange',
+                              states={'draft': [('readonly', False)]})
+    # payment_line_ids = fields.One2many('payment.instruction', 'security_return_id', readonly=True, copy=False)
+    # total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
+    #                                     store=True, readonly=True, track_visibility='onchange', copy=False)
+    # total_payment_approved = fields.Float('Advance Paid', compute='_compute_payment_amount',
+    #                                       store=True, readonly=True, track_visibility='onchange', copy=False)
+    #
+    # @api.one
+    # @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
+    # def _compute_payment_amount(self):
+    #     for va in self:
+    #         va.total_payment_amount = sum(line.amount for line in va.payment_line_ids if line.state not in ['cancel'])
+    #         va.total_payment_approved = sum(line.amount for line in va.payment_line_ids if line.state in ['approved'])
 
     @api.onchange('vsd_ids')
     def _onchange_amount(self):
@@ -59,6 +78,8 @@ class VendorSecurityReturn(models.Model):
     @api.multi
     def action_confirm(self):
         for rec in self:
+            if self.env.user.id == rec.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
             if not rec.vsd_ids:
                 raise ValidationError("No Vendor Security Deposit is selected")
             if not rec.amount > 0:
@@ -73,6 +94,8 @@ class VendorSecurityReturn(models.Model):
     def action_approve(self):
         security_return_line_obj = self.env['vendor.security.return.line']
         for rec in self:
+            if self.env.user.id == rec.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
             remaining_balance = rec.amount
             if rec.vsd_ids:
                 for vsd in rec.vsd_ids:
@@ -104,9 +127,11 @@ class VendorSecurityReturn(models.Model):
 
             self._cr.execute('DELETE FROM res_partner_vendor_security_return_rel WHERE vendor_security_return_id={}'
                              .format(self.id))
+            self.create_journal()
 
             rec.write({
-                'state': 'approve'
+                'state': 'approve',
+                'approver_id': self.env.user.id
             })
 
     @api.multi
@@ -121,6 +146,48 @@ class VendorSecurityReturn(models.Model):
             if rec.state != 'draft':
                 raise UserError(_('You cannot delete a record which is not draft state!'))
         return super(VendorSecurityReturn, self).unlink()
+
+    def create_journal(self):
+        journal_id = self.env.ref('vendor_agreement.vendor_advance_journal')
+        ogl_data = {}
+        ogl_data['journal_id'] = journal_id.id
+        ogl_data['date'] = fields.date.today()
+        ogl_data['operating_unit_id'] = journal_id.operating_unit_id.id
+        ogl_data['state'] = 'posted'
+        ogl_data['name'] = self.name
+
+        journal_item_data = []
+        debit_item = [
+            0, 0, {
+                'name': self.description or 'Vendor Security Return',
+                'ref': self.name,
+                'date': fields.date.today(),
+                'account_id': self.company_id.security_deposit_account_id.id,
+                'operating_unit_id': journal_id.operating_unit_id.id,
+                'debit': self.amount,
+                'credit': 0.0,
+                'due_date': fields.date.today()
+
+            }
+        ]
+        journal_item_data.append(debit_item)
+
+        supplier_credit_item = [
+            0, 0, {
+                'name': self.description or 'Vendor Security Return',
+                'ref': self.name,
+                'date': fields.date.today(),
+                'account_id': self.partner_id.property_account_payable_id.id,
+                'operating_unit_id': journal_id.operating_unit_id.id,
+                'debit': 0.0,
+                'credit': self.amount,
+                'due_date': fields.date.today()
+
+            }
+        ]
+        journal_item_data.append(supplier_credit_item)
+        ogl_data['line_ids'] = journal_item_data
+        self.env['account.move'].create(ogl_data)
 
 
 

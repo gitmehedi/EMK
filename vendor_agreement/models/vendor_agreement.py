@@ -117,15 +117,15 @@ class VendorAgreement(models.Model):
         ('monthly', "Monthly"),
         ('yearly', "Yearly")], string="Billing Period",
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
-    calculative_advance = fields.Float('Calculative Advance', readonly=True,
-                                       compute="_compute_advance_without_sd", store=True,
+    payable_to_supplier = fields.Float('Payable TO Supplier', readonly=True,
+                                       compute="_compute_payable_to_supplier", store=True,
                                        help="This is the advance amount after deducting security deposit, Vat and Tax")
 
     @api.one
     @api.depends('advance_amount', 'security_deposit')
-    def _compute_advance_without_sd(self):
+    def _compute_payable_to_supplier(self):
         for record in self:
-            record.calculative_advance = self.advance_amount - self.security_deposit
+            record.payable_to_supplier = self.advance_amount - self.security_deposit
 
     @api.one
     @api.depends('advance_amount', 'additional_advance_amount')
@@ -222,7 +222,7 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'amount': self.calculative_advance - self.total_payment_amount or 0.0,
+            'context': {'amount': self.payable_to_supplier - self.total_payment_amount or 0.0,
                         'advance_amount': self.advance_amount or 0.0,
                         'total_payment_approved': self.total_payment_approved or 0.0,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
