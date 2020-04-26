@@ -147,7 +147,7 @@ class TPMManagementModel(models.Model):
                     val['branch_line_id'] = line.id
                     line.branch_line_ids.create(val)
 
-            # self.write({'state': 'calculate'})
+            self.write({'state': 'calculate'})
 
     @api.multi
     def act_confirm(self):
@@ -184,15 +184,29 @@ class TPMManagementModel(models.Model):
                 name = "%s for branch %s" % (rec.pl_status.capitalize(), rec.branch_id.display_name.replace("'", ""))
                 if rec.income == 0 and rec.expense == 0:
                     continue
-                if rec.branch_id.id == 118:
-                    print()
+
+                if rec.income > 0:
+                    credit_account_id = income_account
+                    debit_account_id = general_account
+                    income_cr_cr = rec.income
+                    income_cr_dr = 0
+                    income_dr_cr = 0
+                    income_dr_dr = rec.income
+                else:
+                    credit_account_id = general_account
+                    debit_account_id = expense_account
+                    income_cr_cr = rec.expense
+                    income_cr_dr = 0
+                    income_dr_cr = 0
+                    income_dr_dr = rec.expense
+
                 credit = {
                     'name': name,
                     'date': date,
                     'date_maturity': date,
-                    'account_id': income_account if rec.income > 0 else general_account,
-                    'debit': rec.income,
-                    'credit': rec.expense,
+                    'account_id': credit_account_id,
+                    'credit': income_cr_cr,
+                    'debit': income_cr_dr,
                     'journal_id': journal,
                     'operating_unit_id': rec.branch_id.id,
                     'currency_id': current_currency,
@@ -204,9 +218,9 @@ class TPMManagementModel(models.Model):
                     'name': name,
                     'date': date,
                     'date_maturity': date,
-                    'account_id': general_account if rec.income > 0 else expense_account,
-                    'credit': rec.income,
-                    'debit': rec.expense,
+                    'account_id': debit_account_id,
+                    'credit': income_dr_cr,
+                    'debit': income_dr_dr,
                     'journal_id': journal,
                     'operating_unit_id': rec.branch_id.id,
                     'currency_id': current_currency,
