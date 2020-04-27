@@ -73,7 +73,8 @@ class VendorSecurityReturn(models.Model):
 
     @api.onchange('vsd_ids')
     def _onchange_vsd_ids(self):
-        self.optional_vsd_ids = self.vsd_ids
+        for rec in self:
+            rec.optional_vsd_ids = rec.vsd_ids
 
     @api.multi
     def action_confirm(self):
@@ -157,20 +158,20 @@ class VendorSecurityReturn(models.Model):
         ogl_data['name'] = self.name
 
         journal_item_data = []
-        debit_item = [
-            0, 0, {
-                'name': self.description or 'Vendor Security Return',
-                'ref': self.name,
-                'date': fields.date.today(),
-                'account_id': self.company_id.security_deposit_account_id.id,
-                'operating_unit_id': journal_id.operating_unit_id.id,
-                'debit': self.amount,
-                'credit': 0.0,
-                'due_date': fields.date.today()
+        for line in self.line_ids:
+            journal_item_data.append([
+                0, 0, {
+                    'name': self.description or 'Vendor Security Return',
+                    'ref': line.vsd_id.name,
+                    'date': fields.date.today(),
+                    'account_id': self.company_id.security_deposit_account_id.id,
+                    'operating_unit_id': journal_id.operating_unit_id.id,
+                    'debit': line.amount,
+                    'credit': 0.0,
+                    'due_date': fields.date.today()
 
-            }
-        ]
-        journal_item_data.append(debit_item)
+                }
+            ])
 
         supplier_credit_item = [
             0, 0, {

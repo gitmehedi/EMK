@@ -282,7 +282,8 @@ class VendorAgreement(models.Model):
                     'partner_id': self.partner_id.id,
                     'amount': self.security_deposit,
                     'account_id': self.company_id.security_deposit_account_id.id,
-                    'state': 'draft'
+                    'state': 'draft',
+                    'name': self.name
                 })
             self.create_journal()
 

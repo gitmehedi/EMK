@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class VendorSecurityDeposit(models.Model):
@@ -25,8 +26,11 @@ class VendorSecurityDeposit(models.Model):
 
     @api.model
     def create(self, values):
-        sequence = self.env['ir.sequence'].next_by_code('vendor.security.deposit') or ''
-        values['name'] = sequence
         return super(VendorSecurityDeposit, self).create(values)
+
+    @api.multi
+    def unlink(self):
+        raise UserError(_('You cannot delete a security deposit!'))
+        return super(VendorSecurityDeposit, self).unlink()
 
 
