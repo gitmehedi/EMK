@@ -7,7 +7,15 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_id']" position="after">
-                <field name="agreement_id" attrs="{'invisible':[('invoice_id','!=',False)]}" string="Agreement"/>
+                <field name="agreement_id"
+                       attrs="{'invisible':['|',('invoice_id','!=',False),('security_return_id','!=',False)]}"
+                       string="Agreement"/>
+                <field name="security_return_id"
+                       attrs="{'invisible':['|',('invoice_id','!=',False),('agreement_id','!=',False)]}"
+                       string="Security Return"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_id']" position="attributes">
+                <attribute name="attrs">{'invisible':['|',('security_return_id','!=',False),('agreement_id','!=',False)]}</attribute>
             </xpath>
         </field>
     </record>
@@ -20,6 +28,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_id']" position="after">
                 <field name="agreement_id" string="Agreement"/>
+                <field name="security_return_id" string="Security Return"/>
             </xpath>
         </field>
     </record>
@@ -37,6 +46,6 @@
     </record>
 
     <record id="gbs_vendor_bill.action_payment_instruction_bill" model="ir.actions.act_window">
-        <field name="domain">['|',('invoice_id', '!=', False),('agreement_id', '!=', False)]</field>
+        <field name="domain">['|', '|', ('invoice_id', '!=', False),('agreement_id', '!=', False),('security_return_id', '!=', False)]</field>
     </record>
 </odoo>

@@ -46,18 +46,24 @@ class VendorSecurityReturn(models.Model):
                                  default=lambda self: self.env['res.company']._company_default_get())
     description = fields.Text('Particulars', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
-    # payment_line_ids = fields.One2many('payment.instruction', 'security_return_id', readonly=True, copy=False)
-    # total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
-    #                                     store=True, readonly=True, track_visibility='onchange', copy=False)
-    # total_payment_approved = fields.Float('Advance Paid', compute='_compute_payment_amount',
-    #                                       store=True, readonly=True, track_visibility='onchange', copy=False)
-    #
-    # @api.one
-    # @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
-    # def _compute_payment_amount(self):
-    #     for va in self:
-    #         va.total_payment_amount = sum(line.amount for line in va.payment_line_ids if line.state not in ['cancel'])
-    #         va.total_payment_approved = sum(line.amount for line in va.payment_line_ids if line.state in ['approved'])
+    payment_line_ids = fields.One2many('payment.instruction', 'security_return_id', readonly=True, copy=False)
+    total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
+                                        store=True, readonly=True, track_visibility='onchange', copy=False)
+    total_payment_approved = fields.Float('Advance Paid', compute='_compute_payment_amount',
+                                          store=True, readonly=True, track_visibility='onchange', copy=False)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  default=lambda self: self.env.user.company_id.currency_id.id)
+    payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
+                                         string="Is Visible")
+
+
+    @api.one
+    @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
+    def _compute_payment_amount(self):
+        for rec in self:
+            rec.total_payment_amount = sum(line.amount for line in rec.payment_line_ids if line.state not in ['cancel'])
+            rec.total_payment_approved = sum(line.amount for line in rec.payment_line_ids if line.state in ['approve'])
 
     @api.onchange('vsd_ids')
     def _onchange_amount(self):
@@ -71,10 +77,28 @@ class VendorSecurityReturn(models.Model):
             else:
                 rec.amount = 0
 
+    @api.depends('amount', 'total_payment_amount')
+    def _compute_payment_btn_visible(self):
+        for record in self:
+            if record.state == 'approve':
+                if record.amount and record.total_payment_amount \
+                        and record.amount <= record.total_payment_amount:
+                    record.payment_btn_visible = False
+                else:
+                    record.payment_btn_visible = True
+            else:
+                record.payment_btn_visible = False
+
     @api.onchange('vsd_ids')
     def _onchange_vsd_ids(self):
         for rec in self:
             rec.optional_vsd_ids = rec.vsd_ids
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        for rec in self:
+            rec.vsd_ids = None
+            rec.amount = 0.0
 
     @api.multi
     def action_confirm(self):
@@ -82,7 +106,7 @@ class VendorSecurityReturn(models.Model):
             if self.env.user.id == rec.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
             if not rec.vsd_ids:
-                raise ValidationError("No Vendor Security Deposit is selected")
+                raise Warning("No Vendor Security Deposit is selected")
             if not rec.amount > 0:
                 raise ValidationError("Amount must be greater than Zero")
             name = self.env['ir.sequence'].sudo().next_by_code('vendor.security.return') or 'New'
@@ -134,6 +158,27 @@ class VendorSecurityReturn(models.Model):
                 'state': 'approve',
                 'approver_id': self.env.user.id
             })
+
+    def action_payment(self):
+        res = self.env.ref('vendor_agreement.view_security_return_payment_instruction_wizard')
+
+        return {
+            'name': _('Payment Instruction'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'security.return.payment.instruction.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'amount': self.amount - self.total_payment_amount or 0.0,
+                        'total_payment_approved': self.total_payment_approved or 0.0,
+                        'currency_id': self.currency_id.id or False,
+                        'operating_unit_id': self.company_id.head_branch_id.id or False,
+                        'partner_id': self.partner_id.id or False,
+                        'company_id': self.company_id.id
+                        },
+        }
 
     @api.multi
     def action_cancel(self):
@@ -189,6 +234,20 @@ class VendorSecurityReturn(models.Model):
         journal_item_data.append(supplier_credit_item)
         ogl_data['line_ids'] = journal_item_data
         self.env['account.move'].create(ogl_data)
+
+    @api.constrains('amount')
+    def _check_amount(self):
+        for line in self:
+            total_amount = sum(vsd.amount for vsd in line.vsd_ids)
+            if line.amount > total_amount:
+                raise ValidationError(_("Sorry! This amount is bigger than Summation of deposits amount. "
+                                        "Summation of deposits amount is %s") % (total_amount))
+
+
+class PaymentInstruction(models.Model):
+    _inherit = 'payment.instruction'
+
+    security_return_id = fields.Many2one('vendor.security.return', string='Vendor Security Return')
 
 
 
