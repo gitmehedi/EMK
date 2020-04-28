@@ -31,11 +31,10 @@
                                 <field name="to_date"/>
                             </group>
                             <group>
-                                <field name="journal_id"
-                                       options="{'no_create':True,'no_create_edit':True}"/>
                                 <field name="total_income"/>
                                 <field name="total_expense"/>
-                                <field name="balance"/>
+                                <field name="journal_id" attrs="{'invisible':[('journal_id','=',False)]}"
+                                       options="{'no_create':True,'no_create_edit':True}"/>
                             </group>
                         </group>
                         <notebook>
@@ -115,9 +114,9 @@
                     <field name="name"/>
                     <field name="branch_id"/>
                     <field name="date"/>
-                    <field name="total_income"/>
-                    <field name="total_expense"/>
-                    <field name="balance"/>
+                    <field name="to_date"/>
+                    <field name="total_income" sum="total_income"/>
+                    <field name="total_expense" sum="total_expense"/>
                     <field name="journal_id"/>
                     <field name="state"/>
                 </tree>
