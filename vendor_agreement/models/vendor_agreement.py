@@ -118,7 +118,7 @@ class VendorAgreement(models.Model):
         ('yearly', "Yearly")], string="Billing Period",
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     payable_to_supplier = fields.Float('Payable TO Supplier', readonly=True,
-                                       compute="_compute_payable_to_supplier", store=True,
+                                       compute="_compute_payable_to_supplier",
                                        help="This is the advance amount after deducting security deposit, Vat and Tax")
 
     @api.one
@@ -164,8 +164,8 @@ class VendorAgreement(models.Model):
     def _compute_payment_btn_visible(self):
         for record in self:
             if record.state == 'done':
-                if record.advance_amount and record.total_payment_amount \
-                        and record.advance_amount <= record.total_payment_amount:
+                if record.payable_to_supplier and record.total_payment_amount \
+                        and record.payable_to_supplier <= record.total_payment_amount:
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
