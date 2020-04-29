@@ -42,9 +42,9 @@ class TPMManagementModel(models.Model):
 
     @api.constrains("date", "to_date")
     def check_date(self):
-        date = self._default_from_date()
-        if date != self.date:
-            raise ValidationError(_("From Date value in not appropriate."))
+        # date = self._default_from_date()
+        # if date != self.date:
+        #     raise ValidationError(_("From Date value in not appropriate."))
         if self.date > self.to_date:
             raise ValidationError(_("From Date should not be greater than To Date."))
 
