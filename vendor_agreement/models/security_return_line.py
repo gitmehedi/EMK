@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _
 
 
-class VendorSecurityReturn(models.Model):
+class VendorSecurityReturnLine(models.Model):
     _name = 'vendor.security.return.line'
     _description = 'Vendor Security Return Line'
     _order = 'id desc'

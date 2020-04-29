@@ -42,15 +42,28 @@
                                 groups="vendor_agreement.vendor_agreement_approver"/>
                         <button string="Payment Instruction" name="action_rent_payment" type="object"
                                 class="oe_highlight"
-                                attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                                attrs="{'invisible': ['|', ('payment_btn_visible', '=', False), ('active', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
-                        <button string="Amendment" name="action_amendment" states="done"
+
+                        <button string="Amendment" name="action_amendment"
                                 type="object" class="oe_read_only"
+                                attrs="{'invisible': ['|', '|', ('is_amendment', '=', True), ('state', 'in', ('draft','confirm','cancel')), ('active', '=', False)]}"
                                 groups="vendor_agreement.group_vendor_agreement_manager,account.group_account_user"/>
                         <button string="Approve" name="action_approve_amendment"
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': [('is_amendment', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="reject" name="action_reject_amendment"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': [('is_amendment', '=', False)]}"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="Receive Outstanding Advance" name="action_receive_outstanding_advance"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', ('active', '=', False), ('state', 'in', ('draft','confirm','cancel'))]}"
+                                groups="vendor_agreement.vendor_agreement_approver"/>
+                        <button string="Inactive" name="action_inactive_agreement"
+                                attrs="{'invisible': [('active', '=', False)]}"
+                                type="object" groups="vendor_agreement.vendor_agreement_approver"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
@@ -72,7 +85,8 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <label string="Effective Period"/>
                                     <div>
-                                        <field name="start_date" class="oe_inline"/>
+                                        <field name="start_date" class="oe_inline"
+                                               attrs="{'required': [('type', '=', 'multi')]}"/>
                                         <label string=" To" class="oe_inline"/>
                                         <field name="end_date" class="oe_inline"/>
                                     </div>
@@ -84,6 +98,7 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="additional_service"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+
                                 <field name="account_id" domain="[('level_id.name', '=', 'Layer 5')]"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="vat_id"
@@ -91,7 +106,8 @@
                                 <field name="tds_id"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="security_deposit"/>
-                                <field name="rent_type"/>
+                                <field name="rent_type" attrs="{'required': [('type', '=', 'multi')]}"/>
+                                <field name="billing_period" attrs="{'required': [('type', '=', 'multi')]}"/>
                                 <field name="area"/>
                                 <field name="rate"/>
                                 <field name="description"/>
@@ -338,8 +354,12 @@
             <field name="act_window_id" ref="rent_agreement_action"/>
         </record>
 
+        <menuitem id="menu_rent_operations_main" name="Rent Operations" sequence="101"/>
+        <menuitem id="menu_rent_operations" name="Rent Operations"
+                  sequence="1" parent="menu_rent_operations_main"/>
+
         <menuitem id="rent_agreement_menu" action="rent_agreement_action"
-                  name="Rent Agreements" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
-                  parent="menu_agreements" sequence="35"/>
+                  name="Rental Agreements" groups="vendor_agreement.group_vendor_agreement_manager,vendor_agreement.group_vendor_agreement_user"
+                  parent="menu_rent_operations" sequence="35"/>
     </data>
 </odoo>

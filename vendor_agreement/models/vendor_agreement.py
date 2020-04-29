@@ -8,7 +8,7 @@ class VendorAgreement(models.Model):
     _inherit = ["agreement", 'mail.thread', 'ir.needaction_mixin']
 
     code = fields.Char(required=False, copy=False, string='Agreement No')
-    name = fields.Char(required=False, track_visibility='onchange', string='Agreement No')
+    name = fields.Char(required=False, track_visibility='onchange', string='Agreement No', default='/')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', required=False,
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True,
@@ -16,17 +16,17 @@ class VendorAgreement(models.Model):
     product_id = fields.Many2one('product.product', string='Service/Product', required=False, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Agreement Service.")
-    start_date = fields.Date(string='Start Date', default=fields.Date.context_today, required=True, readonly=True,
+    start_date = fields.Date(string='Start Date', default=fields.Date.context_today, readonly=True,
                              track_visibility='onchange', states={'draft': [('readonly', False)]})
     end_date = fields.Date(string='End Date', readonly=True, track_visibility='onchange',
                            states={'draft': [('readonly', False)]})
     # pro_advance_amount = fields.Float(string="Proposed Amount", readonly=True,
     #                                   track_visibility='onchange', states={'draft': [('readonly', False)]},
     #                                   help="Proposed advance amount. Initially proposed amount raise by vendor.")
-    adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True,
+    adjustment_value = fields.Float(string="Adjustment Value", required=True, readonly=True, default=0.0,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
                                     help="Adjustment amount which will be adjust in bill.")
-    service_value = fields.Float(string="Service Value", required=True, readonly=True,
+    service_value = fields.Float(string="Service Value", required=True, readonly=True, default=0.0,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
                                  help="Service value.")
     advance_amount = fields.Float(string="Approved Advance", required=True, readonly=True,
@@ -88,19 +88,20 @@ class VendorAgreement(models.Model):
 
     vat_id = fields.Many2one('account.tax', string='VAT', readonly=True, states={'draft': [('readonly', False)]})
     tds_id = fields.Many2one('tds.rule', string='TDS', readonly=True, states={'draft': [('readonly', False)]})
-    security_deposit = fields.Float(string="Security Deposit", readonly=True,
+    security_deposit = fields.Float(string="Security Deposit", readonly=True, default=0.0,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
                                     help="Security Deposit.")
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
+                                            readonly=True, states={'draft': [('readonly', False)]})
     rent_type = fields.Selection([
         ('general', "General Rent"),
-        ('govt_premise', "Govt. Premise Rent")], string="Rent Type", required=True,
-        track_visibility='onchange')
-    area = fields.Float(string='Area(ft)', readonly=True, states={'draft': [('readonly', False)]})
-    rate = fields.Float(string='Rate(ft)', readonly=True, states={'draft': [('readonly', False)]})
-    additional_service = product_id = fields.Many2one('product.product', string='Additional Service',
-                                                      required=False, readonly=True, track_visibility='onchange',
-                                                      states={'draft': [('readonly', False)]}, help="Additional Service.")
+        ('govt_premise', "Govt. Premise Rent")], string="Rent Type",
+        track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    area = fields.Float(string='Area (ft)', readonly=True, states={'draft': [('readonly', False)]})
+    rate = fields.Float(string='Rate (ft)', readonly=True, states={'draft': [('readonly', False)]})
+    additional_service = fields.Many2one('product.product', string='Additional Service',
+                                         required=False, readonly=True, track_visibility='onchange',
+                                         states={'draft': [('readonly', False)]}, help="Additional Service.")
     additional_service_value = fields.Float(string="Ad. Service Value", readonly=True,
                                             track_visibility='onchange', states={'draft': [('readonly', False)]},
                                             help="Additional Service value.")
@@ -112,6 +113,19 @@ class VendorAgreement(models.Model):
     total_service_value = fields.Float(string="Total Service Value", readonly=True,
                                        compute="_compute_total_service_value", store=True,
                                        track_visibility='onchange', help="Total Service Value")
+    billing_period = fields.Selection([
+        ('monthly', "Monthly"),
+        ('yearly', "Yearly")], string="Billing Period",
+        track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    payable_to_supplier = fields.Float('Payable TO Supplier', readonly=True,
+                                       compute="_compute_payable_to_supplier", store=True,
+                                       help="This is the advance amount after deducting security deposit, Vat and Tax")
+
+    @api.one
+    @api.depends('advance_amount', 'security_deposit')
+    def _compute_payable_to_supplier(self):
+        for record in self:
+            record.payable_to_supplier = self.advance_amount - self.security_deposit
 
     @api.one
     @api.depends('advance_amount', 'additional_advance_amount')
@@ -208,7 +222,7 @@ class VendorAgreement(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
-            'context': {'amount': self.advance_amount - self.total_payment_amount or 0.0,
+            'context': {'amount': self.payable_to_supplier - self.total_payment_amount or 0.0,
                         'advance_amount': self.advance_amount or 0.0,
                         'total_payment_approved': self.total_payment_approved or 0.0,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
@@ -240,11 +254,14 @@ class VendorAgreement(models.Model):
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
+            # if self.type == 'multi':
+            #     if not self.line_ids:
+            #         raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+            sequence = ''
+            if self.type == 'single':
+                sequence = self.env['ir.sequence'].next_by_code('agreement') or ''
             if self.type == 'multi':
-                if not self.line_ids:
-                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
-
-            sequence = self.env['ir.sequence'].next_by_code('agreement') or ''
+                sequence = self.env['ir.sequence'].next_by_code('rent.agreement') or ''
             self.write({
                 'state': 'confirm',
                 'name': sequence,
@@ -255,9 +272,20 @@ class VendorAgreement(models.Model):
         if self.state == 'confirm':
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
-            if self.type == 'multi':
-                if not self.line_ids:
-                    raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+
+            # if self.type == 'multi':
+            #     if not self.line_ids:
+            #         raise ValidationError(_("[Warning] Agreements shouldn't be empty!"))
+            if self.type == 'single':
+                security_deposit_env = self.env['vendor.security.deposit']
+                security_deposit_env.create({
+                    'partner_id': self.partner_id.id,
+                    'amount': self.security_deposit,
+                    'account_id': self.company_id.security_deposit_account_id.id,
+                    'state': 'draft',
+                    'name': self.name
+                })
+            self.create_journal()
 
             self.write({
                 'state': 'done',
@@ -325,6 +353,62 @@ class VendorAgreement(models.Model):
                 })
                 requested.write({'state': 'confirm'})
 
+    @api.multi
+    def action_reject_amendment(self):
+        res = self.env.ref('vendor_agreement.agreement_warning_wizard_view')
+        return {
+            'name': _('Warning'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'agreement.warning.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {
+                'default_text': 'Are you sure to reject the amendment?',
+                'default_warning_type': 'reject_amendment'
+            }
+        }
+
+    @api.multi
+    def action_inactive_agreement(self):
+        res = self.env.ref('vendor_agreement.agreement_warning_wizard_view')
+        return {
+            'name': _('Warning'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'agreement.warning.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'active_id': self.id,
+            'context': {
+                'default_text': 'Are you sure to inactive the agreement?' or False,
+                'default_warning_type': 'inactive_agreement' or False
+            }
+        }
+
+    @api.multi
+    def action_receive_outstanding_advance(self):
+
+        res = self.env.ref('vendor_agreement.view_receive_outstanding_advance_wizard')
+
+        return {
+            'name': _('Receive Outstanding Advance'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'receive.outstanding.advance.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {
+                'amount': self.outstanding_amount or 0.0
+            }
+        }
+
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
@@ -346,6 +430,68 @@ class VendorAgreement(models.Model):
                 name = u'%s[%s]' % (agr.name, agr.product_id.name)
             res.append((agr.id, name))
         return res
+
+    def create_journal(self):
+        journal_id = self.env.ref('vendor_agreement.vendor_advance_journal')
+        ogl_data = {}
+        ogl_data['journal_id'] = journal_id.id
+        ogl_data['date'] = fields.date.today()
+        ogl_data['operating_unit_id'] = journal_id.operating_unit_id.id
+        ogl_data['state'] = 'posted'
+        ogl_data['name'] = self.name
+
+        journal_item_data = []
+        debit_item = [
+            0, 0, {
+                'name': self.description or 'Vendor Advance',
+                'ref': self.name,
+                'date': fields.date.today(),
+                'account_id': self.account_id.id,
+                'operating_unit_id': self.operating_unit_id.id,
+                'debit': self.advance_amount,
+                'credit': 0.0,
+                'due_date': fields.date.today()
+
+            }
+        ]
+        journal_item_data.append(debit_item)
+
+        supplier_credit_amount = self.advance_amount
+        if self.type == 'single':
+            if self.security_deposit and self.security_deposit > 0:
+                deposit_credit_item = [
+                    0, 0, {
+                        'name': self.description or 'Vendor Advance',
+                        'ref': self.name,
+                        'date': fields.date.today(),
+                        'account_id': self.company_id.security_deposit_account_id.id,
+                        'operating_unit_id': self.company_id.head_branch_id.id,
+                        'debit': 0.0,
+                        'credit': self.security_deposit,
+                        'due_date': fields.date.today()
+
+                    }
+                ]
+                journal_item_data.append(deposit_credit_item)
+                supplier_credit_amount = supplier_credit_amount - self.security_deposit
+
+        supplier_credit_item = [
+            0, 0, {
+                'name': self.description or 'Vendor Advance',
+                'ref': self.name,
+                'date': fields.date.today(),
+                'account_id': self.partner_id.property_account_payable_id.id,
+                'operating_unit_id': journal_id.operating_unit_id.id,
+                'debit': 0.0,
+                'credit': supplier_credit_amount,
+                'due_date': fields.date.today()
+
+            }
+        ]
+        journal_item_data.append(supplier_credit_item)
+        ogl_data['line_ids'] = journal_item_data
+
+        self.env['account.move'].create(ogl_data)
 
 
 class AccountMoveLine(models.Model):

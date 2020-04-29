@@ -5,3 +5,5 @@ from . import product_template
 from . import vendor_security_deposit
 from . import vendor_security_return
 from . import security_return_line
+from . import vendor_bill_generation
+from . import receive_outstanding_advance
