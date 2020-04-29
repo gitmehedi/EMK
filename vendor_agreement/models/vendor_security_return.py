@@ -63,7 +63,7 @@ class VendorSecurityReturn(models.Model):
     def _compute_payment_amount(self):
         for rec in self:
             rec.total_payment_amount = sum(line.amount for line in rec.payment_line_ids if line.state not in ['cancel'])
-            rec.total_payment_approved = sum(line.amount for line in rec.payment_line_ids if line.state in ['approve'])
+            rec.total_payment_approved = sum(line.amount for line in rec.payment_line_ids if line.state in ['approved'])
 
     @api.onchange('vsd_ids')
     def _onchange_amount(self):
