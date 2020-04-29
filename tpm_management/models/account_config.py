@@ -13,6 +13,7 @@ class ResCompany(models.Model):
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
     income_rate = fields.Float(string='Income Rate', required=True)
     expense_rate = fields.Float(string='Expense Rate', required=True)
+    days_in_fy = fields.Integer(string='Days in Year', size=3, required=True)
 
 
 class AccountConfigSettings(models.TransientModel):
@@ -40,8 +41,8 @@ class AccountConfigSettings(models.TransientModel):
                                  default=lambda self: self._get_default_journal_id())
 
     tpm_general_account_id = fields.Many2one('account.account', string='General Account', required=True,
-                                         default=lambda self: self._get_default_tpm_general_account_id(),
-                                         domain="[('level_id.name','=','Layer 5')]")
+                                             default=lambda self: self._get_default_tpm_general_account_id(),
+                                             domain="[('level_id.name','=','Layer 5')]")
     tpm_income_account_id = fields.Many2one('account.account', string='Income Account', required=True,
                                             default=lambda self: self._get_default_tpm_income_account_id(),
                                             domain="[('level_id.name','=','Layer 5')]")
@@ -50,8 +51,9 @@ class AccountConfigSettings(models.TransientModel):
                                              domain="[('level_id.name','=','Layer 5')]")
     impact_count = fields.Integer(string='Expense Journal', default=1, required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], default='days', required=True)
-    income_rate = fields.Integer(string='Income Rate', size=2, required=True)
-    expense_rate = fields.Integer(string='Expense Rate', size=2, required=True)
+    income_rate = fields.Float(string='Income Rate',  required=True)
+    expense_rate = fields.Float(string='Expense Rate', required=True)
+    days_in_fy = fields.Integer(string='Days in Year', size=3, required=True, default=360)
 
     @api.multi
     def set_journal_id(self):
@@ -59,6 +61,7 @@ class AccountConfigSettings(models.TransientModel):
             self.company_id.write({'journal_id': self.journal_id.id})
         return self.env['ir.values'].sudo().set_default('account.config.settings', 'journal_id',
                                                         self.journal_id.id)
+
     @api.multi
     def set_tpm_general_account_id(self):
         if self.tpm_general_account_id:
@@ -103,3 +106,9 @@ class AccountConfigSettings(models.TransientModel):
         if self.expense_rate:
             self.company_id.write({'expense_rate': self.expense_rate})
         return self.env['ir.values'].sudo().set_default('account.config.settings', 'expense_rate', self.expense_rate)
+
+    @api.multi
+    def set_days_in_fy(self):
+        if self.days_in_fy:
+            self.company_id.write({'days_in_fy': self.days_in_fy})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'days_in_fy', self.days_in_fy)

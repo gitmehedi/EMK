@@ -35,15 +35,6 @@
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
-                    <label for="id" string="Impact Period" groups="account.group_account_user"/>
-                    <div name="impact_count">
-                        <div>
-                            <field name="impact_count" class="oe_inline"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="impact_unit" class="oe_inline"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                        </div>
-                    </div>
                     <label for="id" string="Income Rate" groups="account.group_account_user"/>
                     <div name="income_rate">
                         <div>
@@ -56,6 +47,13 @@
                         <div>
                             <field name="expense_rate" class="oe_inline"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>%
+                        </div>
+                    </div>
+                    <label for="id" string="Days in Year" groups="account.group_account_user"/>
+                    <div name="days_in_fy">
+                        <div>
+                            <field name="days_in_fy" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
                 </group>
