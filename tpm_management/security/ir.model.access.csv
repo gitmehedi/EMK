@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+tpm_branch_cal_line_buser,tpm_branch_cal_line_buser,model_tpm_branch_calculation_line,account.group_account_user,1,0,0,0
+tpm_branch_cal_line_muser,tpm_branch_cal_line_buser,model_tpm_branch_calculation_line,account.group_account_manager,1,1,1,1
+tpm_branch_cal_line_sauser,tpm_branch_cal_line_buser,model_tpm_branch_calculation_line,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+
+tpm_cal_line_buser,tpm_cal_line_buser,model_tpm_calculation_line,account.group_account_user,1,0,0,0
+tpm_cal_line_muser,tpm_cal_line_buser,model_tpm_calculation_line,account.group_account_manager,1,1,1,1
+tpm_cal_line_sauser,tpm_cal_line_buser,model_tpm_calculation_line,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+
+tpm_cal_buser,tpm_cal_buser,model_tpm_calculation,account.group_account_user,1,0,0,0
+tpm_cal_muser,tpm_cal_buser,model_tpm_calculation,account.group_account_manager,1,1,1,1
+tpm_cal_sauser,tpm_cal_buser,model_tpm_calculation,mtbl_access.group_mtbl_sys_admin,1,1,1,1
