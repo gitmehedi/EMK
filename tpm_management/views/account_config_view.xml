@@ -7,33 +7,31 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='accounting']" position="after">
                 <group string="Transfer Pricing Mechanism (TPM)" name="grp_tds_vat_challan">
-                    <label for="id" string="General Account" groups="account.group_account_user"/>
-                    <div name="general_journal_id">
+                    <label for="id" string="TPM Journal" groups="account.group_account_user"/>
+                    <div name="journal_id">
                         <div>
-                            <field name="general_journal_id" class="oe_inline"
+                            <field name="journal_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="General Account" groups="account.group_account_user"/>
+                    <div name="tpm_general_account_id">
+                        <div>
+                            <field name="tpm_general_account_id" class="oe_inline"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
                     <label for="id" string="Income Account" groups="account.group_account_user"/>
-                    <div name="tpm_income_journal_id">
+                    <div name="tpm_income_account_id">
                         <div>
-                            <field name="tpm_income_journal_id" class="oe_inline"
+                            <field name="tpm_income_account_id" class="oe_inline"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
                     <label for="id" string="Expense Account" groups="account.group_account_user"/>
-                    <div name="tpm_expense_journal_id">
+                    <div name="tpm_expense_account_id">
                         <div>
-                            <field name="tpm_expense_journal_id" class="oe_inline"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                        </div>
-                    </div>
-                    <label for="id" string="Impact Period" groups="account.group_account_user"/>
-                    <div name="impact_count">
-                        <div>
-                            <field name="impact_count" class="oe_inline"
-                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="impact_unit" class="oe_inline"
+                            <field name="tpm_expense_account_id" class="oe_inline"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
@@ -49,6 +47,13 @@
                         <div>
                             <field name="expense_rate" class="oe_inline"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>%
+                        </div>
+                    </div>
+                    <label for="id" string="Days in Year" groups="account.group_account_user"/>
+                    <div name="days_in_fy">
+                        <div>
+                            <field name="days_in_fy" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
                 </group>
