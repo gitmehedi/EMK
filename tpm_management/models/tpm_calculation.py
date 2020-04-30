@@ -31,7 +31,7 @@ class TPMManagementModel(models.Model):
     balance = fields.Float(string="Difference", compute="_compute_income_expense")
     journal_id = fields.Many2one('account.move', string='Journal Entry', readonly=True)
     line_ids = fields.One2many('tpm.calculation.line', 'line_id', string='Lines', readonly=True)
-    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'),
                               ('calculate', 'Calculate'),
@@ -173,7 +173,7 @@ class TPMManagementModel(models.Model):
                 'maker_id': self.env.user.id,
             })
 
-    @api.one
+    @api.multi
     def act_approve(self):
         if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
@@ -320,7 +320,7 @@ class TPMManagementModel(models.Model):
             self.env.cr.execute(query)
 
             if move.state == 'draft':
-                move.post()
+                move.sudo().post()
 
             self.write({
                 'state': 'approve',
