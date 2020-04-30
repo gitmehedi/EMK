@@ -1,4 +1,4 @@
-qqqqq<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <odoo noupdate="1">
     <record id="ir_cron_asset_migration_scheduler" model="ir.cron">
