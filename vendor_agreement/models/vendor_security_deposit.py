@@ -7,6 +7,7 @@ class VendorSecurityDeposit(models.Model):
     _description = 'Vendor Security Deposit'
 
     name = fields.Char(required=False, track_visibility='onchange', string='Deposit Name', readonly=True)
+    active = fields.Boolean(strring='active', track_visibility='onchange', default=True)
     partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
                                  track_visibility='onchange',
                                  domain=[('parent_id', '=', False), ('supplier', '=', True)], readonly=True)

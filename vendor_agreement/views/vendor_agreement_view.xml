@@ -15,8 +15,8 @@
                         <field name="product_id" string="Service"/>
                         <field name="operating_unit_id"/>
                         <field name="account_id"/>
-                        <field name="start_date"/>
-                        <field name="end_date"/>
+                        <field name="start_date" invisible="1"/>
+                        <field name="end_date" invisible="1"/>
                         <field name="advance_amount" sum="advance_amount"/>
                         <field name="adjusted_amount" sum="adjusted_amount"/>
                         <field name="state"/>
@@ -51,7 +51,7 @@
                                     groups="vendor_agreement.vendor_agreement_approver"/>
                             <button string="Payment Instruction" name="action_payment" type="object"
                                     class="oe_highlight"
-                                    attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                                    attrs="{'invisible': ['|', ('payment_btn_visible', '=', False), ('active', '=', False)]}"
                                     groups="vendor_agreement.vendor_agreement_approver"/>
                             <button string="Amendment" name="action_amendment"
                                     type="object" class="oe_read_only" invisible="1"
@@ -87,10 +87,11 @@
 <!--                                    </div>-->
                                     <field name="operating_unit_id"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                    <field name="sub_operating_unit_id"
-                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="product_id" string="Service" required="True"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="sub_operating_unit_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                           domain="[('product_id', 'in', [product_id])]"/>
                                     <field name="additional_service" invisible="1"
                                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="company_id" groups="base.group_multi_company"

@@ -62,7 +62,7 @@
                                 attrs="{'invisible': ['|', ('active', '=', False), ('state', 'in', ('draft','confirm','cancel'))]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
                         <button string="Inactive" name="action_inactive_agreement"
-                                attrs="{'invisible': [('active', '=', False)]}"
+                                attrs="{'invisible': ['|', ('active', '=', False), ('state', 'in', ('draft','confirm','cancel'))]}"
                                 type="object" groups="vendor_agreement.vendor_agreement_approver"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
@@ -105,7 +105,7 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="tds_id"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="security_deposit"/>
+                                <field name="security_deposit" invisible="1"/>
                                 <field name="rent_type" attrs="{'required': [('type', '=', 'multi')]}"/>
                                 <field name="billing_period" attrs="{'required': [('type', '=', 'multi')]}"/>
                                 <field name="area"/>
@@ -151,8 +151,8 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Agreements">
-                                <field name="line_ids">
+                            <page string="Agreements" invisible="1">
+                                <field name="line_ids" invisible="1">
                                     <tree string="Agreements" editable="top">
                                         <field name="partner_id"
                                                options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
@@ -194,7 +194,7 @@
                                 </field>
                             </page>
                             <page string="Vendor Bills" class="oe_page_title"
-                                  attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
+                                  attrs="{'invisible': ['|', ('agreement_type', '!=', 'purchase'), ('in_invoice_ids', '=', [])]}">
                                 <group name="in_invoices">
                                     <field name="in_invoice_ids" colspan="4" nolabel="1">
                                         <tree string="Vendor Bills">
@@ -233,7 +233,7 @@
                                 </group>
                             </page>
                             <page string="Payments" class="oe_page_title"
-                                  attrs="{'invisible': [('state', '!=', 'done')]}">
+                                  attrs="{'invisible': ['|',('state', '!=', 'done'), ('payment_line_ids', '=', [])]}">
                                 <field name="payment_line_ids" string="Payments" readonly="1">
                                     <tree string="Payment lines">
                                         <field name="sequence" widget="handle"/>
@@ -275,7 +275,7 @@
                                 </group>
                             </page>
                             <page string="History" class="oe_page_title"
-                                  attrs="{'invisible': [('state', '!=', 'done')]}">
+                                  attrs="{'invisible': ['|', ('state', '!=', 'done'), ('history_line_ids', '=', [])]}">
                                 <field name="history_line_ids" string="History" readonly="1">
                                     <tree string="History lines"
                                           decoration-info="state=='pending'" decoration-success="state=='confirm'">
@@ -322,11 +322,16 @@
                     <field name="product_id" string="Service"/>
                     <field name="start_date"/>
                     <field name="state" string="Status"/>
+                    <field name="rent_type" string="Rent Type"/>
+                    <separator/>
+                    <filter name="inactive" string="Inactive" domain="[('active','=', False)]"/>
                     <separator/>
                     <group name="groupby">
                         <filter string="By Vendor" name="partner_groupby" domain=""
                                 context="{'group_by': 'partner_id'}"/>
                         <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By Rent Type" name="rent_type" domain="[]"
+                                context="{'group_by':'rent_type'}"/>
                     </group>
                 </search>
             </field>
@@ -338,6 +343,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','multi')]</field>
             <field name="context">{'default_type':'multi','search_default_state':1}</field>
+            <field name="search_view_id" ref="rent_agreement_search"/>
         </record>
 
         <record id="rent_agreement_action_tree" model="ir.actions.act_window.view">

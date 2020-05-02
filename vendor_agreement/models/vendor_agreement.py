@@ -76,7 +76,7 @@ class VendorAgreement(models.Model):
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
                                          string="Is Visible")
     line_ids = fields.One2many('agreement.line', 'line_id', copy=False, ondelete='restrict', readonly=True,
-                               required=True, states={'draft': [('readonly', False)]})
+                               states={'draft': [('readonly', False)]})
     type = fields.Selection([('single', 'Single'), ('multi', 'Multi')], default='Type')
 
     state = fields.Selection([
@@ -292,6 +292,16 @@ class VendorAgreement(models.Model):
                 'approver_id': self.env.user.id,
             })
 
+    @api.one
+    def toggle_active(self):
+        for rec in self:
+            super(VendorAgreement, self).toggle_active()
+            if not rec.active:
+                self.env['vendor.security.deposit'].search([('name', '=', rec.name)]).write({'active': False})
+            else:
+                self.env['vendor.security.deposit'].search([('name', '=', rec.name),
+                                                            ('active', '=', False)]).write({'active': True})
+
     @api.multi
     def action_draft(self):
         if self.state == 'cancel':
@@ -456,7 +466,6 @@ class VendorAgreement(models.Model):
         ]
         journal_item_data.append(debit_item)
 
-        supplier_credit_amount = self.advance_amount
         if self.type == 'single':
             if self.security_deposit and self.security_deposit > 0:
                 deposit_credit_item = [
@@ -473,7 +482,6 @@ class VendorAgreement(models.Model):
                     }
                 ]
                 journal_item_data.append(deposit_credit_item)
-                supplier_credit_amount = supplier_credit_amount - self.security_deposit
 
         supplier_credit_item = [
             0, 0, {
@@ -483,7 +491,7 @@ class VendorAgreement(models.Model):
                 'account_id': self.partner_id.property_account_payable_id.id,
                 'operating_unit_id': journal_id.operating_unit_id.id,
                 'debit': 0.0,
-                'credit': supplier_credit_amount,
+                'credit': self.payable_to_supplier,
                 'due_date': fields.date.today()
 
             }
