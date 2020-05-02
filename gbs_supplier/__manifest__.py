@@ -17,7 +17,7 @@
     'category': 'Supplier',
     'version': '10.0.1',
 
-    'depends': ['base','gbs_purchase_requisition'],
+    'depends': ['base'],
 
     'data': [
         'views/supplier_category.xml',

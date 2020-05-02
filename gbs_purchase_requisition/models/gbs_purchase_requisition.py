@@ -1,8 +1,7 @@
-from datetime import date
-from odoo import api, fields, models,_
-from odoo.exceptions import ValidationError
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
 class PurchaseRequisition(models.Model):

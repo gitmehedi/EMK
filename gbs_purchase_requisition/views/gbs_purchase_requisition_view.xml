@@ -94,10 +94,10 @@
                     </xpath>
                     <!-- suplier invisible -->
 
-                    <xpath expr="//field[@name='type_id']" position="attributes">
+<!--                    <xpath expr="//field[@name='type_id']" position="attributes">-->
 
-                        <attribute name="invisible">1</attribute>
-                    </xpath>
+<!--                        <attribute name="invisible">1</attribute>-->
+<!--                    </xpath>-->
                     <xpath expr="//field[@name='schedule_date']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
@@ -203,9 +203,9 @@
                 <xpath expr="//field[@name='name']" position="replace">
                     <field name="name" string="Purchase Requisition" filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
                 </xpath>
-                <xpath expr="//field[@name='type_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
+<!--                <xpath expr="//field[@name='type_id']" position="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
                 <xpath expr="//field[@name='user_id']" position="replace">
                     <field name="indent_ids" />
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
