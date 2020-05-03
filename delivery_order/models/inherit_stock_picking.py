@@ -1,7 +1,8 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.addons.procurement.models import procurement
 from odoo.tools.float_utils import float_round
-import time, datetime
+from datetime import datetime
+from odoo.exceptions import UserError
 
 import math
 
@@ -173,6 +174,16 @@ class InheritStockPicking(models.Model):
     # Inherit Validate Button function
     @api.multi
     def do_new_transfer(self):
+        user = self.env.user.browse(self.env.uid)
+        # Check only for non admin user
+        if user.has_group('base_technical_features.group_technical_features') == False:
+            if self.so_type and self.so_type == 'lc_sales' and self.shipment_date and self.date_done:
+                shipment_date = datetime.strptime(self.lc_id.shipment_date, '%Y-%m-%d').date()
+                # date_done = datetime.strptime(self.date_done, '%Y-%m-%d %H:%M:%S').date()
+                curr_date = datetime.now().date()
+                if shipment_date < curr_date:
+                    raise UserError(_("Unable to deliver Goods due to 'LC Shipment Date' Expired. Please contact to appropriate person for LC Shipment Date Amendment. After that you can deliver the Goods."))
+
         res = super(InheritStockPicking, self).do_new_transfer()
 
         self._get_number_of_jar()
