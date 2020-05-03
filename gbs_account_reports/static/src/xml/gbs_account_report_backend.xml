@@ -3,7 +3,7 @@
 <templates>
     <t t-extend="accountReports.searchView">
         <t t-jquery='.btn-group.o_dropdown.o_account_reports_tags-filter' t-operation='after'>
-            <div class="btn-group o_dropdown o_account_reports_date-filter-multi-operating-unit">
+            <div t-if="context.available_operating_units" class="btn-group o_dropdown o_account_reports_date-filter-multi-operating-unit">
                 <a type="button" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="fa fa-filter"/> Operating Units: <span class="caret"/>
                 </a>
