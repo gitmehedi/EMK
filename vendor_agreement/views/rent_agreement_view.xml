@@ -58,7 +58,7 @@
                                 attrs="{'invisible': [('is_amendment', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
                         <button string="Receive Outstanding Advance" name="action_receive_outstanding_advance"
-                                type="object" class="oe_highlight"
+                                type="object" class="oe_read_only"
                                 attrs="{'invisible': ['|', ('active', '=', False), ('state', 'in', ('draft','confirm','cancel'))]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
                         <button string="Inactive" name="action_inactive_agreement"
@@ -92,10 +92,11 @@
                                     </div>
                                 <field name="operating_unit_id"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="sub_operating_unit_id"
-                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="product_id" string="Service" required="True"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="sub_operating_unit_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       domain="[('product_id', 'in', [product_id])]"/>
                                 <field name="additional_service"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 
@@ -126,13 +127,13 @@
                                 <field name="advance_amount" widget="monetary"
                                        options="{'currency_field': 'currency_id'}"/>
                                 <field name="additional_advance_amount" widget="monetary"
-                                       options="{'currency_field': 'currency_id'}"/>
+                                       options="{'currency_field': 'currency_id'}" states="done"/>
                                 <field name="total_advance_amount" widget="monetary"
-                                       options="{'currency_field': 'currency_id'}"/>
+                                       options="{'currency_field': 'currency_id'}" states="done"/>
                                 <field name="service_value" widget="monetary"
                                        options="{'currency_field': 'currency_id'}"/>
                                 <field name="additional_service_value" widget="monetary"
-                                           options="{'currency_field': 'currency_id'}"/>
+                                       options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_service_value" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
                                 <field name="adjustment_value" widget="monetary"

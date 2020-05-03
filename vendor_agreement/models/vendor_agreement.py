@@ -102,10 +102,10 @@ class VendorAgreement(models.Model):
     additional_service = fields.Many2one('product.product', string='Additional Service',
                                          required=False, readonly=True, track_visibility='onchange',
                                          states={'draft': [('readonly', False)]}, help="Additional Service.")
-    additional_service_value = fields.Float(string="Ad. Service Value", readonly=True,
+    additional_service_value = fields.Float(string="Ad. Service Value", readonly=True, default=0.0,
                                             track_visibility='onchange', states={'draft': [('readonly', False)]},
                                             help="Additional Service value.")
-    additional_advance_amount = fields.Float(string="Ad. Approved Advance", readonly=True,
+    additional_advance_amount = fields.Float(string="Ad. Approved Advance", readonly=True, default=0.0,
                                              track_visibility='onchange', help="Additional Advance Amount.")
     total_advance_amount = fields.Float(string="Total Approved Advance", readonly=True,
                                         compute="_compute_total_advance_amount", store=True,
@@ -117,15 +117,9 @@ class VendorAgreement(models.Model):
         ('monthly', "Monthly"),
         ('yearly', "Yearly")], string="Billing Period",
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
-    payable_to_supplier = fields.Float('Payable TO Supplier', readonly=True,
+    payable_to_supplier = fields.Float('Payable TO Supplier', readonly=True, store=True,
                                        compute="_compute_payable_to_supplier",
                                        help="This is the advance amount after deducting security deposit, Vat and Tax")
-
-    @api.one
-    @api.depends('advance_amount', 'security_deposit')
-    def _compute_payable_to_supplier(self):
-        for record in self:
-            record.payable_to_supplier = self.advance_amount - self.security_deposit
 
     @api.one
     @api.depends('advance_amount', 'additional_advance_amount')
@@ -160,7 +154,7 @@ class VendorAgreement(models.Model):
             else:
                 record.is_remaining = True
 
-    @api.depends('advance_amount', 'total_payment_amount')
+    @api.depends('payable_to_supplier', 'total_payment_amount')
     def _compute_payment_btn_visible(self):
         for record in self:
             if record.state == 'done':
@@ -171,6 +165,12 @@ class VendorAgreement(models.Model):
                     record.payment_btn_visible = True
             else:
                 record.payment_btn_visible = False
+
+    @api.one
+    @api.depends('total_advance_amount', 'security_deposit')
+    def _compute_payable_to_supplier(self):
+        for record in self:
+            record.payable_to_supplier = self.total_advance_amount - self.security_deposit
 
     @api.model
     def create(self, vals):
@@ -354,7 +354,7 @@ class VendorAgreement(models.Model):
             if requested:
                 self.write({
                     'end_date': requested.end_date,
-                    'advance_amount': self.advance_amount + requested.advance_amount_add,
+                    'additional_advance_amount': self.additional_advance_amount + requested.advance_amount_add,
                     'adjustment_value': requested.adjustment_value,
                     'service_value': requested.service_value,
                     'account_id': requested.account_id.id,
