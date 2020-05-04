@@ -38,7 +38,7 @@ class VendorAgreement(models.Model):
                                       track_visibility='onchange', help="Remaining Amount to adjustment.")
     account_id = fields.Many2one('account.account', string="GL Account", required=True, readonly=True,
                                  track_visibility='onchange', states={'draft': [('readonly', False)]},
-                                 domain=[('level_id.name', '=', 'Layer 5')],
+                                 domain=[('level_id.name', '=', 'Layer 5'), ('reconcile', '=', True)],
                                  help="Account for the agreement.")
     description = fields.Text('Particulars', readonly=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
@@ -171,6 +171,13 @@ class VendorAgreement(models.Model):
     def _compute_payable_to_supplier(self):
         for record in self:
             record.payable_to_supplier = self.total_advance_amount - self.security_deposit
+
+    @api.multi
+    @api.onchange('area', 'rate')
+    def onchange_service_value(self):
+        for rec in self:
+            if rec.area and rec.rate:
+                rec.service_value = rec.area * rec.rate
 
     @api.model
     def create(self, vals):
@@ -474,7 +481,7 @@ class VendorAgreement(models.Model):
                         'ref': self.name,
                         'date': fields.date.today(),
                         'account_id': self.company_id.security_deposit_account_id.id,
-                        'operating_unit_id': self.company_id.head_branch_id.id,
+                        'operating_unit_id': self.operating_unit_id.id,
                         'debit': 0.0,
                         'credit': self.security_deposit,
                         'due_date': fields.date.today()
