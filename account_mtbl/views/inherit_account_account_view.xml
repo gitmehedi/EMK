@@ -36,17 +36,21 @@
                         <field name="level_size" invisible="True"/>
                         <field name="level_id" domain="[('is_visible','=',1)]"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-
                         <field name="parent_id"
                                context="{'show_parent_account':True}"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                attrs="{'invisible': [('level_size','in',[0,1])], 'required':[('level_size','>',0)]}"/>
-
                         <field name="code"/>
                         <field name="name"/>
+                        <field name="user_type_id" widget="selection"/>
+                        <label for="reconcile"/>
+                        <div attrs="{'invisible': [('internal_type','=','liquidity')]}">
+                            <field name="reconcile"/>
+                            <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile"
+                                    attrs="{'invisible': [('reconcile', '=', False)]}"/>
+                        </div>
                         <field name="maker_id" invisible="1"/>
                         <field name="approver_id" invisible="1"/>
-                        <field name="user_type_id" widget="selection"/>
                         <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]"
                                groups="base.group_system" invisible="1"/>
                         <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]"
@@ -57,13 +61,7 @@
                         <field name="currency_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                groups="base.group_system,base.group_multi_currency"/>
                         <field name="internal_type" invisible="1" readonly="1"/>
-                        <label for="reconcile"/>
-                        <div attrs="{'invisible': [('internal_type','=','liquidity')]}">
-                            <field name="reconcile"/>
-                            <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile"
-                                    attrs="{'invisible': [('reconcile', '=', False)]}"/>
-                        </div>
-                        <field name="deprecated" groups="base.group_system" invisible="1" />
+                        <field name="deprecated" groups="base.group_system" invisible="1"/>
                     </group>
                 </xpath>
                 <xpath expr="//sheet" position="inside">
