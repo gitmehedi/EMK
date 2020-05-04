@@ -15,12 +15,13 @@ class AccountAccount(models.Model):
     code = fields.Char(size=8, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     user_type_id = fields.Many2one(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     deprecated = fields.Boolean(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     reconcile = fields.Boolean(track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     level_size = fields.Integer(related='level_id.size')
 
     level_id = fields.Many2one('account.account.level', ondelete='restrict', string='Layer', required=True,
-                               track_visibility='onchange')
+                               track_visibility='onchange',readonly=True, states={'draft': [('readonly', False)]})
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
