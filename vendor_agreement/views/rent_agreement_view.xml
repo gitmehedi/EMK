@@ -40,7 +40,7 @@
                         <button name="action_draft" type="object"
                                 string="Reset to draft" states="cancel"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
-                        <button string="Payment Instruction" name="action_rent_payment" type="object"
+                        <button string="Payment Instruction" name="action_payment" type="object"
                                 class="oe_highlight"
                                 attrs="{'invisible': ['|', ('payment_btn_visible', '=', False), ('active', '=', False)]}"
                                 groups="vendor_agreement.vendor_agreement_approver"/>
@@ -152,87 +152,48 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Agreements" invisible="1">
-                                <field name="line_ids" invisible="1">
-                                    <tree string="Agreements" editable="top">
-                                        <field name="partner_id"
-                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
-                                        <field name="product_id"
-                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
-                                        <field name="rent_price" sum="rent_price"/>
-                                        <field name="rent_qty" sum="rent_qty"/>
-                                        <field name="service_value" sum="service_value"/>
-                                        <field name="advance_amount" sum="advance_amount"/>
-                                        <field name="adjusted_amount" sum="adjusted_amount" readonly="True"/>
-                                        <field name="outstanding_amount" sum="outstanding_amount" readonly="True"/>
-                                        <field name="adjustment_value" sum="adjustment_value"/>
-                                        <field name="currency_id" invisible="1"/>
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="is_remaining" invisible="1"/>
-                                        <field name="is_amendment" invisible="1"/>
-                                    </tree>
-                                    <form string="Agreements">
-                                        <group>
-                                            <group>
-                                                <field name="partner_id"/>
-                                                <field name="product_id"/>
-                                                <field name="rent_price"/>
-                                                <field name="rent_qty"/>
-                                            </group>
-                                            <group>
-                                                <field name="adjustment_value"/>
-                                                <field name="service_value"/>
-                                                <field name="advance_amount"/>
-                                                <field name="adjusted_amount"/>
-                                                <field name="outstanding_amount"/>
-                                                <field name="currency_id" invisible="1"/>
-                                                <field name="company_id" invisible="1"/>
-                                                <field name="is_remaining" invisible="1"/>
-                                                <field name="is_amendment" invisible="1"/>
-                                            </group>
-                                        </group>
-                                    </form>
-                                </field>
-                            </page>
-                            <page string="Vendor Bills" class="oe_page_title"
-                                  attrs="{'invisible': ['|', ('agreement_type', '!=', 'purchase'), ('in_invoice_ids', '=', [])]}">
-                                <group name="in_invoices">
-                                    <field name="in_invoice_ids" colspan="4" nolabel="1">
-                                        <tree string="Vendor Bills">
-                                            <field name="number" string="Bill No"/>
-                                            <field name="partner_id" string="Vendor"/>
-                                            <field name="date_invoice" string="Bill Date"/>
-                                            <field name="user_id" string="Responsible"/>
-                                            <field name="total_bill_payable"/>
-                                            <field name="amount_total_signed" string="Total"/>
-                                            <field name="residual_signed" string="To Pay"/>
-                                            <field name="agreement_adjusted_amount" string="Adjusted"
-                                                   sum="agreement_adjusted_amount"/>
-                                            <field name="state"/>
-                                        </tree>
-                                        <form string="Vendor Bills">
-                                            <header>
-                                                <field name="state" widget="statusbar"
-                                                       statusbar_visible="draft,open,paid"/>
-                                            </header>
-                                            <group>
-                                                <group>
-                                                    <field name="number" string="Bill No"/>
-                                                    <field name="partner_id" string="Vendor"/>
-                                                    <field name="date_invoice" string="Bill Date"/>
-                                                    <field name="user_id" string="Responsible"/>
-                                                </group>
-                                                <group>
-                                                    <field name="total_bill_payable"/>
-                                                    <field name="amount_total_signed" string="Total"/>
-                                                    <field name="residual_signed" string="To Pay"/>
-                                                    <field name="agreement_adjusted_amount" string="Adjusted"/>
-                                                </group>
-                                            </group>
-                                        </form>
-                                    </field>
-                                </group>
-                            </page>
+<!--                            <page string="Agreements" invisible="1">-->
+<!--                                <field name="line_ids" invisible="1">-->
+<!--                                    <tree string="Agreements" editable="top">-->
+<!--                                        <field name="partner_id"-->
+<!--                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>-->
+<!--                                        <field name="product_id"-->
+<!--                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>-->
+<!--                                        <field name="rent_price" sum="rent_price"/>-->
+<!--                                        <field name="rent_qty" sum="rent_qty"/>-->
+<!--                                        <field name="service_value" sum="service_value"/>-->
+<!--                                        <field name="advance_amount" sum="advance_amount"/>-->
+<!--                                        <field name="adjusted_amount" sum="adjusted_amount" readonly="True"/>-->
+<!--                                        <field name="outstanding_amount" sum="outstanding_amount" readonly="True"/>-->
+<!--                                        <field name="adjustment_value" sum="adjustment_value"/>-->
+<!--                                        <field name="currency_id" invisible="1"/>-->
+<!--                                        <field name="company_id" invisible="1"/>-->
+<!--                                        <field name="is_remaining" invisible="1"/>-->
+<!--                                        <field name="is_amendment" invisible="1"/>-->
+<!--                                    </tree>-->
+<!--                                    <form string="Agreements">-->
+<!--                                        <group>-->
+<!--                                            <group>-->
+<!--                                                <field name="partner_id"/>-->
+<!--                                                <field name="product_id"/>-->
+<!--                                                <field name="rent_price"/>-->
+<!--                                                <field name="rent_qty"/>-->
+<!--                                            </group>-->
+<!--                                            <group>-->
+<!--                                                <field name="adjustment_value"/>-->
+<!--                                                <field name="service_value"/>-->
+<!--                                                <field name="advance_amount"/>-->
+<!--                                                <field name="adjusted_amount"/>-->
+<!--                                                <field name="outstanding_amount"/>-->
+<!--                                                <field name="currency_id" invisible="1"/>-->
+<!--                                                <field name="company_id" invisible="1"/>-->
+<!--                                                <field name="is_remaining" invisible="1"/>-->
+<!--                                                <field name="is_amendment" invisible="1"/>-->
+<!--                                            </group>-->
+<!--                                        </group>-->
+<!--                                    </form>-->
+<!--                                </field>-->
+<!--                            </page>-->
                             <page string="Payments" class="oe_page_title"
                                   attrs="{'invisible': ['|',('state', '!=', 'done'), ('payment_line_ids', '=', [])]}">
                                 <field name="payment_line_ids" string="Payments" readonly="1">
@@ -273,6 +234,45 @@
                                         <field name="total_payment_amount" class="oe_subtotal_footer_separator"
                                                widget="monetary"/>
                                     </group>
+                                </group>
+                            </page>
+                            <page string="Vendor Bills" class="oe_page_title"
+                                  attrs="{'invisible': ['|', ('agreement_type', '!=', 'purchase'), ('in_invoice_ids', '=', [])]}">
+                                <group name="in_invoices">
+                                    <field name="in_invoice_ids" colspan="4" nolabel="1">
+                                        <tree string="Vendor Bills">
+                                            <field name="number" string="Bill No"/>
+                                            <field name="partner_id" string="Vendor"/>
+                                            <field name="date_invoice" string="Bill Date"/>
+                                            <field name="user_id" string="Responsible"/>
+                                            <field name="total_bill_payable"/>
+                                            <field name="amount_total_signed" string="Total"/>
+                                            <field name="residual_signed" string="To Pay"/>
+                                            <field name="agreement_adjusted_amount" string="Adjusted"
+                                                   sum="agreement_adjusted_amount"/>
+                                            <field name="state"/>
+                                        </tree>
+                                        <form string="Vendor Bills">
+                                            <header>
+                                                <field name="state" widget="statusbar"
+                                                       statusbar_visible="draft,open,paid"/>
+                                            </header>
+                                            <group>
+                                                <group>
+                                                    <field name="number" string="Bill No"/>
+                                                    <field name="partner_id" string="Vendor"/>
+                                                    <field name="date_invoice" string="Bill Date"/>
+                                                    <field name="user_id" string="Responsible"/>
+                                                </group>
+                                                <group>
+                                                    <field name="total_bill_payable"/>
+                                                    <field name="amount_total_signed" string="Total"/>
+                                                    <field name="residual_signed" string="To Pay"/>
+                                                    <field name="agreement_adjusted_amount" string="Adjusted"/>
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
                                 </group>
                             </page>
                             <page string="History" class="oe_page_title"

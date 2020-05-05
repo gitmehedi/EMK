@@ -230,7 +230,7 @@ class VendorAgreement(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {'amount': self.payable_to_supplier - self.total_payment_amount or 0.0,
-                        'advance_amount': self.advance_amount or 0.0,
+                        'advance_amount': self.total_advance_amount or 0.0,
                         'total_payment_approved': self.total_payment_approved or 0.0,
                         'currency_id': self.env.user.company_id.currency_id.id or False,
                         'operating_unit_id': self.operating_unit_id.id or False,
