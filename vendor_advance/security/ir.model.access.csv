@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_advance_manager,access_advance_manager,model_agreement,vendor_advance.group_vendor_advance_manager,1,1,1,1
+access_advance_user,access_advance_user,model_agreement,vendor_advance.group_vendor_advance_user,1,1,1,1
