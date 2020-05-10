@@ -54,6 +54,7 @@ class ServerFileProcess(models.Model):
                                          ("dest_sftp", "Single Middleware Location"),
                                          ("sftp", "Double Middleware Location")],
                               default="sftp", required=True, track_visibility='onchange')
+    sys_file_name = fields.Char(string='Filename',track_visibility='onchange')
     status = fields.Boolean(default=True, string='Status')
 
     @api.constrains('source_path', 'dest_path', 'folder')
@@ -278,16 +279,19 @@ class ServerFileProcess(models.Model):
     @api.multi
     def sysdt_update(self, record):
         for rec in record:
-            with rec.sftp_connection('destination') as source:
+            with rec.sftp_connection('destination') as destination:
                 dirs = [rec.source_path, rec.dest_path]
                 rec.directory_check(dirs)
-                files = filter(lambda x: x.endswith('BaNCSDATE'), source.listdir(rec.source_path))
+                files = filter(lambda x:    x.endswith(self.sys_file_name), destination.listdir(rec.source_path))
+                if not files:
+                    raise exceptions.Warning(_("[{0}] is not available in middleware.".format(self.sys_file_name)))
+
                 for file in files:
                     source_path = os.path.join(rec.dest_path, file)
                     local_path = os.path.join(rec.source_path, file)
-                    source.get(source_path, localpath=local_path, preserve_mtime=True)
+                    destination.get(source_path, localpath=local_path, preserve_mtime=True)
 
-                    with source.open(local_path, 'r') as ins:
+                    with destination.open(local_path, 'r') as ins:
                         for date in ins:
                             year, month, day = date[:4], date[4:6], date[6:8]
                             batch_date = "{0}-{1}-{2}".format(year, month, day)

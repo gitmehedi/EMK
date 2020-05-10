@@ -4,6 +4,7 @@ except ImportError:
     import StringIO
 import base64, os
 import csv, datetime
+import numpy as np
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -214,9 +215,10 @@ class GBSFileImportWizard(models.TransientModel):
             is_valid = True
             val = dict()
 
-            credit_amt = abs(float(line['cr amt'].strip()))
-            debit_amt = abs(float(line['dr amt'].strip()))
-            lcy_amt = float(line['lcy bal'].strip())
+            credit_amt = abs(np.float128(line['cr amt'].strip()))
+            debit_amt = abs(np.float128(line['dr amt'].strip()))
+            lcy_amt = np.float128(line['lcy bal'].strip())
+
 
             if credit_amt or debit_amt or lcy_amt:
                 date_str = line['dt'].strip()
@@ -274,8 +276,8 @@ class GBSFileImportWizard(models.TransientModel):
 
                     # For BDT Only
                     if cur_code == 'BDT':
-                        val['debit'] = abs(debit_amt)
-                        val['credit'] = abs(credit_amt)
+                        val['debit'] = "{:.3f}".format(debit_amt)
+                        val['credit'] = "{:.3f}".format(credit_amt)
                         val['amount_currency'] = 0
                     # For OBU Only
                     elif branch_code == '116' and cur_code == 'USD':
@@ -283,21 +285,21 @@ class GBSFileImportWizard(models.TransientModel):
                         val['credit'] = abs(credit_amt) * self.dollar_rate
 
                         if credit_amt > 0:
-                            val['amount_currency'] = credit_amt
+                            val['amount_currency'] = "{:.3f}".format(credit_amt)
                         else:
-                            val['amount_currency'] = debit_amt
+                            val['amount_currency'] = "-{:.3f}".format(debit_amt)
                     else:
                         if lcy_amt > 0:
-                            val['credit'] = abs(lcy_amt)
+                            val['credit'] = "{:.3f}".format(abs(lcy_amt))
                             val['debit'] = 0
                         else:
                             val['credit'] = 0
-                            val['debit'] = abs(lcy_amt)
+                            val['debit'] = "{:.3f}".format(abs(lcy_amt))
 
                         if credit_amt > 0:
-                            val['amount_currency'] = credit_amt
+                            val['amount_currency'] = "{:.3f}".format(credit_amt)
                         else:
-                            val['amount_currency'] = debit_amt
+                            val['amount_currency'] = "-{:.3f}".format(debit_amt)
 
                     journal_entry += self.format_journal(val)
 

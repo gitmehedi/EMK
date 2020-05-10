@@ -49,7 +49,7 @@ class SOAPProcess(models.Model):
         if self.wsdl_name:
             self.wsdl_name = self.wsdl_name.strip()
 
-    @api.depends("endpoint_url", "endpoint_port", "wsdl_name")
+    @api.depends("http_method","endpoint_url", "endpoint_port", "wsdl_name")
     def _compute_endpoint_fullname(self):
         for rec in self:
             if rec.http_method and rec.endpoint_url and rec.endpoint_port and rec.wsdl_name:
