@@ -282,7 +282,7 @@ class ServerFileProcess(models.Model):
             with rec.sftp_connection('destination') as destination:
                 dirs = [rec.source_path, rec.dest_path]
                 rec.directory_check(dirs)
-                files = filter(lambda x: x.endswith(self.sys_file_name), destination.listdir(rec.source_path))
+                files = filter(lambda x:    x.endswith(self.sys_file_name), destination.listdir(rec.source_path))
                 if not files:
                     raise exceptions.Warning(_("[{0}] is not available in middleware.".format(self.sys_file_name)))
 

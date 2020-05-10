@@ -8,13 +8,13 @@
                 <form string="TPM Management" duplicate="0">
                     <header>
                         <button name="calculate_tpm" string="Calculate TPM" type="object" states="draft"
-                                class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"/>
+                                class="oe_highlight" groups="account.group_account_manager"/>
                         <button name="act_confirm" string="Confirm" type="object" states="calculate"
-                                class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"/>
+                                class="oe_highlight" groups="account.group_account_manager"/>
                         <button name="act_draft" string="Set to Re-Calculate" type="object" states="calculate"
                                 groups="mtbl_access.group_mtbl_sys_admin"/>
                         <button name="act_approve" string="Approve" type="object" states="confirm"
-                                class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"/>
+                                class="oe_highlight" groups="account.group_account_manager"/>
                         <field name="state" widget="statusbar" statusbar_visible="calculate,confirm,approve"/>
                     </header>
                     <sheet>

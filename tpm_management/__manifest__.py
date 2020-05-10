@@ -12,9 +12,10 @@ Transfer Pricing Mechanism.
     'depends': [
         'account',
         'operating_unit',
+        'mtbl_access',
     ],
     'data': [
-        # 'security/ir_security.xml'
+        'security/ir.model.access.csv',
         'views/menu_view.xml',
         'views/account_config_view.xml',
         'views/tpm_calculation_view.xml'

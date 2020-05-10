@@ -303,9 +303,7 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def _cron_generate_entries(self):
-        cron_ctx = self.env.ref("account_asset.account_asset_cron")
-        date = cron_ctx.nextcall[:10]
-        self._generate_depreciation(date)
+        return False
 
     @api.model
     def _generate_depreciation(self, date):

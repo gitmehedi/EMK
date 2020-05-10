@@ -1,6 +1,14 @@
 # Genweb2 Business Solution [GBS]
-## Mutual Trust Bank Limited [MTBL]
-[TOC]
+Table of Contents
+=================
+* [Application Architecture](#application-architecture)
+   * [Three Tier Server Installation](#three-tier-server-installation)
+      * [Client/Web Server](#client/web-server)
+      * [Application Server](#application-server)
+      * [Database Server](#database-server)
+* [Database Clean Query](#database-clean-query)
+
+## Application Architecture
 
 In 3-tier architecture, there is an intermediary level, meaning that the architecture is generally split up between: 
 1. **The Client or Web server**, i.e. the computer, which requests the resources, equipped with a user interface 
@@ -8,11 +16,10 @@ In 3-tier architecture, there is an intermediary level, meaning that the archite
 2. **The Application Server** (also called middleware), whose task it is to provide the requested resources, but by calling on another server.
 3. **The Data Server**, which provides the application server with the data that it requires: 
 
-**MTBL** follows 3-tier architecture
 
-## 3-tier Server Installation:
+### Three Tier Server Installation:
 
-### 1. Client/Web Server:
+#### 1. Client/Web Server:
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -139,7 +146,7 @@ $ python2.7 get-pip.py
 ```
 
 
-### 3. Data Server:  
+### 3. Database Server:  
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -166,4 +173,53 @@ _Configure Postgresql 10 in RedHat 7 and Create user odoo_
 $ sudo systemctl enable postgresql-10.service
 $ sudo systemctl start postgresql-10.service
 $ sudo su - postgres -c "createuser -s odoo" 2> /dev/null || true
+```
+
+# Database Clean Query
+```sql
+-- Delete all Vendor Bills
+delete from account_invoice_line;
+delete from account_invoice;
+
+-- Delete from Payment Instructions
+delete from payment_instruction;
+
+-- Delete from Bulk Import
+delete from gbs_file_import_line;
+delete from gbs_file_import;
+
+-- Delete from TDS and VAT entries
+delete from tds_vat_payment;
+delete from tds_vat_challan;
+delete from tds_vat_challan_line;
+
+-- Delete all related entries
+delete from account_asset_sale_line;
+delete from account_asset_sale;
+delete from account_asset_disposal_line;
+delete from account_asset_disposal;
+delete from account_asset_allocation_history;
+delete from account_asset_depreciation_history_line;
+delete from account_asset_depreciation_history;
+delete from account_asset_depreciation_line;
+delete from account_asset_asset;
+
+-- Delete all Interface entries
+delete from generate_cbs_journal_success;
+delete from cbs_journal_line;
+delete from server_file_error;
+delete from server_file_error_line;
+delete from server_file_success;
+delete from gbs_data_migration;
+
+-- Delete all Journal Entries
+delete from account_move_line;
+delete from account_move;
+
+-- Remove all Log related data
+delete from auditlog_log_line;
+delete from auditlog_log;
+delete from auditlog_http_request;
+delete from auditlog_http_session;
+delete from ir_sessions;
 ```
