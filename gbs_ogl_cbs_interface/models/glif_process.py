@@ -54,7 +54,7 @@ class ServerFileProcess(models.Model):
                                          ("dest_sftp", "Single Middleware Location"),
                                          ("sftp", "Double Middleware Location")],
                               default="sftp", required=True, track_visibility='onchange')
-    sys_file_name = fields.Char(string='Filename',track_visibility='onchange')
+    sys_file_name = fields.Char(string='Filename', track_visibility='onchange')
     status = fields.Boolean(default=True, string='Status')
 
     @api.constrains('source_path', 'dest_path', 'folder')
@@ -282,7 +282,7 @@ class ServerFileProcess(models.Model):
             with rec.sftp_connection('destination') as destination:
                 dirs = [rec.source_path, rec.dest_path]
                 rec.directory_check(dirs)
-                files = filter(lambda x:    x.endswith(self.sys_file_name), destination.listdir(rec.source_path))
+                files = filter(lambda x: x.endswith(self.sys_file_name), destination.listdir(rec.source_path))
                 if not files:
                     raise exceptions.Warning(_("[{0}] is not available in middleware.".format(self.sys_file_name)))
 
@@ -346,11 +346,29 @@ class ServerFileProcess(models.Model):
         glcc_struc = [3, 3, 1, 5, 3, 2, 2, 3]
         date_struc = [2, 2, 4, 2, 2, 2]
         glcc_name = ['BRANCH', 'CURRENCY', 'SEGMENT', 'COMP_1', 'COMP_2', 'AC', 'SC', 'COST_CENTRE']
-        keys = ['POSTING-DATE', 'SYSTEM-DATE', 'POSTING-TIME', 'SOURCE', 'JOURNAL-NBR', 'JOURNAL-SEQ',
-                'SOC', 'BRCH', 'FCY-CODE', 'GL-CLASS-CODE', 'DESC-TRCODE-6', 'DESC-TEXT-24', 'POSTING-IND',
-                'TRANS-DATE', 'LCY-AMT',
-                'FCY-AMT', 'REVERSAL-CODE', 'REVERSAL-DATE', 'REFERENCE', 'SOURCE-APPLN', 'PS-JOURNAL-ID',
-                'PS-JOURNAL-NBR', 'CNTL-CENTRE']
+        keys = ['POSTING-DATE',
+                'SYSTEM-DATE',
+                'POSTING-TIME',
+                'SOURCE',
+                'JOURNAL-NBR',
+                'JOURNAL-SEQ',
+                'SOC',
+                'BRCH',
+                'FCY-CODE',
+                'GL-CLASS-CODE',
+                'DESC-TRCODE-6',
+                'DESC-TEXT-24',
+                'POSTING-IND',
+                'TRANS-DATE',
+                'LCY-AMT',
+                'FCY-AMT',
+                'REVERSAL-CODE',
+                'REVERSAL-DATE',
+                'REFERENCE',
+                'SOURCE-APPLN',
+                'PS-JOURNAL-ID',
+                'PS-JOURNAL-NBR',
+                'CNTL-CENTRE']
 
         if len(data) > 15:
             data[9] = dict(zip(glcc_name, self.strslice(data[9], glcc_struc)))
@@ -359,9 +377,11 @@ class ServerFileProcess(models.Model):
             data[13] = self.format_data(self.strslice(data[13] + '000000', date_struc))
             if data[14][-1:] == '+':
                 data[14] = data[14][:-1]
+                data[15] = data[15][:-1]
                 data[5] = '01'
             else:
                 data[14] = data[14][:-1]
+                data[15] = data[15][:-1]
                 data[5] = '02'
 
             return dict(zip(keys, data[:len(data)]))
@@ -401,7 +421,7 @@ class ServerFileProcess(models.Model):
             return "({0},{1},'{2}','{3}'),".format(id, index, text, fields.Datetime.now())
 
         def format_journal(line):
-            return "({0},'{1}','{2}',{3},{4},'{5}','{6}',{7},{8},{9},{10},{11},{12},{13},{14},{15}),".format(
+            return "({0},'{1}','{2}',{3},{4},'{5}','{6}',{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}),".format(
                 line['move_id'],
                 line['date'],
                 line['date_maturity'],
@@ -417,6 +437,7 @@ class ServerFileProcess(models.Model):
                 line['servicing_channel_id'],
                 line['credit'],
                 line['debit'],
+                line['amount_currency'],
                 line['company_id'])
 
         with open(source_path, 'r') as file_ins:
@@ -562,6 +583,20 @@ class ServerFileProcess(models.Model):
                                                'LCY-AMT [{0}] has large value than system expected'.format(
                                                    rec['LCY-AMT']))
 
+                    fcy_d_bef = rec['FCY-AMT'][-17:-3]
+                    fcy_d_after = rec['FCY-AMT'][-3:]
+                    if not fcy_d_bef.isdigit() or not fcy_d_after.isdigit():
+                        errors += format_error(errObj.id, index,
+                                               'FCY Amount [{0}] has invalid value'.format(rec['FCY-AMT']))
+                    else:
+                        fcy_amt = np.float128(fcy_d_bef + '.' + fcy_d_after)
+                        fcy_amount = "{:.2f}".format(fcy_amt)
+
+                    if len(fcy_amount) > 16:
+                        errors += format_error(errObj.id, index,
+                                               'FCY-AMT [{0}] has large value than system expected'.format(
+                                                   rec['FCY-AMT']))
+
                     if len(errors) == 0:
                         line = {
                             'move_id': move_id.id,
@@ -582,12 +617,27 @@ class ServerFileProcess(models.Model):
                         if rec['JOURNAL-SEQ'] == '02':
                             line['debit'] = amount
                             line['credit'] = 0.0
+
+                            if currency_code == 'BDT':
+                                line['amount_currency'] = 0.0
+                            else:
+                                line['amount_currency'] = '-' + fcy_amount
+
                             debit += lcy_amt
+
                         elif rec['JOURNAL-SEQ'] == '01':
                             line['debit'] = 0.0
                             line['credit'] = amount
+
+                            if currency_code == 'BDT':
+                                line['amount_currency'] = 0.0
+                            else:
+                                line['amount_currency'] = fcy_amount
+
                             credit += lcy_amt
+
                         journal_entry += format_journal(line)
+
         if len(errors) > 0:
             try:
                 query = """
@@ -603,7 +653,7 @@ class ServerFileProcess(models.Model):
                 query = """
                 INSERT INTO account_move_line 
                 (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
-                analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,company_id)  
+                analytic_account_id,segment_id,acquiring_channel_id,servicing_channel_id,credit,debit,amount_currency,company_id)  
                 VALUES %s""" % journal_entry[:-1]
                 self.env.cr.execute(query)
 
@@ -626,13 +676,12 @@ class ServerFileProcess(models.Model):
                                             'line_no': 'Unequal Amount',
                                             'details': msg})
             except Exception:
-                missmatch = move_id.missmatch_value
-                # if move_id.state == 'draft':
-                #     move_id.unlink()
+                if move_id.state == 'draft':
+                    move_id.unlink()
                 errObj.line_ids.create({'line_id': errObj.id,
                                         'line_no': 'Unknown Error',
-                                        'details': 'Cannot create unbalanced journal entry. Amount Variance is {0}'.format(
-                                            missmatch)})
+                                        'details': 'Unbalanced journal, amount variance is {0}'.format(
+                                            move_id.missmatch_value)})
 
         return False
 
