@@ -79,3 +79,8 @@ class Holidays(models.Model):
             holiday.linked_request_ids.action_refuse()
         self._remove_resource_leave()
         return True
+
+    def _check_state_access_right(self, vals):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel', 'refuse'] and not self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user'):
+            return False
+        return True

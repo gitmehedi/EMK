@@ -191,7 +191,7 @@ class HRHolidays(models.Model):
                     leaves.action_validate()
         return True
 
-    def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')):
-            return False
-        return True
+    # def _check_state_access_right(self, vals):
+    #     if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')):
+    #         return False
+    #     return True
