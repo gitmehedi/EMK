@@ -1,10 +1,10 @@
-from odoo import api, fields,models, SUPERUSER_ID, _
-from odoo.exceptions import ValidationError,UserError
+from odoo import api, models, SUPERUSER_ID, _
+from odoo.exceptions import ValidationError, UserError
 
 
 class Holidays(models.Model):
     _name = 'hr.holidays'
-    _inherit = ['hr.holidays','mail.thread']
+    _inherit = ['hr.holidays', 'mail.thread']
 
     @api.one
     @api.constrains('number_of_days_temp')
@@ -22,7 +22,8 @@ class Holidays(models.Model):
     def write(self, values):
         employee_id = values.get('employee_id', False)
         if employee_id:
-            self.pending_approver = self.env['hr.employee'].search([('id','=',employee_id)]).holidays_approvers[0].approver.id
+            self.pending_approver = self.env['hr.employee'].search([('id', '=', employee_id)]).holidays_approvers[
+                0].approver.id
         res = super(Holidays, self).write(values)
         return res
 
@@ -81,6 +82,7 @@ class Holidays(models.Model):
         return True
 
     def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel', 'refuse'] and not self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user'):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel', 'refuse'] and not self.env[
+            'res.users'].has_group('hr_holidays.group_hr_holidays_user'):
             return False
         return True
