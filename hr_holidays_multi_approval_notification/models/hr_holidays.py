@@ -30,33 +30,27 @@ class Holidays(models.Model):
     @api.multi
     def btn_action_approve(self):
         res = super(Holidays, self).btn_action_approve()
-        for holiday in self:
-            if holiday.holiday_type != 'category' and not holiday.parent_id:
-                if holiday.sudo(SUPERUSER_ID).pending_approver and \
-                        holiday.sudo(SUPERUSER_ID).pending_approver.user_id:
-                    self.message_post(body="",
-                                      partner_ids=[holiday.sudo(SUPERUSER_ID).pending_approver.user_id.partner_id.id])
+        self._notify_approvers()
+
         return res
 
     @api.multi
     def _notify_approvers(self):
-        """Input: res.user"""
-        # self.ensure_one()
         for holiday in self:
             if holiday.holiday_type != 'category' and not holiday.parent_id:
-                # approvers = holiday.employee_id._get_employee_manager()
-                # if not approvers:
-                #     return True
-                # for approver in approvers:
-                #     holiday.sudo(SUPERUSER_ID).add_follower(approver.id)
-                #     if approver.sudo(SUPERUSER_ID).user_id:
-                #         holiday.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-                #             [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
                 if holiday.sudo(SUPERUSER_ID).pending_approver and \
                         holiday.sudo(SUPERUSER_ID).pending_approver.user_id:
                     self.message_post(body="",
                                       partner_ids=[holiday.sudo(SUPERUSER_ID).pending_approver.user_id.partner_id.id])
-        return True
+
+    @api.multi
+    def _send_refuse_notification(self):
+        for holiday in self:
+            if holiday.holiday_type != 'category' and not holiday.parent_id:
+                if holiday.sudo(SUPERUSER_ID).employee_id and \
+                        holiday.sudo(SUPERUSER_ID).employee_id.user_id:
+                    self.message_post(body="Your leave request has been refused.",
+                                      partner_ids=[holiday.sudo(SUPERUSER_ID).employee_id.user_id.partner_id.id])
 
     @api.multi
     def action_refuse(self):
@@ -69,17 +63,21 @@ class Holidays(models.Model):
             if holiday.state not in ['confirm', 'validate', 'validate1']:
                 raise UserError(_('Leave request must be confirmed or validated in order to refuse it.'))
 
+            vals = {'state': 'refuse', 'pending_approver': None}
             if holiday.state == 'validate1':
-                holiday.write({'state': 'refuse', 'manager_id': manager.id})
+                vals['manager_id'] = manager.id
             else:
-                holiday.write({'state': 'refuse', 'manager_id2': manager.id})
+                vals['manager_id2'] = manager.id
+
+            holiday.write(vals)
+
             # Delete the meeting
             if holiday.meeting_id:
                 holiday.meeting_id.unlink()
             # If a category that created several holidays, cancel all related
             holiday.linked_request_ids.action_refuse()
         self._remove_resource_leave()
-        return True
+        self._send_refuse_notification()
 
     def _check_state_access_right(self, vals):
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel', 'refuse'] and not self.env[
