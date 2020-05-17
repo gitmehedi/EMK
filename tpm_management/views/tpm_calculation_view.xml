@@ -156,6 +156,6 @@
         </record>
 
         <menuitem id="menu_tpm_calculation" parent="main_menu_tpm" action="action_tpm_calculation"
-                  sequence="1" groups="account_tds.group_tds_manager,account_tds.group_tds_user"/>
+                  sequence="1" />
     </data>
 </odoo>
