@@ -118,8 +118,11 @@ class TPMManagementModel(models.Model):
                                               AND am.is_cbs=TRUE
                                               AND (aml.date >= '%s'
                                               AND aml.date < '%s')
-                                        GROUP  BY aml.operating_unit_id) init ON (init.id = aa.id)""" % (
-                    general_account, start_date, end_date, general_account, fy_start_date, end_date)
+                                        GROUP  BY aml.operating_unit_id) init ON (init.id = aa.id)
+                            WHERE aa.active=True 
+                                  AND aa.pending=False
+                            ORDER BY aa.id ASC""" % (
+                general_account, start_date, end_date, general_account, fy_start_date, end_date)
 
                 self.env.cr.execute(query)
                 for bal in self.env.cr.fetchall():

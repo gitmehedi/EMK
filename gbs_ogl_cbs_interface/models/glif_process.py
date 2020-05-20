@@ -282,7 +282,7 @@ class ServerFileProcess(models.Model):
             with rec.sftp_connection('destination') as destination:
                 dirs = [rec.source_path, rec.dest_path]
                 rec.directory_check(dirs)
-                files = filter(lambda x: x.endswith(self.sys_file_name), destination.listdir(rec.source_path))
+                files = filter(lambda x: x.endswith(self.sys_file_name), destination.listdir(rec.dest_path))
                 if not files:
                     raise exceptions.Warning(_("[{0}] is not available in middleware.".format(self.sys_file_name)))
 
@@ -291,7 +291,7 @@ class ServerFileProcess(models.Model):
                     local_path = os.path.join(rec.source_path, file)
                     destination.get(source_path, localpath=local_path, preserve_mtime=True)
 
-                    with destination.open(local_path, 'r') as ins:
+                    with open(local_path, 'r') as ins:
                         for date in ins:
                             year, month, day = date[:4], date[4:6], date[6:8]
                             batch_date = "{0}-{1}-{2}".format(year, month, day)
@@ -583,19 +583,22 @@ class ServerFileProcess(models.Model):
                                                'LCY-AMT [{0}] has large value than system expected'.format(
                                                    rec['LCY-AMT']))
 
-                    fcy_d_bef = rec['FCY-AMT'][-17:-3]
-                    fcy_d_after = rec['FCY-AMT'][-3:]
-                    if not fcy_d_bef.isdigit() or not fcy_d_after.isdigit():
-                        errors += format_error(errObj.id, index,
-                                               'FCY Amount [{0}] has invalid value'.format(rec['FCY-AMT']))
+                    if currency_code == 'BDT':
+                        fcy_amount = '0.0'
                     else:
-                        fcy_amt = np.float128(fcy_d_bef + '.' + fcy_d_after)
-                        fcy_amount = "{:.2f}".format(fcy_amt)
+                        fcy_d_bef = rec['FCY-AMT'][-17:-3]
+                        fcy_d_after = rec['FCY-AMT'][-3:]
+                        if not fcy_d_bef.isdigit() or not fcy_d_after.isdigit():
+                            errors += format_error(errObj.id, index,
+                                                   'FCY Amount [{0}] has invalid value'.format(rec['FCY-AMT']))
+                        else:
+                            fcy_amt = np.float128(fcy_d_bef + '.' + fcy_d_after)
+                            fcy_amount = "{:.2f}".format(fcy_amt)
 
-                    if len(fcy_amount) > 16:
-                        errors += format_error(errObj.id, index,
-                                               'FCY-AMT [{0}] has large value than system expected'.format(
-                                                   rec['FCY-AMT']))
+                        if len(fcy_amount) > 16:
+                            errors += format_error(errObj.id, index,
+                                                   'FCY-AMT [{0}] has large value than system expected'.format(
+                                                       rec['FCY-AMT']))
 
                     if len(errors) == 0:
                         line = {
@@ -617,23 +620,13 @@ class ServerFileProcess(models.Model):
                         if rec['JOURNAL-SEQ'] == '02':
                             line['debit'] = amount
                             line['credit'] = 0.0
-
-                            if currency_code == 'BDT':
-                                line['amount_currency'] = 0.0
-                            else:
-                                line['amount_currency'] = '-' + fcy_amount
-
+                            line['amount_currency'] = '-' + fcy_amount
                             debit += lcy_amt
 
                         elif rec['JOURNAL-SEQ'] == '01':
                             line['debit'] = 0.0
                             line['credit'] = amount
-
-                            if currency_code == 'BDT':
-                                line['amount_currency'] = 0.0
-                            else:
-                                line['amount_currency'] = fcy_amount
-
+                            line['amount_currency'] = fcy_amount
                             credit += lcy_amt
 
                         journal_entry += format_journal(line)
