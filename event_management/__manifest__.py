@@ -9,7 +9,7 @@
     'depends': [
         'product',
         'account',
-        'event_barcode',
+        #'event_barcode',
         'report_layout',
         'mail_send',
         'event',
