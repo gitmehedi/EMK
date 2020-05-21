@@ -24,7 +24,7 @@
                             <field name="seats_expected"
                                    widget="statinfo" string="Attendees"/>
                         </button>
-                        <button class="oe_stat_button" name="%(event_barcode.event_barcode_action_main_view)d" type="action"
+                        <button class="oe_stat_button"
                                 icon="fa-barcode" string="Barcode Interface"/>
                     </div>
                     <group>
