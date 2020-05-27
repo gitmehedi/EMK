@@ -29,5 +29,5 @@ class AccountReportContextCommon(models.TransientModel):
         result = super(AccountReportContextCommon, self).get_html_and_data(given_context)
         select = ['operating_unit_ids']
         result['report_context'].update(self.read(select)[0])
-        result['report_context']['available_operating_units'] = self.get_available_operating_unit_ids_and_names()
+        result['report_context']['available_operating_units'] = self.get_available_operating_unit_ids_and_names() if hasattr(self, 'get_available_operating_unit_ids_and_names') else False
         return result
