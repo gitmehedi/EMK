@@ -36,6 +36,13 @@
                     </header>
                     <sheet>
                         <group>
+                            <div class="oe_button_box" name="button_box">
+                                <button class="oe_stat_button" name="action_get_stock_picking"
+                                        string="Stock Operation" type="object"
+                                        attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"
+                                        groups="stock.group_stock_user"/>
+                                <field name="picking_id" invisible="1"/>
+                            </div>
                             <group>
                                 <field name="receive_type" placeholder="Please Select"/>
                                 <field name="date"/>
