@@ -167,6 +167,12 @@ class PurchaseRequisition(models.Model):
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseRequisition, self).unlink()
 
+    @api.constrains('line_ids')
+    def _validation_line_ids(self):
+        product_id_list = [line.product_id.id for line in self.line_ids]
+        if len(product_id_list) != len(set(product_id_list)):
+            raise ValidationError(_("Duplicate product found in products line."))
+
 
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"

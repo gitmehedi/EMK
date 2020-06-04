@@ -25,7 +25,7 @@
     'summary': 'Leave carry forward and encashment process is calculated ',
     'description': 
     """This module gives opportunity to decide user either he wants to carry forward his/her leaves
-            leave ot not'""",        
+            leave or not and also how many leaves will encashment '""",
     'installable': True,
     'application': True,
 }

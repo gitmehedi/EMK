@@ -15,12 +15,12 @@
     'category': 'Stock',
     'version': '10.0.1',
 
-    'depends': ['product_gate_in','stock_picking_lc'],
+    'depends': [],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/gate_in_view.xml',
+
     ],
 
 }

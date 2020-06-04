@@ -9,6 +9,7 @@
         'com_shipment',
         'stock_operating_unit',
         'ir_sequence_operating_unit',
+        'stock_picking_lc',
     ],
 
     'data': [

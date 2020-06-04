@@ -33,6 +33,8 @@
                 'gbs_analytic_account_type',
                 'gbs_account_payment_narration',
                 'gbs_general_ledger_customer',
+                'gbs_journal_type',
+                'account_log',
                 ],
 
     'data': [ ],

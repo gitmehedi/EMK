@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_pr_summary"
+                model="purchase.requisition"
+                string="Purchase Requisition Summary Report"
+                report_type="qweb-pdf"
+                menu="False"
+                name="purchase_reports.report_pr_summary"
+                file="purchase_reports.report_pr_summary"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+        <template id="report_pr_summary">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Purchase Requisition Summary Report</h4>
+                                <br/>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        <ul class="list-inline">
+                                            <li>
+                                                <strong>Type : </strong>
+                                                <t t-if="data['type'] == 'all'">All</t>
+                                                <t t-else="">
+                                                    <span t-esc="data['type']"/>
+                                                </t>
+                                            </li>
+                                            <li>
+                                                <strong>Operating Unit : </strong>
+                                                <span t-esc="data['operating_unit_name']"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <ul class="list-inline">
+                                            <li>
+                                                <t t-if="data['is_only_pending']">
+                                                    <strong>Display PR: </strong>
+                                                    <span>Only Pending</span>
+                                                </t>
+                                            </li>
+                                            <li>
+                                                <t t-if="data['date_from'] and data['date_to']">
+                                                    <strong>Date : </strong>
+                                                    <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_from'],'%Y-%m-%d'))"/>
+                                                    <strong> To </strong>
+                                                    <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_to'],'%Y-%m-%d'))"/>
+                                                </t>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center" style="width:5%;">Date</th>
+                                        <th class="text-center" style="width:14%;">MRR No</th>
+                                        <th class="text-center" style="width:7%;">Internal Ref</th>
+                                        <th class="text-center" style="width:26%;">Product Name</th>
+                                        <th class="text-center" style="width:24%;">Narration</th>
+                                        <th class="text-center" style="width:6%;">Unit</th>
+                                        <th class="text-center" style="width:6%;">PR Qty</th>
+                                        <th class="text-center" style="width:6%;">MRR Qty</th>
+                                        <th class="text-center" style="width:6%;">Due Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data" t-as="obj">
+                                        <tr>
+                                            <td class="odo-bg-info" colspan="100%">
+                                                <strong class="text-nowrap" t-esc="obj_value['requisition_name']"/>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="obj_value['products']" t-as="product_obj">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <span class="text-nowrap" t-esc="product_obj['date']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-foreach="product_obj['mrr_no']" t-as="mrr_no">
+                                                        <span t-esc="mrr_no"/><br/>
+                                                    </t>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span t-esc="product_obj['internal_ref']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <span t-esc="product_obj['product_name']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <span t-esc="product_obj['narration']"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="text-nowrap" t-esc="product_obj['unit']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="formatLang(product_obj['pr_qty'])"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="formatLang(product_obj['mrr_qty'])"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="formatLang(product_obj['due_qty'])"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

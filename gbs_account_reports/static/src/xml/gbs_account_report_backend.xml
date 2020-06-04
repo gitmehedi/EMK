@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-extend="accountReports.searchView">
+        <t t-jquery='.btn-group.o_dropdown.o_account_reports_tags-filter' t-operation='after'>
+            <div t-if="context.available_operating_units" class="btn-group o_dropdown o_account_reports_date-filter-multi-operating-unit">
+                <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-filter"/> Operating Units: <span class="caret"/>
+                </a>
+                <ul class="dropdown-menu o_filters_menu" role="menu">
+                    <t t-foreach="context.available_operating_units" t-as="p">
+                        <li t-att-title="p[1]" t-att-data-value="p[0]" t-att-class="'o_account_reports_one-operating-unit ' + ((context.operating_unit_ids.indexOf(p[0]) !== -1) and 'selected' or '')"><a><t t-esc='p[1]'/></a></li>
+                    </t>
+                </ul>
+            </div>
+        </t>
+    </t>
+</templates>

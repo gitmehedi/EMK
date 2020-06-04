@@ -195,7 +195,7 @@ class AccountInvoice(models.Model):
     def _get_invoice_line_key_cols(self):
         res = super(AccountInvoice, self)._get_invoice_line_key_cols()
         res.append('operating_unit_id')
-        res.append('sub_operating_unit_id')
+        # res.append('sub_operating_unit_id')
         return res
 
 

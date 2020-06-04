@@ -5,7 +5,8 @@ from openerp.exceptions import UserError, ValidationError
 class AttendanceSummary(models.Model):
     _name = 'hr.attendance.summary'
     _inherit = ['mail.thread']
-    _description = 'Attendance and over time summary'    
+    _description = 'Attendance and over time summary'
+    _order = 'id desc'
 
     name = fields.Char(size=100, string='Title', required='True')
     period = fields.Many2one("date.range", "Period", required=True,
