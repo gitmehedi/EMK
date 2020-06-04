@@ -215,13 +215,7 @@
                                         <tr class="evc-head">
                                             <td colspan="2">Temporary Passcode</td>
                                         </tr>
-                                        <tr class="evc-body">
-                                            <td></td>
-                                            <td>
-                                                <i class="glyphicon glyphicon-th"></i>
-                                                <t t-esc="attendee.barcode"/>
-                                            </td>
-                                        </tr>
+
                                         <tr class="evc-head">
                                             <td colspan="2">Attendee Name</td>
                                         </tr>
