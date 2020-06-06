@@ -16,6 +16,7 @@
     'version': '10.0.1',
 
     'depends': [
+        'stock'
     ],
 
     # always loaded
