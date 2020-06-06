@@ -9,10 +9,8 @@
             <field name="arch" type="xml">
                 <tree string="Product Get In Form" decoration-info="state=='draft'" edit="false">
                     <field name="name"/>
-                    <field name="ship_id"/>
                     <field name="challan_bill_no"/>
                     <field name="received"/>
-                    <field name="operating_unit_id"/>
                     <field name="date"/>
                     <field name="state"/>
                 </tree>
@@ -39,44 +37,26 @@
                             <div class="oe_button_box" name="button_box">
                                 <button class="oe_stat_button" name="action_get_stock_picking"
                                         string="Stock Operation" type="object"
-                                        attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"
+                                        icon="fa-cogs"
                                         groups="stock.group_stock_user"/>
-                                <field name="picking_id" invisible="1"/>
                             </div>
                             <group>
-                                <field name="receive_type" placeholder="Please Select"/>
                                 <field name="date"/>
                                 <field name="challan_bill_no"/>
                                 <field name="truck_no"/>
                             </group>
                             <group>
-                                <field name="ship_id"
-                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
-                                       attrs="{'invisible': [('receive_type', '!=', 'lc')],'required': [('receive_type', '=', 'lc')]}"/>
                                 <field name="create_by"/>
                                 <field name="received"/>
                                 <field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
-                            <page string="Products">
-                                <field name="shipping_line_ids">
-                                    <tree string="Product Lines" editable="bottom">
-                                        <field name="product_id"/>
-                                        <field name="product_qty"/>
-<!--                                        <field name="product_uom"/>-->
-<!--                                        <field name="price_unit"/>-->
-                                        <field name="state" invisible="1"/>
-                                    </tree>
-                                </field>
-                            </page>
                             <page string="Others">
                                 <group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company"
                                                options="{'no_create': True,'no_open':True}"/>
-                                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
-                                               groups="operating_unit.group_multi_operating_unit"/>
                                     </group>
                                 </group>
 
@@ -94,7 +74,6 @@
             <field name="arch" type="xml">
                 <search string="Search Gate In">
                     <field name="name"/>
-                    <field name="lc_id"/>
                 </search>
             </field>
         </record>
@@ -111,7 +90,6 @@
         <record model="ir.actions.act_window" id="act_product_gate_in">
             <field name="name">Product Gate In</field>
             <field name="res_model">stock.gate.in</field>
-            <field name="domain">[('ship_id.id','=',active_id)]</field>
             <field name="view_mode">tree,form</field>
         </record>
 
