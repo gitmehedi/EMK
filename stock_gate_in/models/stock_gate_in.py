@@ -225,8 +225,8 @@ class ShipmentProductLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
                                 change_default=True)
     date_planned = fields.Date(string='Scheduled Date', index=True)
-    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='UOM',store=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Unit Price',store=True)
+    # product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='UOM',store=True)
+    # price_unit = fields.Float(related='product_id.standard_price',string='Unit Price',store=True)
     product_qty = fields.Float(string='Quantity')
     parent_id = fields.Many2one('stock.gate.in',
                                 string='Gate In')
