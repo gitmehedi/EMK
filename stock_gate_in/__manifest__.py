@@ -16,7 +16,8 @@
     'version': '10.0.1',
 
     'depends': [
-        'stock'
+        'stock',
+        'ir_sequence_operating_unit'
     ],
 
     # always loaded
