@@ -10,9 +10,16 @@
     'depends': [
         'account',
         'sub_operating_unit',
+        'vendor_advance',
+        'rent_agreement',
+        'vendor_security_deposit'
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/data.xml',
+        'views/payment_instruction_view.xml',
+        'wizard/payment_instruction_wizard_view.xml',
+        'views/account_invoice.xml'
     ],
     'installable': True,
     'application': True,

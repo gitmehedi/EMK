@@ -31,6 +31,8 @@ class PaymentInstruction(models.Model):
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     state = fields.Selection([('draft', "Draft"), ('approved', "Approved"), ('cancel', "Cancel"), ], default='draft',string="Status", track_visibility='onchange')
     narration = fields.Text(string="Narration", size=30)
+    invoice_id = fields.Many2one('account.invoice', string="Vendor Bill", copy=False)
+
 
     @api.model
     def create(self, vals):
@@ -43,11 +45,15 @@ class PaymentInstruction(models.Model):
     @api.multi
     def action_reject(self):
         if self.state == 'draft':
+            if self.invoice_id:
+                self.invoice_id.write({'payment_approver': self.env.user.name})
             return self.write({'state': 'cancel'})
 
     @api.multi
     def action_reset(self):
         if self.state == 'cancel':
+            if self.invoice_id:
+                self.invoice_id.write({'payment_approver': self.env.user.name})
             return self.write({'state': 'draft'})
 
     @api.model
