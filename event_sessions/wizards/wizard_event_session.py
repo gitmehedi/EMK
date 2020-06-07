@@ -188,7 +188,7 @@ class WizardEventSession(models.TransientModel):
         for ses in session:
             for rec in self.event_id.registration_ids:
                 ses_reg = {
-                    'origin': rec.barcode,
+                    # 'origin': rec.barcode,
                     'session_id': ses.id,
                     'event_id': ses.event_id.id,
                     'attendee_id': rec.id,
