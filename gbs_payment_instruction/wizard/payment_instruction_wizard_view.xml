@@ -30,6 +30,9 @@
                         <field name="credit_operating_unit_id"
                                attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
                                options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_sub_operating_unit_id"
+                               attrs="{'invisible':[('type','=','casa')]}"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                     </group>
                 </group>
                 <footer>

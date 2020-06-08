@@ -39,7 +39,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
         # debit_acc = self.invoice_id.partner_id.property_account_payable_id.id
         debit_branch = self.debit_operating_unit_id.id or None
         debit_sou = self.debit_sub_operating_unit_id.id if self.debit_sub_operating_unit_id else None
-        partner_id = self.invoice_id.partner_id.id
+        # partner_id = self.invoice_id.partner_id.id
 
         if self.type == 'casa':
             vendor_bank_acc = self.invoice_id.partner_id.vendor_bank_acc
@@ -60,7 +60,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             'default_debit_account_id': self.debit_account_id.id,
             'debit_operating_unit_id': debit_branch,
             'debit_sub_operating_unit_id': debit_sou,
-            'partner_id': partner_id,
+            'partner_id': self.partner_id.id,
             'vendor_bank_acc': vendor_bank_acc,
             'default_credit_account_id': credit_acc,
             'credit_operating_unit_id': credit_branch,
