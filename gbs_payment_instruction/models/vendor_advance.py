@@ -2,32 +2,30 @@ from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+class VendorAdvance(models.Model):
+    _inherit = 'vendor.advance'
 
-    payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
+    payment_line_ids = fields.One2many('payment.instruction', 'advance_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
     total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
-    payment_approver = fields.Text('Payment Instruction Responsible', track_visibility='onchange',
-                                   help="Log for payment approver", copy=False)
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
                                          string="Is Visible")
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
     def _compute_payment_amount(self):
-        for invoice in self:
-            invoice.total_payment_amount = sum(
-                line.amount for line in invoice.payment_line_ids if line.state not in ['cancel'])
-            invoice.total_payment_approved = sum(
-                line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
+        for advance in self:
+            advance.total_payment_amount = sum(
+                line.amount for line in advance.payment_line_ids if line.state not in ['cancel'])
+            advance.total_payment_approved = sum(
+                line.amount for line in advance.payment_line_ids if line.state in ['approved'])
 
     @api.depends('payable_to_supplier', 'total_payment_amount')
     def _compute_payment_btn_visible(self):
         for record in self:
-            if record.state == 'open':
+            if record.state == 'approve':
                 if record.payable_to_supplier and record.total_payment_amount \
                         and record.payable_to_supplier <= record.total_payment_amount:
                     record.payment_btn_visible = False
@@ -62,8 +60,8 @@ class AccountInvoice(models.Model):
                 'op_unit': self.operating_unit_id.id or False,
                 'partner_id': self.partner_id.id or False,
                 'debit_acc': self.partner_id.property_account_payable_id.id,
-                'invoice_id': self.id,
-                'payment_type': 'invoice'
+                'advance_id': self.id,
+                'payment_type': 'advance'
                 # 'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[
                 #     0].sub_operating_unit_id else None,
             }

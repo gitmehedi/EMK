@@ -32,6 +32,7 @@ class PaymentInstruction(models.Model):
     state = fields.Selection([('draft', "Draft"), ('approved', "Approved"), ('cancel', "Cancel"), ], default='draft',string="Status", track_visibility='onchange')
     narration = fields.Text(string="Narration", size=30)
     invoice_id = fields.Many2one('account.invoice', string="Vendor Bill", copy=False)
+    advance_id = fields.Many2one('vendor.advance', string="Advance", copy=False)
 
 
     @api.model

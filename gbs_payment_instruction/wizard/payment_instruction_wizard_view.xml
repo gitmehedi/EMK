@@ -7,7 +7,9 @@
             <form string="Payment Instruction">
                 <group>
                     <group>
-                        <field name="invoice_id"/>
+                        <field name="payment_type" invisible="1"/>
+                        <field name="invoice_id" attrs="{'invisible': [('payment_type', '!=', 'invoice')]}"/>
+                        <field name="advance_id" attrs="{'invisible': [('payment_type', '!=', 'advance')]}"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="narration"/>

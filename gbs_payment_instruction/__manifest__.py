@@ -19,7 +19,8 @@
         'data/data.xml',
         'views/payment_instruction_view.xml',
         'wizard/payment_instruction_wizard_view.xml',
-        'views/account_invoice.xml'
+        'views/account_invoice.xml',
+        'views/vendor_advance.xml'
     ],
     'installable': True,
     'application': True,

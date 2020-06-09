@@ -5,8 +5,10 @@ from odoo.exceptions import UserError, ValidationError
 class BillPaymentInstructionWizard(models.TransientModel):
     _name = 'bill.payment.instruction.wizard'
 
-    invoice_id = fields.Many2one('account.invoice', default=lambda self: self.env.context.get('active_id'),
+    invoice_id = fields.Many2one('account.invoice', default=lambda self: self.env.context.get('invoice_id'),
                                  string="Invoice", copy=False, readonly=True)
+    advance_id = fields.Many2one('vendor.advance', default=lambda self: self.env.context.get('advance_id'),
+                                   string="Advance", copy=False, readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.context.get('currency_id'))
     amount = fields.Float(string='Amount', required=True, default=lambda self: self.env.context.get('amount'))
@@ -25,6 +27,11 @@ class BillPaymentInstructionWizard(models.TransientModel):
     narration = fields.Char(string="Narration", size=30)
     debit_account_id = fields.Many2one('account.account', string='Debit Account',
                                        default=lambda self: self.env.context.get('debit_acc'))
+    payment_type = fields.Selection([
+        ('invoice', "Invoice"),
+        ('advance', "Advance"),
+        ('security_return', "Security Return")], string="Payment Type",
+        default=lambda self: self.env.context.get('payment_type'))
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -54,9 +61,10 @@ class BillPaymentInstructionWizard(models.TransientModel):
 
         self.env['payment.instruction'].create({
             'invoice_id': self.invoice_id.id,
+            'advance_id': self.advance_id.id,
             'instruction_date': self.instruction_date,
             'amount': self.amount,
-            'currency_id': self.invoice_id.currency_id.id,
+            'currency_id': self.currency_id.id,
             'default_debit_account_id': self.debit_account_id.id,
             'debit_operating_unit_id': debit_branch,
             'debit_sub_operating_unit_id': debit_sou,
