@@ -32,6 +32,10 @@ class BillPaymentInstructionWizard(models.TransientModel):
         ('advance', "Advance"),
         ('security_return', "Security Return")], string="Payment Type",
         default=lambda self: self.env.context.get('payment_type'))
+    advance_type = fields.Selection([
+        ('single', "Single"),
+        ('multi', "Multi")
+    ], string='Advance Type', related='advance_id.type')
 
     @api.constrains('amount')
     def _check_amount(self):

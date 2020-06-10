@@ -3,7 +3,8 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class VendorAdvance(models.Model):
-    _inherit = 'vendor.advance'
+    _name = 'vendor.advance'
+    _inherit = ['vendor.advance', 'ir.needaction_mixin']
 
     payment_line_ids = fields.One2many('payment.instruction', 'advance_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
