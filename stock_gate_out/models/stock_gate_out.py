@@ -4,8 +4,8 @@ from odoo import models, fields, api,_
 from odoo.exceptions import UserError
 
 
-class StockGateIn(models.Model):
-    _name = 'stock.gate.in'
+class StockGateOut(models.Model):
+    _name = 'stock.gate.out'
     _order = 'date desc, name desc, id desc'
 
     name = fields.Char(string='Name', index=True, readonly=True)
@@ -25,9 +25,9 @@ class StockGateIn(models.Model):
     @api.model
     def create(self, vals):
         requested_date = datetime.today().date()
-        new_seq = self.env['ir.sequence'].next_by_code_new('stock.gate.in', requested_date) or '/'
+        new_seq = self.env['ir.sequence'].next_by_code_new('stock.gate.out', requested_date) or '/'
         vals['name'] = new_seq
-        return super(StockGateIn, self).create(vals)
+        return super(StockGateOut, self).create(vals)
 
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):
@@ -62,4 +62,4 @@ class StockGateIn(models.Model):
         for m in self:
             if m.state != 'draft':
                 raise UserError(_('You can not delete in this state.'))
-        return super(StockGateIn, self).unlink()
+        return super(StockGateOut, self).unlink()
