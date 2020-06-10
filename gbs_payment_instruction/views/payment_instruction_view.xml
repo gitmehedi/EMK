@@ -158,5 +158,5 @@
     <menuitem
             parent="account.menu_finance_payables"
             action="action_payment_instruction_bill"
-            id="menu_payment_instruction_bill" sequence="40"/>
+            id="menu_payment_instruction_bill" sequence="140"/>
 </odoo>
