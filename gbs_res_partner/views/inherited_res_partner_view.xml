@@ -75,7 +75,7 @@
                 <field name="contact_person"/>
                 <field name="designation_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
             </xpath>
-            <xpath expr="//field[@name='tin']" position="after">
+            <xpath expr="//field[@name='lang']" position="after">
                 <field name="nid"/>
                 <field name="maker_id" invisible="1"/>
                 <field name="approver_id" invisible="1"/>

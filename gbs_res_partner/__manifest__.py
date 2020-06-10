@@ -11,7 +11,7 @@
         "base",
         'mail',
         'account',
-        'base_vat_bd',
+        # 'base_vat_bd',
         'gbs_bd_division',
     ],
     "data": [

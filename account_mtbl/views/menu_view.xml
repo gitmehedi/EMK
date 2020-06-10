@@ -121,9 +121,9 @@
         <field name="action" eval="False"/>
     </record>
 
-    <record id="payment.root_payment_menu" model="ir.ui.menu">
-        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
-    </record>
+<!--    <record id="payment.root_payment_menu" model="ir.ui.menu">-->
+<!--        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>-->
+<!--    </record>-->
 
     <record id="account.account_management_menu" model="ir.ui.menu">
         <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
