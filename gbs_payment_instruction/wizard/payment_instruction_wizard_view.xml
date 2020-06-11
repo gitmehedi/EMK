@@ -8,8 +8,16 @@
                 <group>
                     <group>
                         <field name="payment_type" invisible="1"/>
+                        <field name="advance_type" invisible="1"/>
                         <field name="invoice_id" attrs="{'invisible': [('payment_type', '!=', 'invoice')]}"/>
-                        <field name="advance_id" attrs="{'invisible': [('payment_type', '!=', 'advance')]}"/>
+                        <!--<label for="advance_id" string="Advance" attrs="{'invisible': [('advance_type', '=', 'multi')]}"/>-->
+                        <!--<label for="advance_id" string="Rent" attrs="{'invisible': [('advance_type', '=', 'single')]}"/>-->
+                        <field name="advance_id" string="Advance"
+                               attrs="{'invisible': ['|', ('advance_type', '=', 'multi'), ('payment_type', '!=', 'advance')]}"/>
+                        <field name="advance_id" string="Rent"
+                               attrs="{'invisible': ['|', ('advance_type', '=', 'single'), ('payment_type', '!=', 'advance')]}"/>
+                        <field name="security_return_id" string="Security Return"
+                               attrs="{'invisible': [('payment_type', '!=', 'security_return')]}"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="narration"/>

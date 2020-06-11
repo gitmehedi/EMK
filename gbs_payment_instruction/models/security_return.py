@@ -3,10 +3,10 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class VendorAdvance(models.Model):
-    _name = 'vendor.advance'
-    _inherit = ['vendor.advance', 'ir.needaction_mixin']
+    _name = 'vendor.security.return'
+    _inherit = ['vendor.security.return', 'ir.needaction_mixin']
 
-    payment_line_ids = fields.One2many('payment.instruction', 'advance_id', string='Payment')
+    payment_line_ids = fields.One2many('payment.instruction', 'security_return_id', string='Payment')
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
     total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
@@ -23,12 +23,12 @@ class VendorAdvance(models.Model):
             advance.total_payment_approved = sum(
                 line.amount for line in advance.payment_line_ids if line.state in ['approved'])
 
-    @api.depends('payable_to_supplier', 'total_payment_amount')
+    @api.depends('amount', 'total_payment_amount')
     def _compute_payment_btn_visible(self):
         for record in self:
             if record.state == 'approve':
-                if record.payable_to_supplier and record.total_payment_amount \
-                        and record.payable_to_supplier <= record.total_payment_amount:
+                if record.amount and record.total_payment_amount \
+                        and record.amount <= record.total_payment_amount:
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
@@ -43,6 +43,7 @@ class VendorAdvance(models.Model):
         # if self.residual <= sum(line.amount for line in self.payment_line_ids if line.state == 'draft'):
         #     raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
         #                             ' no new payment instruction can possible!'))
+        ou_id = [deposit.operating_unit_id.id for deposit in self.vsd_ids][0]
 
         res = self.env.ref('gbs_payment_instruction.view_bill_payment_instruction_wizard')
 
@@ -56,13 +57,13 @@ class VendorAdvance(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': self.payable_to_supplier - self.total_payment_amount or 0.0,
+                'amount': self.amount - self.total_payment_amount or 0.0,
                 'currency_id': self.currency_id.id or False,
-                'op_unit': self.operating_unit_id.id or False,
+                'op_unit': ou_id or False,
                 'partner_id': self.partner_id.id or False,
-                'debit_acc': self.partner_id.property_account_payable_id.id,
-                'advance_id': self.id,
-                'payment_type': 'advance'
+                'debit_acc': self.company_id.security_deposit_account_id.id,
+                'security_return_id': self.id,
+                'payment_type': 'security_return'
                 # 'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[
                 #     0].sub_operating_unit_id else None,
             }
