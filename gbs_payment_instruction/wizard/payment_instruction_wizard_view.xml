@@ -16,6 +16,8 @@
                                attrs="{'invisible': ['|', ('advance_type', '=', 'multi'), ('payment_type', '!=', 'advance')]}"/>
                         <field name="advance_id" string="Rent"
                                attrs="{'invisible': ['|', ('advance_type', '=', 'single'), ('payment_type', '!=', 'advance')]}"/>
+                        <field name="security_return_id" string="Security Return"
+                               attrs="{'invisible': [('payment_type', '!=', 'security_return')]}"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="narration"/>

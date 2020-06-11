@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="inherit_advance_payment_instruction" model="ir.ui.view">
         <field name="name">inherit.vendor.advance.payment.instruction</field>
@@ -11,7 +11,7 @@
                         attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
                         string="Payment Instruction" class="oe_highlight"/>
             </xpath>
-            <xpath expr="//notebook" position="inside">
+            <xpath expr="//notebook/page[1]" position="after">
                 <page string="Payments" class="oe_page_title"
                       attrs="{'invisible': [('payment_line_ids', '=', [])]}">
                     <field name="payment_line_ids" string="Payments" readonly="1">

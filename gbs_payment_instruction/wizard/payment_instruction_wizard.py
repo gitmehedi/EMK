@@ -9,6 +9,9 @@ class BillPaymentInstructionWizard(models.TransientModel):
                                  string="Invoice", copy=False, readonly=True)
     advance_id = fields.Many2one('vendor.advance', default=lambda self: self.env.context.get('advance_id'),
                                    string="Advance", copy=False, readonly=True)
+    security_return_id = fields.Many2one('vendor.security.return',
+                                         default=lambda self: self.env.context.get('security_return_id'),
+                                         string='Security Return', copy=False)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.context.get('currency_id'))
     amount = fields.Float(string='Amount', required=True, default=lambda self: self.env.context.get('amount'))
@@ -64,8 +67,9 @@ class BillPaymentInstructionWizard(models.TransientModel):
             credit_sou = self.credit_sub_operating_unit_id.id if self.credit_sub_operating_unit_id else None
 
         self.env['payment.instruction'].create({
-            'invoice_id': self.invoice_id.id,
-            'advance_id': self.advance_id.id,
+            'invoice_id': self.invoice_id.id or False,
+            'advance_id': self.advance_id.id or False,
+            'security_return_id': self.security_return_id.id or False,
             'instruction_date': self.instruction_date,
             'amount': self.amount,
             'currency_id': self.currency_id.id,

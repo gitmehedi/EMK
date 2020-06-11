@@ -33,6 +33,7 @@ class PaymentInstruction(models.Model):
     narration = fields.Text(string="Narration", size=30)
     invoice_id = fields.Many2one('account.invoice', string="Vendor Bill", copy=False)
     advance_id = fields.Many2one('vendor.advance', string="Advance", copy=False)
+    security_return_id = fields.Many2one('vendor.security.return', string='Security Return', copy=False)
 
 
     @api.model
