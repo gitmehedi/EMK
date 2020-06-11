@@ -9,7 +9,7 @@ class StockGateOut(models.Model):
     _order = 'date desc, name desc, id desc'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    create_by = fields.Char('Created By', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
+    create_by = fields.Char('Delivered By', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
     received = fields.Char('To Whom Received', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
     challan_bill_no = fields.Char('Challan Bill No', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
     truck_no = fields.Char('Truck/Vehicle No', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
@@ -37,15 +37,9 @@ class StockGateOut(models.Model):
             if len(bill_no) > 1:
                 raise UserError(_('[Unique Error] Challan Bill must be unique for %s !')% self.partner_id.name)
 
-    @api.constrains('shipping_line_ids')
-    def _check_shipping_line_ids(self):
-        if not self.shipping_line_ids:
-            raise UserError(_('You cannot save %s which has no line.' % (self.name)))
-
     @api.multi
     def action_confirm(self):
         self.state = 'confirm'
-        self.shipping_line_ids.write({'state': 'confirm'})
 
     @api.multi
     def action_get_stock_picking(self):
@@ -55,7 +49,6 @@ class StockGateOut(models.Model):
     @api.multi
     def action_draft(self):
         self.state = 'draft'
-        self.shipping_line_ids.write({'state': 'draft'})
 
     @api.multi
     def unlink(self):
