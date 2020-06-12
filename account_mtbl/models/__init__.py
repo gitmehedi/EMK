@@ -12,3 +12,4 @@ from . import inherit_product_product
 from . import account_analytic_account
 from . import inherit_res_partner_bank
 from . import inherit_res_currency_rate
+from . import inherit_vendor_advance

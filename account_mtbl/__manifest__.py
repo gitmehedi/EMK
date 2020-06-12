@@ -64,6 +64,7 @@
         'views/account_analytic_account_view.xml',
         'views/res_users_preferences_view.xml',
         'views/inherit_res_currency_rate_view.xml',
+        'views/inherit_vendor_advance_view.xml'
     ],
     'installable': True,
     'application': True,

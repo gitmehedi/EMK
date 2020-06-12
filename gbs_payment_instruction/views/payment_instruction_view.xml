@@ -8,11 +8,11 @@
             <form string="Payment Instruction" create="false" delete="false" edit="false">
                 <header>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" states="draft" groups="gbs_vendor_bill.payment_approver"/>
+                            class="oe_highlight" states="draft"/>
                     <button name="action_reject" string="Reject" type="object"
-                            states="draft" groups="gbs_vendor_bill.payment_approver"/>
+                            states="draft"/>
                     <button name="action_reset" string="Reset" type="object"
-                            states="cancel" groups="gbs_vendor_bill.payment_approver"/>
+                            states="cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
                 </header>
                 <sheet>
@@ -50,7 +50,7 @@
                     <group string="Payment To">
                         <group>
                             <field name="vendor_bank_acc"
-                                   attrs="{'invisible':[('default_credit_account_id','!=',False)]}"/>
+                                   attrs="{'invisible':[('default_credit_account_id','!=',False)]}" readonly="1"/>
                             <field name="default_credit_account_id"
                                    attrs="{'invisible':[('vendor_bank_acc','!=',False)]}"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>

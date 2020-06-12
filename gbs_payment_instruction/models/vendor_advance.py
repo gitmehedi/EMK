@@ -30,6 +30,8 @@ class VendorAdvance(models.Model):
                 if record.payable_to_supplier and record.total_payment_amount \
                         and record.payable_to_supplier <= record.total_payment_amount:
                     record.payment_btn_visible = False
+                elif record.payable_to_supplier <= 0.0:
+                    record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
             else:
@@ -62,8 +64,7 @@ class VendorAdvance(models.Model):
                 'partner_id': self.partner_id.id or False,
                 'debit_acc': self.partner_id.property_account_payable_id.id,
                 'advance_id': self.id,
-                'payment_type': 'advance'
-                # 'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[
-                #     0].sub_operating_unit_id else None,
+                'payment_type': 'advance',
+                'sub_op_unit': self.sub_operating_unit_id.id or False
             }
         }

@@ -8,7 +8,7 @@
             <xpath expr="//button[@name='action_validate']" position="after">
                 <field name="payment_btn_visible" invisible="1"/>
                 <button name="action_payment_instruction" type="object"
-                        attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                        attrs="{'invisible': ['|', ('payment_btn_visible', '=', False), ('active', '=', False)]}"
                         string="Payment Instruction" class="oe_highlight"/>
             </xpath>
             <xpath expr="//notebook/page[1]" position="after">
@@ -66,7 +66,7 @@
             <xpath expr="//button[@name='action_validate']" position="after">
                 <field name="payment_btn_visible" invisible="1"/>
                 <button name="action_payment_instruction" type="object"
-                        attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                        attrs="{'invisible': ['|', ('payment_btn_visible', '=', False), ('active', '=', False)]}"
                         string="Payment Instruction" class="oe_highlight"/>
             </xpath>
             <xpath expr="//notebook/page[1]" position="after">

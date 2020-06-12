@@ -12,12 +12,12 @@
                         <field name="invoice_id" attrs="{'invisible': [('payment_type', '!=', 'invoice')]}"/>
                         <!--<label for="advance_id" string="Advance" attrs="{'invisible': [('advance_type', '=', 'multi')]}"/>-->
                         <!--<label for="advance_id" string="Rent" attrs="{'invisible': [('advance_type', '=', 'single')]}"/>-->
-                        <field name="advance_id" string="Advance"
-                               attrs="{'invisible': ['|', ('advance_type', '=', 'multi'), ('payment_type', '!=', 'advance')]}"/>
-                        <field name="advance_id" string="Rent"
-                               attrs="{'invisible': ['|', ('advance_type', '=', 'single'), ('payment_type', '!=', 'advance')]}"/>
+                        <field name="advance_id" string="Advance" readonly="1"
+                               attrs="{'invisible': [('payment_type', '!=', 'advance')]}"/>
+                        <!--<field name="advance_id" string="Rent"-->
+                               <!--attrs="{'invisible': ['|', ('advance_type', '=', 'single'), ('payment_type', '!=', 'advance')]}"/>-->
                         <field name="security_return_id" string="Security Return"
-                               attrs="{'invisible': [('payment_type', '!=', 'security_return')]}"/>
+                               attrs="{'invisible': [('payment_type', '!=', 'security_return')]}" readonly="1"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="narration"/>
@@ -41,7 +41,7 @@
                                attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
                                options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                         <field name="credit_sub_operating_unit_id"
-                               attrs="{'invisible':[('type','=','casa')]}"
+                               attrs="{'invisible':[('type','=','casa')], 'required':[('type','=','credit')]}"
                                options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                     </group>
                 </group>
