@@ -68,3 +68,4 @@ class AccountMoveLine(models.Model):
     acquiring_channel_id = fields.Many2one('acquiring.channel', string="AC")
     servicing_channel_id = fields.Many2one('servicing.channel', string="SC")
     operating_unit_id = fields.Many2one(string='Branch')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True)
