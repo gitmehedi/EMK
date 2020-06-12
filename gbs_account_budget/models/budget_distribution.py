@@ -205,7 +205,7 @@ class BudgetDistributionLine(models.Model):
 
     budget_distribution_id = fields.Many2one('budget.distribution',string='Budget Distribution')
     operating_unit_id = fields.Many2one('operating.unit',required=True, string='Branch')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True)
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount',compute='_compute_practical_amount')
     remaining_amount = fields.Float(string='Remaining/Exceed Amount',compute='_compute_remaining_amount')
@@ -293,8 +293,7 @@ class BudgetDistributionLine(models.Model):
 
 
     def _compute_active(self):
-        if self.budget_distribution_id and \
-                        self.budget_distribution_id.active==False:
+        if self.budget_distribution_id and self.budget_distribution_id.active==False:
             self.active = False
         else:
             self.active = True
@@ -305,21 +304,3 @@ class BudgetDistributionLine(models.Model):
         if self.planned_amount < 0:
             raise UserError('You can\'t give negative value!!!')
 
-
-            # @api.onchange('account_id')
-            # def onchange_account_id(self):
-            #     if self.account_id:
-            #         self.branch_budget_lines = []
-            #         self.cost_centre_budget_lines = []
-            #         branch_vals = []
-            #         cost_vals =  []
-            #
-            #         op_pool = self.env['operating.unit'].search([])
-            #         for obj in op_pool:
-            #             branch_vals.append((0, 0, {'operating_unit_id': obj.id,}))
-            #         self.branch_budget_lines = branch_vals
-            #
-            #         cost_pool = self.env['account.analytic.account'].search([])
-            #         for obj in cost_pool:
-            #             cost_vals.append((0, 0, {'analytic_account_id': obj.id,}))
-            #         self.cost_centre_budget_lines = cost_vals

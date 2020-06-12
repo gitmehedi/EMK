@@ -63,7 +63,7 @@ class AccountAssetAsset(models.Model):
     accumulated_value = fields.Float(string='Accumulated Depr.', compute="_compute_accumulated_value",
                                      track_visibility='onchange', store=True)
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
-    cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
+    cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True,
                                      track_visibility='onchange', readonly=True,
                                      states={'draft': [('readonly', False)]})
     note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
