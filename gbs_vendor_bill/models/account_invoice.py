@@ -45,12 +45,13 @@ class AccountInvoice(models.Model):
                                      store=True, readonly=True, track_visibility='onchange', copy=False)
     total_amount_with_vat = fields.Float('Total', compute='_compute_total_amount_with_vat',
                                          store=True, readonly=True, track_visibility='onchange', copy=False)
-    date_invoice = fields.Date(default=fields.Datetime.now,states={'draft': [('readonly', True)]})
-    total_bill_payable = fields.Float(string='Net Payable', compute='_computer_bill_payable',store=True)
-    vendor_account_id = fields.Many2one('account.account',string='Account', related='partner_id.property_account_payable_id',store=True)
+    date_invoice = fields.Date(default=fields.Datetime.now, states={'draft': [('readonly', True)]})
+    total_bill_payable = fields.Float(string='Net Payable', compute='_computer_bill_payable', store=True)
+    vendor_account_id = fields.Many2one('account.account', string='Account',
+                                        related='partner_id.property_account_payable_id', store=True)
 
     @api.one
-    @api.depends('residual','total_payment_amount','total_payment_approved')
+    @api.depends('residual', 'total_payment_amount', 'total_payment_approved')
     def _computer_bill_payable(self):
         self.total_bill_payable = self.residual + self.total_payment_approved
 
@@ -290,7 +291,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        if self.state=='draft':
+        if self.state == 'draft':
             if vals.get('reference'):
                 vals.update({'reference': vals.get('reference').strip()})
             return super(AccountInvoice, self).write(vals)
@@ -334,13 +335,13 @@ class AccountInvoiceLine(models.Model):
             if self.invoice_id.vat_selection == 'mushok':
                 if self.invoice_line_tax_ids[0].mushok_amount > 0.0:
                     self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
+                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].mushok_amount)
                 else:
                     self.mushok_vds_amount = 0
             elif self.invoice_id.vat_selection == 'vds_authority':
                 if self.invoice_line_tax_ids[0].vds_amount > 0.0:
                     self.mushok_vds_amount = taxes['taxes'][0]['amount'] / (
-                        self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
+                            self.invoice_line_tax_ids[0].amount / self.invoice_line_tax_ids[0].vds_amount)
                 else:
                     self.mushok_vds_amount = 0
             else:
@@ -355,7 +356,7 @@ class AccountInvoiceLine(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
     quantity = fields.Float(digits=0)
     invoice_line_tax_ids = fields.Many2many(string='VAT')
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price', store=True, readonly=True, copy=False)
@@ -375,15 +376,6 @@ class AccountInvoiceLine(models.Model):
     def _check_supplier_taxes_id(self):
         if self.invoice_line_tax_ids and len(self.invoice_line_tax_ids) > 1:
             raise Warning('You can select one VAT!')
-
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        vals = super(AccountInvoiceLine, self)._onchange_product_id()
-        self.sub_operating_unit_id = []
-        if self.product_id:
-            self.asset_name = self.product_id.name
-            vals['domain']['sub_operating_unit_id'] = [('product_id', '=', self.product_id.id)]
-        return vals
 
 
 class AccountInvoiceTax(models.Model):

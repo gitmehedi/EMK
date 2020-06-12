@@ -18,7 +18,7 @@ class AccountMove(models.Model):
                                         states={'posted': [('readonly', True)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
     is_cbs = fields.Boolean(default=False, help='CBS data always sync with OGL using GLIF.')
-    is_sync = fields.Boolean(default=False, copy=False,help='OGL continuously send data to CBS for journal sync.')
+    is_sync = fields.Boolean(default=False, copy=False, help='OGL continuously send data to CBS for journal sync.')
     is_cr = fields.Boolean(default=False)
     user_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     total_debit = fields.Char(compute='_compute_sum', string="Total Debit")
@@ -63,7 +63,7 @@ class AccountMoveLine(models.Model):
 
     name = fields.Char(string="Narration")
     account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)])
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string="Sequence")
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string="Sequence", required=True)
     segment_id = fields.Many2one('segment', string="Segment")
     acquiring_channel_id = fields.Many2one('acquiring.channel', string="AC")
     servicing_channel_id = fields.Many2one('servicing.channel', string="SC")

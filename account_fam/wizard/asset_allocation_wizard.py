@@ -34,14 +34,13 @@ class AssetAllocationWizard(models.TransientModel):
         else:
             return False
 
-
     asset_user = fields.Char("Asset User")
     date = fields.Date(string='Allocation/Transfer Date', required=True, default=default_date)
     warranty_date = fields.Date(string='Warranty Date')
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre')
     is_allocate = fields.Boolean(default=default_status)
 
@@ -132,9 +131,9 @@ class AssetAllocationWizard(models.TransientModel):
                         date = self.date.split('-')
                         count = asset.asset_type_id.asset_count + 1
                         code = '{0}-{1}-MTB-{2}-{3}'.format(date[0],
-                                                                date[1].zfill(2),
-                                                                asset.asset_type_id.code,
-                                                                str(count).zfill(5))
+                                                            date[1].zfill(2),
+                                                            asset.asset_type_id.code,
+                                                            str(count).zfill(5))
                         asset.write({'asset_seq': code})
                         asset.asset_type_id.write({'asset_count': count})
                     else:
