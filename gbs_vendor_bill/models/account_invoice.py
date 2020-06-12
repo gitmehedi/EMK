@@ -362,20 +362,17 @@ class AccountInvoiceLine(models.Model):
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price', store=True, readonly=True, copy=False)
     asset_name = fields.Char(string='Asset Name')
 
-    # @api.onchange('operating_unit_id')
-    # def _onchange_operating_unit_id(self):
-    #     for line in self:
-    #         line.sub_operating_unit_id = []
-    #         sub_operating_unit_ids = self.env['sub.operating.unit'].search([
-    #             ('operating_unit_id', '=', self.operating_unit_id.id)]).ids
-    #         return {'domain': {
-    #             'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
-    #         }}
-
     @api.constrains('invoice_line_tax_ids')
     def _check_supplier_taxes_id(self):
         if self.invoice_line_tax_ids and len(self.invoice_line_tax_ids) > 1:
             raise Warning('You can select one VAT!')
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        vals = super(AccountInvoiceLine, self)._onchange_product_id()
+        if self.product_id:
+            self.asset_name = self.product_id.name
+        return vals
 
 
 class AccountInvoiceTax(models.Model):
