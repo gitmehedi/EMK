@@ -4,7 +4,7 @@
         <field name="name">sub.operating.unit.form</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <form string="Sub Operating Unit" edit="0" duplicate="0">
+            <form string="Sequence" edit="0" duplicate="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
                             groups="mtbl_access.group_mtbl_sys_admin"/>
@@ -61,7 +61,7 @@
         <field name="name">sub.operating.unit.tree</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <tree string="Sub Operating Unit" decoration-info="state=='draft'" decoration-success="state=='approve'"
+            <tree string="Sequence" decoration-info="state=='draft'" decoration-success="state=='approve'"
                   decoration-danger="state=='reject'"
                   decoration-bf="state in ('approve',)">
                 <field name="name"/>
@@ -77,8 +77,8 @@
         <field name="name">sub.operating.unit.search</field>
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
-            <search string="Search Sub Operating Unit">
-                <field name="name" string="Sub Operating Unit"/>
+            <search string="Search Sequence">
+                <field name="name" string="Sequence"/>
                 <field name="pending" string="Pending"/>
                 <field name="code" string="Code"/>
                 <!--<field name="operating_unit_id" string="Branch"/>-->
@@ -98,7 +98,7 @@
     </record>
 
     <record id="action_sub_operating_unit_tree" model="ir.actions.act_window">
-        <field name="name">Sub Operating Unit</field>
+        <field name="name">Sequence</field>
         <field name="res_model">sub.operating.unit</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -108,7 +108,7 @@
         <field name="search_view_id" ref="view_sub_operating_unit_search"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to start a new Sub Operating Unit.
+                Click to start a new Sequence.
             </p>
         </field>
     </record>

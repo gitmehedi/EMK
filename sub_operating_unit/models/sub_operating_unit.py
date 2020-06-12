@@ -9,7 +9,7 @@ class SubOperatingUnit(models.Model):
     _name = 'sub.operating.unit'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc,state asc'
-    _description = 'Sub Operating Unit'
+    _description = 'Sequence'
 
     name = fields.Char('Name', required=True, size=200, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
@@ -161,7 +161,7 @@ class SubOperatingUnit(models.Model):
 
 class HistorySubOperatingUnit(models.Model):
     _name = 'history.sub.operating.unit'
-    _description = 'History Sub Operating Unit'
+    _description = 'History Sequence'
     _order = 'id desc'
 
     change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})

@@ -57,7 +57,7 @@ class AccountAssetAsset(models.Model):
                                   states={'draft': [('readonly', False)]})
     current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
                                         track_visibility='onchange')
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence',
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
     accumulated_value = fields.Float(string='Accumulated Depr.', compute="_compute_accumulated_value",

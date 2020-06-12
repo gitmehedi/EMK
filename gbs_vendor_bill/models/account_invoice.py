@@ -15,7 +15,7 @@ class AccountInvoice(models.Model):
                                         operating_unit_default_get(self._uid),
                                         readonly=True, required=True,
                                         states={'draft': [('readonly', False)]})
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sequence',
                                             readonly=True, states={'draft': [('readonly', False)]})
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     security_deposit = fields.Float('Security Deposit', track_visibility='onchange', copy=False,
@@ -355,7 +355,7 @@ class AccountInvoiceLine(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence')
     quantity = fields.Float(digits=0)
     invoice_line_tax_ids = fields.Many2many(string='VAT')
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price', store=True, readonly=True, copy=False)

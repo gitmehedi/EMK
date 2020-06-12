@@ -41,7 +41,7 @@ class AssetAllocationWizard(models.TransientModel):
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence')
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre')
     is_allocate = fields.Boolean(default=default_status)
 
