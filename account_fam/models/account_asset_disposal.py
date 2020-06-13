@@ -18,6 +18,10 @@ class AccountAssetDisposal(models.Model):
     total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
     total_depr_amount = fields.Float(string='Total Accumulated Depr.', compute='_compute_total_depr_amount',
                                      track_visibility='onchange')
+    narration = fields.Char(string="Narration", required=True, readonly=True,
+                            states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    narration_gl = fields.Char(string="Narration Gain/Loss", required=True, readonly=True,
+                               states={'draft': [('readonly', False)]}, track_visibility='onchange')
     request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now,
                                    readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
     approve_date = fields.Datetime(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
@@ -88,7 +92,7 @@ class AccountAssetDisposal(models.Model):
         current_currency = asset.currency_id
 
         credit = {
-            'name': asset.display_name,
+            'name': self.narration,
             'account_id': asset.asset_type_id.account_asset_id.id,
             'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
             'debit': 0.0,
@@ -100,7 +104,7 @@ class AccountAssetDisposal(models.Model):
         }
 
         debit = {
-            'name': asset.display_name,
+            'name': self.narration,
             'account_id': asset.asset_type_id.account_depreciation_id.id,
             'credit': 0.0,
             'debit': asset.accumulated_value if float_compare(asset.accumulated_value, 0.0,
@@ -113,7 +117,7 @@ class AccountAssetDisposal(models.Model):
         }
 
         debit2 = {
-            'name': asset.display_name,
+            'name': self.narration_gl,
             'account_id': asset.asset_type_id.account_asset_loss_id.id,
             'credit': 0.0,
             'debit': asset.value_residual if float_compare(asset.value_residual, 0.0,
@@ -165,5 +169,5 @@ class AccountAssetDisposalLine(models.Model):
         if self.asset_id:
             depreciated_value = sum([val.amount for val in self.asset_id.depreciation_line_ids])
             self.depreciation_value = depreciated_value
-            self.asset_value = self.asset_id.value_residual - depreciated_value
+            self.asset_value = self.asset_id.value - depreciated_value
 

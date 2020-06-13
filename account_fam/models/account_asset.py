@@ -317,9 +317,9 @@ class AccountAssetAsset(models.Model):
 
         company_id = self.env.user.company_id.id
         opu_id = self.env.user.default_operating_unit_id.id
-        narr_date = datetime.strptime(date,DATE_FORMAT).strftime(' - %b, %Y')
+        narr_date = datetime.strptime(date, DATE_FORMAT).strftime(' - %b, %Y')
         self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s,'%s')""" % (
-            date, self.env.uid, journal_id.id, opu_id, company_id,narr_date));
+            date, self.env.uid, journal_id.id, opu_id, company_id, narr_date));
         debit, credit = 0, 0
         for val in self.env.cr.fetchall():
             move = self.env['account.move'].search([('id', '=', val[0])])
@@ -381,7 +381,7 @@ class AccountAssetAsset(models.Model):
                     if not rec:
                         depreciation = asset.depreciation_line_ids.create(vals)
                         if depreciation:
-                            move = asset.create_move(depreciation,date)
+                            move = asset.create_move(depreciation, date)
                             if date.month == 12 and date.day == 31 and asset.method == 'degressive':
                                 asset.write({'lst_depr_date': date.date(),
                                              'lst_depr_amount': depr_amount,
@@ -394,7 +394,7 @@ class AccountAssetAsset(models.Model):
                             return move
 
     @api.multi
-    def create_move(self, line,date):
+    def create_move(self, line, date):
         created_moves = self.env['account.move']
         prec = self.env['decimal.precision'].precision_get('Account')
 
@@ -496,7 +496,6 @@ class AccountAssetAsset(models.Model):
                 else:
                     no_of_days = 0
 
-
                 vals = {
                     'amount': asset.value_residual,
                     'asset_id': self.id,
@@ -511,11 +510,10 @@ class AccountAssetAsset(models.Model):
 
                 depreciation = asset.depreciation_line_ids.create(vals)
                 if depreciation:
-                    if asset.create_move(depreciation):
+                    if asset.create_move(depreciation, date):
                         asset.write({'lst_depr_date': curr_depr_date.date(),
                                      'state': 'close'})
                         return True
-
 
     def date_depr_format(self, date):
         no_of_days = calendar.monthrange(date.year, date.month)[1]
