@@ -50,7 +50,7 @@ class ServerFileProcess(models.Model):
     dest_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
     type = fields.Selection([('glif', 'GLIF Process'),
                              ('sys_dt', 'Date Process'),
-                             ('batch', 'MDC Process'),
+                             ('mdc', 'MDC Process'),
                              ('mdc_report', 'MDC Report Process')],
                             string='Type', required=True)
     method = fields.Selection(selection=[("local", "Local Location"),
@@ -227,7 +227,6 @@ class ServerFileProcess(models.Model):
 
             files = filter(lambda x: x.endswith('.txt'), os.listdir(rec.source_path))
             for file in files:
-
                 if os.path.splitext(file)[1] in ['.txt']:
                     source_path = os.path.join(rec.source_path, file)
                     dest_path = os.path.join(rec.dest_path, file)
@@ -245,6 +244,9 @@ class ServerFileProcess(models.Model):
                                                                     'move_id': journal.id})
 
         for rec in self.filtered(lambda r: r.method == "sftp"):
+            report_gen = self.env['generate.cbs.journal.success'].search(
+                [('has_report', '=', False), ('state', '=', 'mdc')])
+            mdc_rec = {rec.name: rec for rec in report_gen}
             with self.sftp_connection('source') as source:
                 with self.sftp_connection('destination') as destination:
                     dirs = [rec.folder, rec.source_path, rec.dest_path]
@@ -256,22 +258,21 @@ class ServerFileProcess(models.Model):
                         local_path = os.path.join(rec.folder, file)
 
                         source.get(source_path, localpath=local_path, preserve_mtime=True)
-                        start_date = fields.Datetime.now()
-                        journal = rec.create_journal(file, {'source': source, 'dest': destination})
-                        stop_date = fields.Datetime.now()
-                        if journal:
-                            if destination.put(local_path, dest_path):
-                                self.env['server.file.success'].create({'name': file,
-                                                                        'start_date': start_date,
-                                                                        'stop_date': stop_date,
-                                                                        'file_name': file,
-                                                                        'move_id': journal.id})
-                                if not source.unlink(source_path):
+                        process_time = fields.Datetime.now()
+                        with open(local_path) as f:
+                            content = base64.b64encode(f.read())
+                            encode = content if len(content) > 0 else ' '
+                        if file in mdc_rec:
+                            report = mdc_rec[file].write({'mdc_report_file': encode,
+                                                          'mdc_report_process_time': process_time,
+                                                          'has_report': True,
+                                                          'state': 'report',
+                                                          })
+                            if report:
+                                if destination.put(local_path, dest_path):
                                     os.remove(local_path)
-                                else:
-                                    continue
-                            else:
-                                continue
+                                    source.unlink(source_path)
+
                         else:
                             os.remove(local_path)
 
@@ -313,7 +314,7 @@ class ServerFileProcess(models.Model):
             return move_ids if os.path.exists(file_path) else False
 
         record = self.env['server.file.process'].search([('method', '=', 'dest_sftp'),
-                                                         ('type', '=', 'batch'),
+                                                         ('type', '=', 'mdc'),
                                                          ('status', '=', True)], limit=1)
         for rec in record:
             with rec.sftp_connection('destination') as destination:
@@ -948,21 +949,24 @@ class ServerFileSuccess(models.Model):
 
 class GenerateCBSJournalSuccess(models.Model):
     _name = 'generate.cbs.journal.success'
-    _description = "CBS Batch Process Success"
+    _description = "MDC Process"
     _inherit = ["mail.thread", "ir.needaction_mixin"]
     _order = 'date desc'
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
-    date = fields.Datetime(string='Date', default=fields.Datetime.now, required=True)
+    date = fields.Datetime(string='Process Time', default=fields.Datetime.now, required=True)
     start_date = fields.Datetime(string='Start Datetime', required=True)
     stop_date = fields.Datetime(string='Stop Datetime', required=True)
     file_name = fields.Char(string='File Path', required=True)
-    upload_file = fields.Binary(string="Generated File", attachment=True)
-    time = fields.Text(string='Time', compute="_compute_time")
+    upload_file = fields.Binary(string="MDC File", attachment=True)
+    time = fields.Text(string='Duration', compute="_compute_time")
     status = fields.Boolean(default=False, string='Status')
-    journal_count = fields.Char(string="Total Journals", compute='_compute_journal', store=True)
+    journal_count = fields.Char(string="No of Journals", compute='_compute_journal', store=True)
     line_ids = fields.One2many('cbs.journal.line', 'line_id', string="Journal")
-    state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
+    state = fields.Selection([('mdc', 'MDC'), ('report', ' MDC Report')], default='mdc')
+    mdc_report_file = fields.Binary(string="Report File", attachment=True)
+    mdc_report_process_time = fields.Datetime(string='Process Time')
+    has_report = fields.Boolean(default=False, attachment=True)
 
     @api.depends('start_date', 'stop_date')
     def _compute_time(self):

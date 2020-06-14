@@ -91,6 +91,7 @@
             <tree string="Backups" decoration-success="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
+                <field name="type" />
                 <field name="source_sftp_host" string="Source Middleware"/>
                 <field name="source_path" string="Source Middleware Path"/>
                 <field name="dest_sftp_host" string="Destination Middleware"/>

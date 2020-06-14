@@ -63,9 +63,9 @@ class AccountMoveLine(models.Model):
 
     name = fields.Char(string="Narration")
     account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)])
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string="Sequence", required=True)
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string="Sequence")
     segment_id = fields.Many2one('segment', string="Segment")
     acquiring_channel_id = fields.Many2one('acquiring.channel', string="AC")
     servicing_channel_id = fields.Many2one('servicing.channel', string="SC")
     operating_unit_id = fields.Many2one(string='Branch')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
