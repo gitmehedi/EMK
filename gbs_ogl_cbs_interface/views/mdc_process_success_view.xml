@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="ir.ui.view" id="view_generate_cbs_journal_success_form">
-        <field name="name">CBS Batch Success</field>
+        <field name="name">MDC Success</field>
         <field name="model">generate.cbs.journal.success</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
@@ -44,7 +44,7 @@
     </record>
 
     <record model="ir.ui.view" id="view_generate_cbs_journal_success_tree">
-        <field name="name">CBS Batch Success</field>
+        <field name="name">MDC Success</field>
         <field name="model">generate.cbs.journal.success</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
@@ -63,7 +63,7 @@
     </record>
 
     <record model="ir.ui.view" id="view_generate_cbs_journal_success_search">
-        <field name="name">CBS Batch Success</field>
+        <field name="name">MDC Success</field>
         <field name="model">generate.cbs.journal.success</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
@@ -77,7 +77,7 @@
     </record>
 
     <record id="action_generate_cbs_journal_success_form" model="ir.actions.act_window">
-        <field name="name">CBS Batch Success</field>
+        <field name="name">MDC Success</field>
         <field name="res_model">generate.cbs.journal.success</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
