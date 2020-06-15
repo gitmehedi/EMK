@@ -19,11 +19,15 @@
                 <xpath expr="//field[@name='line_ids']/tree//field[@name='operating_unit_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>>
                 </xpath>
+                <xpath expr="//field[@name='line_ids']/tree//field[@name='analytic_account_id']" position="before">
+                    <field name="sub_operating_unit_id"
+                           options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
+                </xpath>
                 <xpath expr="//field[@name='line_ids']/tree//field[@name='analytic_account_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>>
                     <attribute name="string">Cost Centre</attribute>
                 </xpath>
-                <xpath expr="//sheet/notebook/page/field/tree/field[@name='name']" position="after">
+                <xpath expr="//field[@name='line_ids']/tree//field[@name='analytic_account_id']" position="after">
                     <field name="segment_id" options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>
                     <field name="acquiring_channel_id"
                            options="{'no_create': True,'no_create_edit':True,'no_open':True}"/>

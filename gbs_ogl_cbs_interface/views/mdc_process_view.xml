@@ -68,11 +68,9 @@
             <tree string="CBS Batch Config" decoration-success="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
-                <field name='folder'/>
-                <field name='method'/>
-                <field name="source_sftp_host"/>
+                <field name="source_sftp_host" string="Source IP"/>
                 <field name="source_path"/>
-                <field name="dest_sftp_host"/>
+                <field name="dest_sftp_host" string="Destination IP"/>
                 <field name="dest_path"/>
                 <field name="status"/>
             </tree>

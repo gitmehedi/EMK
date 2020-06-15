@@ -33,7 +33,7 @@ class BranchDistributionHistoryLine(models.Model):
 
     budget_distribution_history_id = fields.Many2one('budget.distribution.history',string='Budget Distribution History')
     operating_unit_id = fields.Many2one('operating.unit',string='Branch')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True)
     planned_amount = fields.Float('Planned Amount', required=True)
     practical_amount = fields.Float(string='Practical Amount')
     theoritical_amount = fields.Float(string='Theoretical Amount')

@@ -36,19 +36,22 @@ class ServerFileProcess(models.Model):
     days_to_keep = fields.Integer(required=True, default=0, )
 
     source_path = fields.Char(string="Source Path", required=True, track_visibility='onchange')
-    source_sftp_host = fields.Char(string='SFTP Server', track_visibility='onchange')
-    source_sftp_port = fields.Integer(string="SFTP Port", default=22, track_visibility='onchange')
+    source_sftp_host = fields.Char(string='Middleware IP', track_visibility='onchange')
+    source_sftp_port = fields.Integer(string="Middleware Port", default=22, track_visibility='onchange')
     source_sftp_user = fields.Char(string='Username', track_visibility='onchange')
-    source_sftp_password = fields.Char(string="SFTP Password")
+    source_sftp_password = fields.Char(string="Password")
     source_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
 
     dest_path = fields.Char(string="Destination Path", required=True, track_visibility='onchange')
-    dest_sftp_host = fields.Char(string='SFTP Server', track_visibility='onchange')
-    dest_sftp_port = fields.Integer(string="SFTP Port", default=22, track_visibility='onchange')
+    dest_sftp_host = fields.Char(string='Middleware IP', track_visibility='onchange')
+    dest_sftp_port = fields.Integer(string="Middleware Port", default=22, track_visibility='onchange')
     dest_sftp_user = fields.Char(string='Username', track_visibility='onchange')
-    dest_sftp_password = fields.Char(string="SFTP Password")
+    dest_sftp_password = fields.Char(string="Password")
     dest_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
-    type = fields.Selection([('glif', 'GLIF Process'), ('sys_dt', 'System Date'), ('batch', 'CBS Batch')],
+    type = fields.Selection([('glif', 'GLIF Process'),
+                             ('sys_dt', 'Date Process'),
+                             ('mdc', 'MDC Process'),
+                             ('mdc_report', 'MDC Report Process')],
                             string='Type', required=True)
     method = fields.Selection(selection=[("local", "Local Location"),
                                          ("dest_sftp", "Single Middleware Location"),
@@ -128,30 +131,38 @@ class ServerFileProcess(models.Model):
     @api.model
     def glif_process(self):
         """Run all scheduled backups."""
-        integration = self.search([('type', '=', 'glif'), ('status', '=', True)], limit=1)
+        integration = self.search([('type', '=', 'glif'), ('method', '=', 'sftp'), ('status', '=', True)], limit=1)
         if not integration:
-            raise ValidationError(_("Record is not avaiable with proper configuration"))
-        return integration.glif_generate()
+            raise ValidationError(_("Record is not available with proper configuration"))
+        return integration.glif_generate_process()
 
     @api.model
     def sysdt_process(self):
-        integration = self.search([('type', '=', 'sys_dt'), ('status', '=', True)], limit=1)
+        integration = self.search([('type', '=', 'sys_dt'), ('method', '=', 'sftp'), ('status', '=', True)], limit=1)
         if not integration:
-            raise ValidationError(_("Record is not avaiable with proper configuration"))
-        return integration.sysdt_update(integration)
+            raise ValidationError(_("Record is not available with proper configuration"))
+        return integration.sysdt_import_process(integration)
 
     @api.model
-    def batch_process(self):
-        integration = self.search([('type', '=', 'batch'), ('method', '=', 'dest_sftp'), ('status', '=', True)],
+    def mdc_process(self):
+        integration = self.search([('type', '=', 'mdc'), ('method', '=', 'dest_sftp'), ('status', '=', True)],
                                   limit=1)
         if not integration:
-            raise ValidationError(_("Record is not avaiable with proper configuration"))
-        return integration.journal_process()
+            raise ValidationError(_("Record is not available with proper configuration"))
+        return integration.mdc_generate_process()
+
+    @api.model
+    def mdc_report_process(self):
+        integration = self.search([('type', '=', 'mdc_report'), ('method', '=', 'sftp'), ('status', '=', True)],
+                                  limit=1)
+        if not integration:
+            raise ValidationError(_("Record is not available with proper configuration"))
+        return integration.mdc_report_generate_process()
 
     """Function Defination of CRON JOB"""
 
     @api.multi
-    def glif_generate(self):
+    def glif_generate_process(self):
 
         for rec in self.filtered(lambda r: r.method == "local"):
             dirs = [rec.source_path, rec.dest_path]
@@ -208,7 +219,65 @@ class ServerFileProcess(models.Model):
                             os.remove(local_path)
 
     @api.multi
-    def journal_process(self):
+    def mdc_report_generate_process(self):
+
+        for rec in self.filtered(lambda r: r.method == "local"):
+            dirs = [rec.source_path, rec.dest_path]
+            self.directory_check(dirs)
+
+            files = filter(lambda x: x.endswith('.txt'), os.listdir(rec.source_path))
+            for file in files:
+                if os.path.splitext(file)[1] in ['.txt']:
+                    source_path = os.path.join(rec.source_path, file)
+                    dest_path = os.path.join(rec.dest_path, file)
+                    start_date = fields.Datetime.now()
+                    journal = rec.create_journal(file)
+                    stop_date = fields.Datetime.now()
+                    if journal:
+                        if shutil.move(source_path, dest_path):
+                            raise ValidationError(_('Please check path configuration.'))
+                        else:
+                            self.env['server.file.success'].create({'name': file,
+                                                                    'start_date': start_date,
+                                                                    'stop_date': stop_date,
+                                                                    'file_name': file,
+                                                                    'move_id': journal.id})
+
+        for rec in self.filtered(lambda r: r.method == "sftp"):
+            report_gen = self.env['generate.cbs.journal.success'].search(
+                [('has_report', '=', False), ('state', '=', 'mdc')])
+            mdc_rec = {rec.name: rec for rec in report_gen}
+            with self.sftp_connection('source') as source:
+                with self.sftp_connection('destination') as destination:
+                    dirs = [rec.folder, rec.source_path, rec.dest_path]
+                    self.directory_check(dirs)
+                    files = filter(lambda x: x.endswith('.txt'), source.listdir(rec.source_path))
+                    for file in files:
+                        source_path = os.path.join(rec.source_path, file)
+                        dest_path = os.path.join(rec.dest_path, file)
+                        local_path = os.path.join(rec.folder, file)
+
+                        source.get(source_path, localpath=local_path, preserve_mtime=True)
+                        process_time = fields.Datetime.now()
+                        with open(local_path) as f:
+                            content = base64.b64encode(f.read())
+                            encode = content if len(content) > 0 else ' '
+                        if file in mdc_rec:
+                            report = mdc_rec[file].write({'mdc_report_file': encode,
+                                                          'mdc_report_process_time': process_time,
+                                                          'has_report': True,
+                                                          'state': 'report',
+                                                          })
+                            if report:
+                                if destination.put(local_path, dest_path):
+                                    os.remove(local_path)
+                                    source.unlink(source_path)
+
+                        else:
+                            os.remove(local_path)
+
+    @api.multi
+    def mdc_generate_process(self):
         filename = self.generate_filename()
 
         def generate_file(record):
@@ -245,7 +314,7 @@ class ServerFileProcess(models.Model):
             return move_ids if os.path.exists(file_path) else False
 
         record = self.env['server.file.process'].search([('method', '=', 'dest_sftp'),
-                                                         ('type', '=', 'batch'),
+                                                         ('type', '=', 'mdc'),
                                                          ('status', '=', True)], limit=1)
         for rec in record:
             with rec.sftp_connection('destination') as destination:
@@ -277,7 +346,7 @@ class ServerFileProcess(models.Model):
                         continue
 
     @api.multi
-    def sysdt_update(self, record):
+    def sysdt_import_process(self, record):
         for rec in record:
             with rec.sftp_connection('destination') as destination:
                 dirs = [rec.source_path, rec.dest_path]
@@ -880,21 +949,24 @@ class ServerFileSuccess(models.Model):
 
 class GenerateCBSJournalSuccess(models.Model):
     _name = 'generate.cbs.journal.success'
-    _description = "CBS Batch Process Success"
+    _description = "MDC Process"
     _inherit = ["mail.thread", "ir.needaction_mixin"]
     _order = 'date desc'
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
-    date = fields.Datetime(string='Date', default=fields.Datetime.now, required=True)
+    date = fields.Datetime(string='Process Time', default=fields.Datetime.now, required=True)
     start_date = fields.Datetime(string='Start Datetime', required=True)
     stop_date = fields.Datetime(string='Stop Datetime', required=True)
     file_name = fields.Char(string='File Path', required=True)
-    upload_file = fields.Binary(string="Generated File", attachment=True)
-    time = fields.Text(string='Time', compute="_compute_time")
+    upload_file = fields.Binary(string="MDC File", attachment=True)
+    time = fields.Text(string='Duration', compute="_compute_time")
     status = fields.Boolean(default=False, string='Status')
-    journal_count = fields.Char(string="Total Journals", compute='_compute_journal', store=True)
+    journal_count = fields.Char(string="No of Journals", compute='_compute_journal', store=True)
     line_ids = fields.One2many('cbs.journal.line', 'line_id', string="Journal")
-    state = fields.Selection([('issued', 'Issued'), ('resolved', 'Resolved')], default='issued')
+    state = fields.Selection([('mdc', 'MDC'), ('report', ' MDC Report')], default='mdc')
+    mdc_report_file = fields.Binary(string="Report File", attachment=True)
+    mdc_report_process_time = fields.Datetime(string='Process Time')
+    has_report = fields.Boolean(default=False, attachment=True)
 
     @api.depends('start_date', 'stop_date')
     def _compute_time(self):

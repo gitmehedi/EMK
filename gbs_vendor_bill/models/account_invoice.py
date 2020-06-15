@@ -15,7 +15,7 @@ class AccountInvoice(models.Model):
                                         operating_unit_default_get(self._uid),
                                         readonly=True, required=True,
                                         states={'draft': [('readonly', False)]})
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sub Operating Unit',
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', 'Sequence',
                                             readonly=True, states={'draft': [('readonly', False)]})
     payment_line_ids = fields.One2many('payment.instruction', 'invoice_id', string='Payment')
     security_deposit = fields.Float('Security Deposit', track_visibility='onchange', copy=False,
@@ -374,6 +374,8 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    account_analytic_id = fields.Many2one('account.analytic.account', required=True)
+
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
                  'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
@@ -419,21 +421,11 @@ class AccountInvoiceLine(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
     quantity = fields.Float(digits=0)
     invoice_line_tax_ids = fields.Many2many(string='VAT')
     mushok_vds_amount = fields.Float('VAT Payable', compute='_compute_price', store=True, readonly=True, copy=False)
     asset_name = fields.Char(string='Asset Name')
-
-    # @api.onchange('operating_unit_id')
-    # def _onchange_operating_unit_id(self):
-    #     for line in self:
-    #         line.sub_operating_unit_id = []
-    #         sub_operating_unit_ids = self.env['sub.operating.unit'].search([
-    #             ('operating_unit_id', '=', self.operating_unit_id.id)]).ids
-    #         return {'domain': {
-    #             'sub_operating_unit_id': [('id', 'in', sub_operating_unit_ids)]
-    #         }}
 
     @api.constrains('invoice_line_tax_ids')
     def _check_supplier_taxes_id(self):
@@ -443,10 +435,8 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         vals = super(AccountInvoiceLine, self)._onchange_product_id()
-        self.sub_operating_unit_id = []
         if self.product_id:
             self.asset_name = self.product_id.name
-            vals['domain']['sub_operating_unit_id'] = [('product_id', '=', self.product_id.id)]
         return vals
 
 

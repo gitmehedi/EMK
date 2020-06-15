@@ -259,7 +259,7 @@ class GBSFileImportWizard(models.TransientModel):
                 errors += self.format_error(line_no, 'Current Branch Code [{0}] invalid value'.format(cb_code))
 
             # if sou_code not in sou.keys():
-            #     errors += self.format_error(line_no, 'Sub Operating Unit Code [{0}] invalid value'.format(sou_code))
+            #     errors += self.format_error(line_no, 'Sequence Code [{0}] invalid value'.format(sou_code))
             #
             # if cc_code not in cc.keys():
             #     errors += self.format_error(line_no, 'Cost Center Code [{0}] invalid value'.format(cc_code))
