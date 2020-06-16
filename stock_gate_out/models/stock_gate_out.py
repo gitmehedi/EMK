@@ -6,17 +6,18 @@ from odoo.exceptions import UserError
 
 class StockGateOut(models.Model):
     _name = 'stock.gate.out'
+    _inherit = ['mail.thread']
     _order = 'date desc, name desc, id desc'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    create_by = fields.Char('Delivered By', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
-    received = fields.Char('To Whom Received', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
-    challan_bill_no = fields.Char('Challan Bill No', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
-    truck_no = fields.Char('Truck/Vehicle No', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True)
+    create_by = fields.Char('Delivered By', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True, track_visibility='onchange')
+    received = fields.Char('To Whom Received', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True, track_visibility='onchange')
+    challan_bill_no = fields.Char('Challan Bill No', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True, track_visibility='onchange')
+    truck_no = fields.Char('Truck/Vehicle No', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True, track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
-    partner_id = fields.Many2one('res.partner', string='Supplier')
-    date = fields.Date(string="Date", readonly=True, states={'draft': [('readonly', False)]}, required=True)
+    partner_id = fields.Many2one('res.partner', string='Supplier', readonly=True, states={'draft': [('readonly', False)]})
+    date = fields.Date(string="Date", readonly=True, states={'draft': [('readonly', False)]}, required=True, track_visibility='onchange')
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
