@@ -31,7 +31,6 @@
         'stock_picking_lc',
         'stock_picking_mrr',
         'stock_warehouse_extend',
-        'stock_gate_in',
         'stock_custom_summary_report',
         'stock_purchase_custom_report',
         'stock_loan_analysis_report',

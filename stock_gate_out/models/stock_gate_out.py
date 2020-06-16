@@ -4,8 +4,8 @@ from odoo import models, fields, api,_
 from odoo.exceptions import UserError
 
 
-class StockGateIn(models.Model):
-    _name = 'stock.gate.in'
+class StockGateOut(models.Model):
+    _name = 'stock.gate.out'
     _inherit = ['mail.thread']
     _order = 'date desc, name desc, id desc'
 
@@ -16,7 +16,7 @@ class StockGateIn(models.Model):
     truck_no = fields.Char('Truck/Vehicle No', size=100, readonly=True, states={'draft': [('readonly', False)]}, required=True, track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
-    partner_id = fields.Many2one('res.partner', string='Supplier', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', string='Supplier', readonly=True, states={'draft': [('readonly', False)]})
     date = fields.Date(string="Date", readonly=True, states={'draft': [('readonly', False)]}, required=True, track_visibility='onchange')
     state = fields.Selection([
         ('draft', "Draft"),
@@ -26,9 +26,9 @@ class StockGateIn(models.Model):
     @api.model
     def create(self, vals):
         requested_date = datetime.today().date()
-        new_seq = self.env['ir.sequence'].next_by_code_new('stock.gate.in', requested_date) or '/'
+        new_seq = self.env['ir.sequence'].next_by_code_new('stock.gate.out', requested_date) or '/'
         vals['name'] = new_seq
-        return super(StockGateIn, self).create(vals)
+        return super(StockGateOut, self).create(vals)
 
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):
@@ -56,4 +56,4 @@ class StockGateIn(models.Model):
         for m in self:
             if m.state != 'draft':
                 raise UserError(_('You can not delete in this state.'))
-        return super(StockGateIn, self).unlink()
+        return super(StockGateOut, self).unlink()

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Stock Gate In",
+    'name': "Stock Gate Out",
 
     'summary': """
-        Extend Module to link Stock and Gate In""",
+        Extend Module to link Stock and Gate Out""",
 
     'description': """
-        
+
     """,
 
     'author': "Genweb2",
@@ -23,8 +23,8 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/stock_gate_in_view.xml',
-        'data/gate_in_sequence.xml'
+        'views/stock_gate_out_view.xml',
+        'data/gate_out_sequence.xml'
     ],
     'installable': True,
     'application': False,

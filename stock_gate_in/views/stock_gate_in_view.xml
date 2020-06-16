@@ -1,0 +1,97 @@
+<odoo>
+    <data>
+
+        <!-- Tree views on models -->
+        <record model="ir.ui.view" id="stock_gate_in_list_view">
+            <field name="name">stock.gate.in.tree.view</field>
+            <field name="model">stock.gate.in</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Get In Form" decoration-info="state=='draft'" edit="false">
+                    <field name="name"/>
+                    <field name="challan_bill_no"/>
+                    <field name="received"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form views on models -->
+        <record model="ir.ui.view" id="stock_gate_in_form_view">
+            <field name="name">stock.gate.in.form.view</field>
+            <field name="model">stock.gate.in</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock Get In Form">
+                    <header>
+                        <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <div class="oe_button_box" name="button_box">
+                                <button class="oe_stat_button" name="action_get_stock_picking"
+                                        string="Stock Operation" type="object"
+                                        icon="fa-cogs"
+                                        groups="stock.group_stock_user"/>
+                            </div>
+                            <group>
+                                <field name="date"/>
+                                <field name="challan_bill_no"/>
+                                <field name="truck_no"/>
+                            </group>
+                            <group>
+                                <field name="create_by"/>
+                                <field name="received"/>
+                                <field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Others">
+                                <group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True,'no_open':True}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_gate_in_search" model="ir.ui.view">
+            <field name="name">stock.gate.in.search</field>
+            <field name="model">stock.gate.in</field>
+            <field name="arch" type="xml">
+                <search string="Search Gate In">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="stock_gate_in_action_window">
+            <field name="name">Stock Gate In</field>
+            <field name="res_model">stock.gate.in</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_stock_gate_in_search"/>
+        </record>
+
+        <!-- actions views for gate in button box -->
+        <record model="ir.actions.act_window" id="act_stock_gate_in">
+            <field name="name">Stock Gate In</field>
+            <field name="res_model">stock.gate.in</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Stock Gate In" id="stock_gate_in_menu" parent="stock.menu_stock_root"/>
+        <menuitem name="Gate In" id="stock_gate_in_sub_menu" parent="stock_gate_in_menu" sequence="5" action="stock_gate_in_action_window"/>
+    </data>
+
+</odoo>
