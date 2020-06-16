@@ -12,7 +12,7 @@
         'mail',
         'account',
         'gbs_payment_instruction',
-        'gbs_vendor_bill',
+        # 'gbs_vendor_bill',
     ],
     "data": [
         "security/security.xml",

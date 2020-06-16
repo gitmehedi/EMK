@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Account TDS',
+    'name': 'Drop Account TDS',
     'description': """
         Module is responsible for 'Tax Deducted at Source'.This module included with-
         --TDS nature/rules

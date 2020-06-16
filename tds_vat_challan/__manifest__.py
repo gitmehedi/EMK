@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "TDS/Vat Challan",
+    'name': "Drop TDS/Vat Challan",
     'description': """
         Module is responsible for 'TDS & Vat Challan'.This module included with-
         --Selection wizard

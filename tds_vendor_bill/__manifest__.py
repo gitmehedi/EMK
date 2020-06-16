@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'TDS Vendor Bill',
+    'name': 'Drop TDS Vendor Bill',
     'description': """
         Linked module of Account TDS and Vendor Bill
         """,

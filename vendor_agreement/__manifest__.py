@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Vendor Agreement",
+    'name': "Drop Vendor Agreement",
     'description': """
         Module is responsible for 'Vendor Agreement'.This module included with-
         1. Creation / Modification of Agreement

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Vendor Security Deposit return",
+    'name': "Drop Vendor Security Deposit return",
     'description': """
         Module is responsible for 'Return of SD'.This module included with-
         1. Creation / Modification of Security Deposit Return
