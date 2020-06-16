@@ -12,7 +12,7 @@
         'account_asset',
         'account_fam',
         'account_category',
-        'tds_vat_challan',
+        # 'tds_vat_challan',
     ],
     'data': [
         'security/security.xml',

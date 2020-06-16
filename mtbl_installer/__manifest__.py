@@ -28,7 +28,7 @@
         "account_fam",
         "account_category",
         "account_tds",
-        "tds_vat_challan",
+        # "tds_vat_challan",
         "gbs_payment_instruction",
         "gbs_vendor_bill",
         "tds_vendor_bill",
