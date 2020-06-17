@@ -3,6 +3,7 @@ from . import acquiring_channel
 from . import servicing_channel
 from . import inherit_res_currency
 from . import branch
+# from . import inherit_account_tax
 from . import inherit_account_journal
 from . import inherit_res_bank
 from . import inherit_account_move

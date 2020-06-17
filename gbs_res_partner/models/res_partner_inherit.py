@@ -13,10 +13,12 @@ class ResPartner(models.Model):
     company_type = fields.Selection(track_visibility='onchange', store=True)
     category_id = fields.Many2many(track_visibility='onchange')
     function = fields.Char(track_visibility='onchange')
-    tax = fields.Char(track_visibility='onchange')
-    vat = fields.Char(track_visibility='onchange',size=11)
-    bin = fields.Char(track_visibility='onchange',size=13)
-    tin = fields.Char(track_visibility='onchange',size=12)
+
+    tax = fields.Char(string='Trade License', track_visibility='onchange')
+    vat = fields.Char(string='VAT Registration', track_visibility='onchange',size=11)
+    bin = fields.Char(string='BIN Number', track_visibility='onchange',size=13)
+    tin = fields.Char(string='TIN Number', track_visibility='onchange',size=12)
+
     title = fields.Many2one(track_visibility='onchange')
     lang = fields.Selection(track_visibility='onchange')
     customer = fields.Boolean(track_visibility='onchange')

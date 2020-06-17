@@ -13,3 +13,4 @@ from . import product_product_wizard
 from . import res_partner_bank_wizard
 from . import res_currency_wizard
 from . import res_currency_rate_wizard
+from . import inherit_account_tax_wizard
