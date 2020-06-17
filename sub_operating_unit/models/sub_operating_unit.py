@@ -15,6 +15,8 @@ class SubOperatingUnit(models.Model):
                        states={'draft': [('readonly', False)]})
     code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
+    account_id = fields.Many2one('account.account', string='GL Account', readonly=True,
+                                 states={'draft': [('readonly', False)]}, domain=[('level_id.name', '=', 'Layer 5')])
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
