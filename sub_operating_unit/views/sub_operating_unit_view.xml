@@ -26,13 +26,13 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="account_id" domain="[('child_ids', '=', False)]"
+                            <field name="account_id"
                                    options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="code"/>
                             <field name="name"/>
-                            <field name="pending" invisible="True"/>
                         </group>
                         <group>
-                            <field name="code"/>
+                            <field name="pending" invisible="True"/>
                             <field name="maker_id" invisible="1"/>
                             <field name="approver_id" invisible="1"/>
                         </group>
