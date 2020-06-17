@@ -5,7 +5,8 @@ class VendorAdvance(models.Model):
     _name = 'vendor.advance'
     _inherit = ['vendor.advance', 'ir.needaction_mixin']
 
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit', required=True,
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True,
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
 
