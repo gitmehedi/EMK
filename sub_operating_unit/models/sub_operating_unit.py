@@ -16,7 +16,7 @@ class SubOperatingUnit(models.Model):
     code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
     account_id = fields.Many2one('account.account', string='GL Account', readonly=True,
-                                 states={'draft': [('readonly', False)]}, domain=[('level_id.name', '=', 'Layer 5')])
+                                 states={'draft': [('readonly', False)]}, required=True)
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
@@ -49,7 +49,7 @@ class SubOperatingUnit(models.Model):
     @api.one
     def name_get(self):
         if self.name and self.code:
-            name = '[%s] %s' % (self.code, self.name)
+            name = '%s-%s-%s' % (self.account_id.code, self.code, self.name)
         return (self.id, name)
 
     @api.model
