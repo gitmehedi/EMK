@@ -7,11 +7,11 @@
     'version': '1.0',
     'category': 'Extra Tools',
     'depends': [
-        'base',
+        'account',
+        'l10n_bd_account_tax',
         'operating_unit',
         'sub_operating_unit',
         'account_asset',
-        'account',
     ],
     'data': [
         'security/security.xml',
