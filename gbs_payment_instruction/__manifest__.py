@@ -12,7 +12,8 @@
         'sub_operating_unit',
         'vendor_advance',
         'rent_agreement',
-        'vendor_security_deposit'
+        'vendor_security_deposit',
+        'gbs_res_partner'
     ],
     'data': [
         'security/ir.model.access.csv',
