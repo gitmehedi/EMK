@@ -6,8 +6,7 @@
         <field name="inherit_id" ref="vendor_advance.vendor_advance_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='account_id']" position="after">
-                <field name="sub_operating_unit_id" domain="[('product_id', 'in', [product_id])]"
-                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                <field name="sub_operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
             </xpath>
         </field>
     </record>

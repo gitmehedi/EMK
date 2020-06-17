@@ -12,6 +12,7 @@
         'operating_unit',
         'sub_operating_unit',
         'account_asset',
+        'vendor_advance',
     ],
     'data': [
         'security/security.xml',
@@ -37,7 +38,8 @@
         'views/account_move_view.xml',
         'views/account_asset_depreciation_history_view.xml',
         'views/account_config.xml',
-        'views/asset_depreciation_change_request_view.xml'
+        'views/asset_depreciation_change_request_view.xml',
+        'views/asset_vendor_bills_view.xml'
     ],
     'installable': True,
     'application': True,

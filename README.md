@@ -222,4 +222,41 @@ delete from auditlog_log;
 delete from auditlog_http_request;
 delete from auditlog_http_session;
 delete from ir_sessions;
+
+
+-- Remove TPM related data
+delete from tpm_branch_calculation_line;
+delete from tpm_calculation_line;
+delete from tpm_calculation;
+
+-- Remove message data from related message table
+delete from mail_message where model in ('tpm.branch.calculation.line');
+delete from mail_message where model in ('tpm.calculation.line');
+delete from mail_message where model in ('tpm.calculation');
+delete from mail_message where model in ('account.move.line');
+delete from mail_message where model in ('account.move');
+delete from mail_message where model in ('server.file.error');
+delete from mail_message where model in ('server.file.error.line');
+delete from mail_message where model in ('server.file.success');
+delete from mail_message where model in ('gbs.data.migration');
+delete from mail_message where model in ('account.asset.sale.line');
+delete from mail_message where model in ('account.asset.sale');
+delete from mail_message where model in ('account.asset.disposal.line');
+delete from mail_message where model in ('account.asset.disposal');
+delete from mail_message where model in ('account.asset.allocation.history');
+delete from mail_message where model in ('account.asset.depreciation.history.line');
+delete from mail_message where model in ('account.asset.depreciation.history');
+delete from mail_message where model in ('account.asset.depreciation.line');
+delete from mail_message where model in ('account.asset.asset');
+delete from mail_message where model in ('account.invoice.line');
+delete from mail_message where model in ('account.invoice');
+delete from mail_message where model in ('payment.instruction');
+delete from mail_message where model in ('gbs.file.import.line');
+delete from mail_message where model in ('gbs.file.import');
+delete from mail_message where model in ('tds.vat.payment');
+delete from mail_message where model in ('tds.vat.challan');
+delete from mail_message where model in ('tds.vat.challan.line');
+delete from mail_message where model in ('account.move.line');
+delete from mail_message where model in ('account.move');
+delete from mail_message where model in ('system.date.status');
 ```
