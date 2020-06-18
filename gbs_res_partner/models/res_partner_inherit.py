@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _, SUPERUSER_ID
-from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
+from psycopg2 import IntegrityError
 
 
 class ResPartner(models.Model):
@@ -211,38 +211,43 @@ class ResPartner(models.Model):
             }
 
 
-    @api.constrains('tax','bin', 'tin','vat','mobile','fax')
+    @api.constrains('tax', 'bin', 'tin', 'vat', 'mobile', 'fax')
     def _check_numeric_constrain(self):
-        if self.tax:
-            tax = self.search(
-                [('tax', '=ilike', self.tax.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
-            if len(tax) > 1:
-                raise Warning(_('[Unique Error] Trade License must be unique!'))
-        if self.bin:
-            bin = self.search(
-                [('bin', '=ilike', self.bin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
-            if len(bin) > 1:
-                raise Warning(_('[Unique Error] BIN Number must be unique!'))
-            if len(self.bin) != 13 or not self.bin.isdigit():
-                raise Warning('[Format Error] BIN must be numeric with 13 digit!')
-        if self.vat:
-            vat = self.search(
-                [('vat', '=ilike', self.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
-            if len(vat) > 1:
-                raise Warning(_('[Unique Error] VAT Registration must be unique!'))
-            if len(self.vat) != 11 or not self.vat.isdigit():
-                raise Warning('[Format Error] VAT Registration must be numeric with 11 digit!')
-        if self.tin:
-            tin = self.search(
-                [('tin', '=ilike', self.tin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True), ('active', '=', False)])
-            if len(tin) > 1:
-                raise Warning(_('[Unique Error] TIN Number must be unique!'))
-            if len(self.tin) != 12 or not self.tin.isdigit():
-                raise Warning('[Format Error] TIN must be numeric with 12 digit!')
-        if self.mobile and not self.mobile.isdigit():
-            raise Warning('[Format Error] Mobile must be numeric!')
-        if self.fax and len(self.fax) != 16:
-            raise Warning('[Format Error] Fax must be 16 character!')
+        for partner in self:
+            if partner.tax:
+                tax = self.search(
+                    [('tax', '=ilike', partner.tax.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                     ('active', '=', False)])
+                if len(tax) > 1:
+                    raise Warning(_('[Unique Error] Trade License must be unique!'))
+            if partner.bin:
+                bin = self.search(
+                    [('bin', '=ilike', partner.bin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                     ('active', '=', False)])
+                if len(bin) > 1:
+                    raise Warning(_('[Unique Error] BIN Number must be unique!'))
+                if len(partner.bin) != 13 or not partner.bin.isdigit():
+                    raise Warning('[Format Error] BIN must be numeric with 13 digit!')
+            if partner.vat:
+                vat = self.search(
+                    [('vat', '=ilike', partner.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                     ('active', '=', False)])
+                if len(vat) > 1:
+                    raise Warning(_('[Unique Error] VAT Registration must be unique!'))
+                if len(partner.vat) != 11 or not partner.vat.isdigit():
+                    raise Warning('[Format Error] VAT Registration must be numeric with 11 digit!')
+            if partner.tin:
+                tin = self.search(
+                    [('tin', '=ilike', partner.tin.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                     ('active', '=', False)])
+                if len(tin) > 1:
+                    raise Warning(_('[Unique Error] TIN Number must be unique!'))
+                if len(partner.tin) != 12 or not partner.tin.isdigit():
+                    raise Warning('[Format Error] TIN must be numeric with 12 digit!')
+            if partner.mobile and not partner.mobile.isdigit():
+                raise Warning('[Format Error] Mobile must be numeric!')
+            if partner.fax and len(partner.fax) != 16:
+                raise Warning('[Format Error] Fax must be 16 character!')
 
     @api.constrains('nid')
     def _check_nid_constrain(self):
