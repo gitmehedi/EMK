@@ -30,14 +30,14 @@ class SubOperatingUnit(models.Model):
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
-    @api.constrains('name', 'code')
+    @api.constrains('account_id.code', 'code')
     def _check_unique_constrain(self):
         if self.name or self.code:
-            name = self.search([('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'),
+            name = self.search([('account_id.code', '=ilike', self.account_id.code.strip()), ('state', '!=', 'reject'),
                                 ('code', '=', self.code.strip()), '|',
                                 ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
-                raise Warning(_('[Unique Error] Combination of Name and Code must be unique!'))
+                raise Warning(_('[Unique Error] Combination of GL Account and Code must be unique!'))
 
             if len(self.code) != 3 or not self.code.isdigit():
                 raise Warning(_('[Format Error] Code must be numeric with 3 digit!'))
