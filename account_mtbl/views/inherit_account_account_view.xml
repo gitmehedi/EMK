@@ -47,7 +47,7 @@
                         <div attrs="{'invisible': [('internal_type','=','liquidity')]}">
                             <field name="reconcile"/>
                             <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile"
-                                    attrs="{'invisible': [('reconcile', '=', False)]}"/>
+                                    invisible="1"/>
                         </div>
                         <field name="maker_id" invisible="1"/>
                         <field name="approver_id" invisible="1"/>

@@ -10,4 +10,14 @@
             </xpath>
         </field>
     </record>
+    <record id="inherit_rent_agreement_sou" model="ir.ui.view">
+        <field name="name">inherit.rent.agreement.sou</field>
+        <field name="model">vendor.advance</field>
+        <field name="inherit_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="sub_operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
