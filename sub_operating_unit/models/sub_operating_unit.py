@@ -8,7 +8,7 @@ from odoo.exceptions import Warning, ValidationError
 class SubOperatingUnit(models.Model):
     _name = 'sub.operating.unit'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = 'id desc,state asc'
+    _order = 'account_id asc,code asc'
     _description = 'Sequence'
 
     name = fields.Char('Name', required=True, size=200, track_visibility='onchange', readonly=True,

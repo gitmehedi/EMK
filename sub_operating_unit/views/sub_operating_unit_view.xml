@@ -64,8 +64,9 @@
             <tree string="Sequence" decoration-info="state=='draft'" decoration-success="state=='approve'"
                   decoration-danger="state=='reject'"
                   decoration-bf="state in ('approve',)">
-                <field name="name"/>
+                <field name="account_id"/>
                 <field name="code"/>
+                <field name="name"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -76,10 +77,14 @@
         <field name="model">sub.operating.unit</field>
         <field name="arch" type="xml">
             <search string="Search Sequence">
+                <field name="account_id" string="COA"/>
+                <field name="code" string="Code"/>
                 <field name="name" string="Sequence"/>
                 <field name="pending" string="Pending"/>
-                <field name="code" string="Code"/>
+
                 <group string="Group By">
+                    <filter name="group_by_account_id" string="COA"
+                            context="{'group_by': 'account_id'}"/>
                     <filter string="Pending" name="pending" icon="terp-personal"
                             domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
                     <filter string="Rejected" name="state" icon="terp-personal"
