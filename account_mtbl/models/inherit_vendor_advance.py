@@ -10,6 +10,11 @@ class VendorAdvance(models.Model):
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
 
+    @api.onchange('account_id')
+    def _onchange_account_id(self):
+        for rec in self:
+            rec.sub_operating_unit_id = None
+
     def create_journal(self, journal_id):
         move = super(VendorAdvance, self).create_journal(journal_id)
         if self.sub_operating_unit_id:

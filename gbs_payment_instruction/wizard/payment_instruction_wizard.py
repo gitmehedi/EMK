@@ -49,6 +49,11 @@ class BillPaymentInstructionWizard(models.TransientModel):
                 raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "
                                         "Remaining balance is %s") % (rem_amount))
 
+    @api.onchange('credit_account_id')
+    def _onchange_account_id(self):
+        for rec in self:
+            rec.credit_sub_operating_unit_id = None
+
     @api.multi
     def action_validate(self):
         # debit_acc = self.invoice_id.partner_id.property_account_payable_id.id
