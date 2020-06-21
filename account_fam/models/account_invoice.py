@@ -21,6 +21,14 @@ class AccountInvoiceLine(models.Model):
 
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', ondelete="restrict")
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Category', ondelete="restrict")
+    asset_name = fields.Char(string='Asset Name')
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        vals = super(AccountInvoiceLine, self)._onchange_product_id()
+        if self.product_id:
+            self.asset_name = self.product_id.name
+        return vals
 
     @api.onchange('asset_type_id')
     def onchange_asset_type_id(self):

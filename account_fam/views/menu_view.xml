@@ -60,4 +60,7 @@
 
     <menuitem name='Fixed Asset Operations' parent="account_fam.main_fixed_asset_menu"
               id="menu_action_account_asset_operation" sequence="10"/>
+
+    <menuitem id="sub_assets_vendor_menu" name="Vendor Operations" sequence="15"
+              parent="account_fam.main_fixed_asset_menu" groups=""/>
 </odoo>

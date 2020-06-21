@@ -28,13 +28,16 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
-    name = fields.Char(string='Narration')
+    name = fields.Char(string='Narration', required=True)
     account_analytic_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True)
 
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, readonly=False,
                                         default=lambda self: self.env['res.users'].operating_unit_default_get(
                                             self._uid))
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
+
+
+
 
 
 
