@@ -52,6 +52,7 @@
                             <field name="reference" string="Vendor Reference"/>
                         </group>
                         <group>
+                            <field name="is_asset" invisible="1"/>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" string="Bill Date"/>
                             <field name="date_due"/>
@@ -254,14 +255,11 @@
         <field name="sequence" eval='1'/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
-                <field name="is_asset" invisible="True"/>
+                <field name="is_asset" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='asset_category_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='asset_type_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='asset_category_id']" position="replace">
             </xpath>
         </field>
     </record>
+
 </odoo>
