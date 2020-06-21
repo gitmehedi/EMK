@@ -318,3 +318,11 @@ class HistoryAccountTag(models.Model):
     line_id = fields.Many2one('account.tag', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')
+
+
+class AccountTax(models.Model):
+    _inherit = 'account.tax'
+
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')],
+                                    string='Tax Scope', required=True, default="purchase",
+                                    help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
