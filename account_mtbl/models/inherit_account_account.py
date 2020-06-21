@@ -3,6 +3,7 @@ from psycopg2 import IntegrityError
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import Warning, ValidationError
+from odoo.osv import expression
 
 
 class AccountAccount(models.Model):
@@ -21,7 +22,7 @@ class AccountAccount(models.Model):
     level_size = fields.Integer(related='level_id.size')
 
     level_id = fields.Many2one('account.account.level', ondelete='restrict', string='Layer', required=True,
-                               track_visibility='onchange',readonly=True, states={'draft': [('readonly', False)]})
+                               track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
@@ -32,16 +33,7 @@ class AccountAccount(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
-    gl_type = fields.Selection([('online','Online')], string='GL Type')
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
-        names2 = []
-        if name:
-            domain = ['|', ('code', '=', name), ('name', '=', name + '%')]
-            names2 = self.search(domain, limit=limit).name_get()
-        return list(set(names1) | set(names2))[:limit]
+    gl_type = fields.Selection([('online', 'Online')], string='GL Type')
 
     @api.constrains('code')
     def _check_numeric_constrain(self):
@@ -91,6 +83,22 @@ class AccountAccount(models.Model):
             #     code = self.parent_id.code + filter
             # if code:
             #     self.code = code[:self.level_id.size]
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        limit = 100
+        default, values = [], []
+
+        if name:
+            domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name), ('level_id.name', '=', 'Layer 5')]
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                domain = ['&', '!'] + domain[1:]
+            values = self.search(domain, limit=limit, order='id ASC').name_get()
+        else:
+            domain = [('level_id.name', '=', 'Layer 5')]
+            default = self.search(domain + args, limit=limit, order='id ASC').name_get()
+
+        return list(set(default) | set(values))[:limit]
 
     @api.one
     def name_get(self):
