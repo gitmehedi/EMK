@@ -10,6 +10,9 @@
                     <field name="sou_id" domain="[('account_id', 'in', [account_id])]"
                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                 </xpath>
+                <xpath expr="//field[@name='type_tax_use']" position="replace">
+                    <field name="type_tax_use" invisible="1"/>
+                </xpath>
             </field>
         </record>
 <!--        <record id="inherited_view_tax_form" model="ir.ui.view">-->
