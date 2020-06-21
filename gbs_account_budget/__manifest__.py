@@ -17,10 +17,9 @@ planned for this Budget.
 
 """,
     'depends': [
-        'account_parent',
+        'account',
         'operating_unit',
-        'account_fiscal_year',
-        # 'gbs_vendor_bill',
+        'date_range',
     ],
     'data': [
         'security/ir.model.access.csv',

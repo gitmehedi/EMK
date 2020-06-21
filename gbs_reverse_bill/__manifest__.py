@@ -8,7 +8,7 @@
     'category': 'Accounting',
     'depends': [
         'asset_vendor_bill',
-        'tds_vat_challan',
+        # 'tds_vat_challan',
     ],
     'data': [
         'wizards/account_invoice_refund_view.xml',

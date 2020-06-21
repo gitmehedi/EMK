@@ -43,6 +43,8 @@
         'wizard/account_analytic_account_wizard_view.xml',
         'wizard/account_account_wizard_view.xml',
         'wizard/res_currency_rate_wizard_view.xml',
+        'wizard/inherit_account_tax_wizard_view.xml',
+        'views/inherited_account_tax.xml',
         'views/report_view_access.xml',
         'views/act_window_access.xml',
         'views/segment_view.xml',
@@ -64,7 +66,9 @@
         'views/account_analytic_account_view.xml',
         'views/res_users_preferences_view.xml',
         'views/inherit_res_currency_rate_view.xml',
-        'views/inherit_vendor_advance_view.xml'
+        'views/inherit_vendor_advance_view.xml',
+        'views/account_report.xml',
+        'views/account_invoice_view.xml'
     ],
     'installable': True,
     'application': True,

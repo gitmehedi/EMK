@@ -21,6 +21,8 @@
                                    options="{'currency_field': 'currency_id'}"/>
                             <field name="total_sale_amount" widget="monetary"
                                    options="{'currency_field': 'currency_id'}"/>
+                            <field name="narration"/>
+                            <field name="narration_gl"/>
                         </group>
                         <group>
                             <field name="request_date"/>
@@ -32,8 +34,8 @@
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                             <field name="sale_user_id" states="sale"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="note"/>
                         </group>
-                        <field name="note"/>
                     </group>
                     <notebook>
                         <page string="Assets">

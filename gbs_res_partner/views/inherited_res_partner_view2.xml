@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="inherited_res_partner_form_view" model="ir.ui.view">
+        <field name="name">inherited.res.partner.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lang']" position="after">
+                <field name="tax"/>
+                <field name="vat"/>
+                <field name="bin"/>
+                <field name="tin"/>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lang']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='title']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="attributes">
+                    <attribute name="string">Designation</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="replace">
+                <page name="sales_purchases" string="Purchases" groups="base.group_system">
+                    <group name="container_row_2">
+                        <group string="Sale" name="sale" invisible="1">
+                            <field name="customer"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="Purchase" name="purchase">
+                            <field name="supplier"/>
+                        </group>
+                        <group string="Misc" invisible="1">
+                            <field name="ref"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Payments" name="banks">
+                            <field name="currency_id" invisible="1"/>
+                            <div invisible="1">
+                                <button type="action" class="btn-link"
+                                        name="%(base.action_res_partner_bank_account_form)d"
+                                        context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
+                                    <field string="Bank account(s)" name="bank_account_count" widget="statinfo"/>
+                                </button>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_view_partner_property_form" model="ir.ui.view">
+        <field name="name">inherited.res.partner.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="replace">
+                <page string="Accounting" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                    <group>
+                        <group string="Sale" name="acc_sale" invisible="1">>
+                            <field name="property_payment_term_id" widget="selection"/>
+                            <field name="credit" groups="base.group_no_one"/>
+                            <field name="trust"/>
+                        </group>
+                        <group string="Purchase" name="acc_purchase" groups="base.group_system">
+                            <field name="property_supplier_payment_term_id" widget="selection"
+                                   groups="base.group_system"/>
+                            <field name="debit" groups="base.group_system"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Fiscal Information" name="fiscal_information" groups="base.group_system">
+                            <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_user">
+                            <field name="property_account_receivable_id"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="property_account_payable_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

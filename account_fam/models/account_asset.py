@@ -57,13 +57,13 @@ class AccountAssetAsset(models.Model):
                                   states={'draft': [('readonly', False)]})
     current_branch_id = fields.Many2one('operating.unit', string='Current Branch', required=True,
                                         track_visibility='onchange')
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit',
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True,
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
     accumulated_value = fields.Float(string='Accumulated Depr.', compute="_compute_accumulated_value",
                                      track_visibility='onchange', store=True)
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
-    cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre',
+    cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True,
                                      track_visibility='onchange', readonly=True,
                                      states={'draft': [('readonly', False)]})
     note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
@@ -77,7 +77,7 @@ class AccountAssetAsset(models.Model):
     @api.model_cr
     def init(self):
         self._cr.execute("""
-            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER) 
+            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER, narr_date TEXT) 
                     RETURNS INTEGER AS $$
                     DECLARE
                     rec RECORD;
@@ -106,7 +106,8 @@ class AccountAssetAsset(models.Model):
                     user_id = user_id;
                     journal_id = journal_id;
                     opu_id = opu_id;
-                    company_id =company_id;
+                    company_id = company_id;
+					narr_date = narr_date;
                 
                     query = 'SELECT aaa.*,
                         aac.id AS category_id,
@@ -191,6 +192,8 @@ class AccountAssetAsset(models.Model):
                     END LOOP;
                     move_query='SELECT aaa.current_branch_id,
                             aaa.cost_centre_id,
+							aaa.sub_operating_unit_id,
+							aac.name as type_name,
                             aac.account_depreciation_id,
                             aac.account_depreciation_expense_id,
                             SUM(aaa.lst_depr_amount) AS depr_sum
@@ -204,17 +207,19 @@ class AccountAssetAsset(models.Model):
                              AND aadl.move_id= '|| move || 
                          'GROUP BY aaa.current_branch_id,
                             aaa.cost_centre_id,
+							aaa.sub_operating_unit_id,
+							aac.name,
                             aac.account_depreciation_id,
                             aac.account_depreciation_expense_id
                           ORDER BY aaa.current_branch_id DESC';
                     FOR mrec IN EXECUTE move_query
                     LOOP
                           -- insert credit amount in account.move.line
-                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
+                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.sub_operating_unit_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
                           -- insert debit amount in account.move.line
-                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation in '|| depr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
+                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
+                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.sub_operating_unit_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
                         
                     END LOOP;
                     RETURN move;
@@ -313,8 +318,9 @@ class AccountAssetAsset(models.Model):
 
         company_id = self.env.user.company_id.id
         opu_id = self.env.user.default_operating_unit_id.id
-        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s)""" % (
-            date, self.env.uid, journal_id.id, opu_id, company_id));
+        narr_date = datetime.strptime(date, DATE_FORMAT).strftime(' - %b, %Y')
+        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s,'%s')""" % (
+            date, self.env.uid, journal_id.id, opu_id, company_id, narr_date));
         debit, credit = 0, 0
         for val in self.env.cr.fetchall():
             move = self.env['account.move'].search([('id', '=', val[0])])
@@ -376,7 +382,7 @@ class AccountAssetAsset(models.Model):
                     if not rec:
                         depreciation = asset.depreciation_line_ids.create(vals)
                         if depreciation:
-                            move = asset.create_move(depreciation)
+                            move = asset.create_move(depreciation, date)
                             if date.month == 12 and date.day == 31 and asset.method == 'degressive':
                                 asset.write({'lst_depr_date': date.date(),
                                              'lst_depr_amount': depr_amount,
@@ -389,9 +395,10 @@ class AccountAssetAsset(models.Model):
                             return move
 
     @api.multi
-    def create_move(self, line):
+    def create_move(self, line, date):
         created_moves = self.env['account.move']
         prec = self.env['decimal.precision'].precision_get('Account')
+
         if line:
             if line.move_id:
                 raise UserError(
@@ -410,8 +417,9 @@ class AccountAssetAsset(models.Model):
             current_currency = line.asset_id.currency_id
             amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
+            narration = 'Depreciation on ' + line.asset_id.asset_type_id.name + date.strftime(' - %b, %Y')
             move_line_1 = {
-                'name': asset_name,
+                'name': narration,
                 'account_id': category_id.account_depreciation_id.id,
                 'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
                 'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
@@ -424,7 +432,7 @@ class AccountAssetAsset(models.Model):
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
             move_line_2 = {
-                'name': asset_name,
+                'name': narration,
                 'account_id': category_id.account_depreciation_expense_id.id,
                 'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
                 'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
@@ -503,7 +511,7 @@ class AccountAssetAsset(models.Model):
 
                 depreciation = asset.depreciation_line_ids.create(vals)
                 if depreciation:
-                    if asset.create_move(depreciation):
+                    if asset.create_move(depreciation, date):
                         asset.write({'lst_depr_date': curr_depr_date.date(),
                                      'state': 'close'})
                         return True

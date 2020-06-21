@@ -5,9 +5,15 @@ class VendorAdvance(models.Model):
     _name = 'vendor.advance'
     _inherit = ['vendor.advance', 'ir.needaction_mixin']
 
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sub Operating Unit', required=True,
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True,
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
+
+    @api.onchange('account_id')
+    def _onchange_account_id(self):
+        for rec in self:
+            rec.sub_operating_unit_id = None
 
     def create_journal(self, journal_id):
         move = super(VendorAdvance, self).create_journal(journal_id)

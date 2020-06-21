@@ -37,7 +37,10 @@ class AccountAssetSale(models.Model):
                                   default=lambda self: self.env.user.company_id.currency_id.id)
     note = fields.Text(string='Note', readonly=True, states={'draft': [('readonly', False)]},
                        track_visibility='onchange')
-
+    narration = fields.Char(string="Narration", required=True, readonly=True,
+                                      states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    narration_gl = fields.Char(string="Narration Gain/Loss", required=True, readonly=True,
+                                      states={'draft': [('readonly', False)]}, track_visibility='onchange')
     line_ids = fields.One2many('account.asset.sale.line', 'sale_id', string='Sale Line', readonly=True,
                                states={'draft': [('readonly', False)]}, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('sale', 'Sold')], default='draft',
@@ -89,7 +92,7 @@ class AccountAssetSale(models.Model):
         current_currency = asset.currency_id
 
         credit = {
-            'name': asset.display_name,
+            'name': self.narration,
             'account_id': asset.asset_type_id.account_asset_id.id,
             'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
             'debit': 0.0,
@@ -101,7 +104,7 @@ class AccountAssetSale(models.Model):
         }
 
         debit = {
-            'name': asset.display_name,
+            'name': self.narration,
             'account_id': asset.asset_type_id.account_depreciation_id.id,
             'credit': 0.0,
             'debit': float("{0:.2f}".format(asset.accumulated_value)) if float_compare(asset.accumulated_value, 0.0,
@@ -117,7 +120,7 @@ class AccountAssetSale(models.Model):
         if lg_value > 0:
             lg_value = abs(lg_value)
             lg_journal = {
-                'name': asset.display_name,
+                'name': self.narration_gl,
                 'account_id': asset.asset_type_id.account_asset_gain_id.id,
                 'credit': lg_value if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'debit': 0.0,
@@ -130,7 +133,7 @@ class AccountAssetSale(models.Model):
         else:
             lg_value = abs(lg_value)
             lg_journal = {
-                'name': asset.display_name,
+                'name': self.narration_gl,
                 'account_id': asset.asset_type_id.account_asset_loss_id.id,
                 'credit': 0.0,
                 'debit': lg_value if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
@@ -142,7 +145,7 @@ class AccountAssetSale(models.Model):
             }
 
         debit3 = {
-            'name': asset.display_name,
+            'name': self.narration,
             'account_id': asset.asset_type_id.asset_sale_suspense_account_id.id,
             'credit': 0.0,
             'debit': rec.sale_value if float_compare(rec.sale_value, 0.0,
@@ -194,5 +197,5 @@ class AccountAssetSaleLine(models.Model):
         if self.asset_id:
             depreciated_value = sum([val.amount for val in self.asset_id.depreciation_line_ids])
             self.depreciation_value = depreciated_value
-            self.asset_value = self.asset_id.value_residual - depreciated_value
+            self.asset_value = self.asset_id.value - depreciated_value
 

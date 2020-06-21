@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Vendor Advances",
+    'name': "Drop Vendor Advances",
     'description': """
         Module is responsible for 'Vendor Advances'.This module included with-
         1. Creation / Modification of Vendor Advances

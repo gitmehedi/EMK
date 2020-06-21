@@ -12,7 +12,7 @@
         'mail',
         'account',
         'gbs_payment_instruction',
-        'gbs_vendor_bill',
+        # 'gbs_vendor_bill',
     ],
     "data": [
         "security/security.xml",
@@ -28,7 +28,7 @@
         "views/glif_process_success_view.xml",
         "views/api_process_view.xml",
         "views/api_process_error_view.xml",
-        "views/cbs_batch_process_success_view.xml",
+        "views/mdc_process_success_view.xml",
         "views/system_date_status_view.xml",
         "views/payment_instruction_view.xml",
         "views/file_import_view.xml",

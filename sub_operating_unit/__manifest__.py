@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    "name": "Sub Operating Unit",
+    "name": "Sequence",
     "summary": "Operating unit that will be child of Operating Unit.",
     "version": "10.0.1.0.0",
     'author': 'Genweb2 Limited',
