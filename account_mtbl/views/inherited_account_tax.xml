@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
+        <record id="inherited_view_tax_form" model="ir.ui.view">
+            <field name="name">inherited.account.tax.view</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='refund_account_id']" position="after">
+                    <field name="sou_id" domain="[('account_id', 'in', [account_id])]"
+                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                </xpath>
+            </field>
+        </record>
 <!--        <record id="inherited_view_tax_form" model="ir.ui.view">-->
 <!--            <field name="name">inherited.account.tax.view</field>-->
 <!--            <field name="model">account.tax</field>-->
