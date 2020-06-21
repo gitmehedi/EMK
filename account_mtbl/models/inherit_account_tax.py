@@ -21,6 +21,7 @@ class AccountTax(models.Model):
     # maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     # approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     sou_id = fields.Many2one('sub.operating.unit', string='Sequence')
+    type_tax_use = fields.Selection(default="purchase")
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
