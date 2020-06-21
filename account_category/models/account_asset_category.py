@@ -13,7 +13,8 @@ from odoo.tools import float_compare, float_is_zero
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
 
-    method_progress_factor = fields.Float('Depreciation Factor', digits=(1,3),default=0.0, track_visibility='onchange')
+    method_progress_factor = fields.Float('Depreciation Factor', digits=(1, 3), default=0.0,
+                                          track_visibility='onchange')
     category_ids = fields.One2many('account.asset.category', 'parent_id', string="Category")
     parent_id = fields.Many2one('account.asset.category', string="Asset Type Name", ondelete="restrict",
                                 track_visibility='onchange')
@@ -23,12 +24,19 @@ class AccountAssetCategory(models.Model):
         if self.parent_id:
             self.journal_id = self.parent_id.journal_id
             self.asset_suspense_account_id = self.parent_id.asset_suspense_account_id
+            self.asset_suspense_seq_id = self.parent_id.asset_suspense_seq_id
             self.account_asset_id = self.parent_id.account_asset_id
+            self.account_asset_seq_id = self.parent_id.account_asset_seq_id
             self.account_depreciation_id = self.parent_id.account_depreciation_id if self.parent_id.account_depreciation_id else None
+            self.account_depreciation_seq_id = self.parent_id.account_depreciation_seq_id if self.parent_id.account_depreciation_seq_id else None
             self.account_depreciation_expense_id = self.parent_id.account_depreciation_expense_id if self.parent_id.account_depreciation_expense_id else None
+            self.account_depreciation_expense_seq_id = self.parent_id.account_depreciation_expense_seq_id if self.parent_id.account_depreciation_expense_seq_id else None
             self.account_asset_loss_id = self.parent_id.account_asset_loss_id
+            self.account_asset_loss_seq_id = self.parent_id.account_asset_loss_seq_id
             self.account_asset_gain_id = self.parent_id.account_asset_gain_id
+            self.account_asset_gain_seq_id = self.parent_id.account_asset_gain_seq_id
             self.asset_sale_suspense_account_id = self.parent_id.asset_sale_suspense_account_id
+            self.asset_sale_suspense_seq_id = self.parent_id.asset_sale_suspense_seq_id
             self.method = self.parent_id.method
             self.depreciation_year = self.parent_id.depreciation_year
             self.method_period = self.parent_id.method_period
