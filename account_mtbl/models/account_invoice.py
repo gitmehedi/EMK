@@ -36,6 +36,11 @@ class AccountInvoiceLine(models.Model):
                                             self._uid))
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
 
+    @api.onchange('account_id')
+    def _onchange_account_id(self):
+        for rec in self:
+            rec.sub_operating_unit_id = None
+
 
 
 

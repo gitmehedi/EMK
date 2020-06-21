@@ -21,7 +21,6 @@
             </xpath>
             <xpath expr="//field[@name='account_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="readonly">True</attribute>
@@ -33,12 +32,14 @@
                 <field name="operating_unit_id" readonly="0"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
-                <field name="sub_operating_unit_id"
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="after">
+                <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
                    position="attributes">
