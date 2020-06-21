@@ -52,31 +52,81 @@
                             <group>
                                 <field name="journal_id"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}"
-                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="asset_suspense_account_id"
-                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="asset_sale_suspense_account_id"
-                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <label for="account_asset_id"/>
+                                <div>
+                                    <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline"
+                                           domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="account_asset_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                </div>
+                                <label for="asset_suspense_account_id"/>
+                                <div>
+                                    <field name="asset_suspense_account_id" class="oe_inline"
+                                           domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="asset_suspense_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                </div>
+                                <label for="asset_sale_suspense_account_id"/>
+                                <div>
+                                    <field name="asset_sale_suspense_account_id" class="oe_inline"
+                                           domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="asset_sale_suspense_seq_id"
+                                           attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                </div>
+
+
                             </group>
                             <group>
-                                <field name="account_asset_loss_id"
-                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="account_asset_gain_id"
-                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="account_depreciation_expense_id"
-                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="account_depreciation_id"
-                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
-                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <label for="account_asset_loss_id"/>
+                                <div>
+                                    <field name="account_asset_loss_id" class="oe_inline"
+                                           domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="account_asset_loss_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                </div>
+                                <label for="account_asset_gain_id"/>
+                                <div>
+                                    <field name="account_asset_gain_id" class="oe_inline"
+                                           domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="account_asset_gain_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                </div>
+                                <label for="account_depreciation_expense_id"/>
+                                <div>
+                                    <field name="account_depreciation_expense_id" class="oe_inline"
+                                           domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                           attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="account_depreciation_expense_seq_id"
+                                           attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                </div>
+                                <label for="account_depreciation_id"/>
+                                <div>
+                                    <field name="account_depreciation_id" class="oe_inline"
+                                           domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                           attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="account_depreciation_seq_id"
+                                           attrs="{'invisible': [('type','=', False)]}"
+                                           class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                </div>
+
+
                             </group>
                         </group>
                         <group>
