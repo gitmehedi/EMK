@@ -13,6 +13,7 @@
         'sub_operating_unit',
         'account_asset',
         'vendor_advance',
+        'account_mtbl',
     ],
     'data': [
         'security/security.xml',

@@ -6,7 +6,7 @@ class AccountInvoice(models.Model):
 
     @api.onchange('price_subtotal_without_vat','operating_unit_id','account_analytic_id')
     def _onchange_subtotal_without_vat(self):
-        if self.price_subtotal_without_vat:
+        if self.amount_untaxed:
             date = fields.Date.context_today(self)
             date_range_objs = self.env['date.range'].search(
                 [('date_start', '<=', date),
