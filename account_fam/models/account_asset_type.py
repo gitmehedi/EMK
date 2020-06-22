@@ -30,34 +30,35 @@ class AccountAssetCategory(models.Model):
                                ('linear', 'Straight Line/Linear'),
                                ('no_depreciation', 'No Depreciation')],
                               string='Computation Method', required=True, default='degressive',
-                              track_visibility='onchange',
-                              help="Choose the method to use to compute the amount of depreciation lines.\n"
-                                   "  * Linear: Calculated on basis of: Gross Value - Salvage Value/ Useful life of the fixed asset\n"
-                                   "  * Reducing Method: Calculated on basis of: Residual Value * Depreciation Factor")
+                              track_visibility='onchange')
     account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True,
                                        track_visibility='onchange',
-                                       domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
-                                       help="Account used to record the purchase of the asset at its original price.")
+                                       domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    account_asset_seq_id = fields.Many2one('sub.operating.unit', required=True)
     asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation', required=True,
                                                 domain=[('deprecated', '=', False)], track_visibility='onchange')
+    asset_suspense_seq_id = fields.Many2one('sub.operating.unit', required=True)
     account_depreciation_id = fields.Many2one('account.account', track_visibility='onchange', required=False,
                                               domain=[('deprecated', '=', False)],
                                               string='Accumulated Depreciation A/C', )
+    account_depreciation_seq_id = fields.Many2one('sub.operating.unit', required=True)
     account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
                                                       track_visibility='onchange', required=False,
                                                       domain=[('internal_type', '=', 'other'),
-                                                              ('deprecated', '=', False)],
-                                                      oldname='account_income_recognition_id',
-                                                      help="Account used in the periodical entries, to record a part of the asset as expense.")
+                                                              ('deprecated', '=', False)], )
+    account_depreciation_expense_seq_id = fields.Many2one('sub.operating.unit', required=True)
     account_asset_loss_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                             domain=[('deprecated', '=', False)],
                                             string='Asset Loss A/C')
+    account_asset_loss_seq_id = fields.Many2one('sub.operating.unit', required=True)
     account_asset_gain_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                             domain=[('deprecated', '=', False)],
                                             string='Asset Gain A/C')
+    account_asset_gain_seq_id = fields.Many2one('sub.operating.unit', required=True)
     asset_sale_suspense_account_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                                      domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
+    asset_sale_suspense_seq_id = fields.Many2one('sub.operating.unit', required=True)
 
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
@@ -78,6 +79,41 @@ class AccountAssetCategory(models.Model):
     @api.onchange('account_asset_id')
     def onchange_account_asset(self):
         return False
+
+    @api.onchange('account_asset_id')
+    def _onchange_account_asset_id(self):
+        for rec in self:
+            rec.account_asset_seq_id = None
+
+    @api.onchange('asset_suspense_account_id')
+    def _onchange_asset_suspense_account_id(self):
+        for rec in self:
+            rec.asset_suspense_seq_id = None
+
+    @api.onchange('account_depreciation_expense_id')
+    def _onchange_account_depreciation_expense_id(self):
+        for rec in self:
+            rec.account_depreciation_expense_seq_id = None
+
+    @api.onchange('account_depreciation_id')
+    def _onchange_account_depreciation_id(self):
+        for rec in self:
+            rec.account_depreciation_seq_id = None
+
+    @api.onchange('account_asset_loss_id')
+    def _onchange_account_asset_loss_id(self):
+        for rec in self:
+            rec.account_asset_loss_seq_id = None
+
+    @api.onchange('account_asset_gain_id')
+    def _onchange_account_asset_gain_id(self):
+        for rec in self:
+            rec.account_asset_gain_seq_id = None
+
+    @api.onchange('asset_sale_suspense_account_id')
+    def _onchange_asset_sale_suspense_account_id(self):
+        for rec in self:
+            rec.asset_sale_suspense_seq_id = None
 
     @api.constrains('method')
     def check_method(self):

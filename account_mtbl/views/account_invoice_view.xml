@@ -21,7 +21,6 @@
             </xpath>
             <xpath expr="//field[@name='account_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                <attribute name="readonly">True</attribute>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="readonly">True</attribute>
@@ -33,12 +32,14 @@
                 <field name="operating_unit_id" readonly="0"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
-                <field name="sub_operating_unit_id"
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="after">
+                <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
                    position="attributes">
@@ -63,4 +64,74 @@
             </xpath>
         </field>
     </record>
+
+    <record id="inherited_invoice_supplier_tree" model="ir.ui.view">
+        <field name="name">invoice.supplier.tree.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-success">state == 'draft'</attribute>
+                <attribute name="decoration-success">state == 'open'</attribute>
+                <attribute name="decoration-muted">state in('paid','cancel')</attribute>
+                <attribute name="decoration-bf">state in ('open','paid')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reference']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_due']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="attributes">
+                <attribute name="string">Bill No</attribute>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="after">
+                <field name="user_id" string="Responsible"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total_signed']" position="replace">
+                <field name="amount_total_signed" string="Total" sum="Total" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="number" string="Bill No"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_invoice_supplier_search" model="ir.ui.view">
+        <field name="name">invoice.supplier.search.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search string="Search Invoice">
+                    <field name="number" string="Invoice"
+                           filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                    <field name="journal_id"/>
+                    <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma'))]"/>
+                    <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]"
+                            groups="account.group_proforma_invoices"/>
+                    <filter name="invoices" string="Open"
+                            domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_partner_id" string="Vendor"
+                                context="{'group_by':'commercial_partner_id'}"/>
+                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <separator/>
+                        <filter string="Invoice Date" context="{'group_by':'date_invoice'}"/>
+                        <filter string="Due Date" context="{'group_by':'date_due'}"/>
+                    </group>
+                </search>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
