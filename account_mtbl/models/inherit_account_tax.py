@@ -22,7 +22,7 @@ class AccountTax(models.Model):
     # approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     sou_id = fields.Many2one('sub.operating.unit', string='Sequence', required="True")
     type_tax_use = fields.Selection(default="purchase")
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+    operating_unit_id = fields.Many2one('operating.unit', string='Branch')
 
     @api.onchange('account_id')
     def _onchange_account_id(self):

@@ -50,6 +50,11 @@
                                    context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                                    domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
+                            <field name="advance_ids"
+                                   domain="[('state', '=', 'approve'), ('partner_id', 'in', [partner_id]), ('active', '=', True), ('outstanding_amount', '&gt;', 0)]"
+                                   widget="many2many_tags" attrs="{'invisible': [('partner_id', '=', False)]}"
+                                   options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="adjusted_advance" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                         </group>
                         <group>
                             <field name="is_asset" invisible="1"/>
@@ -96,9 +101,9 @@
                                            context="{'type':parent.type}"
                                            domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"
                                            options="{'no_create': True}"/>
-                                    <field name="vat_id"
+                                    <field name="vat_id" domain="[('is_vat', '=', True)]"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
-                                    <field name="tds_id"
+                                    <field name="tds_id" domain="[('is_tds', '=', True)]"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
@@ -131,6 +136,7 @@
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    <field name="amount_tds" class="oe_subtotal_footer_separator" widget="monetary"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
@@ -167,10 +173,13 @@
                                     <field name="date"
                                            domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]"
                                            groups="account.group_account_user"/>
-                                    <field name="agreement_id"
-                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field name="company_id" options="{'no_create': True}"
                                            groups="base.group_multi_company"/>
+                                    <field name="agreement_id"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase')]"
+                                           context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
+                                    <field name="commercial_partner_id" invisible="1"/>
                                 </group>
                             </group>
                         </page>
