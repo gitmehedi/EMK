@@ -15,3 +15,4 @@ from . import inherit_res_partner_bank
 from . import inherit_res_currency_rate
 from . import inherit_vendor_advance
 from . import account_invoice
+from . import account_move
