@@ -194,12 +194,16 @@ class GBSFileImportWizard(models.TransientModel):
         # retrieve existing data from database
         aac, partner, branch, currency, sou, cc, jrnl = self.get_existing_data()
         # computation method
-        cm = {'No Depreciation': 'no_depreciation', 'Reducing': 'degressive', 'Straight Line': 'linear'}
+        cm = {'No Depreciation': 'no_depreciation', 'Reducing Method': 'degressive', 'Straight Line/Linear': 'linear'}
 
         for line in reader:
             if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):
-                raise ValidationError(_(
-                    "** Header of uploaed file does not match with expected one. \n Please check header of the file."))
+                if len(line.keys()) > len(allow_header):
+                    header_mis = list(set(line.keys()) - set(allow_header))
+                    raise ValidationError(_("Remove Header from file with name {0}.".format(header_mis)))
+                else:
+                    header_mis = list(set(allow_header) - set(line.keys()))
+                    raise ValidationError(_("Add Header in file with name {0}.".format(header_mis)))
 
             index += 1
             line_no = index + 1
@@ -217,7 +221,8 @@ class GBSFileImportWizard(models.TransientModel):
             lst_depr_date = line['last depr. date'].strip()
             pb_code = line['purchase branch'].strip()
             cb_code = line['current branch'].strip()
-            sou_name = line['sub operating unit'].strip()
+            # sou_code = line['sub operating unit'].strip()
+            sou_code = '001'
             cc_code = line['cost centre'].strip()
             currency_code = line['currency'].strip()
             depr_base_value = float(line['depr. base value'].strip().replace(',', ''))
@@ -249,7 +254,7 @@ class GBSFileImportWizard(models.TransientModel):
             if not self.date_validate(usage_date):
                 errors += self.format_error(line_no, 'Usage Date [{0}] invalid value'.format(usage_date))
 
-            if not self.date_validate(lst_depr_date) and  cm_code != 'No Depreciation':
+            if not self.date_validate(lst_depr_date) and cm_code != 'No Depreciation':
                 errors += self.format_error(line_no, 'Last Depr. Date [{0}] invalid value'.format(lst_depr_date))
 
             if pb_code not in branch.keys():
@@ -258,11 +263,11 @@ class GBSFileImportWizard(models.TransientModel):
             if cb_code not in branch.keys():
                 errors += self.format_error(line_no, 'Current Branch Code [{0}] invalid value'.format(cb_code))
 
-            # if sou_code not in sou.keys():
-            #     errors += self.format_error(line_no, 'Sequence Code [{0}] invalid value'.format(sou_code))
-            #
-            # if cc_code not in cc.keys():
-            #     errors += self.format_error(line_no, 'Cost Center Code [{0}] invalid value'.format(cc_code))
+            if sou_code not in sou.keys():
+                errors += self.format_error(line_no, 'Sequence Code [{0}] invalid value'.format(sou_code))
+
+            if cc_code not in cc.keys():
+                errors += self.format_error(line_no, 'Cost Center Code [{0}] invalid value'.format(cc_code))
 
             if currency_code not in currency.keys():
                 errors += self.format_error(line_no, 'Currency Code [{0}] invalid value'.format(currency_code))
@@ -291,8 +296,8 @@ class GBSFileImportWizard(models.TransientModel):
                 val['lst_depr_date'] = lst_depr_date
                 val['operating_unit_id'] = branch[pb_code]
                 val['current_branch_id'] = branch[cb_code]
-                # val['sub_operating_unit_id'] = sou[sou_code]
-                # val['cost_centre_id'] = cc[cc_code]
+                val['sub_operating_unit_id'] = sou[sou_code]
+                val['cost_centre_id'] = cc[cc_code]
                 val['depr_base_value'] = depr_base_value
                 val['value'] = cost_value
                 val['value_residual'] = wdv
@@ -316,8 +321,8 @@ class GBSFileImportWizard(models.TransientModel):
                 history_line = {
                     'from_branch_id': branch[pb_code],
                     'operating_unit_id': branch[cb_code],
-                    # 'sub_operating_unit_id': sou[sou_code],
-                    # 'cost_centre_id': cc[cc_code],
+                    'sub_operating_unit_id': sou[sou_code],
+                    'cost_centre_id': cc[cc_code],
                     'receive_date': usage_date,
                     'state': 'active'
                 }
@@ -346,11 +351,9 @@ class GBSFileImportWizard(models.TransientModel):
                 print(line_no)
 
         end = time.time()
-        print('Total Execution Time: {0}'.format(end-start))
+        print('Total Execution Time: {0}'.format(end - start))
 
         if len(errors) > 0:
             file_path = os.path.join(os.path.expanduser("~"), "FAM_ERR_" + fields.Datetime.now())
             with open(file_path, "w+") as file:
                 file.write(errors)
-
-
