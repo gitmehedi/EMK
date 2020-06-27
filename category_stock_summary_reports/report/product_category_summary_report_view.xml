@@ -18,7 +18,18 @@
                     <div class="page">
                         <div class="row mb32">
                             <div class="col-xs-12">
-                                <h2 class="text-center">Product Category Summary</h2>
+                                <h2 class="text-center">Category Summary</h2>
+                                <p class="text-center">
+                                    <strong>Category Name:
+                                        <span t-esc="data['category_name']"/>
+                                    </strong>
+                                    <br/>
+                                    <t t-if="data['location_id']">
+                                        <strong>Shop Name:
+                                            <span t-esc="data['location_name']"/>
+                                        </strong>
+                                    </t>
+                                </p>
                             </div>
                         </div>
 
@@ -31,10 +42,14 @@
                                     <th class="text-center">Attributes</th>
                                     <th class="text-center">Received Qty</th>
                                     <th class="text-center">Sales Qty</th>
-                                    <th class="text-center">Move Qty</th>
+                                    <t t-if="data['location_id']">
+                                        <th class="text-center">Move Qty</th>
+                                    </t>
                                     <th class="text-center">On Hand Qty</th>
                                     <th class="text-center">Sales Price</th>
-                                    <th class="text-center">Cost Price</th>
+                                    <t t-if="not data['location_id']">
+                                        <th class="text-center">Cost Price</th>
+                                    </t>
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,18 +73,22 @@
                                         <td class="text-center">
                                             <span class="text-nowrap" t-esc="obj['sale_qty']"/>
                                         </td>
-                                        <td class="text-center">
-                                            <span class="text-nowrap" t-esc="obj['move_qty']"/>
-                                        </td>
+                                        <t t-if="data['location_id']">
+                                            <td class="text-center">
+                                                <span class="text-nowrap" t-esc="obj['move_qty']"/>
+                                            </td>
+                                        </t>
                                         <td class="text-center">
                                             <span class="text-nowrap" t-esc="obj['on_hand']"/>
                                         </td>
                                         <td class="text-center">
                                             <span class="text-nowrap" t-esc="obj['sale_price']"/>
                                         </td>
-                                        <td class="text-center">
-                                            <span class="text-nowrap" t-esc="obj['cost_price']"/>
-                                        </td>
+                                        <t t-if="not data['location_id']">
+                                            <td class="text-center">
+                                                <span class="text-nowrap" t-esc="obj['cost_price']"/>
+                                            </td>
+                                        </t>
                                     </tr>
                                 </t>
                             </tbody>
@@ -81,7 +100,7 @@
 
         <report id="action_report_product_category_summary"
                 model="stock.move"
-                string="Product Category Summary"
+                string="Category Summary"
                 name="category_stock_summary_reports.report_product_category_summary_qweb"
                 file="category_stock_summary_reports.report_product_category_summary_qweb"
                 multi="True"
