@@ -26,7 +26,7 @@
         </record>
 
         <record id="action_wizard_product_category_summary" model="ir.actions.act_window">
-            <field name="name">Product Category Summary</field>
+            <field name="name">Category Summary</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.category.summary.wizard</field>
             <field name="view_type">form</field>
@@ -36,7 +36,7 @@
 
         <menuitem action="action_wizard_product_category_summary"
                   id="menu_product_category_summary"
-                  string="Product Category Summary"
+                  string="Category Summary"
                   parent="menu_inventory_report_main_menu" sequence="2"
                   groups="stock.group_stock_manager,pebbles_transfer_user.group_requisition_transfer_approval_manager"/>
 
