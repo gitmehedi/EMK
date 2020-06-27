@@ -16,7 +16,13 @@ class ProductCategorySummaryReport(models.AbstractModel):
                        COALESCE(SUM(stock.rec_qty),0) AS rec_qty,
                        COALESCE(SUM(stock.sale_qty),0) AS sale_qty,
                        COALESCE(SUM(stock.move_qty),0) AS move_qty,
-                       COALESCE(SUM(stock.rec_qty) - SUM(stock.sale_qty) - SUM(stock.move_qty),0) AS stock_qty
+                       COALESCE(SUM(stock.rec_qty) - (SUM(stock.sale_qty) + SUM(stock.move_qty)),0) AS stock_qty,
+                       pb.name,
+                       (SELECT STRING_AGG(Name, ', ') FROM product_attribute_value_product_product_rel pavpp
+                        LEFT JOIN product_attribute_value pav
+                         ON (pav.id=pavpp.att_id)
+                        WHERE pp.id = pavpp.prod_id
+                        ) AS attribute
                 FROM product_template pt
                 LEFT JOIN product_product pp ON (pp.product_tmpl_id=pt.id)
                 LEFT JOIN product_brand pb ON (pb.id = pt.product_brand_id)
@@ -32,8 +38,8 @@ class ProductCategorySummaryReport(models.AbstractModel):
                       LEFT JOIN stock_location sl 
                           ON (sl.id = sm.location_id)
                       WHERE sm.location_dest_id = %s 
-                      GROUP BY sm.product_qty,
-                                 sm.product_id
+                            AND sm.location_id IN (SELECT id FROM stock_location WHERE usage !='customer') 
+                      GROUP BY sm.product_id
                       ORDER BY product_id ASC) rec
                    LEFT JOIN
                      (SELECT sm.product_id,
@@ -41,10 +47,9 @@ class ProductCategorySummaryReport(models.AbstractModel):
                       FROM stock_move sm
                       LEFT JOIN stock_location sl 
                          ON (sl.id=sm.location_id)
-                      WHERE sm.location_id=9
-                        AND sl.usage ='customer'
-                      GROUP BY sm.product_qty,
-                               sm.product_id
+                      WHERE sm.location_id=%s
+                        AND sm.location_dest_id IN (SELECT id FROM stock_location WHERE usage='customer')
+                      GROUP BY sm.product_id
                       ORDER BY sm.product_id ASC) sale 
                      ON (rec.product_id = sale.product_id)
                    LEFT JOIN
@@ -53,9 +58,8 @@ class ProductCategorySummaryReport(models.AbstractModel):
                       FROM stock_move sm
                       LEFT JOIN stock_location sl ON (sl.id=sm.location_id)
                       WHERE sm.location_id=%s
-                        AND sl.usage !='customer'
-                      GROUP BY sm.product_qty,
-                               sm.product_id
+                        AND sm.location_dest_id IN (SELECT id FROM stock_location WHERE usage !='customer' AND id!=%s)
+                      GROUP BY sm.product_id
                       ORDER BY sm.product_id ASC) mv 
                       ON (rec.product_id = mv.product_id)) stock 
                                ON (stock.product_id = pp.id)
@@ -64,7 +68,9 @@ class ProductCategorySummaryReport(models.AbstractModel):
                              pp.name_template,
                              pt.categ_id,
                              pt.list_price,
-                             pt.id
+                             pt.id,
+                             pp.id,
+                             pb.name
                     ORDER BY pp.default_code ASC
     """
 
@@ -79,16 +85,18 @@ class ProductCategorySummaryReport(models.AbstractModel):
 
     def get_data(self, data):
         report_data = []
-        self._cr.execute(self.sql_str, (data['location_id'], data['location_id'], data['category_id']))
+
+        self._cr.execute(self.sql_str, (data['location_id'], data['location_id'],data['location_id'],data['location_id'], data['category_id']))
 
         for val in self._cr.fetchall():
             temp_dict = {}
             temp_dict['code'] = val[0]
             temp_dict['name'] = val[1]
-            temp_dict['brand'] = 'Brand'
-            temp_dict['attributes'] = 'Attributes'
+            temp_dict['brand'] = val[9]
+            temp_dict['attributes'] = val[10]
             temp_dict['received_qty'] = val[5]
             temp_dict['sale_qty'] = val[6]
+            temp_dict['move_qty'] = val[7]
             temp_dict['on_hand'] = val[8]
             temp_dict['sale_price'] = val[3]
             temp_dict['cost_price'] = val[4]

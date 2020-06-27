@@ -31,7 +31,8 @@
                                     <th class="text-center">Attributes</th>
                                     <th class="text-center">Received Qty</th>
                                     <th class="text-center">Sales Qty</th>
-                                    <th class="text-center">On Hand</th>
+                                    <th class="text-center">Move Qty</th>
+                                    <th class="text-center">On Hand Qty</th>
                                     <th class="text-center">Sales Price</th>
                                     <th class="text-center">Cost Price</th>
                                 </tr>
@@ -56,6 +57,9 @@
                                         </td>
                                         <td class="text-center">
                                             <span class="text-nowrap" t-esc="obj['sale_qty']"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-nowrap" t-esc="obj['move_qty']"/>
                                         </td>
                                         <td class="text-center">
                                             <span class="text-nowrap" t-esc="obj['on_hand']"/>
