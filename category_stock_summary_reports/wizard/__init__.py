@@ -20,3 +20,4 @@
 ##############################################################################
 import print_report
 import purchase_order_wizard
+import product_category_summary
