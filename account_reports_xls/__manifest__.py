@@ -12,6 +12,7 @@
         'report_xlsx',
         'report',
         'account_operating_unit',
+        'account_fy_closing',
     ],
     'data': [
         'view/reports.xml',

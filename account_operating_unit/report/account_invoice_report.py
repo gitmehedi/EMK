@@ -14,7 +14,7 @@ class AccountInvoiceReport(models.Model):
     def _select(self):
         select_str = super(AccountInvoiceReport, self)._select()
         select_str += """
-            ,sub.operating_unit_id
+            ,sub_operating_unit_id
         """
         return select_str
 

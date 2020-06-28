@@ -13,8 +13,7 @@ class AccountAssetAllocationHistory(models.Model):
     from_branch_id = fields.Many2one('operating.unit', string='From Branch', track_visibility='onchange')
     operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True,
                                         track_visibility='onchange')
-    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True,
-                                            track_visibility='onchange')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', track_visibility='onchange')
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True, track_visibility='onchange')
     receive_date = fields.Date(string='Receive Date', required=True, track_visibility='onchange')
     transfer_date = fields.Date(string='Transfer Date', track_visibility='onchange')
