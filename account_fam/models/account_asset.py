@@ -195,7 +195,9 @@ class AccountAssetAsset(models.Model):
 							aaa.sub_operating_unit_id,
 							aac.name as type_name,
                             aac.account_depreciation_id,
+                            aac.account_depreciation_seq_id,
                             aac.account_depreciation_expense_id,
+                            aac.account_depreciation_expense_seq_id,
                             SUM(aaa.lst_depr_amount) AS depr_sum
                         FROM account_asset_asset aaa
                         LEFT JOIN account_asset_category aac
@@ -210,16 +212,18 @@ class AccountAssetAsset(models.Model):
 							aaa.sub_operating_unit_id,
 							aac.name,
                             aac.account_depreciation_id,
-                            aac.account_depreciation_expense_id
+                            aac.account_depreciation_seq_id,
+                            aac.account_depreciation_expense_id,
+                            aac.account_depreciation_expense_seq_id
                           ORDER BY aaa.current_branch_id DESC';
                     FOR mrec IN EXECUTE move_query
                     LOOP
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.sub_operating_unit_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
+                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.account_depreciation_expense_seq_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.sub_operating_unit_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
+                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.account_depreciation_seq_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
                         
                     END LOOP;
                     RETURN move;
@@ -427,7 +431,7 @@ class AccountAssetAsset(models.Model):
                 'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
                 'analytic_account_id': line.asset_id.cost_centre_id.id if line.asset_id.cost_centre_id else False,
                 'operating_unit_id': line.asset_id.current_branch_id.id,
-                'sub_operating_unit_id': line.asset_id.sub_operating_unit_id.id if line.asset_id.sub_operating_unit_id else False,
+                'sub_operating_unit_id': category_id.account_depreciation_seq_id.id if category_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
@@ -440,7 +444,7 @@ class AccountAssetAsset(models.Model):
                 'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
                 'analytic_account_id': line.asset_id.cost_centre_id.id if line.asset_id.cost_centre_id else False,
                 'operating_unit_id': line.asset_id.current_branch_id.id,
-                'sub_operating_unit_id': line.asset_id.sub_operating_unit_id.id if line.asset_id.sub_operating_unit_id else False,
+                'sub_operating_unit_id': category_id.account_depreciation_expense_seq_id.id if category_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and line.amount or 0.0,
             }

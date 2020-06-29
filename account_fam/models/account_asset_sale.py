@@ -98,7 +98,7 @@ class AccountAssetSale(models.Model):
             'debit': 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
-            'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+            'sub_operating_unit_id': asset.asset_type_id.account_asset_seq_id.id if asset.asset_type_id else None,
             'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
             'currency_id': company_currency != current_currency and current_currency.id or False,
         }
@@ -111,7 +111,7 @@ class AccountAssetSale(models.Model):
                                                                                        precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
-            'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+            'sub_operating_unit_id': asset.asset_type_id.account_depreciation_seq_id.id if asset.asset_type_id else None,
             'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
             'currency_id': company_currency != current_currency and current_currency.id or False,
         }
@@ -126,7 +126,7 @@ class AccountAssetSale(models.Model):
                 'debit': 0.0,
                 'journal_id': asset.asset_type_id.journal_id.id,
                 'operating_unit_id': asset.current_branch_id.id,
-                'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+                'sub_operating_unit_id': asset.asset_type_id.account_asset_gain_seq_id.id if asset.asset_type_id else None,
                 'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -139,7 +139,7 @@ class AccountAssetSale(models.Model):
                 'debit': lg_value if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.asset_type_id.journal_id.id,
                 'operating_unit_id': asset.current_branch_id.id,
-                'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+                'sub_operating_unit_id': asset.asset_type_id.account_asset_gain_seq_id.id if asset.asset_type_id else None,
                 'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -152,7 +152,7 @@ class AccountAssetSale(models.Model):
                                                      precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
-            'sub_operating_unit_id': asset.sub_operating_unit_id.id if asset.sub_operating_unit_id else None,
+            'sub_operating_unit_id': asset.asset_type_id.asset_sale_suspense_seq_id.id if asset.asset_type_id else None,
             'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
             'currency_id': company_currency != current_currency and current_currency.id or False,
         }
