@@ -26,7 +26,7 @@
         "views/glif_process_view.xml",
         "views/glif_process_error_view.xml",
         "views/glif_process_success_view.xml",
-        "views/api_process_view.xml",
+        "views/api_interface_view.xml",
         "views/api_process_error_view.xml",
         "views/mdc_process_success_view.xml",
         "views/system_date_status_view.xml",

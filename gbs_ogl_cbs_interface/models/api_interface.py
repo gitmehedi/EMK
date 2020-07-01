@@ -2,11 +2,10 @@ import requests, json
 
 from odoo import models, fields, api, _, tools, SUPERUSER_ID
 from xml.etree import ElementTree
-import lxml.etree as etree
 from odoo.exceptions import ValidationError
 
 
-class SOAPProcess(models.Model):
+class APIInterface(models.Model):
     _name = 'soap.process'
     _inherit = ["mail.thread", "ir.needaction_mixin"]
     _rec_name = 'name'
@@ -24,9 +23,48 @@ class SOAPProcess(models.Model):
     teller_no = fields.Char(string='Teller Number', required=True, track_visibility='onchange')
     ins_num = fields.Char(string='Institution Number', required=True, track_visibility='onchange')
     uuid_source = fields.Char(string='Source of Request', required=True, track_visibility='onchange', default='OGL')
-    flag_4 = fields.Char(string='Flag 4', required=True, track_visibility='onchange', default='W')
-    flag_5 = fields.Char(string='Flag 5', required=True, track_visibility='onchange', default='Y')
+    uuid_num = fields.Char(string='UUIDNUM', track_visibility='onchange')
+    uuid_seq_no = fields.Char(string='UUIDSeqNo', track_visibility='onchange')
+    wsdl_type = fields.Selection(
+        [('GenericTransferAmount', 'GenericTransferAmount'), ('GLToDepositTransfer', 'GLToDepositTransfer'),
+         ('GLToGLTransfer', 'GLToGLTransfer'), ('GLEnquiryPrompt', 'GLEnquiryPrompt')], string='WSDL Type', required=True)
     status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
+
+    msg_len = fields.Char(string='MsgLen', track_visibility='onchange')
+    msg_typ = fields.Char(string='MsgTyp', track_visibility='onchange')
+    cyc_num = fields.Char(string='CycNum', track_visibility='onchange')
+    msg_num = fields.Char(string='MsgNum', track_visibility='onchange')
+    seg_num = fields.Char(string='SegNum', track_visibility='onchange')
+    seg_num2 = fields.Char(string='SegNum2', track_visibility='onchange')
+    frontend_num = fields.Char(string='FrontEndNum', track_visibility='onchange')
+    terml_num = fields.Char(string='TermlNum', track_visibility='onchange')
+    inst_num = fields.Char(string='InstNum', track_visibility='onchange')
+    brch_num = fields.Char(string='BrchNum', track_visibility='onchange')
+    workstation_num = fields.Char(string='WorkstationNum', track_visibility='onchange')
+    teller_num = fields.Char(string='TellerNum', track_visibility='onchange')
+    tran_num = fields.Char(string='TranNum', track_visibility='onchange')
+    jrnl_num = fields.Char(string='JrnlNum', track_visibility='onchange')
+    hdr_dt = fields.Char(string='HdrDt', track_visibility='onchange')
+    filler1 = fields.Char(string='Filler1', track_visibility='onchange')
+    filler2 = fields.Char(string='Filler2', track_visibility='onchange')
+    filler3 = fields.Char(string='Filler3', track_visibility='onchange')
+    filler4 = fields.Char(string='Filler4', track_visibility='onchange')
+    filler5 = fields.Char(string='Filler5', track_visibility='onchange')
+    filler6 = fields.Char(string='Filler6', track_visibility='onchange')
+
+    flag_1 = fields.Char(string='Flag1', track_visibility='onchange')
+    flag_2 = fields.Char(string='Flag2', track_visibility='onchange')
+    flag_3 = fields.Char(string='Flag3', track_visibility='onchange')
+    flag_4 = fields.Char(string='Flag4', track_visibility='onchange', required=True, default='W')
+    flag_5 = fields.Char(string='Flag5', track_visibility='onchange', required=True, default='Y')
+    flag_6 = fields.Char(string='Flag6', track_visibility='onchange')
+    flag_7 = fields.Char(string='Flag7', track_visibility='onchange')
+    sprvsr_id = fields.Char(string='SprvsrID', track_visibility='onchange')
+    sup_date = fields.Char(string='SupDate', track_visibility='onchange')
+    checker_id1 = fields.Char(string='CheckerID1', track_visibility='onchange')
+    parent_blink_jrnl_num = fields.Char(string='ParentBlinkJrnlNum', track_visibility='onchange')
+    checker_id2 = fields.Char(string='CheckerID2', track_visibility='onchange')
+    blink_jrnl_num = fields.Char(string='BlinkJrnlNum', track_visibility='onchange')
 
     @api.constrains('name', 'endpoint_fullname')
     def _check_unique_constrain(self):
@@ -49,11 +87,11 @@ class SOAPProcess(models.Model):
         if self.wsdl_name:
             self.wsdl_name = self.wsdl_name.strip()
 
-    @api.depends("http_method","endpoint_url", "endpoint_port", "wsdl_name")
+    @api.depends("http_method", "wsdl_type", "endpoint_url", "endpoint_port", "wsdl_name")
     def _compute_endpoint_fullname(self):
         for rec in self:
-            if rec.http_method and rec.endpoint_url and rec.endpoint_port and rec.wsdl_name:
-                rec.endpoint_fullname = rec.http_method + "://" + rec.endpoint_url + ':' + rec.endpoint_port + '/' + rec.wsdl_name
+            if rec.http_method and rec.endpoint_url and rec.endpoint_port and rec.wsdl_type and rec.wsdl_name:
+                rec.endpoint_fullname = rec.http_method + "://" + rec.endpoint_url + ':' + rec.endpoint_port + '/' + rec.wsdl_type + '/' + rec.wsdl_name
 
     @api.model
     def apiInterfaceMapping(self, debit, credit):
