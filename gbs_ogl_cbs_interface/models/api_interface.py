@@ -27,7 +27,8 @@ class APIInterface(models.Model):
     uuid_seq_no = fields.Char(string='UUIDSeqNo', track_visibility='onchange')
     wsdl_type = fields.Selection(
         [('GenericTransferAmount', 'GenericTransferAmount'), ('GLToDepositTransfer', 'GLToDepositTransfer'),
-         ('GLToGLTransfer', 'GLToGLTransfer'), ('GLEnquiryPrompt', 'GLEnquiryPrompt')], string='WSDL Type', required=True)
+         ('GLToGLTransfer', 'GLToGLTransfer'), ('GLEnquiryPrompt', 'GLEnquiryPrompt')], string='WSDL Type',
+        required=True)
     status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     msg_len = fields.Char(string='MsgLen', track_visibility='onchange')
@@ -94,18 +95,18 @@ class APIInterface(models.Model):
                 rec.endpoint_fullname = rec.http_method + "://" + rec.endpoint_url + ':' + rec.endpoint_port + '/' + rec.wsdl_type + '/' + rec.wsdl_name
 
     @api.model
-    def apiInterfaceMapping(self, debit, credit):
-        endpoint = self.search([('name', '=', 'GenericTransferAmountInterfaceHttpService')], limit=1)
+    def interface_mapping(self, type):
+        endpoint = self.search([('wsdl_type', '=', type)], limit=1)
         if endpoint:
             return endpoint
 
     @api.model
     def call_payment_api(self, record):
         debit, credit = 1, 1
-        endpoint = self.apiInterfaceMapping(debit, credit)
+        endpoint = self.interface_mapping('GenericTransferAmountInterfaceHttpService')
 
         if endpoint:
-            reqBody = self.genGenericTransferAmountInterfaceForPayment(record, endpoint)
+            reqBody = self.api_gneric_transfer_amount(record, endpoint)
             try:
                 resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
                                         auth=(endpoint.username, endpoint.password),
@@ -158,13 +159,181 @@ class APIInterface(models.Model):
             raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
     @api.model
-    def action_payment_instruction(self):
-        payment_ids = self.env['payment.instruction'].search([('is_sync', '=', False), ('state', '=', 'approved')])
-        for record in payment_ids:
-            self.call_payment_api(record)
+    def call_glto_deposit_transfer(self, record):
+        debit, credit = 1, 1
+        endpoint = self.interface_mapping('GLToDepositTransfer')
+
+        if endpoint:
+            reqBody = self.api_glto_deposit_transfer(record, endpoint)
+            try:
+                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
+                                        auth=(endpoint.username, endpoint.password),
+                                        headers={'content-type': 'application/text'})
+
+                root = ElementTree.fromstring(resBody.content)
+                response = {}
+                for rec in root.iter('*'):
+                    key = rec.tag.split("}")
+                    text = rec.text
+                    if len(key) == 2:
+                        response[key[1]] = text
+                    else:
+                        response[key[0]] = text
+
+                if 'OkMessage' in response:
+                    record.write({'is_sync': True, 'cbs_response': resBody.content})
+                    return "OkMessage"
+                elif 'ErrorMessage' in response:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['ErrorCode'],
+                        'error_message': response['ErrorMessage'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
+                    return error
+                elif 'faultcode' in response:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['faultcode'],
+                        'error_message': response['faultstring'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
+                    return error
+            except Exception:
+                error = {
+                    'name': endpoint.endpoint_fullname,
+                    'error_code': "Operation Interrupted",
+                    'error_message': "Please contact with authority.",
+                }
+                self.env['soap.process.error'].create(error)
+                return error
+        else:
+            raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
     @api.model
-    def genGenericTransferAmountInterfaceForPayment(self, record, endpoint):
+    def call_glto_gl_transfer(self, record):
+        debit, credit = 1, 1
+        endpoint = self.interface_mapping('GLToGLTransfer')
+
+        if endpoint:
+            reqBody = self.api_gltogl_transfer(record, endpoint)
+            try:
+                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
+                                        auth=(endpoint.username, endpoint.password),
+                                        headers={'content-type': 'application/text'})
+
+                root = ElementTree.fromstring(resBody.content)
+                response = {}
+                for rec in root.iter('*'):
+                    key = rec.tag.split("}")
+                    text = rec.text
+                    if len(key) == 2:
+                        response[key[1]] = text
+                    else:
+                        response[key[0]] = text
+
+                if 'OkMessage' in response:
+                    record.write({'is_sync': True, 'cbs_response': resBody.content})
+                    return "OkMessage"
+                elif 'ErrorMessage' in response:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['ErrorCode'],
+                        'error_message': response['ErrorMessage'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
+                    return error
+                elif 'faultcode' in response:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['faultcode'],
+                        'error_message': response['faultstring'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
+                    return error
+            except Exception:
+                error = {
+                    'name': endpoint.endpoint_fullname,
+                    'error_code': "Operation Interrupted",
+                    'error_message': "Please contact with authority.",
+                }
+                self.env['soap.process.error'].create(error)
+                return error
+        else:
+            raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
+
+    @api.model
+    def call_gl_enquiry_payment(self, record):
+        debit, credit = 1, 1
+        endpoint = self.interface_mapping('GLEnquiryPrompt')
+
+        if endpoint:
+            reqBody = self.api_gl_enquiry_prompt(record, endpoint)
+            try:
+                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
+                                        auth=(endpoint.username, endpoint.password),
+                                        headers={'content-type': 'application/text'})
+
+                root = ElementTree.fromstring(resBody.content)
+                response = {}
+                for rec in root.iter('*'):
+                    key = rec.tag.split("}")
+                    text = rec.text
+                    if len(key) == 2:
+                        response[key[1]] = text
+                    else:
+                        response[key[0]] = text
+
+                if 'OkMessage' in response:
+                    record.write({'is_sync': True, 'cbs_response': resBody.content})
+                    return "OkMessage"
+                elif 'ErrorMessage' in response:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['ErrorCode'],
+                        'error_message': response['ErrorMessage'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
+                    return error
+                elif 'faultcode' in response:
+                    error = {
+                        'name': endpoint.endpoint_fullname,
+                        'request_body': reqBody,
+                        'response_body': resBody.content,
+                        'error_code': response['faultcode'],
+                        'error_message': response['faultstring'],
+                        'errors': json.dumps(response)
+                    }
+                    self.env['soap.process.error'].create(error)
+                    return error
+            except Exception:
+                error = {
+                    'name': endpoint.endpoint_fullname,
+                    'error_code': "Operation Interrupted",
+                    'error_message': "Please contact with authority.",
+                }
+                self.env['soap.process.error'].create(error)
+                return error
+        else:
+            raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
+
+    @api.model
+    def api_generic_transfer_amount(self, record, endpoint):
         credit = record.default_credit_account_id.code if record.default_credit_account_id else None
         c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
         c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
@@ -228,6 +397,423 @@ class APIInterface(models.Model):
                                           data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
                                           data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
         return request
+
+    @api.model
+    def api_glto_deposit_transfer(self, record, endpoint):
+        credit = record.default_credit_account_id.code if record.default_credit_account_id else None
+        c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
+        c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
+
+        debit = record.default_debit_account_id.code if record.default_debit_account_id else None
+        d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
+        d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
+
+        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
+
+        if record.vendor_bank_acc:
+            to_bgl = record.vendor_bank_acc.zfill(17)
+        else:
+            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
+
+        if record.narration:
+            statement = record.code + " " + record.narration
+        else:
+            statement = record.code
+
+        data = {
+            'InstNum': endpoint.ins_num,
+            'BrchNum': d_ou.zfill(5),
+            'TellerNum': endpoint.teller_no,
+            'Flag4': endpoint.flag_4,
+            'Flag5': endpoint.flag_5,
+            'UUIDSource': endpoint.uuid_source,
+            'UUIDNUM': str(record.code),
+            'UUIDSeqNo': '',
+            'FrmAcct': from_bgl,
+            'Amt': record.amount,
+            'ToAcct': to_bgl,
+            'StmtNarr': statement,
+        }
+        request = """<soapenv:Envelope
+                        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                        xmlns:v1="http://BaNCS.TCS.com/webservice/GLToGLTransferInterface/v1"
+                        xmlns:ban = "http://TCS.BANCS.Adapter/BANCSSchema">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <v1:gLToGLTransfer>
+                                <!--Optional:-->
+                                <GLToGLXferRq>
+                                    <ban:RqHeader>
+                                        <!--Optional:-->
+                                        <ban:Filler1></ban:Filler1>
+                                        <!--Optional:-->
+                                        <ban:MsgLen></ban:MsgLen>
+                                        <!--Optional:-->
+                                        <ban:Filler2></ban:Filler2>
+                                        <!--Optional:-->
+                                        <ban:MsgTyp></ban:MsgTyp>
+                                        <!--Optional:-->
+                                        <ban:Filler3></ban:Filler3>
+                                        <!--Optional:-->
+                                        <ban:CycNum></ban:CycNum>
+                                        <!--Optional:-->
+                                        <ban:MsgNum></ban:MsgNum>
+                                        <!--Optional:-->
+                                        <ban:SegNum></ban:SegNum>
+                                        <!--Optional:-->
+                                        <ban:SegNum2></ban:SegNum2>
+                                        <!--Optional:-->
+                                        <ban:FrontEndNum></ban:FrontEndNum>
+                                        <!--Optional:-->
+                                        <ban:TermlNum></ban:TermlNum>
+                                        <!--Optional:-->
+                                        <ban:InstNum>003</ban:InstNum>
+                                        <ban:BrchNum>006</ban:BrchNum>
+                                        <!--Optional:-->
+                                        <ban:WorkstationNum></ban:WorkstationNum>
+                                        <!--Optional:-->
+                                        <ban:TellerNum>4748889</ban:TellerNum>
+                                        <!--Optional:-->
+                                        <ban:TranNum></ban:TranNum>
+                                        <!--Optional:-->
+                                        <ban:JrnlNum></ban:JrnlNum>
+                                        <!--Optional:-->
+                                        <ban:HdrDt></ban:HdrDt>
+                                        <!--Optional:-->
+                                        <ban:Filler4></ban:Filler4>
+                                        <!--Optional:-->
+                                        <ban:Filler5></ban:Filler5>
+                                        <!--Optional:-->
+                                        <ban:Filler6></ban:Filler6>
+                                        <!--Optional:-->
+                                        <ban:Flag1></ban:Flag1>
+                                        <!--Optional:-->
+                                        <ban:Flag2></ban:Flag2>
+                                        <!--Optional:-->
+                                        <ban:Flag3></ban:Flag3>
+                                        <!--Optional:-->
+                                        <ban:Flag4></ban:Flag4>
+                                        <ban:Flag5></ban:Flag5>
+                                        <!--Optional:-->
+                                        <ban:Flag6></ban:Flag6>
+                                        <!--Optional:-->
+                                        <ban:Flag7></ban:Flag7>
+                                        <!--Optional:-->
+                                        <ban:SprvsrID></ban:SprvsrID>
+                                        <!--Optional:-->
+                                        <ban:SupDate></ban:SupDate>
+                                        <!--Optional:-->
+                                        <ban:CheckerID1></ban:CheckerID1>
+                                        <!--Optional:-->
+                                        <ban:ParentBlinkJrnlNum></ban:ParentBlinkJrnlNum>
+                                        <!--Optional:-->
+                                        <ban:CheckerID2></ban:CheckerID2>
+                                        <!--Optional:-->
+                                        <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
+                                        <ban:UUIDSource></ban:UUIDSource>
+                                        <ban:UUIDNUM></ban:UUIDNUM>
+                                        <!--Optional:-->
+                                        <ban:UUIDSeqNo></ban:UUIDSeqNo>
+                                    </ ban:RqHeader>
+                                    <ban:Data>
+                                        <ban:AcctNum1>38527419632500999</ban:AcctNum1>
+                                        <ban:Amt1>550</ban:Amt1>
+                                        <!--Optional:-->
+                                        <ban:Descptn></ban:Descptn>
+                                        <!--Optional:-->
+                                        <ban:AcctNum2>38527419632500705</ban:AcctNum2>
+                                        <!--Optional:-->
+                                        <ban:AccCurCode1></ban:AccCurCode1>
+                                        <ban:RefNum></ban:RefNum>
+                                        <!--Optional:-->
+                                    </ ban:Data>
+                                </ GLToGLXferRq>
+                            </ v1:gLToGLTransfer>
+                        </ soapenv:Body>
+                    </ soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
+                                                   data['Flag5'], data['UUIDSource'], data['UUIDNUM'],
+                                                   data['UUIDSeqNo'],
+                                                   data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
+        return request
+
+    @api.model
+    def api_gltogl_transfer(self, record, endpoint):
+        credit = record.default_credit_account_id.code if record.default_credit_account_id else None
+        c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
+        c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
+
+        debit = record.default_debit_account_id.code if record.default_debit_account_id else None
+        d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
+        d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
+
+        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
+
+        if record.vendor_bank_acc:
+            to_bgl = record.vendor_bank_acc.zfill(17)
+        else:
+            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
+
+        if record.narration:
+            statement = record.code + " " + record.narration
+        else:
+            statement = record.code
+
+        data = {
+            'InstNum': endpoint.ins_num,
+            'BrchNum': d_ou.zfill(5),
+            'TellerNum': endpoint.teller_no,
+            'Flag4': endpoint.flag_4,
+            'Flag5': endpoint.flag_5,
+            'UUIDSource': endpoint.uuid_source,
+            'UUIDNUM': str(record.code),
+            'UUIDSeqNo': '',
+            'FrmAcct': from_bgl,
+            'Amt': record.amount,
+            'ToAcct': to_bgl,
+            'StmtNarr': statement,
+        }
+        request = """<soapenv:Envelope
+                        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                        xmlns:v1="http://BaNCS.TCS.com/webservice/GLToDepositTransferInterface/v1"
+                        xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <v1:gLToDepositTransfer>
+                                <!--Optional:-->
+                                <GLToDepXferRq>
+                                    <ban:RqHeader>
+                                        <!--Optional:-->
+                                        <ban:Filler1></ban:Filler1>
+                                        <!--Optional:-->
+                                        <ban:MsgLen></ban:MsgLen>
+                                        <!--Optional:-->
+                                        <ban:Filler2></ban:Filler2>
+                                        <!--Optional:-->
+                                        <ban:MsgTyp></ban:MsgTyp>
+                                        <!--Optional:-->
+                                        <ban:Filler3></ban:Filler3>
+                                        <!--Optional:-->
+                                        <ban:CycNum></ban:CycNum>
+                                        <!--Optional:-->
+                                        <ban:MsgNum></ban:MsgNum>
+                                        <!--Optional:-->
+                                        <ban:SegNum></ban:SegNum>
+                                        <!--Optional:-->
+                                        <ban:SegNum2></ban:SegNum2>
+                                        <!--Optional:-->
+                                        <ban:FrontEndNum></ban:FrontEndNum>
+                                        <!--Optional:-->
+                                        <ban:TermlNum></ban:TermlNum>
+                                        <!--Optional:-->
+                                        <ban:InstNum>003</ban:InstNum>
+                                        <ban:BrchNum>006</ban:BrchNum>
+                                        <!--Optional:-->
+                                        <ban:WorkstationNum></ban:WorkstationNum>
+                                        <!--Optional:-->
+                                        <ban:TellerNum>4748889</ban:TellerNum>
+                                        <!--Optional:-->
+                                        <ban:TranNum></ban:TranNum>
+                                        <!--Optional:-->
+                                        <ban:JrnlNum></ban:JrnlNum>
+                                        <!--Optional:-->
+                                        <ban:HdrDt></ban:HdrDt>
+                                        <!--Optional:-->
+                                        <ban:Filler4></ban:Filler4>
+                                        <!--Optional:-->
+                                        <ban:Filler5></ban:Filler5>
+                                        <!--Optional:-->
+                                        <ban:Filler6></ban:Filler6>
+                                        <!--Optional:-->
+                                        <ban:Flag1></ban:Flag1>
+                                        <!--Optional:-->
+                                        <ban:Flag2></ban:Flag2>
+                                        <!--Optional:-->
+                                        <ban:Flag3></ban:Flag3>
+                                        <!--Optional:-->
+                                        <ban:Flag4></ban:Flag4>
+                                        <ban:Flag5></ban:Flag5>
+                                        <!--Optional:-->
+                                        <ban:Flag6></ban:Flag6>
+                                        <!--Optional:-->
+                                        <ban:Flag7></ban:Flag7>
+                                        <!--Optional:-->
+                                        <ban:SprvsrID></ban:SprvsrID>
+                                        <!--Optional:-->
+                                        <ban:SupDate></ban:SupDate>
+                                        <!--Optional:-->
+                                        <ban:CheckerID1></ban:CheckerID1>
+                                        <!--Optional:-->
+                                        <ban:ParentBlinkJrnlNum></ban:ParentBlinkJrnlNum>
+                                        <!--Optional:-->
+                                        <ban:CheckerID2></ban:CheckerID2>
+                                        <!--Optional:-->
+                                        <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
+                                        <ban:UUIDSource></ban:UUIDSource>
+                                        <ban:UUIDNUM></ban:UUIDNUM>
+                                        <!--Optional:-->
+                                        <ban:UUIDSeqNo></ban:UUIDSeqNo>
+                                    </ban:RqHeader>
+                                    <ban:Data>
+                                        <ban:AcctNum2>1311000003393</ban:AcctNum2>
+                                        <!--Optional:-->
+                                        <ban:TrnDt></ban:TrnDt>
+                                        <!--Optional:-->
+                                        <ban:Exchgamt>1100</ban:Exchgamt>
+                                        <!--Optional:-->
+                                        <ban:AcctNum1>38527419632500705</ban:AcctNum1>
+                                        <!--Optional:-->
+                                        <ban:Descptn></ban:Descptn>
+                                        <!--Optional:-->
+                                        <ban:AcctCurCode1>BDT</ban:AcctCurCode1>
+                                        <ban:Amt1>1100</ban:Amt1>
+                                        <!--Optional:-->
+                                        <ban:RefNum>SYS20610512005734973</ban:RefNum>
+                                        <!--Optional:-->
+                                    </ban:Data>
+                                </GLToDepXferRq>
+                            </v1:gLToDepositTransfer>
+                        </soapenv:Body>
+                    </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
+                                                  data['Flag5'], data['UUIDSource'], data['UUIDNUM'],
+                                                  data['UUIDSeqNo'],
+                                                  data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
+        return request
+
+    @api.model
+    def api_gl_enquiry_prompt(self, record, endpoint):
+        credit = record.default_credit_account_id.code if record.default_credit_account_id else None
+        c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
+        c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
+
+        debit = record.default_debit_account_id.code if record.default_debit_account_id else None
+        d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
+        d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
+
+        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
+
+        if record.vendor_bank_acc:
+            to_bgl = record.vendor_bank_acc.zfill(17)
+        else:
+            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
+
+        if record.narration:
+            statement = record.code + " " + record.narration
+        else:
+            statement = record.code
+
+        data = {
+            'InstNum': endpoint.ins_num,
+            'BrchNum': d_ou.zfill(5),
+            'TellerNum': endpoint.teller_no,
+            'Flag4': endpoint.flag_4,
+            'Flag5': endpoint.flag_5,
+            'UUIDSource': endpoint.uuid_source,
+            'UUIDNUM': str(record.code),
+            'UUIDSeqNo': '',
+            'FrmAcct': from_bgl,
+            'Amt': record.amount,
+            'ToAcct': to_bgl,
+            'StmtNarr': statement,
+        }
+        request = """<soapenv:Envelope
+                        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                        xmlns:v1="http://BaNCS.TCS.com/webservice/GLEnquiryPromptInterface/v1"
+                        xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <v1:gLEnquiryPrompt>
+                                <!--Optional:-->
+                                <GLPrmptInqRq>
+                                    <ban:RqHeader>
+                                        <!--Optional:-->
+                                        <ban:Filler1></ban:Filler1>
+                                        <!--Optional:-->
+                                        <ban:MsgLen></ban:MsgLen>
+                                        <!--Optional:-->
+                                        <ban:Filler2></ban:Filler2>
+                                        <!--Optional:-->
+                                        <ban:MsgTyp></ban:MsgTyp>
+                                        <!--Optional:-->
+                                        <ban:Filler3></ban:Filler3>
+                                        <!--Optional:-->
+                                        <ban:CycNum></ban:CycNum>
+                                        <!--Optional:-->
+                                        <ban:MsgNum></ban:MsgNum>
+                                        <!--Optional:-->
+                                        <ban:SegNum></ban:SegNum>
+                                        <!--Optional:-->
+                                        <ban:SegNum2></ban:SegNum2>
+                                        <!--Optional:-->
+                                        <ban:FrontEndNum></ban:FrontEndNum>
+                                        <!--Optional:-->
+                                        <ban:TermlNum></ban:TermlNum>
+                                        <!--Optional:-->
+                                        <ban:InstNum>003</ban:InstNum>
+                                        <ban:BrchNum>006</ban:BrchNum>
+                                        <!--Optional:-->
+                                        <ban:WorkstationNum></ban:WorkstationNum>
+                                        <!--Optional:-->
+                                        <ban:TellerNum>4748889</ban:TellerNum>
+                                        <!--Optional:-->
+                                        <ban:TranNum></ban:TranNum>
+                                        <!--Optional:-->
+                                        <ban:JrnlNum></ban:JrnlNum>
+                                        <!--Optional:-->
+                                        <ban:HdrDt></ban:HdrDt>
+                                        <!--Optional:-->
+                                        <ban:Filler4></ban:Filler4>
+                                        <!--Optional:-->
+                                        <ban:Filler5></ban:Filler5>
+                                        <!--Optional:-->
+                                        <ban:Filler6></ban:Filler6>
+                                        <!--Optional:-->
+                                        <ban:Flag1></ban:Flag1>
+                                        <!--Optional:-->
+                                        <ban:Flag2></ban:Flag2>
+                                        <!--Optional:-->
+                                        <ban:Flag3></ban:Flag3>
+                                        <!--Optional:-->
+                                        <ban:Flag4></ban:Flag4>
+                                        <ban:Flag5></ban:Flag5>
+                                        <!--Optional:-->
+                                        <ban:Flag6></ban:Flag6>
+                                        <!--Optional:-->
+                                        <ban:Flag7></ban:Flag7>
+                                        <!--Optional:-->
+                                        <ban:SprvsrID></ban:SprvsrID>
+                                        <!--Optional:-->
+                                        <ban:SupDate></ban:SupDate>
+                                        <!--Optional:-->
+                                        <ban:CheckerID1></ban:CheckerID1>
+                                        <!--Optional:-->
+                                        <ban:ParentBlinkJrnlNum></ban:ParentBlinkJrnlNum>
+                                        <!--Optional:-->
+                                        <ban:CheckerID2></ban:CheckerID2>
+                                        <!--Optional:-->
+                                        <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
+                                        <ban:UUIDSource></ban:UUIDSource>
+                                        <ban:UUIDNUM></ban:UUIDNUM>
+                                        <!--Optional:-->
+                                        <ban:UUIDSeqNo></ban:UUIDSeqNo>
+                                    </ban:RqHeader>
+                                    <ban:Data>
+                                        <ban:AcctNum>38527419632500066</ban:AcctNum>
+                                        <!--Optional:-->
+                                        <ban:Opt>1</ban:Opt>
+                                    </ban:Data>
+                                </GLPrmptInqRq>
+                            </v1:gLEnquiryPrompt>
+                        </soapenv:Body>
+                    </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
+                                                  data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
+                                                  data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
+        return request
+
+    @api.model
+    def action_payment_instruction(self):
+        payment_ids = self.env['payment.instruction'].search([('is_sync', '=', False), ('state', '=', 'approved')])
+        for record in payment_ids:
+            self.call_payment_api(record)
 
     @api.model
     def prepare_bgl(self, record, rec):
