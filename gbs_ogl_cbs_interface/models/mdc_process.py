@@ -181,7 +181,7 @@ class GenerateCBSJournal(models.Model):
             move_ids = []
             file_path = os.path.join(record.source_path, filename)
             journals = self.env['account.move'].search(
-                [('is_cbs', '=', False), ('is_sync', '=', False), ('state', '=', 'posted')])
+                [('is_cbs', '=', False), ('is_sync', '=', False), ('is_opening', '=', False),('state', '=', 'posted')])
             with open(file_path, "w+") as file:
                 for vals in journals:
                     for val in vals.line_ids:
