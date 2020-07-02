@@ -20,6 +20,7 @@
 
         <record id="account.group_account_manager" model="res.groups">
             <field name="name">Group Finance</field>
+            <field name="implied_ids" eval="[(4, ref('vendor_advance.group_vendor_advance_manager'))]"/>
         </record>
 
         <record id="group_mtbl_sys_admin" model="res.groups">
