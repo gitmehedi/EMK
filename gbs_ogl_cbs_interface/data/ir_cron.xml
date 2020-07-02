@@ -66,4 +66,18 @@
         <field name="model">payment.instruction</field>
         <field name="function">invalidate_payment_cache</field>
     </record>
+
+    <record id="ir_cron_ogl_cbs_gl_enquiry_prompt_scheduler" model="ir.cron">
+        <field name="name">OGL-CBS GL Enquiry Prompt</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="active">True</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="priority">5</field>
+        <field name="nextcall"
+               eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
+        <field name="model">soap.process</field>
+        <field name="function">action_gl_enquire_process</field>
+    </record>
 </odoo>

@@ -1,9 +1,10 @@
 from odoo import api, fields, models, _
 
+
 class AccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
 
-    batch_date = fields.Date(string='MDMC/BULK Upload Date',default=fields.Date.today, required=True)
+    batch_date = fields.Date(string='MDMC/BULK Upload Date', default=fields.Date.today, required=True)
 
     @api.multi
     def set_batch_date(self):
@@ -15,4 +16,11 @@ class AccountConfigSettings(models.TransientModel):
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    batch_date = fields.Date(string='MDMC/BULK Upload Date',default=fields.Date.today)
+    batch_date = fields.Date(string='MDMC/BULK Upload Date', default=fields.Date.today)
+
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    is_bgl = fields.Selection([('not_check', 'Not Check'), ('fail', 'Fail'), ('pass', 'Pass')], string='Is BGL',
+                              default='not_check', required=False)

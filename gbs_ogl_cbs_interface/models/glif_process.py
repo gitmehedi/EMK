@@ -283,8 +283,11 @@ class ServerFileProcess(models.Model):
         def generate_file(record):
             move_ids = []
             file_path = os.path.join(record.source_path, filename)
-            journals = self.env['account.move'].search(
-                [('is_cbs', '=', False), ('is_sync', '=', False), ('state', '=', 'posted')])
+            journals = self.env['account.move'].search([('is_cbs', '=', False),
+                                                        ('is_sync', '=', False),
+                                                        ('is_opening', '=', False),
+                                                        ('line_ids.is_bgl', '=', 'pass'),
+                                                        ('state', '=', 'posted')])
             with open(file_path, "w+") as file:
                 for vals in journals:
                     for val in vals.line_ids:
