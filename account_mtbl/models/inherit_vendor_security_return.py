@@ -10,3 +10,4 @@ class VendorSecurityReturn(models.Model):
             for line in move.line_ids:
                 line.write({'sub_operating_unit_id': self.company_id.security_deposit_sequence_id.id})
         return move
+

@@ -17,7 +17,8 @@ This application allows you to easily maintain access rights of mtbl process.
         'vendor_advance',
     ],
     'data': [
-        'security/ir_security.xml'
+        'security/ir_security.xml',
+        'views/menu.xml'
     ],
     'installable': True,
     'auto_install': False,
