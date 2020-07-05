@@ -99,11 +99,11 @@
               name="Journal Type" sequence="25" parent="account.menu_finance_configuration"
               groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"/>
 
-    <menuitem action="base.action_res_bank_form"
-              id="menu_action_res_bank_manu"
-              name="Banks" sequence='15'
-              groups="mtbl_access.group_mtbl_sys_admin"
-              parent="account.menu_finance_configuration"/>
+    <!--<menuitem action="base.action_res_bank_form"-->
+              <!--id="menu_action_res_bank_manu"-->
+              <!--name="Banks" sequence='15'-->
+              <!--groups="mtbl_access.group_mtbl_sys_admin"-->
+              <!--parent="account.menu_finance_configuration"/>-->
 
     <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
               parent="account.account_account_menu" sequence="5" groups="mtbl_access.group_mtbl_sys_admin"/>
