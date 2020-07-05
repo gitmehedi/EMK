@@ -11,11 +11,14 @@
         'base',
         'mail',
         'account',
-        'account_mtbl'
+        'account_mtbl',
+        'l10n_bd_account_tax'
     ],
     "data": [
-        'wizard/account_account_wizard_view.xml',
-        'views/inherit_account_account_view.xml'
+        # 'wizard/account_account_wizard_view.xml',
+        # 'views/inherit_account_account_view.xml',
+        'wizard/account_tax_wizard_view.xml',
+        'views/inherit_account_tax.xml'
     ],
     'installable': True,
     'application': True,
