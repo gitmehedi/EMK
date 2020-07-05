@@ -9,8 +9,8 @@
                 <header>
                     <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate"
                             class="oe_highlight" groups="account.group_account_invoice"/>
-                    <button name="135" type="action" states="open" string="Register Payment"
-                            groups="account.group_account_invoice" class="oe_highlight"/>
+                    <button name="action_payment_instruction" type="object"
+                            string="Payment Instruction" class="oe_highlight" groups="account.group_account_user"/>
                     <button name="198" type="action" string="Ask Refund" groups="account.group_account_invoice"
                             attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','paid'))]}"/>
                     <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
@@ -180,52 +180,6 @@
                                            domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase')]"
                                            context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
                                     <field name="commercial_partner_id" invisible="1"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
-                            <field name="payment_line_ids" readonly="1">
-                                <tree string="Payment lines">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="instruction_date"/>
-                                    <field name="partner_id"/>
-                                    <field name="amount"/>
-                                    <field name="default_debit_account_id"/>
-                                    <field name="vendor_bank_acc"/>
-                                    <field name="default_credit_account_id"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="state" string="Status"/>
-                                    <field name="is_sync" invisible="1"/>
-                                    <button name="sync" string="Sync" type="action"
-                                            icon="fa fa-check text-success"
-                                            attrs="{'invisible': [('is_sync', '=', False)]}"/>
-                                    <button name="not_sync" string="Not Sync" type="action"
-                                            icon="fa-times-circle text-danger"
-                                            attrs="{'invisible': [('is_sync', '=', True)]}"/>
-                                </tree>
-                                <form string="Payment">
-                                    <group>
-                                        <group>
-                                            <field name="invoice_id"/>
-                                            <field name="instruction_date"/>
-                                            <field name="partner_id"/>
-                                        </group>
-                                        <group>
-                                            <field name="amount"/>
-                                            <field name="currency_id"/>
-                                            <field name="is_sync" invisible="1"/>
-                                        </group>
-                                    </group>
-                                </form>
-                            </field>
-                            <group>
-                                <group></group>
-                                <group class="oe_subtotal_footer oe_right">
-                                    <field name="total_payment_amount" class="oe_subtotal_footer_separator"
-                                           widget="monetary"/>
-                                    <field name="total_payment_approved" class="oe_subtotal_footer_separator"
-                                           widget="monetary"/>
-                                    <field name="payment_approver" invisible="1"/>
                                 </group>
                             </group>
                         </page>
