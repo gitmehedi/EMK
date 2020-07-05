@@ -665,24 +665,23 @@ class APIInterface(models.Model):
 
     @api.model
     def api_gl_enquiry_prompt(self, rec, ep):
-        account = rec.account_id.code.zfill(9)
-        opu = (rec.operating_unit_id.code if rec.operating_unit_id else '1').zfill(5)
-        sequence = (rec.sub_operating_unit_id.code if rec.sub_operating_unit_id else '1').zfill(3)
+        bgl = self.prepare_bgl(rec.account_id.code, rec.sub_operating_unit_id.code, rec.operating_unit_id.code)
+        branch = rec.operating_unit_id.code.zfill(5)
 
-        bgl = "{0}{1}{2}".format(account, opu, sequence)
-
-        data = {
+        dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': opu,
+            'BrchNum': branch,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
             'UUIDSource': ep.uuid_source,
             'UUIDNUM': bgl,
             'UUIDSeqNo': ep.uuid_seq_no,
+        }
+        dbody = {
             'bgl': bgl,
         }
-        print ""
+
         request = """<soapenv:Envelope
                         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                         xmlns:v1="http://BaNCS.TCS.com/webservice/GLEnquiryPromptInterface/v1"
@@ -774,8 +773,8 @@ class APIInterface(models.Model):
                         </soapenv:Body>
                     </soapenv:Envelope>"""
 
-        return request.format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
-                              data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'], data['bgl'])
+        return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'],
+                              dhead['Flag5'], dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'], dbody['bgl'])
 
     @api.model
     def action_payment_instruction(self):
