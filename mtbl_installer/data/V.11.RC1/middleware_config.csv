@@ -1,0 +1,4 @@
+"id","days_to_keep","dest_path","sys_file_name","folder","method","name","source_sftp_password","dest_sftp_password","dest_sftp_port","source_sftp_port","source_sftp_host","dest_sftp_host","source_path","status","type","dest_sftp_user","source_sftp_user"
+"__export__.server_file_process_1","0","/sftp/odoogl/output/gliffilea","","/home/odoo","Double Middleware Location","GLIF Process","Mtb1234","Mtb1234","22","22","192.168.13.177","192.168.13.177","/sftp/odoogl/output/gliffile","True","GLIF Process","odoo","odoo"
+"__export__.server_file_process_2","0","/sftp/odoogl/input/mdc","","/home/odoo","Single Middleware Location","MDC Process","","Mtb1234","22","22","","192.168.13.177","/opt/odoo/source","True","","odoo",""
+"__export__.server_file_process_3","0","/sftp/odoogl/output/sysgl","BANCSDATE","/home/odoo","Single Middleware Location","System Date","","Mtb1234","22","22","","192.168.13.177","/opt/odoo/source","True","Date Process","cbs",""
