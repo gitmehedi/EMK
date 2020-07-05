@@ -165,7 +165,6 @@ class APIInterface(models.Model):
 
         if ep:
             req_body = self.api_glto_deposit_transfer(record, ep)
-            print ""
             try:
                 res_body = requests.post(ep.endpoint_fullname, data=req_body, verify=False,
                                          auth=(ep.username, ep.password),
@@ -333,39 +332,33 @@ class APIInterface(models.Model):
             raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
     @api.model
-    def api_generic_transfer_amount(self, record, ep):
-        credit = record.default_credit_account_id.code if record.default_credit_account_id else None
-        c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
-        c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
-
-        debit = record.default_debit_account_id.code if record.default_debit_account_id else None
-        d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
-        d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
-
-        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
-
-        if record.vendor_bank_acc:
-            to_bgl = record.vendor_bank_acc.zfill(17)
+    def api_generic_transfer_amount(self, rec, ep):
+        dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
+                                  rec.debit_operating_unit_id.code)
+        if rec.vendor_bank_acc:
+            cr_bgl = rec.vendor_bank_acc.zfill(17)
         else:
-            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
+            cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
+                                      rec.credit_operating_unit_id.code)
 
-        if record.narration:
-            statement = record.code + " " + record.narration
-        else:
-            statement = record.code
+        branch = rec.debit_operating_unit_id.code.zfill(5)
+        curr_code = rec.currency_id.code
+        statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
         data = {
             'InstNum': ep.ins_num,
-            'BrchNum': d_ou.zfill(5),
+            'BrchNum': branch,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
             'UUIDSource': ep.uuid_source,
-            'UUIDNUM': str(record.code),
+            'UUIDNUM': str(rec.code),
             'UUIDSeqNo': '',
-            'FrmAcct': from_bgl,
-            'Amt': record.amount,
-            'ToAcct': to_bgl,
+        }
+        dbody = {
+            'FrmAcct': dr_bgl,
+            'Amt': rec.amount,
+            'ToAcct': cr_bgl,
             'StmtNarr': statement,
         }
         request = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1" xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
@@ -393,53 +386,39 @@ class APIInterface(models.Model):
                      </GenericAmtXferRq>
                   </v1:genericTransferAmount>
                </soapenv:Body>
-            </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
-                                          data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
-                                          data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
-        return request
+            </soapenv:Envelope>"""
+
+        return request.format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
+                              data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
+                              dbody['FrmAcct'], dbody['Amt'], dbody['ToAcct'], dbody['StmtNarr'])
 
     @api.model
-    def api_glto_deposit_transfer(self, record, ep):
-        credit = record.default_credit_account_id.code if record.default_credit_account_id else None
-        c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
-        c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
+    def api_glto_deposit_transfer(self, rec, ep):
+        dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
+                                  rec.debit_operating_unit_id.code)
+        cr_bgl = rec.vendor_bank_acc.zfill(17)
 
-        debit = record.default_debit_account_id.code if record.default_debit_account_id else None
-        d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
-        d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
-
-        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
-
-        if record.vendor_bank_acc:
-            to_bgl = record.vendor_bank_acc.zfill(17)
-        else:
-            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
-
-        if record.narration:
-            statement = record.code + " " + record.narration
-        else:
-            statement = record.code
+        branch = rec.debit_operating_unit_id.code.zfill(5)
+        curr_code = rec.currency_id.code
+        statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
         dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': d_ou.zfill(5),
+            'BrchNum': branch,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
             'UUIDSource': ep.uuid_source,
-            'UUIDNUM': str(record.code),
+            'UUIDNUM': str(rec.code),
             'UUIDSeqNo': '',
-            'FrmAcct': from_bgl,
-            'Amt': record.amount,
-            'ToAcct': to_bgl,
         }
         dbody = {
-            'AcctNum1': statement,
-            'Amt1': statement,
+            'AcctNum1': dr_bgl,
+            'Amt1': rec.amount,
             'Descptn': statement,
-            'AcctNum2': statement,
-            'AccCurCode1': statement,
-            'RefNum': statement,
+            'AcctNum2': cr_bgl,
+            'AccCurCode1': curr_code,
+            'RefNum': str(rec.code),
         }
         request = """<soapenv:Envelope
                         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -546,12 +525,13 @@ class APIInterface(models.Model):
 
     @api.model
     def api_glto_gl_transfer(self, rec, ep):
-        cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
-                                  rec.credit_operating_unit_id.code)
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
+        cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
+                                  rec.credit_operating_unit_id.code)
 
         branch = rec.debit_operating_unit_id.code.zfill(5)
+        curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
         dhead = {
@@ -570,7 +550,7 @@ class APIInterface(models.Model):
             'Exchgamt': '',
             'AcctNum1': dr_bgl,
             'Descptn': statement,
-            'AcctCurCode1': rec.currency_id.code,
+            'AcctCurCode1': curr_code,
             'Amt1': rec.amount,
             'RefNum': str(rec.code),
         }
