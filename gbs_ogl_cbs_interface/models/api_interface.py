@@ -95,24 +95,25 @@ class APIInterface(models.Model):
                 rec.endpoint_fullname = rec.http_method + "://" + rec.endpoint_url + ':' + rec.endpoint_port + '/' + rec.wsdl_type + '/' + rec.wsdl_name
 
     @api.model
-    def interface_mapping(self, type):
+    def search_api(self, type):
         endpoint = self.search([('wsdl_type', '=', type)], limit=1)
         if endpoint:
             return endpoint
 
     @api.model
-    def call_payment_api(self, record):
-        debit, credit = 1, 1
-        endpoint = self.interface_mapping('GenericTransferAmountInterfaceHttpService')
+    def call_generic_transfer_amount(self, record):
+        ep = self.search_api('GenericTransferAmount')
 
-        if endpoint:
-            reqBody = self.api_gneric_transfer_amount(record, endpoint)
+        if ep:
+            req_body = self.api_generic_transfer_amount(record, ep)
             try:
-                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
-                                        auth=(endpoint.username, endpoint.password),
-                                        headers={'content-type': 'application/text'})
+                res_body = requests.post(ep.endpoint_fullname,
+                                         data=req_body,
+                                         verify=False,
+                                         auth=(ep.username, ep.password),
+                                         headers={'content-type': 'application/text'})
 
-                root = ElementTree.fromstring(resBody.content)
+                root = ElementTree.fromstring(res_body.content)
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -123,13 +124,13 @@ class APIInterface(models.Model):
                         response[key[0]] = text
 
                 if 'OkMessage' in response:
-                    record.write({'is_sync': True, 'cbs_response': resBody.content})
+                    record.write({'is_sync': True, 'cbs_response': res_body.content})
                     return "OkMessage"
                 elif 'ErrorMessage' in response:
                     error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
+                        'name': ep.endpoint_fullname,
+                        'request_body': req_body,
+                        'response_body': res_body.content,
                         'error_code': response['ErrorCode'],
                         'error_message': response['ErrorMessage'],
                         'errors': json.dumps(response)
@@ -138,9 +139,9 @@ class APIInterface(models.Model):
                     return error
                 elif 'faultcode' in response:
                     error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
+                        'name': ep.endpoint_fullname,
+                        'request_body': req_body,
+                        'response_body': res_body.content,
                         'error_code': response['faultcode'],
                         'error_message': response['faultstring'],
                         'errors': json.dumps(response)
@@ -149,7 +150,7 @@ class APIInterface(models.Model):
                     return error
             except Exception:
                 error = {
-                    'name': endpoint.endpoint_fullname,
+                    'name': ep.endpoint_fullname,
                     'error_code': "Operation Interrupted",
                     'error_message': "Please contact with authority.",
                 }
@@ -160,17 +161,17 @@ class APIInterface(models.Model):
 
     @api.model
     def call_glto_deposit_transfer(self, record):
-        debit, credit = 1, 1
-        endpoint = self.interface_mapping('GLToDepositTransfer')
+        ep = self.search_api('GLToDepositTransfer')
 
-        if endpoint:
-            reqBody = self.api_glto_deposit_transfer(record, endpoint)
+        if ep:
+            req_body = self.api_glto_deposit_transfer(record, ep)
+            print ""
             try:
-                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
-                                        auth=(endpoint.username, endpoint.password),
-                                        headers={'content-type': 'application/text'})
+                res_body = requests.post(ep.endpoint_fullname, data=req_body, verify=False,
+                                         auth=(ep.username, ep.password),
+                                         headers={'content-type': 'application/text'})
 
-                root = ElementTree.fromstring(resBody.content)
+                root = ElementTree.fromstring(res_body.content)
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -181,13 +182,13 @@ class APIInterface(models.Model):
                         response[key[0]] = text
 
                 if 'OkMessage' in response:
-                    record.write({'is_sync': True, 'cbs_response': resBody.content})
+                    record.write({'is_sync': True, 'cbs_response': res_body.content})
                     return "OkMessage"
                 elif 'ErrorMessage' in response:
                     error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
+                        'name': ep.endpoint_fullname,
+                        'request_body': req_body,
+                        'response_body': res_body.content,
                         'error_code': response['ErrorCode'],
                         'error_message': response['ErrorMessage'],
                         'errors': json.dumps(response)
@@ -196,9 +197,9 @@ class APIInterface(models.Model):
                     return error
                 elif 'faultcode' in response:
                     error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
+                        'name': ep.endpoint_fullname,
+                        'request_body': req_body,
+                        'response_body': res_body.content,
                         'error_code': response['faultcode'],
                         'error_message': response['faultstring'],
                         'errors': json.dumps(response)
@@ -207,7 +208,7 @@ class APIInterface(models.Model):
                     return error
             except Exception:
                 error = {
-                    'name': endpoint.endpoint_fullname,
+                    'name': ep.endpoint_fullname,
                     'error_code': "Operation Interrupted",
                     'error_message': "Please contact with authority.",
                 }
@@ -218,17 +219,17 @@ class APIInterface(models.Model):
 
     @api.model
     def call_glto_gl_transfer(self, record):
-        debit, credit = 1, 1
-        endpoint = self.interface_mapping('GLToGLTransfer')
+        ep = self.search_api('GLToGLTransfer')
 
-        if endpoint:
-            reqBody = self.api_gltogl_transfer(record, endpoint)
+        if ep:
+            req_body = self.api_glto_gl_transfer(record, ep)
+
             try:
-                resBody = requests.post(endpoint.endpoint_fullname, data=reqBody, verify=False,
-                                        auth=(endpoint.username, endpoint.password),
-                                        headers={'content-type': 'application/text'})
+                res_body = requests.post(ep.endpoint_fullname, data=req_body, verify=False,
+                                         auth=(ep.username, ep.password),
+                                         headers={'content-type': 'application/text'})
 
-                root = ElementTree.fromstring(resBody.content)
+                root = ElementTree.fromstring(res_body.content)
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -239,13 +240,13 @@ class APIInterface(models.Model):
                         response[key[0]] = text
 
                 if 'OkMessage' in response:
-                    record.write({'is_sync': True, 'cbs_response': resBody.content})
+                    record.write({'is_sync': True, 'cbs_response': res_body.content})
                     return "OkMessage"
                 elif 'ErrorMessage' in response:
                     error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
+                        'name': ep.endpoint_fullname,
+                        'request_body': req_body,
+                        'response_body': res_body.content,
                         'error_code': response['ErrorCode'],
                         'error_message': response['ErrorMessage'],
                         'errors': json.dumps(response)
@@ -254,9 +255,9 @@ class APIInterface(models.Model):
                     return error
                 elif 'faultcode' in response:
                     error = {
-                        'name': endpoint.endpoint_fullname,
-                        'request_body': reqBody,
-                        'response_body': resBody.content,
+                        'name': ep.endpoint_fullname,
+                        'request_body': req_body,
+                        'response_body': res_body.content,
                         'error_code': response['faultcode'],
                         'error_message': response['faultstring'],
                         'errors': json.dumps(response)
@@ -265,7 +266,7 @@ class APIInterface(models.Model):
                     return error
             except Exception:
                 error = {
-                    'name': endpoint.endpoint_fullname,
+                    'name': ep.endpoint_fullname,
                     'error_code': "Operation Interrupted",
                     'error_message': "Please contact with authority.",
                 }
@@ -276,8 +277,7 @@ class APIInterface(models.Model):
 
     @api.model
     def call_gl_enquiry_payment(self, record):
-        debit, credit = 1, 1
-        ep = self.interface_mapping('GLEnquiryPrompt')
+        ep = self.search_api('GLEnquiryPrompt')
 
         if ep:
             req_body = self.api_gl_enquiry_prompt(record, ep)
@@ -333,7 +333,7 @@ class APIInterface(models.Model):
             raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
     @api.model
-    def api_generic_transfer_amount(self, record, endpoint):
+    def api_generic_transfer_amount(self, record, ep):
         credit = record.default_credit_account_id.code if record.default_credit_account_id else None
         c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
         c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
@@ -355,12 +355,12 @@ class APIInterface(models.Model):
             statement = record.code
 
         data = {
-            'InstNum': endpoint.ins_num,
+            'InstNum': ep.ins_num,
             'BrchNum': d_ou.zfill(5),
-            'TellerNum': endpoint.teller_no,
-            'Flag4': endpoint.flag_4,
-            'Flag5': endpoint.flag_5,
-            'UUIDSource': endpoint.uuid_source,
+            'TellerNum': ep.teller_no,
+            'Flag4': ep.flag_4,
+            'Flag5': ep.flag_5,
+            'UUIDSource': ep.uuid_source,
             'UUIDNUM': str(record.code),
             'UUIDSeqNo': '',
             'FrmAcct': from_bgl,
@@ -399,7 +399,7 @@ class APIInterface(models.Model):
         return request
 
     @api.model
-    def api_glto_deposit_transfer(self, record, endpoint):
+    def api_glto_deposit_transfer(self, record, ep):
         credit = record.default_credit_account_id.code if record.default_credit_account_id else None
         c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
         c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
@@ -420,19 +420,26 @@ class APIInterface(models.Model):
         else:
             statement = record.code
 
-        data = {
-            'InstNum': endpoint.ins_num,
+        dhead = {
+            'InstNum': ep.ins_num,
             'BrchNum': d_ou.zfill(5),
-            'TellerNum': endpoint.teller_no,
-            'Flag4': endpoint.flag_4,
-            'Flag5': endpoint.flag_5,
-            'UUIDSource': endpoint.uuid_source,
+            'TellerNum': ep.teller_no,
+            'Flag4': ep.flag_4,
+            'Flag5': ep.flag_5,
+            'UUIDSource': ep.uuid_source,
             'UUIDNUM': str(record.code),
             'UUIDSeqNo': '',
             'FrmAcct': from_bgl,
             'Amt': record.amount,
             'ToAcct': to_bgl,
-            'StmtNarr': statement,
+        }
+        dbody = {
+            'AcctNum1': statement,
+            'Amt1': statement,
+            'Descptn': statement,
+            'AcctNum2': statement,
+            'AccCurCode1': statement,
+            'RefNum': statement,
         }
         request = """<soapenv:Envelope
                         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -467,12 +474,12 @@ class APIInterface(models.Model):
                                         <!--Optional:-->
                                         <ban:TermlNum></ban:TermlNum>
                                         <!--Optional:-->
-                                        <ban:InstNum>003</ban:InstNum>
-                                        <ban:BrchNum>006</ban:BrchNum>
+                                        <ban:InstNum>{0}</ban:InstNum>
+                                        <ban:BrchNum>{1}</ban:BrchNum>
                                         <!--Optional:-->
                                         <ban:WorkstationNum></ban:WorkstationNum>
                                         <!--Optional:-->
-                                        <ban:TellerNum>4748889</ban:TellerNum>
+                                        <ban:TellerNum>{2}</ban:TellerNum>
                                         <!--Optional:-->
                                         <ban:TranNum></ban:TranNum>
                                         <!--Optional:-->
@@ -492,8 +499,8 @@ class APIInterface(models.Model):
                                         <!--Optional:-->
                                         <ban:Flag3></ban:Flag3>
                                         <!--Optional:-->
-                                        <ban:Flag4></ban:Flag4>
-                                        <ban:Flag5></ban:Flag5>
+                                        <ban:Flag4>{3}</ban:Flag4>
+                                        <ban:Flag5>{4}</ban:Flag5>
                                         <!--Optional:-->
                                         <ban:Flag6></ban:Flag6>
                                         <!--Optional:-->
@@ -510,68 +517,64 @@ class APIInterface(models.Model):
                                         <ban:CheckerID2></ban:CheckerID2>
                                         <!--Optional:-->
                                         <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
-                                        <ban:UUIDSource></ban:UUIDSource>
-                                        <ban:UUIDNUM></ban:UUIDNUM>
+                                        <ban:UUIDSource>{5}</ban:UUIDSource>
+                                        <ban:UUIDNUM>{6}</ban:UUIDNUM>
                                         <!--Optional:-->
-                                        <ban:UUIDSeqNo></ban:UUIDSeqNo>
+                                        <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
                                     </ ban:RqHeader>
                                     <ban:Data>
-                                        <ban:AcctNum1>38527419632500999</ban:AcctNum1>
-                                        <ban:Amt1>550</ban:Amt1>
+                                        <ban:AcctNum1>{8}</ban:AcctNum1>
+                                        <ban:Amt1>{9}</ban:Amt1>
                                         <!--Optional:-->
-                                        <ban:Descptn></ban:Descptn>
+                                        <ban:Descptn>{10}</ban:Descptn>
                                         <!--Optional:-->
-                                        <ban:AcctNum2>38527419632500705</ban:AcctNum2>
+                                        <ban:AcctNum2>{11}</ban:AcctNum2>
                                         <!--Optional:-->
-                                        <ban:AccCurCode1></ban:AccCurCode1>
-                                        <ban:RefNum></ban:RefNum>
+                                        <ban:AccCurCode1>{12}</ban:AccCurCode1>
+                                        <ban:RefNum>{13}</ban:RefNum>
                                         <!--Optional:-->
                                     </ ban:Data>
                                 </ GLToGLXferRq>
                             </ v1:gLToGLTransfer>
                         </ soapenv:Body>
-                    </ soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
-                                                   data['Flag5'], data['UUIDSource'], data['UUIDNUM'],
-                                                   data['UUIDSeqNo'],
-                                                   data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
-        return request
+                    </ soapenv:Envelope>"""
+
+        return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'], dhead['Flag5'],
+                              dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],
+                              dbody['AcctNum1'], dbody['Amt1'], dbody['Descptn'], dbody['AcctNum2'],
+                              dbody['AccCurCode1'], dbody['RefNum'])
 
     @api.model
-    def api_gltogl_transfer(self, record, endpoint):
-        credit = record.default_credit_account_id.code if record.default_credit_account_id else None
-        c_ou = record.credit_operating_unit_id.code if record.credit_operating_unit_id else '00001'
-        c_opu = record.credit_sub_operating_unit_id.code if record.credit_sub_operating_unit_id else '001'
+    def api_glto_gl_transfer(self, rec, ep):
+        cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
+                                  rec.credit_operating_unit_id.code)
+        dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
+                                  rec.debit_operating_unit_id.code)
 
-        debit = record.default_debit_account_id.code if record.default_debit_account_id else None
-        d_ou = record.debit_operating_unit_id.code if record.debit_operating_unit_id else '00001'
-        d_opu = record.debit_sub_operating_unit_id.code if record.debit_sub_operating_unit_id else '001'
+        branch = rec.debit_operating_unit_id.code.zfill(5)
+        statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
-        from_bgl = "0{0}{1}00{2}".format(debit, d_opu, d_ou)
-
-        if record.vendor_bank_acc:
-            to_bgl = record.vendor_bank_acc.zfill(17)
-        else:
-            to_bgl = "0{0}{1}00{2}".format(credit, c_opu, c_ou)
-
-        if record.narration:
-            statement = record.code + " " + record.narration
-        else:
-            statement = record.code
-
-        data = {
-            'InstNum': endpoint.ins_num,
-            'BrchNum': d_ou.zfill(5),
-            'TellerNum': endpoint.teller_no,
-            'Flag4': endpoint.flag_4,
-            'Flag5': endpoint.flag_5,
-            'UUIDSource': endpoint.uuid_source,
-            'UUIDNUM': str(record.code),
+        dhead = {
+            'InstNum': ep.ins_num,
+            'BrchNum': branch,
+            'TellerNum': ep.teller_no,
+            'Flag4': ep.flag_4,
+            'Flag5': ep.flag_5,
+            'UUIDSource': ep.uuid_source,
+            'UUIDNUM': str(rec.code),
             'UUIDSeqNo': '',
-            'FrmAcct': from_bgl,
-            'Amt': record.amount,
-            'ToAcct': to_bgl,
-            'StmtNarr': statement,
         }
+        dbody = {
+            'AcctNum2': cr_bgl,
+            'TrnDt': statement,
+            'Exchgamt': '',
+            'AcctNum1': dr_bgl,
+            'Descptn': statement,
+            'AcctCurCode1': rec.currency_id.code,
+            'Amt1': rec.amount,
+            'RefNum': str(rec.code),
+        }
+
         request = """<soapenv:Envelope
                         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                         xmlns:v1="http://BaNCS.TCS.com/webservice/GLToDepositTransferInterface/v1"
@@ -605,12 +608,12 @@ class APIInterface(models.Model):
                                         <!--Optional:-->
                                         <ban:TermlNum></ban:TermlNum>
                                         <!--Optional:-->
-                                        <ban:InstNum>003</ban:InstNum>
-                                        <ban:BrchNum>006</ban:BrchNum>
+                                        <ban:InstNum>{0}</ban:InstNum>
+                                        <ban:BrchNum>{1}</ban:BrchNum>
                                         <!--Optional:-->
                                         <ban:WorkstationNum></ban:WorkstationNum>
                                         <!--Optional:-->
-                                        <ban:TellerNum>4748889</ban:TellerNum>
+                                        <ban:TellerNum>{2}</ban:TellerNum>
                                         <!--Optional:-->
                                         <ban:TranNum></ban:TranNum>
                                         <!--Optional:-->
@@ -630,8 +633,8 @@ class APIInterface(models.Model):
                                         <!--Optional:-->
                                         <ban:Flag3></ban:Flag3>
                                         <!--Optional:-->
-                                        <ban:Flag4></ban:Flag4>
-                                        <ban:Flag5></ban:Flag5>
+                                        <ban:Flag4>{3}</ban:Flag4>
+                                        <ban:Flag5>{4}</ban:Flag5>
                                         <!--Optional:-->
                                         <ban:Flag6></ban:Flag6>
                                         <!--Optional:-->
@@ -648,36 +651,37 @@ class APIInterface(models.Model):
                                         <ban:CheckerID2></ban:CheckerID2>
                                         <!--Optional:-->
                                         <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
-                                        <ban:UUIDSource></ban:UUIDSource>
-                                        <ban:UUIDNUM></ban:UUIDNUM>
+                                        <ban:UUIDSource>{5}</ban:UUIDSource>
+                                        <ban:UUIDNUM>{6}</ban:UUIDNUM>
                                         <!--Optional:-->
-                                        <ban:UUIDSeqNo></ban:UUIDSeqNo>
+                                        <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
                                     </ban:RqHeader>
                                     <ban:Data>
-                                        <ban:AcctNum2>1311000003393</ban:AcctNum2>
+                                        <ban:AcctNum2>{8}</ban:AcctNum2>
                                         <!--Optional:-->
-                                        <ban:TrnDt></ban:TrnDt>
+                                        <ban:TrnDt>{9}</ban:TrnDt>
                                         <!--Optional:-->
-                                        <ban:Exchgamt>1100</ban:Exchgamt>
+                                        <ban:Exchgamt>{10}</ban:Exchgamt>
                                         <!--Optional:-->
-                                        <ban:AcctNum1>38527419632500705</ban:AcctNum1>
+                                        <ban:AcctNum1>{11}</ban:AcctNum1>
                                         <!--Optional:-->
-                                        <ban:Descptn></ban:Descptn>
+                                        <ban:Descptn>{12}</ban:Descptn>
                                         <!--Optional:-->
-                                        <ban:AcctCurCode1>BDT</ban:AcctCurCode1>
-                                        <ban:Amt1>1100</ban:Amt1>
+                                        <ban:AcctCurCode1>{13}</ban:AcctCurCode1>
+                                        <ban:Amt1>{14}</ban:Amt1>
                                         <!--Optional:-->
-                                        <ban:RefNum>SYS20610512005734973</ban:RefNum>
+                                        <ban:RefNum>{15}</ban:RefNum>
                                         <!--Optional:-->
                                     </ban:Data>
                                 </GLToDepXferRq>
                             </v1:gLToDepositTransfer>
                         </soapenv:Body>
-                    </soapenv:Envelope>""".format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
-                                                  data['Flag5'], data['UUIDSource'], data['UUIDNUM'],
-                                                  data['UUIDSeqNo'],
-                                                  data['FrmAcct'], data['Amt'], data['ToAcct'], data['StmtNarr'])
-        return request
+                    </soapenv:Envelope>"""
+
+        return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'],
+                              dhead['Flag5'], dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],
+                              dbody['AcctNum2'], dbody['TrnDt'], dbody['Exchgamt'], dbody['AcctNum1'], dbody['Descptn'],
+                              dbody['AcctCurCode1'], dbody['Amt1'], dbody['RefNum'])
 
     @api.model
     def api_gl_enquiry_prompt(self, rec, ep):
@@ -797,7 +801,7 @@ class APIInterface(models.Model):
     def action_payment_instruction(self):
         payment_ids = self.env['payment.instruction'].search([('is_sync', '=', False), ('state', '=', 'approved')])
         for record in payment_ids:
-            self.call_payment_api(record)
+            self.call_generic_transfer_amount(record)
 
     @api.model
     def action_gl_enquire_process(self):
@@ -814,10 +818,8 @@ class APIInterface(models.Model):
                 mv.write({'is_bgl': 'pass'})
 
     @api.model
-    def prepare_bgl(self, record, rec):
-        sub_operating_unit = rec.sub_operating_unit_id.code if rec.sub_operating_unit_id else '001'
-        branch = str("00" + record.operating_unit_id.code) if record.operating_unit_id.code else '00001'
-        return "0{0}{1}00{2}".format(rec.account_id.code, sub_operating_unit, branch)
+    def prepare_bgl(self, account, seq, branch):
+        return '{0}{1}{2}'.format(account.zfill(9), seq.zfill(3), branch.zfill(5))
 
     def format_date(self, val):
         vals = val.split('-')
@@ -847,52 +849,3 @@ class ServerFileError(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'issued')]
-
-
-class PaymentInstruction(models.Model):
-    _inherit = 'payment.instruction'
-    _payments = []
-
-    @api.multi
-    def action_approve(self):
-        payment = self.search([('id', '=', self.id), ('is_sync', '=', False), ('state', '=', 'draft')])
-        if not payment:
-            raise ValidationError(_("Payment Instruction [{0}] already submitted.".format(self.code)))
-        if payment.state == 'draft' and not payment.is_sync and payment.code not in self._payments:
-            if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
-                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
-
-            self.payment_remove(self.code)
-            response = self.env['soap.process'].call_payment_api(payment)
-            if 'error_code' in response:
-                self.payment_remove(self.code)
-                err_text = "Payment of {0} is not possible due to following reason:\n\n - Error Code: {1} \n - Error Message: {2}".format(
-                    self.code, response['error_code'], response['error_message'])
-                raise ValidationError(_(err_text))
-            elif response == 'OkMessage':
-                payment.write({'state': 'approved'})
-                if payment.invoice_id:
-                    for line in payment.invoice_id.suspend_security().move_id.line_ids:
-                        if line.account_id.internal_type in ('receivable', 'payable'):
-                            if line.amount_residual < 0:
-                                val = -1
-                            else:
-                                val = 1
-                            line.write({'amount_residual': ((line.amount_residual) * val) - payment.amount})
-                self.payment_remove(self.code)
-            else:
-                self.payment_remove(self.code)
-        else:
-            raise ValidationError(_("Payment Instruction [{0}] is processing.".format(self.code)))
-
-    @api.multi
-    def payment_remove(self, code):
-        if code in self._payments:
-            self._payments.remove(code)
-
-    @api.multi
-    def invalidate_payment_cache(self):
-        payments = self.search([('is_sync', '=', False), ('state', '=', 'draft')])
-        for val in payments:
-            if val.code in self._payments:
-                self._payments.remove(val.code)
