@@ -63,8 +63,7 @@ class AccountInvoice(models.Model):
                 'partner_id': self.partner_id.id or False,
                 'debit_acc': self.partner_id.property_account_payable_id.id,
                 'invoice_id': self.id,
-                'payment_type': 'invoice'
-                # 'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[
-                #     0].sub_operating_unit_id else None,
+                'payment_type': 'invoice',
+                'sub_op_unit': self.partner_id.property_account_payable_sou_id.id or False
             }
         }

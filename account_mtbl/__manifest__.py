@@ -23,6 +23,7 @@
         'vendor_advance_ou',
         'rent_agreement',
         'mtbl_access',
+        'gbs_res_partner'
         # 'account_tds'
     ],
     "data": [
@@ -68,7 +69,8 @@
         'views/inherit_res_currency_rate_view.xml',
         'views/inherit_vendor_advance_view.xml',
         'views/account_report.xml',
-        'views/account_invoice_view.xml'
+        'views/account_invoice_view.xml',
+        'views/inherit_res_partner_view.xml'
     ],
     'installable': True,
     'application': True,
