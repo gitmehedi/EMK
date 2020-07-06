@@ -15,13 +15,6 @@ class VendorAdvance(models.Model):
         for rec in self:
             rec.sub_operating_unit_id = None
 
-    # def create_journal(self, journal_id):
-    #     move = super(VendorAdvance, self).create_journal(journal_id)
-    #     if self.sub_operating_unit_id:
-    #         for line in move.line_ids:
-    #             line.write({'sub_operating_unit_id': self.sub_operating_unit_id.id})
-    #     return move
-
     def get_debit_item_data(self, journal_id):
         res = super(VendorAdvance, self).get_debit_item_data(journal_id)
         res['sub_operating_unit_id'] = self.sub_operating_unit_id.id or False
@@ -47,10 +40,12 @@ class VendorAdvance(models.Model):
         res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
         return res
 
-    # def create_journal_for_amendment(self, amount, journal_id):
-    #     move = super(VendorAdvance, self).create_journal_for_amendment(amount, journal_id)
-    #     if self.sub_operating_unit_id:
-    #         for line in move.line_ids:
-    #             line.write({'sub_operating_unit_id': self.sub_operating_unit_id.id})
-    #
-    #     return move
+    def _get_debit_line_for_amendment(self, amount):
+        res = super(VendorAdvance, self)._get_debit_line_for_amendment(amount)
+        res['sub_operating_unit_id'] = self.sub_operating_unit_id.id or False
+        return res
+
+    def _get_credit_line_for_amendment(self, amount):
+        res = super(VendorAdvance, self)._get_credit_line_for_amendment(amount)
+        res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+        return res
