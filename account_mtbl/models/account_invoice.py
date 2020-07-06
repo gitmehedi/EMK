@@ -24,6 +24,33 @@ class AccountInvoice(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'open')]
 
+    @api.multi
+    def finalize_invoice_move_lines(self, move_lines):
+        move_lines = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
+        for line in move_lines:
+            if line[2]['name'] == '/':
+                line[2]['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+
+        return move_lines
+
+    @api.multi
+    def action_move_create(self):
+        res = super(AccountInvoice, self).action_move_create()
+        if res:
+            for inv in self:
+                move = self.env['account.move'].browse(inv.move_id.id)
+                for line in move.line_ids:
+                    if line.product_id:
+                        for inv_line in inv.invoice_line_ids:
+                            if inv_line.product_id.id == line.product_id.id:
+                                line.write({'sub_operating_unit_id': inv_line.sub_operating_unit_id.id})
+                    if line.tax_line_id:
+                        line.write({'sub_operating_unit_id': line.tax_line_id.sou_id.id or False})
+                    if line.advance_id:
+                        line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False})
+
+        return res
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
