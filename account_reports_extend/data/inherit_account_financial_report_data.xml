@@ -92,13 +92,6 @@
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_liabilities_view0')]"/>
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
             <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_current_liabilities0')]"/>
         </function>
         <value eval="{'noupdate': True}" />
@@ -114,13 +107,6 @@
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
             <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_net_assets0')]"/>
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_equity0')]"/>
         </function>
         <value eval="{'noupdate': True}" />
     </function>
@@ -156,5 +142,11 @@
 
     <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_non_current_assets_view0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_non_current_assets_view0')]"/>
+
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_liabilities_view0'))]"/>
+    <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_liabilities_view0')]"/>
+
+    <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_equity0'))]"/>
+    <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_equity0')]"/>
 
 </odoo>
