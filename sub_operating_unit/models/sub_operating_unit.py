@@ -26,7 +26,9 @@ class SubOperatingUnit(models.Model):
 
     line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
-
+    all_branch = fields.Boolean(string='All Branch', default=True)
+    branch_ids = fields.Many2many('operating.unit', 'sequence_branch_rel', 'sequence_id', 'branch_id',
+                                  string='Payment Move Lines')
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
