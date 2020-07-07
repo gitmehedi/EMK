@@ -19,7 +19,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
 
     debit_operating_unit_id = fields.Many2one('operating.unit', string='Debit Branch', required=True,
                                               default=lambda self: self.env.context.get('op_unit'))
-    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit SOU',
+    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit Sequence',
                                                   default=lambda self: self.env.context.get('sub_op_unit'))
     partner_id = fields.Many2one('res.partner', string='Vendor',
                                  default=lambda self: self.env.context.get('partner_id'))
@@ -27,8 +27,8 @@ class BillPaymentInstructionWizard(models.TransientModel):
     type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa', string='Payment To')
     credit_account_id = fields.Many2one('account.account', string='Credit Account')
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')
-    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU')
-    narration = fields.Char(string="Narration", size=30)
+    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence')
+    narration = fields.Char(string="Narration", size=30, required=True)
     debit_account_id = fields.Many2one('account.account', string='Debit Account',
                                        default=lambda self: self.env.context.get('debit_acc'))
     payment_type = fields.Selection([

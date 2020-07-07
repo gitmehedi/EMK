@@ -92,12 +92,12 @@ class RentPaymentInstructionLineWizard(models.TransientModel):
     credit_account_id = fields.Many2one('account.account', string='Credit Account')
     debit_operating_unit_id = fields.Many2one('operating.unit', string='Debit Branch')
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')
-    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU')
-    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit SOU')
+    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence')
+    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit Sequence')
     partner_id = fields.Many2one('res.partner', string='Vendor')
     type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa', string='Payment To')
     vendor_bank_acc = fields.Char(related='partner_id.vendor_bank_acc', string='Vendor Bank Account')
-    narration = fields.Char(string='Narration', size=30)
+    narration = fields.Char(string='Narration', size=30, required=True)
 
     @api.onchange('type')
     def _onchange_type(self):

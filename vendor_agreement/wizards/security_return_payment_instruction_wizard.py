@@ -1,5 +1,5 @@
-from odoo import models, fields, api,_
-from odoo.exceptions import UserError,ValidationError
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class SecurityReturnPaymentInstructionWizard(models.TransientModel):
@@ -17,13 +17,13 @@ class SecurityReturnPaymentInstructionWizard(models.TransientModel):
     debit_operating_unit_id = fields.Many2one('operating.unit', string='Debit Branch',
                                               default=lambda self: self.env.context.get('operating_unit_id'))
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')
-    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit SOU')
-    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit SOU')
+    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence')
+    debit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Debit Sequence')
     partner_id = fields.Many2one('res.partner', string='Vendor',
                                  default=lambda self: self.env.context.get('partner_id'))
     type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa', string='Payment To')
     vendor_bank_acc = fields.Char(related='partner_id.vendor_bank_acc', string='Vendor Bank Account')
-    narration = fields.Char(string='Narration', size=30)
+    narration = fields.Char(string='Narration', size=30, required=True)
     company_id = currency_id = fields.Many2one('res.company', string='Company', required=True,
                                                default=lambda self: self.env.context.get('company_id'))
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
