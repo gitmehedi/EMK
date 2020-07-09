@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="vendor_security_deposit.vendor_security_deposit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='account_id']" position="after">
-                    <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
+                    <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]" required="1"
                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                 </xpath>
             </field>
