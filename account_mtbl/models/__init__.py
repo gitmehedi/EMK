@@ -18,3 +18,4 @@ from . import account_invoice
 from . import inherit_vendor_security_return
 from . import inherit_res_partner
 from . import inherit_account_config
+from . import inherit_vendor_security_deposit

@@ -61,10 +61,9 @@ class VendorAdvance(models.Model):
                 'currency_id': self.currency_id.id or False,
                 'op_unit': ou_id or False,
                 'partner_id': self.partner_id.id or False,
-                'debit_acc': self.company_id.security_deposit_account_id.id,
+                'debit_acc': self.partner_id.property_account_payable_id.id,
                 'security_return_id': self.id,
-                'payment_type': 'security_return'
-                # 'sub_op_unit': self.invoice_line_ids[0].sub_operating_unit_id.id if self.invoice_line_ids[
-                #     0].sub_operating_unit_id else None,
+                'payment_type': 'security_return',
+                'sub_op_unit': self.partner_id.property_account_payable_sou_id.id or False
             }
         }

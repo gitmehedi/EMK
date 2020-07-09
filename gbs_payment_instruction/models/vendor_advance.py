@@ -65,6 +65,6 @@ class VendorAdvance(models.Model):
                 'debit_acc': self.partner_id.property_account_payable_id.id,
                 'advance_id': self.id,
                 'payment_type': 'advance',
-                'sub_op_unit': self.sub_operating_unit_id.id or False
+                'sub_op_unit': self.partner_id.property_account_payable_sou_id.id or False
             }
         }

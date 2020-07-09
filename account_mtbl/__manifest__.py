@@ -71,7 +71,8 @@
         'views/account_report.xml',
         'views/account_invoice_view.xml',
         'views/inherit_res_partner_view.xml',
-        'views/inherit_account_config_view.xml'
+        'views/inherit_account_config_view.xml',
+        'views/inherit_vendor_security_deposit_view.xml'
     ],
     'installable': True,
     'application': True,

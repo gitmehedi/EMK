@@ -49,3 +49,9 @@ class VendorAdvance(models.Model):
         res = super(VendorAdvance, self)._get_credit_line_for_amendment(amount)
         res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
         return res
+
+    def create_security_deposit(self):
+        res = super(VendorAdvance, self).create_security_deposit()
+        if res:
+            res.write({'sub_operating_unit_id': self.company_id.security_deposit_sequence_id.id})
+        return res
