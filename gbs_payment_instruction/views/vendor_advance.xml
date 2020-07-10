@@ -17,11 +17,17 @@
                     <field name="payment_line_ids" string="Payments" readonly="1">
                         <tree string="Payment lines">
                             <field name="sequence" widget="handle"/>
+                            <field name="code"/>
                             <field name="instruction_date"/>
                             <field name="partner_id"/>
                             <field name="amount"/>
                             <field name="default_debit_account_id"/>
+                            <field name="debit_sub_operating_unit_id"/>
+                            <field name="debit_operating_unit_id"/>
+                            <field name="vendor_bank_acc"/>
                             <field name="default_credit_account_id"/>
+                            <field name="credit_sub_operating_unit_id"/>
+                            <field name="credit_operating_unit_id"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="state" string="Status"/>
                             <field name="is_sync" invisible="1"/>

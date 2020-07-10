@@ -10,7 +10,7 @@ class PaymentInstruction(models.Model):
     _description = 'Payment Instruction'
 
     sequence = fields.Integer('Sequence', track_visibility='onchange')
-    code = fields.Char('Sequence', track_visibility='onchange')
+    code = fields.Char('Number', track_visibility='onchange')
     origin = fields.Char('Origin', track_visibility='onchange')
     instruction_date = fields.Date(string='Date', track_visibility='onchange')
     amount = fields.Float(string='Amount', track_visibility='onchange')
