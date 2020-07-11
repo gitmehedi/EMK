@@ -138,7 +138,7 @@ class ServerFileProcess(models.Model):
 
     @api.model
     def sysdt_process(self):
-        integration = self.search([('type', '=', 'sys_dt'), ('method', '=', 'sftp'), ('status', '=', True)], limit=1)
+        integration = self.search([('type', '=', 'sys_dt'), ('method', '=', 'dest_sftp'), ('status', '=', True)], limit=1)
         if not integration:
             raise ValidationError(_("Record is not available with proper configuration"))
         return integration.sysdt_import_process(integration)
