@@ -84,9 +84,14 @@ class AccountTax(models.Model):
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:
-            name = self.search(
-                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
-                 ('active', '=', False)])
+            if self.is_vat:
+                name = self.search(
+                    [('name', '=ilike', self.name.strip()), ('is_vat', '=', True), ('state', '!=', 'reject'),
+                     '|', ('active', '=', True), ('active', '=', False)])
+            elif self.is_tds:
+                name = self.search(
+                    [('name', '=ilike', self.name.strip()), ('is_tds', '=', True), ('state', '!=', 'reject'),
+                     '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
