@@ -118,6 +118,14 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account_fam.asset_account_invoice_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_open']" position="after">
+                <field name="payment_btn_visible" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_payment_instruction']" position="attributes">
+                <attribute name="attrs">{'invisible': [('payment_btn_visible', '=', False)]}</attribute>
+            </xpath>
+
             <xpath expr="//notebook/page[2]" position="after">
                 <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
                     <field name="payment_line_ids" readonly="1">
