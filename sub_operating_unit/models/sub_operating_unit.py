@@ -50,6 +50,7 @@ class SubOperatingUnit(models.Model):
 
     @api.one
     def name_get(self):
+        name = self.name
         if self.name and self.code:
             name = '%s-%s-%s' % (self.account_id.code, self.code, self.name)
         return (self.id, name)
