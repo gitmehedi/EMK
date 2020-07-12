@@ -13,7 +13,8 @@
         'vendor_advance',
         'rent_agreement',
         'vendor_security_deposit',
-        'gbs_res_partner'
+        'gbs_res_partner',
+        'account_fam'
     ],
     'data': [
         'security/ir.model.access.csv',

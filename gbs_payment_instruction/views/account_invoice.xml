@@ -112,4 +112,65 @@
             <!--</xpath>-->
         </field>
     </record>
+
+    <record id="inherit_asset_invoice_payment_instruction" model="ir.ui.view">
+        <field name="name">inherit.asset.vendor.bill.payment.instruction</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account_fam.asset_account_invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[2]" position="after">
+                <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
+                    <field name="payment_line_ids" readonly="1">
+                        <tree string="Payment lines">
+                            <field name="sequence" widget="handle"/>
+                            <field name="code"/>
+                            <field name="instruction_date"/>
+                            <field name="partner_id"/>
+                            <field name="amount"/>
+                            <field name="default_debit_account_id"/>
+                            <field name="debit_sub_operating_unit_id"/>
+                            <field name="debit_operating_unit_id"/>
+                            <field name="vendor_bank_acc"/>
+                            <field name="default_credit_account_id"/>
+                            <field name="credit_sub_operating_unit_id"/>
+                            <field name="credit_operating_unit_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" string="Status"/>
+                            <field name="is_sync" invisible="1"/>
+                            <button name="sync" string="Sync" type="action"
+                                    icon="fa fa-check text-success"
+                                    attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                            <button name="not_sync" string="Not Sync" type="action"
+                                    icon="fa-times-circle text-danger"
+                                    attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                        </tree>
+                        <form string="Payment">
+                            <group>
+                                <group>
+                                    <field name="invoice_id"/>
+                                    <field name="instruction_date"/>
+                                    <field name="partner_id"/>
+                                </group>
+                                <group>
+                                    <field name="amount"/>
+                                    <field name="currency_id"/>
+                                    <field name="is_sync" invisible="1"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                    <group>
+                        <group></group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="total_payment_amount" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+                            <field name="total_payment_approved" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+                            <field name="payment_approver" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 </odoo>
