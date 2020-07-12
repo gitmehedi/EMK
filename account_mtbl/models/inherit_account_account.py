@@ -90,12 +90,13 @@ class AccountAccount(models.Model):
         default, values = [], []
 
         if name:
-            domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name), ('level_id.name', '=', 'Layer 5')]
+            domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
             values = self.search(domain, limit=limit, order='id ASC').name_get()
         else:
-            domain = [('level_id.name', '=', 'Layer 5')]
+            # domain = [('level_id.name', '=', 'Layer 5')]
+            domain=[]
             default = self.search(domain + args, limit=limit, order='id ASC').name_get()
 
         return list(set(default) | set(values))[:limit]
