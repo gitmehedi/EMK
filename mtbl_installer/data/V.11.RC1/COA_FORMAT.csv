@@ -1,0 +1,7 @@
+Layer,Code,Name,Parent Account,Type,Allow Reconciliation,Active,Pending,Status
+Layer 4,26813,Blocked Interest Receivable waived,268,View Type,,TRUE,FALSE,Approved
+Layer 5,26813001,Blocked Interest Receivable Account-waived,26813,Assets: Office Accounts,,TRUE,FALSE,Approved
+Layer 5,26813002,Blocked Interest Receivable Account- non-waived,26813,Assets: Office Accounts,,TRUE,FALSE,Approved
+Layer 5,13201009,MTB Instant,13201,Liabilities: Customer Accounts,,TRUE,FALSE,Approved
+Layer 5,23103007,Receivable on Government Securities,23103,Treasury Asset,,TRUE,FALSE,Approved
+Layer 5,41203904,Interest Expenses on RD NRB TEMP,41203,Expenditure Accounts,,TRUE,FALSE,Approved
