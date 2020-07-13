@@ -146,4 +146,8 @@
         </field>
     </record>
 
+    <record id="account.action_invoice_tree2" model="ir.actions.act_window">
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False)]</field>
+    </record>
+
 </odoo>
