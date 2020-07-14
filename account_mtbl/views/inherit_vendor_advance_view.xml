@@ -11,6 +11,23 @@
             </xpath>
         </field>
     </record>
+
+    <record id="inherit_vendor_advance_form_view_2" model="ir.ui.view">
+        <field name="name">inherit.vendor.advance.form.view</field>
+        <field name="model">vendor.advance</field>
+        <field name="inherit_id" ref="vendor_advance_ou.inherit_vendor_advance_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='operating_unit_id']" position="after">
+                <field name="operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='operating_unit_id']" position="replace">
+                <field name="operating_unit_id" string="Branch" required="True"
+                       domain="[('id', 'in', operating_unit_domain_ids and operating_unit_domain_ids[0] and operating_unit_domain_ids[0][2] or False)]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="inherit_rent_agreement_sou" model="ir.ui.view">
         <field name="name">inherit.rent.agreement.sou</field>
         <field name="model">vendor.advance</field>
