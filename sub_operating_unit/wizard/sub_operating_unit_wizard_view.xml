@@ -8,13 +8,20 @@
                 <group>
                     <group>
                         <field name="name"/>
+                        <field name="status"/>
                     </group>
                     <group>
-                        <field name="status"/>
+                        <field name="all_branch"/>
+                        <field name="inc_branch_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('all_branch','=',True)]}"
+                               options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        <field name="excl_branch_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('all_branch','=',True)]}"
+                               options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                     </group>
                 </group>
                 <footer>
-                    <button name="act_change_name" string="Change Request" type="object" class="btn-primary"/>
+                    <button name="act_change_req" string="Change Request" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-default" special="cancel"/>
                 </footer>
             </form>

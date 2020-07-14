@@ -55,6 +55,7 @@
                                    widget="many2many_tags" attrs="{'invisible': [('partner_id', '=', False)]}"
                                    options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             <field name="adjusted_advance" attrs="{'invisible': ['|', ('advance_ids', '=', []), ('partner_id', '=', False)]}"/>
+                            <field name="vat_selection"/>
                         </group>
                         <group>
                             <field name="is_asset" invisible="1"/>
@@ -77,7 +78,8 @@
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field name="asset_name" required="True"/>
                                     <field name="name"/>
-                                    <field name="operating_unit_id"
+                                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                                           widget="selection" readonly="0" string="Branch"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field name="account_id" groups="account.group_account_user"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
@@ -132,6 +134,7 @@
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
+                                    <field name="amount_vat_payable"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
@@ -153,12 +156,15 @@
                         <page string="Other Info">
                             <group>
                                 <group>
+                                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                                           string="Branch" readonly="1"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field name="journal_id" groups="account.group_account_user"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
-                                           attrs="{'readonly':[('move_name','!=',False)]}"/>
+                                           readonly="1"/>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id"
                                            invisible="1"/>
-                                    <field name="user_id" string="Responsible"
+                                    <field name="user_id" string="Responsible" readonly="1"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                            name="account_id" groups="account.group_account_manager"/>
