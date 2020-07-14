@@ -26,9 +26,11 @@ class SubOperatingUnit(models.Model):
 
     line_ids = fields.One2many('history.sub.operating.unit', 'line_id', string='Lines', readonly=True,
                                states={'draft': [('readonly', False)]})
-    all_branch = fields.Boolean(string='All Branch', default=True)
+    all_branch = fields.Boolean(string='All Branch', default=True, track_visibility='onchange', readonly=True,
+                                states={'draft': [('readonly', False)]})
     branch_ids = fields.Many2many('operating.unit', 'sequence_branch_rel', 'sequence_id', 'branch_id',
-                                  string='Payment Move Lines')
+                                  string='Payment Move Lines', track_visibility='onchange', readonly=True,
+                                  states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
@@ -108,13 +110,27 @@ class SubOperatingUnit(models.Model):
         if self.pending == True:
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
+            inc = [(4, rec.id) for rec in requested.inc_branch_ids]
+            excl = [(3, val.id) for val in requested.excl_branch_ids]
             if requested:
-                self.write({
-                    'name': self.name if not requested.change_name else requested.change_name,
-                    'pending': False,
-                    'active': requested.status,
-                    'approver_id': self.env.user.id,
-                })
+                if requested.all_branch:
+                    self.write({
+                        'name': self.name if not requested.change_name else requested.change_name,
+                        'pending': False,
+                        'active': requested.status,
+                        'branch_ids': [],
+                        'all_branch': requested.all_branch,
+                        'approver_id': self.env.user.id,
+                    })
+                else:
+                    self.write({
+                        'name': self.name if not requested.change_name else requested.change_name,
+                        'pending': False,
+                        'active': requested.status,
+                        'branch_ids': inc + excl,
+                        'all_branch': requested.all_branch,
+                        'approver_id': self.env.user.id,
+                    })
                 requested.write({
                     'state': 'approve',
                     'change_date': fields.Datetime.now()
@@ -154,6 +170,9 @@ class HistorySubOperatingUnit(models.Model):
 
     change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
     status = fields.Boolean('Active', default=True, track_visibility='onchange')
+    excl_branch_ids = fields.Many2many('operating.unit', 'history_seq_branch_excl_rel', string='Exclude Branch')
+    inc_branch_ids = fields.Many2many('operating.unit', 'history_seq_branch_inc_rel', string='Include Branch')
+    all_branch = fields.Boolean(string='All Branch', default=True)
     request_date = fields.Datetime(string='Requested Date')
     change_date = fields.Datetime(string='Approved Date')
     line_id = fields.Many2one('sub.operating.unit', ondelete='restrict')
