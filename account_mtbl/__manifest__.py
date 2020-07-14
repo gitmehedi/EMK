@@ -23,7 +23,8 @@
         'vendor_advance_ou',
         'rent_agreement',
         'mtbl_access',
-        'gbs_res_partner'
+        'gbs_res_partner',
+        'account_tax_challan'
         # 'account_tds'
     ],
     "data": [
@@ -78,6 +79,8 @@
         'views/inherit_vendor_security_deposit_view.xml',
         'views/date_range_type_view.xml',
         'views/date_range_view.xml',
+        'views/inherit_tds_vat_payment_view.xml',
+        'wizard/inherit_tds_vat_move_payment_wizard.xml'
     ],
     'installable': True,
     'application': True,

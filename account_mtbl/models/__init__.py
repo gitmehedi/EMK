@@ -21,3 +21,4 @@ from . import inherit_account_config
 from . import inherit_vendor_security_deposit
 from . import date_range_type
 from . import date_range
+from . import inherit_tds_vat_payment

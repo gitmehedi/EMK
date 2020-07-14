@@ -54,7 +54,7 @@
                                    domain="[('state', '=', 'approve'), ('partner_id', 'in', [partner_id]), ('active', '=', True), ('outstanding_amount', '&gt;', 0)]"
                                    widget="many2many_tags" attrs="{'invisible': [('partner_id', '=', False)]}"
                                    options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
-                            <field name="adjusted_advance" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                            <field name="adjusted_advance" attrs="{'invisible': ['|', ('advance_ids', '=', []), ('partner_id', '=', False)]}"/>
                         </group>
                         <group>
                             <field name="is_asset" invisible="1"/>
@@ -137,9 +137,13 @@
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                     <field name="amount_tds" class="oe_subtotal_footer_separator" widget="monetary"/>
+                                    <field name="adjusted_vat" string="Adjusted VAT Amount"
+                                           attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
+                                    <field name="adjusted_tds" string="Adjusted TDS Amount"
+                                           attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
-                                           widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
+                                           widget="payment" invisible="1"/>
                                 </group>
                             </group>
                             <div>
