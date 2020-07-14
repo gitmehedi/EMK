@@ -10,7 +10,8 @@
     "depends": [
         'base',
         'mail',
-        'account'
+        'account',
+        'account_parent',
     ],
     "data": [
         'security/ir.model.access.csv',
