@@ -17,12 +17,6 @@ class AccountAccount(models.Model):
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange', readonly=True,
                             states={'draft': [('readonly', False)]})
 
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        if not self.env.context.get('parent_coa', False):
-            args += [('child_ids', '=', False)]
-        res = super(AccountAccount, self).search(args)
-        return res
 
     @api.one
     def act_approve(self):
