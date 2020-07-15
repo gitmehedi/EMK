@@ -215,6 +215,7 @@
                 <field name="partner_id" groups="base.group_user" string="Vendor"/>
                 <field name="date_invoice" string="Bill Date"/>
                 <field name="user_id" string="Responsible"/>
+                <field name="residual_signed" string="To Pay" sum="To pay"/>
                 <field name="commercial_partner_id" invisible="1"/>
                 <field name="reference" invisible="1"/>
                 <field name="name" invisible="1"/>
