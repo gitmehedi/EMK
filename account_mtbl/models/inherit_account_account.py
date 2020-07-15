@@ -85,19 +85,23 @@ class AccountAccount(models.Model):
             #     self.code = code[:self.level_id.size]
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def name_search(self, name, args=None, operator='=ilike', limit=100):
         limit = 100
-        default, values = [], []
+        default, values, domain = [], [], []
+        context = self.env.context
 
         if name:
-            domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
-                domain = ['&', '!'] + domain[1:]
-            values = self.search(domain, limit=limit, order='id ASC').name_get()
+            if 'show_parent_account' in context:
+                domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name)]
+            else:
+                domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name),
+                          ('level_id.name', '=', 'Layer 5')]
+            values = self.search(domain + args, limit=limit, order='code ASC').name_get()
         else:
-            # domain = [('level_id.name', '=', 'Layer 5')]
-            domain=[]
-            default = self.search(domain + args, limit=limit, order='id ASC').name_get()
+            if 'show_parent_account' not in context:
+                domain = [('level_id.name', '=', 'Layer 5')]
+
+            default = self.search(domain + args, limit=limit, order='code ASC').name_get()
 
         return list(set(default) | set(values))[:limit]
 
