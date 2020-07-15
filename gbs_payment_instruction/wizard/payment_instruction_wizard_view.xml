@@ -33,12 +33,14 @@
                         <field name="credit_account_id"
                                attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                        <field name="credit_operating_unit_id"
-                               attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
-                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                         <field name="credit_sub_operating_unit_id" domain="[('account_id', 'in', [credit_account_id])]"
                                attrs="{'invisible':[('type','=','casa')], 'required':[('type','=','credit')]}"
                                options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_operating_unit_id"
+                               domain="[('id', 'in', credit_operating_unit_domain_ids and credit_operating_unit_domain_ids[0] and credit_operating_unit_domain_ids[0][2] or False)]"
+                               attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
                     </group>
                 </group>
                 <footer>

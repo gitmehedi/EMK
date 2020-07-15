@@ -41,6 +41,24 @@ class BillPaymentInstructionWizard(models.TransientModel):
         ('multi', "Multi")
     ], string='Advance Type', related='advance_id.type')
 
+    credit_operating_unit_domain_ids = fields.Many2many('operating.unit',
+                                                        compute="_compute_credit_operating_unit_domain_ids",
+                                                        readonly=True, store=False)
+
+    @api.multi
+    @api.depends('credit_sub_operating_unit_id')
+    def _compute_credit_operating_unit_domain_ids(self):
+        for rec in self:
+            if rec.credit_sub_operating_unit_id.all_branch:
+                rec.credit_operating_unit_domain_ids = self.env['operating.unit'].search([])
+            else:
+                rec.credit_operating_unit_domain_ids = rec.credit_sub_operating_unit_id.branch_ids
+
+    @api.onchange('credit_sub_operating_unit_id')
+    def _onchange_credit_sub_operating_unit_id(self):
+        for rec in self:
+            rec.credit_operating_unit_id = None
+
     @api.constrains('amount')
     def _check_amount(self):
         for line in self:
