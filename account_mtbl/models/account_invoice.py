@@ -60,7 +60,7 @@ class AccountInvoiceLine(models.Model):
 
     operating_unit_id = fields.Many2one('operating.unit', string='Branch', required=True, readonly=False,
                                         default=lambda self: self.env['res.users'].operating_unit_default_get(
-                                            self._uid))
+                                            self._uid), related='')
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
 
     @api.onchange('account_id')
