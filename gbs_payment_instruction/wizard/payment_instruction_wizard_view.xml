@@ -30,7 +30,7 @@
                                attrs="{'invisible':[('type','=','credit')],'required':[('type','=','casa')]}"/>
                         <field name="vendor_bank_acc"
                                attrs="{'invisible':[('type','=','credit')],'required':[('type','=','casa')]}"/>
-                        <field name="credit_account_id"
+                        <field name="credit_account_id" domain="[('gl_type','=','online')]"
                                attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                         <field name="credit_sub_operating_unit_id" domain="[('account_id', 'in', [credit_account_id])]"
