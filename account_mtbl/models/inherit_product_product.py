@@ -22,6 +22,12 @@ class ProductProduct(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
+
+    @api.onchange('property_account_expense_id')
+    def onchange_property_account_expense_id(self):
+        for rec in self:
+            rec.sub_operating_unit_id = None
 
     @api.one
     def act_draft(self):

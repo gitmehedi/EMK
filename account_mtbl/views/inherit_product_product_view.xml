@@ -16,6 +16,12 @@
                     <field name="maker_id" invisible="1"/>
                     <field name="approver_id" invisible="1"/>
                 </xpath>
+                <xpath expr="//field[@name='property_account_expense_id']" position="after">
+                    <field name="sub_operating_unit_id"
+                               domain="[('account_id','in',[property_account_expense_id])]"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                               groups="account.group_account_user"/>
+                </xpath>
             </field>
         </record>
 
