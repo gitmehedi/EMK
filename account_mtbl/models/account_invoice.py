@@ -56,23 +56,17 @@ class AccountInvoice(models.Model):
 
         return move_lines
 
-    # @api.multi
-    # def action_move_create(self):
-    #     res = super(AccountInvoice, self).action_move_create()
-    #     if res:
-    #         for inv in self:
-    #             move = self.env['account.move'].browse(inv.move_id.id)
-    #             for line in move.line_ids:
-    #                 if line.product_id:
-    #                     for inv_line in inv.invoice_line_ids:
-    #                         if inv_line.product_id.id == line.product_id.id:
-    #                             line.write({'sub_operating_unit_id': inv_line.sub_operating_unit_id.id})
-    #                 if line.tax_line_id:
-    #                     line.write({'sub_operating_unit_id': line.tax_line_id.sou_id.id or False})
-    #                 if line.advance_id:
-    #                     line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False})
-    #
-    #     return res
+    @api.multi
+    def action_move_create(self):
+        res = super(AccountInvoice, self).action_move_create()
+        if res:
+            for inv in self:
+                move = self.env['account.move'].browse(inv.move_id.id)
+                for line in move.line_ids:
+                    if line.advance_id:
+                        line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False})
+
+        return res
 
 
 class AccountInvoiceLine(models.Model):
