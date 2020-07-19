@@ -167,6 +167,7 @@
                                     <field name="user_id" string="Responsible" readonly="1"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
                                            name="account_id" groups="account.group_account_manager"/>
                                     <field name="name" invisible="1"/>
                                     <field name="payment_term_id"
@@ -215,6 +216,7 @@
                 <field name="partner_id" groups="base.group_user" string="Vendor"/>
                 <field name="date_invoice" string="Bill Date"/>
                 <field name="user_id" string="Responsible"/>
+                <field name="residual_signed" string="To Pay" sum="To pay"/>
                 <field name="commercial_partner_id" invisible="1"/>
                 <field name="reference" invisible="1"/>
                 <field name="name" invisible="1"/>
