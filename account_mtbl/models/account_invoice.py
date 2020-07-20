@@ -65,7 +65,16 @@ class AccountInvoice(models.Model):
                 for line in move.line_ids:
                     if line.advance_id:
                         line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False})
+                    if line.is_security_deposit:
+                        line.write(
+                            {'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False}
+                        )
 
+        return res
+
+    def create_security_deposit(self):
+        res = super(AccountInvoice, self).create_security_deposit()
+        res.write({'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False})
         return res
 
 

@@ -14,6 +14,7 @@
         'account_asset',
         'vendor_advance',
         'account_mtbl',
+        'vendor_security_deposit_ou'
     ],
     'data': [
         'security/security.xml',
