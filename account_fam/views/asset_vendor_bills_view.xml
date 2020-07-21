@@ -113,6 +113,9 @@
                             </field>
                             <group>
                                 <group>
+                                    <group>
+                                        <field name="security_deposit" class="oe_subtotal_footer_separator"/>
+                                    </group>
                                     <div class="oe_inline">
                                         <field name="tax_line_ids">
                                             <tree editable="bottom" string="Taxes">
@@ -130,20 +133,23 @@
                                             </tree>
                                         </field>
                                     </div>
+                                    <group>
+                                        <field name="adjusted_vat" string="Adjusted VAT Amount"
+                                               attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
+                                        <field name="adjusted_tds" string="Adjusted TDS Amount"
+                                               attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
+                                    </group>
                                 </group>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
                                     <field name="amount_vat_payable"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                    <field name="security_deposit" class="oe_subtotal_footer_separator"/>
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                     <field name="amount_tds" class="oe_subtotal_footer_separator" widget="monetary"/>
-                                    <field name="adjusted_vat" string="Adjusted VAT Amount"
-                                           attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
-                                    <field name="adjusted_tds" string="Adjusted TDS Amount"
-                                           attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" invisible="1"/>

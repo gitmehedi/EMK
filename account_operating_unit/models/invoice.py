@@ -18,17 +18,17 @@ class AccountInvoice(models.Model):
                                         states={'draft': [('readonly',
                                                            False)]})
 
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        move_lines = super(AccountInvoice,
-                           self).finalize_invoice_move_lines(move_lines)
-        new_move_lines = []
-        for line_tuple in move_lines:
-            if self.operating_unit_id:
-                line_tuple[2]['operating_unit_id'] = \
-                    self.operating_unit_id.id
-            new_move_lines.append(line_tuple)
-        return new_move_lines
+    # @api.multi
+    # def finalize_invoice_move_lines(self, move_lines):
+    #     move_lines = super(AccountInvoice,
+    #                        self).finalize_invoice_move_lines(move_lines)
+    #     new_move_lines = []
+    #     for line_tuple in move_lines:
+    #         if self.operating_unit_id:
+    #             line_tuple[2]['operating_unit_id'] = \
+    #                 self.operating_unit_id.id
+    #         new_move_lines.append(line_tuple)
+    #     return new_move_lines
 
 
 

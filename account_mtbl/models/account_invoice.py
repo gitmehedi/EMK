@@ -24,11 +24,34 @@ class AccountInvoice(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'open')]
 
+    @api.model
+    def invoice_line_move_line_get(self):
+        res = super(AccountInvoice, self).invoice_line_move_line_get()
+        if res:
+            for iml in res:
+                inv_line_obj = self.env['account.invoice.line'].search([('id', '=', iml['invl_id'])])
+                iml.update({'operating_unit_id': inv_line_obj.operating_unit_id.id,
+                            'sub_operating_unit_id': inv_line_obj.sub_operating_unit_id.id})
+        return res
+
+    @api.model
+    def tax_line_move_line_get(self):
+        res = super(AccountInvoice, self).tax_line_move_line_get()
+        tax_pool = self.env['account.tax']
+        new_res = []
+        for r in res:
+            tax = tax_pool.search([('id', '=', r['tax_line_id'])])[0]
+            r['operating_unit_id'] = tax.operating_unit_id.id
+            r['sub_operating_unit_id'] = tax.sou_id.id
+            new_res.append(r)
+        return new_res
+
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
         move_lines = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
         for line in move_lines:
             if line[2]['name'] == '/':
+                line[2]['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
                 line[2]['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
 
         return move_lines
@@ -40,15 +63,18 @@ class AccountInvoice(models.Model):
             for inv in self:
                 move = self.env['account.move'].browse(inv.move_id.id)
                 for line in move.line_ids:
-                    if line.product_id:
-                        for inv_line in inv.invoice_line_ids:
-                            if inv_line.product_id.id == line.product_id.id:
-                                line.write({'sub_operating_unit_id': inv_line.sub_operating_unit_id.id})
-                    if line.tax_line_id:
-                        line.write({'sub_operating_unit_id': line.tax_line_id.sou_id.id or False})
                     if line.advance_id:
                         line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False})
+                    if line.is_security_deposit:
+                        line.write(
+                            {'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False}
+                        )
 
+        return res
+
+    def create_security_deposit(self):
+        res = super(AccountInvoice, self).create_security_deposit()
+        res.write({'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False})
         return res
 
 
@@ -67,6 +93,20 @@ class AccountInvoiceLine(models.Model):
     def _onchange_account_id(self):
         for rec in self:
             rec.sub_operating_unit_id = None
+
+
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    @api.model
+    def _convert_prepared_anglosaxon_line(self, line, partner):
+        res = super(ProductProduct, self)._convert_prepared_anglosaxon_line(line, partner)
+        if res:
+            if line.get('operating_unit_id'):
+                res.update({'operating_unit_id': line.get('operating_unit_id')})
+            if line.get('sub_operating_unit_id'):
+                res.update({'sub_operating_unit_id': line.get('sub_operating_unit_id')})
+        return res
 
 
 
