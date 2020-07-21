@@ -145,7 +145,6 @@
                                     <field name="amount_tax"/>
                                     <field name="amount_vat_payable"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                    <field name="security_deposit" class="oe_subtotal_footer_separator"/>
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
