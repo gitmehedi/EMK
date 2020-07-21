@@ -11,6 +11,9 @@ class VendorAdvance(models.Model):
                                             states={'draft': [('readonly', False)]})
 
     operating_unit_domain_ids = fields.Many2many('operating.unit', compute="_compute_operating_unit_domain_ids", readonly=True, store=False)
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Cost Centre',
+                                          readonly=True, required='True', track_visibility='onchange',
+                                          states={'draft': [('readonly', False)]})
 
     @api.multi
     @api.depends('sub_operating_unit_id')
@@ -34,11 +37,13 @@ class VendorAdvance(models.Model):
     def get_debit_item_data(self, journal_id):
         res = super(VendorAdvance, self).get_debit_item_data(journal_id)
         res['sub_operating_unit_id'] = self.sub_operating_unit_id.id or False
+        res['analytic_account_id'] = self.account_analytic_id.id or False
         return res
 
     def get_deposit_credit_item_data(self, journal_id):
         res = super(VendorAdvance, self).get_deposit_credit_item_data(journal_id)
         res['sub_operating_unit_id'] = self.company_id.security_deposit_sequence_id.id or False
+        res['analytic_account_id'] = self.account_analytic_id.id or False
         return res
 
     def get_vat_item_data(self, vat_id, vat_amount):

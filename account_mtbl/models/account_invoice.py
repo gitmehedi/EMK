@@ -64,7 +64,8 @@ class AccountInvoice(models.Model):
                 move = self.env['account.move'].browse(inv.move_id.id)
                 for line in move.line_ids:
                     if line.advance_id:
-                        line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False})
+                        line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False,
+                                    'analytic_account_id': line.advance_id.account_analytic_id.id or False})
                     if line.is_security_deposit:
                         line.write(
                             {'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False}
