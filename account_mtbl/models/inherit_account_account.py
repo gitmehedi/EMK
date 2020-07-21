@@ -96,7 +96,7 @@ class AccountAccount(models.Model):
             else:
                 domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name),
                           ('level_id.name', '=', 'Layer 5')]
-            values = self.search(domain + args, limit=limit, order='code ASC').name_get()
+            values = self.search(domain, limit=limit, order='code ASC').name_get()
         else:
             if 'show_parent_account' not in context:
                 domain = [('level_id.name', '=', 'Layer 5')]
