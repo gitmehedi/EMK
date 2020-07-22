@@ -29,7 +29,7 @@ class PaymentInstruction(models.Model):
     cbs_response = fields.Text('Response')
     is_sync = fields.Boolean(string='Payment Synced',copy=False, default=False, track_visibility='onchange')
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
-    state = fields.Selection([('draft', "Draft"), ('approved', "Approved"), ('cancel', "Cancel"), ], default='draft',string="Status", track_visibility='onchange')
+    state = fields.Selection([('draft', "Waiting for Approval"), ('approved', "Approved"), ('cancel', "Cancel"), ], default='draft',string="Status", track_visibility='onchange')
     narration = fields.Text(string="Narration", size=30, required=True)
     invoice_id = fields.Many2one('account.invoice', string="Vendor Bill", copy=False)
     advance_id = fields.Many2one('vendor.advance', string="Advance", copy=False)
