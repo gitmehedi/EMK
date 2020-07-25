@@ -6,12 +6,12 @@ class VendorAdvance(models.Model):
     _name = 'vendor.advance'
     _inherit = ['vendor.advance', 'ir.needaction_mixin']
 
-    payment_line_ids = fields.One2many('payment.instruction', 'advance_id', string='Payment')
+    payment_line_ids = fields.One2many('payment.instruction', 'advance_id', string='Payment', copy=False)
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
     total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
-    payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
+    payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False, copy=False,
                                          string="Is Visible")
 
     @api.one

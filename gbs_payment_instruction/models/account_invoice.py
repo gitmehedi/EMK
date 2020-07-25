@@ -57,7 +57,7 @@ class AccountInvoice(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': self.payable_to_supplier - self.total_payment_amount or 0.0,
+                'amount': self.residual - self.total_payment_amount or 0.0,
                 'currency_id': self.currency_id.id or False,
                 'op_unit': self.operating_unit_id.id or False,
                 'partner_id': self.partner_id.id or False,
