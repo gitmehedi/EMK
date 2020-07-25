@@ -19,7 +19,8 @@
                     <attribute name="options">{'no_create':True, 'no_open':True}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='refund_account_id']" position="before">
-                    <field name="sou_id" domain="[('account_id', 'in', [account_id])]"
+                    <field name="sou_id" attrs="{'required': [('amount_type', '!=', 'group')]}"
+                           domain="[('account_id', 'in', [account_id])]"
                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                 </xpath>
 
