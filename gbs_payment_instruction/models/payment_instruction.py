@@ -1,5 +1,4 @@
-from odoo import models, fields, api, _, SUPERUSER_ID
-from odoo.exceptions import UserError, ValidationError
+from odoo import models, fields, api
 
 
 class PaymentInstruction(models.Model):
@@ -34,6 +33,7 @@ class PaymentInstruction(models.Model):
     invoice_id = fields.Many2one('account.invoice', string="Vendor Bill", copy=False)
     advance_id = fields.Many2one('vendor.advance', string="Advance", copy=False)
     security_return_id = fields.Many2one('vendor.security.return', string='Security Return', copy=False)
+    reconcile_ref = fields.Char(string="Reconciliation Ref#", size=20)
 
 
     @api.model

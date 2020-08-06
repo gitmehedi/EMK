@@ -94,3 +94,8 @@ class VendorAdvance(models.Model):
 
         return reconcile_ref
 
+    def get_security_deposit_data(self):
+        res = super(VendorAdvance, self).get_security_deposit_data()
+        if self.company_id.security_deposit_account_id:
+            res['reconcile_ref'] = self.get_reconcile_ref(self.company_id.security_deposit_account_id.id, self.name)
+        return res
