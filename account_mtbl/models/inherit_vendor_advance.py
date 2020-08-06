@@ -38,37 +38,44 @@ class VendorAdvance(models.Model):
         res = super(VendorAdvance, self).get_debit_item_data(journal_id)
         res['sub_operating_unit_id'] = self.sub_operating_unit_id.id or False
         res['analytic_account_id'] = self.account_analytic_id.id or False
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
 
     def get_deposit_credit_item_data(self, journal_id):
         res = super(VendorAdvance, self).get_deposit_credit_item_data(journal_id)
         res['sub_operating_unit_id'] = self.company_id.security_deposit_sequence_id.id or False
         res['analytic_account_id'] = self.account_analytic_id.id or False
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
 
     def get_vat_item_data(self, vat_id, vat_amount):
         res = super(VendorAdvance, self).get_vat_item_data(vat_id, vat_amount)
         res['sub_operating_unit_id'] = vat_id.sou_id.id or False
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
 
     def get_tds_item_data(self, tds_id, tds_amount):
         res = super(VendorAdvance, self).get_tds_item_data(tds_id, tds_amount)
         res['sub_operating_unit_id'] = tds_id.sou_id.id or False
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
 
     def get_supplier_credit_item_data(self, journal_id, supplier_credit_amount):
         res = super(VendorAdvance, self).get_supplier_credit_item_data(journal_id, supplier_credit_amount)
         res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
 
     def _get_debit_line_for_amendment(self, amount):
         res = super(VendorAdvance, self)._get_debit_line_for_amendment(amount)
         res['sub_operating_unit_id'] = self.sub_operating_unit_id.id or False
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
 
     def _get_credit_line_for_amendment(self, amount):
         res = super(VendorAdvance, self)._get_credit_line_for_amendment(amount)
         res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
 
     def create_security_deposit(self):
@@ -76,3 +83,13 @@ class VendorAdvance(models.Model):
         if res:
             res.write({'sub_operating_unit_id': self.company_id.security_deposit_sequence_id.id})
         return res
+
+    def get_reconcile_ref(self, account_id, ref):
+        # Generate reconcile ref code
+        reconcile_ref = None
+        account_obj = self.env['account.account'].search([('id', '=', account_id)])
+        if account_obj.reconcile:
+            reconcile_ref = account_obj.code + ref.replace('/', '')
+
+        return reconcile_ref
+
