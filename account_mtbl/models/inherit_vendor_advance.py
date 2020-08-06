@@ -1,10 +1,11 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 
 
 class VendorAdvance(models.Model):
     _name = 'vendor.advance'
     _inherit = ['vendor.advance', 'ir.needaction_mixin']
 
+    reconcile_ref = fields.Char(string="Reconciliation Ref#", size=20)
     operating_unit_id = fields.Many2one('operating.unit', string='Branch')
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True,
                                             track_visibility='onchange', readonly=True,
