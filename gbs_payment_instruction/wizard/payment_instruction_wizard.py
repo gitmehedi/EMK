@@ -90,6 +90,9 @@ class BillPaymentInstructionWizard(models.TransientModel):
             credit_branch = self.credit_operating_unit_id.id
             credit_sou = self.credit_sub_operating_unit_id.id if self.credit_sub_operating_unit_id else None
 
+        # Generate reconcile ref code for debit account
+        reconcile_ref = self.advance_id.get_reconcile_ref(self.debit_account_id.id, self.advance_id.name)
+
         self.env['payment.instruction'].create({
             'invoice_id': self.invoice_id.id or False,
             'advance_id': self.advance_id.id or False,
@@ -105,6 +108,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             'default_credit_account_id': credit_acc,
             'credit_operating_unit_id': credit_branch,
             'credit_sub_operating_unit_id': credit_sou,
-            'narration': self.narration
+            'narration': self.narration,
+            'reconcile_ref': reconcile_ref
         })
         return {'type': 'ir.actions.act_window_close'}
