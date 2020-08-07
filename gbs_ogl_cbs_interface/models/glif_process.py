@@ -295,7 +295,7 @@ class ServerFileProcess(models.Model):
                         amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                         amount = ''.join(amount.split('.')).zfill(16)
                         narration = re.sub(r'[|\n||\r|?|$|.|!]', r' ', val.name[:50])
-                        trn_ref_no = ''.join(vals.name.split('/'))[-8:]
+                        trn_ref_no = val.reconcile_ref if val.reconcile_ref else ''
                         date_array = val.date.split("-")
                         date = date_array[2] + date_array[1] + date_array[0]
                         cost_centre = str(
@@ -305,7 +305,7 @@ class ServerFileProcess(models.Model):
                         branch_code = str("00" + val.operating_unit_id.code) if val.operating_unit_id.code else '00001'
                         bgl = "0{0}{1}{2}".format(account_no, sub_opu, branch_code)
 
-                        journal = "{:2s}{:17s}{:16s}{:50s}{:8s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount, narration,
+                        journal = "{:2s}{:17s}{:16s}{:50s}{:20s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount, narration,
                                                                                       trn_ref_no, date, cost_centre)
                         file.write(journal)
 
