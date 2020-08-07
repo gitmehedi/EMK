@@ -35,6 +35,7 @@
                             <field name="instruction_date"/>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="narration"/>
+                            <field name="reconcile_ref"/>
                             <field name="currency_id" invisible="1"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         </group>

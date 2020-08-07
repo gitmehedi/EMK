@@ -1,5 +1,3 @@
-import pytz
-import numpy as np
 from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
@@ -69,3 +67,4 @@ class AccountMoveLine(models.Model):
     servicing_channel_id = fields.Many2one('servicing.channel', string="SC")
     operating_unit_id = fields.Many2one(string='Branch')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
+    reconcile_ref = fields.Char(string="Reconciliation Ref#", size=20)

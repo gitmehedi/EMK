@@ -30,6 +30,7 @@
     "data": [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'security/security.xml',
         # 'data/default_data.xml',
         'views/menu_view.xml',
         'wizard/segment_wizard_view.xml',

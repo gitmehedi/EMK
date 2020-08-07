@@ -53,6 +53,7 @@ class AccountInvoice(models.Model):
             if line[2]['name'] == '/':
                 line[2]['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
                 line[2]['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+                line[2]['reconcile_ref'] = self.get_reconcile_ref(self.account_id.id, self.id)  # setting the reconcile ref
 
         return move_lines
 
@@ -77,6 +78,35 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).create_security_deposit()
         res.write({'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False})
         return res
+
+    # this function is required to pass the reconcile reference in security deposit move line
+    def get_security_deposit_move_data(self):
+        res = super(AccountInvoice, self).get_security_deposit_move_data()
+        if self.company_id.security_deposit_account_id:
+            res['reconcile_ref'] = self.get_reconcile_ref(self.company_id.security_deposit_account_id.id, self.id)
+        return res
+
+    # this function is required to pass the reconcile reference in adjusted advance move line
+    def get_advance_line_item(self, advance):
+        res = super(AccountInvoice, self).get_advance_line_item(advance)
+        res['reconcile_ref'] = advance.reconcile_ref
+        return res
+
+    # this function is required to pass the reconcile reference in vendor security deposit
+    def get_security_deposit_data(self):
+        res = super(AccountInvoice, self).get_security_deposit_data()
+        if self.company_id.security_deposit_account_id:
+            res['reconcile_ref'] = self.get_reconcile_ref(self.company_id.security_deposit_account_id.id, self.id)
+        return res
+
+    def get_reconcile_ref(self, account_id, ref):
+        # Generate reconcile ref code
+        reconcile_ref = None
+        account_obj = self.env['account.account'].search([('id', '=', account_id)])
+        if account_obj.reconcile:
+            reconcile_ref = account_obj.code + 'VB' + str(ref)
+
+        return reconcile_ref
 
 
 class AccountInvoiceLine(models.Model):

@@ -75,6 +75,17 @@
             </field>
         </record>
 
+        <record id="inherit_account_move_line_form_view" model="ir.ui.view">
+            <field name="name">inherit.account.move.line.form.view</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="reconcile_ref"/>
+                </xpath>
+            </field>
+        </record>
+
 
         <record id="view_account_move_journal_entry_manual_tree" model="ir.ui.view">
             <field name="name">account.move.tree.journal.manual</field>
