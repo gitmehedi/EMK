@@ -286,9 +286,6 @@ class APIInterface(models.Model):
                                           headers={'content-type': 'application/text'})
 
                 root = ElementTree.fromstring(resp_body.content)
-                print req_body
-                print "--------------------------------------------------------------"
-                print resp_body.content
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -298,39 +295,12 @@ class APIInterface(models.Model):
                     else:
                         response[key[0]] = text
 
-                if 'OkMessage' in response:
-                    record.write({'is_sync': True, 'cbs_response': resp_body.content})
+                if 'GLClassCode' in response:
                     return "OkMessage"
-                elif 'ErrorMessage' in response:
-                    error = {
-                        'name': ep.endpoint_fullname,
-                        'request_body': req_body,
-                        'response_body': resp_body.content,
-                        'error_code': response['ErrorCode'],
-                        'error_message': response['ErrorMessage'],
-                        'errors': json.dumps(response)
-                    }
-                    self.env['soap.process.error'].create(error)
-                    return error
-                elif 'faultcode' in response:
-                    error = {
-                        'name': req_body.endpoint_fullname,
-                        'request_body': req_body,
-                        'response_body': resp_body.content,
-                        'error_code': response['faultcode'],
-                        'error_message': response['faultstring'],
-                        'errors': json.dumps(response)
-                    }
-                    self.env['soap.process.error'].create(error)
-                    return error
+                else:
+                    return 'error_code'
             except Exception:
-                error = {
-                    'name': req_body.endpoint_fullname,
-                    'error_code': "Operation Interrupted",
-                    'error_message': "Please contact with authority.",
-                }
-                self.env['soap.process.error'].create(error)
-                return error
+                return 'error_code'
         else:
             raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
@@ -538,7 +508,7 @@ class APIInterface(models.Model):
     @api.model
     def api_gl_enquiry_prompt(self, rec, ep):
         bgl = self.prepare_bgl(rec.account_id.code, rec.sub_operating_unit_id.code, rec.operating_unit_id.code)
-        branch = rec.operating_unit_id.code.zfill(5)
+        branch = ep.brch_num
 
         dhead = {
             'InstNum': ep.ins_num,
