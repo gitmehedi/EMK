@@ -286,6 +286,9 @@ class APIInterface(models.Model):
                                           headers={'content-type': 'application/text'})
 
                 root = ElementTree.fromstring(resp_body.content)
+                print req_body
+                print "--------------------------------------------------------------"
+                print resp_body.content
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -430,75 +433,13 @@ class APIInterface(models.Model):
                                 <!--Optional:-->
                                 <GLToGLXferRq>
                                     <ban:RqHeader>
-                                        <!--Optional:-->
-                                        <ban:Filler1></ban:Filler1>
-                                        <!--Optional:-->
-                                        <ban:MsgLen></ban:MsgLen>
-                                        <!--Optional:-->
-                                        <ban:Filler2></ban:Filler2>
-                                        <!--Optional:-->
-                                        <ban:MsgTyp></ban:MsgTyp>
-                                        <!--Optional:-->
-                                        <ban:Filler3></ban:Filler3>
-                                        <!--Optional:-->
-                                        <ban:CycNum></ban:CycNum>
-                                        <!--Optional:-->
-                                        <ban:MsgNum></ban:MsgNum>
-                                        <!--Optional:-->
-                                        <ban:SegNum></ban:SegNum>
-                                        <!--Optional:-->
-                                        <ban:SegNum2></ban:SegNum2>
-                                        <!--Optional:-->
-                                        <ban:FrontEndNum></ban:FrontEndNum>
-                                        <!--Optional:-->
-                                        <ban:TermlNum></ban:TermlNum>
-                                        <!--Optional:-->
                                         <ban:InstNum>{0}</ban:InstNum>
                                         <ban:BrchNum>{1}</ban:BrchNum>
-                                        <!--Optional:-->
-                                        <ban:WorkstationNum></ban:WorkstationNum>
-                                        <!--Optional:-->
                                         <ban:TellerNum>{2}</ban:TellerNum>
-                                        <!--Optional:-->
-                                        <ban:TranNum></ban:TranNum>
-                                        <!--Optional:-->
-                                        <ban:JrnlNum></ban:JrnlNum>
-                                        <!--Optional:-->
-                                        <ban:HdrDt></ban:HdrDt>
-                                        <!--Optional:-->
-                                        <ban:Filler4></ban:Filler4>
-                                        <!--Optional:-->
-                                        <ban:Filler5></ban:Filler5>
-                                        <!--Optional:-->
-                                        <ban:Filler6></ban:Filler6>
-                                        <!--Optional:-->
-                                        <ban:Flag1></ban:Flag1>
-                                        <!--Optional:-->
-                                        <ban:Flag2></ban:Flag2>
-                                        <!--Optional:-->
-                                        <ban:Flag3></ban:Flag3>
-                                        <!--Optional:-->
                                         <ban:Flag4>{3}</ban:Flag4>
                                         <ban:Flag5>{4}</ban:Flag5>
-                                        <!--Optional:-->
-                                        <ban:Flag6></ban:Flag6>
-                                        <!--Optional:-->
-                                        <ban:Flag7></ban:Flag7>
-                                        <!--Optional:-->
-                                        <ban:SprvsrID></ban:SprvsrID>
-                                        <!--Optional:-->
-                                        <ban:SupDate></ban:SupDate>
-                                        <!--Optional:-->
-                                        <ban:CheckerID1></ban:CheckerID1>
-                                        <!--Optional:-->
-                                        <ban:ParentBlinkJrnlNum></ban:ParentBlinkJrnlNum>
-                                        <!--Optional:-->
-                                        <ban:CheckerID2></ban:CheckerID2>
-                                        <!--Optional:-->
-                                        <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
                                         <ban:UUIDSource>{5}</ban:UUIDSource>
                                         <ban:UUIDNUM>{6}</ban:UUIDNUM>
-                                        <!--Optional:-->
                                         <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
                                     </ ban:RqHeader>
                                     <ban:Data>
@@ -512,11 +453,11 @@ class APIInterface(models.Model):
                                         <ban:AccCurCode1>{12}</ban:AccCurCode1>
                                         <ban:RefNum>{13}</ban:RefNum>
                                         <!--Optional:-->
-                                    </ ban:Data>
-                                </ GLToGLXferRq>
-                            </ v1:gLToGLTransfer>
-                        </ soapenv:Body>
-                    </ soapenv:Envelope>"""
+                                    </ban:Data>
+                                </GLToGLXferRq>
+                            </v1:gLToGLTransfer>
+                        </soapenv:Body>
+                    </soapenv:Envelope>"""
 
         return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'], dhead['Flag5'],
                               dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],
@@ -565,93 +506,24 @@ class APIInterface(models.Model):
                                 <!--Optional:-->
                                 <GLToDepXferRq>
                                     <ban:RqHeader>
-                                        <!--Optional:-->
-                                        <ban:Filler1></ban:Filler1>
-                                        <!--Optional:-->
-                                        <ban:MsgLen></ban:MsgLen>
-                                        <!--Optional:-->
-                                        <ban:Filler2></ban:Filler2>
-                                        <!--Optional:-->
-                                        <ban:MsgTyp></ban:MsgTyp>
-                                        <!--Optional:-->
-                                        <ban:Filler3></ban:Filler3>
-                                        <!--Optional:-->
-                                        <ban:CycNum></ban:CycNum>
-                                        <!--Optional:-->
-                                        <ban:MsgNum></ban:MsgNum>
-                                        <!--Optional:-->
-                                        <ban:SegNum></ban:SegNum>
-                                        <!--Optional:-->
-                                        <ban:SegNum2></ban:SegNum2>
-                                        <!--Optional:-->
-                                        <ban:FrontEndNum></ban:FrontEndNum>
-                                        <!--Optional:-->
-                                        <ban:TermlNum></ban:TermlNum>
-                                        <!--Optional:-->
                                         <ban:InstNum>{0}</ban:InstNum>
                                         <ban:BrchNum>{1}</ban:BrchNum>
-                                        <!--Optional:-->
-                                        <ban:WorkstationNum></ban:WorkstationNum>
-                                        <!--Optional:-->
                                         <ban:TellerNum>{2}</ban:TellerNum>
-                                        <!--Optional:-->
-                                        <ban:TranNum></ban:TranNum>
-                                        <!--Optional:-->
-                                        <ban:JrnlNum></ban:JrnlNum>
-                                        <!--Optional:-->
-                                        <ban:HdrDt></ban:HdrDt>
-                                        <!--Optional:-->
-                                        <ban:Filler4></ban:Filler4>
-                                        <!--Optional:-->
-                                        <ban:Filler5></ban:Filler5>
-                                        <!--Optional:-->
-                                        <ban:Filler6></ban:Filler6>
-                                        <!--Optional:-->
-                                        <ban:Flag1></ban:Flag1>
-                                        <!--Optional:-->
-                                        <ban:Flag2></ban:Flag2>
-                                        <!--Optional:-->
-                                        <ban:Flag3></ban:Flag3>
-                                        <!--Optional:-->
                                         <ban:Flag4>{3}</ban:Flag4>
                                         <ban:Flag5>{4}</ban:Flag5>
-                                        <!--Optional:-->
-                                        <ban:Flag6></ban:Flag6>
-                                        <!--Optional:-->
-                                        <ban:Flag7></ban:Flag7>
-                                        <!--Optional:-->
-                                        <ban:SprvsrID></ban:SprvsrID>
-                                        <!--Optional:-->
-                                        <ban:SupDate></ban:SupDate>
-                                        <!--Optional:-->
-                                        <ban:CheckerID1></ban:CheckerID1>
-                                        <!--Optional:-->
-                                        <ban:ParentBlinkJrnlNum></ban:ParentBlinkJrnlNum>
-                                        <!--Optional:-->
-                                        <ban:CheckerID2></ban:CheckerID2>
-                                        <!--Optional:-->
-                                        <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
                                         <ban:UUIDSource>{5}</ban:UUIDSource>
                                         <ban:UUIDNUM>{6}</ban:UUIDNUM>
-                                        <!--Optional:-->
                                         <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
                                     </ban:RqHeader>
                                     <ban:Data>
                                         <ban:AcctNum2>{8}</ban:AcctNum2>
-                                        <!--Optional:-->
                                         <ban:TrnDt>{9}</ban:TrnDt>
-                                        <!--Optional:-->
                                         <ban:Exchgamt>{10}</ban:Exchgamt>
-                                        <!--Optional:-->
                                         <ban:AcctNum1>{11}</ban:AcctNum1>
-                                        <!--Optional:-->
                                         <ban:Descptn>{12}</ban:Descptn>
-                                        <!--Optional:-->
                                         <ban:AcctCurCode1>{13}</ban:AcctCurCode1>
                                         <ban:Amt1>{14}</ban:Amt1>
-                                        <!--Optional:-->
                                         <ban:RefNum>{15}</ban:RefNum>
-                                        <!--Optional:-->
                                     </ban:Data>
                                 </GLToDepXferRq>
                             </v1:gLToDepositTransfer>
@@ -671,7 +543,7 @@ class APIInterface(models.Model):
         dhead = {
             'InstNum': ep.ins_num,
             'BrchNum': branch,
-            'TellerNum': ep.teller_no,
+            'TellerNum': str(ep.teller_no),
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
             'UUIDSource': ep.uuid_source,
@@ -692,79 +564,17 @@ class APIInterface(models.Model):
                                 <!--Optional:-->
                                 <GLPrmptInqRq>
                                     <ban:RqHeader>
-                                        <!--Optional:-->
-                                        <ban:Filler1></ban:Filler1>
-                                        <!--Optional:-->
-                                        <ban:MsgLen></ban:MsgLen>
-                                        <!--Optional:-->
-                                        <ban:Filler2></ban:Filler2>
-                                        <!--Optional:-->
-                                        <ban:MsgTyp></ban:MsgTyp>
-                                        <!--Optional:-->
-                                        <ban:Filler3></ban:Filler3>
-                                        <!--Optional:-->
-                                        <ban:CycNum></ban:CycNum>
-                                        <!--Optional:-->
-                                        <ban:MsgNum></ban:MsgNum>
-                                        <!--Optional:-->
-                                        <ban:SegNum></ban:SegNum>
-                                        <!--Optional:-->
-                                        <ban:SegNum2></ban:SegNum2>
-                                        <!--Optional:-->
-                                        <ban:FrontEndNum></ban:FrontEndNum>
-                                        <!--Optional:-->
-                                        <ban:TermlNum></ban:TermlNum>
-                                        <!--Optional:-->
                                         <ban:InstNum>{0}</ban:InstNum>
                                         <ban:BrchNum>{1}</ban:BrchNum>
-                                        <!--Optional:-->
-                                        <ban:WorkstationNum></ban:WorkstationNum>
-                                        <!--Optional:-->
                                         <ban:TellerNum>{2}</ban:TellerNum>
-                                        <!--Optional:-->
-                                        <ban:TranNum></ban:TranNum>
-                                        <!--Optional:-->
-                                        <ban:JrnlNum></ban:JrnlNum>
-                                        <!--Optional:-->
-                                        <ban:HdrDt></ban:HdrDt>
-                                        <!--Optional:-->
-                                        <ban:Filler4></ban:Filler4>
-                                        <!--Optional:-->
-                                        <ban:Filler5></ban:Filler5>
-                                        <!--Optional:-->
-                                        <ban:Filler6></ban:Filler6>
-                                        <!--Optional:-->
-                                        <ban:Flag1></ban:Flag1>
-                                        <!--Optional:-->
-                                        <ban:Flag2></ban:Flag2>
-                                        <!--Optional:-->
-                                        <ban:Flag3></ban:Flag3>
-                                        <!--Optional:-->
                                         <ban:Flag4>{3}</ban:Flag4>
                                         <ban:Flag5>{4}</ban:Flag5>
-                                        <!--Optional:-->
-                                        <ban:Flag6></ban:Flag6>
-                                        <!--Optional:-->
-                                        <ban:Flag7></ban:Flag7>
-                                        <!--Optional:-->
-                                        <ban:SprvsrID></ban:SprvsrID>
-                                        <!--Optional:-->
-                                        <ban:SupDate></ban:SupDate>
-                                        <!--Optional:-->
-                                        <ban:CheckerID1></ban:CheckerID1>
-                                        <!--Optional:-->
-                                        <ban:ParentBlinkJrnlNum></ban:ParentBlinkJrnlNum>
-                                        <!--Optional:-->
-                                        <ban:CheckerID2></ban:CheckerID2>
-                                        <!--Optional:-->
-                                        <ban:BlinkJrnlNum></ban:BlinkJrnlNum>
-                                        <ban:UUIDSource>{5}</ban:UUIDSource>
-                                        <ban:UUIDNUM>{6}</ban:UUIDNUM>
-                                        <!--Optional:-->
-                                        <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
+                                        <ban:UUIDSource></ban:UUIDSource>
+                                        <ban:UUIDNUM></ban:UUIDNUM>
+                                        <ban:UUIDSeqNo></ban:UUIDSeqNo>
                                     </ban:RqHeader>
                                     <ban:Data>
-                                        <ban:AcctNum>{8}</ban:AcctNum>
+                                        <ban:AcctNum>{5}</ban:AcctNum>
                                         <!--Optional:-->
                                         <ban:Opt>1</ban:Opt>
                                     </ban:Data>
@@ -774,7 +584,7 @@ class APIInterface(models.Model):
                     </soapenv:Envelope>"""
 
         return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'],
-                              dhead['Flag5'], dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'], dbody['bgl'])
+                              dhead['Flag5'], dbody['bgl'])
 
     @api.model
     def action_payment_instruction(self):
