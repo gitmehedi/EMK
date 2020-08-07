@@ -40,6 +40,7 @@ class VendorAdvance(models.Model):
         res['sub_operating_unit_id'] = self.sub_operating_unit_id.id or False
         res['analytic_account_id'] = self.account_analytic_id.id or False
         res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
+        self.reconcile_ref = res['reconcile_ref']
         return res
 
     def get_deposit_credit_item_data(self, journal_id):
