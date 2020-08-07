@@ -90,8 +90,10 @@ class BillPaymentInstructionWizard(models.TransientModel):
             credit_branch = self.credit_operating_unit_id.id
             credit_sou = self.credit_sub_operating_unit_id.id if self.credit_sub_operating_unit_id else None
 
+        # vendor bill or vendor advance or vendor security returns name
+        ref_code = self.invoice_id.name or self.advance_id.name or self.security_return_id.name
         # Generate reconcile ref code for debit account
-        reconcile_ref = self.advance_id.get_reconcile_ref(self.debit_account_id.id, self.advance_id.name)
+        reconcile_ref = self.advance_id.get_reconcile_ref(self.debit_account_id.id, ref_code)
 
         self.env['payment.instruction'].create({
             'invoice_id': self.invoice_id.id or False,
