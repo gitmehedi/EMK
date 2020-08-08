@@ -320,7 +320,7 @@ class APIInterface(models.Model):
 
         data = {
             'InstNum': ep.ins_num,
-            'BrchNum': branch,
+            'BrchNum': ep.brch_num,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
@@ -366,18 +366,17 @@ class APIInterface(models.Model):
                               dbody['FrmAcct'], dbody['Amt'], dbody['ToAcct'], dbody['StmtNarr'])
 
     @api.model
-    def api_glto_deposit_transfer(self, rec, ep):
+    def api_glto_gl_transfer(self, rec, ep):
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
         cr_bgl = rec.vendor_bank_acc.zfill(17)
 
-        branch = rec.debit_operating_unit_id.code.zfill(5)
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
         dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': branch,
+            'BrchNum': ep.brch_num,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
@@ -391,7 +390,7 @@ class APIInterface(models.Model):
             'Descptn': statement,
             'AcctNum2': cr_bgl,
             'AccCurCode1': curr_code,
-            'RefNum': str(rec.code),
+            'RefNum': str(rec.reconcile_ref),
         }
         request = """<soapenv:Envelope
                         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -435,19 +434,18 @@ class APIInterface(models.Model):
                               dbody['AccCurCode1'], dbody['RefNum'])
 
     @api.model
-    def api_glto_gl_transfer(self, rec, ep):
+    def api_glto_deposit_transfer(self, rec, ep):
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
         cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
                                   rec.credit_operating_unit_id.code)
 
-        branch = rec.debit_operating_unit_id.code.zfill(5)
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
         dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': branch,
+            'BrchNum': ep.brch_num,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
@@ -457,13 +455,13 @@ class APIInterface(models.Model):
         }
         dbody = {
             'AcctNum2': cr_bgl,
-            'TrnDt': statement,
+            'TrnDt': '',
             'Exchgamt': '',
             'AcctNum1': dr_bgl,
             'Descptn': statement,
             'AcctCurCode1': curr_code,
             'Amt1': rec.amount,
-            'RefNum': str(rec.code),
+            'RefNum': str(rec.reconcile_ref),
         }
 
         request = """<soapenv:Envelope
