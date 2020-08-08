@@ -369,7 +369,8 @@ class APIInterface(models.Model):
     def api_glto_gl_transfer(self, rec, ep):
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
-        cr_bgl = rec.vendor_bank_acc.zfill(17)
+        cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
+                                  rec.credit_operating_unit_id.code)
 
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
@@ -410,12 +411,12 @@ class APIInterface(models.Model):
                                         <ban:UUIDSource>{5}</ban:UUIDSource>
                                         <ban:UUIDNUM>{6}</ban:UUIDNUM>
                                         <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
-                                    </ ban:RqHeader>
+                                    </ban:RqHeader>
                                     <ban:Data>
                                         <ban:AcctNum1>{8}</ban:AcctNum1>
                                         <ban:Amt1>{9}</ban:Amt1>
                                         <!--Optional:-->
-                                        <ban:Descptn>{10}</ban:Descptn>
+                                        <ban:Descptn></ban:Descptn>
                                         <!--Optional:-->
                                         <ban:AcctNum2>{11}</ban:AcctNum2>
                                         <!--Optional:-->
@@ -437,8 +438,7 @@ class APIInterface(models.Model):
     def api_glto_deposit_transfer(self, rec, ep):
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
-        cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
-                                  rec.credit_operating_unit_id.code)
+        cr_bgl = rec.vendor_bank_acc.zfill(17)
 
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
@@ -485,7 +485,7 @@ class APIInterface(models.Model):
                                     </ban:RqHeader>
                                     <ban:Data>
                                         <ban:AcctNum2>{8}</ban:AcctNum2>
-                                        <ban:TrnDt>{9}</ban:TrnDt>
+                                        <ban:TrnDt></ban:TrnDt>
                                         <ban:Exchgamt>{10}</ban:Exchgamt>
                                         <ban:AcctNum1>{11}</ban:AcctNum1>
                                         <ban:Descptn>{12}</ban:Descptn>
