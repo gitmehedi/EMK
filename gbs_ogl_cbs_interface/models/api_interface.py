@@ -286,9 +286,6 @@ class APIInterface(models.Model):
                                           headers={'content-type': 'application/text'})
 
                 root = ElementTree.fromstring(resp_body.content)
-                print req_body
-                print "--------------------------------------------------------------"
-                print resp_body.content
                 response = {}
                 for rec in root.iter('*'):
                     key = rec.tag.split("}")
@@ -298,39 +295,12 @@ class APIInterface(models.Model):
                     else:
                         response[key[0]] = text
 
-                if 'OkMessage' in response:
-                    record.write({'is_sync': True, 'cbs_response': resp_body.content})
+                if 'GLClassCode' in response:
                     return "OkMessage"
-                elif 'ErrorMessage' in response:
-                    error = {
-                        'name': ep.endpoint_fullname,
-                        'request_body': req_body,
-                        'response_body': resp_body.content,
-                        'error_code': response['ErrorCode'],
-                        'error_message': response['ErrorMessage'],
-                        'errors': json.dumps(response)
-                    }
-                    self.env['soap.process.error'].create(error)
-                    return error
-                elif 'faultcode' in response:
-                    error = {
-                        'name': req_body.endpoint_fullname,
-                        'request_body': req_body,
-                        'response_body': resp_body.content,
-                        'error_code': response['faultcode'],
-                        'error_message': response['faultstring'],
-                        'errors': json.dumps(response)
-                    }
-                    self.env['soap.process.error'].create(error)
-                    return error
+                else:
+                    return 'error_code'
             except Exception:
-                error = {
-                    'name': req_body.endpoint_fullname,
-                    'error_code': "Operation Interrupted",
-                    'error_message': "Please contact with authority.",
-                }
-                self.env['soap.process.error'].create(error)
-                return error
+                return 'error_code'
         else:
             raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
@@ -350,7 +320,7 @@ class APIInterface(models.Model):
 
         data = {
             'InstNum': ep.ins_num,
-            'BrchNum': branch,
+            'BrchNum': ep.brch_num,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
@@ -396,18 +366,18 @@ class APIInterface(models.Model):
                               dbody['FrmAcct'], dbody['Amt'], dbody['ToAcct'], dbody['StmtNarr'])
 
     @api.model
-    def api_glto_deposit_transfer(self, rec, ep):
+    def api_glto_gl_transfer(self, rec, ep):
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
-        cr_bgl = rec.vendor_bank_acc.zfill(17)
+        cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
+                                  rec.credit_operating_unit_id.code)
 
-        branch = rec.debit_operating_unit_id.code.zfill(5)
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
         dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': branch,
+            'BrchNum': ep.brch_num,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
@@ -421,7 +391,7 @@ class APIInterface(models.Model):
             'Descptn': statement,
             'AcctNum2': cr_bgl,
             'AccCurCode1': curr_code,
-            'RefNum': str(rec.code),
+            'RefNum': str(rec.reconcile_ref),
         }
         request = """<soapenv:Envelope
                         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -441,12 +411,12 @@ class APIInterface(models.Model):
                                         <ban:UUIDSource>{5}</ban:UUIDSource>
                                         <ban:UUIDNUM>{6}</ban:UUIDNUM>
                                         <ban:UUIDSeqNo>{7}</ban:UUIDSeqNo>
-                                    </ ban:RqHeader>
+                                    </ban:RqHeader>
                                     <ban:Data>
                                         <ban:AcctNum1>{8}</ban:AcctNum1>
                                         <ban:Amt1>{9}</ban:Amt1>
                                         <!--Optional:-->
-                                        <ban:Descptn>{10}</ban:Descptn>
+                                        <ban:Descptn></ban:Descptn>
                                         <!--Optional:-->
                                         <ban:AcctNum2>{11}</ban:AcctNum2>
                                         <!--Optional:-->
@@ -465,19 +435,17 @@ class APIInterface(models.Model):
                               dbody['AccCurCode1'], dbody['RefNum'])
 
     @api.model
-    def api_glto_gl_transfer(self, rec, ep):
+    def api_glto_deposit_transfer(self, rec, ep):
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
-        cr_bgl = self.prepare_bgl(rec.default_credit_account_id.code, rec.credit_sub_operating_unit_id.code,
-                                  rec.credit_operating_unit_id.code)
+        cr_bgl = rec.vendor_bank_acc.zfill(17)
 
-        branch = rec.debit_operating_unit_id.code.zfill(5)
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
 
         dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': branch,
+            'BrchNum': ep.brch_num,
             'TellerNum': ep.teller_no,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
@@ -487,13 +455,13 @@ class APIInterface(models.Model):
         }
         dbody = {
             'AcctNum2': cr_bgl,
-            'TrnDt': statement,
+            'TrnDt': '',
             'Exchgamt': '',
             'AcctNum1': dr_bgl,
             'Descptn': statement,
             'AcctCurCode1': curr_code,
             'Amt1': rec.amount,
-            'RefNum': str(rec.code),
+            'RefNum': str(rec.reconcile_ref),
         }
 
         request = """<soapenv:Envelope
@@ -517,7 +485,7 @@ class APIInterface(models.Model):
                                     </ban:RqHeader>
                                     <ban:Data>
                                         <ban:AcctNum2>{8}</ban:AcctNum2>
-                                        <ban:TrnDt>{9}</ban:TrnDt>
+                                        <ban:TrnDt></ban:TrnDt>
                                         <ban:Exchgamt>{10}</ban:Exchgamt>
                                         <ban:AcctNum1>{11}</ban:AcctNum1>
                                         <ban:Descptn>{12}</ban:Descptn>
@@ -538,7 +506,7 @@ class APIInterface(models.Model):
     @api.model
     def api_gl_enquiry_prompt(self, rec, ep):
         bgl = self.prepare_bgl(rec.account_id.code, rec.sub_operating_unit_id.code, rec.operating_unit_id.code)
-        branch = rec.operating_unit_id.code.zfill(5)
+        branch = ep.brch_num
 
         dhead = {
             'InstNum': ep.ins_num,
