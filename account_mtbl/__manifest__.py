@@ -81,7 +81,8 @@
         'views/date_range_type_view.xml',
         'views/date_range_view.xml',
         'views/inherit_tds_vat_payment_view.xml',
-        'wizard/inherit_tds_vat_move_payment_wizard.xml'
+        'wizard/inherit_tds_vat_move_payment_wizard.xml',
+        'views/receive_outstanding_advance_view.xml'
     ],
     'installable': True,
     'application': True,

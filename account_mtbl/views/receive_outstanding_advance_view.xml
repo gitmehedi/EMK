@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_receive_outstanding_advance_form_view_sou" model="ir.ui.view">
+        <field name="name">inherit.receive.outstanding.advance.form.view.sou</field>
+        <field name="model">receive.outstanding.advance</field>
+        <field name="inherit_id" ref="vendor_advance_ou.inherit_receive_outstanding_advance_form_view_ou"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='debit_operating_unit_id']" position="before">
+                <field name="debit_sub_operating_unit_id" string="Debit Sequence" required="True"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                       domain="[('account_id', 'in', [debit_account_id])]"/>
+                <field name="operating_unit_domain_ids" invisible="1" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='debit_operating_unit_id']" position="replace">
+                <field name="debit_operating_unit_id" string="Debit Branch" required="True"
+                       domain="[('id', 'in', operating_unit_domain_ids and operating_unit_domain_ids[0] and operating_unit_domain_ids[0][2] or False)]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
