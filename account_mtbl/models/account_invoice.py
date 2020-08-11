@@ -6,7 +6,6 @@ class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'ir.needaction_mixin']
 
-
     @api.model
     def create(self, vals):
         if vals.get('reference'):
@@ -49,11 +48,16 @@ class AccountInvoice(models.Model):
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
         move_lines = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
+        count = 1
         for line in move_lines:
-            if line[2]['name'] == '/':
-                line[2]['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
-                line[2]['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
-                line[2]['reconcile_ref'] = self.get_reconcile_ref(self.account_id.id, self.id)  # setting the reconcile ref
+            val = line[2]
+            if val['name'] == '/':
+                val['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
+                val['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+                val['reconcile_ref'] = self.get_reconcile_ref(self.account_id.id, self.id)
+            elif val['product_id'] > 0:
+                val['reconcile_ref'] = self.get_reconcile_ref(val['account_id'], str(self.id) + str(count))
+                count = count + 1
 
         return move_lines
 
@@ -138,9 +142,3 @@ class ProductProduct(models.Model):
             if line.get('sub_operating_unit_id'):
                 res.update({'sub_operating_unit_id': line.get('sub_operating_unit_id')})
         return res
-
-
-
-
-
-

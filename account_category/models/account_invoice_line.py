@@ -32,6 +32,8 @@ class AccountInvoiceLine(models.Model):
         if self.asset_category_id and self.asset_type_id:
             asset_value = self.price_subtotal / self.quantity
             batch_seq = {val: key for key, val in enumerate(self.invoice_id.invoice_line_ids.ids)}
+            reconcile_ref = self.env['account.move.line'].search(
+                [('invoice_id', '=', self.invoice_id.id), ('product_id', '=', self.product_id.id)])
             for rec in range(0, int(self.quantity)):
                 vals = {
                     'name': self.asset_name or '/',
@@ -51,6 +53,7 @@ class AccountInvoiceLine(models.Model):
                     'batch_no': "{0}-{1}".format(self.invoice_id.number, batch_seq[self.id]),
                     'cost_centre_id': self.account_analytic_id.id if self.account_analytic_id else None,
                     'sub_operating_unit_id': self.sub_operating_unit_id.id if self.sub_operating_unit_id else None,
+                    'reconcile_ref': reconcile_ref.reconcile_ref
                 }
                 changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['asset_type_id'])
                 vals.update(changed_vals['value'])

@@ -231,6 +231,7 @@ class TPMManagementModel(models.Model):
                     'amount_currency': 0.0,
                     'move_id': move.id,
                     'company_id': company.id,
+                    'is_bgl': 'not_check',
                 }
                 debit = {
                     'name': name,
@@ -245,6 +246,7 @@ class TPMManagementModel(models.Model):
                     'amount_currency': 0.0,
                     'move_id': move.id,
                     'company_id': company.id,
+                    'is_bgl': 'not_check',
                 }
                 journal_entry += self.format_journal(credit)
                 journal_entry += self.format_journal(debit)
@@ -265,6 +267,7 @@ class TPMManagementModel(models.Model):
                     'amount_currency': 0.0,
                     'move_id': move.id,
                     'company_id': company.id,
+                    'is_bgl': 'not_check',
                 }
                 inc_debit = {
                     'name': name,
@@ -279,6 +282,7 @@ class TPMManagementModel(models.Model):
                     'amount_currency': 0.0,
                     'move_id': move.id,
                     'company_id': company.id,
+                    'is_bgl': 'not_check',
                 }
                 journal_entry += self.format_journal(inc_credit)
                 journal_entry += self.format_journal(inc_debit)
@@ -299,6 +303,7 @@ class TPMManagementModel(models.Model):
                     'amount_currency': 0.0,
                     'move_id': move.id,
                     'company_id': company.id,
+                    'is_bgl': 'not_check',
                 }
                 exp_debit = {
                     'name': name,
@@ -313,13 +318,14 @@ class TPMManagementModel(models.Model):
                     'amount_currency': 0.0,
                     'move_id': move.id,
                     'company_id': company.id,
+                    'is_bgl': 'not_check',
                 }
                 journal_entry += self.format_journal(exp_credit)
                 journal_entry += self.format_journal(exp_debit)
 
             query = """INSERT INTO account_move_line 
                                     (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
-                                    credit,debit,amount_currency,company_id)  
+                                    credit,debit,amount_currency,company_id,is_bgl)  
                                     VALUES %s""" % journal_entry[:-1]
             self.env.cr.execute(query)
 
@@ -341,7 +347,7 @@ class TPMManagementModel(models.Model):
 
     @staticmethod
     def format_journal(line):
-        return "({0},'{1}','{2}',{3},{4},'{5}','{6}',{7},{8},{9},{10},{11},{12}),".format(
+        return "({0},'{1}','{2}',{3},{4},'{5}','{6}',{7},{8},{9},{10},{11},{12},'{13}'),".format(
             line['move_id'],
             line['date'],
             line['date_maturity'],
@@ -354,7 +360,9 @@ class TPMManagementModel(models.Model):
             line['credit'],
             line['debit'],
             line['amount_currency'],
-            line['company_id'])
+            line['company_id'],
+            line['is_bgl']
+        )
 
     @api.model
     def _needaction_domain_get(self):

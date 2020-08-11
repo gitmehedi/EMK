@@ -95,6 +95,7 @@ class AssetAllocationWizard(models.TransientModel):
                         'sub_operating_unit_id': asset.asset_type_id.asset_suspense_seq_id.id,
                         'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else False,
                         'currency_id': company_currency != current_currency and current_currency.id or False,
+                        'reconcile_ref': asset.reconcile_ref,
                     }
                     debit = {
                         'name': self.narration,
@@ -106,6 +107,7 @@ class AssetAllocationWizard(models.TransientModel):
                         'sub_operating_unit_id': asset.asset_type_id.account_asset_seq_id.id,
                         'analytic_account_id': self.cost_centre_id.id,
                         'currency_id': company_currency != current_currency and current_currency.id or False,
+                        'reconcile_ref': asset.reconcile_ref,
                     }
 
                     move = self.env['account.move'].create({
@@ -150,6 +152,7 @@ class AssetAllocationWizard(models.TransientModel):
                         'sub_operating_unit_id': asset.asset_type_id.account_asset_seq_id.id,
                         'analytic_account_id': asset.cost_centre_id.id,
                         'currency_id': company_currency != current_currency and current_currency.id or False,
+                        'reconcile_ref': asset.reconcile_ref,
                     }
                     to_total_debit = {
                         'name': self.narration,
@@ -161,6 +164,7 @@ class AssetAllocationWizard(models.TransientModel):
                         'sub_operating_unit_id': asset.asset_type_id.account_asset_seq_id.id,
                         'analytic_account_id': self.cost_centre_id.id,
                         'currency_id': company_currency != current_currency and current_currency.id or False,
+                        'reconcile_ref': asset.reconcile_ref,
                     }
 
                     depr_value = asset.value - asset.value_residual
@@ -174,6 +178,7 @@ class AssetAllocationWizard(models.TransientModel):
                         'sub_operating_unit_id': asset.asset_type_id.account_depreciation_seq_id.id,
                         'analytic_account_id': self.cost_centre_id.id,
                         'currency_id': company_currency != current_currency and current_currency.id or False,
+                        'reconcile_ref': asset.reconcile_ref,
                     }
                     to_depr_debit = {
                         'name': self.narration,
@@ -185,6 +190,7 @@ class AssetAllocationWizard(models.TransientModel):
                         'sub_operating_unit_id': asset.asset_type_id.account_depreciation_seq_id.id,
                         'analytic_account_id': asset.cost_centre_id.id,
                         'currency_id': company_currency != current_currency and current_currency.id or False,
+                        'reconcile_ref': asset.reconcile_ref,
                     }
 
                     move = self.env['account.move'].create({
