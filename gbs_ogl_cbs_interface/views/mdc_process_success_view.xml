@@ -72,9 +72,9 @@
             <search string="MDC Process Search">
                 <field name="name"/>
                 <group name="group_by">
-                    <filter string="MDC" name="state" icon="terp-personal"
+                    <filter string="MDC" icon="terp-personal"
                             domain="[('state','=','mdc')]"/>
-                    <filter string="Report" icon="terp-personal"
+                    <filter string="Report"  icon="terp-personal"
                             domain="[('state','=','report')]"/>
                 </group>
             </search>
