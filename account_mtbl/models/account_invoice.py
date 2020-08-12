@@ -120,6 +120,23 @@ class AccountInvoiceLine(models.Model):
                                             self._uid), related='')
     sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
 
+    operating_unit_domain_ids = fields.Many2many('operating.unit', compute="_compute_operating_unit_domain_ids",
+                                                 readonly=True, store=False)
+
+    @api.multi
+    @api.depends('sub_operating_unit_id')
+    def _compute_operating_unit_domain_ids(self):
+        for rec in self:
+            if rec.sub_operating_unit_id.all_branch:
+                rec.operating_unit_domain_ids = self.env['operating.unit'].search([])
+            else:
+                rec.operating_unit_domain_ids = rec.sub_operating_unit_id.branch_ids
+
+    @api.onchange('sub_operating_unit_id')
+    def _onchange_sub_operating_unit_id(self):
+        for rec in self:
+            rec.operating_unit_id = None
+
     @api.onchange('account_id')
     def _onchange_account_id(self):
         for rec in self:

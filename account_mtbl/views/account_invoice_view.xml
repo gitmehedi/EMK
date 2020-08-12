@@ -29,13 +29,13 @@
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 <attribute name="required">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
-                <field name="operating_unit_id" readonly="0"
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="after">
+                <field name="operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+                <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
-            </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="after">
-                <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
+                <field name="operating_unit_id" readonly="0"
+                       domain="[('id', 'in', operating_unit_domain_ids and operating_unit_domain_ids[0] and operating_unit_domain_ids[0][2] or False)]"
                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                        groups="operating_unit.group_multi_operating_unit"/>
             </xpath>
