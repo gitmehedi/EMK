@@ -55,7 +55,7 @@ class AccountInvoice(models.Model):
                 val['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
                 val['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
                 val['reconcile_ref'] = self.get_reconcile_ref(self.account_id.id, self.id)
-            elif val['product_id'] > 0:
+            elif ('product_id' in val and val['product_id']>0):
                 val['reconcile_ref'] = self.get_reconcile_ref(val['account_id'], str(self.id) + str(count))
                 count = count + 1
 
