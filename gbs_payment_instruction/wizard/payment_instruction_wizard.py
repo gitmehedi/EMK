@@ -76,7 +76,11 @@ class BillPaymentInstructionWizard(models.TransientModel):
     def action_validate(self):
         # debit_acc = self.invoice_id.partner_id.property_account_payable_id.id
         debit_branch = self.debit_operating_unit_id.id or None
-        debit_sou = self.debit_sub_operating_unit_id.id if self.debit_sub_operating_unit_id else None
+        if self.debit_sub_operating_unit_id:
+            debit_sou = self.debit_sub_operating_unit_id.id
+        else:
+            raise ValidationError("[Configuration Error] Please configure sequence for the following Vendor in account "
+                                  "configuration:\n {}".format(self.partner_id.name))
         # partner_id = self.invoice_id.partner_id.id
 
         if self.type == 'casa':
