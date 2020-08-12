@@ -25,6 +25,11 @@ class ReceiveOutstandingAdvance(models.Model):
         for rec in self:
             rec.debit_sub_operating_unit_id = None
 
+    @api.onchange('debit_sub_operating_unit_id')
+    def _onchange_debit_sub_operating_unit_id(self):
+        for rec in self:
+            rec.debit_operating_unit_id = None
+
     def get_debit_item_data(self):
         res = super(ReceiveOutstandingAdvance, self).get_debit_item_data()
         if self.debit_sub_operating_unit_id:
