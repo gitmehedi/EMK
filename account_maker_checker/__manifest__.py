@@ -15,8 +15,7 @@
     ],
     "data": [
         'security/ir.model.access.csv',
-        # 'wizard/account_account_wizard_view.xml',
-        # 'views/inherit_account_account_view.xml',
+        'wizard/inherit_account_tax_wizard_view.xml',
         'wizard/account_tax_wizard_view.xml',
         'views/inherit_account_tax.xml'
     ],
