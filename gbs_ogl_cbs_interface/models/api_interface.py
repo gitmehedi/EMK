@@ -10,6 +10,7 @@ class APIInterface(models.Model):
     _inherit = ["mail.thread", "ir.needaction_mixin"]
     _rec_name = 'name'
     _description = 'API Endpoint'
+    _gl_enquiry = []
 
     name = fields.Char(string='Endpoint Name', required=True)
     endpoint_fullname = fields.Char(string='Endpoint', compute='_compute_endpoint_fullname', store=True)
@@ -562,17 +563,20 @@ class APIInterface(models.Model):
 
     @api.model
     def action_gl_enquire_process(self):
-        mv_lines = self.env['account.move.line'].search([('is_bgl', '!=', 'pass'),
-                                                         ('move_id.is_sync', '=', False),
-                                                         ('move_id.is_opening', '=', False),
-                                                         ('move_id.is_cbs', '=', False),
-                                                         ('move_id.state', '=', 'posted')])
-        for mv in mv_lines:
-            response = self.call_gl_enquiry_payment(mv)
-            if 'error_code' in response:
-                mv.write({'is_bgl': 'fail'})
-            elif response == 'OkMessage':
-                mv.write({'is_bgl': 'pass'})
+        if not self._gl_enquiry:
+            self._gl_enquiry.append('active')
+            mv_lines = self.env['account.move.line'].search([('is_bgl', '!=', 'pass'),
+                                                             ('move_id.is_sync', '=', False),
+                                                             ('move_id.is_opening', '=', False),
+                                                             ('move_id.is_cbs', '=', False),
+                                                             ('move_id.state', '=', 'posted')])
+            for mv in mv_lines:
+                response = self.call_gl_enquiry_payment(mv)
+                if 'error_code' in response:
+                    mv.write({'is_bgl': 'fail'})
+                elif response == 'OkMessage':
+                    mv.write({'is_bgl': 'pass'})
+            self._gl_enquiry.remove('active')
 
     @api.model
     def prepare_bgl(self, account, seq, branch):

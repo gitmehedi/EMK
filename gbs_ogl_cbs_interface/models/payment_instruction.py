@@ -15,7 +15,7 @@ class PaymentInstruction(models.Model):
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
-            self.payment_remove(self.code)
+            self._payments.append(self.code)
             api_ins = self.env['soap.process']
             recon_cr = self.default_credit_account_id.reconcile
             recon_dr = self.default_debit_account_id.reconcile
