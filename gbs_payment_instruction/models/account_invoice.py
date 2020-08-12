@@ -29,7 +29,7 @@ class AccountInvoice(models.Model):
         for record in self:
             if record.state == 'open':
                 if record.payable_to_supplier and record.total_payment_amount \
-                        and record.payable_to_supplier <= record.total_payment_amount:
+                        and record.residual <= record.total_payment_amount:
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
