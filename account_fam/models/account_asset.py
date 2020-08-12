@@ -73,6 +73,7 @@ class AccountAssetAsset(models.Model):
     lst_depr_amount = fields.Float(string='Last Depr. Amount', readonly=True, track_visibility='onchange', store=True)
     awaiting_dispose_date = fields.Date(string='Awaiting Dispose Date', readonly=True, track_visibility='onchange')
     dmc_date = fields.Date(string='DMC Date', readonly=True, track_visibility='onchange')
+    reconcile_ref = fields.Char(string='Reconcile Ref', size=20)
 
     @api.model_cr
     def init(self):
@@ -219,11 +220,11 @@ class AccountAssetAsset(models.Model):
                     FOR mrec IN EXECUTE move_query
                     LOOP
                           -- insert credit amount in account.move.line
-                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.account_depreciation_expense_seq_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW());
+                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_bgl)
+                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.account_depreciation_expense_seq_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW(),'not_check');
                           -- insert debit amount in account.move.line
-                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date)
-                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.account_depreciation_seq_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW());
+                          INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_bgl)
+                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.account_depreciation_seq_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW(),'not_check');
                         
                     END LOOP;
                     RETURN move;

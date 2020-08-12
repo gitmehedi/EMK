@@ -11,10 +11,25 @@ class VendorAdvance(models.Model):
                                             track_visibility='onchange', readonly=True,
                                             states={'draft': [('readonly', False)]})
 
-    operating_unit_domain_ids = fields.Many2many('operating.unit', compute="_compute_operating_unit_domain_ids", readonly=True, store=False)
+    operating_unit_domain_ids = fields.Many2many('operating.unit', compute="_compute_operating_unit_domain_ids",
+                                                 readonly=True, store=False)
     account_analytic_id = fields.Many2one('account.analytic.account', string='Cost Centre',
                                           readonly=True, required='True', track_visibility='onchange',
                                           states={'draft': [('readonly', False)]})
+    payment_type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa',
+                                    string='Payment To', readonly=True, states={'draft': [('readonly', False)]},
+                                    track_visibility='onchange', required=True)
+    vendor_bank_acc = fields.Char(string='Vendor Bank Account', related='partner_id.vendor_bank_acc', readonly=True,
+                                  track_visibility='onchange')
+    credit_account_id = fields.Many2one('account.account', string='Credit Account', track_visibility='onchange',
+                                        readonly=True, states={'draft': [('readonly', False)]})
+    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence',
+                                                   track_visibility='onchange', readonly=True,
+                                                   states={'draft': [('readonly', False)]})
+    credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch', track_visibility='onchange',
+                                               readonly=True, states={'draft': [('readonly', False)]})
+    credit_operating_unit_domain_ids = fields.Many2many('operating.unit', readonly=True, store=False,
+                                                        compute="_compute_credit_operating_unit_domain_ids")
 
     @api.multi
     @api.depends('sub_operating_unit_id')
@@ -24,6 +39,15 @@ class VendorAdvance(models.Model):
                 rec.operating_unit_domain_ids = self.env['operating.unit'].search([])
             else:
                 rec.operating_unit_domain_ids = rec.sub_operating_unit_id.branch_ids
+
+    @api.multi
+    @api.depends('credit_sub_operating_unit_id')
+    def _compute_credit_operating_unit_domain_ids(self):
+        for rec in self:
+            if rec.credit_sub_operating_unit_id.all_branch:
+                rec.credit_operating_unit_domain_ids = self.env['operating.unit'].search([])
+            else:
+                rec.credit_operating_unit_domain_ids = rec.credit_sub_operating_unit_id.branch_ids
 
     @api.onchange('sub_operating_unit_id')
     def _onchange_sub_operating_unit_id(self):

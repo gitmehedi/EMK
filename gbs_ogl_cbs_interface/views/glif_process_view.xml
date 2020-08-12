@@ -123,7 +123,7 @@
     <menuitem parent="main_api_interface"
               action="action_server_file_process_form"
               id="server_file_process_menu"
-              groups="grp_api_interface_manager"
+              groups="grp_api_interface_manager,grp_api_group_finance"
               sequence="30"/>
 
 

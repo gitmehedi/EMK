@@ -72,9 +72,9 @@
             <search string="MDC Process Search">
                 <field name="name"/>
                 <group name="group_by">
-                    <filter string="MDC" name="state" icon="terp-personal"
+                    <filter string="MDC" icon="terp-personal"
                             domain="[('state','=','mdc')]"/>
-                    <filter string="Report" icon="terp-personal"
+                    <filter string="Report"  icon="terp-personal"
                             domain="[('state','=','report')]"/>
                 </group>
             </search>
@@ -91,5 +91,5 @@
     </record>
 
     <menuitem parent="main_error_api_interface" action="action_mdc_process_form"
-              id="mdc_process_menu" sequence="10" groups="grp_api_interface_manager"/>
+              id="mdc_process_menu" sequence="10" groups="grp_api_interface_manager,grp_api_group_finance,grp_api_branc_user"/>
 </odoo>
