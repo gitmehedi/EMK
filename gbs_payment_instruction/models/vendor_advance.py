@@ -28,7 +28,7 @@ class VendorAdvance(models.Model):
         for record in self:
             if record.state == 'approve':
                 if record.payable_to_supplier and record.total_payment_amount \
-                        and record.payable_to_supplier <= record.total_payment_amount:
+                        and round(record.payable_to_supplier, 2) <= record.total_payment_amount:
                     record.payment_btn_visible = False
                 elif record.payable_to_supplier <= 0.0:
                     record.payment_btn_visible = False
