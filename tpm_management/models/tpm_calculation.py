@@ -73,7 +73,7 @@ class TPMManagementModel(models.Model):
             general_account = company.tpm_general_account_id.id
             income_rate = (company.income_rate / 100) / days
             expense_rate = (company.expense_rate / 100) / days
-            branch = self.env['operating.unit'].search([('active', '=', True), ('pending', '=', False)])
+            branch = self.env['operating.unit'].sudo().search([('active', '=', True), ('pending', '=', False)])
             branch_lines = {}
             for val in branch:
                 branch_lines[val.id] = []

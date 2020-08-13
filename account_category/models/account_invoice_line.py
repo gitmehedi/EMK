@@ -30,7 +30,7 @@ class AccountInvoiceLine(models.Model):
     @api.one
     def asset_create(self):
         if self.asset_category_id and self.asset_type_id:
-            asset_value = self.price_subtotal / self.quantity
+            asset_value = self.price_total / self.quantity
             batch_seq = {val: key for key, val in enumerate(self.invoice_id.invoice_line_ids.ids)}
             reconcile_ref = self.env['account.move.line'].search(
                 [('invoice_id', '=', self.invoice_id.id), ('product_id', '=', self.product_id.id)])
