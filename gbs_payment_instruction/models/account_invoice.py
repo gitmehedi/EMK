@@ -24,12 +24,12 @@ class AccountInvoice(models.Model):
             invoice.total_payment_approved = sum(
                 line.amount for line in invoice.payment_line_ids if line.state in ['approved'])
 
-    @api.depends('payable_to_supplier', 'total_payment_amount')
+    @api.depends('residual', 'total_payment_amount')
     def _compute_payment_btn_visible(self):
         for record in self:
             if record.state == 'open':
-                if record.payable_to_supplier and record.total_payment_amount \
-                        and record.residual <= record.total_payment_amount:
+                if record.residual and record.total_payment_amount \
+                        and round(record.residual) <= record.total_payment_amount:
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
