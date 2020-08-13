@@ -127,7 +127,7 @@
                                                 <field name="sequence" invisible="1"/>
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
-                                                <field name="account_analytic_id"
+                                                <field name="account_analytic_id" string="Cost Centre"
                                                        domain="[('company_id', '=', parent.company_id)]"
                                                        groups="analytic.group_analytic_accounting"/>
                                                 <field name="amount"/>
@@ -145,12 +145,14 @@
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
-                                    <field name="amount_vat_payable"/>
+                                    <!--<field name="amount_vat_payable"/>-->
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                    <field name="amount_tds" widget="monetary"/>
+                                    <field name="amount_vat_payable" widget="monetary"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                    <field name="amount_tds" class="oe_subtotal_footer_separator" widget="monetary"/>
+                                    <!--<field name="amount_tds" class="oe_subtotal_footer_separator" widget="monetary"/>-->
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" invisible="1"/>
