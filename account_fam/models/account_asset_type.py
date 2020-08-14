@@ -34,31 +34,31 @@ class AccountAssetCategory(models.Model):
     account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True,
                                        track_visibility='onchange',
                                        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    account_asset_seq_id = fields.Many2one('sub.operating.unit', required=True)
+    account_asset_seq_id = fields.Many2one('sub.operating.unit', string='Asset Account Sequence', required=True)
     asset_suspense_account_id = fields.Many2one('account.account', string='Asset Awaiting Allocation', required=True,
                                                 domain=[('deprecated', '=', False)], track_visibility='onchange')
-    asset_suspense_seq_id = fields.Many2one('sub.operating.unit', required=True)
+    asset_suspense_seq_id = fields.Many2one('sub.operating.unit', string='Asset Awaiting Allocation Sequence', required=True)
     account_depreciation_id = fields.Many2one('account.account', track_visibility='onchange', required=False,
                                               domain=[('deprecated', '=', False)],
                                               string='Accumulated Depreciation A/C', )
-    account_depreciation_seq_id = fields.Many2one('sub.operating.unit', required=True)
+    account_depreciation_seq_id = fields.Many2one('sub.operating.unit', string='Accumulated Depreciation A/C Sequence', required=False)
     account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Exp. A/C',
                                                       track_visibility='onchange', required=False,
                                                       domain=[('internal_type', '=', 'other'),
                                                               ('deprecated', '=', False)], )
-    account_depreciation_expense_seq_id = fields.Many2one('sub.operating.unit', required=True)
+    account_depreciation_expense_seq_id = fields.Many2one('sub.operating.unit', string='Depreciation Exp. A/C Sequence', required=False)
     account_asset_loss_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                             domain=[('deprecated', '=', False)],
                                             string='Asset Loss A/C')
-    account_asset_loss_seq_id = fields.Many2one('sub.operating.unit', required=True)
+    account_asset_loss_seq_id = fields.Many2one('sub.operating.unit', string='Asset Loss A/C Sequence',required=True)
     account_asset_gain_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                             domain=[('deprecated', '=', False)],
                                             string='Asset Gain A/C')
-    account_asset_gain_seq_id = fields.Many2one('sub.operating.unit', required=True)
+    account_asset_gain_seq_id = fields.Many2one('sub.operating.unit',string='Asset Gain A/C Sequence', required=True)
     asset_sale_suspense_account_id = fields.Many2one('account.account', required=True, track_visibility='onchange',
                                                      domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
-    asset_sale_suspense_seq_id = fields.Many2one('sub.operating.unit', required=True)
+    asset_sale_suspense_seq_id = fields.Many2one('sub.operating.unit', string='Asset Awaiting Disposal Sequence',required=True)
 
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})
@@ -349,3 +349,11 @@ class HistoryAccountAssetCategory(models.Model):
                                             string='Asset Gain A/C')
     asset_sale_suspense_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)],
                                                      string='Asset Awaiting Disposal')
+    account_asset_seq_id = fields.Many2one('sub.operating.unit', string='Asset Account Sequence')
+    asset_suspense_seq_id = fields.Many2one('sub.operating.unit', string='Asset Awaiting Allocation Sequence')
+    account_depreciation_seq_id = fields.Many2one('sub.operating.unit', string='Accumulated Depreciation A/C Sequence')
+    account_depreciation_expense_seq_id = fields.Many2one('sub.operating.unit', string='Depreciation Exp. A/C Sequence')
+    account_asset_loss_seq_id = fields.Many2one('sub.operating.unit', string='Asset Loss A/C Sequence')
+    account_asset_gain_seq_id = fields.Many2one('sub.operating.unit', string='Asset Gain A/C Sequence')
+    asset_sale_suspense_seq_id = fields.Many2one('sub.operating.unit', string='Asset Awaiting Disposal Sequence')
+
