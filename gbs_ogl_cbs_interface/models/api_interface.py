@@ -571,11 +571,16 @@ class APIInterface(models.Model):
                                                              ('move_id.is_cbs', '=', False),
                                                              ('move_id.state', '=', 'posted')])
             for mv in mv_lines:
-                response = self.call_gl_enquiry_payment(mv)
-                if 'error_code' in response:
-                    mv.write({'is_bgl': 'fail'})
-                elif response == 'OkMessage':
-                    mv.write({'is_bgl': 'pass'})
+                try:
+
+                    response = self.call_gl_enquiry_payment(mv)
+                    if 'error_code' in response:
+                        mv.write({'is_bgl': 'fail'})
+                    elif response == 'OkMessage':
+                        mv.write({'is_bgl': 'pass'})
+                except Exception:
+                    pass
+
             self._gl_enquiry.remove('active')
 
     @api.model

@@ -82,7 +82,8 @@
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="asset_sale_suspense_seq_id"
                                        attrs="{'invisible': [('type','=', False)]}"
-                                       class="oe_inline" domain="[('account_id', 'in', [asset_sale_suspense_account_id])]"
+                                       class="oe_inline"
+                                       domain="[('account_id', 'in', [asset_sale_suspense_account_id])]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </div>
                         </group>
@@ -113,7 +114,8 @@
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="account_depreciation_expense_seq_id"
                                        attrs="{'invisible': [('type','=', False)]}"
-                                       class="oe_inline" domain="[('account_id', 'in', [account_depreciation_expense_id])]"
+                                       class="oe_inline"
+                                       domain="[('account_id', 'in', [account_depreciation_expense_id])]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </div>
                             <label for="account_depreciation_id"/>
@@ -145,12 +147,19 @@
                             <field name="change_name"/>
                             <field name="journal_id"/>
                             <field name="account_asset_id"/>
+                            <field name="account_asset_seq_id"/>
                             <field name="asset_suspense_account_id"/>
+                            <field name="asset_suspense_seq_id"/>
                             <field name="account_depreciation_id"/>
+                            <field name="account_depreciation_seq_id"/>
                             <field name="account_depreciation_expense_id"/>
+                            <field name="account_depreciation_expense_seq_id"/>
                             <field name="account_asset_loss_id"/>
+                            <field name="account_asset_loss_seq_id"/>
                             <field name="account_asset_gain_id"/>
+                            <field name="account_asset_gain_seq_id"/>
                             <field name="asset_sale_suspense_account_id"/>
+                            <field name="asset_sale_suspense_seq_id"/>
                             <field name="method"/>
                             <field name="method_progress_factor"/>
                             <field name="depreciation_year"/>
