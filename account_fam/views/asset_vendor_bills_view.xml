@@ -5,7 +5,7 @@
         <field name="model">account.invoice</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <form string="Vendor Bill">
+            <form string="Vendor Bill" duplicate="0">
                 <header>
                     <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate"
                             class="oe_highlight" groups="account.group_account_invoice"/>
