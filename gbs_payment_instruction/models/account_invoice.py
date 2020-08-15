@@ -59,7 +59,7 @@ class AccountInvoice(models.Model):
             'context': {
                 'amount': self.residual - self.total_payment_amount or 0.0,
                 'currency_id': self.currency_id.id or False,
-                'op_unit': self.operating_unit_id.id or False,
+                'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
                 'partner_id': self.partner_id.id or False,
                 'debit_acc': self.partner_id.property_account_payable_id.id,
                 'invoice_id': self.id,
