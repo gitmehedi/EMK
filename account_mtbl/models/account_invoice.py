@@ -40,8 +40,21 @@ class AccountInvoice(models.Model):
         new_res = []
         for r in res:
             tax = tax_pool.search([('id', '=', r['tax_line_id'])])[0]
-            r['operating_unit_id'] = tax.operating_unit_id.id
-            r['sub_operating_unit_id'] = tax.sou_id.id
+            if tax.is_vat:
+                tax_type = 'VAT'
+            elif tax.is_tds:
+                tax_type = 'TDS'
+            if tax.operating_unit_id:
+                r['operating_unit_id'] = tax.operating_unit_id.id
+            else:
+                raise ValidationError("[Configuration Error] Please configure Branch for the following {} rule: \n {}".
+                                      format(tax_type, tax.name))
+            if tax.sou_id:
+                r['sub_operating_unit_id'] = tax.sou_id.id
+            else:
+                raise ValidationError(
+                    "[Configuration Error] Please configure Sequence for the following {} rule: \n {}".format(tax_type,
+                                                                                                              tax.name))
             new_res.append(r)
         return new_res
 
@@ -53,7 +66,12 @@ class AccountInvoice(models.Model):
             val = line[2]
             if val['name'] == '/':
                 val['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
-                val['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+                if self.partner_id.property_account_payable_sou_id:
+                    val['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+                else:
+                    raise ValidationError(
+                        "[Configuration Error] Please configure Sequence for the following Vendor: \n {}".format(
+                            self.partner_id.name))
                 val['reconcile_ref'] = self.get_reconcile_ref(self.account_id.id, self.id)
             elif ('product_id' in val and val['product_id']>0):
                 val['reconcile_ref'] = self.get_reconcile_ref(val['account_id'], str(self.id) + str(count))
@@ -72,9 +90,13 @@ class AccountInvoice(models.Model):
                         line.write({'sub_operating_unit_id': line.advance_id.sub_operating_unit_id.id or False,
                                     'analytic_account_id': line.advance_id.account_analytic_id.id or False})
                     if line.is_security_deposit:
-                        line.write(
-                            {'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False}
-                        )
+                        if self.env.user.company_id.security_deposit_sequence_id:
+                            line.write(
+                                {'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False}
+                            )
+                        else:
+                            raise ValidationError("[Configuration Error] Please configure security deposit sequence in "
+                                                  "Accounting Configuration")
 
         return res
 
