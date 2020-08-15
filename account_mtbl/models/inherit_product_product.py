@@ -86,6 +86,10 @@ class ProductProduct(models.Model):
                 else:
                     self.type = requested.type if requested.type else self.type
 
+                if requested.property_account_expense_id and requested.sub_operating_unit_id:
+                    self.property_account_expense_id = requested.property_account_expense_id
+                    self.sub_operating_unit_id = requested.sub_operating_unit_id
+
                 self.pending = False
                 self.approver_id = self.env.user.id
                 requested.state = 'approve'
@@ -149,6 +153,8 @@ class HistoryProductProduct(models.Model):
     line_id = fields.Many2one('product.product', ondelete='restrict')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')
+    property_account_expense_id = fields.Many2one('account.account', string="Expense Account")
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence')
 
 
 class ProductTemplate(models.Model):

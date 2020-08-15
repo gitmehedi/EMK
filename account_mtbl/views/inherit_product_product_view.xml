@@ -73,6 +73,8 @@
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
                             <field name="type"/>
+                            <field name="property_account_expense_id"/>
+                            <field name="sub_operating_unit_id"/>
                             <field name="asset_category_id"/>
                             <field name="asset_type_id"/>
                             <field name="account_tds_id"/>

@@ -26,6 +26,8 @@ class ProductProductWizard(models.TransientModel):
     type = fields.Selection([('consu', 'Product'), ('service', 'Service'), ('asset', 'Assets')], string='Product Type')
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Type')
     asset_type_id = fields.Many2one('account.asset.category', string='Asset Category')
+    property_account_expense_id = fields.Many2one('account.account', string="Expense Account")
+    sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence')
 
     @api.onchange('asset_category_id')
     def onchange_asset_category(self):
@@ -36,6 +38,11 @@ class ProductProductWizard(models.TransientModel):
             'asset_type_id': [('id', 'in', category_ids.ids)],
         }
         return res
+
+    @api.onchange('property_account_expense_id')
+    def _onchange_property_account_expense_id(self):
+        for rec in self:
+            rec.sub_operating_unit_id = None
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -68,6 +75,8 @@ class ProductProductWizard(models.TransientModel):
                                                     'type': self.type,
                                                     'asset_category_id': self.asset_category_id.id if self.asset_category_id else None,
                                                     'asset_type_id': self.asset_type_id.id if self.asset_type_id else None,
+                                                    'property_account_expense_id': self.property_account_expense_id.id if self.property_account_expense_id else None,
+                                                    'sub_operating_unit_id': self.sub_operating_unit_id.id if self.sub_operating_unit_id else None
                                                     })
 
         record = self.env['product.product'].search(
