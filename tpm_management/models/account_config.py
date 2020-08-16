@@ -6,8 +6,11 @@ class ResCompany(models.Model):
 
     journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True)
     tpm_general_account_id = fields.Many2one('account.account', string='General Journal', required=True)
+    tpm_general_seq_id = fields.Many2one('sub.operating.unit', string='General Journal Sequence', required=True)
     tpm_income_account_id = fields.Many2one('account.account', string='Income Journal', required=True)
+    tpm_income_seq_id = fields.Many2one('sub.operating.unit', string='Income Journal Sequence', required=True)
     tpm_expense_account_id = fields.Many2one('account.account', string='Expense Journal', required=True)
+    tpm_expense_seq_id = fields.Many2one('sub.operating.unit', string='Expense Journal Sequence', required=True)
     impact_count = fields.Integer(string='Expense Journal', required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
@@ -25,11 +28,20 @@ class AccountConfigSettings(models.TransientModel):
     def _get_default_tpm_general_account_id(self):
         return self.env.user.company_id.tpm_general_account_id
 
+    def _get_default_tpm_general_seq_id(self):
+        return self.env.user.company_id.tpm_general_seq_id
+
     def _get_default_tpm_income_account_id(self):
         return self.env.user.company_id.tpm_income_account_id
 
+    def _get_default_tpm_income_seq_id(self):
+        return self.env.user.company_id.tpm_income_seq_id
+
     def _get_default_tpm_expense_account_id(self):
         return self.env.user.company_id.tpm_expense_account_id
+
+    def _get_default_tpm_expense_seq_id(self):
+        return self.env.user.company_id.tpm_expense_seq_id
 
     def _get_default_impact_count(self):
         return self.env.user.company_id.impact_count
@@ -43,15 +55,25 @@ class AccountConfigSettings(models.TransientModel):
     tpm_general_account_id = fields.Many2one('account.account', string='General Account', required=True,
                                              default=lambda self: self._get_default_tpm_general_account_id(),
                                              domain="[('level_id.name','=','Layer 5')]")
+    tpm_general_seq_id = fields.Many2one('sub.operating.unit', string='General Account Sequence', required=True,
+                                         default=lambda self: self._get_default_tpm_general_seq_id())
+
     tpm_income_account_id = fields.Many2one('account.account', string='Income Account', required=True,
                                             default=lambda self: self._get_default_tpm_income_account_id(),
                                             domain="[('level_id.name','=','Layer 5')]")
+    tpm_income_seq_id = fields.Many2one('sub.operating.unit', string='Income Account Sequence', required=True,
+                                         default=lambda self: self._get_default_tpm_income_seq_id())
+
     tpm_expense_account_id = fields.Many2one('account.account', string='Expense Account', required=True,
                                              default=lambda self: self._get_default_tpm_expense_account_id(),
                                              domain="[('level_id.name','=','Layer 5')]")
+
+    tpm_expense_seq_id = fields.Many2one('sub.operating.unit', string='Expense Account Sequence', required=True,
+                                             default=lambda self: self._get_default_tpm_expense_seq_id())
+
     impact_count = fields.Integer(string='Expense Journal', default=1, required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], default='days', required=True)
-    income_rate = fields.Float(string='Income Rate',  required=True)
+    income_rate = fields.Float(string='Income Rate', required=True)
     expense_rate = fields.Float(string='Expense Rate', required=True)
     days_in_fy = fields.Integer(string='Days in Year', size=3, required=True, default=360)
 
@@ -68,6 +90,12 @@ class AccountConfigSettings(models.TransientModel):
             self.company_id.write({'tpm_general_account_id': self.tpm_general_account_id.id})
         return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_general_account_id',
                                                         self.tpm_general_account_id.id)
+    @api.multi
+    def set_tpm_general_seq_id(self):
+        if self.tpm_general_seq_id:
+            self.company_id.write({'tpm_general_seq_id': self.tpm_general_seq_id.id})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_general_seq_id',
+                                                        self.tpm_general_seq_id.id)
 
     @api.multi
     def set_tpm_income_account_id(self):
@@ -75,6 +103,12 @@ class AccountConfigSettings(models.TransientModel):
             self.company_id.write({'tpm_income_account_id': self.tpm_income_account_id.id})
         return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_income_account_id',
                                                         self.tpm_income_account_id.id)
+    @api.multi
+    def set_tpm_income_seq_id(self):
+        if self.tpm_income_seq_id:
+            self.company_id.write({'tpm_income_seq_id': self.tpm_income_seq_id.id})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_income_seq_id',
+                                                        self.tpm_income_seq_id.id)
 
     @api.multi
     def set_tpm_expense_account_id(self):
@@ -82,6 +116,13 @@ class AccountConfigSettings(models.TransientModel):
             self.company_id.write({'tpm_expense_account_id': self.tpm_expense_account_id.id})
         return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_expense_account_id',
                                                         self.tpm_expense_account_id.id)
+
+    @api.multi
+    def set_tpm_expense_seq_id(self):
+        if self.tpm_expense_seq_id:
+            self.company_id.write({'tpm_expense_seq_id': self.tpm_expense_seq_id.id})
+        return self.env['ir.values'].sudo().set_default('account.config.settings', 'tpm_expense_seq_id',
+                                                        self.tpm_expense_seq_id.id)
 
     @api.multi
     def set_impact_count(self):
