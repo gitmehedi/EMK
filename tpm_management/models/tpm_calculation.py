@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
-from odoo.exceptions import ValidationError,Warning
+from odoo.exceptions import ValidationError, Warning
 
 
 class TPMManagementModel(models.Model):
@@ -122,7 +122,7 @@ class TPMManagementModel(models.Model):
                             WHERE aa.active=True 
                                   AND aa.pending=False
                             ORDER BY aa.id ASC""" % (
-                general_account, start_date, end_date, general_account, fy_start_date, end_date)
+                    general_account, start_date, end_date, general_account, fy_start_date, end_date)
 
                 self.env.cr.execute(query)
                 for bal in self.env.cr.fetchall():
@@ -176,7 +176,6 @@ class TPMManagementModel(models.Model):
                 'maker_id': self.env.user.id,
             })
 
-
     @api.multi
     def act_approve(self):
         if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
@@ -199,7 +198,8 @@ class TPMManagementModel(models.Model):
                 'is_cr': True,
             })
             for rec in self.line_ids:
-                name = "%s for branch %s" % (rec.pl_status.capitalize(), rec.branch_id.display_name.replace("'", ""))
+                branch = rec.sudo().branch_id
+                name = "%s for branch %s" % (rec.pl_status.capitalize(), branch.display_name.replace("'", ""))
                 if rec.income == 0 and rec.expense == 0:
                     continue
 
@@ -226,7 +226,7 @@ class TPMManagementModel(models.Model):
                     'credit': income_cr_cr,
                     'debit': income_cr_dr,
                     'journal_id': journal,
-                    'operating_unit_id': rec.branch_id.id,
+                    'operating_unit_id': branch.id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -241,7 +241,7 @@ class TPMManagementModel(models.Model):
                     'credit': income_dr_cr,
                     'debit': income_dr_dr,
                     'journal_id': journal,
-                    'operating_unit_id': rec.branch_id.id,
+                    'operating_unit_id': branch.id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -252,7 +252,8 @@ class TPMManagementModel(models.Model):
                 journal_entry += self.format_journal(debit)
 
             if self.total_expense:
-                name = "Income of %s" % (self.branch_id.display_name.replace("'", ""))
+                branch = self.sudo().branch_id
+                name = "Income of %s" % (branch.display_name.replace("'", ""))
 
                 inc_credit = {
                     'name': name,
@@ -262,7 +263,7 @@ class TPMManagementModel(models.Model):
                     'credit': self.total_expense,
                     'debit': 0,
                     'journal_id': journal,
-                    'operating_unit_id': self.branch_id.id,
+                    'operating_unit_id': branch.id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -277,7 +278,7 @@ class TPMManagementModel(models.Model):
                     'credit': 0,
                     'debit': self.total_expense,
                     'journal_id': journal,
-                    'operating_unit_id': self.branch_id.id,
+                    'operating_unit_id': branch.id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -288,7 +289,8 @@ class TPMManagementModel(models.Model):
                 journal_entry += self.format_journal(inc_debit)
 
             if self.total_income:
-                name = "Expense of %s" % (self.branch_id.display_name.replace("'", ""))
+                branch = self.sudo().branch_id
+                name = "Expense of %s" % (branch.display_name.replace("'", ""))
 
                 exp_credit = {
                     'name': name,
@@ -298,7 +300,7 @@ class TPMManagementModel(models.Model):
                     'credit': self.total_income,
                     'debit': 0,
                     'journal_id': journal,
-                    'operating_unit_id': self.branch_id.id,
+                    'operating_unit_id': branch.id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -313,7 +315,7 @@ class TPMManagementModel(models.Model):
                     'credit': 0,
                     'debit': self.total_income,
                     'journal_id': journal,
-                    'operating_unit_id': self.branch_id.id,
+                    'operating_unit_id': branch.id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -332,7 +334,7 @@ class TPMManagementModel(models.Model):
             if move.state == 'draft':
                 move.sudo().post()
 
-            self.write({
+            self.sudo().write({
                 'state': 'approve',
                 'approver_id': self.env.user.id,
                 'journal_id': move.id,
