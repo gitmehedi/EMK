@@ -65,7 +65,9 @@ class AccountInvoice(models.Model):
         for line in move_lines:
             val = line[2]
             if val['name'] == '/':
-                val['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
+                val_ou = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
+                # val['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
+                val['operating_unit_id'] = val_ou.id or False
                 if self.partner_id.property_account_payable_sou_id:
                     val['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
                 else:

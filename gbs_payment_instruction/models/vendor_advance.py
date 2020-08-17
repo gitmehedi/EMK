@@ -47,6 +47,7 @@ class VendorAdvance(models.Model):
         #                             ' no new payment instruction can possible!'))
 
         res = self.env.ref('gbs_payment_instruction.view_bill_payment_instruction_wizard')
+        op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
 
         return {
             'name': _('Payment Instruction'),
@@ -60,7 +61,8 @@ class VendorAdvance(models.Model):
             'context': {
                 'amount': self.payable_to_supplier - self.total_payment_amount or 0.0,
                 'currency_id': self.currency_id.id or False,
-                'op_unit': self.operating_unit_id.id or False,
+                # 'op_unit': self.operating_unit_id.id or False,
+                'op_unit': op_unit.id or False,
                 'partner_id': self.partner_id.id or False,
                 'debit_acc': self.partner_id.property_account_payable_id.id,
                 'advance_id': self.id,

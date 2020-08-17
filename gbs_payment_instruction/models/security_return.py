@@ -37,13 +37,8 @@ class VendorAdvance(models.Model):
 
     @api.multi
     def action_payment_instruction(self):
-        # if self.residual <= 0.0:
-        #     raise ValidationError(_('There is no remaining balance for this Bill!'))
-        #
-        # if self.residual <= sum(line.amount for line in self.payment_line_ids if line.state == 'draft'):
-        #     raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
-        #                             ' no new payment instruction can possible!'))
-        ou_id = [deposit.operating_unit_id.id for deposit in self.vsd_ids][0]
+        # ou_id = [deposit.operating_unit_id.id for deposit in self.vsd_ids][0]
+        op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
 
         res = self.env.ref('gbs_payment_instruction.view_bill_payment_instruction_wizard')
 
@@ -59,7 +54,8 @@ class VendorAdvance(models.Model):
             'context': {
                 'amount': self.amount - self.total_payment_amount or 0.0,
                 'currency_id': self.currency_id.id or False,
-                'op_unit': ou_id or False,
+                # 'op_unit': ou_id or False,
+                'op_unit': op_unit.id or False,
                 'partner_id': self.partner_id.id or False,
                 'debit_acc': self.partner_id.property_account_payable_id.id,
                 'security_return_id': self.id,

@@ -12,6 +12,8 @@ class VendorSecurityReturn(models.Model):
 
     def get_supplier_credit_item(self, journal_id):
         res = super(VendorSecurityReturn, self).get_supplier_credit_item(journal_id)
+        op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
+        res['operating_unit_id'] = op_unit.id or False
         res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
         res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
         return res
