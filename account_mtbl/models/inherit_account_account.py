@@ -160,6 +160,7 @@ class AccountAccount(models.Model):
                     'currency_id': self.currency_id.id if not requested.currency_id else requested.currency_id.id,
                     'pending': False,
                     'active': requested.status,
+                    'reconcile': requested.reconcile,
                     'approver_id': self.env.user.id,
                 })
                 requested.write({
@@ -206,6 +207,7 @@ class HistoryAccountAccount(models.Model):
     line_id = fields.Many2one('account.account', ondelete='restrict')
     user_type_id = fields.Many2one('account.account.type', string='Type')
     currency_id = fields.Many2one('res.currency', string='Account Currency')
+    reconcile = fields.Boolean(string='Allow Reconciliation')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')
 
