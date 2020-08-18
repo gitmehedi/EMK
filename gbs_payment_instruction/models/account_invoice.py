@@ -46,6 +46,7 @@ class AccountInvoice(models.Model):
         #                             ' no new payment instruction can possible!'))
 
         res = self.env.ref('gbs_payment_instruction.view_bill_payment_instruction_wizard')
+        op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
 
         return {
             'name': _('Payment Instruction'),
@@ -59,7 +60,8 @@ class AccountInvoice(models.Model):
             'context': {
                 'amount': self.residual - self.total_payment_amount or 0.0,
                 'currency_id': self.currency_id.id or False,
-                'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
+                # 'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
+                'op_unit': op_unit.id or False,
                 'partner_id': self.partner_id.id or False,
                 'debit_acc': self.partner_id.property_account_payable_id.id,
                 'invoice_id': self.id,

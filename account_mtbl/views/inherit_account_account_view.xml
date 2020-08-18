@@ -70,9 +70,12 @@
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
+                            <field name="user_type_id"/>
+                            <field name="currency_id"/>
+                            <field name="reconcile"/>
+                            <field name="status"/>
                             <field name="request_date"/>
                             <field name="change_date"/>
-                            <field name="status"/>
                             <field name="state"/>
                         </tree>
                     </field>

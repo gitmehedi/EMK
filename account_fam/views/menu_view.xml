@@ -19,7 +19,7 @@
     </record>
 
     <menuitem id="sub_reports_menu" name="Reports" sequence="20"
-              parent="account_fam.main_fixed_asset_menu" groups=""/>
+              parent="account_fam.main_fixed_asset_menu" groups="base.group_no_one"/>
 
     <record id="account_asset.menu_action_asset_asset_report" model="ir.ui.menu">
         <field name="name">Fixed Assets</field>

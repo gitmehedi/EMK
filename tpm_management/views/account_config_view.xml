@@ -20,6 +20,11 @@
                             <field name="tpm_general_account_id" class="oe_inline"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
+                        <div>
+                            <field name="tpm_general_seq_id" class="oe_inline"
+                                   domain="[('account_id', 'in', [tpm_general_account_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
                     </div>
                     <label for="id" string="Income Account" groups="account.group_account_user"/>
                     <div name="tpm_income_account_id">
@@ -27,11 +32,21 @@
                             <field name="tpm_income_account_id" class="oe_inline"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
+                        <div>
+                            <field name="tpm_income_seq_id" class="oe_inline"
+                                   domain="[('account_id', 'in', [tpm_income_account_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
                     </div>
                     <label for="id" string="Expense Account" groups="account.group_account_user"/>
                     <div name="tpm_expense_account_id">
                         <div>
                             <field name="tpm_expense_account_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <div>
+                            <field name="tpm_expense_seq_id" class="oe_inline"
+                                   domain="[('account_id', 'in', [tpm_expense_account_id])]"
                                    options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         </div>
                     </div>
