@@ -6,6 +6,11 @@ class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'ir.needaction_mixin']
 
+    def _get_date_invoice(self):
+        return self.env.user.company_id.batch_date
+
+    date_invoice = fields.Date(default=_get_date_invoice, required=True)
+
     @api.model
     def create(self, vals):
         if vals.get('reference'):
