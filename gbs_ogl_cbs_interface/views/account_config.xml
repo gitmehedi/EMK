@@ -6,11 +6,11 @@
         <field name="inherit_id" ref="account.view_account_config_settings"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='accounting']" position="after">
-                <group string="MDMC/BULK Upload" name="grp_tds_vat_challan">
+                <group string="CBS System Date" name="grp_tds_vat_challan">
                     <label for="id" string="Date" groups="account.group_account_user"/>
                     <div name="tds_vat_challan">
                         <div>
-                            <label for="MDMC/BULK Upload Date"/>
+                            <label for="CBS System Date"/>
                             <field name="batch_date" class="oe_inline"/>
                         </div>
                     </div>

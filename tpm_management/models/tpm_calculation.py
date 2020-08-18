@@ -11,13 +11,7 @@ class TPMManagementModel(models.Model):
     _order = 'id desc'
 
     def _default_from_date(self):
-        date = self.search([('state', '=', 'confirm')], order='to_date desc', limit=1)
-
-        if date:
-            next = datetime.strptime(date.to_date, "%Y-%m-%d") + timedelta(days=+1)
-            return next.strftime("%Y-%m-%d")
-        else:
-            return fields.Date.today()
+        return self.env.user.company_id.batch_date
 
     name = fields.Char('Name', size=200, track_visibility='onchange', readonly=True)
     branch_id = fields.Many2one('operating.unit', string='Branch', readonly=True,
