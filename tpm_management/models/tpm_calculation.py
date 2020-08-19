@@ -20,9 +20,9 @@ class TPMManagementModel(models.Model):
                        states={'draft': [('readonly', False)]})
     to_date = fields.Date(string='To Date', required=True, readonly=True,
                           states={'draft': [('readonly', False)]})
-    total_income = fields.Float(string="Total Income", compute="_compute_income_expense")
-    total_expense = fields.Float(string="Total Expense", compute="_compute_income_expense")
-    balance = fields.Float(string="Difference", compute="_compute_income_expense")
+    total_income = fields.Float(string="Total Income", compute="_compute_income_expense", store=True)
+    total_expense = fields.Float(string="Total Expense", compute="_compute_income_expense", store=True)
+    balance = fields.Float(string="Difference", compute="_compute_income_expense", store=True)
     journal_id = fields.Many2one('account.move', string='Journal Entry', readonly=True)
     line_ids = fields.One2many('tpm.calculation.line', 'line_id', string='Lines', readonly=True)
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user, track_visibility='onchange')
@@ -50,6 +50,7 @@ class TPMManagementModel(models.Model):
             rec.total_expense = sum([val.expense for val in rec.line_ids])
             rec.balance = abs(rec.total_income - rec.total_expense)
 
+
     @api.one
     def act_draft(self):
         if self.state == 'calculate':
@@ -62,11 +63,13 @@ class TPMManagementModel(models.Model):
         if self.state == 'draft':
             self.line_ids.unlink()
 
-            company = self.env.user.company_id
-            days = company.days_in_fy
-            general_account = company.tpm_general_account_id.id
-            income_rate = (company.income_rate / 100) / days
-            expense_rate = (company.expense_rate / 100) / days
+            tpm_config = self.env['account.app.config'].search([('config_type','=','tpm')])
+            if not tpm_config:
+                raise Warning(_("Please configure proper settings for TPM"))
+            days = tpm_config.days_in_fy
+            general_account = tpm_config.tpm_general_account_id.id
+            income_rate = (tpm_config.income_rate / 100) / days
+            expense_rate = (tpm_config.expense_rate / 100) / days
             branch = self.env['operating.unit'].sudo().search([('active', '=', True), ('pending', '=', False)])
             branch_lines = {}
             for val in branch:
@@ -138,8 +141,8 @@ class TPMManagementModel(models.Model):
                         'pl_status': 'expense' if bal[3] > 0 else 'income',
                         'branch_id': branch_id,
                         'date': start_date,
-                        'income_rate': company.income_rate,
-                        'expense_rate': company.expense_rate,
+                        'income_rate': tpm_config.income_rate,
+                        'expense_rate': tpm_config.expense_rate,
                         'branch_line_id': 0,
                     }
                     branch_lines[bal[0]].append(line)
@@ -178,15 +181,18 @@ class TPMManagementModel(models.Model):
             lines = []
             date = fields.Datetime.now()
             journal_entry = ""
-            company = self.env.user.company_id
-            journal = company.journal_id.id
+            tpm_config = self.env['account.app.config'].search([('config_type', '=', 'tpm')])
+            if not tpm_config:
+                raise Warning(_("Please configure proper settings for TPM"))
+            company= self.env.user.company_id
+            journal = tpm_config.journal_id.id
             current_currency = company.currency_id.id
-            general_account = company.tpm_general_account_id.id
-            general_seq = company.tpm_general_seq_id.id
-            income_account = company.tpm_income_account_id.id
-            income_seq = company.tpm_income_seq_id.id
-            expense_account = company.tpm_expense_account_id.id
-            expense_seq = company.tpm_expense_seq_id.id
+            general_account = tpm_config.tpm_general_account_id.id
+            general_seq = tpm_config.tpm_general_seq_id.id
+            income_account = tpm_config.tpm_income_account_id.id
+            income_seq = tpm_config.tpm_income_seq_id.id
+            expense_account = tpm_config.tpm_expense_account_id.id
+            expense_seq = tpm_config.tpm_expense_seq_id.id
             move = self.env['account.move'].create({
                 'ref': 'TPM in [{0}] with ref {1}'.format(self.date, self.name),
                 'date': date,
@@ -341,7 +347,7 @@ class TPMManagementModel(models.Model):
             if move.state == 'draft':
                 move.sudo().post()
 
-            self.sudo().write({
+            self.write({
                 'state': 'approve',
                 'approver_id': self.env.user.id,
                 'journal_id': move.id,

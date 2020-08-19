@@ -15,9 +15,11 @@ Transfer Pricing Mechanism.
         'mtbl_access',
     ],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'views/menu_view.xml',
         'views/account_config_view.xml',
+        'views/account_app_config_view.xml',
         'views/tpm_calculation_view.xml'
     ],
     'installable': True,
