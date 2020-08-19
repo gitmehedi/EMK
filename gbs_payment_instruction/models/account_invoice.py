@@ -29,7 +29,7 @@ class AccountInvoice(models.Model):
         for record in self:
             if record.state == 'open':
                 if record.residual and record.total_payment_amount \
-                        and round(record.residual, 2) <= record.total_payment_amount:
+                        and round(record.residual, 2) <= round(record.total_payment_amount):
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
@@ -58,7 +58,7 @@ class AccountInvoice(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': self.residual - self.total_payment_amount or 0.0,
+                'amount': round(self.residual - self.total_payment_amount, 2) or 0.0,
                 'currency_id': self.currency_id.id or False,
                 # 'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
                 'op_unit': op_unit.id or False,
