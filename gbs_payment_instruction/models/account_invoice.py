@@ -29,7 +29,7 @@ class AccountInvoice(models.Model):
         for record in self:
             if record.state == 'open':
                 if record.residual and record.total_payment_amount \
-                        and round(record.residual, 2) <= round(record.total_payment_amount):
+                        and round(record.residual, 2) <= round(record.total_payment_amount, 2):
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
