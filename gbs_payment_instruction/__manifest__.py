@@ -23,7 +23,8 @@
         'wizard/payment_instruction_wizard_view.xml',
         'views/account_invoice.xml',
         'views/vendor_advance.xml',
-        'views/security_return.xml'
+        'views/security_return.xml',
+        'views/inherit_vendor_bill_generation_view.xml'
     ],
     'installable': True,
     'application': True,
