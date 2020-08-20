@@ -14,7 +14,8 @@ class BillPaymentInstructionWizard(models.TransientModel):
                                          string='Security Return', copy=False)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.context.get('currency_id'))
-    amount = fields.Float(string='Amount', required=True, default=lambda self: self.env.context.get('amount'))
+    amount = fields.Float(string='Amount', required=True, default=lambda self: self.env.context.get('amount'),
+                          digits=(16, 2))
     instruction_date = fields.Date(string='Date', default=fields.Date.context_today, required=True, copy=False)
 
     debit_operating_unit_id = fields.Many2one('operating.unit', string='Debit Branch', required=True,

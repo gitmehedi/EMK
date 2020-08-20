@@ -28,7 +28,7 @@ class VendorAdvance(models.Model):
         for record in self:
             if record.state == 'approve':
                 if record.amount and record.total_payment_amount \
-                        and record.amount <= record.total_payment_amount:
+                        and round(record.amount, 2) <= round(record.total_payment_amount, 2):
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
@@ -52,7 +52,7 @@ class VendorAdvance(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': self.amount - self.total_payment_amount or 0.0,
+                'amount': round(self.amount - self.total_payment_amount, 2) or 0.0,
                 'currency_id': self.currency_id.id or False,
                 # 'op_unit': ou_id or False,
                 'op_unit': op_unit.id or False,
