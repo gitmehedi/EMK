@@ -138,7 +138,8 @@ class ServerFileProcess(models.Model):
 
     @api.model
     def sysdt_process(self):
-        integration = self.search([('type', '=', 'sys_dt'), ('method', '=', 'dest_sftp'), ('status', '=', True)], limit=1)
+        integration = self.search([('type', '=', 'sys_dt'), ('method', '=', 'dest_sftp'), ('status', '=', True)],
+                                  limit=1)
         if not integration:
             raise ValidationError(_("Record is not available with proper configuration"))
         return integration.sysdt_import_process(integration)
@@ -306,7 +307,7 @@ class ServerFileProcess(models.Model):
                         bgl = "0{0}{1}{2}".format(account_no, sub_opu, branch_code)
 
                         journal = "{:2s}{:17s}{:16s}{:50s}{:20s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount, narration,
-                                                                                      trn_ref_no, date, cost_centre)
+                                                                                       trn_ref_no, date, cost_centre)
                         file.write(journal)
 
                     move_ids.append((0, 0, {'move_id': vals.id}))
@@ -700,10 +701,10 @@ class ServerFileProcess(models.Model):
                             line['credit'] = amount
                             line['amount_currency'] = fcy_amount
                             credit += lcy_amt
-
                         journal_entry += format_journal(line)
 
         if len(errors) > 0:
+            self.unlink_move(move_id)
             try:
                 query = """
                     INSERT INTO server_file_error_line (line_id,line_no,details,process_date) 
@@ -714,6 +715,7 @@ class ServerFileProcess(models.Model):
                                         'line_no': 'UNKNOWN ERROR',
                                         'details': 'Please check your file.'})
         else:
+            missmatch = "{:.2f}".format(debit - credit)
             try:
                 query = """
                 INSERT INTO account_move_line 
@@ -722,33 +724,32 @@ class ServerFileProcess(models.Model):
                 VALUES %s""" % journal_entry[:-1]
                 self.env.cr.execute(query)
 
-                missmatch = "{:.2f}".format(debit - credit)
-                if move_id:
-                    move_id.amount = debit
                 if move_id.state == 'draft':
-                    move_id.sudo().write({'date': rec['POSTING-DATE']})
-                    move_id.sudo().post()
-                    errObj.sudo().write({'state': 'resolved'})
-                    return move_id
-                else:
                     if debit - credit > 0:
-                        msg = 'Debit is greater than Credit amount. Please register a Credit entry with amount {0}'.format(
-                            missmatch)
+                        msg = 'Debit is greater than Credit. Mismatch Amount: {0}'.format(missmatch)
+                        errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
+                        self.unlink_move(move_id)
+                    elif credit - debit > 0:
+                        msg = 'Credit is greater than Debit. Mismatch Amount: {0}'.format(missmatch)
+                        errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
+                        self.unlink_move(move_id)
                     else:
-                        msg = 'Credit is greater than Debit amount. Please register a Dedit entry with amount {0}'.format(
-                            missmatch)
-                    errObj.line_ids.create({'line_id': errObj.id,
-                                            'line_no': 'Unequal Amount',
-                                            'details': msg})
+                        move_id.amount = debit
+                        move_id.sudo().write({'date': rec['POSTING-DATE']})
+                        move_id.sudo().post()
+                        errObj.sudo().write({'state': 'resolved'})
+                        return move_id
             except Exception:
-                if move_id.state == 'draft':
-                    move_id.unlink()
+                self.unlink_move(move_id)
                 errObj.line_ids.create({'line_id': errObj.id,
                                         'line_no': 'Unknown Error',
-                                        'details': 'Unbalanced journal, amount variance is {0}'.format(
-                                            move_id.missmatch_value)})
+                                        'details': 'Unbalanced journal, amount variance is {0}'.format(missmatch)})
 
         return False
+
+    def unlink_move(self, move):
+        if move.state == 'draft':
+            move.unlink()
 
     @api.multi
     def action_sftp_test_connection(self):
