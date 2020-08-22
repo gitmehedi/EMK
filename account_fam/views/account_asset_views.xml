@@ -57,9 +57,9 @@
                     </group>
                     <group>
                         <field name="invoice_date" readonly="True"/>
-                        <field name="warranty_date"/>
-                        <field name="date"/>
-                        <field name="asset_usage_date"/>
+                        <field name="warranty_date" readonly="True"/>
+                        <field name="date" readonly="True"/>
+                        <field name="asset_usage_date" readonly="True"/>
                         <field name="lst_depr_date"/>
                         <field name="dmc_date"/>
                         <field name="code" invisible="1"/>
@@ -88,7 +88,7 @@
                         <field name="depr_base_value" readonly="True" help="Depreciation base value of asset"/>
                         <field name="value" readonly="True" help="Gross value of asset"/>
                         <field name="value_residual"/>
-                        <field name="salvage_value" attrs="{'invisible': [('type','=','sale')]}"/>
+                        <field name="salvage_value" readonly="1" attrs="{'invisible': [('type','=','sale')]}"/>
                         <field name="accumulated_value" attrs="{'invisible': [('type','=','sale')]}"/>
                         <field name="lst_depr_amount" attrs="{'invisible': [('type','=','sale')]}"/>
                     </group>

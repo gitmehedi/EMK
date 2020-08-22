@@ -21,7 +21,7 @@ class AccountAssetAsset(models.Model):
     asset_type_id = fields.Many2one(string='Asset Category', required=True, change_default=True, readonly=True)
     asset_seq = fields.Char(string='Asset Code', track_visibility='onchange')
     batch_no = fields.Char(string='Batch No', readonly=True,
-                           track_visibility='onchange', states={'draft': [('readonly', False)]})
+                           track_visibility='onchange', )
     method_progress_factor = fields.Float(string='Depreciation Factor', digits=(1, 3), readonly=True, default=0.0,
                                           states={'draft': [('readonly', False)]})
     method_number = fields.Integer(string='Number of Depreciations', default=0,
@@ -43,8 +43,7 @@ class AccountAssetAsset(models.Model):
     date = fields.Date(string='Purchase Date', track_visibility='onchange')
     asset_usage_date = fields.Date(string='Usage Date', help='Usage Date/Allocation Date', readonly=True,
                                    track_visibility='onchange', states={'draft': [('readonly', False)]})
-    model_name = fields.Char(string='Model', track_visibility='onchange', readonly=True,
-                             states={'draft': [('readonly', False)]})
+    model_name = fields.Char(string='Model', track_visibility='onchange', readonly=True)
     operating_unit_id = fields.Many2one('operating.unit', string='Purchase Branch', required=True,
                                         track_visibility='onchange')
     invoice_date = fields.Date(related='invoice_id.date_invoice', string='Bill Date', track_visibility='onchange')
@@ -64,8 +63,7 @@ class AccountAssetAsset(models.Model):
                                      track_visibility='onchange', store=True)
     asset_description = fields.Text(string='Asset Description', readonly=True, states={'draft': [('readonly', False)]})
     cost_centre_id = fields.Many2one('account.analytic.account', string='Cost Centre', required=True,
-                                     track_visibility='onchange', readonly=True,
-                                     states={'draft': [('readonly', False)]})
+                                     track_visibility='onchange', readonly=True)
     note = fields.Text(string="Note", required=False, readonly=True, states={'draft': [('readonly', False)]})
     allocation_status = fields.Boolean(string='Allocation Status', track_visibility='onchange', default=False)
     depreciation_flag = fields.Boolean(string='Awaiting Disposal', track_visibility='onchange', default=False)
@@ -73,7 +71,7 @@ class AccountAssetAsset(models.Model):
     lst_depr_amount = fields.Float(string='Last Depr. Amount', readonly=True, track_visibility='onchange', store=True)
     awaiting_dispose_date = fields.Date(string='Awaiting Dispose Date', readonly=True, track_visibility='onchange')
     dmc_date = fields.Date(string='DMC Date', readonly=True, track_visibility='onchange')
-    reconcile_ref = fields.Char(string='Reconcile Ref', size=20)
+    reconcile_ref = fields.Char(string='Reconcile Ref', size=20, readonly=True)
 
     @api.model_cr
     def init(self):

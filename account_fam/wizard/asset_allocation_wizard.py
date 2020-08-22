@@ -26,7 +26,10 @@ class AssetAllocationWizard(models.TransientModel):
         if asset.asset_usage_date and len(asset.asset_allocation_ids.ids) == 0:
             return asset.asset_usage_date
         else:
-            return fields.Datetime.now()
+            return self.env.user.company_id.batch_date
+
+    def default_warranty_date(self):
+        return self.env.user.company_id.batch_date
 
     def default_status(self):
         if 'allocation' in self.env.context:
@@ -36,7 +39,7 @@ class AssetAllocationWizard(models.TransientModel):
 
     asset_user = fields.Char("Asset User")
     date = fields.Date(string='Allocation/Transfer Date', required=True, default=default_date)
-    warranty_date = fields.Date(string='Warranty Date')
+    warranty_date = fields.Date(string='Warranty Date', default=default_warranty_date)
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
@@ -44,6 +47,17 @@ class AssetAllocationWizard(models.TransientModel):
     cost_centre_id = fields.Many2one('account.analytic.account', string='To Cost Centre', required=True)
     narration = fields.Char(string='Narration', required=True)
     is_allocate = fields.Boolean(default=default_status)
+
+    @api.constrains('date', 'warranty_date')
+    def check_warranty_date(self):
+        if self.env.user.company_id.batch_date > self.date:
+            raise Warning(_('Date should not be less than system date.'))
+
+        if self.env.user.company_id.batch_date > self.warranty_date:
+            raise Warning(_('Warranty Date should not be less than system date.'))
+
+        if ('allocation' in self.env.context) and (self.date > self.warranty_date):
+            raise Warning(_('Warranty Date should not be greater than Allocation/Transfer Date.'))
 
     @api.multi
     def allocation(self):

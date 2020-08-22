@@ -8,8 +8,16 @@ from odoo import api, fields, models, _
 class AssetDepreciationWizard(models.TransientModel):
     _name = 'asset.depreciation.wizard'
 
-    date = fields.Date(string='Date', required=True, default=fields.Datetime.now)
+    def default_date(self):
+        return self.env.user.company_id.batch_date
+
+    date = fields.Date(string='Date', required=True, default=default_date)
     sure = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='Double Check Execute Date?', required=True)
+
+    @api.constrains('date')
+    def check_date(self):
+        if self.env.user.company_id.batch_date > self.date:
+            raise Warning(_('Date should not be less than system date.'))
 
     @api.multi
     def depreciate(self):

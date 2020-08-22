@@ -181,6 +181,12 @@ $ sudo su - postgres -c "createuser -s odoo" 2> /dev/null || true
 delete from account_invoice_line;
 delete from account_invoice;
 
+-- Delete all Vendor Advance 
+delete from vendor_security_deposit;
+delete from vendor_security_return;
+delete from vendor_bill_generation_line;
+delete from vendor_advance;
+
 -- Delete from Payment Instructions
 delete from payment_instruction;
 
