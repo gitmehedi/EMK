@@ -281,8 +281,8 @@ class GBSFileImportWizard(models.TransientModel):
                         val['amount_currency'] = 0
                     # For OBU Only
                     elif branch_code == '116' and cur_code == 'USD':
-                        val['debit'] = abs(debit_amt) * self.dollar_rate
-                        val['credit'] = abs(credit_amt) * self.dollar_rate
+                        val['debit'] = "{:.3f}".format(abs(debit_amt) * self.dollar_rate)
+                        val['credit'] = "{:.3f}".format(abs(credit_amt) * self.dollar_rate)
 
                         if credit_amt > 0:
                             val['amount_currency'] = "{:.3f}".format(credit_amt)
