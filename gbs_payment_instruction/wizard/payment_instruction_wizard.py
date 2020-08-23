@@ -64,8 +64,8 @@ class BillPaymentInstructionWizard(models.TransientModel):
     def _check_amount(self):
         for line in self:
             rem_amount = self.env.context.get('amount')
-            if line.amount < 0:
-                raise ValidationError(_("Amount can not take negative value."))
+            if line.amount <= 0:
+                raise ValidationError(_("Amount should be more than zero (0)."))
             elif line.amount > rem_amount:
                 raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "
                                         "Remaining balance is %s") % (rem_amount))
