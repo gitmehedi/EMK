@@ -7,20 +7,20 @@
             <form string="Servicing Channel" edit="0" duplicate="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
-                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
-                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
                     <button name="%(action_servicing_channel_wizard)d" string="Edit" type="action"
-                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                            groups="mtbl_access.group_mtbl_sys_admin"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                     <button name="act_reject_pending" string="Reject" type="object"
-                            groups="mtbl_access.group_mtbl_sys_admin"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                     <button name="act_draft" string="Set to Draft" type="object" states="reject"
-                            groups="mtbl_access.group_mtbl_sys_admin"/>
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>

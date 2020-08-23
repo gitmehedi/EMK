@@ -7,7 +7,7 @@
             <form string="Depreciation History" edit="0" create="0" delete="0" duplicate="0">
                 <header>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
-                            states="draft" groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
+                            states="draft" groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

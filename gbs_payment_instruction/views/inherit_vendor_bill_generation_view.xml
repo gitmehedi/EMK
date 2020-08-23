@@ -8,8 +8,8 @@
             <xpath expr="//button[@name='action_bill_validate']" position="after">
                 <field name="approve_payment_button_visible" invisible="1"/>
                 <button string="Make Payment" name="action_payment" type="object"
-                        class="oe_highlight" states="bill_validate"/>
-                <button string="Approve Payment" name="action_approve_payment" type="object"
+                        class="oe_highlight" states="bill_validate" groups="account.group_account_manager"/>
+                <button string="Approve Payment" name="action_approve_payment" type="object" groups="account.group_account_manager"
                         class="oe_highlight" attrs="{'invisible': [('approve_payment_button_visible', '=', False)]}"/>
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="attributes">

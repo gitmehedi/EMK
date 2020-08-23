@@ -52,7 +52,7 @@ class VendorAdvance(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': round(self.amount - self.total_payment_amount, 2) or 0.0,
+                'amount': round(abs(self.amount - self.total_payment_amount), 2) or 0.0,
                 'currency_id': self.currency_id.id or False,
                 # 'op_unit': ou_id or False,
                 'op_unit': op_unit.id or False,
