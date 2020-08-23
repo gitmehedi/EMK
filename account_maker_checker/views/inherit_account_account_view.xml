@@ -13,17 +13,21 @@
                 <xpath expr="//sheet" position="before">
                     <header>
                         <field name="pending" invisible="True"/>
-                        <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"/>
-                        <button name="act_reject" string="Reject" type="object" states="draft"/>
+                        <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                                group="account.group_account_manager"/>
+                        <button name="act_reject" string="Reject" type="object" states="draft"
+                                group="account.group_account_manager"/>
                         <button name="%(account_maker_checker.action_account_account_wizard)d" string="Edit"
-                                type="action"
+                                type="action" group="account.group_account_manager"
                                 class="oe_highlight"
                                 attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                         <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                                group="account.group_account_manager"
                                 attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
-                        <button name="act_reject_pending" string="Reject" type="object"
+                        <button name="act_reject_pending" string="Reject" type="object" group="account.group_account_manager"
                                 attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
-                        <button name="act_draft" string="Set to Draft" type="object" states="reject"/>
+                        <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                                group="account.group_account_manager"/>
                         <field name="state" widget="statusbar" invisible="True"/>
                     </header>
                 </xpath>

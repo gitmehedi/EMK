@@ -60,7 +60,8 @@ class VendorBillGeneration(models.Model):
 
     def get_payment_instruction_values(self, invoice_id, agreement_id):
         debit_acc = invoice_id.partner_id.property_account_payable_id.id
-        debit_branch = invoice_id.operating_unit_id.id or None
+        op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
+        debit_branch = op_unit.id or False
         if invoice_id.partner_id.property_account_payable_sou_id:
             debit_sou = invoice_id.partner_id.property_account_payable_sou_id.id
         else:
