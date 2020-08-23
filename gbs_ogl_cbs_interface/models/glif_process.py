@@ -715,7 +715,7 @@ class ServerFileProcess(models.Model):
                                         'line_no': 'UNKNOWN ERROR',
                                         'details': 'Please check your file.'})
         else:
-            missmatch = "{:.2f}".format(debit - credit)
+            missmatch = "{:.2f}".format(round(debit - credit, 2))
             try:
                 query = """
                 INSERT INTO account_move_line 
@@ -725,11 +725,11 @@ class ServerFileProcess(models.Model):
                 self.env.cr.execute(query)
 
                 if move_id.state == 'draft':
-                    if debit - credit > 0:
+                    if round(debit - credit, 2) > 0:
                         msg = 'Debit is greater than Credit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
-                    elif credit - debit > 0:
+                    elif round(credit - debit, 2) > 0:
                         msg = 'Credit is greater than Debit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)

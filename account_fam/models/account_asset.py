@@ -191,7 +191,6 @@ class AccountAssetAsset(models.Model):
                     END LOOP;
                     move_query='SELECT aaa.current_branch_id,
                             aaa.cost_centre_id,
-							aaa.sub_operating_unit_id,
 							aac.name as type_name,
                             aac.account_depreciation_id,
                             aac.account_depreciation_seq_id,
@@ -208,7 +207,6 @@ class AccountAssetAsset(models.Model):
                              AND aadl.move_id= '|| move || 
                          'GROUP BY aaa.current_branch_id,
                             aaa.cost_centre_id,
-							aaa.sub_operating_unit_id,
 							aac.name,
                             aac.account_depreciation_id,
                             aac.account_depreciation_seq_id,
@@ -687,3 +685,8 @@ class AccountAssetDepreciationLine(models.Model):
             'operating_unit_id': current_branch.id,
             'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
         }
+
+    @api.multi
+    def post_lines_and_close_asset(self):
+        # Overwrite this function because it's create a new entry every time
+        return True
