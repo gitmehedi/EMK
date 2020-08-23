@@ -58,7 +58,7 @@ class AccountInvoice(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': round(self.residual - self.total_payment_amount, 2) or 0.0,
+                'amount': round(abs(self.residual - self.total_payment_amount), 2) or 0.0,
                 'currency_id': self.currency_id.id or False,
                 # 'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
                 'op_unit': op_unit.id or False,
