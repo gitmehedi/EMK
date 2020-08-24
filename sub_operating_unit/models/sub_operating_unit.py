@@ -62,7 +62,9 @@ class SubOperatingUnit(models.Model):
         names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
         names2 = []
         if name:
-            domain = [('code', '=ilike', name + '%')]
+            acc_code, seq_code = name.split('-') if name.find('-') != -1 else [False, name]
+            account_obj = self.env['account.account'].search([('code', '=', acc_code)])
+            domain = [('code', '=ilike', seq_code + '%'), ('account_id', '=', account_obj.id)] if account_obj.id else [('code', '=ilike', seq_code + '%')]
             names2 = self.search(domain, limit=limit).name_get()
         return list(set(names1) | set(names2))[:limit]
 
