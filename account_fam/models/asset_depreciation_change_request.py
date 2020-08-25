@@ -18,12 +18,17 @@ class AssetDepreciationChangeRequest(models.Model):
     name = fields.Char(required=False, track_visibility='onchange', string='Name')
     asset_life = fields.Integer('Asset Life (In Year)', required=True, readonly=True,
                                 states={'draft': [('readonly', False)]})
-    narration = fields.Char('Narration', readonly=True, size=30,required=True, states={'draft': [('readonly', False)]})
+    narration = fields.Char('Narration', readonly=True, size=50, required=True, states={'draft': [('readonly', False)]})
     method_progress_factor = fields.Float('Depreciation Factor', readonly=True, states={'draft': [('readonly', False)]})
     change_date = fields.Date('Change Date', readonly=True, states={'draft': [('readonly', False)]})
-    request_date = fields.Date('Requested Date', default=fields.Date.today, readonly=True,
+    request_date = fields.Date('Requested Date', default=lambda self: self.env.user.company_id.batch_date,
+                               readonly=True,
                                states={'draft': [('readonly', False)]})
     approve_date = fields.Date('Approved Date', readonly=True, states={'draft': [('readonly', False)]})
+    asset_type_id = fields.Many2one('account.asset.category', track_visibility='onchange', required=True,
+                                    domain=[('parent_id', '=', False), ('method', '=', 'degressive')],
+                                    string='Asset Type', readonly=True,
+                                    states={'draft': [('readonly', False)]})
     asset_cat_id = fields.Many2one('account.asset.category', track_visibility='onchange', required=True,
                                    domain=[('parent_id', '!=', False), ('method', '=', 'degressive')],
                                    string='Asset Category', readonly=True,
@@ -35,6 +40,7 @@ class AssetDepreciationChangeRequest(models.Model):
     move_id = fields.Many2one('account.move', string='Journal', track_visibility='onchange', readonly=True)
     line_ids = fields.One2many('asset.depreciation.change.request.line', 'line_id', track_visibility='onchange',
                                readonly=True, states={'draft': [('readonly', False)]})
+    asset_count = fields.Char(compute='_count_asset', store=True, string='No of Assets')
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -43,10 +49,29 @@ class AssetDepreciationChangeRequest(models.Model):
         ('cancel', "Canceled")], default='draft', string="Status",
         track_visibility='onchange')
 
+    @api.onchange('asset_type_id')
+    def onchange_asset_type_id(self):
+        res = {}
+        self.asset_cat_id = None
+        category = self.env['account.asset.category'].search([('parent_id', '=', self.asset_type_id.id)])
+        ids = category.ids if self.asset_type_id else []
+        res['domain'] = {
+            'asset_cat_id': [('id', 'in', ids)],
+        }
+        return res
+
     @api.constrains('asset_life')
     def check_asset_life(self):
         if self.asset_life < 1:
             raise Warning(_('Asset life should be a valid value.'))
+
+    @api.depends('asset_cat_id')
+    def _count_asset(self):
+        for val in self:
+            if self.asset_cat_id:
+                asset = self.env['account.asset.asset'].search(
+                    [('asset_type_id', '=', self.asset_cat_id.id), ('allocation_status', '=', True)])
+                val.asset_count = len(asset.ids)
 
     @api.constrains('asset_cat_id', 'method')
     def check_asset_cat_id(self):
@@ -54,14 +79,18 @@ class AssetDepreciationChangeRequest(models.Model):
             raise Warning(_('Asset Category current method and change request method should not be same.'))
 
     @api.one
+    def action_cancel(self):
+        if self.state == 'confirm':
+            self.write({
+                'state': 'draft',
+                'maker_id': None,
+            })
+
+    @api.one
     def action_confirm(self):
         if self.state == 'draft':
-            if not self.name:
-                name = self.env['ir.sequence'].sudo().next_by_code('asset.depreciation.change.request')
-                name = name.replace('CAT', self.asset_cat_id.code)
             self.write({
                 'state': 'confirm',
-                'name': name,
                 'maker_id': self.env.user.id,
             })
 
@@ -71,12 +100,16 @@ class AssetDepreciationChangeRequest(models.Model):
             if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
+            if not self.name:
+                name = self.env['ir.sequence'].sudo().next_by_code('asset.depreciation.change.request')
+                name = name.replace('CAT', self.asset_cat_id.code)
+
             category = self.env['account.asset.category'].search([('id', '=', self.asset_cat_id.id)])
             if category:
                 history = self.env['history.account.asset.category'].create({'method': self.method,
                                                                              'depreciation_year': self.asset_life,
                                                                              'method_progress_factor': 0.0,
-                                                                             'request_date': fields.Datetime.now(),
+                                                                             'request_date': self.env.user.company_id.batch_date,
                                                                              'line_id': category.id,
                                                                              })
                 category.write({'pending': True})
@@ -101,8 +134,12 @@ class AssetDepreciationChangeRequest(models.Model):
                     if vals:
                         lines.append((0, 0, vals[0]))
                         lines.append((0, 0, vals[1]))
-
-                    # self.line_ids.create({'asset_id': asset.id, 'line_id': self.id})
+                else:
+                    asset.write({'method': self.method,
+                                 'depreciation_year': self.asset_life,
+                                 'method_progress_factor': 0.0,
+                                 'dmc_date': dmc_date
+                                 })
 
             if move:
                 if len(lines) > 1:
@@ -114,9 +151,10 @@ class AssetDepreciationChangeRequest(models.Model):
 
             self.write({
                 'state': 'approve',
+                'name': name,
                 'approver_id': self.env.user.id,
-                'move_id': move.id or False,
-                'approve_date': fields.Date.today()
+                'move_id': move.id if move else [],
+                'approve_date': self.env.user.company_id.batch_date
             })
 
     @api.model
@@ -145,18 +183,23 @@ class AssetDepreciationChangeRequest(models.Model):
                 }
 
                 line = asset.depreciation_line_ids.create(vals)
-
-                if line:
-                    record = self.create_depr(move, asset, depr_value)
-                    asset.write({'method': self.method,
-                                 'depreciation_year': self.asset_life,
-                                 'method_progress_factor': 0.0,
-                                 'dmc_date': dmc_date,
-                                 'lst_depr_date': self.env.user.company_id.batch_date,
-                                 'lst_depr_amount': depreciated_amount,
-                                 'state': 'open',
-                                 })
-                    return record
+                record = self.create_depr(move, asset, depr_value)
+                asset.write({'method': self.method,
+                             'depreciation_year': self.asset_life,
+                             'method_progress_factor': 0.0,
+                             'dmc_date': dmc_date,
+                             'lst_depr_date': self.env.user.company_id.batch_date,
+                             'lst_depr_amount': depreciated_amount,
+                             'state': 'open',
+                             })
+                return record
+            else:
+                asset.write({'method': self.method,
+                             'depreciation_year': self.asset_life,
+                             'method_progress_factor': 0.0,
+                             'dmc_date': dmc_date,
+                             'state': 'open',
+                             })
 
     def create_depr(self, move, asset, depr_value):
         prec = self.env['decimal.precision'].precision_get('Account')
@@ -188,6 +231,20 @@ class AssetDepreciationChangeRequest(models.Model):
             'move_id': move.id
         }
         return debit, credit
+
+    @api.multi
+    def open_entries(self):
+        move_ids = self.env['account.asset.asset'].search(
+            [('asset_type_id', '=', self.asset_cat_id.id), ('allocation_status', '=', True)]).ids
+        return {
+            'name': _(self.asset_cat_id.name),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.asset.asset',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', move_ids)],
+        }
 
 
 class AssetDepreciationChangeRequestLine(models.Model):

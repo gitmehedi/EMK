@@ -10,7 +10,7 @@
                            options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                 </group>
                 <footer>
-                    <button name="sale" string="Sell" type="object" class="btn-primary"/>
+                    <button name="sale" string="Confirm" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-default" special="cancel"/>
                 </footer>
             </form>

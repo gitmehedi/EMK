@@ -72,6 +72,9 @@ class AccountAssetAsset(models.Model):
     awaiting_dispose_date = fields.Date(string='Awaiting Dispose Date', readonly=True, track_visibility='onchange')
     dmc_date = fields.Date(string='DMC Date', readonly=True, track_visibility='onchange')
     reconcile_ref = fields.Char(string='Reconcile Ref', size=20, readonly=True)
+    asset_status = fields.Selection([('active', 'Active'),
+                                     ('sell', 'Sell'),
+                                     ('dispose', 'dispose')], default='active')
 
     @api.model_cr
     def init(self):

@@ -18,6 +18,12 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="open_entries" type="object" icon="fa-pencil"
+                                attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <field string="Assets" name="asset_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <div class="pull-left">
                         <h1>
                             <field name="name" readonly="1" nolabel="1"/>
@@ -25,11 +31,13 @@
                     </div>
                     <group>
                         <group>
+                            <field name="asset_type_id"
+                                   options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
                             <field name="asset_cat_id"
+                                   domain="[('parent_id', '=', 'asset_type_id')]"
                                    options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
                             <field name="asset_life"/>
                             <field name="narration"/>
-
                         </group>
                         <group>
                             <field name="method" widget="radio"/>
@@ -37,7 +45,6 @@
                                    readonly="1"/>
                         </group>
                     </group>
-
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -58,6 +65,7 @@
                 <field name="name"/>
                 <field name="asset_cat_id"/>
                 <field name="asset_life"/>
+                <field name="asset_count"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -91,4 +99,5 @@
               parent="account_fam.menu_action_account_asset_operation"
               groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager"
               action="action_asset_depreciation_change_request" sequence="60"/>
+
 </odoo>

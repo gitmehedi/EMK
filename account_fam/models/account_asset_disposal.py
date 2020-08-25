@@ -18,16 +18,17 @@ class AccountAssetDisposal(models.Model):
     total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
     total_depr_amount = fields.Float(string='Total Accumulated Depr.', compute='_compute_total_depr_amount',
                                      track_visibility='onchange')
-    narration = fields.Char(string="Narration", required=True, readonly=True,
+    narration = fields.Char(string="Narration", required=True, readonly=True, size=50,
                             states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    narration_gl = fields.Char(string="Narration Gain/Loss", required=True, readonly=True,
+    narration_gl = fields.Char(string="Narration Gain/Loss", required=True, readonly=True, size=50,
                                states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    request_date = fields.Datetime(string='Request Date', required=True, default=fields.Datetime.now,
-                                   readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    approve_date = fields.Datetime(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
-                                   track_visibility='onchange')
-    dispose_date = fields.Datetime(string='Dispose Date', readonly=True, states={'approve': [('readonly', False)]},
-                                   track_visibility='onchange')
+    request_date = fields.Date(string='Request Date', required=True,
+                               default=lambda self: self.env.user.company_id.batch_date,
+                               readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    approve_date = fields.Date(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
+                               track_visibility='onchange')
+    dispose_date = fields.Date(string='Dispose Date', readonly=True, states={'approve': [('readonly', False)]},
+                               track_visibility='onchange')
     request_user_id = fields.Many2one('res.users', string='Request User', readonly=True,
                                       states={'draft': [('readonly', False)]}, default=lambda self: self.env.user,
                                       track_visibility='onchange')
@@ -39,17 +40,24 @@ class AccountAssetDisposal(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]},
                                   default=lambda self: self.env.user.company_id.currency_id.id)
+    branch_id = fields.Many2one('operating.unit', string='Branch', required=True, readonly=True,
+                                states={'draft': [('readonly', False)]})
     note = fields.Text(string='Note', readonly=True, states={'draft': [('readonly', False)]},
                        track_visibility='onchange')
     line_ids = fields.One2many('account.asset.disposal.line', 'dispose_id', string='Disposal Line', readonly=True,
                                states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('dispose', 'Disposed')], default='draft',
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('dispose', 'Confirmed')], default='draft',
                              string='State', track_visibility='onchange')
 
     @api.depends('line_ids')
     def _compute_total_value(self):
         for rec in self:
             rec.total_value = sum(rec.cost_value for rec in rec.line_ids)
+
+    @api.onchange('branch_id')
+    def _onchange_branch(self):
+        if self.branch_id:
+            self.line_ids = []
 
     @api.depends('line_ids')
     def _compute_total_depr_amount(self):
@@ -62,10 +70,33 @@ class AccountAssetDisposal(models.Model):
             raise Warning(_('[Warning] Dispose List should not be empty.'))
 
         if self.state == 'draft':
+            single, duplicate, sell = [], [], []
+            dup_str, sell_str = '', ''
+            for val in self.line_ids:
+                if val.asset_id.asset_status != 'active':
+                    sell.append(val.asset_id.asset_seq)
+                    sell_str = sell_str + "- {0}\t\n".format(val.asset_id.asset_seq)
+                if val.asset_id.asset_seq not in single:
+                    single.append(val.asset_id.asset_seq)
+                else:
+                    dup_str = dup_str + "- {0}\t\n".format(val.asset_id.asset_seq)
+                    duplicate.append(val.asset_id.asset_seq)
+
+            if len(sell) > 0:
+                raise Warning(_(
+                    "[PROCESSED] Following assets are already Sold or Dispose.\n\n{0}".format(sell_str)))
+            elif len(duplicate) > 0:
+                raise Warning(_(
+                    "[DUPLICATE] Following assets are duplicate in line.\n\n{0}".format(dup_str)))
+
+            for rec in self.line_ids:
+                rec.asset_id.write({'asset_status': 'dispose'})
+
+        if self.state == 'draft':
             self.write({
                 'name': self.env['ir.sequence'].next_by_code('account.asset.disposal') or _('New'),
                 'state': 'approve',
-                'approve_date': fields.Datetime.now(),
+                'approve_date': self.env.user.company_id.batch_date,
                 'approve_user_id': self.env.user.id,
             })
 
@@ -73,7 +104,7 @@ class AccountAssetDisposal(models.Model):
     def action_dispose(self):
         if self.state == 'approve':
             for rec in self.line_ids:
-                date = datetime.strptime(fields.Datetime.now()[:10], DATE_FORMAT)
+                date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
                 dispose = self.generate_move(rec.asset_id)
                 if dispose.state == 'draft':
                     dispose.sudo().post()
@@ -82,7 +113,7 @@ class AccountAssetDisposal(models.Model):
 
             self.write({
                 'state': 'dispose',
-                'dispose_date': fields.Datetime.now(),
+                'dispose_date': self.env.user.company_id.batch_date,
                 'dispose_user_id': self.env.user.id,
             })
 
@@ -170,4 +201,3 @@ class AccountAssetDisposalLine(models.Model):
             depreciated_value = sum([val.amount for val in self.asset_id.depreciation_line_ids])
             self.depreciation_value = depreciated_value
             self.asset_value = self.asset_id.value - depreciated_value
-
