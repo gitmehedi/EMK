@@ -333,12 +333,12 @@ class AccountFinancialReportLine(models.Model):
         if financial_report.tax_report:
             where_clause += ''' AND "account_move_line".tax_exigible = 't' '''
 
-        # Start Bappy Added for Dummy
+        # Start Bappy
         if is_opening == True:
             where_clause += ''' AND "account_move_line".is_opening = True '''
         elif is_opening == False:
             where_clause += ''' AND "account_move_line".is_opening = False '''
-        # End Bappy Added for Dummy
+        # End Bappy
 
         line = self
         financial_report = False
