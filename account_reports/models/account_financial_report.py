@@ -6,6 +6,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.tools.misc import formatLang
 from odoo.tools import float_is_zero, ustr
 from datetime import datetime
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -17,6 +18,7 @@ class ReportAccountFinancialReport(models.Model):
 
     name = fields.Char(translate=True)
     debit_credit = fields.Boolean('Show Credit and Debit Columns')
+    initial_balance = fields.Boolean('Show Initial Balance Columns')
     line_ids = fields.One2many('account.financial.html.report.line', 'financial_report_id', string='Lines')
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('no_date_range', 'Based on a single date'),
@@ -98,7 +100,58 @@ class ReportAccountFinancialReport(models.Model):
             if company.currency_id != used_currency:
                 currency_table[company.currency_id.id] = used_currency.rate / company.currency_id.rate
         linesDicts = [{} for _ in context_id.get_periods()]
+
+        initial_balance = len(context_id.get_periods()) == 1 and self.initial_balance == True
+
+        # Start From Bappy
+        fy_date = self.env.user.company_id.compute_fiscalyear_dates(datetime.strptime(context_id['date_to'], "%Y-%m-%d"))
+
+        if isinstance(fy_date['date_from'], datetime):
+            fy_date_from = fy_date['date_from'].date()
+        else:
+            fy_date_from = fy_date['date_from']
+
+        if isinstance(fy_date['date_to'], datetime):
+            fy_date_to = fy_date['date_to'].date()
+        else:
+            fy_date_to = fy_date['date_to']
+
+
+
+        # Get previous Date from 'context_id['date_to']'
+        if context_id['date_from']:
+            compare_date = fields.Date.from_string(context_id['date_from'])
+        else:
+            compare_date = fields.Date.from_string(context_id['date_to'])
+
+        previous_date = compare_date - timedelta(days=1)
+
+
+        date_from_initial = fy_date['date_from']
+        # If given is start of fiscal year start date then 'date_to_initial' set 'context_id['date_to']'
+        if fy_date_from > previous_date:
+            date_to_initial = previous_date + timedelta(days=1)
+        else:
+            date_to_initial = previous_date
+
+        # If Given Date is Fiscal Year start Date then
+        fiscal_year_start = False
+        if compare_date == date_to_initial:
+            fiscal_year_start = True
+
+        print ("date_from_initial:" + str(date_from_initial))
+        print ("date_to_initial:" + str(date_to_initial))
+        print ("date_from:" + str(context_id['date_from']))
+        print ("date_to:" + str(context_id['date_to']))
+        print ("fiscal_year_start :" + str(fiscal_year_start))
+        # End Bappy
+
+
         res = line_obj.with_context(
+            build_initial_balance=initial_balance,
+            fiscal_year_start=fiscal_year_start,
+            date_from_initial=date_from_initial,
+            date_to_initial=date_to_initial,
             state=context_id.all_entries and 'all' or 'posted',
             cash_basis=self.report_type == 'date_range_cash' or context_id.cash_basis,
             company_ids=context_id.company_ids.ids,
@@ -136,6 +189,12 @@ class AccountFinancialReportLine(models.Model):
 
     domain = fields.Char(default=None)
     formulas = fields.Char()
+
+    formulas_debit = fields.Char()
+    formulas_credit = fields.Char()
+    formulas_initial_balance = fields.Char()
+
+
     groupby = fields.Char("Group by", default=False)
     figure_type = fields.Selection([('float', 'Float'), ('percents', 'Percents'), ('no_unit', 'No Unit')],
                                    'Type', default='float', required=True)
@@ -251,7 +310,7 @@ class AccountFinancialReportLine(models.Model):
             params = [tuple(user_types.ids)] + where_params + [tuple(user_types.ids)] + where_params + [tuple(user_types.ids)] + where_params + [tuple(user_types.ids)]
         return sql, params
 
-    def _compute_line(self, currency_table, financial_report, group_by=None, domain=[]):
+    def _compute_line(self, currency_table, financial_report, is_opening=None, group_by=None, domain=[]):
         """ Computes the sum that appeas on report lines when they aren't unfolded. It is using _query_get() function
             of account.move.line which is based on the context, and an additional domain (the field domain on the report
             line) to build the query that will be used.
@@ -273,6 +332,13 @@ class AccountFinancialReportLine(models.Model):
         tables, where_clause, where_params = self.env['account.move.line']._query_get(domain=domain)
         if financial_report.tax_report:
             where_clause += ''' AND "account_move_line".tax_exigible = 't' '''
+
+        # Start Bappy Added for Dummy
+        if is_opening == True:
+            where_clause += ''' AND "account_move_line".is_opening = True '''
+        elif is_opening == False:
+            where_clause += ''' AND "account_move_line".is_opening = False '''
+        # End Bappy Added for Dummy
 
         line = self
         financial_report = False
@@ -333,7 +399,7 @@ class AccountFinancialReportLine(models.Model):
     def _get_sum(self, currency_table, financial_report, field_names=None):
         ''' Returns the sum of the amls in the domain '''
         if not field_names:
-            field_names = ['debit', 'credit', 'balance', 'amount_residual']
+            field_names = ['debit', 'credit', 'balance', 'amount_residual', 'initial_balance']
         res = dict((fn, 0.0) for fn in field_names)
         if self.domain:
             strict_range = self.special_date_changer == 'strict_range'
@@ -346,13 +412,23 @@ class AccountFinancialReportLine(models.Model):
                 period_to = date_tmp.strftime('%Y-%m-%d')
                 period_from = False
 
-            res = self.with_context(strict_range=strict_range, date_from=period_from, date_to=period_to)._compute_line(currency_table, financial_report, group_by=self.groupby, domain=self.domain)
+            # Start Bappy
+            res = self.with_context(strict_range=strict_range, date_from=period_from,date_to=period_to)._compute_line(currency_table, financial_report, is_opening=False, group_by=self.groupby, domain=self.domain)
+
+            res['initial_balance'] = 0
+            if self._context['build_initial_balance']:
+                is_opening = None
+                if self._context['fiscal_year_start'] == True:
+                    is_opening = True
+                initial_balance = self.with_context(strict_range=strict_range, date_from=self._context['date_from_initial'],date_to=self._context['date_to_initial'])._compute_line(currency_table, financial_report, is_opening, group_by=self.groupby,domain=self.domain)
+                res['initial_balance'] = initial_balance['balance']
+            # End Bappy
         return res
 
     @api.one
     def get_balance(self, linesDict, currency_table, financial_report, field_names=None):
         if not field_names:
-            field_names = ['debit', 'credit', 'balance']
+            field_names = ['debit', 'credit', 'balance','initial_balance']
         res = dict((fn, 0.0) for fn in field_names)
         c = FormulaContext(self.env['account.financial.html.report.line'], linesDict, currency_table, financial_report, self)
         if self.formulas:
@@ -367,6 +443,28 @@ class AccountFinancialReportLine(models.Model):
                             res[field] = 0
                         else:
                             raise err
+        # Start  Bappy
+        if self._context['build_initial_balance']:
+            couples_of_formulas = ''
+            if self.formulas_initial_balance:
+                couples_of_formulas += self.formulas_initial_balance + ';'
+            if self.formulas_debit:
+                couples_of_formulas += self.formulas_debit + ';'
+            if self.formulas_credit:
+                couples_of_formulas += self.formulas_credit
+            if len(couples_of_formulas) > 0:
+                for f in couples_of_formulas.split(';'):
+                    [field, formula] = f.split('=')
+                    field = field.strip()
+                    if field in field_names:
+                        try:
+                            res[field] = safe_eval(formula, c, nocopy=True)
+                        except ValueError as err:
+                            if 'division by zero' in err.args[0]:
+                                res[field] = 0
+                            else:
+                                raise err
+        # End  Bappy
         return res
 
     def _format(self, value):
@@ -408,6 +506,17 @@ class AccountFinancialReportLine(models.Model):
                 result.update({column: formula})
         return result
 
+    def _split_formulas_initial_balance(self):
+        result = {}
+        if self.formulas_initial_balance:
+            for f in self.formulas_initial_balance.split(';'):
+                [column, formula] = f.split('=')
+                column = column.strip()
+                result.update({column: formula})
+        return result
+
+
+
     def _eval_formula(self, financial_report, debit_credit, context, currency_table, linesDict):
         debit_credit = debit_credit and financial_report.debit_credit
         formulas = self._split_formulas()
@@ -421,6 +530,11 @@ class AccountFinancialReportLine(models.Model):
             vals['credit'] = res.credit
             vals['debit'] = res.debit
 
+        # Start Bappy
+        if self._context['build_initial_balance'] and hasattr(res, 'initial_balance'):
+            vals['initial_balance'] = res.initial_balance
+        # End Bappy
+
         results = {}
         if self.domain and self.groupby and self.show_domain != 'never':
             aml_obj = self.env['account.move.line']
@@ -428,6 +542,11 @@ class AccountFinancialReportLine(models.Model):
             sql, params = self._get_with_statement(financial_report)
             if financial_report.tax_report:
                 where_clause += ''' AND "account_move_line".tax_exigible = 't' '''
+
+            # Start Bappy
+            if self._context['fiscal_year_start'] == True:
+                where_clause += ''' AND "account_move_line".is_opening = False '''
+            # End Bappy
 
             groupby = self.groupby or 'id'
             if groupby not in self.env['account.move.line']:
@@ -439,8 +558,51 @@ class AccountFinancialReportLine(models.Model):
             params += where_params
             self.env.cr.execute(sql, params)
             results = self.env.cr.fetchall()
-            results = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4]}) for k in results])
+
+            if self._context['build_initial_balance']:
+                results = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4], 'initial_balance': 0}) for k in results])
+            else:
+                results = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4]}) for k in results])
+
+            # Start Bappy
+            # GL Wise initial Balance Add
+            if self._context['build_initial_balance']:
+                domain = self.domain
+
+                tables, where_clause, where_params = aml_obj.with_context(date_from=self._context['date_from_initial'],date_to=self._context['date_to_initial'])._query_get(domain)
+
+                sql, params = self._get_with_statement(financial_report)
+                if financial_report.tax_report:
+                    where_clause += ''' AND "account_move_line".tax_exigible = 't' '''
+
+                # Start Bappy
+                if self._context['fiscal_year_start'] == True:
+                    where_clause += ''' AND "account_move_line".is_opening = True '''
+                # End Bappy
+
+                groupby = self.groupby or 'id'
+                if groupby not in self.env['account.move.line']:
+                    raise ValueError('Groupby should be a field from account.move.line')
+                select, select_params = self._query_get_select_sum(currency_table)
+                params += select_params
+                sql = sql + "SELECT \"account_move_line\"." + groupby + ", " + select + " FROM " + tables + " WHERE " + where_clause + " GROUP BY \"account_move_line\"." + groupby
+
+                params += where_params
+                self.env.cr.execute(sql, params)
+                results_initial = self.env.cr.fetchall()
+                results_initial = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4]}) for k in results_initial])
+
+                for state in results_initial:
+                    ini_bal = results_initial[state]['balance']
+                    if results.get(state):
+                        results[state]['initial_balance'] = ini_bal
+                    else:
+                        results[state] = {'balance': 0, 'amount_residual': 0, 'debit': 0, 'credit': 0,'initial_balance': ini_bal}
+
+            # End Bappy
+
             c = FormulaContext(self.env['account.financial.html.report.line'], linesDict, currency_table, financial_report, only_sum=True)
+
             if formulas:
                 for key in results:
                     c['sum'] = FormulaLine(results[key], currency_table, financial_report, type='not_computed')
@@ -449,6 +611,22 @@ class AccountFinancialReportLine(models.Model):
                     for col, formula in formulas.items():
                         if col in results[key]:
                             results[key][col] = safe_eval(formula, c, nocopy=True)
+
+            # Start Bappy
+            # Apply For Initial Balance Formula
+            formulas_init_balance = self._split_formulas_initial_balance()
+            if self._context['build_initial_balance'] and formulas_init_balance:
+                for key in results:
+                    c['sum'] = FormulaLine(results[key], currency_table, financial_report, type='not_computed')
+                    c['sum_if_pos'] = FormulaLine(results[key]['initial_balance'] >= 0.0 and results[key] or {'initial_balance': 0.0}, currency_table, financial_report, type='not_computed')
+                    c['sum_if_neg'] = FormulaLine(results[key]['initial_balance'] <= 0.0 and results[key] or {'initial_balance': 0.0}, currency_table, financial_report, type='not_computed')
+                    for col, formula in formulas_init_balance.items():
+                        if col in results[key]:
+                            results[key][col] = safe_eval(formula, c, nocopy=True)
+            # End Bappy
+
+
+
             to_del = []
             for key in results:
                 if self.env.user.company_id.currency_id.is_zero(results[key]['balance']):
@@ -463,9 +641,14 @@ class AccountFinancialReportLine(models.Model):
         res = dict((domain_id, []) for domain_id in domain_ids)
         for period in data:
             debit_credit = False
+            initial_balance = False
             if 'debit' in period['line']:
                 debit_credit = True
+            if self._context['build_initial_balance'] == True and 'initial_balance' in period['line']:
+                initial_balance = True
             for domain_id in domain_ids:
+                if initial_balance and 'initial_balance' in period.get(domain_id):
+                    res[domain_id].append(period.get(domain_id, {'initial_balance': 0})['initial_balance'])
                 if debit_credit:
                     res[domain_id].append(period.get(domain_id, {'debit': 0})['debit'])
                     res[domain_id].append(period.get(domain_id, {'credit': 0})['credit'])
@@ -622,7 +805,7 @@ class FormulaLine(object):
     def __init__(self, obj, currency_table, financial_report, type='balance', linesDict=None):
         if linesDict is None:
             linesDict = {}
-        fields = dict((fn, 0.0) for fn in ['debit', 'credit', 'balance'])
+        fields = dict((fn, 0.0) for fn in ['debit', 'credit', 'balance', 'initial_balance'])
         if type == 'balance':
             fields = obj.get_balance(linesDict, currency_table, financial_report)[0]
             linesDict[obj.code] = self
@@ -636,8 +819,10 @@ class FormulaLine(object):
                 self.amount_residual = fields['amount_residual']
             elif obj._name == 'account.move.line':
                 self.amount_residual = 0.0
-                field_names = ['debit', 'credit', 'balance', 'amount_residual']
+                field_names = ['debit', 'credit', 'balance', 'amount_residual', 'initial_balance']
                 res = obj.env['account.financial.html.report.line']._compute_line(currency_table, financial_report)
+
+
                 for field in field_names:
                     fields[field] = res[field]
                 self.amount_residual = fields['amount_residual']
@@ -650,6 +835,11 @@ class FormulaLine(object):
         self.balance = fields['balance']
         self.credit = fields['credit']
         self.debit = fields['debit']
+
+        # if obj._context['build_initial_balance']:
+        #     self.initial_balance = fields['initial_balance']
+        self.initial_balance = fields['initial_balance']
+
 
 
 class FormulaContext(dict):
@@ -727,6 +917,10 @@ class AccountFinancialReportContext(models.TransientModel):
 
     def get_columns_names(self):
         columns = []
+
+        if self.report_id.initial_balance and not self.comparison:
+            columns += [_('Initial Balance')]
+
         if self.report_id.debit_credit and not self.comparison:
             columns += [_('Debit'), _('Credit')]
         columns += [self.get_balance_date()]
@@ -740,6 +934,10 @@ class AccountFinancialReportContext(models.TransientModel):
     @api.multi
     def get_columns_types(self):
         types = []
+
+        if self.report_id.initial_balance and not self.comparison:
+            types += ['number', 'number']
+
         if self.report_id.debit_credit and not self.comparison:
             types += ['number', 'number']
         types += ['number']
