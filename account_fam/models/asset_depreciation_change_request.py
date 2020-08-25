@@ -20,10 +20,10 @@ class AssetDepreciationChangeRequest(models.Model):
                                 states={'draft': [('readonly', False)]})
     narration = fields.Char('Narration', readonly=True, size=50, required=True, states={'draft': [('readonly', False)]})
     method_progress_factor = fields.Float('Depreciation Factor', readonly=True, states={'draft': [('readonly', False)]})
+
     change_date = fields.Date('Change Date', readonly=True, states={'draft': [('readonly', False)]})
     request_date = fields.Date('Requested Date', default=lambda self: self.env.user.company_id.batch_date,
-                               readonly=True,
-                               states={'draft': [('readonly', False)]})
+                               readonly=True, states={'draft': [('readonly', False)]})
     approve_date = fields.Date('Approved Date', readonly=True, states={'draft': [('readonly', False)]})
     asset_type_id = fields.Many2one('account.asset.category', track_visibility='onchange', required=True,
                                     domain=[('parent_id', '=', False), ('method', '=', 'degressive')],
@@ -35,6 +35,7 @@ class AssetDepreciationChangeRequest(models.Model):
                                    states={'draft': [('readonly', False)]})
     method = fields.Selection([('linear', 'Straight Line/Linear')], default='linear', string="Computation Method",
                               track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     move_id = fields.Many2one('account.move', string='Journal', track_visibility='onchange', readonly=True)

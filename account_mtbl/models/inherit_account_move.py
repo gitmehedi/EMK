@@ -7,7 +7,7 @@ class AccountMove(models.Model):
     _inherit = ['account.move', 'mail.thread']
 
     journal_id = fields.Many2one(track_visibility='onchange')
-    date = fields.Date(track_visibility='onchange')
+    date = fields.Date(track_visibility='onchange', default=lambda self: self.env.user.company_id.batch_date)
     ref = fields.Char(states={'posted': [('readonly', True)]}, track_visibility='onchange')
     state = fields.Selection(track_visibility='onchange')
     narration = fields.Text(states={'posted': [('readonly', True)]}, track_visibility='onchange')
@@ -50,10 +50,10 @@ class AccountMove(models.Model):
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         return super(AccountMove, self).post()
 
-    # @api.constrains('date')
-    # def _check_date(self):
-    #     if self.date > fields.Date.today():
-    #         raise ValidationError(_('Journal Date should not be greater than current datetime.'))
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date != self.env.user.company_id.batch_date:
+            raise ValidationError(_('Journal Date should not be greater than system datetime.'))
 
 
 class AccountMoveLine(models.Model):
