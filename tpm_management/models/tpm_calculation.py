@@ -187,8 +187,6 @@ class TPMManagementModel(models.Model):
             company= self.env.user.company_id
             journal = tpm_config.journal_id.id
             current_currency = company.currency_id.id
-            general_account = tpm_config.tpm_general_account_id.id
-            general_seq = tpm_config.tpm_general_seq_id.id
             income_account = tpm_config.tpm_income_account_id.id
             income_seq = tpm_config.tpm_income_seq_id.id
             expense_account = tpm_config.tpm_expense_account_id.id
@@ -209,15 +207,15 @@ class TPMManagementModel(models.Model):
                 if rec.income > 0:
                     credit_account_id = income_account
                     credit_seq_id = income_seq
-                    debit_account_id = general_account
-                    debit_seq_id = general_seq
+                    debit_account_id = expense_account
+                    debit_seq_id = expense_seq
                     income_cr_cr = rec.income
                     income_cr_dr = 0
                     income_dr_cr = 0
                     income_dr_dr = rec.income
                 else:
-                    credit_account_id = general_account
-                    credit_seq_id = general_seq
+                    credit_account_id = income_account
+                    credit_seq_id = income_seq
                     debit_account_id = expense_account
                     debit_seq_id = expense_seq
                     income_cr_cr = rec.expense
@@ -284,8 +282,8 @@ class TPMManagementModel(models.Model):
                     'name': name,
                     'date': date,
                     'date_maturity': date,
-                    'account_id': general_account,
-                    'sub_operating_unit_id': general_seq,
+                    'account_id': expense_account,
+                    'sub_operating_unit_id': expense_seq,
                     'credit': 0,
                     'debit': self.total_expense,
                     'journal_id': journal,
@@ -307,8 +305,8 @@ class TPMManagementModel(models.Model):
                     'name': name,
                     'date': date,
                     'date_maturity': date,
-                    'account_id': general_account,
-                    'sub_operating_unit_id': general_seq,
+                    'account_id': income_account,
+                    'sub_operating_unit_id': income_seq,
                     'credit': self.total_income,
                     'debit': 0,
                     'journal_id': journal,

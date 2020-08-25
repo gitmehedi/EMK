@@ -29,11 +29,6 @@
                                         <field name="tpm_general_account_id" class="oe_inline"
                                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     </div>
-                                    <div>
-                                        <field name="tpm_general_seq_id" class="oe_inline"
-                                               domain="[('account_id', 'in', [tpm_general_account_id])]"
-                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                    </div>
                                 </div>
                                 <label for="id" string="Income Account"/>
                                 <div name="tpm_income_account_id">

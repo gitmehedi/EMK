@@ -12,8 +12,6 @@ class AccountTPMConfig(models.Model):
     journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True, track_visibility='onchange')
     tpm_general_account_id = fields.Many2one('account.account', string='General Account', required=True,
                                              track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
-    tpm_general_seq_id = fields.Many2one('sub.operating.unit', string='General Account Sequence',
-                                         track_visibility='onchange', required=True)
     tpm_income_account_id = fields.Many2one('account.account', string='Income Account', required=True,
                                             track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
     tpm_income_seq_id = fields.Many2one('sub.operating.unit', string='Income Account Sequence', required=True,
