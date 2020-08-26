@@ -50,10 +50,10 @@ class AccountMove(models.Model):
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         return super(AccountMove, self).post()
 
-    @api.constrains('date')
-    def _check_date(self):
-        if self.date != self.env.user.company_id.batch_date:
-            raise ValidationError(_('Journal Date should not be greater than system datetime.'))
+    # @api.constrains('date')
+    # def _check_date(self):
+    #     if self.date != self.env.user.company_id.batch_date:
+    #         raise ValidationError(_('Journal Date should not be greater than system datetime.'))
 
 
 class AccountMoveLine(models.Model):

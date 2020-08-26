@@ -190,7 +190,7 @@ class AssetDepreciationChangeRequest(models.Model):
                              'method_progress_factor': 0.0,
                              'dmc_date': dmc_date,
                              'lst_depr_date': self.env.user.company_id.batch_date,
-                             'lst_depr_amount': depreciated_amount,
+                             'lst_depr_amount': depr_value,
                              'state': 'open',
                              })
                 return record
