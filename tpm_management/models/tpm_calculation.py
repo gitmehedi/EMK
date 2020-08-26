@@ -214,7 +214,7 @@ class TPMManagementModel(models.Model):
                     credit_branch_id = branch.id
                     debit_branch_id = self.branch_id.id
                     credit_nar = "%s of %s" % ('Income', branch.display_name.replace("'", ""))
-                    debit_nar = "%s of %s" % ('Expense', self.branch_id.display_name.replace("'", ""))
+                    debit_nar = "%s of %s" % ('Income', branch.display_name.replace("'", ""))
                 else:
                     credit_account_id = income_account
                     credit_seq_id = income_seq
@@ -226,7 +226,7 @@ class TPMManagementModel(models.Model):
                     income_dr_dr = rec.expense
                     credit_branch_id = self.branch_id.id
                     debit_branch_id = branch.id
-                    credit_nar = "%s of %s" % ('Income', self.branch_id.display_name.replace("'", ""))
+                    credit_nar = "%s of %s" % ('Expense', branch.display_name.replace("'", ""))
                     debit_nar = "%s of %s" % ('Expense', branch.display_name.replace("'", ""))
 
                 credit = {

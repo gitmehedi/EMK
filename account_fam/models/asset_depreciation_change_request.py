@@ -121,13 +121,13 @@ class AssetDepreciationChangeRequest(models.Model):
             lines = []
 
             for asset in assets:
-                dmc_date = datetime.strptime(asset.date, DATE_FORMAT) + relativedelta(years=self.asset_life)
-                system_date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
-                if system_date > dmc_date:
+                usage_date = datetime.strptime(asset.date, DATE_FORMAT) + relativedelta(years=self.asset_life)
+                dmc_date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
+                if dmc_date > usage_date:
                     if not move:
                         move = self.env['account.move'].create({
                             'ref': self.narration,
-                            'date': system_date,
+                            'date': dmc_date,
                             'journal_id': asset.category_id.journal_id.id,
                             'operating_unit_id': asset.current_branch_id.id
                         })
@@ -176,7 +176,7 @@ class AssetDepreciationChangeRequest(models.Model):
                     'name': asset.code or '/',
                     'remaining_value': abs(remaining_value),
                     'depreciated_value': depreciated_amount,
-                    'depreciation_date': self.env.user.company_id.batch_date,
+                    'depreciation_date': dmc_date,
                     'days': 0,
                     'asset_id': asset.id,
                     'move_id': move.id,
@@ -184,7 +184,7 @@ class AssetDepreciationChangeRequest(models.Model):
                 }
 
                 line = asset.depreciation_line_ids.create(vals)
-                record = self.create_depr(move, asset, depr_value)
+                record = self.create_depr(move, asset, depr_value, dmc_date)
                 asset.write({'method': self.method,
                              'depreciation_year': self.asset_life,
                              'method_progress_factor': 0.0,
@@ -202,7 +202,7 @@ class AssetDepreciationChangeRequest(models.Model):
                              'state': 'open',
                              })
 
-    def create_depr(self, move, asset, depr_value):
+    def create_depr(self, move, asset, depr_value, dmc_date):
         prec = self.env['decimal.precision'].precision_get('Account')
         company_currency = asset.company_id.currency_id
         current_currency = asset.currency_id
@@ -210,6 +210,7 @@ class AssetDepreciationChangeRequest(models.Model):
         credit = {
             'name': self.narration,
             'debit': 0.0,
+            'date': dmc_date,
             'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
             'journal_id': category.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
@@ -217,10 +218,12 @@ class AssetDepreciationChangeRequest(models.Model):
             'sub_operating_unit_id': category.account_depreciation_seq_id.id,
             'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else False,
             'currency_id': company_currency != current_currency and current_currency.id or False,
+            'company_id': self.env.user.company_id.id,
             'move_id': move.id
         }
         debit = {
             'name': self.narration,
+            'date': dmc_date,
             'debit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
             'credit': 0.0,
             'journal_id': asset.category_id.journal_id.id,
@@ -229,6 +232,7 @@ class AssetDepreciationChangeRequest(models.Model):
             'sub_operating_unit_id': category.account_depreciation_expense_seq_id.id,
             'analytic_account_id': asset.cost_centre_id.id,
             'currency_id': company_currency != current_currency and current_currency.id or False,
+            'company_id': self.env.user.company_id.id,
             'move_id': move.id
         }
         return debit, credit
