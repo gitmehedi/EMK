@@ -23,7 +23,7 @@ class TPMManagementModel(models.Model):
     total_income = fields.Float(string="Total Income", compute="_compute_income_expense", store=True)
     total_expense = fields.Float(string="Total Expense", compute="_compute_income_expense", store=True)
     balance = fields.Float(string="Difference", compute="_compute_income_expense", store=True)
-    journal_id = fields.Many2one('account.move', string='Journal Entry', readonly=True)
+    journal_id = fields.Many2one('account.move', string='Journal', readonly=True)
     line_ids = fields.One2many('tpm.calculation.line', 'line_id', string='Lines', readonly=True)
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
@@ -50,7 +50,6 @@ class TPMManagementModel(models.Model):
             rec.total_expense = sum([val.expense for val in rec.line_ids])
             rec.balance = abs(rec.total_income - rec.total_expense)
 
-
     @api.one
     def act_draft(self):
         if self.state == 'calculate':
@@ -63,7 +62,7 @@ class TPMManagementModel(models.Model):
         if self.state == 'draft':
             self.line_ids.unlink()
 
-            tpm_config = self.env['account.app.config'].search([('config_type','=','tpm')])
+            tpm_config = self.env['account.app.config'].search([('config_type', '=', 'tpm')])
             if not tpm_config:
                 raise Warning(_("Please configure proper settings for TPM"))
             days = tpm_config.days_in_fy
@@ -179,12 +178,12 @@ class TPMManagementModel(models.Model):
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'confirm':
             lines = []
-            date = fields.Datetime.now()
+            date = self.env.user.company_id.batch_date
             journal_entry = ""
             tpm_config = self.env['account.app.config'].search([('config_type', '=', 'tpm')])
             if not tpm_config:
                 raise Warning(_("Please configure proper settings for TPM"))
-            company= self.env.user.company_id
+            company = self.env.user.company_id
             journal = tpm_config.journal_id.id
             current_currency = company.currency_id.id
             income_account = tpm_config.tpm_income_account_id.id
@@ -200,7 +199,6 @@ class TPMManagementModel(models.Model):
             })
             for rec in self.line_ids:
                 branch = rec.sudo().branch_id
-                name = "%s for branch %s" % (rec.pl_status.capitalize(), branch.display_name.replace("'", ""))
                 if rec.income == 0 and rec.expense == 0:
                     continue
 
@@ -213,6 +211,10 @@ class TPMManagementModel(models.Model):
                     income_cr_dr = 0
                     income_dr_cr = 0
                     income_dr_dr = rec.income
+                    credit_branch_id = branch.id
+                    debit_branch_id = self.branch_id.id
+                    credit_nar = "%s of %s" % ('Income', branch.display_name.replace("'", ""))
+                    debit_nar = "%s of %s" % ('Expense', self.branch_id.display_name.replace("'", ""))
                 else:
                     credit_account_id = income_account
                     credit_seq_id = income_seq
@@ -222,9 +224,13 @@ class TPMManagementModel(models.Model):
                     income_cr_dr = 0
                     income_dr_cr = 0
                     income_dr_dr = rec.expense
+                    credit_branch_id = self.branch_id.id
+                    debit_branch_id = branch.id
+                    credit_nar = "%s of %s" % ('Income', self.branch_id.display_name.replace("'", ""))
+                    debit_nar = "%s of %s" % ('Expense', branch.display_name.replace("'", ""))
 
                 credit = {
-                    'name': name,
+                    'name': credit_nar,
                     'date': date,
                     'date_maturity': date,
                     'account_id': credit_account_id,
@@ -232,7 +238,7 @@ class TPMManagementModel(models.Model):
                     'credit': income_cr_cr,
                     'debit': income_cr_dr,
                     'journal_id': journal,
-                    'operating_unit_id': branch.id,
+                    'operating_unit_id': credit_branch_id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -240,7 +246,7 @@ class TPMManagementModel(models.Model):
                     'is_bgl': 'not_check',
                 }
                 debit = {
-                    'name': name,
+                    'name': debit_nar,
                     'date': date,
                     'date_maturity': date,
                     'account_id': debit_account_id,
@@ -248,7 +254,7 @@ class TPMManagementModel(models.Model):
                     'credit': income_dr_cr,
                     'debit': income_dr_dr,
                     'journal_id': journal,
-                    'operating_unit_id': branch.id,
+                    'operating_unit_id': debit_branch_id,
                     'currency_id': current_currency,
                     'amount_currency': 0.0,
                     'move_id': move.id,
@@ -257,84 +263,6 @@ class TPMManagementModel(models.Model):
                 }
                 journal_entry += self.format_journal(credit)
                 journal_entry += self.format_journal(debit)
-
-            if self.total_expense:
-                branch = self.sudo().branch_id
-                name = "Income of %s" % (branch.display_name.replace("'", ""))
-
-                inc_credit = {
-                    'name': name,
-                    'date': date,
-                    'date_maturity': date,
-                    'account_id': income_account,
-                    'sub_operating_unit_id': income_seq,
-                    'credit': self.total_expense,
-                    'debit': 0,
-                    'journal_id': journal,
-                    'operating_unit_id': branch.id,
-                    'currency_id': current_currency,
-                    'amount_currency': 0.0,
-                    'move_id': move.id,
-                    'company_id': company.id,
-                    'is_bgl': 'not_check',
-                }
-                inc_debit = {
-                    'name': name,
-                    'date': date,
-                    'date_maturity': date,
-                    'account_id': expense_account,
-                    'sub_operating_unit_id': expense_seq,
-                    'credit': 0,
-                    'debit': self.total_expense,
-                    'journal_id': journal,
-                    'operating_unit_id': branch.id,
-                    'currency_id': current_currency,
-                    'amount_currency': 0.0,
-                    'move_id': move.id,
-                    'company_id': company.id,
-                    'is_bgl': 'not_check',
-                }
-                journal_entry += self.format_journal(inc_credit)
-                journal_entry += self.format_journal(inc_debit)
-
-            if self.total_income:
-                branch = self.sudo().branch_id
-                name = "Expense of %s" % (branch.display_name.replace("'", ""))
-
-                exp_credit = {
-                    'name': name,
-                    'date': date,
-                    'date_maturity': date,
-                    'account_id': income_account,
-                    'sub_operating_unit_id': income_seq,
-                    'credit': self.total_income,
-                    'debit': 0,
-                    'journal_id': journal,
-                    'operating_unit_id': branch.id,
-                    'currency_id': current_currency,
-                    'amount_currency': 0.0,
-                    'move_id': move.id,
-                    'company_id': company.id,
-                    'is_bgl': 'not_check',
-                }
-                exp_debit = {
-                    'name': name,
-                    'date': date,
-                    'date_maturity': date,
-                    'account_id': expense_account,
-                    'sub_operating_unit_id': expense_seq,
-                    'credit': 0,
-                    'debit': self.total_income,
-                    'journal_id': journal,
-                    'operating_unit_id': branch.id,
-                    'currency_id': current_currency,
-                    'amount_currency': 0.0,
-                    'move_id': move.id,
-                    'company_id': company.id,
-                    'is_bgl': 'not_check',
-                }
-                journal_entry += self.format_journal(exp_credit)
-                journal_entry += self.format_journal(exp_debit)
 
             query = """INSERT INTO account_move_line 
                                     (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,

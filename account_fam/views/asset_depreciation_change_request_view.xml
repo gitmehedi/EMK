@@ -42,6 +42,7 @@
                         <group>
                             <field name="method" widget="radio"/>
                             <field name="move_id" options="{'no_create': 1, 'no_create_edit': 1}"
+                                   attrs="{'invisible':[('journal_id','=',False)]}"
                                    readonly="1"/>
                         </group>
                     </group>

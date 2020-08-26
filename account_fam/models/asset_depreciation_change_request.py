@@ -69,9 +69,9 @@ class AssetDepreciationChangeRequest(models.Model):
     @api.depends('asset_cat_id')
     def _count_asset(self):
         for val in self:
-            if self.asset_cat_id:
+            if val.asset_cat_id:
                 asset = self.env['account.asset.asset'].search(
-                    [('asset_type_id', '=', self.asset_cat_id.id), ('allocation_status', '=', True)])
+                    [('asset_type_id', '=', val.asset_cat_id.id), ('allocation_status', '=', True)])
                 val.asset_count = len(asset.ids)
 
     @api.constrains('asset_cat_id', 'method')
