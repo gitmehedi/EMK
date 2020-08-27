@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="gbs_rent_data_migration_form" model="ir.ui.view">
-            <field name="name">gbs.rent.data.migration.form</field>
-            <field name="model">gbs.rent.data.migration</field>
+        <record id="gbs_vsd_data_migration_form" model="ir.ui.view">
+            <field name="name">gbs.vsd.data.migration.form</field>
+            <field name="model">gbs.vsd.data.migration</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="%(gbs_data_migration.action_gbs_rent_data_migration_wizard)d"
+                        <button name="%(gbs_data_migration.action_gbs_vsd_data_migration_wizard)d"
                                 groups="mtbl_access.group_mtbl_sys_admin"
                                 type="action" string="Upload" class="oe_highlight"/>
                     </header>
@@ -27,9 +27,9 @@
             </field>
         </record>
 
-        <record id="gbs_rent_data_migration_tree" model="ir.ui.view">
-            <field name="name">gbs.rent.data.migration.tree</field>
-            <field name="model">gbs.rent.data.migration</field>
+        <record id="gbs_vsd_data_migration_tree" model="ir.ui.view">
+            <field name="name">gbs.vsd.data.migration.tree</field>
+            <field name="model">gbs.vsd.data.migration</field>
             <field name="arch" type="xml">
                 <tree string="Bulk / Manual Journal">
                     <field name="code"/>
@@ -38,15 +38,15 @@
             </field>
         </record>
 
-        <record id="action_gbs_rent_data_migration" model="ir.actions.act_window">
-            <field name="name">Rent Data Migration</field>
-            <field name="res_model">gbs.rent.data.migration</field>
+        <record id="action_gbs_vsd_data_migration" model="ir.actions.act_window">
+            <field name="name">VSD Data Migration</field>
+            <field name="res_model">gbs.vsd.data.migration</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_rent_data_migration" name="Rent"
+        <menuitem id="menu_vsd_data_migration" name="VSD"
                   parent="menu_data_migration"
-                  sequence="55" groups="mtbl_access.group_mtbl_sys_admin"
-                  action="action_gbs_rent_data_migration"/>
+                  sequence="60" groups="mtbl_access.group_mtbl_sys_admin"
+                  action="action_gbs_vsd_data_migration"/>
     </data>
 </odoo>
