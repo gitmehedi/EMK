@@ -35,7 +35,6 @@ class AssetDepreciationChangeRequest(models.Model):
                                    states={'draft': [('readonly', False)]})
     method = fields.Selection([('linear', 'Straight Line/Linear')], default='linear', string="Computation Method",
                               track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     move_id = fields.Many2one('account.move', string='Journal', track_visibility='onchange', readonly=True)
