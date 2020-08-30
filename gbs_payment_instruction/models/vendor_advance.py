@@ -13,6 +13,7 @@ class VendorAdvance(models.Model):
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False, copy=False,
                                          string="Is Visible")
+    is_bulk_data = fields.Boolean(default=False, copy=False, string="Is a Bulk Data")
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
@@ -23,31 +24,37 @@ class VendorAdvance(models.Model):
             advance.total_payment_approved = sum(
                 line.amount for line in advance.payment_line_ids if line.state in ['approved'])
 
-    @api.depends('payable_to_supplier', 'total_payment_amount')
+    @api.depends('payable_to_supplier', 'total_payment_amount', 'is_bulk_data', 'type', 'additional_advance_amount')
     def _compute_payment_btn_visible(self):
         for record in self:
             if record.state == 'approve':
-                if record.payable_to_supplier and record.total_payment_amount \
-                        and round(record.payable_to_supplier, 2) <= round(record.total_payment_amount, 2):
-                    record.payment_btn_visible = False
-                elif record.payable_to_supplier <= 0.0:
-                    record.payment_btn_visible = False
+                if not record.is_bulk_data:
+                    if record.payable_to_supplier and record.total_payment_amount \
+                            and round(record.payable_to_supplier, 2) <= round(record.total_payment_amount, 2):
+                        record.payment_btn_visible = False
+                    elif record.payable_to_supplier <= 0.0:
+                        record.payment_btn_visible = False
+                    else:
+                        record.payment_btn_visible = True
                 else:
-                    record.payment_btn_visible = True
+                    if record.type == 'single':
+                        record.payment_btn_visible = False
+                    else:
+                        if record.additional_advance_amount <= record.total_payment_amount:
+                            record.payment_btn_visible = False
+                        else:
+                            record.payment_btn_visible = True
             else:
                 record.payment_btn_visible = False
 
     @api.multi
     def action_payment_instruction(self):
-        # if self.residual <= 0.0:
-        #     raise ValidationError(_('There is no remaining balance for this Bill!'))
-        #
-        # if self.residual <= sum(line.amount for line in self.payment_line_ids if line.state == 'draft'):
-        #     raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
-        #                             ' no new payment instruction can possible!'))
-
         res = self.env.ref('gbs_payment_instruction.view_bill_payment_instruction_wizard')
         op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
+        if not self.is_bulk_data:
+            amount = round(abs(self.payable_to_supplier - self.total_payment_amount), 2) or 0.0
+        else:
+            amount = round(self.additional_advance_amount - self.total_payment_amount, 2)
 
         return {
             'name': _('Payment Instruction'),
@@ -59,7 +66,7 @@ class VendorAdvance(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': round(abs(self.payable_to_supplier - self.total_payment_amount), 2) or 0.0,
+                'amount': amount,
                 'currency_id': self.currency_id.id or False,
                 # 'op_unit': self.operating_unit_id.id or False,
                 'op_unit': op_unit.id or False,
