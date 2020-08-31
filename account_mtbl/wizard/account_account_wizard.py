@@ -51,6 +51,11 @@ class AccountAccountWizard(models.TransientModel):
         if len(name) > 0:
             raise Warning('[Unique Error] Name must be unique!')
 
+        if not self.status:
+            aml = self.env['account.move.line'].search([('account_id', '=', id)])
+            if len(aml) > 0:
+                raise Warning('[Warning] Already have Journal!')
+
         pending = self.env['history.account.account'].search([('state', '=', 'pending'), ('line_id', '=', id)])
         if len(pending) > 0:
             raise Warning('[Warning] You already have a pending request!')
