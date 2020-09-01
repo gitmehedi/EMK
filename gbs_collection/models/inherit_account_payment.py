@@ -100,6 +100,7 @@ class InheritAccountPayment(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
+        self.sale_order_id = []
         id_list = self.get_sale_order_id_list()
         return {'domain': {'sale_order_id': [('id', 'in', id_list)]}}
 
