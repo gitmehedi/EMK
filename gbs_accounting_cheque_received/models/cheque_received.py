@@ -91,6 +91,7 @@ class ChequeReceived(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
+        self.sale_order_id = []
         so_ids = []
         if self.partner_id.id:
             sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id),
