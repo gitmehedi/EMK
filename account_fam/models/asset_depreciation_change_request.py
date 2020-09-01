@@ -26,7 +26,7 @@ class AssetDepreciationChangeRequest(models.Model):
                                readonly=True, states={'draft': [('readonly', False)]})
     approve_date = fields.Date('Approved Date', readonly=True, states={'draft': [('readonly', False)]})
     asset_type_id = fields.Many2one('account.asset.category', track_visibility='onchange', required=True,
-                                    domain=[('parent_id', '=', False), ('method', '=', 'degressive')],
+                                    domain=[('parent_id', '=', False)],
                                     string='Asset Type', readonly=True,
                                     states={'draft': [('readonly', False)]})
     asset_cat_id = fields.Many2one('account.asset.category', track_visibility='onchange', required=True,
@@ -53,7 +53,8 @@ class AssetDepreciationChangeRequest(models.Model):
     def onchange_asset_type_id(self):
         res = {}
         self.asset_cat_id = None
-        category = self.env['account.asset.category'].search([('parent_id', '=', self.asset_type_id.id)])
+        category = self.env['account.asset.category'].search(
+            [('parent_id', '=', self.asset_type_id.id), ('method', '!=', 'no_depreciation')])
         ids = category.ids if self.asset_type_id else []
         res['domain'] = {
             'asset_cat_id': [('id', 'in', ids)],
@@ -138,7 +139,8 @@ class AssetDepreciationChangeRequest(models.Model):
                     asset.write({'method': self.method,
                                  'depreciation_year': self.asset_life,
                                  'method_progress_factor': 0.0,
-                                 'dmc_date': dmc_date
+                                 'dmc_date': dmc_date,
+                                 'lst_depr_date': dmc_date,
                                  })
 
             if move:
@@ -188,7 +190,7 @@ class AssetDepreciationChangeRequest(models.Model):
                              'depreciation_year': self.asset_life,
                              'method_progress_factor': 0.0,
                              'dmc_date': dmc_date,
-                             'lst_depr_date': self.env.user.company_id.batch_date,
+                             'lst_depr_date': dmc_date,
                              'lst_depr_amount': depr_value,
                              'state': 'open',
                              })
@@ -198,6 +200,7 @@ class AssetDepreciationChangeRequest(models.Model):
                              'depreciation_year': self.asset_life,
                              'method_progress_factor': 0.0,
                              'dmc_date': dmc_date,
+                             'lst_depr_date': dmc_date,
                              'state': 'open',
                              })
 
