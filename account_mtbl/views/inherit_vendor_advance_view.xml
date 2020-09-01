@@ -5,6 +5,10 @@
         <field name="model">vendor.advance</field>
         <field name="inherit_id" ref="vendor_advance.vendor_advance_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="replace">
+                <field name="account_id" domain="[('reconcile', '=', True), ('originating_type', '=', 'debit')]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
             <xpath expr="//field[@name='account_id']" position="after">
                 <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
@@ -34,6 +38,10 @@
         <field name="model">vendor.advance</field>
         <field name="inherit_id" ref="rent_agreement.rent_agreement_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="replace">
+                <field name="account_id" domain="[('reconcile', '=', True), ('originating_type', '=', 'debit')]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
             <xpath expr="//field[@name='account_id']" position="after">
                 <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>

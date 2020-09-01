@@ -20,6 +20,15 @@ class AccountAccountWizard(models.TransientModel):
             return True
 
     @api.model
+    def default_originating_type(self):
+        context = self._context
+        record = self.env[context['active_model']].search([('id', '=', context['active_id'])])
+        if record:
+            return record.originating_type
+        else:
+            return False
+
+    @api.model
     def default_status(self):
         context = self._context
         record = self.env[context['active_model']].search([('id', '=', context['active_id'])])
@@ -33,6 +42,13 @@ class AccountAccountWizard(models.TransientModel):
     user_type_id = fields.Many2one('account.account.type', string='Type')
     currency_id = fields.Many2one('res.currency', string='Account Currency')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=default_reconcile)
+    originating_type = fields.Selection([('debit', 'Originating Debit'), ('credit', 'Originating Credit')],
+                                        string='Originating Type', default=default_originating_type)
+
+    @api.onchange('reconcile')
+    def onchange_originating_type(self):
+        if not self.reconcile:
+            self.originating_type = False
 
     @api.constrains('name')
     def _check_unique_constrain(self):
@@ -66,7 +82,8 @@ class AccountAccountWizard(models.TransientModel):
                                                     'status': self.status,
                                                     'request_date': fields.Datetime.now(),
                                                     'line_id': id,
-                                                    'reconcile': self.reconcile})
+                                                    'reconcile': self.reconcile,
+                                                    'originating_type': self.originating_type})
 
         record = self.env['account.account'].search(
             [('id', '=', id), '|', ('active', '=', False), ('active', '=', True)])

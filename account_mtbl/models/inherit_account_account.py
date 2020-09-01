@@ -34,6 +34,8 @@ class AccountAccount(models.Model):
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     gl_type = fields.Selection([('online', 'Online')], string='GL Type')
+    originating_type = fields.Selection([('debit', 'Originating Debit'), ('credit', 'Originating Credit')],
+                                        string='Originating Type')
 
     @api.constrains('code')
     def _check_numeric_constrain(self):
@@ -53,6 +55,10 @@ class AccountAccount(models.Model):
                  '|', ('active', '=', True), ('active', '=', False)])
             if len(name) > 1:
                 raise Warning(_('[Unique Error] Name must be unique!'))
+
+    @api.onchange('reconcile')
+    def onchange_originating_type(self):
+        self.originating_type = False
 
     @api.onchange("level_id")
     def onchange_levels(self):
@@ -161,6 +167,7 @@ class AccountAccount(models.Model):
                     'pending': False,
                     'active': requested.status,
                     'reconcile': requested.reconcile,
+                    'originating_type': requested.originating_type,
                     'approver_id': self.env.user.id,
                 })
                 requested.write({
@@ -210,6 +217,8 @@ class HistoryAccountAccount(models.Model):
     reconcile = fields.Boolean(string='Allow Reconciliation')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')
+    originating_type = fields.Selection([('debit', 'Originating Debit'), ('credit', 'Originating Credit')],
+                                        string='Originating Type')
 
 
 class AccountAccountTag(models.Model):
