@@ -104,6 +104,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             # generate reconcile ref code (Vendor Advances or Vendor Security Returns)
             ref_code = self.advance_id.name or self.security_return_id.name
             reconcile_ref = self.advance_id.get_reconcile_ref(self.debit_account_id.id, ref_code)
+        move_id = self.invoice_id.move_id.id or self.advance_id.journal_id.id or self.security_return_id.move_id.id or False
 
         self.env['payment.instruction'].create({
             'invoice_id': self.invoice_id.id or False,
@@ -121,6 +122,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             'credit_operating_unit_id': credit_branch,
             'credit_sub_operating_unit_id': credit_sou,
             'narration': self.narration,
-            'reconcile_ref': reconcile_ref
+            'reconcile_ref': reconcile_ref,
+            'move_id': move_id
         })
         return {'type': 'ir.actions.act_window_close'}

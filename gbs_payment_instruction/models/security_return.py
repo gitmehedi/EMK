@@ -27,8 +27,7 @@ class VendorAdvance(models.Model):
     def _compute_payment_btn_visible(self):
         for record in self:
             if record.state == 'approve':
-                if record.amount and record.total_payment_amount \
-                        and round(record.amount, 2) <= round(record.total_payment_amount, 2):
+                if round(record.amount, 2) <= round(record.total_payment_amount, 2):
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
