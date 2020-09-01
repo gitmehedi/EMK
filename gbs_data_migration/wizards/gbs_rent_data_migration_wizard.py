@@ -242,11 +242,13 @@ class GBSFileImportWizard(models.TransientModel):
             cr_branch_code = line['credit branch'].strip()
             currency_code = line['currency'].strip()
 
-            if not name:
-                errors += self.format_error(line_no, 'Vendor Advance Name [{0}] invalid value'.format(name)) + '\n'
-
             if vendor not in partner.keys():
                 errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor)) + '\n'
+
+            if vendor in partner.keys() and PAYMENT_TYPE[payment_type] == 'casa':
+                vendor_obj = self.env['res.partner'].search([('id', '=', partner[vendor])])
+                if not vendor_obj.vendor_bank_acc:
+                    errors += self.format_error(line_no, 'Vendor Bank Account of {0} [{1}] invalid value'.format(vendor, vendor_obj.vendor_bank_acc)) + '\n'
 
             if product_name not in product.keys():
                 errors += self.format_error(line_no, 'Service/Product [{0}] invalid value'.format(product_name)) + '\n'
@@ -287,14 +289,15 @@ class GBSFileImportWizard(models.TransientModel):
             if payment_type not in PAYMENT_TYPE.keys():
                 errors += self.format_error(line_no, 'Payment Type [{0}] invalid value'.format(payment_type)) + '\n'
 
-            if cr_acc_code not in aa.keys():
-                errors += self.format_error(line_no, 'Credit Account [{0}] invalid value'.format(cr_acc_code)) + '\n'
+            if PAYMENT_TYPE[payment_type] == 'credit':
+                if cr_acc_code not in aa.keys():
+                    errors += self.format_error(line_no, 'Credit Account [{0}] invalid value'.format(cr_acc_code)) + '\n'
 
-            if cr_seq_code not in sequence.keys():
-                errors += self.format_error(line_no, 'Credit Sequence [{0}] invalid value'.format(cr_seq_code)) + '\n'
+                if cr_seq_code not in sequence.keys():
+                    errors += self.format_error(line_no, 'Credit Sequence [{0}] invalid value'.format(cr_seq_code)) + '\n'
 
-            if cr_branch_code not in branch.keys():
-                errors += self.format_error(line_no, 'Credit Branch [{0}] invalid value'.format(cr_branch_code)) + '\n'
+                if cr_branch_code not in branch.keys():
+                    errors += self.format_error(line_no, 'Credit Branch [{0}] invalid value'.format(cr_branch_code)) + '\n'
 
             if currency_code not in currency.keys():
                 errors += self.format_error(line_no, 'Currency Code [{0}] invalid value'.format(currency_code)) + '\n'
@@ -324,16 +327,24 @@ class GBSFileImportWizard(models.TransientModel):
                 val['service_value'] = service_value
                 val['additional_service_value'] = additional_service_value
                 val['payment_type'] = PAYMENT_TYPE[payment_type]
-                val['credit_account_id'] = aa[cr_acc_code]
-                val['credit_sub_operating_unit_id'] = sequence[cr_seq_code]
-                val['credit_operating_unit_id'] = branch[cr_branch_code]
                 val['currency_id'] = currency[currency_code]
                 val['company_id'] = self.env.user.company_id.id
                 val['active'] = True
                 val['state'] = 'approve'
                 val['type'] = 'multi'
+                val['is_bulk_data'] = True
 
-                self.env['vendor.advance'].create(val)
+                if val['payment_type'] == 'credit':
+                    val['credit_account_id'] = aa[cr_acc_code]
+                    val['credit_sub_operating_unit_id'] = sequence[cr_seq_code]
+                    val['credit_operating_unit_id'] = branch[cr_branch_code]
+
+                rent_id = self.env['vendor.advance'].create(val)
+
+                if not name or name == 'N/A':
+                    name = rent_id.get_seq()
+                    rent_id.write({'name': name})
+
                 print(line_no)
 
         end = time.time()

@@ -140,7 +140,7 @@ class GBSFileImportWizard(models.TransientModel):
         partner = {val.name: val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
         product = {val.name: val.id for val in self.env['product.product'].search([('active', '=', True)])}
         aa = {val.code: val.id for val in self.env['account.account'].search([('active', '=', True)])}
-        sequence = {val.account_id.code + '-' + val.code: val.id for val in self.env['sub.operating.unit'].search([('active', '=', True)])}
+        sequence = {val.account_id.code + val.code: val.id for val in self.env['sub.operating.unit'].search([('active', '=', True)])}
         branch = {val.code: val.id for val in self.env['operating.unit'].search([('active', '=', True)])}
         cc = {val.code: val.id for val in self.env['account.analytic.account'].search([('active', '=', True)])}
         currency = {val.code: val.id for val in self.env['res.currency'].search([('active', '=', True)])}
@@ -164,10 +164,9 @@ class GBSFileImportWizard(models.TransientModel):
 
         allow_header = [
             'name',
-            'partner',
+            'vendor',
             'service/product',
             'gl account',
-            'sequence',
             'branch',
             'cost centre',
             'approved advance',
@@ -192,14 +191,14 @@ class GBSFileImportWizard(models.TransientModel):
             val = {}
 
             name = line['name'].strip()
-            vendor = line['partner'].strip()
+            vendor = line['vendor'].strip()
             particulars = line['particulars'].strip()
             product_name = line['service/product'].strip()
-            acc_code = line['gl account'].strip()
-            seq_code = line['sequence'].strip()
-            branch_code = line['branch'].strip()
+            acc_code = line['gl account'].strip()[:8]
+            seq_code = line['gl account'].strip()[:11]
+            branch_code = line['branch'].strip()[-3:]
             cc_code = line['cost centre'].strip()
-            advance_amount = float(line['approved advance'].strip().replace(',', ''))
+            advance_amount = abs(float(line['approved advance'].strip().replace(',', '')))
             currency_code = line['currency'].strip()
 
             if not name:
@@ -245,6 +244,7 @@ class GBSFileImportWizard(models.TransientModel):
                 val['active'] = True
                 val['state'] = 'approve'
                 val['type'] = 'single'
+                val['is_bulk_data'] = True
 
                 self.env['vendor.advance'].create(val)
                 print(line_no)
