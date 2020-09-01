@@ -34,15 +34,14 @@ class PaymentInstruction(models.Model):
     advance_id = fields.Many2one('vendor.advance', string="Advance", copy=False)
     security_return_id = fields.Many2one('vendor.security.return', string='Security Return', copy=False)
     reconcile_ref = fields.Char(string="Reconciliation Ref#", size=20)
-
+    move_id = fields.Many2one('account.move', string='Journal', readonly=True,  copy=False)
+    is_submit = fields.Boolean(string='Payment Submitted', copy=False, default=False, track_visibility='onchange')
 
     @api.model
     def create(self, vals):
         if vals.get('code', 'New') == 'New':
             vals['code'] = self.env['ir.sequence'].next_by_code('payment.instruction.sequence') or ''
         return super(PaymentInstruction, self).create(vals)
-
-
 
     @api.multi
     def action_reject(self):
