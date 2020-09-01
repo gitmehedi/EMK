@@ -60,8 +60,8 @@
                         <field name="warranty_date" readonly="True"/>
                         <field name="date" readonly="True"/>
                         <field name="asset_usage_date" readonly="True"/>
-                        <field name="lst_depr_date"/>
                         <field name="dmc_date"/>
+                        <field name="lst_depr_date"/>
                         <field name="code" invisible="1"/>
                         <field name="type" invisible="1"/>
                         <field name="allocation_status" invisible="True"/>
@@ -78,7 +78,8 @@
                         <field name="sub_operating_unit_id" readonly="True"
                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         <field name="cost_centre_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                        <field name="reconcile_ref" groups="base.group_no_one"/>
+                        <field name="reconcile_ref" groups="account_fam.grp_fixasset_manager"
+                               attrs="{'invisible':[('reconcile_ref','=',False)]}"/>
                         <field name="currency_id" groups="base.group_multi_currency"
                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         <field name="company_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
