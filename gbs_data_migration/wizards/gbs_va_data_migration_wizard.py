@@ -140,7 +140,7 @@ class GBSFileImportWizard(models.TransientModel):
         partner = {val.name: val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
         product = {val.name: val.id for val in self.env['product.product'].search([('active', '=', True)])}
         aa = {val.code: val.id for val in self.env['account.account'].search([('active', '=', True)])}
-        sequence = {val.account_id.code + '-' + val.code: val.id for val in self.env['sub.operating.unit'].search([('active', '=', True)])}
+        sequence = {val.account_id.code + val.code: val.id for val in self.env['sub.operating.unit'].search([('active', '=', True)])}
         branch = {val.code: val.id for val in self.env['operating.unit'].search([('active', '=', True)])}
         cc = {val.code: val.id for val in self.env['account.analytic.account'].search([('active', '=', True)])}
         currency = {val.code: val.id for val in self.env['res.currency'].search([('active', '=', True)])}
@@ -154,7 +154,7 @@ class GBSFileImportWizard(models.TransientModel):
             raise ValidationError(_('Please Select File.'))
 
         index = 0
-        errors = ""
+        errors, data_list = "", []
 
         self._err_log = ''
         lines, header = self._remove_leading_lines(self.lines)
@@ -163,11 +163,10 @@ class GBSFileImportWizard(models.TransientModel):
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
 
         allow_header = [
-            'name',
-            'partner',
+            'reference',
+            'vendor',
             'service/product',
             'gl account',
-            'sequence',
             'branch',
             'cost centre',
             'approved advance',
@@ -178,6 +177,7 @@ class GBSFileImportWizard(models.TransientModel):
         # retrieve existing data from database
         partner, product, aa, sequence, branch, cc, currency = self.get_existing_data()
 
+        # validation
         for line in reader:
             if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):
                 if len(line.keys()) > len(allow_header):
@@ -189,49 +189,72 @@ class GBSFileImportWizard(models.TransientModel):
 
             index += 1
             line_no = index + 1
+            is_valid = True
             val = {}
 
-            name = line['name'].strip()
-            vendor = line['partner'].strip()
+            reference = line['reference'].strip()
+            vendor = line['vendor'].strip()
             particulars = line['particulars'].strip()
             product_name = line['service/product'].strip()
-            acc_code = line['gl account'].strip()
-            seq_code = line['sequence'].strip()
-            branch_code = line['branch'].strip()
+            acc_code = line['gl account'].strip()[:8]
+            seq_code = line['gl account'].strip()[:11]
+            branch_code = line['branch'].strip()[-3:]
             cc_code = line['cost centre'].strip()
-            advance_amount = float(line['approved advance'].strip().replace(',', ''))
+            advance_amount = abs(float(line['approved advance'].strip().replace(',', '')))
             currency_code = line['currency'].strip()
 
-            if not name:
-                errors += self.format_error(line_no, 'Vendor Name [{0}] invalid value'.format(name)) + '\n'
+            if not reference:
+                is_valid = False
+                errors += self.format_error(line_no, 'Vendor Advance Name [{0}] invalid value'.format(reference)) + '\n'
+            else:
+                vendor_advance_id = self.env['vendor.advance'].search([('name', '=', reference), ('type', '=', 'single')])
+                if len(vendor_advance_id.ids) > 0:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Vendor Advance Name [{0}] already exist'.format(reference)) + '\n'
 
             if vendor not in partner.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor)) + '\n'
 
             if product_name not in product.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Service/Product [{0}] invalid value'.format(product_name)) + '\n'
 
             if acc_code not in aa.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'GL Account [{0}] invalid value'.format(acc_code)) + '\n'
 
+            if acc_code in aa.keys():
+                account_id = self.env['account.account'].search([('id', '=', aa[acc_code])])
+                if not account_id.reconcile:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'GL Account is not reconcile type') + '\n'
+                if account_id.reconcile and not reference:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Reconcile Reference [{0}] invalid value'.format(reference)) + '\n'
+
             if seq_code not in sequence.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Sequence [{0}] invalid value'.format(seq_code)) + '\n'
 
             if branch_code not in branch.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Branch [{0}] invalid value'.format(branch_code)) + '\n'
 
             if cc_code not in cc.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Cost Center [{0}] invalid value'.format(cc_code)) + '\n'
 
             if currency_code not in currency.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Currency Code [{0}] invalid value'.format(currency_code)) + '\n'
 
             current_date = datetime.datetime.now()
             val['date'] = str(current_date.month) + '/' + str(current_date.day) + '/' + str(current_date.year)
 
-            # if data is valid, create model object.
-            if len(errors) == 0:
-                val['name'] = name
+            if is_valid:
+                val['name'] = reference
+                val['reconcile_ref'] = reference
                 val['partner_id'] = partner[vendor]
                 val['description'] = particulars
                 val['product_id'] = product[product_name]
@@ -245,14 +268,16 @@ class GBSFileImportWizard(models.TransientModel):
                 val['active'] = True
                 val['state'] = 'approve'
                 val['type'] = 'single'
+                val['is_bulk_data'] = True
 
-                self.env['vendor.advance'].create(val)
-                print(line_no)
+                data_list.append(val)
 
-        end = time.time()
-        print('Total Execution Time: {0}'.format(end - start))
-
-        if len(errors) > 0:
+        if len(errors) == 0:
+            for item in data_list:
+                self.env['vendor.advance'].create(item)
+        else:
             file_path = os.path.join(os.path.expanduser("~"), "VA_ERR_" + fields.Datetime.now())
             with open(file_path, "w+") as file:
                 file.write(errors)
+
+            raise Warning('You have invalid data and a file has been created for invalid data.')
