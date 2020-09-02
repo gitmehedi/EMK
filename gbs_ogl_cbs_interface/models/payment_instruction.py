@@ -8,6 +8,10 @@ class PaymentInstruction(models.Model):
 
     @api.multi
     def action_approve(self):
+        if not self.move_id.report_process:
+            raise ValidationError(
+                _("Journal [{0}] is not process yet in CBS. Please check in MDC File.".format(self.move_id.name)))
+
         payment = self.search([('id', '=', self.id), ('is_sync', '=', False), ('state', '=', 'draft')])
         if not payment:
             raise ValidationError(_("Payment Instruction [{0}] already submitted.".format(self.code)))

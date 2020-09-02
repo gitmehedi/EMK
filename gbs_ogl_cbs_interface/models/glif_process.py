@@ -273,6 +273,8 @@ class ServerFileProcess(models.Model):
                                 if destination.put(local_path, dest_path):
                                     os.remove(local_path)
                                     source.unlink(source_path)
+                                    for move in mdc_rec[file].line_ids:
+                                        move.move_id.write({'report_process': True})
 
                         else:
                             os.remove(local_path)

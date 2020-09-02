@@ -19,6 +19,12 @@ class ResCompany(models.Model):
     batch_date = fields.Date(string='MDMC/BULK Upload Date', default=fields.Date.today)
 
 
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    report_process = fields.Boolean(default=False, string='Process')
+
+
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 

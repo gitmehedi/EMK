@@ -7,20 +7,15 @@
         <field name="arch" type="xml">
             <form string="Payment Instruction" create="false" delete="false" edit="false">
                 <header>
-                    <field name="is_submit" invisible="1"/>
                     <button name="action_approve" string="Approve" type="object"
                             class="oe_highlight"
-                            attrs="{'invisible': [('is_submit', '=', False), ('state', '=', 'draft')]}"/>
+                           />
                     <button name="action_reject" string="Reject" type="object"
-                            attrs="{'invisible': [('is_submit', '=', False), ('state', '=', 'draft')]}"/>
+                            />
                     <button name="action_reset" string="Reset" type="object"
                             states="cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
                 </header>
-                <div class="alert alert-danger" role="alert" style="margin:0px; text-align: center;"
-                     attrs="{'invisible': [('is_submit','!=',False)]}">
-                    <strong>MDC is not process yet</strong>
-                </div>
                 <sheet>
                     <h1>
                         <field name="code"/>

@@ -79,7 +79,7 @@ class AccountAssetAsset(models.Model):
     @api.model_cr
     def init(self):
         self._cr.execute("""
-            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER, narr_date TEXT) 
+            CREATE OR REPLACE FUNCTION asset_depreciation(date DATE,user_id INTEGER,journal_id INTEGER,opu_id INTEGER,company_id INTEGER, narr_date TEXT,sys_date DATE) 
                     RETURNS INTEGER AS $$
                     DECLARE
                     rec RECORD;
@@ -123,7 +123,7 @@ class AccountAssetAsset(models.Model):
                          AND aaa.allocation_status=True';
                          
                     INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date) 
-                        VALUES ('/','Asset depreciation date '||depr_date ,journal_id,company_id,CURRENT_DATE,opu_id,user_id,'draft',False,False,False,user_id,user_id,NOW(),NOW())
+                        VALUES ('/','Asset Depreciation on '|| depr_date ,journal_id,company_id,sys_date,opu_id,user_id,'draft',False,False,False,user_id,user_id,sys_date,sys_date)
                         RETURNING account_move.id INTO move;
                 
                     FOR rec IN EXECUTE query
@@ -194,7 +194,10 @@ class AccountAssetAsset(models.Model):
                     END LOOP;
                     move_query='SELECT aaa.current_branch_id,
                             aaa.cost_centre_id,
-							aac.name as type_name,
+							dsou.name as depr_name,
+							dsou.code as depr_code,
+	                        adsou.name as acc_depr_name,
+	                        adsou.code as acc_depr_code,
                             aac.account_depreciation_id,
                             aac.account_depreciation_seq_id,
                             aac.account_depreciation_expense_id,
@@ -205,12 +208,19 @@ class AccountAssetAsset(models.Model):
                                ON (aaa.asset_type_id = aac.id)
                         LEFT JOIN account_asset_depreciation_line aadl
                                ON (aadl.asset_id = aaa.id)
+                        LEFT JOIN sub_operating_unit dsou
+                               ON (dsou.id = aac.account_depreciation_expense_seq_id)
+                        LEFT JOIN sub_operating_unit adsou
+                               ON (adsou.id = aac.account_depreciation_seq_id)
                         WHERE  aaa.depreciation_flag=False 
                              AND aaa.allocation_status=True
                              AND aadl.move_id= '|| move || 
                          'GROUP BY aaa.current_branch_id,
                             aaa.cost_centre_id,
-							aac.name,
+							dsou.name,
+							dsou.code,
+	                        adsou.name,
+	                        adsou.code,
                             aac.account_depreciation_id,
                             aac.account_depreciation_seq_id,
                             aac.account_depreciation_expense_id,
@@ -220,10 +230,10 @@ class AccountAssetAsset(models.Model):
                     LOOP
                           -- insert credit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_bgl,company_id)
-                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.account_depreciation_expense_seq_id,mrec.cost_centre_id,depr_date,depr_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW(),'not_check',company_id);
+                          VALUES ('Depreciation on ' || mrec.depr_code || '-' || mrec.depr_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_expense_id,mrec.current_branch_id,mrec.account_depreciation_expense_seq_id,mrec.cost_centre_id,sys_date,sys_date,mrec.depr_sum,0,user_id,user_id,NOW(),NOW(),'not_check',company_id);
                           -- insert debit amount in account.move.line
                           INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_bgl,company_id)
-                          VALUES ('Depreciation on '|| mrec.type_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.account_depreciation_seq_id,mrec.cost_centre_id,depr_date,depr_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW(),'not_check',company_id);
+                          VALUES ('Depreciation on ' || mrec.acc_depr_code || '-' || mrec.acc_depr_name || narr_date,mrec.account_depreciation_id,journal_id,move,mrec.account_depreciation_id,mrec.current_branch_id,mrec.account_depreciation_seq_id,mrec.cost_centre_id,sys_date,sys_date,0,mrec.depr_sum,user_id,user_id,NOW(),NOW(),'not_check',company_id);
                         
                     END LOOP;
                     RETURN move;
@@ -323,8 +333,9 @@ class AccountAssetAsset(models.Model):
         company_id = self.env.user.company_id.id
         opu_id = self.env.user.default_operating_unit_id.id
         narr_date = datetime.strptime(date, DATE_FORMAT).strftime(' - %b, %Y')
-        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s,'%s')""" % (
-            date, self.env.uid, journal_id.id, opu_id, company_id, narr_date));
+        system_date = self.env.user.company_id.batch_date
+        self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s,'%s','%s')""" % (
+            date, self.env.uid, journal_id.id, opu_id, company_id, narr_date, system_date));
         debit, credit = 0, 0
         for val in self.env.cr.fetchall():
             move = self.env['account.move'].search([('id', '=', val[0])])
@@ -402,6 +413,7 @@ class AccountAssetAsset(models.Model):
     def create_move(self, line, date):
         created_moves = self.env['account.move']
         prec = self.env['decimal.precision'].precision_get('Account')
+        sys_date = self.env.user.company_id.batch_date
 
         if line:
             if line.move_id:
@@ -420,10 +432,9 @@ class AccountAssetAsset(models.Model):
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
             amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
-            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
-            narration = 'Depreciation on ' + line.asset_id.asset_type_id.name + date.strftime(' - %b, %Y')
+
             move_line_1 = {
-                'name': narration,
+                'name': 'Depreciation on ' + category_id.account_depreciation_seq_id.name + date.strftime(' - %b, %Y'),
                 'account_id': category_id.account_depreciation_id.id,
                 'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
                 'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
@@ -434,9 +445,13 @@ class AccountAssetAsset(models.Model):
                 'sub_operating_unit_id': category_id.account_depreciation_seq_id.id if category_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
+                'date': sys_date,
+                'date_maturity': sys_date,
+                'company_id': self.env.user.company_id.id,
             }
             move_line_2 = {
-                'name': narration,
+                'name': 'Depreciation on ' + category_id.account_depreciation_expense_seq_id.name + date.strftime(
+                    ' - %b, %Y'),
                 'account_id': category_id.account_depreciation_expense_id.id,
                 'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
                 'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
@@ -447,10 +462,13 @@ class AccountAssetAsset(models.Model):
                 'sub_operating_unit_id': category_id.account_depreciation_expense_seq_id.id if category_id else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and line.amount or 0.0,
+                'date': sys_date,
+                'date_maturity': sys_date,
+                'company_id': self.env.user.company_id.id,
             }
             move_vals = {
-                'ref': line.asset_id.asset_seq,
-                'date': fields.Datetime.now(),
+                'ref': 'Asset Depreciation on {0}'.format(depreciation_date),
+                'date': sys_date,
                 'journal_id': category_id.journal_id.id,
                 'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
             }
