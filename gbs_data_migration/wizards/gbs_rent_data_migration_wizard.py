@@ -279,9 +279,9 @@ class GBSFileImportWizard(models.TransientModel):
                 is_valid = False
                 errors += self.format_error(line_no, 'Start Date [{0}] invalid value'.format(start_date)) + '\n'
 
-            if not self.date_validate(end_date):
-                is_valid = False
-                errors += self.format_error(line_no, 'End Date [{0}] invalid value'.format(end_date)) + '\n'
+            # if not self.date_validate(end_date):
+            #     is_valid = False
+            #     errors += self.format_error(line_no, 'End Date [{0}] invalid value'.format(end_date)) + '\n'
 
             if additional_service and additional_service not in product.keys():
                 is_valid = False
