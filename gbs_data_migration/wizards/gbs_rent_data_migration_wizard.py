@@ -160,7 +160,7 @@ class GBSFileImportWizard(models.TransientModel):
             raise ValidationError(_('Please Select File.'))
 
         index = 0
-        errors = ""
+        errors, data_list = "", []
 
         self._err_log = ''
         lines, header = self._remove_leading_lines(self.lines)
@@ -169,8 +169,8 @@ class GBSFileImportWizard(models.TransientModel):
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
 
         allow_header = [
-            'name',
-            'partner',
+            'reference',
+            'vendor',
             'service/product',
             'gl account',
             'sequence',
@@ -212,10 +212,11 @@ class GBSFileImportWizard(models.TransientModel):
 
             index += 1
             line_no = index + 1
+            is_valid = True
             val = {}
 
-            name = line['name'].strip()
-            vendor = line['partner'].strip()
+            reference = line['reference'].strip()
+            vendor = line['vendor'].strip()
             product_name = line['service/product'].strip()
             acc_code = line['gl account'].strip()
             seq_code = line['sequence'].strip()
@@ -243,68 +244,92 @@ class GBSFileImportWizard(models.TransientModel):
             currency_code = line['currency'].strip()
 
             if vendor not in partner.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor)) + '\n'
 
             if vendor in partner.keys() and PAYMENT_TYPE[payment_type] == 'casa':
                 vendor_obj = self.env['res.partner'].search([('id', '=', partner[vendor])])
                 if not vendor_obj.vendor_bank_acc:
+                    is_valid = False
                     errors += self.format_error(line_no, 'Vendor Bank Account of {0} [{1}] invalid value'.format(vendor, vendor_obj.vendor_bank_acc)) + '\n'
 
             if product_name not in product.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Service/Product [{0}] invalid value'.format(product_name)) + '\n'
 
             if acc_code not in aa.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'GL Account [{0}] invalid value'.format(acc_code)) + '\n'
 
+            if acc_code in aa.keys():
+                account_id = self.env['account.account'].search([('id', '=', aa[acc_code])])
+                if account_id.reconcile and not reference:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Reconcile Reference [{0}] invalid value'.format(reference)) + '\n'
+
             if seq_code not in sequence.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Sequence [{0}] invalid value'.format(seq_code)) + '\n'
 
             if branch_code not in branch.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Branch [{0}] invalid value'.format(branch_code)) + '\n'
 
             if not self.date_validate(start_date):
+                is_valid = False
                 errors += self.format_error(line_no, 'Start Date [{0}] invalid value'.format(start_date)) + '\n'
 
             if not self.date_validate(end_date):
+                is_valid = False
                 errors += self.format_error(line_no, 'End Date [{0}] invalid value'.format(end_date)) + '\n'
 
             if additional_service and additional_service not in product.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Additional Service [{0}] invalid value'.format(additional_service)) + '\n'
 
             if rent_type not in RENT_TYPE.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Rent Type [{0}] invalid value'.format(rent_type)) + '\n'
 
             if billing_period not in BILLING_PERIOD.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Billing Period [{0}] invalid value'.format(billing_period)) + '\n'
 
             if vat_name and vat_name not in vat.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'VAT [{0}] invalid value'.format(vat_name)) + '\n'
 
             if tds_name and tds_name not in tds.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'TDS [{0}] invalid value'.format(tds_name)) + '\n'
 
             if cc_code not in cc.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Cost Center [{0}] invalid value'.format(cc_code)) + '\n'
 
             if payment_type not in PAYMENT_TYPE.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Payment Type [{0}] invalid value'.format(payment_type)) + '\n'
 
             if PAYMENT_TYPE[payment_type] == 'credit':
                 if cr_acc_code not in aa.keys():
+                    is_valid = False
                     errors += self.format_error(line_no, 'Credit Account [{0}] invalid value'.format(cr_acc_code)) + '\n'
 
                 if cr_seq_code not in sequence.keys():
+                    is_valid = False
                     errors += self.format_error(line_no, 'Credit Sequence [{0}] invalid value'.format(cr_seq_code)) + '\n'
 
                 if cr_branch_code not in branch.keys():
+                    is_valid = False
                     errors += self.format_error(line_no, 'Credit Branch [{0}] invalid value'.format(cr_branch_code)) + '\n'
 
             if currency_code not in currency.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Currency Code [{0}] invalid value'.format(currency_code)) + '\n'
 
-            # if data is valid, create model object.
-            if len(errors) == 0:
-                val['name'] = name
+            if is_valid:
+                val['name'] = reference
                 val['partner_id'] = partner[vendor]
                 val['description'] = particulars
                 val['product_id'] = product[product_name]
@@ -339,18 +364,17 @@ class GBSFileImportWizard(models.TransientModel):
                     val['credit_sub_operating_unit_id'] = sequence[cr_seq_code]
                     val['credit_operating_unit_id'] = branch[cr_branch_code]
 
-                rent_id = self.env['vendor.advance'].create(val)
+                data_list.append(val)
 
-                if not name or name == 'N/A':
+        if len(errors) == 0:
+            for item in data_list:
+                rent_id = self.env['vendor.advance'].create(item)
+                if not item['name']:
                     name = rent_id.get_seq()
                     rent_id.write({'name': name})
-
-                print(line_no)
-
-        end = time.time()
-        print('Total Execution Time: {0}'.format(end - start))
-
-        if len(errors) > 0:
+        else:
             file_path = os.path.join(os.path.expanduser("~"), "RENT_ERR_" + fields.Datetime.now())
             with open(file_path, "w+") as file:
                 file.write(errors)
+
+            raise Warning('You have invalid data and a file has been created for invalid data.')

@@ -154,7 +154,7 @@ class GBSFileImportWizard(models.TransientModel):
             raise ValidationError(_('Please Select File.'))
 
         index = 0
-        errors = ""
+        errors, data_list = "", []
 
         self._err_log = ''
         lines, header = self._remove_leading_lines(self.lines)
@@ -163,7 +163,7 @@ class GBSFileImportWizard(models.TransientModel):
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
 
         allow_header = [
-            'name',
+            'reference',
             'vendor',
             'gl account',
             'branch',
@@ -186,9 +186,10 @@ class GBSFileImportWizard(models.TransientModel):
 
             index += 1
             line_no = index + 1
+            is_valid = True
             val = {}
 
-            name = line['name'].strip()
+            reference = line['reference'].strip()
             vendor = line['vendor'].strip()
             acc_code = line['gl account'].strip()[:8]
             seq_code = line['gl account'].strip()[:11]
@@ -197,27 +198,47 @@ class GBSFileImportWizard(models.TransientModel):
             particulars = line['particulars'].strip()
             currency_code = line['currency'].strip()
 
-            if not name:
-                errors += self.format_error(line_no, 'Vendor Name [{0}] invalid value'.format(name)) + '\n'
+            if not reference:
+                is_valid = False
+                errors += self.format_error(line_no, 'Vendor Security Deposit Name [{0}] invalid value'.format(reference)) + '\n'
+            else:
+                vsd_id = self.env['vendor.security.deposit'].search([('name', '=', reference)])
+                if len(vsd_id.ids) > 0:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Vendor Security Deposit Name [{0}] already exist'.format(reference)) + '\n'
 
             if vendor not in partner.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor)) + '\n'
 
             if acc_code not in aa.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'GL Account [{0}] invalid value'.format(acc_code)) + '\n'
 
+            if acc_code in aa.keys():
+                account_id = self.env['account.account'].search([('id', '=', aa[acc_code])])
+                if not account_id.reconcile:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'GL Account is not reconcile type') + '\n'
+                if account_id.reconcile and not reference:
+                    is_valid = False
+                    errors += self.format_error(line_no, 'Reconcile Reference [{0}] invalid value'.format(reference)) + '\n'
+
             if seq_code not in sequence.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Sequence [{0}] invalid value'.format(seq_code)) + '\n'
 
             if branch_code not in branch.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Branch [{0}] invalid value'.format(branch_code)) + '\n'
 
             if currency_code not in currency.keys():
+                is_valid = False
                 errors += self.format_error(line_no, 'Currency Code [{0}] invalid value'.format(currency_code)) + '\n'
 
-            # if data is valid, create model object.
-            if len(errors) == 0:
-                val['name'] = name
+            if is_valid:
+                val['name'] = reference
+                val['reconcile_ref'] = reference
                 val['partner_id'] = partner[vendor]
                 val['description'] = particulars
                 val['account_id'] = aa[acc_code]
@@ -228,13 +249,14 @@ class GBSFileImportWizard(models.TransientModel):
                 val['active'] = True
                 val['state'] = 'approve'
 
-                self.env['vendor.security.deposit'].create(val)
-                print(line_no)
+                data_list.append(val)
 
-        end = time.time()
-        print('Total Execution Time: {0}'.format(end - start))
-
-        if len(errors) > 0:
+        if len(errors) == 0:
+            for item in data_list:
+                self.env['vendor.security.deposit'].create(item)
+        else:
             file_path = os.path.join(os.path.expanduser("~"), "VSD_ERR_" + fields.Datetime.now())
             with open(file_path, "w+") as file:
                 file.write(errors)
+
+            raise Warning('You have invalid data and a file has been created for invalid data.')
