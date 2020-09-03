@@ -135,6 +135,14 @@ class GBSFileImportWizard(models.TransientModel):
 
         return is_valid
 
+    @staticmethod
+    def convert_amount_str(amount_str):
+        amount = 0.0
+        if len(amount_str) > 0:
+            amount = abs(float(amount_str))
+
+        return amount
+
     @api.multi
     def get_existing_data(self):
         partner = {val.name: val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
@@ -200,7 +208,7 @@ class GBSFileImportWizard(models.TransientModel):
             seq_code = line['gl account'].strip()[:11]
             branch_code = line['branch'].strip()[-3:]
             cc_code = line['cost centre'].strip()
-            advance_amount = abs(float(line['approved advance'].strip().replace(',', '')))
+            advance_amount = self.convert_amount_str(line['approved advance'].strip().replace(',', ''))
             currency_code = line['currency'].strip()
 
             if not reference:
@@ -244,6 +252,10 @@ class GBSFileImportWizard(models.TransientModel):
             if cc_code not in cc.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'Cost Center [{0}] invalid value'.format(cc_code)) + '\n'
+
+            if advance_amount == 0:
+                is_valid = False
+                errors += self.format_error(line_no, 'Advance Amount [{0}] invalid value'.format(advance_amount)) + '\n'
 
             if currency_code not in currency.keys():
                 is_valid = False

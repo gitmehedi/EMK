@@ -139,6 +139,14 @@ class GBSFileImportWizard(models.TransientModel):
 
         return is_valid
 
+    @staticmethod
+    def convert_amount_str(amount_str):
+        amount = 0.0
+        if len(amount_str) > 0:
+            amount = abs(float(amount_str))
+
+        return amount
+
     @api.multi
     def get_existing_data(self):
         partner = {val.name: val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
@@ -228,13 +236,13 @@ class GBSFileImportWizard(models.TransientModel):
             billing_period = line['billing period'].strip()
             vat_name = line['vat'].strip()
             tds_name = line['tds'].strip()
-            area = float(line['area (ft)'].strip().replace(',', ''))
-            rate = float(line['rate'].strip().replace(',', ''))
-            advance_amount = float(line['approved advance'].strip().replace(',', ''))
-            adjusted_amount = float(line['adjusted amount'].strip().replace(',', ''))
-            adjustment_value = float(line['adjustment value'].strip().replace(',', ''))
-            service_value = float(line['service value'].strip().replace(',', ''))
-            additional_service_value = float(line['ad. service value'].strip().replace(',', ''))
+            area = self.convert_amount_str(line['area (ft)'].strip().replace(',', ''))
+            rate = self.convert_amount_str(line['rate'].strip().replace(',', ''))
+            advance_amount = self.convert_amount_str(line['approved advance'].strip().replace(',', ''))
+            adjusted_amount = self.convert_amount_str(line['adjusted amount'].strip().replace(',', ''))
+            adjustment_value = self.convert_amount_str(line['adjustment value'].strip().replace(',', ''))
+            service_value = self.convert_amount_str(line['service value'].strip().replace(',', ''))
+            additional_service_value = self.convert_amount_str(line['ad. service value'].strip().replace(',', ''))
             particulars = line['particulars'].strip()
             cc_code = line['cost centre'].strip()
             payment_type = line['payment to'].strip()
@@ -302,6 +310,18 @@ class GBSFileImportWizard(models.TransientModel):
             if tds_name and tds_name not in tds.keys():
                 is_valid = False
                 errors += self.format_error(line_no, 'TDS [{0}] invalid value'.format(tds_name)) + '\n'
+
+            if service_value <= 0:
+                is_valid = False
+                errors += self.format_error(line_no, 'Service Value [{0}] invalid value'.format(service_value)) + '\n'
+
+            if adjustment_value > service_value:
+                is_valid = False
+                errors += self.format_error(line_no, 'Adjustment Value can not be greater than Service Value') + '\n'
+
+            if adjustment_value > advance_amount:
+                is_valid = False
+                errors += self.format_error(line_no, 'Adjustment Value can not be greater than Approved Advance') + '\n'
 
             if cc_code not in cc.keys():
                 is_valid = False
