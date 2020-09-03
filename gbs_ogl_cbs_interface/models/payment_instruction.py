@@ -10,7 +10,7 @@ class PaymentInstruction(models.Model):
     def action_approve(self):
         if not self.move_id.report_process:
             raise ValidationError(
-                _("Journal [{0}] is not process yet in CBS. Please check in MDC File.".format(self.move_id.name)))
+                _("The originating journal [{0}] yet to sync in CBS. Please try later.".format(self.move_id.name)))
 
         payment = self.search([('id', '=', self.id), ('is_sync', '=', False), ('state', '=', 'draft')])
         if not payment:
