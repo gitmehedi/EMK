@@ -20,7 +20,7 @@ class VendorBillGeneration(models.Model):
     @api.depends('line_ids')
     def _compute_approve_payment_button(self):
         for rec in self:
-            status_list = [line.payment_instruction_state=='draft' for line in rec.line_ids if line.payment_instruction_id]
+            status_list = list({line.payment_instruction_state=='draft' for line in rec.line_ids if line.payment_instruction_id})
             if True in status_list:
                 rec.approve_payment_button_visible = True
             else:
@@ -45,7 +45,9 @@ class VendorBillGeneration(models.Model):
                         line.payment_instruction_id.action_approve()
                     except Exception:
                         pass
-            rec.write({'state': 'payment_approve'})
+            status_list = list({line.payment_instruction_id.state == 'draft' for line in rec.line_ids if line.payment_instruction_id})
+            if len(status_list) == 1 and not status_list[0]:
+                rec.write({'state': 'payment_approve'})
 
     def create_payment_instruction(self, vbg_line):
         invoice_id = vbg_line.invoice_id if vbg_line.invoice_id else False
@@ -99,7 +101,8 @@ class VendorBillGeneration(models.Model):
             'credit_operating_unit_id': credit_branch,
             'credit_sub_operating_unit_id': credit_sou,
             'narration': invoice_id.invoice_line_ids[0].name,
-            'reconcile_ref': reconcile_ref
+            'reconcile_ref': reconcile_ref,
+            'move_id': invoice_id.move_id.id
         }
         return payment_values
 
