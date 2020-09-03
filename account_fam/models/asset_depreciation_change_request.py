@@ -121,7 +121,7 @@ class AssetDepreciationChangeRequest(models.Model):
             lines = []
 
             for asset in assets:
-                usage_date = datetime.strptime(asset.date, DATE_FORMAT) + relativedelta(years=self.asset_life)
+                usage_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(years=self.asset_life)
                 dmc_date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
                 if dmc_date > usage_date:
                     if not move:
@@ -141,6 +141,8 @@ class AssetDepreciationChangeRequest(models.Model):
                                  'method_progress_factor': 0.0,
                                  'dmc_date': dmc_date,
                                  'lst_depr_date': dmc_date,
+                                 'end_of_date': usage_date,
+                                 'depr_base_value': asset.value_residual,
                                  })
 
             if move:

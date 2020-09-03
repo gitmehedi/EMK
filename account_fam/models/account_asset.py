@@ -71,6 +71,7 @@ class AccountAssetAsset(models.Model):
     lst_depr_amount = fields.Float(string='Last Depr. Amount', readonly=True, track_visibility='onchange', store=True)
     awaiting_dispose_date = fields.Date(string='Awaiting Dispose Date', readonly=True, track_visibility='onchange')
     dmc_date = fields.Date(string='DMC Date', readonly=True, track_visibility='onchange')
+    end_of_date = fields.Date(string='End of Date')
     reconcile_ref = fields.Char(string='Reconcile Ref', size=20, readonly=True)
     asset_status = fields.Selection([('active', 'Active'),
                                      ('sell', 'Sell'),
@@ -137,12 +138,20 @@ class AccountAssetAsset(models.Model):
                 
                     IF no_days > 0 AND rec.state='open' AND rec.method !='no_depreciation' THEN
                         IF rec.method = 'linear' THEN
-                          degr_start = DATE_PART('year', depr_date) || '-01-01';
-                          degr_end = DATE_PART('year', depr_date) || '-12-31';
-                          delta_days =  degr_end -  degr_start + 1;
-
                           IF rec.value_residual > 0 THEN
+                              IF rec.dmc_date IS NOT NULL THEN
+                                delta_days =  (rec.end_of_date -  rec.dmc_date)::integer;
+								IF delta_days > 0 THEN
+                                	daily_depr = rec.depr_base_value  / delta_days;
+								ELSE
+									daily_depr = 0;
+								END IF;
+                              ELSE
+                                degr_start = DATE_PART('year', depr_date) || '-01-01';
+                                degr_end = DATE_PART('year', depr_date) || '-12-31';
+                                delta_days =  degr_end -  degr_start + 1;
                                 daily_depr = (rec.depr_base_value / rec.depreciation_year) / delta_days;
+                              END IF;
                           ELSE
                                 daily_depr = 0;
                           END IF;
@@ -359,11 +368,19 @@ class AccountAssetAsset(models.Model):
 
             if no_of_days > 0:
                 if asset.method == 'linear':
-                    year = date.year
-                    date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
-
                     if asset.value_residual > 0:
-                        daily_depr = (asset.depr_base_value / asset.depreciation_year) / date_delta
+                        if asset.dmc_date:
+                            end_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(
+                                years=asset.depreciation_year)
+                            date_delta = (end_date - self.date_str_format(asset.dmc_date)).days
+                            if date_delta>0:
+                                daily_depr = asset.depr_base_value / date_delta
+                            else:
+                                daily_depr = 0;
+                        else:
+                            year = date.year
+                            date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
+                            daily_depr = (asset.depr_base_value / asset.depreciation_year) / date_delta
                     else:
                         daily_depr = 0;
 
