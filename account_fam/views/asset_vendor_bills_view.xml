@@ -154,6 +154,7 @@
                                     <field name="amount_vat_payable" widget="monetary"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    <field name="amount_payable" readonly="1" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                                     <!--<field name="amount_tds" class="oe_subtotal_footer_separator" widget="monetary"/>-->
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
