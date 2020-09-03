@@ -5,11 +5,63 @@ from odoo.exceptions import UserError, ValidationError
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'ir.needaction_mixin']
+    amount_payable = fields.Float('Payable To Supplier', readonly=True, copy=False,
+                                       compute='_compute_amount_payable')
 
     def _get_date_invoice(self):
         return self.env.user.company_id.batch_date
 
     date_invoice = fields.Date(default=_get_date_invoice, required=True)
+
+    @api.depends('adjusted_advance', 'invoice_line_ids', 'tax_line_ids', 'adjustable_vat', 'adjustable_tds', 'security_deposit')
+    def _compute_amount_payable(self):
+        for inv in self:
+            payable = 0
+            self.env.context = dict(self.env.context)
+            self.env.context.update({
+                'noonchange': True,
+            })
+            # counting invoice line amount
+            for inv_line in inv.invoice_line_ids:
+                price = inv_line.price_subtotal
+                for tax in inv_line.invoice_line_tax_ids:
+                    if len(tax.children_tax_ids) > 0:
+                        for ctax in tax.children_tax_ids:
+                            # considering include in expense
+                            if ctax.include_in_expense:
+                                if ctax.is_vat:
+                                    price += inv_line.price_tax
+                                else:
+                                    price += inv_line.price_tds
+                    else:
+                        if tax.include_in_expense:
+                            if tax.is_vat:
+                                price += inv_line.price_tax
+                            else:
+                                price += inv_line.price_tds
+                payable += price
+
+            # considering if the vat or tax rules are reverse
+            for tax_line in inv.tax_line_ids:
+                if tax_line.tax_id.is_reverse:
+                    payable -= tax_line.amount
+                else:
+                    payable += tax_line.amount
+
+            # considering adjusted advance amount
+            if inv.adjusted_advance > 0:
+                payable -= inv.adjusted_advance
+
+            # considering adjustable vat and tds
+            if inv.adjustable_vat > 0 or inv.adjustable_tds > 0:
+                payable += inv.adjustable_vat
+                payable += inv.adjustable_tds
+
+            # considering security deposit
+            if inv.security_deposit > 0:
+                payable -= inv.security_deposit
+
+            inv.amount_payable = payable
 
     @api.model
     def create(self, vals):

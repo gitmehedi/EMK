@@ -87,6 +87,9 @@
             <xpath expr="//page/group/group/field[@name='account_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
+            <xpath expr="//field[@name='residual']" position="after">
+                <field name="amount_payable" readonly="1" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+            </xpath>
         </field>
     </record>
 
