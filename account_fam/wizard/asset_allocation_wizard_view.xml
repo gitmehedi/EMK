@@ -7,10 +7,11 @@
             <form string="Fixed Assets Allocation">
                 <group>
                     <group>
-                        <field name="date"/>
+                        <field name="date" readonly="True"/>
+                        <field name="usage_date"
+                               attrs="{'invisible':[('is_allocate','=',False)],'required':[('is_allocate','=',True)]}"/>
                         <field name="warranty_date"
                                attrs="{'invisible':[('is_allocate','=',False)],'required':[('is_allocate','=',True)]}"/>
-                        <field name="asset_user"/>
                         <field name="narration"/>
                         <field name="is_allocate" invisible="True"/>
                     </group>
@@ -20,6 +21,7 @@
                         <field name="to_operating_unit_id"
                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="cost_centre_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="asset_user"/>
                     </group>
                 </group>
                 <footer>

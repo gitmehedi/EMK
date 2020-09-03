@@ -2,10 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, Warning
 from odoo.tools import float_compare, float_is_zero
+
+DATE_FORMAT = "%Y-%m-%d"
 
 
 class AssetAllocationWizard(models.TransientModel):
@@ -40,6 +43,7 @@ class AssetAllocationWizard(models.TransientModel):
     asset_user = fields.Char("Asset User")
     date = fields.Date(string='Allocation/Transfer Date', required=True, default=default_date)
     warranty_date = fields.Date(string='Warranty Date', default=default_warranty_date)
+    usage_date = fields.Date(string='Usage Date', default=default_warranty_date)
     operating_unit_id = fields.Many2one('operating.unit', string='From Branch', readonly=True,
                                         default=default_from_branch)
     to_operating_unit_id = fields.Many2one('operating.unit', string='To Branch', required=True)
@@ -48,16 +52,27 @@ class AssetAllocationWizard(models.TransientModel):
     narration = fields.Char(string='Narration', required=True)
     is_allocate = fields.Boolean(default=default_status)
 
-    @api.constrains('date', 'warranty_date')
+    @api.constrains('date', 'warranty_date', 'usage_date')
     def check_warranty_date(self):
-        if self.env.user.company_id.batch_date > self.date:
-            raise Warning(_('Date should not be less than system date.'))
+        sys_date = self.env.user.company_id.batch_date
 
-        if self.env.user.company_id.batch_date > self.warranty_date:
-            raise Warning(_('Warranty Date should not be less than system date.'))
+        if self.usage_date:
+            provision_diff = datetime.strptime(sys_date, DATE_FORMAT) - relativedelta(years=3)
+            provision_date = provision_diff.strftime(DATE_FORMAT)
 
-        if ('allocation' in self.env.context) and (self.date > self.warranty_date):
-            raise Warning(_('Warranty Date should not be greater than Allocation/Transfer Date.'))
+            if self.usage_date > sys_date:
+                raise ValidationError(
+                    _('Usage date [{0}] should not be greater than current OGL application date [{1}]'.format(
+                        self.usage_date, sys_date)))
+            if provision_date > self.usage_date:
+                raise ValidationError(
+                    _(
+                        'Usage date [{0}] should not be less than 3 years earlier from OGL application date [{1}].'.format(
+                            self.usage_date, sys_date)))
+        if self.warranty_date:
+            if self.usage_date > self.warranty_date:
+                raise ValidationError(_('Warranty date [{0}] should not be less than usage date [{1}].'.format(
+                    self.warranty_date, self.usage_date)))
 
     @api.multi
     def allocation(self):
@@ -82,7 +97,7 @@ class AssetAllocationWizard(models.TransientModel):
                             _("Asset Allocation/Transfer date shouldn\'t less than previous Allocation/Transfer date."))
 
                     last_allocation.write({
-                        'transfer_date': datetime.strptime(self.date, '%Y-%m-%d') + timedelta(days=-1),
+                        'transfer_date': datetime.strptime(self.date, '%Y-%m-%d'),
                         'state': 'inactive',
                     })
 
@@ -125,7 +140,8 @@ class AssetAllocationWizard(models.TransientModel):
                     }
 
                     move = self.env['account.move'].create({
-                        'ref': asset.code,
+                        'ref': 'Asset allocation from branch [{0}] to [{1}]'.format(self.operating_unit_id.name,
+                                                                                  self.to_operating_unit_id.name),
                         'journal_id': asset.asset_type_id.journal_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         # 'sub_operating_unit_id': cur_sub_operating_unit,
@@ -208,7 +224,8 @@ class AssetAllocationWizard(models.TransientModel):
                     }
 
                     move = self.env['account.move'].create({
-                        'ref': asset.asset_usage_date,
+                        'ref': 'Asset transfer from branch [{0}] to [{1}]'.format(self.operating_unit_id.name,
+                                                                                  self.to_operating_unit_id.name),
                         'journal_id': asset.asset_type_id.journal_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'line_ids': [(0, 0, from_total_credit), (0, 0, to_total_debit),
@@ -225,7 +242,8 @@ class AssetAllocationWizard(models.TransientModel):
                                  })
             else:
                 flag = 'Active' if asset.depreciation_flag else 'In-Active'
-                raise Warning(_('Asset [{0}] is in Status [{1}] with Awaiting Disposal [{2}]'.format(asset.display_name,
-                                                                                                     asset.state,
-                                                                                                     flag)))
+                raise ValidationError(
+                    _('Asset [{0}] is in Status [{1}] with Awaiting Disposal [{2}]'.format(asset.display_name,
+                                                                                           asset.state,
+                                                                                           flag)))
         return {'type': 'ir.actions.act_window_close'}
