@@ -82,7 +82,10 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
-                                           domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
+                                           domain="['|', ('code', '=ilike', '2%'), ('code', '=ilike', '4%'),
+                                           ('company_id', '=', parent.company_id),
+                                           ('internal_type', '=', 'other'), ('deprecated', '=', False),
+                                           ('originating_type', '!=', 'credit')]"/>
                                     <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"

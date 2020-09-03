@@ -71,6 +71,10 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//page[1]/field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                <attribute name="domain">['|', ('code', '=ilike', '2%'), ('code', '=ilike', '4%'), ('company_id', '=', parent.company_id),
+                       ('internal_type', '=', 'other'), ('deprecated', '=', False), ('originating_type', '!=', 'credit')]</attribute>
+            </xpath>
             <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
