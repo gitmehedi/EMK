@@ -13,9 +13,9 @@ class SubOperatingUnit(models.Model):
 
     name = fields.Char('Name', required=True, size=200, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
-    code = fields.Char('Code', required=True, size=3, track_visibility='onchange', readonly=True,
+    code = fields.Char('Sequence', required=True, size=3, track_visibility='onchange', readonly=True,
                        states={'draft': [('readonly', False)]})
-    account_id = fields.Many2one('account.account', string='GL Account', readonly=True,
+    account_id = fields.Many2one('account.account', string='CGL Account', readonly=True,
                                  states={'draft': [('readonly', False)]}, required=True)
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)]})

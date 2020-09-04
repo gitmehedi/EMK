@@ -109,7 +109,7 @@
     </record>
 
     <record id="action_sub_operating_unit_tree" model="ir.actions.act_window">
-        <field name="name">Sequence</field>
+        <field name="name">BGL Accounts</field>
         <field name="res_model">sub.operating.unit</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
