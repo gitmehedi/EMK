@@ -217,6 +217,8 @@ delete from server_file_error;
 delete from server_file_error_line;
 delete from server_file_success;
 delete from gbs_data_migration;
+delete from soap_process_error;
+delete from system_date_status;
 
 -- Delete all Journal Entries
 delete from account_move_line;
