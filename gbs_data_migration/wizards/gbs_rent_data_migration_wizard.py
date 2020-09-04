@@ -159,8 +159,8 @@ class GBSFileImportWizard(models.TransientModel):
 
     @api.multi
     def get_existing_data(self):
-        partner = {val.name: val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
-        product = {val.name: val.id for val in self.env['product.product'].search([('active', '=', True)])}
+        partner = {val.name.strip().upper(): val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
+        product = {val.name.strip().upper(): val.id for val in self.env['product.product'].search([('active', '=', True)])}
         aa = {val.code: val.id for val in self.env['account.account'].search([('active', '=', True)])}
         sequence = {val.account_id.code + '-' + val.code: val.id for val in self.env['sub.operating.unit'].search([('active', '=', True)])}
         branch = {val.code: val.id for val in self.env['operating.unit'].search([('active', '=', True)])}
@@ -234,14 +234,14 @@ class GBSFileImportWizard(models.TransientModel):
             val = {}
 
             reference = line['reference'].strip()
-            vendor = line['vendor'].strip()
-            product_name = line['service/product'].strip()
+            vendor = line['vendor'].strip().upper()
+            product_name = line['service/product'].strip().upper()
             acc_code = line['gl account'].strip()
             seq_code = line['sequence'].strip()
             branch_code = self.check_leading_zero(line['branch'].strip())
             start_date = line['start date'].strip()
             end_date = line['end date'].strip()
-            additional_service = line['additional service'].strip()
+            additional_service = line['additional service'].strip().upper()
             rent_type = line['rent type'].strip()
             billing_period = line['billing period'].strip()
             vat_name = line['vat'].strip()
@@ -263,7 +263,7 @@ class GBSFileImportWizard(models.TransientModel):
 
             if vendor not in partner.keys():
                 is_valid = False
-                errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor)) + '\n'
+                errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(line['vendor'].strip())) + '\n'
 
             if vendor in partner.keys() and PAYMENT_TYPE[payment_type] == 'casa':
                 vendor_obj = self.env['res.partner'].search([('id', '=', partner[vendor])])
@@ -273,7 +273,7 @@ class GBSFileImportWizard(models.TransientModel):
 
             if product_name not in product.keys():
                 is_valid = False
-                errors += self.format_error(line_no, 'Service/Product [{0}] invalid value'.format(product_name)) + '\n'
+                errors += self.format_error(line_no, 'Service/Product [{0}] invalid value'.format(line['service/product'].strip())) + '\n'
 
             if acc_code not in aa.keys():
                 is_valid = False
@@ -303,7 +303,7 @@ class GBSFileImportWizard(models.TransientModel):
 
             if additional_service and additional_service not in product.keys():
                 is_valid = False
-                errors += self.format_error(line_no, 'Additional Service [{0}] invalid value'.format(additional_service)) + '\n'
+                errors += self.format_error(line_no, 'Additional Service [{0}] invalid value'.format(line['additional service'].strip())) + '\n'
 
             if rent_type not in RENT_TYPE.keys():
                 is_valid = False
