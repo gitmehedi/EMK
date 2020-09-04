@@ -13,7 +13,7 @@ class ResPartner(models.Model):
         # Check for Unique Name
         if self.name:
             vendor_id = self.search([('name', '=ilike', self.name.strip()), ('supplier', '=', True)])
-            if len(vendor_id.ids) > 0:
+            if len(vendor_id.ids) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
     @api.constrains('vendor_bank_acc')
