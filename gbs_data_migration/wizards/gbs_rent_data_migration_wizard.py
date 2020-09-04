@@ -147,6 +147,16 @@ class GBSFileImportWizard(models.TransientModel):
 
         return amount
 
+    @staticmethod
+    def check_leading_zero(code_str):
+        code = code_str
+        if len(code) == 1:
+            code = '00' + code
+        if len(code) == 2:
+            code = '0' + code
+
+        return code
+
     @api.multi
     def get_existing_data(self):
         partner = {val.name: val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
@@ -228,7 +238,7 @@ class GBSFileImportWizard(models.TransientModel):
             product_name = line['service/product'].strip()
             acc_code = line['gl account'].strip()
             seq_code = line['sequence'].strip()
-            branch_code = line['branch'].strip()
+            branch_code = self.check_leading_zero(line['branch'].strip())
             start_date = line['start date'].strip()
             end_date = line['end date'].strip()
             additional_service = line['additional service'].strip()
@@ -244,11 +254,11 @@ class GBSFileImportWizard(models.TransientModel):
             service_value = self.convert_amount_str(line['service value'].strip().replace(',', ''))
             additional_service_value = self.convert_amount_str(line['ad. service value'].strip().replace(',', ''))
             particulars = line['particulars'].strip()
-            cc_code = line['cost centre'].strip()
+            cc_code = self.check_leading_zero(line['cost centre'].strip())
             payment_type = line['payment to'].strip()
             cr_acc_code = line['credit account'].strip()
             cr_seq_code = line['credit sequence'].strip()
-            cr_branch_code = line['credit branch'].strip()
+            cr_branch_code = self.check_leading_zero(line['credit branch'].strip())
             currency_code = line['currency'].strip()
 
             if vendor not in partner.keys():
