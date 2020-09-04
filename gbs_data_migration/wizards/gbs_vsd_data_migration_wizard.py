@@ -145,8 +145,8 @@ class GBSFileImportWizard(models.TransientModel):
 
     @api.multi
     def get_existing_data(self):
-        partner = {val.name: val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
-        product = {val.name: val.id for val in self.env['product.product'].search([('active', '=', True)])}
+        partner = {val.name.strip().upper(): val.id for val in self.env['res.partner'].search([('supplier', '=', True), ('active', '=', True)])}
+        product = {val.name.strip().upper(): val.id for val in self.env['product.product'].search([('active', '=', True)])}
         aa = {val.code: val.id for val in self.env['account.account'].search([('active', '=', True)])}
         sequence = {val.account_id.code + val.code: val.id for val in self.env['sub.operating.unit'].search([('active', '=', True)])}
         branch = {val.code: val.id for val in self.env['operating.unit'].search([('active', '=', True)])}
@@ -198,7 +198,7 @@ class GBSFileImportWizard(models.TransientModel):
             val = {}
 
             reference = line['reference'].strip()
-            vendor = line['vendor'].strip()
+            vendor = line['vendor'].strip().upper()
             acc_code = line['gl account'].strip()[:8]
             seq_code = line['gl account'].strip()[:11]
             branch_code = line['branch'].strip()[-3:]
@@ -217,7 +217,7 @@ class GBSFileImportWizard(models.TransientModel):
 
             if vendor not in partner.keys():
                 is_valid = False
-                errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(vendor)) + '\n'
+                errors += self.format_error(line_no, 'Vendor [{0}] invalid value'.format(line['vendor'].strip())) + '\n'
 
             if acc_code not in aa.keys():
                 is_valid = False
