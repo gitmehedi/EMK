@@ -209,6 +209,7 @@ delete from account_asset_depreciation_history_line;
 delete from account_asset_depreciation_history;
 delete from account_asset_depreciation_line;
 delete from account_asset_asset;
+delete from asset_depreciation_change_request;
 
 -- Delete all Interface entries
 delete from generate_cbs_journal_success;
