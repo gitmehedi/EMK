@@ -7,11 +7,10 @@
         <field name="arch" type="xml">
             <form string="Payment Instruction" create="false" delete="false" edit="false">
                 <header>
-                    <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight"
-                           />
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '=', 'approved')]}"/>
                     <button name="action_reject" string="Reject" type="object"
-                            />
+                            attrs="{'invisible': [('state', '=', 'approved')]}"/>
                     <button name="action_reset" string="Reset" type="object"
                             states="cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
@@ -80,8 +79,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Payment Instruction" edit="0" create="0" delete="0" duplicate="0"
-                  decoration-info="state == 'draft'" decoration-success="state == 'approved'"
-                  decoration-muted="state in ('cancel') ">
+                  decoration-info="state == 'draft'" decoration-muted="state == 'approved'"
+                  decoration-danger="state in ('cancel') ">
                 <field name="code"/>
                 <field name="invoice_id"/>
                 <field name="advance_id"/>
