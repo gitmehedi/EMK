@@ -35,7 +35,7 @@ class ResPartnerWizard(models.TransientModel):
                                                      domain="[('internal_type', '=', 'receivable')]")
     property_account_payable_id = fields.Many2one('account.account', string='Account Payable',
                                                   domain="[('internal_type', '=', 'payable')]")
-    vendor_bank_acc = fields.Char(string='Vendor Bank Account')
+    vendor_bank_acc = fields.Char(string='Vendor Bank Account',size=13)
     division_id = fields.Many2one('bd.division', string='Division')
     district_id = fields.Many2one('bd.district', string='District')
     upazila_id = fields.Many2one('bd.upazila', string='Upazila/Thana')

@@ -19,8 +19,8 @@ class VendorAdvance(models.Model):
     payment_type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa',
                                     string='Payment To', readonly=True, states={'draft': [('readonly', False)]},
                                     track_visibility='onchange', required=True)
-    vendor_bank_acc = fields.Char(string='Vendor Bank Account', related='partner_id.vendor_bank_acc', readonly=True,
-                                  track_visibility='onchange')
+    vendor_bank_acc = fields.Char(string='Vendor Bank Account', related='partner_id.vendor_bank_acc', size=13,
+                                  readonly=True, track_visibility='onchange')
     credit_account_id = fields.Many2one('account.account', string='Credit Account', track_visibility='onchange',
                                         readonly=True, states={'draft': [('readonly', False)]})
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence',

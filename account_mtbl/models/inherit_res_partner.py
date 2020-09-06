@@ -18,8 +18,12 @@ class ResPartner(models.Model):
 
     @api.constrains('vendor_bank_acc')
     def _constrains_vendor_bank_acc(self):
-        if self.vendor_bank_acc and len(self.vendor_bank_acc) != 13:
-            raise Warning('Vendor Bank Account must be 14 digit.')
+        if self.vendor_bank_acc:
+            if len(self.vendor_bank_acc) != 13:
+                raise Warning('Vendor Bank Account must be 13 digit.')
+
+            if not self.vendor_bank_acc.isdigit():
+                raise Warning('[Format Error] Vendor Account must be numeric!')
 
     @api.onchange('vendor_bank_acc')
     def _onchange_vendor_bank_acc(self):

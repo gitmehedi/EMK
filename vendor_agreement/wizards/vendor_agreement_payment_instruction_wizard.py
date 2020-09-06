@@ -26,7 +26,7 @@ class AgreementPaymentInstructionWizard(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string='Vendor',
                                  default=lambda self: self.env.context.get('partner_id'))
     type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], default='casa', string='Payment To')
-    vendor_bank_acc = fields.Char(related='partner_id.vendor_bank_acc', string='Vendor Bank Account')
+    vendor_bank_acc = fields.Char(related='partner_id.vendor_bank_acc', string='Vendor Bank Account',size=13,)
     narration = fields.Char(string='Narration', size=30, required=True)
 
     @api.constrains('amount')
