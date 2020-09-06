@@ -16,8 +16,8 @@
                 <attribute name="attrs">{'invisible': ['|', ('line_ids', '=', []), ('state', 'in', ('confirm', 'approve', 'bill_generate', 'bill_validate', 'payment_done', 'cancel', 'payment_approve'))]}</attribute>
             </xpath>
             <xpath expr="//notebook/page/field/tree/field[@name='move_id']" position="after">
-                <field name="payment_instruction_id"/>
-                <field name="payment_instruction_state"/>
+                <field name="payment_instruction_id" readonly="1"/>
+                <field name="payment_instruction_state" readonly="1"/>
             </xpath>
         </field>
     </record>
