@@ -473,7 +473,7 @@ class AccountAssetAsset(models.Model):
                 'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
                 'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id if category_id.journal_id else False,
-                'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,git commi
+                'partner_id': line.asset_id.partner_id.id if line.asset_id.partner_id else False,
                 'analytic_account_id': line.asset_id.cost_centre_id.id if line.asset_id.cost_centre_id else False,
                 'operating_unit_id': line.asset_id.current_branch_id.id,
                 'sub_operating_unit_id': category_id.account_depreciation_expense_seq_id.id if category_id else False,

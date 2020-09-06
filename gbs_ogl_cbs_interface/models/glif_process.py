@@ -374,10 +374,10 @@ class ServerFileProcess(models.Model):
                             previous_date = company.batch_date
 
                             try:
-                                company.sudo().write({'batch_date': batch_date})
-                                self.env['ir.values'].sudo().set_default('account.config.settings', 'batch_date',
-                                                                         batch_date)
-                                if company.batch_date == batch_date:
+                                if previous_date != batch_date:
+                                    company.sudo().write({'batch_date': batch_date})
+                                    self.env['ir.values'].sudo().set_default('account.config.settings', 'batch_date',
+                                                                             batch_date)
                                     self.env['system.date.status'].create({'current_date': batch_date,
                                                                            'previous_date': previous_date,
                                                                            'state': 'success',
