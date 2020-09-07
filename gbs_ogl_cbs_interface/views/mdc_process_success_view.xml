@@ -53,7 +53,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="CBS Batch Success" edit="0" create="0" delete="0" duplicate="0"
-                  decoration-success="state=='mdc'" decoration-muted="state=='report'">
+                  decoration-danger="state=='mdc'" decoration-muted="state=='report'"
+                  decoration-bf="state=='mdc'">
                 <field name="name"/>
                 <field name="journal_count"/>
                 <field name="date" string="MDC Process Time"/>
@@ -74,7 +75,7 @@
                 <group name="group_by">
                     <filter string="MDC" icon="terp-personal"
                             domain="[('state','=','mdc')]"/>
-                    <filter string="Report"  icon="terp-personal"
+                    <filter string="Report" icon="terp-personal"
                             domain="[('state','=','report')]"/>
                 </group>
             </search>
@@ -91,5 +92,6 @@
     </record>
 
     <menuitem parent="main_error_api_interface" action="action_mdc_process_form"
-              id="mdc_process_menu" sequence="10" groups="grp_api_interface_manager,grp_api_group_finance,grp_api_branc_user"/>
+              id="mdc_process_menu" sequence="10"
+              groups="grp_api_interface_manager,grp_api_group_finance,grp_api_branc_user"/>
 </odoo>

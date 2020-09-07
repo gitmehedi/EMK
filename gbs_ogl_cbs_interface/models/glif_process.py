@@ -985,6 +985,10 @@ class GenerateCBSJournalSuccess(models.Model):
         for rec in self:
             rec.journal_count = len(rec.line_ids)
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'mdc')]
+
 
 class CBSJournalLine(models.Model):
     _name = 'cbs.journal.line'
