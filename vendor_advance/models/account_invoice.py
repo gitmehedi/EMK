@@ -36,7 +36,7 @@ class AccountInvoice(models.Model):
     def update_move_lines_with_agreement(self, move_lines,amount):
         if amount:
             for line in move_lines:
-                if line[2]['name'] == '/':
+                if line[2]['account_id'] == self.partner_id.property_account_payable_id.id:
                     if amount>line[2]['credit']:
                         amount = line[2]['credit']
                         self.agreement_adjusted_amount = amount

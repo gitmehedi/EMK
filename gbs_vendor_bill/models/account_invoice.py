@@ -182,7 +182,7 @@ class AccountInvoice(models.Model):
     def finalize_invoice_move_lines(self, move_lines):
         if self.security_deposit > 0.0:
             for line in move_lines:
-                if line[2]['name'] == '/':
+                if line[2]['account_id'] == self.partner_id.property_account_payable_id.id:
                     line[2]['credit'] = line[2]['credit'] - self.security_deposit
             if self.env.user.company_id.head_branch_id:
                 branch_id = self.env.user.company_id.head_branch_id.id
