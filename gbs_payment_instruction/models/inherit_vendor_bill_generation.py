@@ -29,25 +29,26 @@ class VendorBillGeneration(models.Model):
     @api.multi
     def action_payment(self):
         for rec in self:
-            # invoice_ids = self.env['account.invoice'].search([('vbg_batch_id', '=', rec.id)])
-            for line in rec.line_ids:
-                if line.invoice_id:
-                    if line.invoice_id.state == 'open':
-                        rec.create_payment_instruction(line)
-            rec.write({'state': 'payment_done'})
+            if rec.state == 'bill_validate':
+                for line in rec.line_ids:
+                    if line.invoice_id:
+                        if line.invoice_id.state == 'open':
+                            rec.create_payment_instruction(line)
+                rec.write({'state': 'payment_done'})
 
     @api.multi
     def action_approve_payment(self):
         for rec in self:
-            for line in rec.line_ids:
-                if line.payment_instruction_id.state == 'draft':
-                    try:
-                        line.payment_instruction_id.action_approve()
-                    except Exception:
-                        pass
-            status_list = list({line.payment_instruction_id.state == 'draft' for line in rec.line_ids if line.payment_instruction_id})
-            if len(status_list) == 1 and not status_list[0]:
-                rec.write({'state': 'payment_approve'})
+            if rec.state == 'payment_done':
+                for line in rec.line_ids:
+                    if line.payment_instruction_id.state == 'draft':
+                        try:
+                            line.payment_instruction_id.action_approve()
+                        except Exception:
+                            pass
+                status_list = list({line.payment_instruction_id.state == 'draft' for line in rec.line_ids if line.payment_instruction_id})
+                if len(status_list) == 1 and not status_list[0]:
+                    rec.write({'state': 'payment_approve'})
 
     def create_payment_instruction(self, vbg_line):
         invoice_id = vbg_line.invoice_id if vbg_line.invoice_id else False
