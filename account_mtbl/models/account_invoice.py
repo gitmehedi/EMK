@@ -5,8 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'ir.needaction_mixin']
-    amount_payable = fields.Float('Payable To Supplier', readonly=True, copy=False,
-                                       compute='_compute_amount_payable')
+    amount_payable = fields.Float('Payable To Supplier', readonly=True, copy=False, compute='_compute_amount_payable')
 
     def _get_date_invoice(self):
         return self.env.user.company_id.batch_date
@@ -121,7 +120,7 @@ class AccountInvoice(models.Model):
         count = 1
         for line in move_lines:
             val = line[2]
-            if val['name'] == '/':
+            if val['account_id'] == self.partner_id.property_account_payable_id.id:
                 val_ou = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
                 # val['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id or False
                 val['operating_unit_id'] = val_ou.id or False
@@ -132,7 +131,8 @@ class AccountInvoice(models.Model):
                         "[Configuration Error] Please configure Sequence for the following Vendor: \n {}".format(
                             self.partner_id.name))
                 val['reconcile_ref'] = self.get_reconcile_ref(self.account_id.id, self.id)
-            elif ('product_id' in val and val['product_id']>0):
+
+            elif 'product_id' in val and val['product_id'] > 0:
                 val['reconcile_ref'] = self.get_reconcile_ref(val['account_id'], str(self.id) + str(count))
                 count = count + 1
 
