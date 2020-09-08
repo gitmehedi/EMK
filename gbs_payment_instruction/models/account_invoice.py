@@ -28,7 +28,7 @@ class AccountInvoice(models.Model):
     def _compute_payment_btn_visible(self):
         for record in self:
             if record.state == 'open':
-                if round(record.residual, 2) <= round(record.total_payment_amount, 2):
+                if round(self.amount_payable, 2) <= round(record.total_payment_amount, 2):
                     record.payment_btn_visible = False
                 else:
                     record.payment_btn_visible = True
@@ -37,12 +37,12 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_payment_instruction(self):
-        # if self.residual <= 0.0:
-        #     raise ValidationError(_('There is no remaining balance for this Bill!'))
-        #
-        # if self.residual <= sum(line.amount for line in self.payment_line_ids if line.state == 'draft'):
-        #     raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
-        #                             ' no new payment instruction can possible!'))
+        if self.residual <= 0.0:
+            raise ValidationError(_('There is no remaining balance for this Bill!'))
+
+        if self.residual <= sum(line.amount for line in self.payment_line_ids if line.state == 'draft'):
+            raise ValidationError(_('Without Approval/Rejection of previous payment instruction'
+                                    ' no new payment instruction can possible!'))
 
         res = self.env.ref('gbs_payment_instruction.view_bill_payment_instruction_wizard')
         op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
@@ -57,7 +57,7 @@ class AccountInvoice(models.Model):
             'nodestroy': True,
             'target': 'new',
             'context': {
-                'amount': round(abs(self.residual - self.total_payment_amount), 2) or 0.0,
+                'amount': round(self.amount_payable - self.total_payment_amount, 2) or 0.0,
                 'currency_id': self.currency_id.id or False,
                 # 'op_unit': self.invoice_line_ids[0].operating_unit_id.id or False,
                 'op_unit': op_unit.id or False,

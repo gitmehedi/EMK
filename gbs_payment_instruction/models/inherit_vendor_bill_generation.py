@@ -89,7 +89,7 @@ class VendorBillGeneration(models.Model):
             'invoice_id': invoice_id.id or False,
             'advance_id': False,
             'security_return_id': False,
-            'instruction_date': fields.Date.context_today(self),
+            'instruction_date': self.env.user.company_id.batch_date,
             'amount': invoice_id.residual - invoice_id.total_payment_amount,
             'currency_id': invoice_id.currency_id.id,
             'default_debit_account_id': debit_acc,

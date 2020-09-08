@@ -67,7 +67,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             if line.amount <= 0:
                 raise ValidationError(_("Amount should be more than zero (0)."))
             elif line.amount > rem_amount:
-                raise ValidationError(_("Sorry! This amount is bigger then remaining balance. "
+                raise ValidationError(_("Sorry! This amount is bigger than remaining balance. "
                                         "Remaining balance is %s") % (rem_amount))
 
     @api.onchange('credit_account_id')
@@ -78,6 +78,19 @@ class BillPaymentInstructionWizard(models.TransientModel):
     @api.multi
     def action_validate(self):
         # debit_acc = self.invoice_id.partner_id.property_account_payable_id.id
+        remaining = self.env.context.get('amount')
+        if self.invoice_id:
+            remaining = round(self.invoice_id.amount_payable - self.invoice_id.total_payment_amount,2)
+        elif self.advance_id:
+            if not self.advance_id.is_bulk_data:
+                remaining = round(self.advance_id.payable_to_supplier - self.advance_id.total_payment_amount, 2)
+            else:
+                remaining = round(self.advance_id.additional_advance_amount - self.advance_id.total_payment_amount, 2)
+        elif self.security_return_id:
+            remaining = round(self.security_return_id.amount - self.security_return_id.total_payment_amount, 2)
+        if self.amount > remaining:
+            raise ValidationError("This amount is bigger than remaining balance.The remaining balance is {}".format(abs(remaining)))
+
         debit_branch = self.debit_operating_unit_id.id or None
         if self.debit_sub_operating_unit_id:
             debit_sou = self.debit_sub_operating_unit_id.id
@@ -110,7 +123,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
             'invoice_id': self.invoice_id.id or False,
             'advance_id': self.advance_id.id or False,
             'security_return_id': self.security_return_id.id or False,
-            'instruction_date': self.instruction_date,
+            'instruction_date': self.env.user.company_id.batch_date,
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'default_debit_account_id': self.debit_account_id.id,
