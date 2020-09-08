@@ -281,6 +281,9 @@ class ServerFileProcess(models.Model):
 
     @api.multi
     def mdc_generate_process(self):
+        mdc = self.env['generate.cbs.journal.success'].search([('state', '=', 'mdc'), ('state', '!=', 'mdc_report')])
+        if len(mdc) > 0:
+            return False
         filename = self.generate_filename()
 
         def generate_file(record):
@@ -290,7 +293,8 @@ class ServerFileProcess(models.Model):
                                                         ('is_sync', '=', False),
                                                         ('is_opening', '=', False),
                                                         ('line_ids.is_bgl', '=', 'pass'),
-                                                        ('state', '=', 'posted')])
+                                                        ('state', '=', 'posted')], order='id ASC')
+
             with open(file_path, "w+") as file:
                 for vals in journals:
                     for val in vals.line_ids:
