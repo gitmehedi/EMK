@@ -15,8 +15,6 @@
                 </group>
                 <group string="Journal Entries">
                     <group>
-                        <field name="journal_id"
-                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                         <label for="account_asset_id"/>
                         <div>
                             <field name="account_asset_id"

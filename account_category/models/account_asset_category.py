@@ -40,11 +40,11 @@ class AccountAssetCategory(models.Model):
 
             self.asset_suspense_seq_id = self.parent_id.asset_suspense_seq_id
             self.account_asset_seq_id = self.parent_id.account_asset_seq_id
-            self.account_depreciation_seq_id = self.parent_id.account_depreciation_seq_id if self.parent_id.account_depreciation_seq_id else None
-            self.account_depreciation_expense_seq_id = self.parent_id.account_depreciation_expense_seq_id if self.parent_id.account_depreciation_expense_seq_id else None
             self.account_asset_loss_seq_id = self.parent_id.account_asset_loss_seq_id
             self.account_asset_gain_seq_id = self.parent_id.account_asset_gain_seq_id
             self.asset_sale_suspense_seq_id = self.parent_id.asset_sale_suspense_seq_id
+            self.account_depreciation_seq_id = self.parent_id.account_depreciation_seq_id if self.parent_id.account_depreciation_seq_id else None
+            self.account_depreciation_expense_seq_id = self.parent_id.account_depreciation_expense_seq_id if self.parent_id.account_depreciation_expense_seq_id else None
 
     @api.model
     def create(self, vals):

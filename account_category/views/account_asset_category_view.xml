@@ -106,26 +106,25 @@
                                        class="oe_inline" domain="[('account_id', 'in', [account_asset_gain_id])]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </div>
-                            <label for="account_depreciation_expense_id"/>
+                            <label for="account_depreciation_expense_id" attrs="{'invisible': [('method','=','no_depreciation')]}"/>
                             <div>
                                 <field name="account_depreciation_expense_id" class="oe_inline"
                                        domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                        attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="account_depreciation_expense_seq_id"
-                                       attrs="{'invisible': [('type','=', False)]}"
-                                       class="oe_inline"
+                                <field name="account_depreciation_expense_seq_id" class="oe_inline"
+                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
                                        domain="[('account_id', 'in', [account_depreciation_expense_id])]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </div>
-                            <label for="account_depreciation_id"/>
+                            <label for="account_depreciation_id" attrs="{'invisible': [('method','=','no_depreciation')]}"/>
                             <div>
                                 <field name="account_depreciation_id" class="oe_inline"
                                        domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                        attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="account_depreciation_seq_id"
-                                       attrs="{'invisible': [('type','=', False)]}"
+                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
                                        class="oe_inline" domain="[('account_id', 'in', [account_depreciation_id])]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </div>
@@ -145,21 +144,20 @@
                               decoration-bf="state in ('pending',)"
                               decoration-danger="state=='reject'">
                             <field name="change_name"/>
-                            <field name="journal_id"/>
                             <field name="account_asset_id"/>
                             <field name="account_asset_seq_id"/>
                             <field name="asset_suspense_account_id"/>
                             <field name="asset_suspense_seq_id"/>
-                            <field name="account_depreciation_id"/>
-                            <field name="account_depreciation_seq_id"/>
-                            <field name="account_depreciation_expense_id"/>
-                            <field name="account_depreciation_expense_seq_id"/>
+                            <field name="asset_sale_suspense_account_id"/>
+                            <field name="asset_sale_suspense_seq_id"/>
                             <field name="account_asset_loss_id"/>
                             <field name="account_asset_loss_seq_id"/>
                             <field name="account_asset_gain_id"/>
                             <field name="account_asset_gain_seq_id"/>
-                            <field name="asset_sale_suspense_account_id"/>
-                            <field name="asset_sale_suspense_seq_id"/>
+                            <field name="account_depreciation_expense_id"/>
+                            <field name="account_depreciation_expense_seq_id"/>
+                            <field name="account_depreciation_id"/>
+                            <field name="account_depreciation_seq_id"/>
                             <field name="method"/>
                             <field name="method_progress_factor"/>
                             <field name="depreciation_year"/>
