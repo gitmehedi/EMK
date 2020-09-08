@@ -13,7 +13,7 @@
                        context="{'default_type': 'purchase'}"
                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                 <field name="asset_type_id"
-                       domain="[('type', '=', 'purchase'),('parent_id', '!=',False)]"
+                       domain="[('type', '=', 'purchase'),('parent_id', '=',asset_category_id)]"
                        context="{'default_type': 'purchase'}"
                        attrs="{'required': [('type','=', 'asset'),('asset_category_id','!=',False)],'invisible': [('type','!=', 'asset')]}"
                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
