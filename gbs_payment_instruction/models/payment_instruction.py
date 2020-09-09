@@ -37,6 +37,7 @@ class PaymentInstruction(models.Model):
     security_return_id = fields.Many2one('vendor.security.return', string='Security Return', copy=False)
     reconcile_ref = fields.Char(string="Reconciliation Ref#", size=20)
     move_id = fields.Many2one('account.move', string='Journal', readonly=True, required=True, copy=False)
+    is_rent_bill = fields.Boolean(default=False, string='Rent Bill', copy=False)
 
     @api.model
     def create(self, vals):
