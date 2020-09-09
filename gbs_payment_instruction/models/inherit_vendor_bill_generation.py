@@ -34,12 +34,24 @@ class VendorBillGeneration(models.Model):
                     if line.invoice_id:
                         if line.invoice_id.state == 'open':
                             rec.create_payment_instruction(line)
-                rec.write({'state': 'payment_done'})
+                rec.write({'state': 'payment_done',
+                           'maker_id': self.env.user.id})
 
     @api.multi
     def action_approve_payment(self):
         for rec in self:
             if rec.state == 'payment_done':
+                if self.env.user.id == rec.maker_id.id and self.env.user.id != SUPERUSER_ID:
+                    raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+                error_journals = ''
+                error_journals_list = []
+                for val in rec.line_ids:
+                    if not val.payment_instruction_id.move_id.report_process:
+                        error_journals_list.append(val.payment_instruction_id.move_id.name)
+                        error_journals += "- {0}\t\n".format(val.payment_instruction_id.move_id.name)
+                if len(error_journals_list) > 0:
+                    raise ValidationError(_(
+                        "Following Originating journals yet to sync in CBS. Please Try Later\n\n{0}".format(error_journals)))
                 for line in rec.line_ids:
                     if line.payment_instruction_id.state == 'draft':
                         try:
@@ -48,7 +60,8 @@ class VendorBillGeneration(models.Model):
                             pass
                 status_list = list({line.payment_instruction_id.state == 'draft' for line in rec.line_ids if line.payment_instruction_id})
                 if len(status_list) == 1 and not status_list[0]:
-                    rec.write({'state': 'payment_approve'})
+                    rec.write({'state': 'payment_approve',
+                               'approver_id': self.env.user.id})
 
     def create_payment_instruction(self, vbg_line):
         invoice_id = vbg_line.invoice_id if vbg_line.invoice_id else False
@@ -101,9 +114,10 @@ class VendorBillGeneration(models.Model):
             'default_credit_account_id': credit_acc,
             'credit_operating_unit_id': credit_branch,
             'credit_sub_operating_unit_id': credit_sou,
-            'narration': invoice_id.invoice_line_ids[0].name,
+            'narration': invoice_id.invoice_line_ids[0].name or False,
             'reconcile_ref': reconcile_ref,
-            'move_id': invoice_id.move_id.id
+            'move_id': invoice_id.move_id.id,
+            'is_rent_bill': True
         }
         return payment_values
 
