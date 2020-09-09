@@ -43,6 +43,15 @@ class VendorBillGeneration(models.Model):
             if rec.state == 'payment_done':
                 if self.env.user.id == rec.maker_id.id and self.env.user.id != SUPERUSER_ID:
                     raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+                error_journals = ''
+                error_journals_list = []
+                for val in rec.line_ids:
+                    if not val.payment_instruction_id.move_id.report_process:
+                        error_journals_list.append(val.payment_instruction_id.move_id.name)
+                        error_journals += "- {0}\t\n".format(val.payment_instruction_id.move_id.name)
+                if len(error_journals_list) > 0:
+                    raise ValidationError(_(
+                        "Following Originating journals yet to sync in CBS. Please Try Later\n\n{0}".format(error_journals)))
                 for line in rec.line_ids:
                     if line.payment_instruction_id.state == 'draft':
                         try:
