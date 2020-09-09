@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
 
 
 class VendorAdvance(models.Model):
@@ -57,6 +58,7 @@ class VendorAdvance(models.Model):
     @api.onchange('account_id')
     def _onchange_account_id(self):
         for rec in self:
+            rec._check_valid_gl_account()
             rec.sub_operating_unit_id = None
 
     def get_debit_item_data(self, journal_id):
@@ -129,3 +131,14 @@ class VendorAdvance(models.Model):
         if self.company_id.security_deposit_account_id:
             res['reconcile_ref'] = self.get_reconcile_ref(self.company_id.security_deposit_account_id.id, self.name)
         return res
+
+    @api.constrains('account_id', 'type')
+    def check_security_deposit(self):
+        self._check_valid_gl_account()
+
+    def _check_valid_gl_account(self):
+        if self.type == 'multi' and self.account_id:
+            if self.account_id.originating_type == 'credit':
+                raise ValidationError("[Validation Error] Please select the appropiate GL Account")
+
+
