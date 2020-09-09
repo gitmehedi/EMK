@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
-from odoo.exceptions import Warning
+from odoo import models, fields, api, _, SUPERUSER_ID
+from odoo.exceptions import ValidationError
 from datetime import datetime
 from odoo.tools import float_compare, float_is_zero
 
@@ -67,7 +67,7 @@ class AccountAssetDisposal(models.Model):
     @api.one
     def action_approve(self):
         if len(self.line_ids) <= 0:
-            raise Warning(_('[Warning] Dispose List should not be empty.'))
+            raise ValidationError(_('[Warning] Dispose List should not be empty.'))
 
         if self.state == 'draft':
             single, duplicate, sell = [], [], []
@@ -83,10 +83,10 @@ class AccountAssetDisposal(models.Model):
                     duplicate.append(val.asset_id.asset_seq)
 
             if len(sell) > 0:
-                raise Warning(_(
+                raise ValidationError(_(
                     "[PROCESSED] Following assets are already Sold or Dispose.\n\n{0}".format(sell_str)))
             elif len(duplicate) > 0:
-                raise Warning(_(
+                raise ValidationError(_(
                     "[DUPLICATE] Following assets are duplicate in line.\n\n{0}".format(dup_str)))
 
             for rec in self.line_ids:
@@ -103,6 +103,9 @@ class AccountAssetDisposal(models.Model):
     @api.one
     def action_dispose(self):
         if self.state == 'approve':
+            if self.env.user.id == self.approve_user_id.id and self.env.user.id != SUPERUSER_ID:
+                raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+
             for rec in self.line_ids:
                 date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
                 dispose = self.generate_move(rec.asset_id)
@@ -174,7 +177,7 @@ class AccountAssetDisposal(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'dispose'):
-                raise Warning(_('[Warning] Approved and Disposed Record cannot deleted.'))
+                raise ValidationError(_('[Warning] Approved and Disposed Record cannot deleted.'))
         return super(AccountAssetDisposal, self).unlink()
 
     @api.model

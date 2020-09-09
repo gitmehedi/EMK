@@ -121,7 +121,8 @@ class AssetDepreciationChangeRequest(models.Model):
             lines = []
 
             for asset in assets:
-                usage_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(years=self.asset_life)
+                usage_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(
+                    years=self.asset_life)
                 dmc_date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
                 if dmc_date > usage_date:
                     if not move:
@@ -254,6 +255,13 @@ class AssetDepreciationChangeRequest(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', move_ids)],
         }
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('approve', 'confirm'):
+                raise Warning(_('[Warning] Approved and Confirm Record cannot deleted.'))
+        return super(AssetDepreciationChangeRequest, self).unlink()
 
 
 class AssetDepreciationChangeRequestLine(models.Model):
