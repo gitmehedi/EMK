@@ -15,3 +15,9 @@ class AccountInvoice(models.Model):
                 line[2]['name'] = narration
 
         return aml
+
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    invoice_line_id = fields.Many2one("account.invoice.line")

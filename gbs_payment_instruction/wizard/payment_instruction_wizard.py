@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+import re
 
 
 class BillPaymentInstructionWizard(models.TransientModel):
@@ -32,19 +33,24 @@ class BillPaymentInstructionWizard(models.TransientModel):
     narration = fields.Char(string="Narration", size=30, required=True)
     debit_account_id = fields.Many2one('account.account', string='Debit Account',
                                        default=lambda self: self.env.context.get('debit_acc'))
-    payment_type = fields.Selection([
-        ('invoice', "Invoice"),
-        ('advance', "Advance"),
-        ('security_return', "Security Return")], string="Payment Type",
-        default=lambda self: self.env.context.get('payment_type'))
-    advance_type = fields.Selection([
-        ('single', "Single"),
-        ('multi', "Multi")
-    ], string='Advance Type', related='advance_id.type')
+    payment_type = fields.Selection([('invoice', "Invoice"),
+                                     ('advance', "Advance"),
+                                     ('security_return', "Security Return")], string="Payment Type",
+                                    default=lambda self: self.env.context.get('payment_type'))
+    advance_type = fields.Selection([('single', "Single"),
+                                     ('multi', "Multi")
+                                     ], string='Advance Type', related='advance_id.type')
 
     credit_operating_unit_domain_ids = fields.Many2many('operating.unit',
                                                         compute="_compute_credit_operating_unit_domain_ids",
                                                         readonly=True, store=False)
+
+    @api.constrains('narration')
+    def _check_narration(self):
+        regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+
+        if regex.search(self.narration) != None:
+            raise ValidationError(_("Following special character is not allowed [@_!#$%^&*()<>?/\|}{~:]"))
 
     @api.multi
     @api.depends('credit_sub_operating_unit_id')
@@ -80,7 +86,7 @@ class BillPaymentInstructionWizard(models.TransientModel):
         # debit_acc = self.invoice_id.partner_id.property_account_payable_id.id
         remaining = self.env.context.get('amount')
         if self.invoice_id:
-            remaining = round(self.invoice_id.amount_payable - self.invoice_id.total_payment_amount,2)
+            remaining = round(self.invoice_id.amount_payable - self.invoice_id.total_payment_amount, 2)
         elif self.advance_id:
             if not self.advance_id.is_bulk_data:
                 remaining = round(self.advance_id.payable_to_supplier - self.advance_id.total_payment_amount, 2)
@@ -89,7 +95,8 @@ class BillPaymentInstructionWizard(models.TransientModel):
         elif self.security_return_id:
             remaining = round(self.security_return_id.amount - self.security_return_id.total_payment_amount, 2)
         if self.amount > remaining:
-            raise ValidationError("This amount is bigger than remaining balance.The remaining balance is {}".format(abs(remaining)))
+            raise ValidationError(
+                "This amount is bigger than remaining balance.The remaining balance is {}".format(abs(remaining)))
 
         debit_branch = self.debit_operating_unit_id.id or None
         if self.debit_sub_operating_unit_id:
