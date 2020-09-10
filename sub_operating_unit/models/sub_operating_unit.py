@@ -53,19 +53,19 @@ class SubOperatingUnit(models.Model):
     @api.one
     def name_get(self):
         name = self.name
-        if self.name and self.code:
+        if self.name and self.code and self.account_id.code:
             name = '%s-%s-%s' % (self.account_id.code, self.code, self.name)
         return (self.id, name)
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def name_search(self, name, args=None, operator='=ilike', limit=100):
         names1 = super(models.Model, self).name_search(name=name, args=args, operator=operator, limit=limit)
         names2 = []
         if name:
-            acc_code, seq_code = name.split('-') if name.find('-') != -1 else [False, name]
-            account_obj = self.env['account.account'].search([('code', '=', acc_code)])
-            domain = [('code', '=ilike', seq_code + '%'), ('account_id', '=', account_obj.id)] if account_obj.id else [('code', '=ilike', seq_code + '%')]
-            names2 = self.search(domain, limit=limit).name_get()
+            domain = ['|', '|', ('code', '=ilike', name + '%'), ('name', '=ilike', name + '%'),
+                      ('account_id.code', '=ilike', name + '%')]
+            names2 = self.search(domain, limit=limit, order='code ASC').name_get()
+
         return list(set(names1) | set(names2))[:limit]
 
     @api.onchange("name", "code")
