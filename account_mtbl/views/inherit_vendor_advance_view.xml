@@ -39,7 +39,7 @@
         <field name="inherit_id" ref="rent_agreement.rent_agreement_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='account_id']" position="replace">
-                <field name="account_id" domain="['|', ('originating_type', '!=', 'credit'), ('originating_type', '=', False)]"
+                <field name="account_id" domain="[('reconcile', '=', False), '|', ('originating_type', '!=', 'credit'), ('originating_type', '=', False)]"
                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
             </xpath>
             <xpath expr="//field[@name='account_id']" position="after">

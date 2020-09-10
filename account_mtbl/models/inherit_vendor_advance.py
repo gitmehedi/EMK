@@ -89,6 +89,7 @@ class VendorAdvance(models.Model):
         return res
 
     def get_supplier_credit_item_data(self, journal_id, supplier_credit_amount):
+        # this function will trigger at the approval of vendor advance/rent agreement
         res = super(VendorAdvance, self).get_supplier_credit_item_data(journal_id, supplier_credit_amount)
         op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
         res['operating_unit_id'] = op_unit.id or False
@@ -108,7 +109,10 @@ class VendorAdvance(models.Model):
         op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
         res['operating_unit_id'] = op_unit.id or False
         res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
-        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
+        ref = res['ref']
+        if len(self.move_ids) >= 1:
+            ref += str(len(self.move_ids))
+        res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], ref)
         return res
 
     def create_security_deposit(self):
@@ -123,6 +127,8 @@ class VendorAdvance(models.Model):
         account_obj = self.env['account.account'].search([('id', '=', account_id)])
         if account_obj.reconcile:
             reconcile_ref = account_obj.code + ref.replace('/', '')
+            if len(reconcile_ref) > 20:
+                reconcile_ref = reconcile_ref.replace('A', '')
 
         return reconcile_ref
 
@@ -138,7 +144,7 @@ class VendorAdvance(models.Model):
 
     def _check_valid_gl_account(self):
         if self.type == 'multi' and self.account_id:
-            if self.account_id.originating_type == 'credit':
+            if self. account_id.reconcile or self.account_id.originating_type == 'credit':
                 raise ValidationError("[Validation Error] Please select the appropiate GL Account")
 
 

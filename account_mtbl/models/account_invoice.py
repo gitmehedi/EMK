@@ -172,6 +172,7 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).get_security_deposit_move_data()
         if self.company_id.security_deposit_account_id:
             res['reconcile_ref'] = self.get_reconcile_ref(self.company_id.security_deposit_account_id.id, self.id)
+            res['name'] = self.invoice_line_ids[0].name or 'Security Deposit'
         return res
 
     # this function is required to pass the reconcile reference in adjusted advance move line
