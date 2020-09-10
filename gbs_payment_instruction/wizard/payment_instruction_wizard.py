@@ -120,11 +120,24 @@ class BillPaymentInstructionWizard(models.TransientModel):
         if self.invoice_id.id:
             # generate reconcile ref code (Vendor Bills)
             reconcile_ref = self.invoice_id.get_reconcile_ref(self.debit_account_id.id, self.invoice_id.id)
-        else:
+            move_id = self.invoice_id.move_id.id
+        elif self.advance_id:
+
             # generate reconcile ref code (Vendor Advances or Vendor Security Returns)
-            ref_code = self.advance_id.name or self.security_return_id.name
+            ref_code = self.advance_id.name #or self.security_return_id.name
+            if len(self.advance_id.move_ids) > 1:
+                ref_code += str(len(self.advance_id.move_ids) - 1)
             reconcile_ref = self.advance_id.get_reconcile_ref(self.debit_account_id.id, ref_code)
-        move_id = self.invoice_id.move_id.id or self.advance_id.journal_id.id or self.security_return_id.move_id.id or False
+            move_id = self.advance_id.move_ids[0].id
+        elif self.security_return_id:
+            ref_code = self.security_return_id.name
+            reconcile_ref = self.env['vendor.advance'].get_reconcile_ref(self.debit_account_id.id, ref_code)
+            move_id = self.security_return_id.move_id.id
+        else:
+            reconcile_ref = None
+            move_id = False
+
+        # move_id = self.invoice_id.move_id.id or self.advance_id.journal_id.id or self.security_return_id.move_id.id or False
 
         self.env['payment.instruction'].create({
             'invoice_id': self.invoice_id.id or False,
