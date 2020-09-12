@@ -12,7 +12,8 @@ class AccountInvoice(models.Model):
 
     date_invoice = fields.Date(default=_get_date_invoice, required=True)
 
-    @api.depends('adjusted_advance', 'invoice_line_ids', 'tax_line_ids', 'adjustable_vat', 'adjustable_tds', 'security_deposit')
+    @api.depends('adjusted_advance', 'invoice_line_ids', 'tax_line_ids', 'adjustable_vat', 'adjustable_tds',
+                 'security_deposit')
     def _compute_amount_payable(self):
         for inv in self:
             payable = 0
@@ -104,8 +105,9 @@ class AccountInvoice(models.Model):
                 if tax.operating_unit_id:
                     r['operating_unit_id'] = tax.operating_unit_id.id
                 else:
-                    raise ValidationError("[Configuration Error] Please configure Branch for the following {} rule: \n {}".
-                                          format(tax_type, tax.name))
+                    raise ValidationError(
+                        "[Configuration Error] Please configure Branch for the following {} rule: \n {}".
+                        format(tax_type, tax.name))
             else:
                 r['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id
             if tax.sou_id:
@@ -114,6 +116,8 @@ class AccountInvoice(models.Model):
                 raise ValidationError(
                     "[Configuration Error] Please configure Sequence for the following {} rule: \n {}".format(tax_type,
                                                                                                               tax.name))
+            product = self.tax_line_ids.search([('id', '=', r['invoice_tax_line_id'])])
+            r['product_id'] = product.product_id.id if product else None
             new_res.append(r)
         return new_res
 
@@ -154,7 +158,8 @@ class AccountInvoice(models.Model):
                     if line.is_security_deposit:
                         if self.env.user.company_id.security_deposit_sequence_id:
                             line.write(
-                                {'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False}
+                                {
+                                    'sub_operating_unit_id': self.env.user.company_id.security_deposit_sequence_id.id or False}
                             )
                         else:
                             raise ValidationError("[Configuration Error] Please configure security deposit sequence in "
@@ -244,3 +249,9 @@ class ProductProduct(models.Model):
             if line.get('sub_operating_unit_id'):
                 res.update({'sub_operating_unit_id': line.get('sub_operating_unit_id')})
         return res
+
+
+class AccountInvoiceTax(models.Model):
+    _inherit = "account.invoice.tax"
+
+    product_id = fields.Many2one('product.product', string='Product', required=True)

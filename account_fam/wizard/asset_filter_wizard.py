@@ -28,7 +28,7 @@ class AssetFilterWizard(models.TransientModel):
             'res_model': 'account.asset.asset',
             'type': 'ir.actions.act_window',
             'target': 'current',
-            'domain': [('current_branch_id','=', self.operating_unit_id.id)],
+            'domain': [('current_branch_id', '=', self.operating_unit_id.id), ('state', '=', 'open')],
         }
 
 
