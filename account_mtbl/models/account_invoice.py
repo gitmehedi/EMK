@@ -236,6 +236,16 @@ class AccountInvoiceLine(models.Model):
         for rec in self:
             rec.sub_operating_unit_id = None
 
+    @api.constrains('quantity')
+    def _check_quantity(self):
+        if self.quantity < 1:
+            raise ValidationError('Quantity can not be less than 1.00')
+
+    @api.constrains('price_unit')
+    def _check_unit_price(self):
+        if self.price_unit <= 0:
+            raise ValidationError('Unit Price can not be equal or less than Zero(0)')
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
