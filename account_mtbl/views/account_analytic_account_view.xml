@@ -27,13 +27,13 @@
                     </header>
                     <sheet string="Analytic Account">
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive" invisible="1">
                                 <field name="active" widget="boolean_button"
                                        options='{"terminology": "archive"}'/>
                             </button>
                             <button class="oe_stat_button" type="action"
                                     name="%(analytic.account_analytic_line_action)d"
-                                    icon="fa-usd" string="Cost/Revenue" widget="statinfo"/>
+                                    icon="fa-usd" string="Cost/Revenue" widget="statinfo" invisible="1"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -91,12 +91,12 @@
                       decoration-bf="state in ('approve',)">
                     <field name="display_name"/>
                     <field name="code"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="debit"/>
-                    <field name="credit"/>
-                    <field name="balance"/>
+                    <field name="debit" invisible="1"/>
+                    <field name="credit" invisible="1"/>
+                    <field name="balance" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </xpath>
