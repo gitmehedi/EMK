@@ -31,6 +31,8 @@ class VendorAdvance(models.Model):
                                                readonly=True, states={'draft': [('readonly', False)]})
     credit_operating_unit_domain_ids = fields.Many2many('operating.unit', readonly=True, store=False,
                                                         compute="_compute_credit_operating_unit_domain_ids")
+    date = fields.Date(string='Date ', required=True, default=lambda self:self.env.user.company_id.batch_date,
+                       track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.multi
     @api.depends('sub_operating_unit_id')

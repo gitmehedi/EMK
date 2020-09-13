@@ -1,10 +1,18 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class TDSVATMovePaymentWizard(models.TransientModel):
     _inherit = 'tds.vat.move.payment.wizard'
 
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
+    credit_account_id = fields.Many2one('account.account', string='Credit Account',
+                                        required=True, domain=[('gl_type','=','online')])
+
+    @api.constrains('credit_account_id')
+    def _check_credit_account_id(self):
+        if self.credit_account_id and self.credit_account_id.gl_type != 'online':
+            raise ValidationError('Please select appropriate GL')
 
     @api.onchange('credit_account_id')
     def _onchange_credit_account_id(self):
