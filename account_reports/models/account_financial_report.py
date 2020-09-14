@@ -416,12 +416,13 @@ class AccountFinancialReportLine(models.Model):
             res = self.with_context(strict_range=strict_range, date_from=period_from,date_to=period_to)._compute_line(currency_table, financial_report, is_opening=False, group_by=self.groupby, domain=self.domain)
 
             res['initial_balance'] = 0
-            if self._context['build_initial_balance']:
-                is_opening = None
-                if self._context['fiscal_year_start'] == True:
-                    is_opening = True
-                initial_balance = self.with_context(strict_range=strict_range, date_from=self._context['date_from_initial'],date_to=self._context['date_to_initial'])._compute_line(currency_table, financial_report, is_opening, group_by=self.groupby,domain=self.domain)
-                res['initial_balance'] = initial_balance['balance']
+
+            is_opening = None
+            if self._context['fiscal_year_start'] == True:
+                is_opening = True
+            initial_balance = self.with_context(strict_range=strict_range, date_from=self._context['date_from_initial'],date_to=self._context['date_to_initial'])._compute_line(currency_table, financial_report, is_opening, group_by=self.groupby,domain=self.domain)
+            res['initial_balance'] = initial_balance['balance']
+
             # End Bappy
         return res
 
@@ -444,26 +445,25 @@ class AccountFinancialReportLine(models.Model):
                         else:
                             raise err
         # Start  Bappy
-        if self._context['build_initial_balance']:
-            couples_of_formulas = ''
-            if self.formulas_initial_balance:
-                couples_of_formulas += self.formulas_initial_balance + ';'
-            if self.formulas_debit:
-                couples_of_formulas += self.formulas_debit + ';'
-            if self.formulas_credit:
-                couples_of_formulas += self.formulas_credit
-            if len(couples_of_formulas) > 0:
-                for f in couples_of_formulas.split(';'):
-                    [field, formula] = f.split('=')
-                    field = field.strip()
-                    if field in field_names:
-                        try:
-                            res[field] = safe_eval(formula, c, nocopy=True)
-                        except ValueError as err:
-                            if 'division by zero' in err.args[0]:
-                                res[field] = 0
-                            else:
-                                raise err
+        couples_of_formulas = ''
+        if self.formulas_initial_balance:
+            couples_of_formulas += self.formulas_initial_balance + ';'
+        if self.formulas_debit:
+            couples_of_formulas += self.formulas_debit + ';'
+        if self.formulas_credit:
+            couples_of_formulas += self.formulas_credit
+        if len(couples_of_formulas) > 0:
+            for f in couples_of_formulas.split(';'):
+                [field, formula] = f.split('=')
+                field = field.strip()
+                if field in field_names:
+                    try:
+                        res[field] = safe_eval(formula, c, nocopy=True)
+                    except ValueError as err:
+                        if 'division by zero' in err.args[0]:
+                            res[field] = 0
+                        else:
+                            raise err
         # End  Bappy
         return res
 
@@ -531,7 +531,7 @@ class AccountFinancialReportLine(models.Model):
             vals['debit'] = res.debit
 
         # Start Bappy
-        if self._context['build_initial_balance'] and hasattr(res, 'initial_balance'):
+        if hasattr(res, 'initial_balance'):
             vals['initial_balance'] = res.initial_balance
         # End Bappy
 
@@ -559,46 +559,42 @@ class AccountFinancialReportLine(models.Model):
             self.env.cr.execute(sql, params)
             results = self.env.cr.fetchall()
 
-            if self._context['build_initial_balance']:
-                results = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4], 'initial_balance': 0}) for k in results])
-            else:
-                results = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4]}) for k in results])
+            results = dict(
+                [(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4], 'initial_balance': 0})
+                 for k in results])
+            # Start Bappy
+
+            domain = self.domain
+
+            tables, where_clause, where_params = aml_obj.with_context(date_from=self._context['date_from_initial'],date_to=self._context['date_to_initial'])._query_get(domain)
+
+            sql, params = self._get_with_statement(financial_report)
+            if financial_report.tax_report:
+                where_clause += ''' AND "account_move_line".tax_exigible = 't' '''
 
             # Start Bappy
-            # GL Wise initial Balance Add
-            if self._context['build_initial_balance']:
-                domain = self.domain
+            if self._context['fiscal_year_start'] == True:
+                where_clause += ''' AND "account_move_line".is_opening = True '''
+            # End Bappy
 
-                tables, where_clause, where_params = aml_obj.with_context(date_from=self._context['date_from_initial'],date_to=self._context['date_to_initial'])._query_get(domain)
+            groupby = self.groupby or 'id'
+            if groupby not in self.env['account.move.line']:
+                raise ValueError('Groupby should be a field from account.move.line')
+            select, select_params = self._query_get_select_sum(currency_table)
+            params += select_params
+            sql = sql + "SELECT \"account_move_line\"." + groupby + ", " + select + " FROM " + tables + " WHERE " + where_clause + " GROUP BY \"account_move_line\"." + groupby
 
-                sql, params = self._get_with_statement(financial_report)
-                if financial_report.tax_report:
-                    where_clause += ''' AND "account_move_line".tax_exigible = 't' '''
+            params += where_params
+            self.env.cr.execute(sql, params)
+            results_initial = self.env.cr.fetchall()
+            results_initial = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4]}) for k in results_initial])
 
-                # Start Bappy
-                if self._context['fiscal_year_start'] == True:
-                    where_clause += ''' AND "account_move_line".is_opening = True '''
-                # End Bappy
-
-                groupby = self.groupby or 'id'
-                if groupby not in self.env['account.move.line']:
-                    raise ValueError('Groupby should be a field from account.move.line')
-                select, select_params = self._query_get_select_sum(currency_table)
-                params += select_params
-                sql = sql + "SELECT \"account_move_line\"." + groupby + ", " + select + " FROM " + tables + " WHERE " + where_clause + " GROUP BY \"account_move_line\"." + groupby
-
-                params += where_params
-                self.env.cr.execute(sql, params)
-                results_initial = self.env.cr.fetchall()
-                results_initial = dict([(k[0], {'balance': k[1], 'amount_residual': k[2], 'debit': k[3], 'credit': k[4]}) for k in results_initial])
-
-                for state in results_initial:
-                    ini_bal = results_initial[state]['balance']
-                    if results.get(state):
-                        results[state]['initial_balance'] = ini_bal
-                    else:
-                        results[state] = {'balance': 0, 'amount_residual': 0, 'debit': 0, 'credit': 0,'initial_balance': ini_bal}
-
+            for state in results_initial:
+                ini_bal = results_initial[state]['balance']
+                if results.get(state):
+                    results[state]['initial_balance'] = ini_bal
+                else:
+                    results[state] = {'balance': 0, 'amount_residual': 0, 'debit': 0, 'credit': 0,'initial_balance': ini_bal}
             # End Bappy
 
             c = FormulaContext(self.env['account.financial.html.report.line'], linesDict, currency_table, financial_report, only_sum=True)
@@ -615,7 +611,8 @@ class AccountFinancialReportLine(models.Model):
             # Start Bappy
             # Apply For Initial Balance Formula
             formulas_init_balance = self._split_formulas_initial_balance()
-            if self._context['build_initial_balance'] and formulas_init_balance:
+
+            if formulas_init_balance:
                 for key in results:
                     c['sum'] = FormulaLine(results[key], currency_table, financial_report, type='not_computed')
                     c['sum_if_pos'] = FormulaLine(results[key]['initial_balance'] >= 0.0 and results[key] or {'initial_balance': 0.0}, currency_table, financial_report, type='not_computed')
