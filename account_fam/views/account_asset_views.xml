@@ -207,6 +207,7 @@
                     <field name="category_id"/>
                     <field name="asset_type_id"/>
                     <field name="current_branch_id"/>
+                    <field name="cost_centre_id"/>
                     <field name="asset_usage_date"/>
                     <field name="lst_depr_date"/>
                     <field name="value" sum="value"/>

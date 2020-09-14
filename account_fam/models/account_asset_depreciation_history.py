@@ -8,6 +8,7 @@ DATE_FORMAT = "%Y-%m-%d"
 
 class AccountAssetDepreciationHistory(models.Model):
     _name = 'account.asset.depreciation.history'
+    _description = 'Depreciation History'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
     _rec_name = 'date'
@@ -17,7 +18,7 @@ class AccountAssetDepreciationHistory(models.Model):
     request_date = fields.Date(string='Request Date', required=True, default=fields.Date.today,
                                readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
     approve_date = fields.Date(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
-                                   track_visibility='onchange')
+                               track_visibility='onchange')
     request_user_id = fields.Many2one('res.users', string='Request User', readonly=True,
                                       states={'draft': [('readonly', False)]}, default=lambda self: self.env.user,
                                       track_visibility='onchange')
@@ -49,7 +50,7 @@ class AccountAssetDepreciationHistory(models.Model):
                     if move.name == '/':
                         sequence = move.journal_id.sequence_id
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
-                        move.write({'name': new_name,'is_cr': True, 'state': 'posted'})
+                        move.write({'name': new_name, 'is_cr': True, 'state': 'posted'})
                 else:
                     post = False
 

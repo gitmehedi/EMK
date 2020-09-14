@@ -40,6 +40,7 @@
                             <field name="narration"/>
                         </group>
                         <group>
+                            <field name="request_date"/>
                             <field name="method" widget="radio"/>
                             <field name="move_id" options="{'no_create': 1, 'no_create_edit': 1}"
                                    attrs="{'invisible':[('move_id','=',False)]}"
@@ -63,8 +64,9 @@
             <tree string="Asset Depreciation Change Request" decoration-success="state=='confirm'"
                   decoration-muted="state=='approve'"
                   decoration-bf="state in ('draft','confirm')" duplicate="0">
-                <field name="name"/>
                 <field name="asset_cat_id"/>
+                <field name="name"/>
+                <field name="request_date"/>
                 <field name="asset_life"/>
                 <field name="asset_count"/>
                 <field name="state"/>

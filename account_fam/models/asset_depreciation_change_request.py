@@ -11,9 +11,17 @@ DATE_FORMAT = "%Y-%m-%d"
 class AssetDepreciationChangeRequest(models.Model):
     _name = 'asset.depreciation.change.request'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Asset Depreciation Method Change'
+    _description = 'Depreciation Method Change'
     _order = 'id desc'
     _depreciation = []
+
+    def _get_depr_date(self):
+        history = self.env['account.asset.depreciation.history'].search([], order='date desc', limit=1)
+        if history:
+            date = history.date
+        else:
+            date = self.env['res.company'].search([('id', '=', self.env.user.id)], limit=1).batch_date
+        return date
 
     name = fields.Char(required=False, track_visibility='onchange', string='Name')
     asset_life = fields.Integer('Asset Life (In Year)', required=True, readonly=True,
@@ -22,7 +30,7 @@ class AssetDepreciationChangeRequest(models.Model):
     method_progress_factor = fields.Float('Depreciation Factor', readonly=True, states={'draft': [('readonly', False)]})
 
     change_date = fields.Date('Change Date', readonly=True, states={'draft': [('readonly', False)]})
-    request_date = fields.Date('Requested Date', default=lambda self: self.env.user.company_id.batch_date,
+    request_date = fields.Date('Date', default=_get_depr_date, required=True,
                                readonly=True, states={'draft': [('readonly', False)]})
     approve_date = fields.Date('Approved Date', readonly=True, states={'draft': [('readonly', False)]})
     asset_type_id = fields.Many2one('account.asset.category', track_visibility='onchange', required=True,
@@ -61,10 +69,13 @@ class AssetDepreciationChangeRequest(models.Model):
         }
         return res
 
-    @api.constrains('asset_life')
+    @api.constrains('asset_life', 'request_date')
     def check_asset_life(self):
         if self.asset_life < 1:
-            raise Warning(_('Asset life should be a valid value.'))
+            raise ValidationError(_('Asset life should be a valid value.'))
+
+        if self._get_depr_date() != self.request_date:
+            raise ValidationError(_('Depreciation method change date must be last depreciation date.'))
 
     @api.depends('asset_cat_id')
     def _count_asset(self):
@@ -77,7 +88,7 @@ class AssetDepreciationChangeRequest(models.Model):
     @api.constrains('asset_cat_id', 'method')
     def check_asset_cat_id(self):
         if self.asset_cat_id.method == self.method:
-            raise Warning(_('Asset Category current method and change request method should not be same.'))
+            raise ValidationError(_('Asset Category current method and change request method should not be same.'))
 
     @api.one
     def action_cancel(self):
@@ -123,7 +134,7 @@ class AssetDepreciationChangeRequest(models.Model):
             for asset in assets:
                 usage_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(
                     years=self.asset_life)
-                dmc_date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
+                dmc_date = datetime.strptime(self.request_date, DATE_FORMAT)
                 if dmc_date > usage_date:
                     if not move:
                         move = self.env['account.move'].create({
@@ -260,7 +271,7 @@ class AssetDepreciationChangeRequest(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'confirm'):
-                raise Warning(_('[Warning] Approved and Confirm Record cannot deleted.'))
+                raise ValidationError(_('[Warning] Approved and Confirm Record cannot deleted.'))
         return super(AssetDepreciationChangeRequest, self).unlink()
 
 

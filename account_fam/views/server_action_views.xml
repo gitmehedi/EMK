@@ -51,14 +51,4 @@
                 key2="client_action_multi"
                 target="new"
                 groups="grp_fixasset_manager,grp_fam_system_settings"/>
-
-    <act_window id="action_asset_depreciation_wizard"
-                name="Execute Assets Depreciation"
-                src_model="account.asset.asset"
-                res_model="asset.depreciation.wizard"
-                view_type="form"
-                view_mode="form"
-                key2="client_action_multi"
-                target="new"
-                groups="grp_fixasset_manager,grp_fam_system_settings"/>
 </odoo>
