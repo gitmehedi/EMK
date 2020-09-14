@@ -192,7 +192,7 @@ class AccountAssetSale(models.Model):
 
         return self.env['account.move'].create({
             'ref': asset.code,
-            'date': self.env.user.company_id.batch_date or False,
+            'date': self.env.user.company_id.batch_date,
             'journal_id': asset.category_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id,
