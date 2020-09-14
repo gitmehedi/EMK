@@ -4,6 +4,13 @@ from odoo import api, fields, models, _
 class VendorSecurityReturn(models.Model):
     _inherit = 'vendor.security.return'
 
+    def get_batch_date(self):
+        batch_date = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)]).batch_date
+        return batch_date
+
+    date = fields.Date(default=get_batch_date, track_visibility='onchange', string='Date', copy=False,
+                       readonly=True, states={'draft': [('readonly', False)]})
+
     def get_deposit_debit_item(self, deposit_line):
         res = super(VendorSecurityReturn, self).get_deposit_debit_item(deposit_line)
         res['sub_operating_unit_id'] = deposit_line.vsd_id.sub_operating_unit_id.id or False

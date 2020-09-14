@@ -31,6 +31,8 @@ class VendorAdvance(models.Model):
                                                readonly=True, states={'draft': [('readonly', False)]})
     credit_operating_unit_domain_ids = fields.Many2many('operating.unit', readonly=True, store=False,
                                                         compute="_compute_credit_operating_unit_domain_ids")
+    date = fields.Date(string='Date ', required=True, default=lambda self:self.env.user.company_id.batch_date,
+                       track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.multi
     @api.depends('sub_operating_unit_id')
@@ -139,7 +141,7 @@ class VendorAdvance(models.Model):
         return res
 
     @api.constrains('account_id', 'type')
-    def check_security_deposit(self):
+    def check_account_id(self):
         self._check_valid_gl_account()
 
     def _check_valid_gl_account(self):
