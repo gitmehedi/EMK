@@ -141,7 +141,7 @@ class VendorAdvance(models.Model):
         return res
 
     @api.constrains('account_id', 'type')
-    def check_security_deposit(self):
+    def check_account_id(self):
         self._check_valid_gl_account()
 
     def _check_valid_gl_account(self):
