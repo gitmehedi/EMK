@@ -61,6 +61,9 @@ class AccountInvoice(models.Model):
             if inv.security_deposit > 0:
                 payable -= inv.security_deposit
 
+            if payable < 0:
+                payable = 0.00
+
             inv.amount_payable = payable
 
     @api.model

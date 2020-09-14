@@ -29,8 +29,7 @@ class VendorAdvance(models.Model):
         for record in self:
             if record.state == 'approve':
                 if not record.is_bulk_data:
-                    if record.payable_to_supplier and record.total_payment_amount \
-                            and round(record.payable_to_supplier, 2) <= round(record.total_payment_amount, 2):
+                    if round(record.payable_to_supplier, 2) <= round(record.total_payment_amount, 2):
                         record.payment_btn_visible = False
                     elif record.payable_to_supplier <= 0.0:
                         record.payment_btn_visible = False
@@ -40,7 +39,7 @@ class VendorAdvance(models.Model):
                     if record.type == 'single':
                         record.payment_btn_visible = False
                     else:
-                        if record.additional_advance_amount <= record.total_payment_amount:
+                        if round(record.additional_advance_amount, 2) <= round(record.total_payment_amount, 2):
                             record.payment_btn_visible = False
                         else:
                             record.payment_btn_visible = True
@@ -52,9 +51,9 @@ class VendorAdvance(models.Model):
         res = self.env.ref('gbs_payment_instruction.view_bill_payment_instruction_wizard')
         op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
         if not self.is_bulk_data:
-            amount = round(abs(self.payable_to_supplier - self.total_payment_amount), 2) or 0.0
+            amount = round(self.payable_to_supplier - self.total_payment_amount, 2) or 0.0
         else:
-            amount = round(self.additional_advance_amount - self.total_payment_amount, 2)
+            amount = round(self.additional_advance_amount - self.total_payment_amount, 2) or 0.0
 
         return {
             'name': _('Payment Instruction'),
