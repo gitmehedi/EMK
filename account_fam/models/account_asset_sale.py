@@ -172,7 +172,7 @@ class AccountAssetSale(models.Model):
                 'debit': lg_value if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.asset_type_id.journal_id.id,
                 'operating_unit_id': asset.current_branch_id.id,
-                'sub_operating_unit_id': asset.asset_type_id.account_asset_gain_seq_id.id if asset.asset_type_id else None,
+                'sub_operating_unit_id': asset.asset_type_id.account_asset_loss_seq_id.id if asset.asset_type_id else None,
                 'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else None,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
             }
@@ -192,7 +192,7 @@ class AccountAssetSale(models.Model):
 
         return self.env['account.move'].create({
             'ref': asset.code,
-            'date': fields.Datetime.now() or False,
+            'date': self.env.user.company_id.batch_date or False,
             'journal_id': asset.category_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id,

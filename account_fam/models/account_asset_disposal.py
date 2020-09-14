@@ -166,7 +166,7 @@ class AccountAssetDisposal(models.Model):
         # if credit >0 and debit>
         return self.env['account.move'].create({
             'ref': asset.code,
-            'date': fields.Datetime.now() or False,
+            'date': self.env.user.company_id.batch_date,
             'journal_id': asset.category_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id,
