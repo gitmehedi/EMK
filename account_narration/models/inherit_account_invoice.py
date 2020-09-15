@@ -19,7 +19,7 @@ class AccountInvoice(models.Model):
                 narration = line[2]['name']
             if not line[2].get('product_id', False):
                 line[2]['name'] = narration
-            if line[2]['tax_line_id']:
+            if line[2].get('tax_line_id', False):
                 line[2]['name'] = narration
 
         return aml

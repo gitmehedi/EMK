@@ -8,7 +8,7 @@
     'website': 'http://www.genweb2.com',
     "category": "Account",
     "depends": [
-        'l10n_bd_account_tax'
+        'account_mtbl'
     ],
     "data": [],
     'installable': True,
