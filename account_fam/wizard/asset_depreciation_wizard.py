@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class AssetDepreciationWizard(models.TransientModel):
@@ -17,7 +18,7 @@ class AssetDepreciationWizard(models.TransientModel):
     @api.constrains('date')
     def check_date(self):
         if self.env.user.company_id.batch_date > self.date:
-            raise Warning(_('Date should not be less than system date.'))
+            raise ValidationError(_('Date should not be less than system date.'))
 
     @api.multi
     def depreciate(self):
