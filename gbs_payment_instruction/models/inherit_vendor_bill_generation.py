@@ -46,9 +46,10 @@ class VendorBillGeneration(models.Model):
                 error_journals = ''
                 error_journals_list = []
                 for val in rec.line_ids:
-                    if not val.payment_instruction_id.move_id.report_process:
-                        error_journals_list.append(val.payment_instruction_id.move_id.name)
-                        error_journals += "- {0}\t\n".format(val.payment_instruction_id.move_id.name)
+                    if val.payment_instruction_id:
+                        if not val.payment_instruction_id.move_id.report_process:
+                            error_journals_list.append(val.payment_instruction_id.move_id.name)
+                            error_journals += "- {0}\t\n".format(val.payment_instruction_id.move_id.name)
                 if len(error_journals_list) > 0:
                     raise ValidationError(_(
                         "Following Originating journals yet to sync in CBS. Please Try Later\n\n{0}".format(error_journals)))
