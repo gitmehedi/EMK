@@ -8,6 +8,8 @@ class TDSVATMovePaymentWizard(models.TransientModel):
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Sequence', required=True)
     credit_account_id = fields.Many2one('account.account', string='Credit Account',
                                         required=True, domain=[('gl_type','=','online')])
+    instruction_date = fields.Date(string='Date', default=lambda self:self.env.user.company_id.batch_date,
+                                   required=True, copy=False)
 
     @api.constrains('credit_account_id')
     def _check_credit_account_id(self):

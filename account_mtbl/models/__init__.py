@@ -23,3 +23,4 @@ from . import date_range_type
 from . import date_range
 from . import inherit_tds_vat_payment
 from . import receive_outstanding_advance
+from . import inherit_tds_vat_chalan
