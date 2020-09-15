@@ -10,6 +10,8 @@ class ReceiveOutstandingAdvance(models.Model):
                                                   states={'draft': [('readonly', False)]})
     operating_unit_domain_ids = fields.Many2many('operating.unit', compute="_compute_operating_unit_domain_ids",
                                                  readonly=True, store=False)
+    date = fields.Date(string='Date ', default=lambda self:self.env.user.company_id.batch_date,
+                       track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.multi
     @api.depends('debit_sub_operating_unit_id')
