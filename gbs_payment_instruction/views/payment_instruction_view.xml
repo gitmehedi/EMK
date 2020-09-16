@@ -135,7 +135,7 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="payment_instruction_bill_search"/>
         <field name="domain">['|', '|', ('advance_id', '!=', False), ('security_return_id', '!=', False),
-            ('invoice_id.is_asset', '=', False)]
+            ('invoice_id.is_asset', '=', False), ('invoice_id.vbg_batch_id', '=', False)]
         </field>
         <field name="context">{'search_default_draft':1}</field>
         <field name="help" type="html">
@@ -180,6 +180,21 @@
         </field>
     </record>
 
+    <record id="action_payment_instruction_rent_bill" model="ir.actions.act_window">
+        <field name="name">Rent Payment Instructions</field>
+        <field name="res_model">payment.instruction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="payment_instruction_bill_search"/>
+        <field name="domain">[('invoice_id.vbg_batch_id','!=', False)]</field>
+        <field name="context">{'search_default_draft':1}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Payment instruction is empty.
+            </p>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window.view" id="action_payment_instruction_asset_form">
         <field name="sequence" eval="4"/>
         <field name="view_mode">form</field>
@@ -197,4 +212,8 @@
     <menuitem name="Payment Instructions" parent="account_fam.sub_assets_vendor_menu"
               action="action_payment_instruction_asset"
               id="menu_payment_instruction_asset" sequence="10"/>
+
+    <menuitem name="Payment Instructions" parent="rent_agreement.menu_vendor_operation_rent"
+              action="action_payment_instruction_rent_bill" groups="account.group_account_user"
+              id="menu_payment_instruction_rent" sequence="90"/>
 </odoo>
