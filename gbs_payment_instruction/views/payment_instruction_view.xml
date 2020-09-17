@@ -181,7 +181,7 @@
     </record>
 
     <record id="action_payment_instruction_rent_bill" model="ir.actions.act_window">
-        <field name="name">Rent Payment Instructions</field>
+        <field name="name">Payment Instructions</field>
         <field name="res_model">payment.instruction</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

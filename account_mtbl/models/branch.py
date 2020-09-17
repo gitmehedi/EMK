@@ -34,6 +34,8 @@ class Branch(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
+    obu = fields.Boolean(default=False)
+    currency_id = fields.Many2one('res.currency', string='Currency')
 
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
