@@ -239,6 +239,12 @@ delete from tpm_branch_calculation_line;
 delete from tpm_calculation_line;
 delete from tpm_calculation;
 
+-- Remove random data
+delete from account_tax_slab_line;
+delete from agreement;
+delete from history_res_partner;
+delete from res_partner where supplier=true;
+
 -- Remove message data from related message table
 delete from mail_message where model in ('tpm.branch.calculation.line');
 delete from mail_message where model in ('tpm.calculation.line');
