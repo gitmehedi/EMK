@@ -155,7 +155,7 @@ class AssetAllocationWizard(models.TransientModel):
                     asset.write({'allocation_status': True,
                                  'current_branch_id': self.to_operating_unit_id.id,
                                  # 'sub_operating_unit_id': to_sub_operating_unit,
-                                 'asset_usage_date': self.date,
+                                 'asset_usage_date': self.usage_date,
                                  'cost_centre_id': self.cost_centre_id.id,
                                  'warranty_date': self.warranty_date
                                  })
