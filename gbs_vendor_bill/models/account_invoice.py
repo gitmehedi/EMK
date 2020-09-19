@@ -297,7 +297,7 @@ class AccountMove(models.Model):
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
-    _order = "date desc,debit desc, id asc"
+    _order = "date desc, id asc"
 
     is_tdsvat_payable = fields.Boolean('TDS/VAT Payable', default=False)
     tax_type = fields.Selection([('vat', 'VAT'), ('tds', 'TDS')], string='TAX/VAT')

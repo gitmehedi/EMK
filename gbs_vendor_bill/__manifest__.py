@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'GBS Vendor Bill',
+    'name': 'GBS Vendor Bill (Samuda)',
     'description': """ Extended module to manage Vendor Bill.""",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
