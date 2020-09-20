@@ -134,7 +134,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="payment_instruction_bill_search"/>
-        <field name="domain">['|', '|', ('advance_id', '!=', False), ('security_return_id', '!=', False),
+        <field name="domain">['|', '|','|', ('advance_id', '!=', False), ('security_return_id', '!=', False),
             ('invoice_id.is_asset', '=', False), ('invoice_id.vbg_batch_id', '=', False)]
         </field>
         <field name="context">{'search_default_draft':1}</field>

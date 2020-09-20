@@ -32,7 +32,8 @@ class AccountInvoiceLine(models.Model):
     def asset_create(self):
         if self.asset_category_id and self.asset_type_id:
             asset_value = self.price_total / self.quantity
-            batch_seq = {val: key for key, val in enumerate(self.invoice_id.invoice_line_ids.ids)}
+
+            batch_seq = {val: key + 1 for key, val in enumerate(self.invoice_id.invoice_line_ids.ids)}
             recon = self.env['account.move.line'].search([('invoice_id', '=', self.invoice_id.id),
                                                           ('product_id', '=', self.product_id.id),
                                                           ('debit', '=', self.price_total)])
