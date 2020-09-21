@@ -337,7 +337,7 @@ class AccountFinancialReportLine(models.Model):
         if is_opening == True:
             where_clause += ''' AND "account_move_line".is_opening = True '''
         elif is_opening == False:
-            where_clause += ''' AND "account_move_line".is_opening = False '''
+            where_clause += ''' AND ("account_move_line".is_opening IS NULL OR "account_move_line".is_opening = False)'''
         # End Bappy
 
         line = self
@@ -545,7 +545,7 @@ class AccountFinancialReportLine(models.Model):
 
             # Start Bappy
             if self._context['fiscal_year_start'] == True:
-                where_clause += ''' AND "account_move_line".is_opening = False '''
+                where_clause += ''' AND ("account_move_line".is_opening IS NULL OR "account_move_line".is_opening = False)'''
             # End Bappy
 
             groupby = self.groupby or 'id'
