@@ -104,6 +104,7 @@ class VendorAdvance(models.Model):
         res['operating_unit_id'] = self.operating_unit_id.id or False
         res['sub_operating_unit_id'] = self.sub_operating_unit_id.id or False
         res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], res['ref'])
+        res['date'] = self.env.user.company_id.batch_date or fields.Date.today()
         return res
 
     def _get_credit_line_for_amendment(self, amount):
@@ -111,11 +112,17 @@ class VendorAdvance(models.Model):
         op_unit = self.env['operating.unit'].search([('code', '=', '001')], limit=1)
         res['operating_unit_id'] = op_unit.id or False
         res['sub_operating_unit_id'] = self.partner_id.property_account_payable_sou_id.id or False
+        res['date'] = self.env.user.company_id.batch_date or fields.Date.today()
         ref = res['ref']
         if len(self.move_ids) >= 1:
             ref += str(len(self.move_ids))
         res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], ref)
         return res
+
+    def create_journal_for_amendment(self, amount, journal_id):
+        move = super(VendorAdvance, self).create_journal_for_amendment(amount, journal_id)
+        move.write({'date': self.env.user.company_id.batch_date or fields.Date.today()})
+        return move
 
     def create_security_deposit(self):
         res = super(VendorAdvance, self).create_security_deposit()
