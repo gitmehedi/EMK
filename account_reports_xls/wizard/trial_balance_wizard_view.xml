@@ -15,6 +15,7 @@
                 </xpath>
                 <xpath expr="//field[@name='display_account']" position="after">
                     <field name="include_profit_loss"/>
+                    <field name="is_tb_exc" invisible="True"/>
                 </xpath>
                 <xpath expr="//field[@name='date_to']" position="attributes">
                     <attribute name="required">True</attribute>

@@ -12,7 +12,7 @@
     </record>
 
     <menuitem id="menu_trial_balance_exc_report"
-        name="Trial Balance (Exclude)"
+        name="Trial Balance (Excl GL)"
         parent="account.menu_finance_reports"
         action="action_trial_balance_exc"
         sequence="10"/>

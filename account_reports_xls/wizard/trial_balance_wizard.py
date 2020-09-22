@@ -41,6 +41,7 @@ class AccountBalanceReport(models.TransientModel):
         result['ex_operating_unit_ids'] = 'ex_operating_unit_ids' in data2['form'] and \
                                           data2['form']['ex_operating_unit_ids'] or False
         result['include_profit_loss'] = self.include_profit_loss
+        result['is_tb_exc'] = self.is_tb_exc
         return result
 
     def _print_report(self, data):

@@ -132,29 +132,35 @@ class AssetDepreciationChangeRequest(models.Model):
             lines = []
 
             for asset in assets:
-                usage_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(
-                    years=self.asset_life)
-                dmc_date = datetime.strptime(self.request_date, DATE_FORMAT)
-                if dmc_date > usage_date:
-                    if not move:
-                        move = self.env['account.move'].create({
-                            'ref': self.narration,
-                            'date': dmc_date,
-                            'journal_id': asset.category_id.journal_id.id,
-                            'operating_unit_id': asset.current_branch_id.id
-                        })
-                    vals = self.modify(move, asset, dmc_date)
-                    if vals:
-                        lines.append((0, 0, vals[0]))
-                        lines.append((0, 0, vals[1]))
+                if asset.asset_usage_date:
+                    usage_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(
+                        years=self.asset_life)
+                    dmc_date = datetime.strptime(self.request_date, DATE_FORMAT)
+                    if dmc_date > usage_date:
+                        if not move:
+                            move = self.env['account.move'].create({
+                                'ref': self.narration,
+                                'date': dmc_date,
+                                'journal_id': asset.category_id.journal_id.id,
+                                'operating_unit_id': asset.current_branch_id.id
+                            })
+                        vals = self.modify(move, asset, dmc_date)
+                        if vals:
+                            lines.append((0, 0, vals[0]))
+                            lines.append((0, 0, vals[1]))
+                    else:
+                        asset.write({'method': self.method,
+                                     'depreciation_year': self.asset_life,
+                                     'method_progress_factor': 0.0,
+                                     'dmc_date': dmc_date,
+                                     'lst_depr_date': dmc_date,
+                                     'end_of_date': usage_date,
+                                     'depr_base_value': asset.value_residual,
+                                     })
                 else:
                     asset.write({'method': self.method,
                                  'depreciation_year': self.asset_life,
-                                 'method_progress_factor': 0.0,
-                                 'dmc_date': dmc_date,
-                                 'lst_depr_date': dmc_date,
-                                 'end_of_date': usage_date,
-                                 'depr_base_value': asset.value_residual,
+                                 'method_progress_factor': 0.0
                                  })
 
             if move:

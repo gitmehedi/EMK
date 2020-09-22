@@ -13,6 +13,7 @@
         'report',
         'account_operating_unit',
         'account_fy_closing',
+        'account_mtbl',
     ],
     'data': [
         'view/reports.xml',

@@ -51,6 +51,7 @@
                         </div>
                         <field name="originating_type"
                                attrs="{'invisible': [('reconcile', '=', False)], 'required':[('reconcile','=',True)]}"/>
+                        <field name="tb_filter"/>
                         <field name="maker_id" invisible="1"/>
                         <field name="approver_id" invisible="1"/>
                         <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]"

@@ -36,6 +36,7 @@ class AccountAccount(models.Model):
     gl_type = fields.Selection([('online', 'Online')], string='GL Type')
     originating_type = fields.Selection([('debit', 'Originating Debit'), ('credit', 'Originating Credit')],
                                         string='Originating Type')
+    tb_filter = fields.Boolean(string="TB Filter", default=False)
 
     @api.constrains('code')
     def _check_numeric_constrain(self):

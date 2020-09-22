@@ -10,6 +10,10 @@
                         <field name="operating_unit_id"
                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     </group>
+                    <group>
+                        <field name="category_id"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                    </group>
                 </group>
                 <footer>
                     <button name="search_branch" string="Search" type="object" class="btn-primary"/>

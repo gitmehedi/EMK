@@ -139,7 +139,7 @@ class ReportTrialBalance(models.AbstractModel):
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
         accounts = docs if self.model == 'account.account' else self.env['account.account'].search(
-            [('level_id.name', '=', 'Layer 5')])
+            [('level_id.name', '=', 'Layer 5'), ('tb_filter', '=', docs['is_tb_exc'])])
         account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
 
         docargs = {
