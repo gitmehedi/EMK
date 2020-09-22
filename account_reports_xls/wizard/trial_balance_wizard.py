@@ -13,6 +13,7 @@ class AccountBalanceReport(models.TransientModel):
                                              'account_id', 'operating_unit_id', string='Branch (Exclude)',
                                              required=False, default=[])
     include_profit_loss = fields.Boolean(string="Include Profit/Loss", default=False)
+    is_tb_exc = fields.Boolean(string="Trial Balance (Exclude)", default=False)
 
     @api.constrains('date_from', 'date_to')
     def check_date(self):

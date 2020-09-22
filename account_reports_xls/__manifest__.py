@@ -17,6 +17,7 @@
     'data': [
         'view/reports.xml',
         'wizard/trial_balance_wizard_view.xml',
+        'wizard/trial_balance_exc_wizard_view.xml',
     ],
     'installable': True,
     'application': False,
