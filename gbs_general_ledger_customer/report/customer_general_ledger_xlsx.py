@@ -27,6 +27,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         cr = self.env.cr
         aml_obj = self.env['account.move.line']
         move_lines = dict(map(lambda x: (x, []), accounts.ids))
+        state = used_context['state']
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
@@ -39,7 +40,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                                  'lcode': '', 'ldate': ''}
 
             # OPENING BALANCE
-            sql = """SELECT 
+            init_sql_str = """SELECT 
                             l.account_id AS account_id, 
                             COALESCE(SUM(l.debit),0.0) AS debit, 
                             COALESCE(SUM(l.credit),0.0) AS credit, 
@@ -51,11 +52,17 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
                             l.account_id IN %s AND l.move_id=m.id AND l.date BETWEEN %s AND %s 
-                            AND l.journal_id IN %s AND m.state=%s 
-                        GROUP BY l.account_id"""
+                            AND l.journal_id IN %s
+            """
 
-            params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids), 'posted')
-            cr.execute(sql, params)
+            init_sql_str += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
+
+            if state == 'posted':
+                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids), state)
+            else:
+                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids))
+
+            cr.execute(init_sql_str, params)
 
             for row in cr.dictfetchall():
                 init_balance_line['account_id'] = row['account_id']
@@ -64,7 +71,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                 init_balance_line['balance'] = row['balance']
 
             # ADD BALANCE WITH OPENING BALANCE
-            sql = """SELECT 
+            sql_str = """SELECT 
                             l.account_id AS account_id, 
                             COALESCE(SUM(l.debit),0.0) AS debit, 
                             COALESCE(SUM(l.credit),0.0) AS credit, 
@@ -78,11 +85,16 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
                             l.account_id IN %s AND l.move_id=m.id AND l.date < %s AND l.date >= %s 
-                            AND l.journal_id IN %s AND m.state=%s 
-                        GROUP BY l.account_id
+                            AND l.journal_id IN %s
             """
-            params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), 'posted')
-            cr.execute(sql, params)
+            sql_str += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
+
+            if state == 'posted':
+                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), state)
+            else:
+                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']))
+
+            cr.execute(sql_str, params)
 
             for row in cr.dictfetchall():
                 init_balance_line['debit'] += row['debit']
