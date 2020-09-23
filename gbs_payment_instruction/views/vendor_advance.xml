@@ -55,8 +55,8 @@
                     </field>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="total_payment_amount" class="oe_subtotal_footer_separator"
-                                   widget="monetary"/>
+                            <field name="total_payment_approved" widget="monetary"/>
+                            <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
                         </group>
                     </group>
                 </page>
@@ -124,7 +124,8 @@
                     </field>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="total_payment_amount" class="oe_subtotal_footer_separator"
+                            <field name="total_payment_approved" widget="monetary"/>
+                            <field name="amount_due" class="oe_subtotal_footer_separator"
                                    widget="monetary"/>
                         </group>
                     </group>

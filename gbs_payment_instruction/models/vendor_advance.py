@@ -9,11 +9,23 @@ class VendorAdvance(models.Model):
     payment_line_ids = fields.One2many('payment.instruction', 'advance_id', string='Payment', copy=False)
     total_payment_amount = fields.Float('Total Payment', compute='_compute_payment_amount',
                                         store=True, readonly=True, track_visibility='onchange', copy=False)
-    total_payment_approved = fields.Float('Approved Payment', compute='_compute_payment_amount',
+    total_payment_approved = fields.Float('Total Approved Payment', compute='_compute_payment_amount',
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False, copy=False,
                                          string="Is Visible")
     is_bulk_data = fields.Boolean(default=False, copy=False, string="Is a Bulk Data")
+    amount_due = fields.Float(string='Amount Due', compute='_compute_amount_due', readonly=True, copy=False, store=True)
+
+    @api.depends('payable_to_supplier', 'total_payment_approved', 'additional_advance_amount', 'is_bulk_data', 'state')
+    def _compute_amount_due(self):
+        for rec in self:
+            if rec.state == 'approve':
+                if not rec.is_bulk_data:
+                    rec.amount_due = rec.payable_to_supplier - rec.total_payment_approved
+                else:
+                    rec.amount_due = rec.additional_advance_amount - rec.total_payment_approved
+            else:
+                rec.amount_due = 0.0
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')
