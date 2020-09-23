@@ -29,6 +29,8 @@ class AccountTPMConfig(models.Model):
     state = fields.Selection([('draft', 'Draft')], track_visibility='onchange')
     config_type = fields.Selection([('tpm', 'TPM Configuration')], default='tpm', required=True,
                                    track_visibility='onchange', readonly=True)
+    excl_br_ids = fields.Many2many('operating.unit', 'tpm_branch_rel', 'tpm_id', 'branch_id',
+                                   track_visibility='onchange', string='Exclude Branch')
 
     @api.constrains('config_type')
     def _check_unique_constrain(self):

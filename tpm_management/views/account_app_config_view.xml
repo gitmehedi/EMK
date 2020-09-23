@@ -59,6 +59,8 @@
                                 <field name="income_rate"/>
                                 <field name="expense_rate"/>
                                 <field name="days_in_fy"/>
+                                <field name="excl_br_ids" widget="many2many_tags"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </group>
                         </group>
                     </sheet>

@@ -69,7 +69,9 @@ class TPMManagementModel(models.Model):
             general_account = tpm_config.tpm_general_account_id.id
             income_rate = (tpm_config.income_rate / 100) / days
             expense_rate = (tpm_config.expense_rate / 100) / days
-            branch = self.env['operating.unit'].sudo().search([('active', '=', True), ('pending', '=', False)])
+            excl_br = tpm_config.excl_br_ids.ids
+            branch = self.env['operating.unit'].sudo().search(
+                [('active', '=', True), ('pending', '=', False), ('id', 'not in', excl_br)])
             branch_lines = {}
             for val in branch:
                 branch_lines[val.id] = []
@@ -123,7 +125,7 @@ class TPMManagementModel(models.Model):
                 self.env.cr.execute(query)
                 for bal in self.env.cr.fetchall():
                     branch_id = bal[0]
-                    if branch_id == self.branch_id.id:
+                    if branch_id in excl_br:
                         continue
 
                     if bal[3] > 0:
@@ -147,8 +149,6 @@ class TPMManagementModel(models.Model):
                     branch_lines[bal[0]].append(line)
 
             for key, value in branch_lines.items():
-                if key == self.branch_id.id:
-                    continue
                 line = self.line_ids.create({
                     'name': self.id,
                     'branch_id': key,
