@@ -104,13 +104,8 @@ class AccountInvoice(models.Model):
                 tax_type = 'VAT'
             elif tax.is_tds:
                 tax_type = 'TDS'
-            if tax.is_reverse:
-                if tax.operating_unit_id:
-                    r['operating_unit_id'] = tax.operating_unit_id.id
-                else:
-                    raise ValidationError(
-                        "[Configuration Error] Please configure Branch for the following {} rule: \n {}".
-                        format(tax_type, tax.name))
+            if tax.operating_unit_id:
+                r['operating_unit_id'] = tax.operating_unit_id.id
             else:
                 r['operating_unit_id'] = self.invoice_line_ids[0].operating_unit_id.id
             if tax.sou_id:

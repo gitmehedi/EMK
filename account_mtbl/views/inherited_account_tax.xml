@@ -10,8 +10,7 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='type_tax_use']" position="after">
-                    <field name="operating_unit_id" options="{'no_create':True, 'no_open':True}"
-                    attrs="{'required': [('is_reverse', '=', True)]}"/>
+                    <field name="operating_unit_id" options="{'no_create':True, 'no_open':True}"/>
                 </xpath>
                 <xpath expr="//field[@name='account_id']" position="attributes">
                     <attribute name="options">{'no_create':True, 'no_open':True}</attribute>
