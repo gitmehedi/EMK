@@ -26,6 +26,7 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
         cr = self.env.cr
         aml_obj = self.env['account.move.line']
         move_lines = dict(map(lambda x: (x, []), accounts.ids))
+        state = used_context['state']
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
@@ -50,10 +51,16 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
                             l.account_id IN %s AND l.move_id=m.id AND l.date BETWEEN %s AND %s 
-                            AND l.journal_id IN %s AND m.state=%s 
-                        GROUP BY l.account_id"""
+                            AND l.journal_id IN %s
+            """
 
-            params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids), 'posted')
+            sql += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
+
+            if state == 'posted':
+                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids), state)
+            else:
+                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids))
+
             cr.execute(sql, params)
 
             for row in cr.dictfetchall():
@@ -77,9 +84,16 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
                             l.account_id IN %s AND l.move_id=m.id AND l.date < %s AND l.date >= %s 
-                            AND l.journal_id IN %s AND m.state=%s 
-                        GROUP BY l.account_id"""
-            params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), 'posted')
+                            AND l.journal_id IN %s
+            """
+
+            sql += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
+
+            if state == 'posted':
+                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), state)
+            else:
+                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']))
+
             cr.execute(sql, params)
 
             for row in cr.dictfetchall():
