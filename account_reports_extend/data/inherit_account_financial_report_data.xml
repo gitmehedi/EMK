@@ -3,12 +3,9 @@
 
     <!-- PROFIT AND LOSS -->
 
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_profitandloss0')]"/>
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
+    <record id="account_reports.account_financial_report_profitandloss0" model="account.financial.html.report">
+            <field name="debit_credit" eval="True"/>
+    </record>
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
@@ -83,13 +80,11 @@
 
     <!-- BALANCE SHEET -->
 
+    <record id="account_reports.account_financial_report_balancesheet0" model="account.financial.html.report">
+            <field name="debit_credit" eval="True"/>
+            <field name="report_type">date_range_analytic</field>
+    </record>
 
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_balancesheet0')]"/>
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
