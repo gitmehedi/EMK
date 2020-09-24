@@ -110,7 +110,7 @@
         <field name="inherit_id" ref="account.invoice_supplier_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
-                <attribute name="decoration-success">state == 'draft'</attribute>
+                <attribute name="decoration-info">state == 'draft'</attribute>
                 <attribute name="decoration-success">state == 'open'</attribute>
                 <attribute name="decoration-muted">state in('paid','cancel')</attribute>
                 <attribute name="decoration-bf">state in ('open','paid')</attribute>
@@ -158,7 +158,9 @@
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]"
                             groups="account.group_proforma_invoices"/>
                     <filter name="invoices" string="Open"
-                            domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
+                            domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice')), ('residual', '&gt;', 0)]"/>
+                    <filter name="paid" string="Paid"
+                            domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice')), ('residual', '&lt;=', 0)]"/>
 
                     <group expand="0" string="Group By">
                         <filter name="group_by_partner_id" string="Vendor"
@@ -174,7 +176,58 @@
     </record>
 
     <record id="account.action_invoice_tree2" model="ir.actions.act_window">
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '=', False)]</field>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '=', False), ('state', 'in', ('draft', 'cancel'))]</field>
     </record>
+
+    <menuitem id="account.menu_action_invoice_tree2" action="account.action_invoice_tree2" name="Vendor Bills (Draft)"
+              parent="account.menu_finance_payables" sequence="1"/>
+
+    <record id="action_vendor_bill_open" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '=', False), ('state', 'in', ('open', 'paid')), ('residual', '&gt;', 0)]</field>
+        <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="action_vendor_bill_open" id="menu_vendor_bills_open"
+              parent="account.menu_finance_payables" name="Vendor Bills (Validated)" sequence="20"/>
+
+    <record id="action_vendor_bill_paid" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '=', False), ('state', 'in', ('open', 'paid')), ('residual', '&lt;=', 0)]</field>
+        <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="action_vendor_bill_paid" id="menu_vendor_bills_paid"
+              parent="account.menu_finance_payables" name="Vendor Bills (Paid)" sequence="30"/>
 
 </odoo>

@@ -253,7 +253,53 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1)]
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1), ('state', '=', 'draft')]
+        </field>
+        <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
+            'in_invoice','journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_asset_vendor_bill_open" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1), ('state', 'in', ('open', 'paid')), ('residual', '&gt;', 0)]
+        </field>
+        <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
+            'in_invoice','journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_asset_vendor_bill_paid" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1), ('state', 'in', ('open', 'paid')), ('residual', '&lt;=', 0)]
         </field>
         <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
             'in_invoice','journal_type': 'purchase'}
@@ -285,7 +331,13 @@
     </record>
 
     <menuitem action="action_asset_vendor_bill_draft" id="menu_asset_action_invoice_tree2_draft"
-              parent="sub_assets_vendor_menu" name="Vendor Bills" sequence="5"/>
+              parent="sub_assets_vendor_menu" name="Vendor Bills (Draft)" sequence="5"/>
+
+    <menuitem action="action_asset_vendor_bill_open" id="menu_asset_action_invoice_tree2_open"
+              parent="sub_assets_vendor_menu" name="Vendor Bills (Validated)" sequence="6"/>
+
+    <menuitem action="action_asset_vendor_bill_paid" id="menu_asset_action_invoice_tree2_paid"
+              parent="sub_assets_vendor_menu" name="Vendor Bills (Paid)" sequence="7"/>
 
     <record id="view_inherite_invoice_asset_type" model="ir.ui.view">
         <field name="name">account.invoice.supplier.form</field>
