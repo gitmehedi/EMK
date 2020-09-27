@@ -162,8 +162,7 @@ class HistoryAccountAnalyticAccount(models.Model):
 
 
 class AccountAnalyticLine(models.Model):
-    _name = 'account.analytic.line'
-    _inherit = ['account.analytic.line', 'mail.thread']
+    _inherit = 'account.analytic.line'
     _order = 'id desc'
     _description = 'Cost Centre Line'
 
