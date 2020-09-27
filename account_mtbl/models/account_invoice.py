@@ -81,7 +81,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'open')]
+        return [('state', 'in', ('open', 'draft'))]
 
     @api.model
     def invoice_line_move_line_get(self):
