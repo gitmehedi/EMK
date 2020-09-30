@@ -13,6 +13,15 @@ class VendorAdvance(models.Model):
                                           store=True, readonly=True, track_visibility='onchange', copy=False)
     payment_btn_visible = fields.Boolean(compute='_compute_payment_btn_visible', default=False,
                                          string="Is Visible")
+    amount_due = fields.Float(string='Amount Due', compute='_compute_amount_due', readonly=True, copy=False, store=True)
+
+    @api.depends('amount', 'total_payment_approved', 'state')
+    def _compute_amount_due(self):
+        for rec in self:
+            if rec.state == 'approve':
+                rec.amount_due = rec.amount - rec.total_payment_approved
+            else:
+                rec.amount_due = 0.0
 
     @api.one
     @api.depends('payment_line_ids.amount', 'payment_line_ids.state')

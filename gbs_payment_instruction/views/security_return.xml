@@ -55,11 +55,22 @@
                     </field>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="total_payment_amount" class="oe_subtotal_footer_separator"
-                                   widget="monetary"/>
+                            <field name="total_payment_approved" widget="monetary"/>
+                            <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
                         </group>
                     </group>
                 </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_vendor_security_deposit_tree" model="ir.ui.view">
+        <field name="name">inherit.security.return.tree</field>
+        <field name="model">vendor.security.return</field>
+        <field name="inherit_id" ref="vendor_security_deposit.vendor_security_return_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="amount_due" string="Need To Pay"/>
             </xpath>
         </field>
     </record>

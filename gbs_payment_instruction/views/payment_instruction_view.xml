@@ -82,6 +82,7 @@
                 <field name="code"/>
                 <field name="invoice_id"/>
                 <field name="advance_id"/>
+                <field name="security_return_id"/>
                 <field name="partner_id"/>
                 <field name="default_debit_account_id"/>
                 <field name="default_credit_account_id"/>
