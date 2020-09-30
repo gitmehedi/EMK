@@ -35,6 +35,8 @@
                 'gbs_general_ledger_customer',
                 'gbs_journal_type',
                 'account_log',
+                'account_cost_center',
+                'account_department_dimension',
                 ],
 
     'data': [ ],
