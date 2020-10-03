@@ -73,7 +73,7 @@ class ResUsers(models.Model):
         if SUPERUSER_ID not in self.ids:
             path = http.request.httprequest.path
             if path not in paths:
-                session = self.env['ir.sessions'].search([('user_id', '=', self.id), ('logged_in', '=', 'true')])
+                session = self.env['ir.sessions'].search([('user_id', '=', self._uid), ('logged_in', '=', 'true')])
                 if session:
                     session.last_active_time = time()
 
