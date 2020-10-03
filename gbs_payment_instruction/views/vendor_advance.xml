@@ -133,4 +133,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="inherit_vendor_advance_tree" model="ir.ui.view">
+        <field name="name">inherit.vendor.advance.tree</field>
+        <field name="model">vendor.advance</field>
+        <field name="inherit_id" ref="vendor_advance.vendor_advance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='advance_amount']" position="after">
+                <field name="amount_due" string="Need To Pay"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
