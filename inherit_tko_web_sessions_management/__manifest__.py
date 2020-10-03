@@ -14,18 +14,20 @@
     'installable': True,
     'auto_install': False,
     'depends': [
-                'base',
-                'resource',
-                'web',
-                'tko_web_sessions_management',
+        'base',
+        'resource',
+        'web',
+        'tko_web_sessions_management',
     ],
     'external_dependencies': {
-                                'python': [],
-                                'bin': [],
-                                },
+        'python': [],
+        'bin': [],
+    },
     'init_xml': [],
     'update_xml': [],
     'css': [],
     'demo_xml': [],
-    'data': [],
+    'data': [
+        'data/ir_config_parameter_data.xml'
+    ],
 }

@@ -1,40 +1,34 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    ThinkOpen Solutions Brasil
-#    Copyright (C) Thinkopen Solutions <http://www.tkobr.com>.
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 import os
+from time import time
 
 from odoo import api
 from odoo import fields, models
 from odoo.http import root
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 class ir_sessions(models.Model):
     _inherit = 'ir.sessions'
     _description = "Sessions"
 
+    last_active_time = fields.Char(string='Last Page Browse')
+
+    def validate_sessions(self):
+        delay = self.env['ir.config_parameter']._auth_timeout_get_parameter_delay()
+        sessions = self.sudo().search(['|', ('last_active_time', '<', time() - delay),
+                                       ('date_expiration', '<=',
+                                        fields.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+                                       ('logged_in', '=', True)])
+        if sessions:
+            sessions._close_session(logout_type='to')
+        return True
+
     @api.multi
     def _close_session(self, logout_type=None):
         redirect = False
+
         for r in self:
             if r.user_id.id == self.env.user.id:
                 redirect = True
