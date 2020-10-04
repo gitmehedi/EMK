@@ -23,6 +23,9 @@ class AccountMove(models.Model):
     total_credit = fields.Char(compute='_compute_sum', string="Total Credit")
     missmatch_value = fields.Char(compute='_compute_sum', string="Amount Variance")
 
+    maker_id = fields.Many2one('res.users', 'Maker', track_visibility='onchange', copy=False)
+    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange', copy=False)
+
     @api.depends('line_ids')
     def _compute_sum(self):
         for rec in self:
