@@ -569,7 +569,7 @@ class APIInterface(models.Model):
                                                              ('move_id.is_sync', '=', False),
                                                              ('move_id.is_opening', '=', False),
                                                              ('move_id.is_cbs', '=', False),
-                                                             ('move_id.state', '=', 'posted')])
+                                                             ('move_id.state', '=', 'posted')], order='id ASC')
             for mv in mv_lines:
                 try:
 
