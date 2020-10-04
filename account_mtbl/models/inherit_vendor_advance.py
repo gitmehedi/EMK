@@ -119,9 +119,21 @@ class VendorAdvance(models.Model):
         res['reconcile_ref'] = self.get_reconcile_ref(res['account_id'], ref)
         return res
 
+    def create_journal(self, journal_id):
+        move = super(VendorAdvance, self).create_journal(journal_id)
+        move.write({
+            'maker_id': self.maker_id.id,
+            'approver_id': self.env.user.id
+        })
+        return move
+
     def create_journal_for_amendment(self, amount, journal_id):
         move = super(VendorAdvance, self).create_journal_for_amendment(amount, journal_id)
-        move.write({'date': self.env.user.company_id.batch_date or fields.Date.today()})
+        move.write({
+            'date': self.env.user.company_id.batch_date or fields.Date.today(),
+            'maker_id': self.maker_id.id,
+            'approver_id': self.env.user.id
+        })
         return move
 
     def create_security_deposit(self):
