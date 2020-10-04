@@ -71,10 +71,10 @@ class ResUsers(models.Model):
         res = super(ResUsers, self).read(fields=fields, load=load)
         paths = self._auth_timeout_get_ignored_urls()
         if SUPERUSER_ID not in self.ids:
-            path = http.request.httprequest.path
-            if path not in paths:
-                session = self.env['ir.sessions'].search([('user_id', '=', self._uid), ('logged_in', '=', 'true')])
+            path = http.request.httprequest.path if http.request else ''
+            if path not in paths and path:
+                session = self.env['ir.sessions'].search([('user_id', '=', self._uid), ('logged_in', '=', 'true')],
+                                                         limit=1)
                 if session:
                     session.last_active_time = time()
-
         return res
