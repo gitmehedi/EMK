@@ -34,11 +34,11 @@ class VendorSecurityReturn(models.Model):
 
         return reconcile_ref
 
-    def create_account_move(self, journal_id):
-        move = super(VendorSecurityReturn).create_account_move(journal_id)
-        move.write({
-            'maker_id': self.maker_id.id,
-            'approver_id': self.env.user.id
-        })
-
-        return move
+    # def create_account_move(self, journal_id):
+    #     move = super(VendorSecurityReturn).create_account_move(journal_id)
+    #     move.write({
+    #         'maker_id': self.maker_id.id,
+    #         'approver_id': self.env.user.id
+    #     })
+    #
+    #     return move

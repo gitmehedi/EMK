@@ -147,10 +147,10 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
         if res:
-            res.write({
-                'maker_id': self.user_id.id,
-                'approver_id': self.env.user.id
-            })
+            # res.write({
+            #     'maker_id': self.user_id.id,
+            #     'approver_id': self.env.user.id
+            # })
             for inv in self:
                 move = self.env['account.move'].browse(inv.move_id.id)
                 for line in move.line_ids:
