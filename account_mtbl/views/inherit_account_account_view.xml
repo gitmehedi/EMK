@@ -106,6 +106,7 @@
                         <field name="code"/>
                         <field name="level_id"/>
                         <field name="user_type_id"/>
+                        <field name="reconcile"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"
                                invisible="True"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
