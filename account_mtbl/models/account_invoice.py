@@ -147,10 +147,6 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
         if res:
-            # res.write({
-            #     'maker_id': self.user_id.id,
-            #     'approver_id': self.env.user.id
-            # })
             for inv in self:
                 move = self.env['account.move'].browse(inv.move_id.id)
                 for line in move.line_ids:
@@ -166,6 +162,11 @@ class AccountInvoice(models.Model):
                         else:
                             raise ValidationError("[Configuration Error] Please configure security deposit sequence in "
                                                   "Accounting Configuration")
+
+                move.write({
+                    'maker_id': self.user_id.id,
+                    'approver_id': self.env.user.id
+                })
 
         return res
 

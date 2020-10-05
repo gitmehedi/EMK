@@ -56,3 +56,13 @@ class ReceiveOutstandingAdvance(models.Model):
             reconcile_ref = account_obj.code + ref.replace('/', '')
 
         return reconcile_ref
+
+    @api.multi
+    def create_account_move(self, journal_id):
+        move = super(ReceiveOutstandingAdvance, self).create_account_move(journal_id)
+        move.write({
+            'maker_id': self.maker_id.id,
+            'approver_id': self.env.user.id
+        })
+
+        return move
