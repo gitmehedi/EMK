@@ -115,8 +115,8 @@
         <field name="act_window_id" ref="vendor_advance_action_approve_paid"/>
     </record>
 
-    <menuitem id="advance_parent_menu" name="Vendor Advances" sequence="2" groups="base.group_vendor_advance_user"
-              parent="account.menu_finance_payables"/>
+    <menuitem id="advance_parent_menu" name="Vendor Advances" sequence="7" groups="base.group_vendor_advance_user"
+              parent="account.menu_finance"/>
 
     <menuitem id="vendor_advance.advance_menu" name="Draft VA" sequence="1" groups="base.group_vendor_advance_user"
               parent="advance_parent_menu" action="vendor_advance_action_draft"/>

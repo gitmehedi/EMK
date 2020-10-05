@@ -10,6 +10,7 @@ This application is to modify the Menu Items.
 """,
     'depends': [
         'base',
+        'account',
         'account_mtbl',
         'gbs_payment_instruction'
     ],

@@ -45,8 +45,8 @@
     </record>
 
     <menuitem id="menu_vendor_security_return_parent" name="Vendor Security Returns"
-                  parent="account.menu_finance_payables"
-                  sequence="4" groups="base.group_vendor_advance_user"/>
+                  parent="account.menu_finance"
+                  sequence="9" groups="base.group_vendor_advance_user"/>
 
     <menuitem id="vendor_security_deposit.menu_vendor_security_return" name="Draft VSR"
                   parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_draft"
