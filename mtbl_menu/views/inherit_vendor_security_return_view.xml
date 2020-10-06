@@ -48,19 +48,19 @@
                   parent="account.menu_finance"
                   sequence="9" groups="base.group_vendor_advance_user"/>
 
-    <menuitem id="vendor_security_deposit.menu_vendor_security_return" name="Draft VSR"
+    <menuitem id="vendor_security_deposit.menu_vendor_security_return" name="VS Returns (Draft)"
                   parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_draft"
                   sequence="1" groups="base.group_vendor_advance_user"/>
 
-    <menuitem id="menu_vendor_security_return_confirm" name="Waiting For Approval"
+    <menuitem id="menu_vendor_security_return_confirm" name="VS Returns (Approval)"
                   parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_confirm"
                   sequence="2" groups="base.group_vendor_advance_user"/>
 
-    <menuitem id="menu_vendor_security_return_approve" name="Waiting For Payment"
+    <menuitem id="menu_vendor_security_return_approve" name="VS Returns (Payment)"
                   parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_approve"
                   sequence="3" groups="base.group_vendor_advance_user"/>
 
-    <menuitem id="menu_vendor_security_return_approve_paid" name="Paid VSR"
+    <menuitem id="menu_vendor_security_return_approve_paid" name="VS Returns (Paid)"
                   parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_approve_paid"
                   sequence="3" groups="base.group_vendor_advance_user"/>
 </odoo>

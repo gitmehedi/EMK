@@ -142,26 +142,26 @@
               groups="base.group_vendor_advance_user" parent="rent_agreement.menu_rent_operations_main" sequence="1"/>
 
     <menuitem id="rent_agreement.rent_agreement_menu" action="rent_agreement_action_draft"
-                  name="Draft RA" groups="base.group_vendor_advance_user"
+                  name="Agreements (Draft)" groups="base.group_vendor_advance_user"
                   parent="rent_agreement_menu_parent" sequence="1"/>
 
     <menuitem id="rent_agreement_menu_wfa" action="rent_agreement_action_wfa"
-                  name="Waiting For Approval" groups="base.group_vendor_advance_user"
+                  name="Agreements (Approval)" groups="base.group_vendor_advance_user"
                   parent="rent_agreement_menu_parent" sequence="2"/>
 
     <menuitem id="rent_agreement_menu_approve" action="rent_agreement_action_approve"
-                  name="Active RA" groups="base.group_vendor_advance_user"
+                  name="Agreements (Active)" groups="base.group_vendor_advance_user"
                   parent="rent_agreement_menu_parent" sequence="3"/>
 
     <menuitem id="rent_agreement_menu_rejected" action="rent_agreement_action_rejected"
-                  name="Rejected RA" groups="base.group_vendor_advance_user"
+                  name="Agreements (Rejected)" groups="base.group_vendor_advance_user"
                   parent="rent_agreement_menu_parent" sequence="4"/>
 
     <menuitem id="rent_agreement_menu_expired" action="rent_agreement_action_expired"
-                  name="Expired RA" groups="base.group_vendor_advance_user"
+                  name="Agreements (Expired)" groups="base.group_vendor_advance_user"
                   parent="rent_agreement_menu_parent" sequence="5"/>
 
     <menuitem id="rent_agreement_menu_inactive" action="rent_agreement_action_inactive"
-                  name="Inactive RA" groups="base.group_vendor_advance_user"
+                  name="Agreements (Inactive)" groups="base.group_vendor_advance_user"
                   parent="rent_agreement_menu_parent" sequence="6"/>
 </odoo>

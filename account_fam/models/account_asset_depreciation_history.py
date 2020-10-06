@@ -15,7 +15,8 @@ class AccountAssetDepreciationHistory(models.Model):
 
     date = fields.Date(string='Depreciation Date', required=True, readonly=True)
     total_amount = fields.Float(compute='_compute_total_amount', string='Amount', store=True)
-    request_date = fields.Date(string='Request Date', required=True, default=fields.Date.today,
+    request_date = fields.Date(string='Request Date', required=True,
+                               default=lambda self: self.env.user.company_id.batch_date,
                                readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
     approve_date = fields.Date(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
                                track_visibility='onchange')
@@ -50,14 +51,20 @@ class AccountAssetDepreciationHistory(models.Model):
                     if move.name == '/':
                         sequence = move.journal_id.sequence_id
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
-                        move.write({'name': new_name, 'is_cr': True, 'state': 'posted'})
+                        move.write({
+                            'name': new_name,
+                            'maker_id': self.request_user_id.id,
+                            'approver_id': self.env.user.id,
+                            'is_cr': True,
+                            'state': 'posted',
+                        })
                 else:
                     post = False
 
             if post:
                 self.write({
                     'state': 'approve',
-                    'approve_date': fields.Date.today(),
+                    'approve_date': self.env.user.company_id.batch_date,
                     'approve_user_id': self.env.user.id
                 })
 

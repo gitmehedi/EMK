@@ -118,19 +118,19 @@
     <menuitem id="advance_parent_menu" name="Vendor Advances" sequence="7" groups="base.group_vendor_advance_user"
               parent="account.menu_finance"/>
 
-    <menuitem id="vendor_advance.advance_menu" name="Draft VA" sequence="1" groups="base.group_vendor_advance_user"
+    <menuitem id="vendor_advance.advance_menu" name="Advances (Draft)" sequence="1" groups="base.group_vendor_advance_user"
               parent="advance_parent_menu" action="vendor_advance_action_draft"/>
 
-    <menuitem id="advance_menu_confirm" name="Waiting For Approval" sequence="2" groups="base.group_vendor_advance_user"
+    <menuitem id="advance_menu_confirm" name="Advances (Approval)" sequence="2" groups="base.group_vendor_advance_user"
               parent="advance_parent_menu" action="vendor_advance_action_confirm"/>
 
-    <menuitem id="advance_menu_approve" name="Waiting For Payment" sequence="3" groups="base.group_vendor_advance_user"
+    <menuitem id="advance_menu_approve" name="Advances (Payment)" sequence="3" groups="base.group_vendor_advance_user"
               parent="advance_parent_menu" action="vendor_advance_action_approve"/>
 
-    <menuitem id="advance_menu_approve_paid" name="Paid VA" parent="advance_parent_menu"
+    <menuitem id="advance_menu_approve_paid" name="Advances (Paid)" parent="advance_parent_menu"
               action="vendor_advance_action_approve_paid"
               sequence="4" groups="base.group_vendor_advance_user"/>
 
-    <menuitem id="advance_menu_active" name="Closed VA" sequence="4" groups="base.group_vendor_advance_user"
+    <menuitem id="advance_menu_active" name="Advances (Closed)" sequence="4" groups="base.group_vendor_advance_user"
               parent="advance_parent_menu" action="vendor_advance_action_closed"/>
 </odoo>

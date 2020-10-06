@@ -23,10 +23,10 @@
                   parent="account.menu_finance"/>
 
         <menuitem id="vendor_security_deposit.Vendor_security_deposit_menu" action="vendor_security_deposit_action_approve"
-                  name="Approved VSD" sequence="1" groups="base.group_vendor_advance_user"
+                  name="VS Deposits (Approved)" sequence="1" groups="base.group_vendor_advance_user"
                   parent="Vendor_security_deposit_menu_parent"/>
 
         <menuitem id="Vendor_security_deposit_menu_closed" action="vendor_security_deposit_action_closed"
-                  name="Closed VSD" sequence="2" groups="base.group_vendor_advance_user"
+                  name="VS Deposits (Closed)" sequence="2" groups="base.group_vendor_advance_user"
                   parent="Vendor_security_deposit_menu_parent"/>
 </odoo>
