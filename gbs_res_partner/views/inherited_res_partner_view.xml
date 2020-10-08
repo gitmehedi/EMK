@@ -77,6 +77,8 @@
             </xpath>
             <xpath expr="//field[@name='lang']" position="after">
                 <field name="nid"/>
+                <field name="bin"/>
+                <field name="tin"/>
                 <field name="maker_id" invisible="1"/>
                 <field name="approver_id" invisible="1"/>
             </xpath>
@@ -193,7 +195,7 @@
         <field name="res_model">res.partner</field>
         <field name="view_type">form</field>
         <field name="domain">[('supplier','=',True)]</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'search_default_supplier': 1,'default_customer': 0,
             'default_supplier':1,"search_default_active":'False',"search_default_pending":'True',}
         </field>

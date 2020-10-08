@@ -27,8 +27,8 @@ class ResPartnerWizard(models.TransientModel):
                                  default=lambda self: self.env.user.company_id.country_id.id)
     tax = fields.Char(string='Trade License')
     vat = fields.Char(string='VAT Registration', size=11)
-    bin = fields.Char(string='BIN Number', size=13)
-    tin = fields.Char(string='TIN Number', size=12)
+    bin = fields.Char(string='BIN Number', size=19)
+    tin = fields.Char(string='TIN Number', size=16)
     fax = fields.Char(string='Fax', size=16)
     nid = fields.Char(string='NID', size=17)
     property_account_receivable_id = fields.Many2one('account.account', string='Account Receivable',
@@ -81,8 +81,8 @@ class ResPartnerWizard(models.TransientModel):
                  ('active', '=', False)])
             if len(bin) > 1:
                 raise Warning(_('[Unique Error] BIN Number must be unique!'))
-            if len(self.bin) != 13 or not self.bin.isdigit():
-                raise Warning('[Format Error] BIN must be numeric with 13 digit!')
+            if len(self.bin) < 13:
+                raise Warning('[Format Error] BIN must be at least 13 digit!')
         if self.vat:
             vat = self.env['res.partner'].search(
                 [('vat', '=ilike', self.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
@@ -97,8 +97,8 @@ class ResPartnerWizard(models.TransientModel):
                  ('active', '=', False)])
             if len(tin) > 1:
                 raise Warning(_('[Unique Error] TIN Number must be unique!'))
-            if len(self.tin) != 12 or not self.tin.isdigit():
-                raise Warning('[Format Error] TIN must be numeric with 12 digit!')
+            if len(self.tin) < 12:
+                raise Warning('[Format Error] TIN must be at least 12 digit!')
         if self.mobile and not self.mobile.isdigit():
             raise Warning('[Format Error] Mobile must be numeric!')
         if self.fax and len(self.fax) != 16:

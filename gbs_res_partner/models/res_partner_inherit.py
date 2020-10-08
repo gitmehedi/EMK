@@ -16,8 +16,8 @@ class ResPartner(models.Model):
 
     tax = fields.Char(string='Trade License', track_visibility='onchange')
     vat = fields.Char(string='VAT Registration', track_visibility='onchange',size=11)
-    bin = fields.Char(string='BIN Number', track_visibility='onchange',size=13)
-    tin = fields.Char(string='TIN Number', track_visibility='onchange',size=12)
+    bin = fields.Char(string='BIN Number', track_visibility='onchange',size=19)
+    tin = fields.Char(string='TIN Number', track_visibility='onchange',size=16)
 
     title = fields.Many2one(track_visibility='onchange')
     lang = fields.Selection(track_visibility='onchange')
@@ -226,8 +226,8 @@ class ResPartner(models.Model):
                      ('active', '=', False)])
                 if len(bin) > 1:
                     raise Warning(_('[Unique Error] BIN Number must be unique!'))
-                if len(partner.bin) != 13 or not partner.bin.isdigit():
-                    raise Warning('[Format Error] BIN must be numeric with 13 digit!')
+                if len(partner.bin) < 13:
+                    raise Warning('[Format Error] BIN must be at least 13 digit!')
             if partner.vat:
                 vat = self.search(
                     [('vat', '=ilike', partner.vat.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
@@ -242,8 +242,8 @@ class ResPartner(models.Model):
                      ('active', '=', False)])
                 if len(tin) > 1:
                     raise Warning(_('[Unique Error] TIN Number must be unique!'))
-                if len(partner.tin) != 12 or not partner.tin.isdigit():
-                    raise Warning('[Format Error] TIN must be numeric with 12 digit!')
+                if len(partner.tin) < 12:
+                    raise Warning('[Format Error] TIN must be at least 12 digit!')
             if partner.mobile and not partner.mobile.isdigit():
                 raise Warning('[Format Error] Mobile must be numeric!')
             if partner.fax and len(partner.fax) != 16:
@@ -283,8 +283,8 @@ class HistoryResPartner(models.Model):
                                  default=lambda self: self.env.user.company_id.country_id.id)
     tax = fields.Char(string='Trade License')
     vat = fields.Char(string='VAT Registration', size=11)
-    bin = fields.Char(string='BIN Number', size=13)
-    tin = fields.Char(string='TIN Number', size=12)
+    bin = fields.Char(string='BIN Number', size=19)
+    tin = fields.Char(string='TIN Number', size=16)
     fax = fields.Char(string='Fax', size=16)
     nid = fields.Char(string='NID', size=17)
     property_account_receivable_id = fields.Many2one('account.account', string='Account Receivable',
