@@ -107,14 +107,14 @@
             </ul>
         </div>
         <div class="btn-group o_dropdown o_account_reports_date-filter-cmp" t-if="report_type.comparison">
-            <!--<a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <a type="button" class="dropdown-toggle" data-toggle="dropdown">
                 <span class="fa fa-bar-chart"/> Comparison:
                 <t t-if="context.date_filter_cmp == 'no_comparison'">None</t>
                 <t t-if="context.date_filter_cmp == 'previous_period'">Previous Periods</t>
                 <t t-if="context.date_filter_cmp == 'same_last_year'">Same Last Year</t>
                 <t t-if="context.date_filter_cmp == 'custom'">Custom</t>
                 <span class="caret"/>
-            </a>-->
+            </a>
             <ul class="dropdown-menu o_filters_menu" role="menu">
                 <li title="No Comparison" data-value="no_comparison" t-att-class="'o_account_reports_one-filter-cmp ' + (context.date_filter_cmp == 'no_comparison' and 'selected' or '')"><a>No Comparison</a></li>
                 <li class="divider"></li>
@@ -241,5 +241,50 @@
                 </li>
             </ul>
         </div>
+        <!--Start Bappy-->
+        <div class="btn-group o_dropdown o_account_reports_cost_center-filter">
+            <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="fa fa-filter"/> Cost Center:
+                <span class="caret"/>
+            </a>
+            <ul class="dropdown-menu o_filters_menu" role="menu">
+                <li style='margin-left: 10px; margin-right: 10px;'>
+                    <label>Cost Center</label><br />
+                    <div class="form-group">
+                        <select class="o_account_reports_cost_center_auto_complete" multiple="multiple" style="min-width: 100px;">
+                            <t t-foreach="context.available_cost_center_ids" t-as="a">
+                                <option t-att-value="a[0]"><t t-esc="a[1]" /></option>
+                            </t>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary o_account_reports_add_cost_center">Apply</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="btn-group o_dropdown o_account_reports_department-filter">
+            <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="fa fa-filter"/>Department:
+                <span class="caret"/>
+            </a>
+            <ul class="dropdown-menu o_filters_menu" role="menu">
+                <li style='margin-left: 10px; margin-right: 10px;'>
+                    <label>Department</label><br />
+                    <div class="form-group">
+                        <select class="o_account_reports_department_auto_complete" multiple="multiple" style="min-width: 100px;">
+                            <t t-foreach="context.available_department_ids" t-as="a">
+                                <option t-att-value="a[0]"><t t-esc="a[1]" /></option>
+                            </t>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary o_account_reports_add_department">Apply</button>
+                </li>
+            </ul>
+        </div>
+        <!--End Bappy-->
+
+
+
+
     </t>
 </templates>

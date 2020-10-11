@@ -157,7 +157,9 @@ class ReportAccountFinancialReport(models.Model):
             company_ids=context_id.company_ids.ids,
             context=context_id,
             analytic_account_ids=context_id.analytic_account_ids,
-            analytic_tag_ids=context_id.analytic_tag_ids
+            analytic_tag_ids=context_id.analytic_tag_ids,
+            cost_center_ids=context_id.cost_center_ids,
+            department_ids=context_id.department_ids
         ).get_lines(self, context_id, currency_table, linesDicts)
         return res
 

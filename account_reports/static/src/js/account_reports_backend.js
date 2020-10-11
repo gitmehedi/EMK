@@ -291,6 +291,44 @@ var account_report_generic = Widget.extend(ControlPanelMixin, {
                 self.restart(report_context);
             });
         }
+        // Start Bappy
+        if (this.report_context.cost_center_ids) {
+            this.$searchview_buttons.find(".o_account_reports_cost_center_auto_complete").select2();
+            var selection = [];
+            for (i = 0; i < this.report_context.cost_center_ids.length; i++) {
+                var cost_center = this.report_context.cost_center_ids[i];
+                selection.push({id:cost_center[0], text:cost_center[1]});
+            }
+            this.$searchview_buttons.find('.o_account_reports_cost_center_auto_complete').data().select2.updateSelection(selection);
+
+            this.$searchview_buttons.find('.o_account_reports_add_cost_center').bind('click', function (event) {
+                var report_context = {};
+                var value = self.$searchview_buttons.find(".o_account_reports_cost_center_auto_complete").select2("val");
+                report_context.cost_center_ids = value;
+                self.restart(report_context);
+            });
+
+        }
+        if (this.report_context.department_ids) {
+
+            this.$searchview_buttons.find(".o_account_reports_department_auto_complete").select2();
+            var selection = [];
+            for (i = 0; i < this.report_context.department_ids.length; i++) {
+                var dept = this.report_context.department_ids[i];
+                selection.push({id:dept[0], text:dept[1]});
+            }
+            this.$searchview_buttons.find('.o_account_reports_department_auto_complete').data().select2.updateSelection(selection);
+
+            this.$searchview_buttons.find('.o_account_reports_add_department').bind('click', function (event) {
+                var report_context = {};
+                var value = self.$searchview_buttons.find(".o_account_reports_department_auto_complete").select2("val");
+                report_context.department_ids = value;
+                self.restart(report_context);
+            });
+
+        }
+        // End Bappy
+
         this.$searchview_buttons.find('li').bind('click', function (event) {event.stopImmediatePropagation();});
         var l10n = core._t.database.parameters; // Get the localisation parameters
         var $datetimepickers = this.$searchview_buttons.find('.o_account_reports_datetimepicker');
