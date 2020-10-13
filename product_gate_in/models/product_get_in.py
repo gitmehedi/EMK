@@ -71,7 +71,7 @@ class ProductGateIn(models.Model):
         location_obj = self.env['stock.location']
         picking_id = False
         for line in self.shipping_line_ids:
-            date_planned = datetime.datetime.now()
+            date_planned = datetime.now()
             location_id = location_obj.search([('usage', '=', 'supplier')], limit=1)
             location_dest_id = location_obj.search(
                 [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Input')], limit=1)

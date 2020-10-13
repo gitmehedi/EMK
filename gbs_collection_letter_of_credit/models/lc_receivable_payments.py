@@ -78,6 +78,11 @@ class LCReceivablePayment(models.Model):
                                                       states={'draft': [('readonly', False)]})
     narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
+    @api.constrains('lc_receivable_collection_ids')
+    def constrains_lc_receivable_collection_ids(self):
+        if len(self.lc_receivable_collection_ids.ids) <= 0:
+            raise ValidationError(_('You have to provide Fund Transfer'))
+
     @api.onchange('narration')
     def onchange_narration(self):
         if self.narration:

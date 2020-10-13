@@ -56,7 +56,6 @@
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
                    position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                <attribute name="string">Cost Centre</attribute>
                 <attribute name="groups"></attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
@@ -77,7 +76,6 @@
             </xpath>
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_analytic_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
-                <attribute name="string">Cost Centre</attribute>
             </xpath>
             <field name="reference" position="after">
                 <field name="vat_selection"/>
