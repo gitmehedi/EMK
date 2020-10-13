@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+tpm_branch_cal_line_buser,tpm_branch_cal_line_buser,model_tpm_branch_calculation_line,grp_tpm_user,1,0,0,0
+tpm_branch_cal_line_muser,tpm_branch_cal_line_buser,model_tpm_branch_calculation_line,grp_tpm_manager,1,1,1,1
+tpm_branch_cal_line_sauser,tpm_branch_cal_line_buser,model_tpm_branch_calculation_line,grp_tpm_system_settings,1,1,1,1
+
+tpm_cal_line_buser,tpm_cal_line_buser,model_tpm_calculation_line,grp_tpm_user,1,0,0,0
+tpm_cal_line_muser,tpm_cal_line_buser,model_tpm_calculation_line,grp_tpm_manager,1,1,1,1
+tpm_cal_line_sauser,tpm_cal_line_buser,model_tpm_calculation_line,grp_tpm_system_settings,1,1,1,1
+
+tpm_cal_buser,tpm_cal_buser,model_tpm_calculation,grp_tpm_user,1,0,0,0
+tpm_cal_muser,tpm_cal_buser,model_tpm_calculation,grp_tpm_manager,1,1,1,1
+tpm_cal_sauser,tpm_cal_buser,model_tpm_calculation,grp_tpm_system_settings,1,1,1,1
+
+acc_app_conf_buser,acc_app_conf_buser,model_account_app_config,grp_tpm_user,0,0,0,0
+acc_app_conf_muser,acc_app_conf_buser,model_account_app_config,grp_tpm_manager,1,0,0,0
+acc_app_conf_sauser,acc_app_conf_buser,model_account_app_config,grp_tpm_system_settings,1,1,0,0
