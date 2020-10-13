@@ -30,7 +30,7 @@
         "views/api_process_error_view.xml",
         "views/mdc_process_success_view.xml",
         "views/system_date_status_view.xml",
-        "views/payment_instruction_view.xml",
+        # "views/payment_instruction_view.xml",
         "views/file_import_view.xml",
     ],
     "application": True,
