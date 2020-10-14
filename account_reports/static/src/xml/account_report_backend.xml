@@ -242,7 +242,7 @@
             </ul>
         </div>
         <!--Start Bappy-->
-        <div class="btn-group o_dropdown o_account_reports_cost_center-filter">
+        <div class="btn-group o_dropdown o_account_reports_cost_center-filter" t-if="context.cost_center">
             <a type="button" class="dropdown-toggle" data-toggle="dropdown">
                 <span class="fa fa-filter"/> Cost Center:
                 <span class="caret"/>
@@ -262,7 +262,7 @@
             </ul>
         </div>
 
-        <div class="btn-group o_dropdown o_account_reports_department-filter">
+        <div class="btn-group o_dropdown o_account_reports_department-filter" t-if="context.department">
             <a type="button" class="dropdown-toggle" data-toggle="dropdown">
                 <span class="fa fa-filter"/>Department:
                 <span class="caret"/>

@@ -539,8 +539,14 @@ class AccountReportContextCommon(models.TransientModel):
         }
         result['available_companies'] = self.multicompany_manager_id.get_available_company_ids_and_names()
 
+        if hasattr(rcontext['report'], 'cost_center'):
+            result['report_context']['cost_center'] = rcontext['report'].cost_center
+
         result['report_context']['cost_center_ids'] = [(t.id, t.name) for t in self.cost_center_ids]
         result['report_context']['available_cost_center_ids'] = self.cost_center_manager_id.get_available_cost_center_ids_and_names()
+
+        if hasattr(rcontext['report'], 'department'):
+            result['report_context']['department'] = rcontext['report'].department
 
         result['report_context']['department_ids'] = [(t.id, t.name) for t in self.department_ids]
         result['report_context']['available_department_ids'] = self.department_manager_id.get_available_department_ids_and_names()

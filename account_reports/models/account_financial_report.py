@@ -19,6 +19,8 @@ class ReportAccountFinancialReport(models.Model):
     name = fields.Char(translate=True)
     debit_credit = fields.Boolean('Show Credit and Debit Columns')
     initial_balance = fields.Boolean('Show Initial Balance Columns')
+    cost_center = fields.Boolean('Show Cost Center Filter')
+    department = fields.Boolean('Show Department Filter')
     line_ids = fields.One2many('account.financial.html.report.line', 'financial_report_id', string='Lines')
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('no_date_range', 'Based on a single date'),

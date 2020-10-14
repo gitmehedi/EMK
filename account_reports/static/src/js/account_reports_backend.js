@@ -292,7 +292,7 @@ var account_report_generic = Widget.extend(ControlPanelMixin, {
             });
         }
         // Start Bappy
-        if (this.report_context.cost_center_ids) {
+        if (this.report_context.cost_center_ids && this.report_context.cost_center) {
             this.$searchview_buttons.find(".o_account_reports_cost_center_auto_complete").select2();
             var selection = [];
             for (i = 0; i < this.report_context.cost_center_ids.length; i++) {
@@ -309,7 +309,7 @@ var account_report_generic = Widget.extend(ControlPanelMixin, {
             });
 
         }
-        if (this.report_context.department_ids) {
+        if (this.report_context.department_ids && this.report_context.department) {
 
             this.$searchview_buttons.find(".o_account_reports_department_auto_complete").select2();
             var selection = [];
