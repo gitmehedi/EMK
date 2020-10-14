@@ -107,14 +107,14 @@
             </ul>
         </div>
         <div class="btn-group o_dropdown o_account_reports_date-filter-cmp" t-if="report_type.comparison">
-            <a type="button" class="dropdown-toggle" data-toggle="dropdown">
-                <span class="fa fa-bar-chart"/> Comparison:
-                <t t-if="context.date_filter_cmp == 'no_comparison'">None</t>
-                <t t-if="context.date_filter_cmp == 'previous_period'">Previous Periods</t>
-                <t t-if="context.date_filter_cmp == 'same_last_year'">Same Last Year</t>
-                <t t-if="context.date_filter_cmp == 'custom'">Custom</t>
-                <span class="caret"/>
-            </a>
+<!--            <a type="button" class="dropdown-toggle" data-toggle="dropdown">-->
+<!--                <span class="fa fa-bar-chart"/> Comparison:-->
+<!--                <t t-if="context.date_filter_cmp == 'no_comparison'">None</t>-->
+<!--                <t t-if="context.date_filter_cmp == 'previous_period'">Previous Periods</t>-->
+<!--                <t t-if="context.date_filter_cmp == 'same_last_year'">Same Last Year</t>-->
+<!--                <t t-if="context.date_filter_cmp == 'custom'">Custom</t>-->
+<!--                <span class="caret"/>-->
+<!--            </a>-->
             <ul class="dropdown-menu o_filters_menu" role="menu">
                 <li title="No Comparison" data-value="no_comparison" t-att-class="'o_account_reports_one-filter-cmp ' + (context.date_filter_cmp == 'no_comparison' and 'selected' or '')"><a>No Comparison</a></li>
                 <li class="divider"></li>
