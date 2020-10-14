@@ -257,7 +257,7 @@
                         <filter string="Dispose or Sale"
                                 domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', True)]"/>
                         <filter string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
-                        <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By Status"  domain="[]" context="{'group_by':'state'}"/>
                         <filter string="By Branch" domain="[]" context="{'group_by':'current_branch_id'}"/>
                         <filter string="By Asset Type" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="By Asset Category" domain="[]" context="{'group_by':'asset_type_id'}"/>
@@ -300,15 +300,25 @@
               action="action_account_asset_asset_form_confirmed" sequence="5" groups="account.group_account_user"/>
 
 
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form_disposal">
+        <field name="name">Fixed Assets (Disposal)</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+        <field name="domain">[('category_id.type', '=', 'purchase'),('state', '=','open'),
+            ('depreciation_flag', '=',True)]
+        </field>
+    </record>
+
+    <menuitem parent="account_fam.sub_assets_menu" id="menu_action_account_asset_asset_form_disposal"
+              action="action_account_asset_asset_form_disposal" sequence="7" groups="account.group_account_user"/>
+
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_close">
         <field name="name">Fixed Assets (Closed)</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
-        <field name="context">{"search_default_state":1}</field>
-        <field name="domain">[('category_id.type', '=', 'purchase'),('state', 'in',
-            ('open','close')),('depreciation_flag', '=', True)]
-        </field>
+        <field name="domain">[('category_id.type', '=', 'purchase'),('state', '=','close')]</field>
     </record>
 
     <menuitem parent="account_fam.sub_assets_menu" id="menu_action_account_asset_asset_form_close"

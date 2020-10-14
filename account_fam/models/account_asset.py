@@ -308,7 +308,7 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'open')]
+        return [('state', 'in', ('open', 'draft'))]
 
     @api.multi
     def compute_depreciation_board(self):
@@ -373,7 +373,7 @@ class AccountAssetAsset(models.Model):
                             end_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(
                                 years=asset.depreciation_year)
                             date_delta = (end_date - self.date_str_format(asset.dmc_date)).days
-                            if date_delta>0:
+                            if date_delta > 0:
                                 daily_depr = asset.depr_base_value / date_delta
                             else:
                                 daily_depr = 0;

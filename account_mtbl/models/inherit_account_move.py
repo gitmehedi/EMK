@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 
 class AccountMove(models.Model):
     _name = "account.move"
-    _inherit = ['account.move', 'mail.thread']
+    _inherit = ['account.move', 'mail.thread', 'ir.needaction_mixin']
 
     journal_id = fields.Many2one(track_visibility='onchange')
     date = fields.Date(track_visibility='onchange', default=lambda self: self.env.user.company_id.batch_date)
@@ -57,6 +57,11 @@ class AccountMove(models.Model):
     # def _check_date(self):
     #     if self.date != self.env.user.company_id.batch_date:
     #         raise ValidationError(_('Journal Date should not be greater than system datetime.'))
+
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ('posted',)), ('is_sync', '=', False)]
 
 
 class AccountMoveLine(models.Model):
