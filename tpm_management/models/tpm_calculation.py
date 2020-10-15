@@ -264,6 +264,9 @@ class TPMManagementModel(models.Model):
                 journal_entry += self.format_journal(credit)
                 journal_entry += self.format_journal(debit)
 
+            if not journal_entry:
+                raise ValidationError(_("Credit/Debit should not be empty."))
+
             query = """INSERT INTO account_move_line 
                                     (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
                                     credit,debit,amount_currency,company_id,is_bgl,sub_operating_unit_id)  
