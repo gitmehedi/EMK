@@ -27,6 +27,7 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
         aml_obj = self.env['account.move.line']
         move_lines = dict(map(lambda x: (x, []), accounts.ids))
         state = used_context['state']
+        partner_id = used_context['partner_id']
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
@@ -50,16 +51,16 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
                             LEFT JOIN res_partner p ON (l.partner_id=p.id)
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
-                            l.account_id IN %s AND l.move_id=m.id AND l.date BETWEEN %s AND %s 
-                            AND l.journal_id IN %s
+                            l.account_id IN %s AND l.partner_id=%s
+                            AND l.date BETWEEN %s AND %s AND l.journal_id IN %s
             """
 
             sql += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
 
             if state == 'posted':
-                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids), state)
+                params = (tuple(accounts.ids), partner_id, fy_date_start, fy_date_end, tuple(journal_ids.ids), state)
             else:
-                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids))
+                params = (tuple(accounts.ids), partner_id, fy_date_start, fy_date_end, tuple(journal_ids.ids))
 
             cr.execute(sql, params)
 
@@ -83,16 +84,16 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
                             LEFT JOIN account_invoice i ON (m.id =i.move_id)
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
-                            l.account_id IN %s AND l.move_id=m.id AND l.date < %s AND l.date >= %s 
-                            AND l.journal_id IN %s
+                            l.account_id IN %s AND l.partner_id=%s 
+                            AND l.date < %s AND l.date >= %s AND l.journal_id IN %s
             """
 
             sql += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
 
             if state == 'posted':
-                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), state)
+                params = (tuple(accounts.ids), partner_id, used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), state)
             else:
-                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']))
+                params = (tuple(accounts.ids), partner_id, used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']))
 
             cr.execute(sql, params)
 
@@ -114,17 +115,20 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
         filters = filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
 
         # Get move lines base on sql query and Calculate the total balance of move lines
-        sql = ('''SELECT l.id AS lid, m.narration AS narration, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
+        sql = ('''SELECT l.id AS lid, invl.price_unit, invl.quantity AS qty, u.name AS unit_name, m.narration AS narration, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
                     m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name\
                     FROM account_move_line l\
                     JOIN account_move m ON (l.move_id=m.id)\
                     LEFT JOIN res_currency c ON (l.currency_id=c.id)\
                     LEFT JOIN res_partner p ON (l.partner_id=p.id)\
+                    LEFT JOIN account_invoice i ON (m.id =i.move_id)\
+                    LEFT JOIN account_invoice_line invl ON (i.id=invl.invoice_id)\
+                    LEFT JOIN product_uom u ON (invl.uom_id=u.id)\
                     JOIN account_journal j ON (l.journal_id=j.id)\
                     JOIN account_account acc ON (l.account_id = acc.id) \
-                    WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, m.narration, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
+                    WHERE l.partner_id=%s AND l.account_id IN %s ''' + filters + ''' GROUP BY l.id, invl.price_unit, invl.quantity, u.name, m.narration, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
 
-        params = (tuple(accounts.ids),) + tuple(where_params)
+        params = (partner_id, tuple(accounts.ids),) + tuple(where_params)
         cr.execute(sql, params)
 
         for row in cr.dictfetchall():
@@ -166,6 +170,7 @@ class VendorGeneralLedgerXLSX(ReportXlsx):
 
         # create context dictionary
         used_context = {}
+        used_context['partner_id'] = docs.id
         used_context['journal_ids'] = journal_ids.ids or False
         used_context['state'] = obj.target_move
         used_context['date_from'] = obj.date_from or False
