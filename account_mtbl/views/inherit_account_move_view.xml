@@ -177,11 +177,5 @@
             <field name="act_window_id" ref="action_account_move_journal_entry_manual"/>
         </record>
 
-        <menuitem name="Journal Entries"
-                  action="action_account_move_journal_entry_manual"
-                  id="menu_action_move_journal_entry_manual"
-                  parent="account.menu_action_move_journal_line_form"
-                  groups="account.group_account_user"
-                  sequence="10"/>
     </data>
 </odoo>

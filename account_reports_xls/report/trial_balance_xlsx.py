@@ -29,8 +29,8 @@ class TrialBalanceXLSX(ReportXlsx):
         header_right = workbook.add_format({'align': 'right', 'valign': 'vcenter', 'bold': True, 'size': 12})
         format = workbook.add_format({'align': 'left', 'valign': 'top'})
         bold = workbook.add_format({'align': 'left', 'bold': True})
-        no_format = workbook.add_format({'num_format': '#,###0.00'})
-        total_format = workbook.add_format({'bold': True, 'num_format': '#,###0.00'})
+        no_format = workbook.add_format({'num_format': '#,###0.000'})
+        total_format = workbook.add_format({'bold': True, 'num_format': '#,###0.000'})
 
         worksheet = workbook.add_worksheet('Trial Balance')
         worksheet.set_column('A:A', 30)
