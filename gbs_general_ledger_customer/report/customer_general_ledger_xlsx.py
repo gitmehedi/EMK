@@ -28,6 +28,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         aml_obj = self.env['account.move.line']
         move_lines = dict(map(lambda x: (x, []), accounts.ids))
         state = used_context['state']
+        partner_id = used_context['partner_id']
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
@@ -51,16 +52,16 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                             LEFT JOIN res_partner p ON (l.partner_id=p.id)
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
-                            l.account_id IN %s AND l.move_id=m.id AND l.date BETWEEN %s AND %s 
-                            AND l.journal_id IN %s
+                            l.account_id IN %s AND l.partner_id=%s 
+                            AND l.date BETWEEN %s AND %s AND l.journal_id IN %s
             """
 
             sql += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
 
             if state == 'posted':
-                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids), state)
+                params = (tuple(accounts.ids), partner_id, fy_date_start, fy_date_end, tuple(journal_ids.ids), state)
             else:
-                params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(journal_ids.ids))
+                params = (tuple(accounts.ids), partner_id, fy_date_start, fy_date_end, tuple(journal_ids.ids))
 
             cr.execute(sql, params)
 
@@ -84,15 +85,15 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                             LEFT JOIN account_invoice i ON (m.id =i.move_id)
                             JOIN account_journal j ON (l.journal_id=j.id)
                         WHERE 
-                            l.account_id IN %s AND l.move_id=m.id AND l.date < %s AND l.date >= %s 
-                            AND l.journal_id IN %s
+                            l.account_id IN %s AND l.partner_id=%s
+                            AND l.date < %s AND l.date >= %s AND l.journal_id IN %s
             """
             sql += " AND m.state=%s GROUP BY l.account_id" if state == 'posted' else " GROUP BY l.account_id"
 
             if state == 'posted':
-                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), state)
+                params = (tuple(accounts.ids), partner_id, used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']), state)
             else:
-                params = (tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']))
+                params = (tuple(accounts.ids), partner_id, used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']))
 
             cr.execute(sql, params)
 
@@ -125,8 +126,8 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                     LEFT JOIN product_uom u ON (invl.uom_id=u.id)\
                     JOIN account_journal j ON (l.journal_id=j.id)\
                     JOIN account_account acc ON (l.account_id = acc.id) \
-                    WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, invl.price_unit, invl.quantity, u.name, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
-        params = (tuple(accounts.ids),) + tuple(where_params)
+                    WHERE l.partner_id=%s AND l.account_id IN %s ''' + filters + ''' GROUP BY l.id, invl.price_unit, invl.quantity, u.name, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
+        params = (partner_id, tuple(accounts.ids),) + tuple(where_params)
         cr.execute(sql, params)
 
         for row in cr.dictfetchall():
@@ -168,6 +169,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
 
         # create context dictionary
         used_context = {}
+        used_context['partner_id'] = docs.id
         used_context['journal_ids'] = journal_ids.ids or False
         used_context['state'] = obj.target_move
         used_context['date_from'] = obj.date_from or False
