@@ -11,8 +11,8 @@
                         <group>
                             <field name="name" placeholder="Name"/>
                             <field name="type"/>
-                            <field name="sys_file_name" attrs="{'invisible':[('type','!=','sys_dt')],'required':[('type','=','sys_dt')]}"/>
-
+                            <field name="sys_file_name"
+                                   attrs="{'invisible':[('type','!=','sys_dt')],'required':[('type','=','sys_dt')]}"/>
                         </group>
                         <group>
                             <field name="method"/>
@@ -41,6 +41,8 @@
                                     attrs="{'invisible': [('method', 'in', ('local','dest_sftp'))],'required': [('method', '=', 'sftp')]}"/>
                         </group>
                         <group string="Destination Settings">
+                            <field name="dest_arc_path"
+                                   attrs="{'invisible': [('type', 'not in', ('mdc'))],'required': [('type', '=', 'mdc')]}"/>
                             <field name="dest_path" placeholder="/var/destination"/>
                             <field name="dest_sftp_host" placeholder="192.168.1.2"
                                    attrs="{'invisible': [('method', '=', 'local')],'required': [('method', 'in', ('sftp','dest_sftp'))]}"/>
@@ -91,7 +93,7 @@
             <tree string="Backups" decoration-success="status==True"
                   decoration-muted="status==False">
                 <field name='name'/>
-                <field name="type" />
+                <field name="type"/>
                 <field name="source_sftp_host" string="Source Middleware"/>
                 <field name="source_path" string="Source Middleware Path"/>
                 <field name="dest_sftp_host" string="Destination Middleware"/>

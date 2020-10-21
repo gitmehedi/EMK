@@ -43,6 +43,7 @@ class ServerFileProcess(models.Model):
     source_sftp_private_key = fields.Char(string="Primary Key Location", track_visibility='onchange')
 
     dest_path = fields.Char(string="Destination Path", required=True, track_visibility='onchange')
+    dest_arc_path = fields.Char(string="Destination Arch Path", track_visibility='onchange')
     dest_sftp_host = fields.Char(string='Middleware IP', track_visibility='onchange')
     dest_sftp_port = fields.Integer(string="Middleware Port", default=22, track_visibility='onchange')
     dest_sftp_user = fields.Char(string='Username', track_visibility='onchange')
@@ -334,10 +335,11 @@ class ServerFileProcess(models.Model):
                 file = generate_file(rec)
 
                 dest_path = os.path.join(rec.dest_path, filename)
+                dest_arc_path = os.path.join(rec.dest_arc_path, filename)
                 local_path = os.path.join(rec.source_path, filename)
 
                 if file:
-                    if destination.put(local_path, dest_path):
+                    if destination.put(local_path, dest_path) and destination.put(local_path, dest_arc_path):
                         with open(local_path, "rb") as cbs_file:
                             encoded_file = base64.b64encode(cbs_file.read())
                         stop_date = fields.Datetime.now()
