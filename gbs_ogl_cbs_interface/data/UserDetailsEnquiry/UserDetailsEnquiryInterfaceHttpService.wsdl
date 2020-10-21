@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions name="UserDetailsEnquiryInterfaceHttpService" targetNamespace="http://BaNCS.TCS.com/webservice/UserDetailsEnquiryInterface/v1/Binding" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://BaNCS.TCS.com/webservice/UserDetailsEnquiryInterface/v1/Binding" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <import location="UserDetailsEnquiryInterface.wsdl" namespace="http://BaNCS.TCS.com/webservice/UserDetailsEnquiryInterface/v1"/>
+  <binding name="UserDetailsEnquiryInterfaceHttpPortBinding" type="ns1:UserDetailsEnquiryInterface" xmlns:ns1="http://BaNCS.TCS.com/webservice/UserDetailsEnquiryInterface/v1">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="userDetailsEnquiry">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="UserDetailsEnquiryFaultMsg">
+        <soap:fault name="UserDetailsEnquiryFaultMsg" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="UserDetailsEnquiryInterfaceHttpService">
+    <port binding="tns:UserDetailsEnquiryInterfaceHttpPortBinding" name="UserDetailsEnquiryInterfaceHttpPort">
+      <soap:address location="http://localhost:9084/UserDetailsEnquiry/UserDetailsEnquiryInterfaceHttpService"/>
+    </port>
+  </service>
+</definitions>
