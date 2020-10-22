@@ -124,7 +124,7 @@ class AssetDepreciationChangeRequest(models.Model):
                                                                              'request_date': self.env.user.company_id.batch_date,
                                                                              'line_id': category.id,
                                                                              })
-                category.write({'pending': True})
+                category.write({'pending': True, 'maker_id': self.maker_id.id})
                 category.act_approve_pending()
 
             assets = self.env['account.asset.asset'].search([('asset_type_id', '=', self.asset_cat_id.id)])
