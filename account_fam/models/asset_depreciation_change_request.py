@@ -165,7 +165,11 @@ class AssetDepreciationChangeRequest(models.Model):
 
             if move:
                 if len(lines) > 1:
-                    move.write({'line_ids': lines})
+                    move.write({
+                        'line_ids': lines,
+                        'maker_id': self.maker_id.id,
+                        'approver_id': self.env.user.id,
+                    })
                     if move.state == 'draft':
                         move.sudo().post()
                 else:

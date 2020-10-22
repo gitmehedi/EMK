@@ -13,6 +13,7 @@ class AccountAssetDisposal(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'name desc,id desc'
     _rec_name = 'name'
+    _describe = "Asset Written-Off"
 
     name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
     total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
@@ -29,12 +30,12 @@ class AccountAssetDisposal(models.Model):
                                track_visibility='onchange')
     dispose_date = fields.Date(string='Dispose Date', readonly=True, states={'approve': [('readonly', False)]},
                                track_visibility='onchange')
-    request_user_id = fields.Many2one('res.users', string='Request User', readonly=True,
+    request_user_id = fields.Many2one('res.users', string='Request', readonly=True,
                                       states={'draft': [('readonly', False)]}, default=lambda self: self.env.user,
                                       track_visibility='onchange')
-    approve_user_id = fields.Many2one('res.users', string='Approve User', readonly=True,
+    approve_user_id = fields.Many2one('res.users', string='Maker', readonly=True,
                                       states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    dispose_user_id = fields.Many2one('res.users', string='Dispose User', readonly=True,
+    dispose_user_id = fields.Many2one('res.users', string='Checker', readonly=True,
                                       states={'approve': [('readonly', False)]}, track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
@@ -128,7 +129,7 @@ class AccountAssetDisposal(models.Model):
         credit = {
             'name': self.narration,
             'account_id': asset.asset_type_id.account_asset_id.id,
-            'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+            'credit': round(asset.value, 2) if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
             'debit': 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
@@ -141,8 +142,8 @@ class AccountAssetDisposal(models.Model):
             'name': self.narration,
             'account_id': asset.asset_type_id.account_depreciation_id.id,
             'credit': 0.0,
-            'debit': asset.accumulated_value if float_compare(asset.accumulated_value, 0.0,
-                                                              precision_digits=prec) > 0 else 0.0,
+            'debit': round(asset.accumulated_value, 2) if float_compare(asset.accumulated_value, 0.0,
+                                                                        precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.asset_type_id.account_depreciation_seq_id.id if asset.asset_type_id else None,
@@ -154,8 +155,8 @@ class AccountAssetDisposal(models.Model):
             'name': self.narration_gl,
             'account_id': asset.asset_type_id.account_asset_loss_id.id,
             'credit': 0.0,
-            'debit': asset.value_residual if float_compare(asset.value_residual, 0.0,
-                                                           precision_digits=prec) > 0 else 0.0,
+            'debit': round(asset.value_residual, 2) if float_compare(asset.value_residual, 0.0,
+                                                                     precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.asset_type_id.account_asset_loss_seq_id.id if asset.asset_type_id else None,
@@ -170,6 +171,8 @@ class AccountAssetDisposal(models.Model):
             'journal_id': asset.category_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id,
+            'maker_id': self.approve_user_id.id,
+            'approver_id': self.env.user.id,
             'line_ids': [(0, 0, credit), (0, 0, debit), (0, 0, debit2)],
         })
 

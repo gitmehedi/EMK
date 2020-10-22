@@ -10,6 +10,8 @@
                             states="draft" groups="account.group_account_manager"/>
                     <button name="action_dispose" string="Confirm" type="object" class="oe_highlight"
                             context="{'dispose':True}" states="approve"/>
+                    <button name="%(action_asset_dispose_wizard)d" states="draft"
+                            type="action" string="Add Assets" />
                     <field name="state" widget="statusbar" statusbar_visible="approve,dispose"/>
                 </header>
                 <sheet>
@@ -88,7 +90,6 @@
                 <field name="request_date"/>
                 <field name="approve_date"/>
                 <field name="dispose_date"/>
-                <field name="request_user_id"/>
                 <field name="approve_user_id"/>
                 <field name="dispose_user_id"/>
                 <field name="state" widget="statusbar"/>

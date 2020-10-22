@@ -6,7 +6,13 @@ from odoo import api, fields, models, _
 class AssetDisposeWizard(models.TransientModel):
     _name = 'asset.dispose.wizard'
 
-    asset_ids = fields.Many2many('account.asset.asset','asset_dispose_rel','asset_id','dispose_id', required=True, string='Assets')
+    def default_branch(self):
+        active_id = self.env.context['active_id']
+        asset_sale = self.env['account.asset.disposal'].browse(active_id)
+        return asset_sale.branch_id
+
+    branch_id = fields.Many2one('operating.unit', default=default_branch)
+    asset_ids = fields.Many2many('account.asset.asset', string='Assets')
 
     @api.multi
     def dispose(self):

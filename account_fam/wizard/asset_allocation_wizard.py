@@ -140,11 +140,12 @@ class AssetAllocationWizard(models.TransientModel):
                     }
 
                     move = self.env['account.move'].create({
-                        'ref': 'Asset allocation from branch [{0}] to [{1}]'.format(self.operating_unit_id.name,
-                                                                                  self.to_operating_unit_id.name),
+                        'ref': 'Asset Allocation Branch [{0}] to [{1}]'.format(self.operating_unit_id.name,
+                                                                               self.to_operating_unit_id.name),
                         'journal_id': asset.asset_type_id.journal_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
-                        # 'sub_operating_unit_id': cur_sub_operating_unit,
+                        'maker_id': self.env.user.id,
+                        'approver_id': self.env.user.id,
                         'line_ids': [(0, 0, debit), (0, 0, credit)],
                     })
 
@@ -224,10 +225,12 @@ class AssetAllocationWizard(models.TransientModel):
                     }
 
                     move = self.env['account.move'].create({
-                        'ref': 'Asset transfer from branch [{0}] to [{1}]'.format(self.operating_unit_id.name,
-                                                                                  self.to_operating_unit_id.name),
+                        'ref': 'Asset Transfer Branch [{0}] to [{1}]'.format(self.operating_unit_id.name,
+                                                                             self.to_operating_unit_id.name),
                         'journal_id': asset.asset_type_id.journal_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
+                        'maker_id': self.env.user.id,
+                        'approver_id': self.env.user.id,
                         'line_ids': [(0, 0, from_total_credit), (0, 0, to_total_debit),
                                      (0, 0, from_depr_credit), (0, 0, to_depr_debit)],
                     })
@@ -237,7 +240,6 @@ class AssetAllocationWizard(models.TransientModel):
                     if move.state == 'draft':
                         move.sudo().post()
                     asset.write({'current_branch_id': self.to_operating_unit_id.id,
-                                 # 'sub_operating_unit_id': to_sub_operating_unit,
                                  'cost_centre_id': self.cost_centre_id.id
                                  })
             else:

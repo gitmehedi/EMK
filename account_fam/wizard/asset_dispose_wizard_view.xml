@@ -5,14 +5,39 @@
         <field name="model">asset.dispose.wizard</field>
         <field name="arch" type="xml">
             <form string="Fixed Assets Write-off">
-                <field name="asset_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
-                    <tree string="Budget Items" editable="top">
+                <field name="branch_id" invisible="1"/>
+                <field name="asset_ids"
+                       domain="[('state', '=', 'open'), ('depreciation_flag', '=', True), ('current_branch_id', '=', branch_id)]">
+                    <tree string="Assets"
+                          decoration-info="(state == 'open') and (allocation_status == False)"
+                          decoration-success="(state == 'open') and (allocation_status == True)"
+                          decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
+                          decoration-muted="(state == 'close')">
+                        <field name="asset_seq"/>
                         <field name="name"/>
+                        <field name="category_id"/>
+                        <field name="asset_type_id"/>
+                        <field name="current_branch_id"/>
+                        <field name="cost_centre_id"/>
+                        <field name="asset_usage_date"/>
+                        <field name="lst_depr_date"/>
+                        <field name="value" sum="value"/>
+                        <field name="value_residual" sum="value_residual"/>
+                        <field name="accumulated_value" sum="accumulated_value"/>
+                        <field name="lst_depr_amount" sum="depr_base_value"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="company_id" groups="base.group_multi_company" invisible="True"/>
+                        <field name="depreciation_flag" invisible="True"/>
                         <field name="state"/>
+                        <field name="allocation_status" invisible="True"/>
+                        <button name="allocation_status2" icon="fa-times-circle text-danger"
+                                attrs="{'invisible': [('allocation_status', '=', True)]}"/>
+                        <button name="allocation_status1" icon="fa fa-check text-success"
+                                attrs="{'invisible': [('allocation_status', '=', False)]}"/>
                     </tree>
                 </field>
                 <footer>
-                    <button name="dispose" string="Dispose" type="object" class="btn-primary"/>
+                    <button name="dispose" string="Confirm" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-default" special="cancel"/>
                 </footer>
             </form>
