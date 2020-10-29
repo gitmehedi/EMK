@@ -321,7 +321,7 @@ class GBSFileImportWizard(models.TransientModel):
                 is_valid = False
                 errors += self.format_error(line_no, 'TDS [{0}] invalid value'.format(tds_name)) + '\n'
 
-            if service_value <= 0:
+            if service_value < 0:
                 is_valid = False
                 errors += self.format_error(line_no, 'Service Value [{0}] invalid value'.format(service_value)) + '\n'
 
