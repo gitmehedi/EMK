@@ -941,7 +941,7 @@ class ServerFileSuccess(models.Model):
     _name = 'server.file.success'
     _description = "GLIF File Success"
     _inherit = ["mail.thread", "ir.needaction_mixin"]
-    _order = 'id desc'
+    _order = 'name desc'
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     start_date = fields.Datetime(string='Start Datetime', required=True)
@@ -957,6 +957,16 @@ class ServerFileSuccess(models.Model):
         for rec in self:
             diff = dt.strptime(rec.stop_date, TIME_FORMAT) - dt.strptime(rec.start_date, TIME_FORMAT)
             rec.time = str(diff)
+
+    @api.multi
+    def unlink_glif(self):
+        unlink = "UPDATE account_move SET state='draft' WHERE id=%s" % self.move_id.id
+        self.env.cr.execute(unlink)
+        self._cr.commit()
+        if not self.env.cr.execute(unlink):
+            self.move_id.unlink()
+            self.unlink()
+            self._cr.commit()
 
 
 class GenerateCBSJournalSuccess(models.Model):
