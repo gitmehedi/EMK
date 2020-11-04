@@ -1,20 +1,21 @@
-from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class InheritEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    @api.one
+    @api.multi
+    @api.depends('init_pf', 'total_pf')
     def _compute_total_pf(self):
-        pfa = self.init_pf
-        for line in self.pf_lines:
-            pfa += line.amount
-
-        self.total_pf = pfa
+        for emp in self:
+            pfa = emp.init_pf
+            for line in emp.pf_lines:
+                pfa += line.amount
+            emp.total_pf = pfa
 
     init_pf = fields.Float("Initial Provident Fund")
-    total_pf = fields.Float(compute='_compute_total_pf', string='Total PF')
+    total_pf = fields.Float(compute='_compute_total_pf', string='Total PF', store=True)
 
     # Relational fields
     pf_lines = fields.One2many('hr.employee.pf.line', 'employee_id', string='PF Lines', readonly="True")
