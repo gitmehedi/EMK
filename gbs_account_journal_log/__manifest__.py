@@ -12,6 +12,7 @@
         'views/account_journal_view.xml',
         'views/inherit_account_move_view.xml',
         'views/inherit_account_move_line_view.xml',
+        'views/inherit_account_move_view_style.xml',
     ],
 
     'summary': 'Account Journal Log',
