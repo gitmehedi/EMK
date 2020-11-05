@@ -1,8 +1,10 @@
 
- .gbs_journal_tree [data-id="debit"]{width: 750px;}
- .gbs_journal_tree [data-id="credit"]{width: 750px;}
-
-/*
+.gbs_journal_tree [data-id="debit"] {
+    width: 110px;
+}
+.gbs_journal_tree [data-id="credit"] {
+    width: 110px;
+}
 
 .gbs_journal .o_form_sheet_bg {
     position: relative;
@@ -15,36 +17,34 @@
     margin: 0;
 }
 
-.o_form_sheet .o_list_view thead,
-.o_form_sheet .o_list_view thead th {
+.gbs_journal .gbs_journal_tree thead,
+.gbs_journal .gbs_journal_tree thead th {
     white-space: nowrap;
 }
 
-.o_form_sheet .o_list_view thead th {
+.gbs_journal .gbs_journal_tree thead th {
     background: #ededed;
     border-left: 1px solid #dfdfdf;
     border-bottom: 2px solid #ddd;
 }
 
-.o_form_sheet .o_list_view {
+.gbs_journal .gbs_journal_tree {
     max-height: calc(100vh - 255px);
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: auto;
     border: 1px solid #ddd;
 }
 
-.o_form_sheet .table-responsive {
+.gbs_journal .gbs_journal_tree .table-responsive {
     overflow: initial;
 }
 
-.o_list_editable {
+.gbs_journal .gbs_journal_tree .table {
+    width: 110% !important;
+    max-width: none !important;
+}
+
+.gbs_journal .gbs_journal_tree .o_list_editable {
     width: 100%;
     over-flow-x: auto;
 }
-
-.gbs_journal o_list_editable_form {
-    width: 200%;
-}
-
-.table-responsive {
-    width: 200%;
-}*/
