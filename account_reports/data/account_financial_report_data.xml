@@ -845,6 +845,7 @@
                 <script type="text/javascript" src="/account_reports/static/src/js/account_reports_backend.js"></script>
                 <script type="text/javascript" src="/account_reports/static/src/js/account_reports_followup_backend.js"></script>
                 <link rel="stylesheet" href="/account_reports/static/src/less/account_financial_report.less" />
+                <link rel="stylesheet" href="/account_reports/static/src/less/custom_account_financial_report.less" />
             </xpath>
         </template>
         <template id="assets_common" name="account_reports_assets_common" inherit_id="web.assets_common">

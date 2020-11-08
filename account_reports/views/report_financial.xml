@@ -203,6 +203,7 @@
     <link rel="stylesheet" href="/web/static/src/less/variables.less"/>
     <link rel="stylesheet" href="/web/static/src/less/utils.less"/>
     <link rel="stylesheet" href="/account_reports/static/src/less/account_financial_report.less" />
+    <link rel="stylesheet" href="/account_reports/static/src/less/custom_account_financial_report.less" />
 </template>
 <template id="report_financial">
         <div class='o_account_reports_body'>
