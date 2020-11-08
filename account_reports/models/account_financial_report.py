@@ -626,14 +626,15 @@ class AccountFinancialReportLine(models.Model):
                             results[key][col] = safe_eval(formula, c, nocopy=True)
             # End Bappy
 
+            # Start Bappy
+            # to_del = []
+            # for key in results:
+            #     if self.env.user.company_id.currency_id.is_zero(results[key]['balance']):
+            #         to_del.append(key)
+            # for key in to_del:
+            #     del results[key]
 
-
-            to_del = []
-            for key in results:
-                if self.env.user.company_id.currency_id.is_zero(results[key]['balance']):
-                    to_del.append(key)
-            for key in to_del:
-                del results[key]
+            # End Bappy
 
         results.update({'line': vals})
         return results
