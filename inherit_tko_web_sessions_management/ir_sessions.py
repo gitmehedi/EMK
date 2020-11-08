@@ -25,6 +25,15 @@ class ir_sessions(models.Model):
             sessions._close_session(logout_type='to')
         return True
 
+    def delete_session(self):
+        try:
+            dir = os.path.join(root.session_store.path)
+            files = "find %s -type f -exec rm -v {} \;" % dir
+            if os.path.exists(dir):
+                os.system(files)
+        except OSError:
+            pass
+
     @api.multi
     def _close_session(self, logout_type=None):
         redirect = False

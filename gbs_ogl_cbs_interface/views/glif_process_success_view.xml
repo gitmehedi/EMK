@@ -6,6 +6,11 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="GLIF Success" edit="0" create="0" delete="0" duplicate="0">
+                <header>
+                    <button name="unlink_glif" groups="gbs_ogl_cbs_interface.grp_api_interface_manager"
+                            confirm="Are you sure to delete current GLIF which will also delete related CBS Journal?"
+                            type="object" string="DELETE GLIF"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
