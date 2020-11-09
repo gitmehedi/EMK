@@ -67,25 +67,26 @@ class InheritAccountPayment(models.Model):
         return invoice_ids
 
     @api.multi
-    def get_sale_order_id_list(self):
-        so_ids = []
+    def get_sale_order_ids(self):
+        ids = []
         if self.partner_id.id:
-            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                                   ('state', '=', 'done'),
-                                                                   ('type_id.sale_order_type', 'in',
-                                                                    ['cash', 'credit_sales'])])
-            for so in sale_order_ids:
-                # check if so has any invoice in 'open' state.
-                if len(self.env['account.invoice'].sudo().search([('so_id', '=', so.id), ('state', '=', 'open')])) > 0:
-                    so_ids.append(so.id)
-                # check if so type is 'cash' and has not created any invoice yet.
-                elif so.type_id.sale_order_type == 'cash' and len(self.env['account.invoice'].sudo().search(
-                        [('so_id', '=', so.id), ('state', '=', 'paid')])) <= 0:
-                    so_ids.append(so.id)
-                else:
-                    pass
+            sql_str = """SELECT
+                            DISTINCT s.id
+                        FROM
+                            sale_order s
+                            JOIN sale_order_type ot ON ot.id=s.type_id
+                            LEFT JOIN account_invoice i ON i.so_id=s.id
+                        WHERE
+                            s.partner_id=%s AND s.state='done'
+                            AND ((ot.sale_order_type='credit_sales' AND i.state='open') 
+                                 OR (ot.sale_order_type='cash' 
+                                 AND s.id NOT IN (SELECT so_id FROM account_invoice WHERE partner_id=%s AND state='paid')))
+    
+            """
+            self.env.cr.execute(sql_str, (self.partner_id.id, self.partner_id.id))
+            ids = self.env.cr.fetchall()
 
-        return so_ids
+        return ids
 
     @api.onchange('narration')
     def onchange_narration(self):
@@ -101,8 +102,8 @@ class InheritAccountPayment(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         self.sale_order_id = []
-        id_list = self.get_sale_order_id_list()
-        return {'domain': {'sale_order_id': [('id', 'in', id_list)]}}
+        ids = self.get_sale_order_ids()
+        return {'domain': {'sale_order_id': [('id', 'in', ids)]}}
 
     @api.onchange('is_auto_invoice_paid')
     def onchange_is_auto_invoice_paid(self):

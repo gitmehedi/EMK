@@ -79,7 +79,7 @@ class PayrollReportPivotal(models.AbstractModel):
                                         if line.code == "NET":
                                             total_sum.append(math.ceil(total_amount))
 
-                                        break;
+                                        break
 
                             dpt_payslips['val'].append(payslip)
                 else:
@@ -107,7 +107,7 @@ class PayrollReportPivotal(models.AbstractModel):
                                     if line.code == "NET":
                                         total_sum.append(math.ceil(total_amount))
 
-                                    break;
+                                    break
 
                         dpt_payslips['val'].append(payslip)
 
@@ -131,6 +131,7 @@ class PayrollReportPivotal(models.AbstractModel):
                 payslip['emp_name'] = other_slip.employee_id.name
                 payslip['designation'] = other_slip.employee_id.job_id.name
                 payslip['doj'] = other_slip.employee_id.initial_employment_date
+                payslip['loan_balance'] = None
 
                 for rule in rule_list:
                     payslip[rule['code']] = 0
@@ -141,7 +142,7 @@ class PayrollReportPivotal(models.AbstractModel):
                             if line.code == "NET":
                                 total_sum.append(math.ceil(line.total))
 
-                            break;
+                            break
 
                 dpt_payslips['name'] = "Other"
                 dpt_payslips['val'].append(payslip)
