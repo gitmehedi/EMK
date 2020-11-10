@@ -10,6 +10,7 @@ class DBOperationManage(models.Model):
     _order = 'id desc'
     _rec_name = 'destination_db'
 
+    name = fields.Char(string="Title", required=True, track_visibility='onchange')
     source_db = fields.Char(string='Source Database', required=True, track_visibility='onchange')
     source_ip = fields.Char(string='Source IP', track_visibility='onchange')
     source_port = fields.Char(string='Source Port', track_visibility='onchange')

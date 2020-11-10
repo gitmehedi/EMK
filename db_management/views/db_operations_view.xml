@@ -17,10 +17,11 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="location"/>
+                                <field name="name"/>
                                 <field name="backup_path"/>
                             </group>
                             <group>
+                                <field name="location"/>
                                 <field name="operation_type"/>
                                 <field name="query" invisible="1"/>
                             </group>
@@ -67,8 +68,11 @@
             <field name="name">view.db.operation.manage.tree</field>
             <field name="model">db.operation.manage</field>
             <field name="arch" type="xml">
-                <tree>
-                    <field name="operation_type"/>
+                <tree string="Sync" duplicate="0"
+                          decoration-info="location=='local'" decoration-success="location=='remote'"
+                          decoration-bf="location in ('local','remote')" >
+                    <field name="name"/>
+                    <field name="location"/>
                     <field name="source_db"/>
                     <field name="destination_db"/>
                     <field name="source_ip"/>
