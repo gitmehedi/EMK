@@ -44,9 +44,9 @@ class AccountInvoice(models.Model):
             # considering if the vat or tax rules are reverse
             for tax_line in inv.tax_line_ids:
                 if tax_line.tax_id.is_reverse:
-                    payable -= tax_line.amount
+                    payable -= round(tax_line.amount, 2)
                 else:
-                    payable += tax_line.amount
+                    payable += round(tax_line.amount, 2)
 
             # considering adjusted advance amount
             if inv.adjusted_advance > 0:
