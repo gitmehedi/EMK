@@ -70,20 +70,28 @@ class InheritAccountPayment(models.Model):
     def get_sale_order_ids(self):
         ids = []
         if self.partner_id.id:
-            sql_str = """SELECT
+            sql_str = """(SELECT
                             DISTINCT s.id
                         FROM
                             sale_order s
-                            JOIN sale_order_type ot ON ot.id=s.type_id
+                            JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='credit_sales'
+                            JOIN account_invoice i ON i.origin=s.name AND i.state='open'
+                        WHERE
+                            s.partner_id=%s AND s.state='done')
+                        UNION
+                        (SELECT
+                            DISTINCT s.id
+                        FROM
+                            sale_order s
+                            JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='cash'
                             LEFT JOIN account_invoice i ON i.so_id=s.id
                         WHERE
                             s.partner_id=%s AND s.state='done'
-                            AND ((ot.sale_order_type='credit_sales' AND i.state='open') 
-                                 OR (ot.sale_order_type='cash' 
-                                 AND s.id NOT IN (SELECT so_id FROM account_invoice WHERE partner_id=%s AND state='paid')))
-    
+                            AND s.id NOT IN (SELECT s.id FROM account_invoice i 
+                                             JOIN sale_order s ON s.name=i.origin 
+                                             AND i.partner_id=%s AND i.state='paid'))    
             """
-            self.env.cr.execute(sql_str, (self.partner_id.id, self.partner_id.id))
+            self.env.cr.execute(sql_str, (self.partner_id.id, self.partner_id.id, self.partner_id.id))
             ids = self.env.cr.fetchall()
 
         return ids
