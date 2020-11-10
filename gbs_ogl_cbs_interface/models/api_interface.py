@@ -362,7 +362,7 @@ class APIInterface(models.Model):
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
         maker = str(rec.maker_id.login).zfill(MC_LEN)
         checker = str(self.env.user.login).zfill(MC_LEN)
-        branch = str(self.env.user.default_operating_unit_id.id).zfill(BRANCH_LEN)
+        branch = str(self.env.user.default_operating_unit_id.code).zfill(BRANCH_LEN)
 
         dhead = {
             'InstNum': ep.ins_num,
@@ -424,7 +424,7 @@ class APIInterface(models.Model):
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
         maker = str(rec.maker_id.login).zfill(MC_LEN)
         checker = str(self.env.user.login).zfill(MC_LEN)
-        branch = str(self.env.user.default_operating_unit_id.id).zfill(BRANCH_LEN)
+        branch = str(self.env.user.default_operating_unit_id.code).zfill(BRANCH_LEN)
 
         dhead = {
             'InstNum': ep.ins_num,
@@ -483,9 +483,9 @@ class APIInterface(models.Model):
                     </soapenv:Envelope>"""
 
         return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'], dhead['Flag5'],
-                              dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],
-                              dbody['AcctNum1'], dbody['Amt1'], dbody['Descptn'], dbody['AcctNum2'],
-                              dbody['AccCurCode1'], dbody['RefNum'], dhead['CheckerID1'])
+                              dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],dbody['AcctNum1'],
+                              dbody['Amt1'], dbody['Descptn'], dbody['AcctNum2'],dbody['AccCurCode1'], dbody['RefNum'],
+                              dhead['CheckerID1'])
 
     @api.model
     def api_glto_deposit_transfer(self, rec, ep):
@@ -497,7 +497,7 @@ class APIInterface(models.Model):
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
         maker = str(rec.maker_id.login).zfill(MC_LEN)
         checker = str(self.env.user.login).zfill(MC_LEN)
-        branch = str(self.env.user.default_operating_unit_id.id).zfill(BRANCH_LEN)
+        branch = str(self.env.user.default_operating_unit_id.code).zfill(BRANCH_LEN)
 
         dhead = {
             'InstNum': ep.ins_num,

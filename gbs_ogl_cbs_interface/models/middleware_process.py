@@ -312,7 +312,7 @@ class ServerFileProcess(models.Model):
                         sub_opu = str(val.sub_operating_unit_id.code) if val.sub_operating_unit_id.code else '001'
                         branch_code = str("00" + val.operating_unit_id.code) if val.operating_unit_id.code else '00001'
                         bgl = "0{0}{1}{2}".format(account_no, sub_opu, branch_code)
-                        branch = str(val.move_id.approver_id.default_operating_unit_id.id).zfill(5)
+                        branch = str(val.move_id.approver_id.default_operating_unit_id.code).zfill(5)
                         maker = str(val.move_id.maker_id.login).zfill(7)
                         checker = str(val.move_id.approver_id.login).zfill(7)
 
