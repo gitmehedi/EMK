@@ -83,6 +83,7 @@ class ChequeReceived(models.Model):
                                                         'honoured': [('readonly', True)],
                                                         'received': [('readonly', True)],
                                                         'deposited': [('readonly', True)]}, track_visibility='onchange')
+    honoured_date = fields.Date(string='Honoured Date', readonly=True, track_visibility='onchange')
 
     @api.onchange('narration')
     def onchange_narration(self):
@@ -92,22 +93,33 @@ class ChequeReceived(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         self.sale_order_id = []
-        so_ids = []
+        ids = []
         if self.partner_id.id:
-            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                                   ('state', '=', 'done')])
-            for so in sale_order_ids:
-                # check if so has any invoice in 'open' state.
-                if len(self.env['account.invoice'].sudo().search([('so_id', '=', so.id), ('state', '=', 'open')])) > 0:
-                    so_ids.append(so.id)
-                # check if so type is 'cash' and has not created any invoice yet.
-                elif so.type_id.sale_order_type == 'cash' and len(self.env['account.invoice'].sudo().search(
-                        [('so_id', '=', so.id), ('state', '=', 'paid')])) <= 0:
-                    so_ids.append(so.id)
-                else:
-                    pass
+            sql_str = """(SELECT
+                            DISTINCT s.id
+                        FROM
+                            sale_order s
+                            JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='credit_sales'
+                            JOIN account_invoice i ON i.origin=s.name AND i.state='open'
+                        WHERE
+                            s.partner_id=%s AND s.state='done')
+                        UNION
+                        (SELECT
+                            DISTINCT s.id
+                        FROM
+                            sale_order s
+                            JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='cash'
+                            LEFT JOIN account_invoice i ON i.so_id=s.id
+                        WHERE
+                            s.partner_id=%s AND s.state='done'
+                            AND s.id NOT IN (SELECT s.id FROM account_invoice i 
+                                             JOIN sale_order s ON s.name=i.origin 
+                                             AND i.partner_id=%s AND i.state='paid'))    
+                    """
+            self.env.cr.execute(sql_str, (self.partner_id.id, self.partner_id.id, self.partner_id.id))
+            ids = self.env.cr.fetchall()
 
-        return {'domain': {'sale_order_id': [('id', 'in', so_ids)]}}
+        return {'domain': {'sale_order_id': [('id', 'in', ids)]}}
 
     @api.multi
     def _get_payment_method(self):
@@ -224,6 +236,21 @@ class ChequeReceived(models.Model):
     @api.multi
     def action_honoured(self):
         for rec in self:
+            if not rec.honoured_date:
+                ids = self.get_sale_order_ids()
+                wizard = self.env.ref('gbs_accounting_cheque_received.add_honoured_date_wizard_view_form')
+                return {
+                    'name': _('Honoured Information'),
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'add.honoured.date.wizard',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'view_id': wizard.id,
+                    'doamin': [('sale_order_ids', 'in', ids)],
+                    'context': {'default_sale_order_ids': self.sale_order_id.ids},
+                    'target': 'new'
+                }
+
             if rec.sale_order_id.ids:
                 rec.invoice_ids = self.env['account.invoice'].sudo().search([('so_id', 'in', self.sale_order_id.ids),
                                                                              ('state', '=', 'open')])
@@ -361,3 +388,32 @@ class ChequeReceived(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('cheque_received_id', 'in', self.ids)],
         }
+
+    def get_sale_order_ids(self):
+        ids = []
+        if self.partner_id.id:
+            sql_str = """(SELECT
+                                    DISTINCT s.id
+                                FROM
+                                    sale_order s
+                                    JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='credit_sales'
+                                    JOIN account_invoice i ON i.origin=s.name AND i.state='open'
+                                WHERE
+                                    s.partner_id=%s AND s.state='done')
+                                UNION
+                                (SELECT
+                                    DISTINCT s.id
+                                FROM
+                                    sale_order s
+                                    JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='cash'
+                                    LEFT JOIN account_invoice i ON i.so_id=s.id
+                                WHERE
+                                    s.partner_id=%s AND s.state='done'
+                                    AND s.id NOT IN (SELECT s.id FROM account_invoice i 
+                                                     JOIN sale_order s ON s.name=i.origin 
+                                                     AND i.partner_id=%s AND i.state='paid'))    
+                            """
+            self.env.cr.execute(sql_str, (self.partner_id.id, self.partner_id.id, self.partner_id.id))
+            ids = self.env.cr.fetchall()
+
+        return ids
