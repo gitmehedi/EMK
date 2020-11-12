@@ -93,32 +93,7 @@ class ChequeReceived(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         self.sale_order_id = []
-        ids = []
-        if self.partner_id.id:
-            sql_str = """(SELECT
-                            DISTINCT s.id
-                        FROM
-                            sale_order s
-                            JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='credit_sales'
-                            JOIN account_invoice i ON i.origin=s.name AND i.state='open'
-                        WHERE
-                            s.partner_id=%s AND s.state='done')
-                        UNION
-                        (SELECT
-                            DISTINCT s.id
-                        FROM
-                            sale_order s
-                            JOIN sale_order_type ot ON ot.id=s.type_id AND ot.sale_order_type='cash'
-                            LEFT JOIN account_invoice i ON i.so_id=s.id
-                        WHERE
-                            s.partner_id=%s AND s.state='done'
-                            AND s.id NOT IN (SELECT s.id FROM account_invoice i 
-                                             JOIN sale_order s ON s.name=i.origin 
-                                             AND i.partner_id=%s AND i.state='paid'))    
-                    """
-            self.env.cr.execute(sql_str, (self.partner_id.id, self.partner_id.id, self.partner_id.id))
-            ids = self.env.cr.fetchall()
-
+        ids = self.get_sale_order_ids()
         return {'domain': {'sale_order_id': [('id', 'in', ids)]}}
 
     @api.multi
