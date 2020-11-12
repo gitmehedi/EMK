@@ -18,7 +18,7 @@ class AccountMove(models.Model):
     is_cbs = fields.Boolean(default=False, help='CBS data always sync with OGL using GLIF.')
     is_sync = fields.Boolean(default=False, copy=False, help='OGL continuously send data to CBS for journal sync.')
     is_cr = fields.Boolean(default=False)
-    user_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
+    user_id = fields.Many2one('res.users', 'Maker')
     total_debit = fields.Char(compute='_compute_sum', string="Total Debit")
     total_credit = fields.Char(compute='_compute_sum', string="Total Credit")
     missmatch_value = fields.Char(compute='_compute_sum', string="Amount Variance")
@@ -49,15 +49,9 @@ class AccountMove(models.Model):
 
     @api.multi
     def post(self):
-        if self.env.user.id == self.user_id.id and self.env.user.id != SUPERUSER_ID:
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         return super(AccountMove, self).post()
-
-    # @api.constrains('date')
-    # def _check_date(self):
-    #     if self.date != self.env.user.company_id.batch_date:
-    #         raise ValidationError(_('Journal Date should not be greater than system datetime.'))
-
 
     @api.model
     def _needaction_domain_get(self):

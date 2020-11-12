@@ -274,7 +274,9 @@ class TPMManagementModel(models.Model):
             self.env.cr.execute(query)
 
             if move.state == 'draft':
-                move.sudo().post()
+                move.write({'maker_id': self.maker_id.id,
+                            'approver_id': self.env.user.id})
+                move.post()
 
             self.write({
                 'state': 'approve',

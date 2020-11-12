@@ -11,7 +11,7 @@
                     <button name="action_dispose" string="Confirm" type="object" class="oe_highlight"
                             context="{'dispose':True}" states="approve"/>
                     <button name="%(action_asset_dispose_wizard)d" states="draft"
-                            type="action" string="Add Assets" />
+                            type="action" string="Add Assets"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,dispose"/>
                 </header>
                 <sheet>
@@ -41,12 +41,12 @@
                     <notebook>
                         <page string="Assets">
                             <field name="line_ids" string="Dispose Assets">
-                                <tree string="Tree Views" editable="bottom">
-                                    <field name="asset_id"
+                                <tree string="Tree Views" editable="bottom" create="0">
+                                    <field name="asset_id" readonly="1"
                                            domain="[('state','=','open'),('asset_status','=','active'),('depreciation_flag','=',True),('current_branch_id','=',parent.branch_id)]"
                                            options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     <field name="cost_value"/>
-                                    <field name="asset_value"/>
+                                    <field name="asset_value" readonly="1"/>
                                     <field name="depreciation_value"/>
                                     <field name="move_id" class="oe_link" readonly="True"/>
                                 </tree>

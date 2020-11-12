@@ -13,7 +13,7 @@ class AccountAssetDisposal(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'name desc,id desc'
     _rec_name = 'name'
-    _describe = "Asset Written-Off"
+    _description = "Asset Written-Off"
 
     name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
     total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
@@ -111,7 +111,7 @@ class AccountAssetDisposal(models.Model):
                 date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
                 dispose = self.generate_move(rec.asset_id)
                 if dispose.state == 'draft':
-                    dispose.sudo().post()
+                    dispose.post()
                     rec.write({'journal_entry': 'post', 'move_id': dispose.id})
                     response = rec.asset_id.set_to_close(date)
 
