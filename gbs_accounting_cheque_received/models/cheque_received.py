@@ -278,7 +278,7 @@ class ChequeReceived(models.Model):
                                                             invoice_currency)
 
         move = self.env['account.move'].create({
-            'date': self.date_on_cheque,
+            'date': self.honoured_date,
             'company_id': self.company_id.id,
             'journal_id': self.journal_id.id,
         })
