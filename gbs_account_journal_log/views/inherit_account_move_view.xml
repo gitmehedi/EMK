@@ -6,6 +6,10 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='partner_id']" position="attributes">
+                    <attribute name="domain">[('parent_id', '=', False), ('active', '=', True),
+                        '|', ('customer', '=', True), ('supplier', '=', True)]</attribute>
+                </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
