@@ -6,74 +6,51 @@
             <field name="model">res.currency</field>
             <field name="inherit_id" ref="base.view_currency_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//form" position="replace">
-                    <form string="Currency" edit="0" duplicate="0">
-                        <header>
-                            <button name="act_approve" string="Approve" type="object" states="draft"
-                                    class="oe_highlight"
-                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
-                            <button name="act_reject" string="Reject" type="object" states="draft"
-                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
-                            <button name="%(action_currency_wizard)d" string="Edit" type="action"
-                                    class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
-                                    attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
-                            <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
-                                    attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
-                            <button name="act_reject_pending" string="Reject" type="object"
-                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
-                                    attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
-                            <button name="%(base.act_view_currency_rates)d" string="View Rates" type="action"
-                                    attrs="{'invisible': [('active', '=', False)]}"/>
-                            <button name="act_draft" string="Set to Draft" type="object" states="reject"
-                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
-                            <field name="state" widget="statusbar" invisible="True"/>
-                        </header>
-
-                        <sheet>
-                            <div class="oe_button_box" name="button_box">
-                                <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                    <field name="active" widget="boolean_button"
-                                           options="{&quot;terminology&quot;: &quot;active&quot;}"/>
-                                </button>
-                            </div>
-                            <group col="4">
-                                <field name="name"/>
-                                <field name="code"/>
-                                <field name="rate"/>
-                                <field name="pending" invisible="1"/>
-                                <field name="maker_id" invisible="1"/>
-                                <field name="approver_id" invisible="1"/>
-                            </group>
-
-                            <group>
-                                <group string="Price Accuracy" groups="base.group_no_one">
-                                    <field name="rounding"/>
-                                    <field name="decimal_places"/>
-                                </group>
-
-                                <group string="Display">
-                                    <field name="symbol"/>
-                                    <field name="position" groups="base.group_no_one"/>
-                                </group>
-                            </group>
-                            <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
-                                <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
-                                      decoration-bf="state in ('pending',)"
-                                      decoration-danger="state=='reject'">
-                                    <field name="change_name"/>
-                                    <field name="request_date"/>
-                                    <field name="change_date"/>
-                                    <field name="status"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </sheet>
-                        <div class="oe_chatter">
-                            <field name="message_follower_ids" widget="mail_followers"/>
-                            <field name="message_ids" widget="mail_thread"/>
-                        </div>
-                    </form>
+                <xpath expr="//form/header/button" position="before">
+                    <button name="act_approve" string="Approve" type="object" states="draft"
+                            class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <button name="act_reject" string="Reject" type="object" states="draft"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <button name="%(action_currency_wizard)d" string="Edit" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                    <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_reject_pending" string="Reject" type="object"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <field name="state" widget="statusbar" invisible="True"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/field[@name='name']" position="after">
+                    <field name="code"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/field[@name='rate']" position="after">
+                    <field name="pending" invisible="1"/>
+                    <field name="maker_id" invisible="1"/>
+                    <field name="approver_id" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/sheet/group[1]" position="after">
+                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
+                        <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                              decoration-bf="state in ('pending',)"
+                              decoration-danger="state=='reject'">
+                            <field name="change_name"/>
+                            <field name="request_date"/>
+                            <field name="change_date"/>
+                            <field name="status"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </xpath>
+                <xpath expr="//form/sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </xpath>
             </field>
         </record>
