@@ -22,11 +22,11 @@ class AddHonouredDateWizard(models.TransientModel):
         if self.honoured_date > current_date:
             raise ValidationError(_('Honoured date can not be greater than today'))
 
-    @api.multi
+    @api.one
     def action_proceed(self):
         cheque_received_id = self.env.context.get('active_id')
         cheque_received = self.env['accounting.cheque.received'].search([('id', '=', cheque_received_id)])
         cheque_received.write({
             'honoured_date': self.honoured_date,
-            'sale_order_id': self.sale_order_ids
+            'sale_order_id': [(6, 0, self.sale_order_ids.ids)]
         })

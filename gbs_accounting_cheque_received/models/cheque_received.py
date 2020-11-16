@@ -221,8 +221,7 @@ class ChequeReceived(models.Model):
                     'view_type': 'form',
                     'view_mode': 'form',
                     'view_id': wizard.id,
-                    'doamin': [('sale_order_ids', 'in', ids)],
-                    'context': {'default_sale_order_ids': self.sale_order_id.ids},
+                    'context': {'default_sale_order_ids': self.sale_order_id.ids, 'domain_ids': ids},
                     'target': 'new'
                 }
 

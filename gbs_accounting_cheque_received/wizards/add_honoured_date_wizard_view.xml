@@ -11,7 +11,8 @@
                             <field name="honoured_date"/>
                         </group>
                         <group>
-                            <field name="sale_order_ids" widget="many2many_tags" options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="sale_order_ids" widget="many2many_tags" domain="[('id', 'in', context.get('domain_ids'))]"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                         </group>
                     </group>
                     <footer>
