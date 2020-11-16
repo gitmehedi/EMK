@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='line_ids']/tree/field[@name='partner_id']" position="attributes">
                     <attribute name="domain">[('parent_id', '=', False), ('active', '=', True),
-                        '|', ('customer', '=', True), ('supplier', '=', True)]</attribute>
+                        '|', '|', ('customer', '=', True), ('supplier', '=', True), ('is_cnf', '=', True)]</attribute>
                 </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
