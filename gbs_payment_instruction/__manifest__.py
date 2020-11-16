@@ -17,6 +17,7 @@
         'account_fam'
     ],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'data/data.xml',
         'views/payment_instruction_view.xml',
