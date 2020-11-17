@@ -129,7 +129,7 @@ class GBSFileImportWizard(models.TransientModel):
     def date_validate(date_str):
         is_valid = True
         try:
-            datetime.datetime.strptime(date_str, '%m/%d/%Y')
+            datetime.datetime.strptime(date_str, '%Y-%m-%d')
         except ValueError:
             is_valid = False
 
@@ -177,7 +177,8 @@ class GBSFileImportWizard(models.TransientModel):
             'branch',
             'amount',
             'particulars',
-            'currency'
+            'currency',
+            'date'
         ]
 
         # retrieve existing data from database
@@ -205,6 +206,7 @@ class GBSFileImportWizard(models.TransientModel):
             amount = self.convert_amount_str(line['amount'].strip().replace(',', ''))
             particulars = line['particulars'].strip()
             currency_code = line['currency'].strip()
+            date_str = line['date'].strip()
 
             if not reference:
                 is_valid = False
@@ -248,6 +250,10 @@ class GBSFileImportWizard(models.TransientModel):
                 is_valid = False
                 errors += self.format_error(line_no, 'Currency Code [{0}] invalid value'.format(currency_code)) + '\n'
 
+            if not self.date_validate(date_str):
+                is_valid = False
+                errors += self.format_error(line_no, 'Date [{0}] invalid value'.format(date_str)) + '\n'
+
             if is_valid:
                 val['name'] = reference
                 val['reconcile_ref'] = reference
@@ -260,6 +266,7 @@ class GBSFileImportWizard(models.TransientModel):
                 val['currency_id'] = currency[currency_code]
                 val['active'] = True
                 val['state'] = 'approve'
+                val['date'] = date_str
 
                 data_list.append(val)
 
