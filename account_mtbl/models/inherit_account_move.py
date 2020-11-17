@@ -70,3 +70,7 @@ class AccountMoveLine(models.Model):
     operating_unit_id = fields.Many2one(string='Branch')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Cost Centre')
     reconcile_ref = fields.Char(string="Reconciliation Ref#", size=20)
+    tin = fields.Char(related='partner_id.tin', string="TIN")
+    bin = fields.Char(related='partner_id.bin', string="BIN")
+    bill_amount = fields.Monetary(related='invoice_id.amount_total', string="Bill Amount")
+    vat_tax_rate = fields.Float(related='tax_line_id.amount', string="VAT/TAX Rate (%)")
