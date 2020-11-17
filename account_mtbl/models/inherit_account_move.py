@@ -73,4 +73,4 @@ class AccountMoveLine(models.Model):
     tin = fields.Char(related='partner_id.tin', string="TIN")
     bin = fields.Char(related='partner_id.bin', string="BIN")
     bill_amount = fields.Monetary(related='invoice_id.amount_total', string="Bill Amount")
-    vat_tax_rate = fields.Float(related='tax_line_id.amount', string="VAT/TAX Rate (%)")
+    vat_tax_rate = fields.Char(related='tax_line_id.name', string="VAT/TAX Rate")
