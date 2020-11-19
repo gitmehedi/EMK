@@ -1,5 +1,9 @@
+# imports of python library
+import datetime
+
+# imports of odoo
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class CustomerGeneralLedgerWizard(models.TransientModel):
@@ -16,19 +20,29 @@ class CustomerGeneralLedgerWizard(models.TransientModel):
     hide_field = fields.Boolean(string='Hide')
 
     @api.constrains('date_from', 'date_to')
-    def _check_date_validation(self):
-        if self.date_from > self.date_to:
-            raise ValidationError(_("From date must be less then To date."))
-        else:
-            dr_obj = self.env['date.range'].search(
+    def _check_date_range(self):
+        dt_range = self.env['date.range'].search(
                 [('type_id.fiscal_year', '=', True), ('date_start', '<=', self.date_from),
                  ('date_end', '>=', self.date_from)])
-            if not dr_obj.date_start and not dr_obj.date_end:
-                raise ValidationError(_("Date range of fiscal year does not exist."))
+        dt_from = datetime.datetime.strptime(self.date_from, '%Y-%m-%d')
+        dt_to = datetime.datetime.strptime(self.date_to, '%Y-%m-%d')
+
+        if dt_from.year != dt_to.year:
+            raise ValidationError(_("The year of Date From and Date To must be same"))
+        if self.date_from > self.date_to:
+            raise ValidationError(_("From date must be less then To date."))
+        if not dt_range.date_start and not dt_range.date_end:
+            raise ValidationError(_("Date range of fiscal year does not exist."))
 
     @api.multi
     def button_export_xlsx(self):
         self.ensure_one()
+        # check whether the partner is a customer or not
+        partner_id = self.env.context.get('active_id')
+        partner = self.env['res.partner'].search([('id', '=', partner_id)])
+        if not partner.customer:
+            raise UserError(_('You can only print General Ledger (Customer) report for Customer'))
+
         return self.env['report'].get_action(self, report_name='gbs_general_ledger_customer.customer_general_ledger_xlsx')
 
     @api.multi
