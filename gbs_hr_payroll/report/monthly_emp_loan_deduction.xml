@@ -22,8 +22,9 @@
                                         <th>Employee</th>
                                         <th>Designation</th>
                                         <th>Department</th>
-                                        <th style="min-width:90px">D.O.J</th>
-                                        <th style="min-width:90px">Employee ID</th>
+                                        <th style="min-width:60px">D.O.J</th>
+                                        <th style="min-width:60px">Employee ID</th>
+                                        <th style="min-width:60px">Loan Amount</th>
                                         <t t-foreach="rules" t-as="r">
                                             <t t-if="r['code']== 'LOAN'">
                                                 <th>
@@ -31,6 +32,7 @@
                                                 </th>
                                             </t>
                                         </t>
+                                        <th style="min-width:60px">Remaining Loan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,22 +57,28 @@
                                                 <span t-esc="o['device_employee_acc']"></span>
                                             </td>
                                             <td>
+                                                <span t-esc="o['initial_loan']"></span>
+                                            </td>
+                                            <td>
                                                 <span t-esc="o['LOAN']"></span>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o['remain_loan']"></span>
                                             </td>
                                         </tr>
                                     </t>
-                                    <tr style="page-break-inside: avoid">
-                                        <t t-if="data['type'] != '1'">
-                                            <td colspan="6" class="text-right">Total</td>
-                                            <t t-foreach="rules" t-as="r">
-                                                <t t-if="r['code']== 'LOAN'">
-                                                    <td class="text-right">
-                                                        <strong class="text-nowrap" t-esc="row_total[r['code']]"></strong>
-                                                    </td>
-                                                </t>
-                                            </t>
-                                        </t>
-                                    </tr>
+<!--                                    <tr style="page-break-inside: avoid">-->
+<!--                                        <t t-if="data['type'] != '1'">-->
+<!--                                            <td colspan="6" class="text-right">Total</td>-->
+<!--                                            <t t-foreach="rules" t-as="r">-->
+<!--                                                <t t-if="r['code']== 'LOAN'">-->
+<!--                                                    <td class="text-right">-->
+<!--                                                        <strong class="text-nowrap" t-esc="row_total[r['code']]"></strong>-->
+<!--                                                    </td>-->
+<!--                                                </t>-->
+<!--                                            </t>-->
+<!--                                        </t>-->
+<!--                                    </tr>-->
                                 </tbody>
                             </table>
                         </div>

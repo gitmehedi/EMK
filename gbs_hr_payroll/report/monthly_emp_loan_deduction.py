@@ -1,4 +1,4 @@
-import math
+import decimal, math
 from odoo import api, exceptions, fields, models, tools
 from odoo.tools.misc import formatLang
 
@@ -45,13 +45,17 @@ class MonthlyLoanDeduction(models.AbstractModel):
                     payslip['doj'] = slip.employee_id.initial_employment_date
                     payslip['device_employee_acc'] = slip.employee_id.device_employee_acc
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
+                    payslip['initial_loan'] = slip.remaining_loan
+                    payslip['remain_loan'] = 0.00
+
                     for rule in rule_list:
                         payslip[rule['code']] = 0
                         for line in slip.line_ids:
                             if line.code == rule['code']:
                                 total_amount = abs(math.ceil(line.total))
-                                payslip[rule['code']] = formatLang(self.env, total_amount)
+                                payslip[rule['code']] = total_amount
                                 row_total[line.code] = row_total[line.code] + (math.ceil(total_amount))
+
                     dpt_payslips['val'].append(payslip)
             emp_sort_list = dpt_payslips['val']
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
@@ -65,6 +69,11 @@ class MonthlyLoanDeduction(models.AbstractModel):
             if rec['val']:
                 for value in rec['val']:
                     if value['LOAN'] != 0:
+                        initial_loan = float(value['initial_loan'])
+                        value['initial_loan'] = formatLang(self.env, initial_loan)
+                        loan_amt = float(value['LOAN'])
+                        value['LOAN'] = formatLang(self.env, loan_amt)
+                        value['remain_loan'] = formatLang(self.env, (initial_loan - loan_amt))
                         loan_val.append(value)
 
         for rule in rule_list:
