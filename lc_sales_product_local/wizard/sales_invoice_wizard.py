@@ -23,19 +23,16 @@ class InvoiceExportWizard(models.TransientModel):
 
     @api.onchange('shipment_id')
     def _onchange_shipment_id(self):
+        invoice_ids = self.env['account.invoice'].search(
+            ['&', '|', ('partner_id', '=', self.shipment_id.lc_id.second_party_applicant.id),
+             ('partner_id', 'in', self.shipment_id.lc_id.second_party_applicant.child_ids.ids), '&',
+             ('sale_type_id.sale_order_type', 'in', ['lc_sales', 'tt_sales', 'contract_sales']),
+             ('state', 'in', ['open', 'paid'])])
 
-        # invoice_objs = self.env['account.invoice'].search([('sale_type_id.sale_order_type', '=', 'lc_sales'),
-        #                                                    ('state', 'in', ['open', 'paid'])])
+        used_invoice_ids = self.env['purchase.shipment'].search([('invoice_id', 'in', invoice_ids.ids)]).mapped('invoice_id')
+        domain_id_list = list(set(invoice_ids.ids) - set(used_invoice_ids.ids))
 
-        domain_id = self.env['account.invoice'].search(['&', '&', '&', '|', ('partner_id', '=', self.shipment_id.lc_id.second_party_applicant.id),
-                                         ('partner_id', 'in', self.shipment_id.lc_id.second_party_applicant.child_ids.ids),
-                                         ('id', 'not in', [i.invoice_id.id for i in self.env['purchase.shipment'].search([])]),
-                                         ('sale_type_id.sale_order_type', 'in', ['lc_sales','tt_sales','contract_sales']),
-                                         ('state', 'in', ['open', 'paid'])]).ids
-
-        return {'domain': {'invoice_id': [('id', 'in', domain_id)]}}
-
-
+        return {'domain': {'invoice_id': [('id', 'in', domain_id_list)]}}
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):

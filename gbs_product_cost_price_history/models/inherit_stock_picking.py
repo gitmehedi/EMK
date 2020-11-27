@@ -41,18 +41,19 @@ class InheritStockPicking(models.Model):
                                                                 ('location_dest_id','=',record.location_dest_id.id),
                                                                 ('state' ,'=','done')],
                                                                order='date DESC')
-                    for i in last_moves:
-                        product_tot_qty_available += i.product_qty
+                    if last_moves:
+                        for i in last_moves:
+                            product_tot_qty_available += i.product_qty
 
-                    amount_unit = self.get_last_price_history(price_obj,price_obj.modified_datetime).current_price or 0.0
+                        amount_unit = self.get_last_price_history(price_obj,price_obj.modified_datetime).current_price or 0.0
 
-                    std_price = ((amount_unit * product_tot_qty_available) + (last_moves[-1].price_unit * last_moves[-1].product_qty)) / (product_tot_qty_available + last_moves[-1].product_qty)
-                    price_obj.write({
-                        'current_price': round(std_price, 2),
-                        'old_price': round(self.get_last_price_history(price_obj,price_obj.modified_datetime).current_price, 2),
-                    })
-                    record.product_id.with_context(force_company=record.company_id.id).sudo().write(
-                        {'standard_price': std_price})
+                        std_price = ((amount_unit * product_tot_qty_available) + (last_moves[-1].price_unit * last_moves[-1].product_qty)) / (product_tot_qty_available + last_moves[-1].product_qty)
+                        price_obj.write({
+                            'current_price': round(std_price, 2),
+                            'old_price': round(self.get_last_price_history(price_obj,price_obj.modified_datetime).current_price, 2),
+                        })
+                        record.product_id.with_context(force_company=record.company_id.id).sudo().write(
+                            {'standard_price': std_price})
 
 
     def get_last_price_history(self,record, date_done):

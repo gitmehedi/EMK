@@ -16,7 +16,7 @@ class AccountPaymentBatch(models.Model):
     """ Relational field"""
     payment_ids = fields.One2many('account.payment', 'batch_id', string='Customer Collection')
 
-    is_batch_model = fields.Boolean(store=False, compute='compute_is_batch_model')
+    batch = fields.Boolean(store=False, compute='compute_batch')
 
     _sql_constraints = [('name_unique', 'unique(name)', 'The Batch name must be unique!')]
 
@@ -53,8 +53,8 @@ class AccountPaymentBatch(models.Model):
         self.payment_ids = []
 
     @api.depends('journal_id')
-    def compute_is_batch_model(self):
-        self.is_batch_model = True
+    def compute_batch(self):
+        self.batch = True
 
     @api.multi
     def button_journal_entries(self):
@@ -74,21 +74,23 @@ class InheritAccountPayment(models.Model):
 
     """ Relational field"""
     batch_id = fields.Many2one('account.payment.batch', ondelete='cascade')
-
-    sale_order_domain_ids = fields.Many2many('sale.order', compute="_compute_sale_order_domain_ids", readonly=True, store=False)
+    sale_order_domain_ids = fields.Many2many('sale.order', compute="_compute_sale_order_domain_ids", readonly=True,
+                                             store=False)
 
     @api.multi
     @api.depends('partner_id')
     def _compute_sale_order_domain_ids(self):
         for rec in self:
-            id_list = rec.get_sale_order_id_list()
-            rec.sale_order_domain_ids = self.env['sale.order'].search([('id', 'in', id_list)])
+            ids = rec.get_sale_order_ids()
+            rec.sale_order_domain_ids = self.env['sale.order'].search([('id', 'in', ids)])
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         res = super(InheritAccountPayment, self).onchange_partner_id()
-        if self.batch_id.is_batch_model:
-            res['domain'] = {}
+        if self.batch_id.batch:
             if not self.batch_id.journal_id:
                 raise UserError(_("You must select a payment journal."))
+
+            res['domain'] = {}
+
         return res
