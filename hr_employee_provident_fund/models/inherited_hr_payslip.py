@@ -6,7 +6,7 @@ class InheritEmployee(models.Model):
     _inherit = 'hr.employee'
 
     @api.multi
-    @api.depends('init_pf', 'total_pf')
+    @api.depends('init_pf')
     def _compute_total_pf(self):
         for emp in self:
             pfa = emp.init_pf
