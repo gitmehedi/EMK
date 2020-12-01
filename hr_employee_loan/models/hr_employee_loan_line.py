@@ -19,4 +19,3 @@ class HrEmployeeLoantLine(models.Model):
         ('pending', "Pending"),
         ('done', "Done")
     ], default='pending')
-

@@ -1,4 +1,4 @@
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models
 
 
 class InheritedHrPayslip(models.Model):
@@ -61,8 +61,10 @@ class InheritedHrPayslip(models.Model):
         for line_state in loan_data:
             if self.contract_id.id and line_state.parent_id.state=='disbursed':
                 line_state.write({'state': 'done'})
-                line_state.parent_id.write({'remaining_loan_amount': line_state.parent_id.remaining_loan_amount - line_state.installment})
+                values = {
+                    'remaining_loan_amount': (line_state.parent_id.remaining_loan_amount - line_state.installment)}
+                if line_state.parent_id.check_pending_installment():
+                    values['state'] = 'closed'
+                line_state.parent_id.write(values)
 
         return res
-
-

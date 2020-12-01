@@ -1,7 +1,8 @@
-from odoo import models, fields, exceptions, _
 import datetime
+
 from dateutil.relativedelta import relativedelta
 from odoo import api
+from odoo import models, fields, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -98,6 +99,7 @@ class HrEmployeeLoanRequest(models.Model):
         ('applied', "Applied"),
         ('approved', "Approved"),
         ('disbursed', "Disbursed"),
+        ('closed', "Closed"),
     ], default='draft')
 
     """All function which process data and operation"""
@@ -294,11 +296,18 @@ class HrEmployeeLoanRequest(models.Model):
                 max_limit = (employee_wage * policy.value) / 100
                 if max_limit < loan_info['loan_amount']:
                     state = False
-                    msg = msg + "Policy On Percentage of Wage:" + "\n" +\
-                                 "--Principal Amount is exceeding the Maximum Limit according to the wage of your latest contract"
+                    msg = msg + "Policy On Percentage of Wage:" + "\n" + \
+                          "--Principal Amount is exceeding the Maximum Limit according to the wage of your latest contract"
 
         res = {
             'state': state,
             'msg': msg
         }
         return res
+
+    @api.one
+    def check_pending_installment(self):
+        for line in self.line_ids:
+            if line.state == 'pending':
+                return False
+        return True
