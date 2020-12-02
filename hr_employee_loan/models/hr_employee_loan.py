@@ -127,6 +127,7 @@ class HrEmployeeLoanRequest(models.Model):
 
     @api.multi
     def action_disbursed(self):
+        self.generate_schedules()
         self.state = 'disbursed'
         self.remaining_loan_amount = self.principal_amount
         self.disbursement_date = datetime.datetime.now()
