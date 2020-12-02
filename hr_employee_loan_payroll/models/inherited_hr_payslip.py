@@ -14,8 +14,8 @@ class InheritedHrPayslip(models.Model):
     def onchange_employee(self):
         if self.employee_id:
 
-            emp_loan=self.env['hr.employee.loan'].search([('employee_id.id','=',self.employee_id.id),
-                                                            ('state','=','disbursed')])
+            emp_loan = self.env['hr.employee.loan'].search([('employee_id.id', '=', self.employee_id.id),
+                                                            ('state', '=', 'disbursed')])
             loan_amt = 0
             for loan in emp_loan:
                 loan_amt += loan.remaining_loan_amount or 0.00
@@ -38,9 +38,9 @@ class InheritedHrPayslip(models.Model):
             """
             Loan Amount
             """
-            line_amt=0
+            line_amt = 0
             for line in loan_data:
-                if line.parent_id.state=='disbursed':
+                if line.parent_id.state == 'disbursed':
                     line_amt += line.installment
             if self.contract_id.id:
                 other_line_ids += other_line_ids.new({
@@ -59,12 +59,12 @@ class InheritedHrPayslip(models.Model):
                                                               ('schedule_date', '<=', self.date_to),
                                                               ('state', '=', 'pending')])
         for line_state in loan_data:
-            if self.contract_id.id and line_state.parent_id.state=='disbursed':
+            if self.contract_id.id and line_state.parent_id.state == 'disbursed':
                 line_state.write({'state': 'done'})
-                values = {
-                    'remaining_loan_amount': (line_state.parent_id.remaining_loan_amount - line_state.installment)}
-                if line_state.parent_id.check_pending_installment():
+                values = {}
+                if line_state.parent_id.check_pending_installment() == True:
                     values['state'] = 'closed'
+
                 line_state.parent_id.write(values)
 
         return res
