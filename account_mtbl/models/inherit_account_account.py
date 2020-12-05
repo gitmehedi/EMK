@@ -161,16 +161,24 @@ class AccountAccount(models.Model):
             requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
                                              limit=1)
             if requested:
-                self.write({
-                    'name': self.name if not requested.change_name else requested.change_name,
-                    'user_type_id': self.user_type_id.id if not requested.user_type_id else requested.user_type_id.id,
-                    'currency_id': self.currency_id.id if not requested.currency_id else requested.currency_id.id,
+                change_val = {
                     'pending': False,
                     'active': requested.status,
-                    'reconcile': requested.reconcile,
-                    'originating_type': requested.originating_type,
                     'approver_id': self.env.user.id,
-                })
+                }
+                if requested.change_name:
+                    change_val['name'] = requested.change_name
+                if requested.user_type_id:
+                    change_val['user_type_id'] = requested.user_type_id.id
+                if requested.currency_id:
+                    change_val['currency_id'] = requested.currency_id.id
+                if self.reconcile != requested.reconcile:
+                    change_val['reconcile'] = requested.reconcile
+                if self.originating_type != requested.originating_type:
+                    change_val['originating_type'] = requested.originating_type
+
+                self.write(change_val)
+
                 requested.write({
                     'state': 'approve',
                     'change_date': fields.Datetime.now()
