@@ -48,6 +48,7 @@
 
                         <group>
                             <field name="date_on_cheque"/>
+                            <field name="honoured_date" attrs="{'invisible':[('honoured_date', '=', False)]}"/>
                             <field name="cheque_amount"/>
                             <field name="sale_order_id" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                             <field name="narration" required="1"/>

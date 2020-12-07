@@ -10,7 +10,7 @@
 
                 <xpath expr="//group[@name='accounting_entries']" position="replace">
                     <group string="Accounting Entries" name="accounting_entries"
-                           groups="gbs_application_group.group_sales_customer_manager,account.group_account_manager">
+                           groups="gbs_application_group.group_sales_customer_manager,account.group_account_manager,account.group_account_user">
                         <field name="property_account_receivable_id"/>
                         <field name="property_account_payable_id"/>
                     </group>

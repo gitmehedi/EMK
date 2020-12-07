@@ -28,7 +28,7 @@ class VendorGeneralLedgerWizard(models.TransientModel):
         dt_to = datetime.datetime.strptime(self.date_to, '%Y-%m-%d')
 
         if dt_from.year != dt_to.year:
-            raise ValidationError(_("The year of Date From and Date To must be same"))
+            raise ValidationError(_("Date From and Date To must be the same financial year."))
         if self.date_from > self.date_to:
             raise ValidationError(_("From date must be less then To date."))
         if not dt_range.date_start and not dt_range.date_end:

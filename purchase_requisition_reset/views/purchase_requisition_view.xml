@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_purchase_requisition_form" model="ir.ui.view">
+            <field name="name">purchase.requisition.form.inherit.reset</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/field[@name='state']" position="after">
+                    <button name="action_confirm" string="Reset to Confirm"
+                            class="btn-primary btn-danger mr24 pull-right oe_read_only"
+                            groups="purchase.group_purchase_user"
+                            type="object" states="approve_head_procurement,done" confirm="Are you sure you want to continue?"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
