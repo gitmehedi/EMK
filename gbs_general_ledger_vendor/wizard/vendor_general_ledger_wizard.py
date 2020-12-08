@@ -40,7 +40,7 @@ class VendorGeneralLedgerWizard(models.TransientModel):
         # check whether the partner is a customer or not
         partner_id = self.env.context.get('active_id')
         partner = self.env['res.partner'].search([('id', '=', partner_id)])
-        if not partner.supplier:
+        if not partner.supplier and not partner.is_cnf:
             raise UserError(_('You can only print General Ledger (Vendor) report for Vendor'))
         return self.env['report'].get_action(self, report_name='gbs_general_ledger_vendor.vendor_general_ledger_xlsx')
 

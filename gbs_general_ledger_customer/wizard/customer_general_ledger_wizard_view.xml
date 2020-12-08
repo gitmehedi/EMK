@@ -35,7 +35,7 @@
             name="General Ledger (Customer)"
             res_model="customer.general.ledger.wizard"
             src_model="res.partner"
-            groups="account.group_account_manager"
+            groups="account.group_account_user"
             view_mode="form" target="new" view_type="form" />
 
     </data>
