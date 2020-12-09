@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_mrp_bom_extend_form" model="ir.ui.view">
+            <field name="name">mrp.bom.extend.form</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']" position="after">
+                    <group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="amount_total"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='product_uom_id']" position="after">
+                    <field name="price_unit"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='operation_id']" position="after">
+                    <field name="price_subtotal"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
