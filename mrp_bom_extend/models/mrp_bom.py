@@ -28,3 +28,11 @@ class MrpBomLine(models.Model):
         super(MrpBomLine, self).onchange_product_id()
         if self.product_id:
             self.price_unit = self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_uom_id)
+
+    @api.onchange('product_uom_id')
+    def onchange_product_uom_id(self):
+        res = super(MrpBomLine, self).onchange_product_uom_id()
+        if self.product_uom_id and self.product_id:
+            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_uom_id)
+
+        return res
