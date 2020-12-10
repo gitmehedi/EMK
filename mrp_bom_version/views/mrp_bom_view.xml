@@ -27,12 +27,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet" position="before">
                     <header>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
                         <button name="action_new_version" type="object" string="New version"
-                                attrs="{'invisible':[('state','==','historical')]}"
+                                attrs="{'invisible':[('state','in',('draft', 'historical'))]}"
                                 class="oe_highlight"/>
                         <field name="state"
                                widget="statusbar"
-                               statusbar_visible="draft,active,historical"
+                               statusbar_visible="draft,confirmed,historical"
                                attrs="{'invisible':[('state','==','historical')]}"/>
                     </header>
                 </xpath>

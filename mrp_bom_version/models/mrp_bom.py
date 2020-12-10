@@ -5,12 +5,12 @@ from odoo import models, fields, api, _
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
-    name = fields.Char(string='BOM Number', readonly=True)
+    name = fields.Char(string='BOM Number', readonly=True, default='/')
     active = fields.Boolean(string='Active', default=True, copy=True, readonly=True)
     historical_date = fields.Date(string='Historical Date', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('active', 'Active'),
+        ('confirmed', 'Confirmed'),
         ('historical', 'Historical')
     ], string='State', readonly=True, default='draft')
 
@@ -18,6 +18,12 @@ class MrpBom(models.Model):
     base_name = fields.Char(string='BOM Reference', readonly=True)
     parent_bom_id = fields.Many2one('mrp.bom', string='Parent BOM', copy=True, ondelete='cascade')
     old_version_ids = fields.One2many('mrp.bom', 'parent_bom_id', string='Old Versions', readonly=True, context={'active_test': False})
+
+    @api.multi
+    def action_confirm(self):
+        self.write({
+            'state': 'confirmed'
+        })
 
     @api.multi
     def action_new_version(self):
@@ -77,8 +83,7 @@ class MrpBom(models.Model):
     @api.model
     def create(self, vals):
         if 'name' not in vals:
-            seq = self.env['ir.sequence']
-            vals['name'] = seq.next_by_code('mrp.bom') or ''
+            vals['name'] = self.env['ir.sequence'].next_by_code('mrp.bom') or _('New')
 
         if 'base_name' not in vals:
             vals['base_name'] = vals['name']

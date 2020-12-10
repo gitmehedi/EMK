@@ -4,10 +4,10 @@
         <record id="sequence_mrp_bom" model="ir.sequence">
             <field name="name">MRP BOM</field>
             <field name="code">mrp.bom</field>
-            <field name="prefix">BOM-%(year)s-</field>
-            <field eval="6" name="padding"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="False" name="company_id"/>
+            <field name="prefix">BOM-</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
         </record>
     </data>
 </odoo>
