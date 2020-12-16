@@ -26,7 +26,7 @@ class MrpProduction(models.Model):
 
             journal_id = moves_finish_ids[0].product_id.categ_id.property_stock_journal
 
-            self.create_account_move_line(raw_meterial_acc, finish_goods_acc, journal_id[0].id)
+            self.create_account_move_line(raw_meterial_acc, finish_goods_acc, journal_id[0].id,order.operating_unit_id.id)
 
     def _get_account_id_value(self, moves_ids):
         raw_meterial_acc_id = {}
@@ -43,38 +43,39 @@ class MrpProduction(models.Model):
 
         return raw_meterial_acc_id
 
-    def create_account_move_line(self, raw_meterial_acc, finish_goods_acc, journal_id):
+    def create_account_move_line(self, raw_meterial_acc, finish_goods_acc, journal_id, operating_unit_id):
 
         line_vals = []
         for key, value in finish_goods_acc.iteritems():
-            credit_line_vals = {
+            debit_line_vals = {
                 'name': self.name,
-                'product_id': None,
-                'quantity': None,
-                'product_uom_id': None,
-                'ref': None,
-                'partner_id': 0,
+                'product_id': False,
+                'quantity': False,
+                'product_uom_id': False,
+                'ref': False,
+                'partner_id': False,
                 'debit': value if value > 0 else 0,
                 'credit': -value if value < 0 else 0,
-                'account_id': key
+                'account_id': key,
+                'operating_unit_id': operating_unit_id
             }
 
-            line_vals.append(credit_line_vals)
+            line_vals.append((0, 0, debit_line_vals))
 
         for key, value in raw_meterial_acc.iteritems():
             credit_line_vals = {
                 'name': self.name,
-                'product_id': None,
-                'quantity': None,
-                'product_uom_id': None,
-                'ref': None,
-                'partner_id': 0,
+                'product_id': False,
+                'quantity': False,
+                'product_uom_id': False,
+                'ref': False,
+                'partner_id': False,
                 'credit': value if value > 0 else 0,
                 'debit': -value if value < 0 else 0,
-                'account_id': key
+                'account_id': key,
+                'operating_unit_id': operating_unit_id
             }
-            line_vals.append(credit_line_vals)
-
+            line_vals.append((0, 0, credit_line_vals))
         AccountMove = self.env['account.move']
         if line_vals:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
@@ -82,5 +83,6 @@ class MrpProduction(models.Model):
                 'journal_id': journal_id,
                 'line_ids': line_vals,
                 'date': date,
-                'ref': ""})
+                'ref': False,
+                'operating_unit_id': operating_unit_id})
             new_account_move.post()
