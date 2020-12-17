@@ -50,18 +50,18 @@
                     <!--attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
                     <!--</xpath>-->
 
-                    <xpath expr="//label[@for='standard_price']" position="replace">
-                        <label for="standard_price" groups="base.group_user"
-                               attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
-                    </xpath>
+<!--                    <xpath expr="//label[@for='standard_price']" position="replace">-->
+<!--                        <label for="standard_price" groups="base.group_user"-->
+<!--                               attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
+<!--                    </xpath>-->
 
-                    <xpath expr="//div[@name='standard_price_uom']" position="replace">
-                        <div name="standard_price_uom" attrs="{'invisible': [('purchase_ok', '=', False)]}">
-                            <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"
-                                   class="oe_inline"
-                                   attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
-                        </div>
-                    </xpath>
+<!--                    <xpath expr="//div[@name='standard_price_uom']" position="replace">-->
+<!--                        <div name="standard_price_uom" attrs="{'invisible': [('purchase_ok', '=', False)]}">-->
+<!--                            <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"-->
+<!--                                   class="oe_inline"-->
+<!--                                   attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
+<!--                        </div>-->
+<!--                    </xpath>-->
                 </data>
             </field>
         </record>
