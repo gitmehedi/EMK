@@ -7,9 +7,11 @@
     'version': '10.0.1.0.0',
     'sequence': 14,
     'depends': [
-        'mrp'
+        'mrp',
+        'account'
     ],
     'data': [
+        'views/product_view.xml'
     ],
     'summary': 'MRP Accounting',
     'installable': True,
