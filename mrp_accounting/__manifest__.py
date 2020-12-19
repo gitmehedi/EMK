@@ -8,7 +8,8 @@
     'sequence': 14,
     'depends': [
         'mrp',
-        'account'
+        'account',
+        'delivery_order',
     ],
     'data': [
         'views/product_view.xml'
