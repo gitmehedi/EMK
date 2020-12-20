@@ -27,13 +27,13 @@ class Picking(models.Model):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
-                'account_id': product.cogs_account_id,
+                'account_id': product.cogs_account_id.id,
                 'quantity': stock_pack_products.product_qty,
                 'ref': ref,
                 'partner_id': False,
                 'debit': amount if amount > 0 else 0,
                 'credit': -amount if amount < 0 else 0,
-                'operating_unit_id': stock_pack_products.picking_id.operating_unit_id,
+                'operating_unit_id': stock_pack_products.picking_id.operating_unit_id.id,
 
             }
 
@@ -41,13 +41,13 @@ class Picking(models.Model):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
-                'account_id': product.cogs_account_id,
+                'account_id': product.cogs_account_id.id,
                 'quantity': stock_pack_products.product_qty,
                 'ref': ref,
                 'partner_id': False,
                 'credit': amount if amount > 0 else 0,
                 'debit': -amount if amount < 0 else 0,
-                'operating_unit_id': stock_pack_products.picking_id.operating_unit_id,
+                'operating_unit_id': stock_pack_products.picking_id.operating_unit_id.id,
 
             }
 
@@ -55,7 +55,7 @@ class Picking(models.Model):
 
             AccountMove = self.env['account.move']
             date = self._context.get('force_period_date', fields.Date.context_today(self))
-            journal_id = stock_pack_products.product_id.categ_id.property_stock_journal
+            journal_id = stock_pack_products.product_id.categ_id.property_stock_journal.id
 
             new_account_move = AccountMove.create({
                 'journal_id': journal_id,
