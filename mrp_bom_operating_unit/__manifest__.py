@@ -7,9 +7,12 @@
     'category': 'Manufacturing',
     'version': '10.0.1.0.0',
     'depends': [
-        'mrp'
+        'mrp',
+        'mrp_bom_version',
+        'ir_sequence_operating_unit'
     ],
     'data': [
+        'data/mrp_bom_sequence.xml',
         'views/mrp_bom_view.xml'
     ],
     'summary': 'BOM Operating Unit',
