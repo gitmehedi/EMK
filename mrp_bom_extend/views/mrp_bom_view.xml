@@ -14,7 +14,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='product_uom_id']" position="after">
-                    <field name="price_unit" readonly="1"/>
+                    <field name="price_unit"/>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='operation_id']" position="after">
                     <field name="price_subtotal"/>
