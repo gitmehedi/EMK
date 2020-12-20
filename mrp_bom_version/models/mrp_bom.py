@@ -21,7 +21,10 @@ class MrpBom(models.Model):
 
     @api.multi
     def action_confirm(self):
+        name = self.env['ir.sequence'].next_by_code('mrp.bom') or _('New')
         self.write({
+            'name': name,
+            'base_name': name,
             'state': 'confirmed'
         })
 
@@ -79,13 +82,3 @@ class MrpBom(models.Model):
             })
 
         return super(MrpBom, self).copy(defaults)
-
-    @api.model
-    def create(self, vals):
-        if 'name' not in vals:
-            vals['name'] = self.env['ir.sequence'].next_by_code('mrp.bom') or _('New')
-
-        if 'base_name' not in vals:
-            vals['base_name'] = vals['name']
-
-        return super(MrpBom, self).create(vals)
