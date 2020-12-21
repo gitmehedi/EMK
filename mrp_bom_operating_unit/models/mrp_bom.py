@@ -6,6 +6,7 @@ from odoo.exceptions import Warning
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
+    name = fields.Char(string='BOM Number', readonly=True, default='/')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', default=lambda self: self.env.user.default_operating_unit_id)
 
     @api.multi

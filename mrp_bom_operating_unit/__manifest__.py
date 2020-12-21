@@ -8,7 +8,6 @@
     'version': '10.0.1.0.0',
     'depends': [
         'mrp',
-        'mrp_bom_version',
         'ir_sequence_operating_unit'
     ],
     'data': [
