@@ -9,7 +9,8 @@ class MrpBom(models.Model):
 
     @api.depends('bom_line_ids.price_subtotal')
     def _compute_amount(self):
-        self.amount_total = sum(line.price_subtotal for line in self.bom_line_ids)
+        for rec in self:
+            rec.amount_total = sum(line.price_subtotal for line in rec.bom_line_ids)
 
 
 class MrpBomLine(models.Model):
