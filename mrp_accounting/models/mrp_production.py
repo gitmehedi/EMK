@@ -20,36 +20,63 @@ class MrpProduction(models.Model):
 
     @api.multi
     def validate(self):
+        is_valid = True
+
         message = ''
+        categ_names_of_costing_method = set()
         categ_names_of_inventory_valuation = set()
         categ_names_of_stock_valuation_account = set()
+        product_names_of_cogs_account = set()
         categ_name_of_stock_journal = None
 
         for move in self.move_raw_ids:
             if move.product_id.product_tmpl_id.categ_id.property_valuation != 'manual_periodic':
+                is_valid = False
                 categ_names_of_inventory_valuation.add(str(move.product_id.product_tmpl_id.categ_id.name))
+
             if not move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id:
+                is_valid = False
                 categ_names_of_stock_valuation_account.add(str(move.product_id.product_tmpl_id.categ_id.name))
 
         for move in self.move_finished_ids:
+            if move.product_id.product_tmpl_id.categ_id.property_cost_method != 'average':
+                is_valid = False
+                categ_names_of_costing_method.add(str(move.product_id.product_tmpl_id.categ_id.name))
+
             if move.product_id.product_tmpl_id.categ_id.property_valuation != 'manual_periodic':
+                is_valid = False
                 categ_names_of_inventory_valuation.add(str(move.product_id.product_tmpl_id.categ_id.name))
+
+            if not move.product_id.product_tmpl_id.cogs_account_id.id:
+                is_valid = False
+                product_names_of_cogs_account.add(str(move.product_id.product_tmpl_id.categ_id.name))
+
             if not move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id:
+                is_valid = False
                 categ_names_of_stock_valuation_account.add(str(move.product_id.product_tmpl_id.categ_id.name))
 
         if not self.move_finished_ids[0].product_id.categ_id.property_stock_journal.id:
+            is_valid = False
             categ_name_of_stock_journal = str(self.move_finished_ids[0].product_id.product_tmpl_id.categ_id.name)
 
+        if categ_names_of_costing_method:
+            message += _('- Costing Method must be "Average Price" for the mentioned Product category(s). '
+                         'Which are %s.\n') % str(tuple(categ_names_of_costing_method))
         if categ_names_of_inventory_valuation:
-            message += _('- Inventory Valuation must be "Periodic" for %s category.\n') % str(tuple(categ_names_of_inventory_valuation))
+            message += _('- Inventory Valuation must be "Periodic (manual)" for the mentioned Product category(s). '
+                         'Which are %s.\n') % str(tuple(categ_names_of_inventory_valuation))
         if categ_names_of_stock_valuation_account:
-            message += _('- Stock Valuation Account is missing for %s category.\n') % str(tuple(categ_names_of_stock_valuation_account))
+            message += _('- Stock Valuation Account is missing for the mentioned Product category(s). '
+                         'Which are %s.\n') % str(tuple(categ_names_of_stock_valuation_account))
+        if product_names_of_cogs_account:
+            message += _('- COGS Account is missing for the mentioned Product(s). '
+                         'Which are %s.\n') % str(tuple(product_names_of_cogs_account))
         if categ_name_of_stock_journal:
-            message += _('- Stock Journal is missing for "%s" category.\n') % categ_name_of_stock_journal
+            message += _('- Stock Journal is missing for "%s" product category.\n') % categ_name_of_stock_journal
 
-        if len(message) > 0:
-            message += _('Contact with Account group')
-            raise ValidationError(message)
+        if not is_valid:
+            message += _('Please Contact with Accounts Department. After that you are able to perform production.')
+            raise ValidationError(_('Unable to perform production\n') + message)
 
     @api.multi
     def do_accounting(self):
