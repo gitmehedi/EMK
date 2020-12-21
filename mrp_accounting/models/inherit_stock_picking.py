@@ -41,7 +41,7 @@ class Picking(models.Model):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
-                'account_id': product.cogs_account_id.id,
+                'account_id': product.categ_id.property_stock_valuation_account_id.id,
                 'quantity': stock_pack_products.product_qty,
                 'ref': ref,
                 'partner_id': False,
@@ -63,13 +63,3 @@ class Picking(models.Model):
                 'date': date,
                 'ref': ref})
             new_account_move.post()
-
-            # stock_pack_products.product_id.categ_id.property_stock_valuation_account_id.name
-            #
-            # stock_pack_products.product_id.cogs_account_id
-            #
-            # stock_pack_products.product_id.standard_price
-            #
-            # stock_pack_products.product_qty
-            #
-            # stock_pack_products.picking_id.operating_unit_id
