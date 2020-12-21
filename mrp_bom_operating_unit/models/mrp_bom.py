@@ -13,10 +13,11 @@ class MrpBom(models.Model):
     def action_confirm(self):
         bom = self.env['mrp.bom'].search([('product_id', '=', self.product_id.id),
                                           ('operating_unit_id', '=', self.operating_unit_id.id),
+                                          ('state', '=', 'confirmed'),
                                           ('active', '=', True)])
         if bom.ids:
-            raise Warning(_('Already BOM exists for "%s" product variant of "%s" operating unit.\n'
-                            'You are only allowed to create new version of "%s" product variant.')
+            raise Warning(_('Already Bill of Materials exists for "%s" product of "%s".\n'
+                            'You are only allowed to create new version of "%s" product.')
                           % (self.product_id.name, self.operating_unit_id.name, self.product_id.name))
 
         new_name = self.env['ir.sequence'].next_by_code_new('mrp.bom', None, self.operating_unit_id)
