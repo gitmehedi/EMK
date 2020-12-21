@@ -1,5 +1,6 @@
 # imports of odoo
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class MrpBom(models.Model):
@@ -11,6 +12,21 @@ class MrpBom(models.Model):
     def _compute_amount(self):
         for rec in self:
             rec.amount_total = sum(line.price_subtotal for line in rec.bom_line_ids)
+
+    @api.constrains('bom_line_ids')
+    def _check_bom_line_ids(self):
+        if len(self.bom_line_ids.ids) <= 0:
+            raise ValidationError(_("can not create Bill of Materials without Product line !!!"))
+
+        if self.bom_line_ids.ids:
+            product_names = set()
+            for line in self.bom_line_ids:
+                if line.price_unit <= 0:
+                    product_names.add(str(line.product_id.product_tmpl_id.name))
+
+            if len(product_names) > 0:
+                raise ValidationError(_('In Product line, the value of Unit Price must be greater than 0 '
+                                        'for the following product(s):\n => %s') % str(tuple(product_names))[1:-1])
 
 
 class MrpBomLine(models.Model):
