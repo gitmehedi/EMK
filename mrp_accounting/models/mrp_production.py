@@ -49,7 +49,7 @@ class MrpProduction(models.Model):
 
             if not move.product_id.product_tmpl_id.cogs_account_id.id:
                 is_valid = False
-                product_names_of_cogs_account.add(str(move.product_id.product_tmpl_id.categ_id.name))
+                product_names_of_cogs_account.add(str(move.product_id.product_tmpl_id.name))
 
             if not move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id:
                 is_valid = False
