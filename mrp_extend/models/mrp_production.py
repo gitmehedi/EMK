@@ -6,11 +6,6 @@ from odoo.exceptions import UserError
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    def _generate_finished_moves(self):
-        move = super(MrpProduction, self)._generate_finished_moves()
-        move.write({'price_unit': self.bom_id.amount_total / self.bom_id.product_qty})
-        return move
-
     def _generate_raw_move(self, bom_line, line_data):
         move = super(MrpProduction, self)._generate_raw_move(bom_line, line_data)
         product_uom_qty = move.product_uom_qty
