@@ -28,8 +28,9 @@
                 <xpath expr="//form/sheet" position="before">
                     <header>
                         <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
-                        <button name="action_new_version" type="object" string="New version"
+                        <button name="action_new_version" type="object" string="New Version"
                                 attrs="{'invisible':[('state','in',('draft', 'historical'))]}"
+                                confirm="You are going to create a new version of this BOM. Are you sure?"
                                 class="oe_highlight"/>
                         <field name="state"
                                widget="statusbar"
@@ -46,7 +47,7 @@
                     </div>
                 </xpath>
                 <field name="company_id" position="after">
-                    <field name="version" />
+                    <field name="version" invisible="1"/>
                     <field name="historical_date" attrs="{'invisible': [('state','!=','historical')]}"/>
                 </field>
                 <notebook position="inside">

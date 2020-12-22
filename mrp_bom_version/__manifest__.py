@@ -10,8 +10,8 @@
         'mrp'
     ],
     'data': [
-        'data/sequence.xml',
-        'wizard/mrp_bom_wizard_view.xml',
+        'data/mrp_bom_sequence.xml',
+        # 'wizard/mrp_bom_wizard_view.xml',
         'views/mrp_bom_view.xml'
     ],
     'summary': 'BOM Versioning',
