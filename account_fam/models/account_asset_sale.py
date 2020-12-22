@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _,SUPERUSER_ID
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import Warning, ValidationError
 from datetime import datetime
 from odoo.tools import float_compare, float_is_zero
@@ -13,6 +13,7 @@ class AccountAssetSale(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'name desc,id desc'
     _rec_name = 'name'
+    _describe = 'Asset Sell'
 
     name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
     total_value = fields.Float(string='Cost Value', compute='_compute_total_value', track_visibility='onchange')
@@ -25,12 +26,12 @@ class AccountAssetSale(models.Model):
                                track_visibility='onchange')
     sale_date = fields.Date(string='Confirm Date', readonly=True, states={'approve': [('readonly', False)]},
                             track_visibility='onchange')
-    request_user_id = fields.Many2one('res.users', string='Request User', readonly=True,
+    request_user_id = fields.Many2one('res.users', string='Request', readonly=True,
                                       states={'draft': [('readonly', False)]}, default=lambda self: self.env.user,
                                       track_visibility='onchange')
-    approve_user_id = fields.Many2one('res.users', string='Approve User', readonly=True,
+    approve_user_id = fields.Many2one('res.users', string='Maker', readonly=True,
                                       states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    sale_user_id = fields.Many2one('res.users', string='Confirm User', readonly=True,
+    sale_user_id = fields.Many2one('res.users', string='Checker', readonly=True,
                                    states={'approve': [('readonly', False)]}, track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
@@ -127,7 +128,7 @@ class AccountAssetSale(models.Model):
         credit = {
             'name': self.narration,
             'account_id': asset.asset_type_id.account_asset_id.id,
-            'credit': asset.value if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
+            'credit': round(asset.value, 2) if float_compare(asset.value, 0.0, precision_digits=prec) > 0 else 0.0,
             'debit': 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
@@ -155,7 +156,7 @@ class AccountAssetSale(models.Model):
             lg_journal = {
                 'name': self.narration_gl,
                 'account_id': asset.asset_type_id.account_asset_gain_id.id,
-                'credit': lg_value if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'credit': round(lg_value, 2) if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'debit': 0.0,
                 'journal_id': asset.asset_type_id.journal_id.id,
                 'operating_unit_id': asset.current_branch_id.id,
@@ -169,7 +170,7 @@ class AccountAssetSale(models.Model):
                 'name': self.narration_gl,
                 'account_id': asset.asset_type_id.account_asset_loss_id.id,
                 'credit': 0.0,
-                'debit': lg_value if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
+                'debit': round(lg_value, 2) if float_compare(lg_value, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': asset.asset_type_id.journal_id.id,
                 'operating_unit_id': asset.current_branch_id.id,
                 'sub_operating_unit_id': asset.asset_type_id.account_asset_loss_seq_id.id if asset.asset_type_id else None,
@@ -181,8 +182,8 @@ class AccountAssetSale(models.Model):
             'name': self.narration,
             'account_id': asset.asset_type_id.asset_sale_suspense_account_id.id,
             'credit': 0.0,
-            'debit': rec.sale_value if float_compare(rec.sale_value, 0.0,
-                                                     precision_digits=prec) > 0 else 0.0,
+            'debit': round(rec.sale_value, 2) if float_compare(rec.sale_value, 0.0,
+                                                               precision_digits=prec) > 0 else 0.0,
             'journal_id': asset.asset_type_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.asset_type_id.asset_sale_suspense_seq_id.id if asset.asset_type_id else None,
@@ -196,6 +197,8 @@ class AccountAssetSale(models.Model):
             'journal_id': asset.category_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'sub_operating_unit_id': asset.sub_operating_unit_id.id,
+            'maker_id': self.approve_user_id.id,
+            'approver_id': self.env.user.id,
             'line_ids': [(0, 0, credit), (0, 0, debit), (0, 0, lg_journal), (0, 0, debit3)],
         })
 

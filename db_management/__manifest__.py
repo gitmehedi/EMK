@@ -7,14 +7,14 @@
     "sequence": 10,
     'summary': 'Database Duplicate and Operations',
     'description': """
-Database Duplicate and Operations
-""",
+        Database Duplicate and Operations
+    """,
     'depends': [
         'mtbl_access',
     ],
     'data': [
         'views/menu_view.xml',
-        'views/db_replicate_view.xml',
+        'views/db_operations_view.xml',
     ],
     'installable': True,
     'application': True,

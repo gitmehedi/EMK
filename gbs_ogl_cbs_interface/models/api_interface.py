@@ -4,6 +4,9 @@ from odoo import models, fields, api, _, tools, SUPERUSER_ID
 from xml.etree import ElementTree
 from odoo.exceptions import ValidationError
 
+MC_LEN = 7
+BRANCH_LEN = 3
+
 
 class APIInterface(models.Model):
     _name = 'soap.process'
@@ -20,16 +23,18 @@ class APIInterface(models.Model):
     http_method = fields.Selection([('http', 'http'), ('https', 'https')], string='HTTP Method', default='http',
                                    required=True, track_visibility='onchange')
     username = fields.Char(string='Username', required=True, track_visibility='onchange')
-    password = fields.Char(string='Password', required=True, track_visibility='onchange')
+    password = fields.Char(string='Password', required=True)
     teller_no = fields.Char(string='Teller Number', required=True, track_visibility='onchange')
     ins_num = fields.Char(string='Institution Number', required=True, track_visibility='onchange')
     uuid_source = fields.Char(string='Source of Request', required=True, track_visibility='onchange', default='OGL')
     uuid_num = fields.Char(string='UUIDNUM', track_visibility='onchange')
     uuid_seq_no = fields.Char(string='UUIDSeqNo', track_visibility='onchange')
-    wsdl_type = fields.Selection(
-        [('GenericTransferAmount', 'GenericTransferAmount'), ('GLToDepositTransfer', 'GLToDepositTransfer'),
-         ('GLToGLTransfer', 'GLToGLTransfer'), ('GLEnquiryPrompt', 'GLEnquiryPrompt')], string='WSDL Type',
-        required=True)
+    wsdl_type = fields.Selection([('GenericTransferAmount', 'GenericTransferAmount'),
+                                  ('GLToDepositTransfer', 'GLToDepositTransfer'),
+                                  ('GLToGLTransfer', 'GLToGLTransfer'),
+                                  ('GLEnquiryPrompt', 'GLEnquiryPrompt'),
+                                  ('UserdetailsEnquiry', 'UserdetailsEnquiry')],
+                                 string='WSDL Type', required=True)
     status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     msg_len = fields.Char(string='MsgLen', track_visibility='onchange')
@@ -94,6 +99,12 @@ class APIInterface(models.Model):
         for rec in self:
             if rec.http_method and rec.endpoint_url and rec.endpoint_port and rec.wsdl_type and rec.wsdl_name:
                 rec.endpoint_fullname = rec.http_method + "://" + rec.endpoint_url + ':' + rec.endpoint_port + '/' + rec.wsdl_type + '/' + rec.wsdl_name
+
+    @api.one
+    def test_interface(self):
+        if self.wsdl_type == 'UserdetailsEnquiry':
+            result = self.call_user_details_enquiry_prompt()
+            raise ValidationError(_(result))
 
     @api.model
     def search_api(self, type):
@@ -306,6 +317,37 @@ class APIInterface(models.Model):
             raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
 
     @api.model
+    def call_user_details_enquiry_prompt(self):
+        ep = self.search_api('UserdetailsEnquiry')
+
+        if ep:
+            req_body = self.api_user_details_enquiry_prompt(ep)
+            try:
+                resp_body = requests.post(ep.endpoint_fullname, data=req_body, verify=False,
+                                          auth=(ep.username, ep.password),
+                                          headers={'content-type': 'application/text'})
+
+                root = ElementTree.fromstring(resp_body.content)
+                response = {}
+                for rec in root.iter('*'):
+                    key = rec.tag.split("}")
+                    text = rec.text
+                    if len(key) == 2:
+                        response[key[1]] = text
+                    else:
+                        response[key[0]] = text
+
+                if 'UsrNo' in response:
+                    if response['Stat'] == 9:
+                        self.env['res.user'].write({'active': False})
+                else:
+                    return 'error_code'
+            except Exception:
+                return 'error_code'
+        else:
+            raise ValidationError(_("API configuration is not properly set. Please contact with authorized person."))
+
+    @api.model
     def api_generic_transfer_amount(self, rec, ep):
         dr_bgl = self.prepare_bgl(rec.default_debit_account_id.code, rec.debit_sub_operating_unit_id.code,
                                   rec.debit_operating_unit_id.code)
@@ -318,11 +360,15 @@ class APIInterface(models.Model):
         branch = rec.debit_operating_unit_id.code.zfill(5)
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
+        maker = str(rec.maker_id.login).zfill(MC_LEN)
+        checker = str(self.env.user.login).zfill(MC_LEN)
+        branch = str(self.env.user.default_operating_unit_id.code).zfill(BRANCH_LEN)
 
-        data = {
+        dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': ep.brch_num,
-            'TellerNum': ep.teller_no,
+            'BrchNum': branch,
+            'TellerNum': maker,
+            'CheckerID1': checker,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
             'UUIDSource': ep.uuid_source,
@@ -345,6 +391,7 @@ class APIInterface(models.Model):
                          <ban:InstNum>{0}</ban:InstNum>
                            <ban:BrchNum>{1}</ban:BrchNum>
                            <ban:TellerNum>{2}</ban:TellerNum>
+                           <ban:CheckerID1>{12}</ban:CheckerID1>
                            <ban:Flag4>{3}</ban:Flag4>
                            <ban:Flag5>{4}</ban:Flag5>
                            <ban:UUIDSource>{5}</ban:UUIDSource>
@@ -362,9 +409,9 @@ class APIInterface(models.Model):
                </soapenv:Body>
             </soapenv:Envelope>"""
 
-        return request.format(data['InstNum'], data['BrchNum'], data['TellerNum'], data['Flag4'],
-                              data['Flag5'], data['UUIDSource'], data['UUIDNUM'], data['UUIDSeqNo'],
-                              dbody['FrmAcct'], dbody['Amt'], dbody['ToAcct'], dbody['StmtNarr'])
+        return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'],
+                              dhead['Flag5'], dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],
+                              dbody['FrmAcct'], dbody['Amt'], dbody['ToAcct'], dbody['StmtNarr'], dhead['CheckerID1'])
 
     @api.model
     def api_glto_gl_transfer(self, rec, ep):
@@ -375,11 +422,15 @@ class APIInterface(models.Model):
 
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
+        maker = str(rec.maker_id.login).zfill(MC_LEN)
+        checker = str(self.env.user.login).zfill(MC_LEN)
+        branch = str(self.env.user.default_operating_unit_id.code).zfill(BRANCH_LEN)
 
         dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': ep.brch_num,
-            'TellerNum': ep.teller_no,
+            'BrchNum': branch,
+            'TellerNum': maker,
+            'CheckerID1': checker,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
             'UUIDSource': ep.uuid_source,
@@ -407,6 +458,7 @@ class APIInterface(models.Model):
                                         <ban:InstNum>{0}</ban:InstNum>
                                         <ban:BrchNum>{1}</ban:BrchNum>
                                         <ban:TellerNum>{2}</ban:TellerNum>
+                                        <ban:CheckerID1>{14}</ban:CheckerID1>
                                         <ban:Flag4>{3}</ban:Flag4>
                                         <ban:Flag5>{4}</ban:Flag5>
                                         <ban:UUIDSource>{5}</ban:UUIDSource>
@@ -431,9 +483,9 @@ class APIInterface(models.Model):
                     </soapenv:Envelope>"""
 
         return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'], dhead['Flag5'],
-                              dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],
-                              dbody['AcctNum1'], dbody['Amt1'], dbody['Descptn'], dbody['AcctNum2'],
-                              dbody['AccCurCode1'], dbody['RefNum'])
+                              dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],dbody['AcctNum1'],
+                              dbody['Amt1'], dbody['Descptn'], dbody['AcctNum2'],dbody['AccCurCode1'], dbody['RefNum'],
+                              dhead['CheckerID1'])
 
     @api.model
     def api_glto_deposit_transfer(self, rec, ep):
@@ -443,11 +495,15 @@ class APIInterface(models.Model):
 
         curr_code = rec.currency_id.code
         statement = rec.code + " " + rec.narration if rec.narration else rec.code
+        maker = str(rec.maker_id.login).zfill(MC_LEN)
+        checker = str(self.env.user.login).zfill(MC_LEN)
+        branch = str(self.env.user.default_operating_unit_id.code).zfill(BRANCH_LEN)
 
         dhead = {
             'InstNum': ep.ins_num,
-            'BrchNum': ep.brch_num,
-            'TellerNum': ep.teller_no,
+            'BrchNum': branch,
+            'TellerNum': maker,
+            'CheckerID1': checker,
             'Flag4': ep.flag_4,
             'Flag5': ep.flag_5,
             'UUIDSource': ep.uuid_source,
@@ -478,6 +534,7 @@ class APIInterface(models.Model):
                                         <ban:InstNum>{0}</ban:InstNum>
                                         <ban:BrchNum>{1}</ban:BrchNum>
                                         <ban:TellerNum>{2}</ban:TellerNum>
+                                        <ban:CheckerID1>{16}</ban:CheckerID1>
                                         <ban:Flag4>{3}</ban:Flag4>
                                         <ban:Flag5>{4}</ban:Flag5>
                                         <ban:UUIDSource>{5}</ban:UUIDSource>
@@ -502,7 +559,7 @@ class APIInterface(models.Model):
         return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'],
                               dhead['Flag5'], dhead['UUIDSource'], dhead['UUIDNUM'], dhead['UUIDSeqNo'],
                               dbody['AcctNum2'], dbody['TrnDt'], dbody['Exchgamt'], dbody['AcctNum1'], dbody['Descptn'],
-                              dbody['AcctCurCode1'], dbody['Amt1'], dbody['RefNum'])
+                              dbody['AcctCurCode1'], dbody['Amt1'], dbody['RefNum'], dhead['CheckerID1'])
 
     @api.model
     def api_gl_enquiry_prompt(self, rec, ep):
@@ -554,6 +611,59 @@ class APIInterface(models.Model):
 
         return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'],
                               dhead['Flag5'], dbody['bgl'])
+
+    @api.model
+    def api_user_details_enquiry_prompt(self, ep):
+        branch = ep.brch_num
+        enquiry_user = str(self.env.user.login).zfill(MC_LEN)
+
+        dhead = {
+            'InstNum': ep.ins_num,
+            'BrchNum': branch,
+            'TellerNum': str(ep.teller_no),
+            'Flag4': ep.flag_4,
+            'Flag5': ep.flag_5,
+            'UUIDSource': ep.uuid_source,
+            'UUIDNUM': '',
+            'UUIDSeqNo': ep.uuid_seq_no,
+        }
+        dbody = {
+            'Instn': ep.ins_num,
+            'UsrNum': enquiry_user,
+        }
+
+        request = """<soapenv:Envelope
+                        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                        xmlns:v1="http://BaNCS.TCS.com/webservice/GLEnquiryPromptInterface/v1"
+                        xmlns:ban="http://TCS.BANCS.Adapter/BANCSSchema">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <v1:gLEnquiryPrompt>
+                                <!--Optional:-->
+                                <GLPrmptInqRq>
+                                    <ban:RqHeader>
+                                        <ban:InstNum>{0}</ban:InstNum>
+                                        <ban:BrchNum>{1}</ban:BrchNum>
+                                        <ban:TellerNum>{2}</ban:TellerNum>
+                                        <ban:Flag4>{3}</ban:Flag4>
+                                        <ban:Flag5>{4}</ban:Flag5>
+                                        <ban:UUIDSource></ban:UUIDSource>
+                                        <ban:UUIDNUM></ban:UUIDNUM>
+                                        <ban:UUIDSeqNo></ban:UUIDSeqNo>
+                                    </ban:RqHeader>
+                                    <ban:Data>
+                                        <ban:Func>E</ban:Func>
+                                        <ban:EffDt></ban:EffDt>
+                                        <ban:Instn>{5}</ban:Instn>
+                                        <ban:UsrNum>{6}</ban:UsrNum>
+                                    </ban:Data>
+                                </GLPrmptInqRq>
+                            </v1:gLEnquiryPrompt>
+                        </soapenv:Body>
+                    </soapenv:Envelope>"""
+
+        return request.format(dhead['InstNum'], dhead['BrchNum'], dhead['TellerNum'], dhead['Flag4'],
+                              dhead['Flag5'], dbody['Instn'], dbody['UsrNum'])
 
     @api.model
     def action_payment_instruction(self):
