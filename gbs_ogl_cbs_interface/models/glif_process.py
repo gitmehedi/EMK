@@ -742,9 +742,12 @@ class ServerFileProcess(models.Model):
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
                     else:
-                        move_id.amount = debit
-                        move_id.sudo().write({'date': rec['POSTING-DATE']})
-                        move_id.sudo().post()
+                        journal = move_id.journal_id
+                        sequence = journal.sequence_id.with_context(ir_sequence_date=move_id.date).next_by_id()
+                        move_id.sudo().write({'state': 'posted',
+                                              'name': sequence,
+                                              'date': rec['POSTING-DATE'],
+                                              'amount': debit})
                         errObj.sudo().write({'state': 'resolved'})
                         return move_id
             except Exception:
