@@ -32,24 +32,16 @@ class MrpBom(models.Model):
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'
 
-    price_unit = fields.Float(string='Unit Price')
+    price_unit = fields.Float(string='Unit Price', store=True, readonly=True, compute='_compute_price_unit')
     price_subtotal = fields.Float(string='Amount', store=True, readonly=True, compute='_compute_price')
+
+    @api.depends('product_id', 'product_uom_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            if rec.product_id:
+                rec.price_unit = rec.product_id.uom_id._compute_price(rec.product_id.standard_price, rec.product_uom_id)
 
     @api.depends('product_qty', 'price_unit')
     def _compute_price(self):
         for rec in self:
             rec.price_subtotal = rec.price_unit * rec.product_qty
-
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        super(MrpBomLine, self).onchange_product_id()
-        if self.product_id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_uom_id)
-
-    @api.onchange('product_uom_id')
-    def onchange_product_uom_id(self):
-        res = super(MrpBomLine, self).onchange_product_uom_id()
-        if self.product_uom_id and self.product_id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_uom_id)
-
-        return res

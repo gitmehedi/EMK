@@ -7,9 +7,8 @@ class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
     name = fields.Char(string='BOM Number', readonly=True, default='/')
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
-                                        default=lambda self: self.env.user.default_operating_unit_id,
-                                        readonly=True, states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
+                                        default=lambda self: self.env.user.default_operating_unit_id)
 
     @api.multi
     def action_confirm(self):
@@ -18,8 +17,8 @@ class MrpBom(models.Model):
                                           ('state', '=', 'confirmed'),
                                           ('active', '=', True)])
         if bom.ids:
-            raise Warning(_('Already Bill of Materials exists for "%s" product of "%s".\n'
-                            'You are only allowed to create new version of "%s" product.')
+            raise Warning(_('Already BOM of "%s" exists for "%s".\n'
+                            'You are only allowed to create new version of "%s".')
                           % (self.product_id.name, self.operating_unit_id.name, self.product_id.name))
 
         if self.version > 0:
