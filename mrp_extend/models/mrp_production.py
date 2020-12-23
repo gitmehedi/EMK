@@ -9,7 +9,7 @@ class MrpProduction(models.Model):
     def _generate_raw_move(self, bom_line, line_data):
         move = super(MrpProduction, self)._generate_raw_move(bom_line, line_data)
         product_uom_qty = move.product_uom_qty
-        move.write({'price_unit': bom_line.price_unit, 'standard_qty': product_uom_qty})
+        move.write({'standard_qty': product_uom_qty})
 
         return move
 
