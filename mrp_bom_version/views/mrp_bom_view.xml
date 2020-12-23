@@ -50,6 +50,19 @@
                     <field name="version" invisible="1"/>
                     <field name="historical_date" attrs="{'invisible': [('state','!=','historical')]}"/>
                 </field>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/field[@name='product_uom_id']" position="attributes">
+                    <attribute name="string">Unit of Measure</attribute>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/button[1][@name='action_see_attachments']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/button[2][@name='action_see_attachments']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
+                    <attribute name="string">Qty</attribute>
+                </xpath>
                 <notebook position="inside">
                     <page string="Versions">
                         <field name="old_version_ids">

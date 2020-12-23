@@ -12,7 +12,7 @@ class MrpBom(models.Model):
     product_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
     bom_line_ids = fields.One2many(readonly=True, states={'draft': [('readonly', False)]})
     product_qty = fields.Float(readonly=True, states={'draft': [('readonly', False)]})
-    product_uom_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
+    product_uom_id = fields.Many2one(readonly=True)
     sequence = fields.Integer(readonly=True, states={'draft': [('readonly', False)]})
     routing_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
     ready_to_produce = fields.Selection(readonly=True, states={'draft': [('readonly', False)]})
@@ -87,9 +87,45 @@ class MrpBom(models.Model):
 
         return super(MrpBom, self).copy(defaults)
 
+    @api.model
+    def create(self, vals):
+        if 'product_tmpl_id' in vals:
+            product_template = self.env['product.template'].search([('id', '=', vals['product_tmpl_id'])])
+            vals['product_uom_id'] = product_template.uom_id.id
+
+        return super(MrpBom, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'product_tmpl_id' in vals:
+            product_template = self.env['product.template'].search([('id', '=', vals['product_tmpl_id'])])
+            vals['product_uom_id'] = product_template.uom_id.id
+
+        return super(MrpBom, self).write(vals)
+
     @api.multi
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
                 raise Warning(_('You cannot delete a record which is not in draft state!'))
         return super(MrpBom, self).unlink()
+
+
+class MrpBomLine(models.Model):
+    _inherit = 'mrp.bom.line'
+
+    @api.model
+    def create(self, vals):
+        if 'product_id' in vals:
+            product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product.product_tmpl_id.uom_id.id
+
+        return super(MrpBomLine, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'product_id' in vals:
+            product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product.product_tmpl_id.uom_id.id
+
+        return super(MrpBomLine, self).write(vals)

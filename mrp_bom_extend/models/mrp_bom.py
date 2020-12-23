@@ -6,6 +6,11 @@ from odoo.exceptions import ValidationError
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('historical', 'Historical')
+    ], string='State', readonly=True, default='draft', track_visibility='onchange')
     amount_total = fields.Float(string='Total', store=True, readonly=True, compute='_compute_amount')
 
     @api.depends('bom_line_ids.price_subtotal')
