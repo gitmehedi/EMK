@@ -6,7 +6,8 @@
     'category': 'Manufacturing',
     'version': '10.0.1.0.0',
     'depends': [
-        'mrp'
+        'mrp',
+        'mrp_bom_extend'
     ],
     'data': [
         'views/inherited_mrp_production_views.xml'
