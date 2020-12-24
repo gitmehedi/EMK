@@ -464,11 +464,11 @@ class ServerFileProcess(models.Model):
             data[13] = self.format_data(self.strslice(data[13] + '000000', date_struc))
             if data[14][-1:] == '+':
                 data[14] = data[14][:-1]
-                data[15] = data[15][:-1]
+                data[15] = data[15]
                 data[5] = '01'
             else:
                 data[14] = data[14][:-1]
-                data[15] = data[15][:-1]
+                data[15] = data[15]
                 data[5] = '02'
 
             return dict(zip(keys, data[:len(data)]))
@@ -673,14 +673,17 @@ class ServerFileProcess(models.Model):
                     if currency_code == 'BDT':
                         fcy_amount = '0.0'
                     else:
-                        fcy_d_bef = rec['FCY-AMT'][-17:-3]
-                        fcy_d_after = rec['FCY-AMT'][-3:]
+                        fcy_d_bef = rec['FCY-AMT'][-17:-4]
+                        fcy_d_after = rec['FCY-AMT'][-4:-1]
+                        fcy_sign = rec['FCY-AMT'][-1:]
                         if not fcy_d_bef.isdigit() or not fcy_d_after.isdigit():
                             errors += format_error(errObj.id, index,
                                                    'FCY Amount [{0}] has invalid value'.format(rec['FCY-AMT']))
                         else:
                             fcy_amt = np.float128(fcy_d_bef + '.' + fcy_d_after)
                             fcy_amount = "{:.2f}".format(fcy_amt)
+                            if fcy_sign == '-':
+                                 fcy_amount = '-' + fcy_amount
 
                         if len(fcy_amount) > 16:
                             errors += format_error(errObj.id, index,
@@ -707,7 +710,7 @@ class ServerFileProcess(models.Model):
                         if rec['JOURNAL-SEQ'] == '02':
                             line['debit'] = amount
                             line['credit'] = 0.0
-                            line['amount_currency'] = '-' + fcy_amount
+                            line['amount_currency'] = fcy_amount
                             debit += lcy_amt
 
                         elif rec['JOURNAL-SEQ'] == '01':
@@ -748,9 +751,12 @@ class ServerFileProcess(models.Model):
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
                     else:
-                        move_id.amount = debit
-                        move_id.sudo().write({'date': rec['POSTING-DATE']})
-                        move_id.sudo().post()
+                        journal = move_id.journal_id
+                        sequence = journal.sequence_id.with_context(ir_sequence_date=move_id.date).next_by_id()
+                        move_id.sudo().write({'state': 'posted',
+                                              'name': sequence,
+                                              'date': rec['POSTING-DATE'],
+                                              'amount': debit})
                         errObj.sudo().write({'state': 'resolved'})
                         return move_id
             except Exception:
