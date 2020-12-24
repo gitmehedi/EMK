@@ -89,9 +89,9 @@ class MrpProduction(models.Model):
 
             journal_id = moves_finish_ids[0].product_id.categ_id.property_stock_journal
 
-            self.create_account_move_line(raw_meterial_acc, finish_goods_acc, journal_id[0].id,order.operating_unit_id.id)
+            self.create_account_move_line(raw_meterial_acc, finish_goods_acc, journal_id[0].id, order.operating_unit_id.id)
 
-            moves_finish_ids.product_price_update_()
+            # moves_finish_ids.product_price_update_()
 
     def _get_account_id_value_for_raw_goods(self, moves_ids):
         raw_meterial_acc_id = {}
