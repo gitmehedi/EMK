@@ -1,5 +1,5 @@
-from odoo import models, fields, api,_
-from odoo.exceptions import UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class Picking(models.Model):
@@ -11,8 +11,45 @@ class Picking(models.Model):
 
         if self.location_dest_id.name == 'Customers':
             # Check Procondition
+            self.validate()
+
             self.do_COGS_accounting()
         return res
+
+    @api.multi
+    def validate(self):
+        is_valid = True
+
+        message = ''
+        categ_names_of_costing_method = set()
+        categ_names_of_stock_valuation_account = set()
+        product_names_of_cogs_account = set()
+
+        for pack_operation_product in self.pack_operation_product_ids:
+            if pack_operation_product.product_id.product_tmpl_id.categ_id.property_cost_method != 'average':
+                is_valid = False
+                categ_names_of_costing_method.add(str(pack_operation_product.product_id.product_tmpl_id.categ_id.name))
+
+            if not pack_operation_product.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id:
+                is_valid = False
+                categ_names_of_stock_valuation_account.add(str(pack_operation_product.product_id.product_tmpl_id.categ_id.name))
+
+            if not pack_operation_product.product_id.product_tmpl_id.cogs_account_id.id:
+                is_valid = False
+                product_names_of_cogs_account.add(str(pack_operation_product.product_id.product_tmpl_id.name))
+
+        if categ_names_of_costing_method:
+            message += _('- Costing Method must be "Average Price" for the mentioned Product category(s). '
+                         'Which are %s.\n') % str(tuple(categ_names_of_costing_method))
+        if categ_names_of_stock_valuation_account:
+            message += _('- Stock Valuation Account is missing for the mentioned Product category(s). '
+                         'Which are %s.\n') % str(tuple(categ_names_of_stock_valuation_account))
+        if product_names_of_cogs_account:
+            message += _('- COGS Account is missing for the mentioned Product(s). '
+                         'Which are %s.\n') % str(tuple(product_names_of_cogs_account))
+
+        if not is_valid:
+            raise ValidationError(message)
 
     @api.multi
     def do_COGS_accounting(self):
