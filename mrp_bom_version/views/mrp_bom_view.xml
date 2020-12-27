@@ -29,6 +29,7 @@
                     <header>
                         <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
                         <button name="action_new_version" type="object" string="New Version"
+                                groups="mrp.group_mrp_manager"
                                 attrs="{'invisible':[('state','in',('draft', 'historical'))]}"
                                 confirm="You are going to create a new version of this BOM. Are you sure?"
                                 class="oe_highlight"/>
@@ -37,6 +38,9 @@
                                statusbar_visible="draft,confirmed,historical"
                                attrs="{'invisible':[('state','==','historical')]}"/>
                     </header>
+                </xpath>
+                <xpath expr="//form/sheet/div[@name='button_box']/button[@name='toggle_active']" position="attributes">
+                    <attribute name="groups">mrp.group_mrp_manager</attribute>
                 </xpath>
                 <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
                     <attribute name="attrs">{'invisible': [('state','==','historical')]}</attribute>
