@@ -6,6 +6,13 @@ from odoo.exceptions import Warning
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
+    @api.model
+    def _get_default_picking_type(self):
+        return self.env['stock.picking.type'].search([
+            ('code', '=', 'mrp_operation'),
+            ('warehouse_id.company_id', 'in', [self.env.context.get('company_id', self.env.user.company_id.id), False])]
+            , limit=1).id
+
     code = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
     type = fields.Selection(readonly=True, states={'draft': [('readonly', False)]})
     product_tmpl_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
@@ -16,7 +23,7 @@ class MrpBom(models.Model):
     sequence = fields.Integer(readonly=True, states={'draft': [('readonly', False)]})
     routing_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
     ready_to_produce = fields.Selection(readonly=True, states={'draft': [('readonly', False)]})
-    picking_type_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
+    picking_type_id = fields.Many2one(default=_get_default_picking_type, readonly=True, states={'draft': [('readonly', False)]})
     company_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
 
     name = fields.Char(string='BOM Number', readonly=True, default='/')
