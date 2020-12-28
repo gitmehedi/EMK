@@ -91,13 +91,12 @@ class MrpProduction(models.Model):
 
             self.create_account_move_line(raw_meterial_acc, finish_goods_acc, journal_id[0].id, order.operating_unit_id.id)
 
-            # moves_finish_ids.product_price_update_()
-
     def _get_account_id_value_for_raw_goods(self, moves_ids):
         raw_meterial_acc_id = {}
-        tatal_raw_value  = 0
+        tatal_raw_value = 0
         for move in moves_ids:
-            acc_id = move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
+            # get account_id of raw goods
+            acc_id = self._get_account_id(move)
 
             total_price = move.product_uom_qty * move.price_unit
             tatal_raw_value += total_price
@@ -113,7 +112,8 @@ class MrpProduction(models.Model):
 
         finish_acc_id = {}
         for move in moves_ids:
-            acc_id = move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
+            # get account_id of finish goods
+            acc_id = self._get_account_id(move)
 
             if acc_id in finish_acc_id.keys():
                 finish_acc_id[acc_id] = finish_acc_id[acc_id] + tatal_raw_value
@@ -121,6 +121,10 @@ class MrpProduction(models.Model):
                 finish_acc_id[acc_id] = tatal_raw_value
 
         return finish_acc_id
+
+    def _get_account_id(self, move):
+        account_id = move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
+        return account_id
 
     def create_account_move_line(self, raw_meterial_acc, finish_goods_acc, journal_id, operating_unit_id):
 
