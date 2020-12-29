@@ -11,3 +11,9 @@ class ProductTemplate(models.Model):
             code = self.env['product.template'].search([('default_code', '=', self.default_code)])
             if len(code) > 1:
                 raise ValidationError(" Internal Reference must be unique!")
+
+
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    standard_price = fields.Float(track_visibility='onchange')
