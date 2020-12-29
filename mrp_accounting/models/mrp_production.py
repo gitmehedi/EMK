@@ -6,6 +6,10 @@ from odoo.exceptions import UserError, ValidationError
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+    move_id = fields.Many2one('account.move', string='Journal Entry',
+                              readonly=True, index=True, ondelete='restrict', copy=False,
+                              help="Link to the automatically generated Journal Items.")
+
     @api.multi
     def button_mark_done(self):
         self.ensure_one()
@@ -95,8 +99,7 @@ class MrpProduction(models.Model):
         raw_meterial_acc_id = {}
         tatal_raw_value = 0
         for move in moves_ids:
-            # get account_id of raw goods
-            acc_id = self._get_account_id(move)
+            acc_id = move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
 
             total_price = move.product_uom_qty * move.price_unit
             tatal_raw_value += total_price
@@ -109,22 +112,11 @@ class MrpProduction(models.Model):
         return tatal_raw_value, raw_meterial_acc_id
 
     def _get_account_id_value_for_finish_goods(self, moves_ids, tatal_raw_value):
-
         finish_acc_id = {}
-        for move in moves_ids:
-            # get account_id of finish goods
-            acc_id = self._get_account_id(move)
-
-            if acc_id in finish_acc_id.keys():
-                finish_acc_id[acc_id] = finish_acc_id[acc_id] + tatal_raw_value
-            else:
-                finish_acc_id[acc_id] = tatal_raw_value
+        acc_id = moves_ids[0].product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
+        finish_acc_id[acc_id] = tatal_raw_value
 
         return finish_acc_id
-
-    def _get_account_id(self, move):
-        account_id = move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
-        return account_id
 
     def create_account_move_line(self, raw_meterial_acc, finish_goods_acc, journal_id, operating_unit_id):
 
@@ -169,3 +161,4 @@ class MrpProduction(models.Model):
                 'ref': False,
                 'operating_unit_id': operating_unit_id})
             new_account_move.post()
+            self.write({'move_id': new_account_move.id})

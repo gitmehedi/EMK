@@ -12,7 +12,8 @@
         'delivery_order',
     ],
     'data': [
-        'views/product_view.xml'
+        'views/product_view.xml',
+        'views/inherit_mrp_production_view.xml'
     ],
     'summary': 'MRP Accounting',
     'installable': True,
