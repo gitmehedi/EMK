@@ -18,6 +18,10 @@ class MrpBom(models.Model):
         for rec in self:
             rec.amount_total = sum(line.price_subtotal for line in rec.bom_line_ids)
 
+    @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
+    def _check_product_recursion(self):
+        pass
+
     @api.constrains('bom_line_ids')
     def _check_bom_line_ids(self):
         if len(self.bom_line_ids.ids) <= 0:
