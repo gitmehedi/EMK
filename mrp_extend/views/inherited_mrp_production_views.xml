@@ -12,6 +12,12 @@
                 <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
+                <xpath expr="//form/sheet/group/group/div/button[@name='%(mrp.action_change_production_qty)d']" position="replace">
+                    <button type="action"
+                            name="%(mrp.action_change_production_qty)d"
+                            attrs="{'invisible': [('availability', 'in', ('assigned', 'none'))]}"
+                            string="Update" class="oe_link"/>
+                </xpath>
                 <xpath expr="//form/sheet/group/group/field[@name='bom_id']" position="attributes">
                     <attribute name="domain">
                         ['&amp;', ('state', '=', 'confirmed'), '&amp;', '|', ('product_id','=',product_id),
