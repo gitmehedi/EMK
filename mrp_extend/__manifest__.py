@@ -10,7 +10,8 @@
         'mrp_bom_extend'
     ],
     'data': [
-        'views/inherited_mrp_production_views.xml'
+        'views/inherited_mrp_production_views.xml',
+        'views/inherited_product_views.xml'
     ],
     'summary': 'Adding standard qty field and modified existing features',
     'installable': True,

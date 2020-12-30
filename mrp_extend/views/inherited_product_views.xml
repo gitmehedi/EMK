@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="mrp.menu_mrp_product_form"
+            name="Products"
+            action="mrp.product_template_action"
+            parent="mrp.menu_mrp_bom"
+            groups="base.group_system"/>
+    </data>
+</odoo>
