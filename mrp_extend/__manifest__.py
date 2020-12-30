@@ -11,8 +11,7 @@
     ],
     'data': [
         'views/inherited_mrp_production_views.xml',
-        'views/inherited_product_views.xml',
-        'views/inherited_stock_move_views.xml'
+        'views/inherited_menu_views.xml'
     ],
     'summary': 'Adding standard qty field and modified existing features',
     'installable': True,
