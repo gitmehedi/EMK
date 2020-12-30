@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="mrp.menu_mrp_scrap"
+                  name="Scrap"
+                  parent="mrp.menu_mrp_manufacturing"
+                  action="stock.action_stock_scrap"
+                  groups="base.group_system"
+                  sequence="25"/>
+    </data>
+</odoo>
