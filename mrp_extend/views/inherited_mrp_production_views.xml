@@ -6,6 +6,12 @@
             <field name="model">mrp.production</field>
             <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@name='open_produce_product'][2]" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='post_inventory']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
                 <xpath expr="//form/header/button[@name='button_scrap']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
