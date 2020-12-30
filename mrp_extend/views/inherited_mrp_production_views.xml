@@ -18,6 +18,9 @@
                             attrs="{'invisible': [('availability', 'in', ('assigned', 'none'))]}"
                             string="Update" class="oe_link"/>
                 </xpath>
+                <xpath expr="//form/sheet/group/group/div/field[@name='product_uom_id']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
                 <xpath expr="//form/sheet/group/group/field[@name='bom_id']" position="attributes">
                     <attribute name="domain">
                         ['&amp;', ('state', '=', 'confirmed'), '&amp;', '|', ('product_id','=',product_id),

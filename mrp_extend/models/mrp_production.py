@@ -32,3 +32,19 @@ class MrpProduction(models.Model):
             return move
         else:
             self._generate_raw_move(bom_line, line_data)
+
+    @api.model
+    def create(self, vals):
+        if 'product_id' in vals:
+            product_product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product_product.uom_id.id
+
+        return super(MrpProduction, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'product_id' in vals:
+            product_product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product_product.uom_id.id
+
+        return super(MrpProduction, self).write(vals)
