@@ -663,7 +663,7 @@ class ServerFileProcess(models.Model):
                                                'Amount [{0}] has invalid value'.format(rec['LCY-AMT']))
                     else:
                         lcy_amt = np.float128(decimal_bef + '.' + decimal_after)
-                        amount = "{:.2f}".format(lcy_amt)
+                        amount = "{:.3f}".format(lcy_amt)
 
                     if len(amount) > 16:
                         errors += format_error(errObj.id, index,
@@ -681,7 +681,7 @@ class ServerFileProcess(models.Model):
                                                    'FCY Amount [{0}] has invalid value'.format(rec['FCY-AMT']))
                         else:
                             fcy_amt = np.float128(fcy_d_bef + '.' + fcy_d_after)
-                            fcy_amount = "{:.2f}".format(fcy_amt)
+                            fcy_amount = "{:.3f}".format(fcy_amt)
                             if fcy_sign == '-':
                                  fcy_amount = '-' + fcy_amount
 
@@ -711,13 +711,13 @@ class ServerFileProcess(models.Model):
                             line['debit'] = amount
                             line['credit'] = 0.0
                             line['amount_currency'] = fcy_amount
-                            debit += lcy_amt
+                            debit += float(amount)
 
                         elif rec['JOURNAL-SEQ'] == '01':
                             line['debit'] = 0.0
                             line['credit'] = amount
                             line['amount_currency'] = fcy_amount
-                            credit += lcy_amt
+                            credit += float(amount)
                         journal_entry += format_journal(line)
 
         if len(errors) > 0:
@@ -732,7 +732,7 @@ class ServerFileProcess(models.Model):
                                         'line_no': 'UNKNOWN ERROR',
                                         'details': 'Please check your file.'})
         else:
-            missmatch = "{:.2f}".format(round(debit - credit, 2))
+            missmatch = "{:.3f}".format(round(debit - credit, 3))
             try:
                 query = """
                 INSERT INTO account_move_line 
@@ -742,11 +742,11 @@ class ServerFileProcess(models.Model):
                 self.env.cr.execute(query)
 
                 if move_id.state == 'draft':
-                    if round(debit - credit, 2) > 0:
+                    if round(debit - credit, 3) > 0:
                         msg = 'Debit is greater than Credit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
-                    elif round(credit - debit, 2) > 0:
+                    elif round(credit - debit, 3) > 0:
                         msg = 'Credit is greater than Debit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
