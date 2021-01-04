@@ -10,6 +10,7 @@
         'mrp_bom_extend'
     ],
     'data': [
+        'wizard/mrp_production_confirmation_view.xml',
         'views/inherited_mrp_production_views.xml',
         'views/inherited_menu_views.xml'
     ],

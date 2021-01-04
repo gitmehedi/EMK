@@ -35,6 +35,9 @@
                     </attribute>
                     <attribute name="options">{'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='routing_id']" position="after">
+                    <field name="production_continue" invisible="1"/>
+                </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='product_uom_qty']" position="before">
                     <field name="standard_qty"/>
                 </xpath>

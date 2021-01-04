@@ -6,6 +6,18 @@ from odoo.exceptions import UserError
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+    production_continue = fields.Boolean('Continue Production', default=True)
+
+    @api.multi
+    @api.depends('workorder_ids.state', 'move_finished_ids')
+    def _get_produced_qty(self):
+        res = super(MrpProduction, self)._get_produced_qty()
+        for production in self:
+            if not production.production_continue and (production.state not in ('done', 'cancel')):
+                production.check_to_done = True
+
+        return res
+
     def _generate_raw_move(self, bom_line, line_data):
         move = super(MrpProduction, self)._generate_raw_move(bom_line, line_data)
         product_uom_qty = move.product_uom_qty
