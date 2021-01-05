@@ -38,9 +38,6 @@
                 <xpath expr="//form/sheet/group/group/field[@name='routing_id']" position="after">
                     <field name="production_continue" invisible="1"/>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='quantity_done']" position="attributes">
-                    <attribute name="groups">base.group_system</attribute>
-                </xpath>
             </field>
         </record>
     </data>
