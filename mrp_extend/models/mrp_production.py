@@ -1,6 +1,6 @@
 # imports of odoo
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class MrpProduction(models.Model):
@@ -81,6 +81,29 @@ class MrpProduction(models.Model):
             return move
         else:
             self._generate_raw_move(bom_line, line_data)
+
+    @api.multi
+    def button_mark_done(self):
+        self.ensure_one()
+        self.check_raw_material_product_qty()
+        res = super(MrpProduction, self).button_mark_done()
+
+        return res
+
+    @api.multi
+    def check_raw_material_product_qty(self):
+        has_qty = True
+        message = ""
+        for move in self.move_raw_ids:
+            stock_qty = move.availability + move.reserved_availability
+            if stock_qty < move.product_qty:
+                has_qty = False
+                message += _('- Product Name: "%s" , Qty: %s \n') % (str(move.product_id.product_tmpl_id.name), (move.product_qty - stock_qty))
+
+        if not has_qty:
+            message += _('\nPlease contact with Inventory Department for that. After that you can perform the production.')
+            raise ValidationError(_('Unable to perform production.\n\n'
+                                    'The mentioned product(s) qty are not available in current stock: \n') + message)
 
     @api.model
     def create(self, vals):
