@@ -1,6 +1,6 @@
 # imports of odoo
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, Warning
 
 
 class MrpBom(models.Model):
@@ -62,6 +62,10 @@ class MrpBomLine(models.Model):
 
     price_unit = fields.Float(string='Unit Price', store=True, readonly=True, compute='_compute_price_unit')
     price_subtotal = fields.Float(string='Amount', store=True, readonly=True, compute='_compute_price')
+
+    _sql_constraints = [
+        ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.'),
+    ]
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
