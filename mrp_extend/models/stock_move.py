@@ -20,7 +20,9 @@ class StockMove(models.Model):
         for move in self:
             if move.has_tracking == 'none':
                 move.quantity_done_store = move.quantity_done
-                move.product_uom_qty = move.quantity_done
+                # for raw materials
+                if move.raw_material_production_id and move.quantity_done > 0:
+                    move.product_uom_qty = move.quantity_done
 
     @api.multi
     def unlink(self):
