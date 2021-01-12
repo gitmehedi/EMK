@@ -7,6 +7,10 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     production_continue = fields.Boolean('Continue Production', default=True)
+    create_delete_move_raw_ids = fields.One2many(
+        'stock.move', 'raw_material_production_id', 'Raw Materials', oldname='move_lines',
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        domain=[('scrapped', '=', False)])
 
     @api.multi
     @api.depends('workorder_ids.state', 'move_finished_ids')
@@ -85,13 +89,14 @@ class MrpProduction(models.Model):
     @api.multi
     def button_mark_done(self):
         self.ensure_one()
-        self.check_raw_material_product_qty()
+        self.check_available_quantity()
         res = super(MrpProduction, self).button_mark_done()
 
         return res
 
     @api.multi
-    def check_raw_material_product_qty(self):
+    def check_available_quantity(self):
+        """check whether the quantity of raw material is available or not"""
         has_qty = True
         message = ""
         for move in self.move_raw_ids:
@@ -109,16 +114,82 @@ class MrpProduction(models.Model):
     def create(self, vals):
         """Override to set the value of product_uom_id field"""
         if 'product_id' in vals:
-            product_product = self.env['product.product'].search([('id', '=', vals['product_id'])])
-            vals['product_uom_id'] = product_product.uom_id.id
+            product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product.uom_id.id
 
         return super(MrpProduction, self).create(vals)
 
     @api.multi
     def write(self, vals):
         """Override to set the value of product_uom_id field"""
+        # parent
         if 'product_id' in vals:
-            product_product = self.env['product.product'].search([('id', '=', vals['product_id'])])
-            vals['product_uom_id'] = product_product.uom_id.id
+            product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product.uom_id.id
+
+        # lines
+        if 'create_delete_move_raw_ids' in vals:
+            new_create_delete_move_raw_ids = []
+            for raw_item in vals['create_delete_move_raw_ids']:
+                # check for creation
+                if raw_item[0] == 0:
+                    self._create_raw_move(raw_item[2])
+
+                # check for edit
+                elif raw_item[0] == 1 and 'product_id' in raw_item[2]:
+                    move = self.env['stock.move'].search([('id', '=', raw_item[1])])
+
+                    if self.availability == 'assigned':
+                        raise UserError(_("You cannot change the product of Raw Material(s) "
+                                          "after performing 'Check availability'"))
+                    if move.bom_line_id:
+                        raise UserError(_("You cannot change the product of Raw Material(s) which are coming from BOM"))
+                    else:
+                        if 'product_uom' not in raw_item[2]:
+                            product = self.env['product.product'].search([('id', '=', raw_item[2]['product_id'])])
+                            raw_item[2].update({'product_uom': product.uom_id.id, 'price_unit': product.standard_price})
+
+                        new_create_delete_move_raw_ids.append(raw_item)
+
+                else:
+                    new_create_delete_move_raw_ids.append(raw_item)
+
+            vals['move_raw_ids'] = new_create_delete_move_raw_ids
+            del vals['create_delete_move_raw_ids']
 
         return super(MrpProduction, self).write(vals)
+
+    def _create_raw_move(self, vals):
+        product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+
+        if self.routing_id and self.routing_id.location_id:
+            source_location = self.routing_id.location_id
+        else:
+            source_location = self.location_src_id
+        original_quantity = (self.product_qty - self.qty_produced) or 1.0
+        data = {
+            'sequence': vals['sequence'],
+            'name': self.name,
+            'date': self.date_planned_start,
+            'date_expected': self.date_planned_start,
+            'product_id': vals['product_id'],
+            'standard_qty': 0,
+            'product_uom_qty': vals['product_uom_qty'],
+            'product_uom': product.uom_id.id,
+            'location_id': source_location.id,
+            'location_dest_id': self.product_id.property_stock_production.id,
+            'raw_material_production_id': self.id,
+            'company_id': self.company_id.id,
+            'price_unit': product.standard_price,
+            'procure_method': 'make_to_stock',
+            'origin': self.name,
+            'warehouse_id': source_location.get_warehouse().id,
+            'group_id': self.procurement_group_id.id,
+            'propagate': self.propagate,
+            'unit_factor': vals['product_uom_qty'] / original_quantity,
+        }
+
+        move = self.env['stock.move'].create(data)
+        move.action_confirm()
+
+        return move

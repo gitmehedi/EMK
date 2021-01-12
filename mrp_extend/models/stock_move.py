@@ -1,5 +1,6 @@
 # imports of odoo
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class StockMove(models.Model):
@@ -20,3 +21,16 @@ class StockMove(models.Model):
             if move.has_tracking == 'none':
                 move.quantity_done_store = move.quantity_done
                 move.product_uom_qty = move.quantity_done
+
+    @api.multi
+    def unlink(self):
+        if any(move.raw_material_production_id for move in self):
+            if any(move.bom_line_id for move in self):
+                raise UserError(_("Sorry !!!! You cannot remove Raw Material(s) which are coming from BOM"))
+
+            if any(move.state not in ('draft', 'confirmed', 'cancel') for move in self):
+                raise UserError(_('You cannot remove Raw Materiel(s) not in confirmed state.'))
+
+            return models.Model.unlink(self)
+
+        return super(StockMove, self).unlink()
