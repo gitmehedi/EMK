@@ -23,49 +23,6 @@ class MrpProduction(models.Model):
 
         return res
 
-    def _generate_raw_move(self, bom_line, line_data):
-        """Override _generate_raw_move to insert the value of standard_qty field"""
-        quantity = line_data['qty']
-        # alt_op needed for the case when you explode phantom bom and all the lines will be consumed in the operation given by the parent bom line
-        alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
-        if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
-            return self.env['stock.move']
-        if bom_line.product_id.type not in ['product', 'consu']:
-            return self.env['stock.move']
-        if self.routing_id:
-            routing = self.routing_id
-        else:
-            routing = self.bom_id.routing_id
-        if routing and routing.location_id:
-            source_location = routing.location_id
-        else:
-            source_location = self.location_src_id
-        original_quantity = (self.product_qty - self.qty_produced) or 1.0
-        data = {
-            'sequence': bom_line.sequence,
-            'name': self.name,
-            'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
-            'bom_line_id': bom_line.id,
-            'product_id': bom_line.product_id.id,
-            'standard_qty': quantity,
-            'product_uom_qty': quantity,
-            'product_uom': bom_line.product_uom_id.id,
-            'location_id': source_location.id,
-            'location_dest_id': self.product_id.property_stock_production.id,
-            'raw_material_production_id': self.id,
-            'company_id': self.company_id.id,
-            'operation_id': bom_line.operation_id.id or alt_op,
-            'price_unit': bom_line.product_id.standard_price,
-            'procure_method': 'make_to_stock',
-            'origin': self.name,
-            'warehouse_id': source_location.get_warehouse().id,
-            'group_id': self.procurement_group_id.id,
-            'propagate': self.propagate,
-            'unit_factor': quantity / original_quantity,
-        }
-        return self.env['stock.move'].create(data)
-
     @api.multi
     def _update_raw_move(self, bom_line, line_data):
         """Override _update_raw_move to insert the value of standard_qty field"""
@@ -93,22 +50,6 @@ class MrpProduction(models.Model):
         res = super(MrpProduction, self).button_mark_done()
 
         return res
-
-    @api.multi
-    def check_available_quantity(self):
-        """check whether the quantity of raw material is available or not"""
-        has_qty = True
-        message = ""
-        for move in self.move_raw_ids:
-            stock_qty = move.availability + move.reserved_availability
-            if stock_qty < move.product_qty:
-                has_qty = False
-                message += _('- Product Name: "%s" , Qty: %s \n') % (str(move.product_id.product_tmpl_id.name), (move.product_qty - stock_qty))
-
-        if not has_qty:
-            message += _('\nPlease contact with Inventory Department for that. After that you can perform the production.')
-            raise ValidationError(_('Unable to perform production.\n\n'
-                                    'The mentioned product(s) qty are not available in current stock: \n') + message)
 
     @api.model
     def create(self, vals):
@@ -158,6 +99,68 @@ class MrpProduction(models.Model):
             del vals['create_delete_move_raw_ids']
 
         return super(MrpProduction, self).write(vals)
+
+    @api.multi
+    def check_available_quantity(self):
+        """check whether the quantity of raw material is available or not"""
+        has_qty = True
+        message = ""
+        for move in self.move_raw_ids:
+            stock_qty = move.availability + move.reserved_availability
+            if stock_qty < move.product_qty:
+                has_qty = False
+                message += _('- Product Name: "%s" , Qty: %s \n') % (
+                str(move.product_id.product_tmpl_id.name), (move.product_qty - stock_qty))
+
+        if not has_qty:
+            message += _('\nPlease contact with Inventory Department for that. '
+                         'After that you can perform the production.')
+            raise ValidationError(_('Unable to perform production.\n\n'
+                                    'The mentioned product(s) qty are not available in current stock: \n') + message)
+
+    def _generate_raw_move(self, bom_line, line_data):
+        """Override _generate_raw_move to insert the value of standard_qty field"""
+        quantity = line_data['qty']
+        # alt_op needed for the case when you explode phantom bom
+        # and all the lines will be consumed in the operation given by the parent bom line
+        alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
+        if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
+            return self.env['stock.move']
+        if bom_line.product_id.type not in ['product', 'consu']:
+            return self.env['stock.move']
+        if self.routing_id:
+            routing = self.routing_id
+        else:
+            routing = self.bom_id.routing_id
+        if routing and routing.location_id:
+            source_location = routing.location_id
+        else:
+            source_location = self.location_src_id
+        original_quantity = (self.product_qty - self.qty_produced) or 1.0
+        data = {
+            'sequence': bom_line.sequence,
+            'name': self.name,
+            'date': self.date_planned_start,
+            'date_expected': self.date_planned_start,
+            'bom_line_id': bom_line.id,
+            'product_id': bom_line.product_id.id,
+            'standard_qty': quantity,
+            'product_uom_qty': quantity,
+            'product_uom': bom_line.product_uom_id.id,
+            'location_id': source_location.id,
+            'location_dest_id': self.product_id.property_stock_production.id,
+            'raw_material_production_id': self.id,
+            'company_id': self.company_id.id,
+            'operation_id': bom_line.operation_id.id or alt_op,
+            'price_unit': bom_line.product_id.standard_price,
+            'procure_method': 'make_to_stock',
+            'origin': self.name,
+            'warehouse_id': source_location.get_warehouse().id,
+            'group_id': self.procurement_group_id.id,
+            'propagate': self.propagate,
+            'unit_factor': quantity / original_quantity,
+        }
+        return self.env['stock.move'].create(data)
 
     def _create_raw_move(self, vals):
         product = self.env['product.product'].search([('id', '=', vals['product_id'])])
