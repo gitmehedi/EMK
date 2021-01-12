@@ -46,6 +46,7 @@ class MrpProduction(models.Model):
     @api.multi
     def button_mark_done(self):
         self.ensure_one()
+        self.validate_actual_consumed()
         self.check_available_quantity()
         res = super(MrpProduction, self).button_mark_done()
 
@@ -117,6 +118,11 @@ class MrpProduction(models.Model):
                          'After that you can perform the production.')
             raise ValidationError(_('Unable to perform production.\n\n'
                                     'The mentioned product(s) qty are not available in current stock: \n') + message)
+
+    @api.multi
+    def validate_actual_consumed(self):
+        if not any(move.quantity_done for move in self.move_raw_ids):
+            raise ValidationError(_("The value of Actual Consumed of all Raw Material(s) cannot be 0 !!!"))
 
     def _generate_raw_move(self, bom_line, line_data):
         """Override _generate_raw_move to insert the value of standard_qty field"""
