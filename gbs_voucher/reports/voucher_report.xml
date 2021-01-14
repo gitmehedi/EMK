@@ -73,6 +73,12 @@
                                                 <t t-if="line['analytic_account_name']">
                                                     <br/><strong class="double-tab font" t-esc="line['analytic_account_name']"/>
                                                 </t>
+                                                <t t-if="line['department_name']">
+                                                    <br/><strong class="double-tab font" t-esc="line['department_name']"/>
+                                                </t>
+                                                <t t-if="line['cost_center_name']">
+                                                    <br/><strong class="double-tab font" t-esc="line['cost_center_name']"/>
+                                                </t>
                                             </td>
                                             <td style="line-height: 110%;"><span t-esc="line['partner_name']"/></td>
                                             <td style="line-height: 110%;"><span t-esc="line['particulars']"/></td>

@@ -35,6 +35,8 @@ class GBSVoucherReport(models.AbstractModel):
             for tag in line.analytic_account_id.tag_ids:
                 aat_name += tag.display_name + ', '
             dict_obj['analytic_account_tag_names'] = aat_name[:len(aat_name)-2] if len(aat_name) > 0 else False
+            dict_obj['department_name'] = line.department_id.display_name
+            dict_obj['cost_center_name'] = line.cost_center_id.display_name
             dict_obj['partner_name'] = line.partner_id.display_name
             dict_obj['particulars'] = line.name
             dict_obj['debit'] = line.debit

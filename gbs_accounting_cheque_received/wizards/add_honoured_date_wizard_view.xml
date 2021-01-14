@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="add_honoured_date_wizard_view_form" model="ir.ui.view">
+            <field name="name">add.honoured.date.wizard.view.form</field>
+            <field name="model">add.honoured.date.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="honoured_date"/>
+                        </group>
+                        <group>
+                            <field name="sale_order_ids" widget="many2many_tags" domain="[('id', 'in', context.get('domain_ids'))]"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_proceed" string="Proceed" type="object" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
