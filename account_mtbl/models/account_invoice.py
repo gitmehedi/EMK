@@ -74,7 +74,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        if self.state == 'draft':
+        if all(rec.state == 'draft' for rec in self):
             if vals.get('reference'):
                 vals.update({'reference': vals.get('reference').strip()})
             return super(AccountInvoice, self).write(vals)
