@@ -121,14 +121,21 @@ class MrpBom(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise Warning(_('You cannot delete a record which is not in draft state!'))
+
+            manufacturing_orders = self.env['mrp.production'].search([('bom_id', 'in', rec.old_version_ids.ids)])
+            if len(manufacturing_orders) > 0:
+                raise Warning(_('You cannot delete a record which is used in Manufacturing Orders!'))
+
         return super(MrpBom, self).unlink()
 
     def has_duplicate_products(self, vals):
         contains_duplicate_products = False
-        product_ids = self.bom_line_ids.mapped('product_id').ids
-        product_ids += [rec[2]['product_id'] for rec in vals['bom_line_ids'] if rec[2]]
-        if len(product_ids) != len(set(product_ids)):
-            contains_duplicate_products = True
+        if 'bom_line_ids' in vals:
+            product_ids = [rec[2]['product_id'] for rec in vals['bom_line_ids'] if rec[2]]
+            if not self.env.context.get('new_bom_version'):
+                product_ids += self.bom_line_ids.mapped('product_id').ids
+            if len(product_ids) != len(set(product_ids)):
+                contains_duplicate_products = True
 
         return contains_duplicate_products
 
