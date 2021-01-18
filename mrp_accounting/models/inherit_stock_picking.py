@@ -8,12 +8,10 @@ class Picking(models.Model):
     @api.multi
     def do_new_transfer(self):
         res = super(Picking, self).do_new_transfer()
-
-        if self.location_dest_id.name == 'Customers':
-            # Check Procondition
-            self.validate()
-
-            self.do_COGS_accounting()
+        if self.operating_unit_id.code == 'SCCL-DF':
+            if self.location_dest_id.name == 'Customers':
+                self.validate()
+                self.do_cogs_accounting()
         return res
 
     @api.multi
@@ -52,7 +50,7 @@ class Picking(models.Model):
             raise ValidationError(message)
 
     @api.multi
-    def do_COGS_accounting(self):
+    def do_cogs_accounting(self):
 
         ref = self.name + " of " + self.origin
         for stock_pack_products in self.pack_operation_product_ids:
