@@ -10,7 +10,7 @@
             <field name="number_increment">1</field>
         </record>
 
-        <record id="pr_sequence_sccl_ctg" model="ir.sequence">
+        <record id="bom_sequence_sccl_ctg" model="ir.sequence">
             <field name="name">BOM SCCL CTG</field>
             <field name="code">mrp.bom</field>
             <field name="prefix">BOM-OU-</field>
@@ -18,5 +18,8 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+
+        <delete model="ir.sequence" search="[('id','=',ref('mrp_bom_version.sequence_mrp_bom'))]"/>
+        <delete model="ir.model.data" search="[('module', '=', 'mrp_bom_version'), ('name', '=', 'sequence_mrp_bom')]"/>
     </data>
 </odoo>

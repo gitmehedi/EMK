@@ -64,6 +64,9 @@ class MrpProduction(models.Model):
     @api.multi
     def write(self, vals):
         """Override to set the value of product_uom_id field"""
+        if self.has_duplicate_products(vals):
+            raise ValidationError(_("Contains duplicate products in Raw material(s) list."))
+
         # parent
         if 'product_id' in vals:
             product = self.env['product.product'].search([('id', '=', vals['product_id'])])
@@ -202,3 +205,12 @@ class MrpProduction(models.Model):
         move.action_confirm()
 
         return move
+
+    def has_duplicate_products(self, vals):
+        contains_duplicate_products = False
+        product_ids = self.create_delete_move_raw_ids.mapped('product_id').ids
+        product_ids += [rec[2]['product_id'] for rec in vals['create_delete_move_raw_ids'] if rec[2]]
+        if len(product_ids) != len(set(product_ids)):
+            contains_duplicate_products = True
+
+        return contains_duplicate_products
