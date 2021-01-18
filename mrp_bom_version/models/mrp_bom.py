@@ -1,6 +1,6 @@
 # imports of odoo
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning
+from odoo.exceptions import Warning, ValidationError
 
 
 class MrpBom(models.Model):
@@ -96,6 +96,9 @@ class MrpBom(models.Model):
 
     @api.model
     def create(self, vals):
+        if self.has_duplicate_products(vals):
+            raise ValidationError(_("Contains duplicate products in Raw material(s) list."))
+
         if 'product_tmpl_id' in vals:
             product_template = self.env['product.template'].search([('id', '=', vals['product_tmpl_id'])])
             vals['product_uom_id'] = product_template.uom_id.id
@@ -104,6 +107,9 @@ class MrpBom(models.Model):
 
     @api.multi
     def write(self, vals):
+        if self.has_duplicate_products(vals):
+            raise ValidationError(_("Contains duplicate products in Raw material(s) list."))
+
         if 'product_tmpl_id' in vals:
             product_template = self.env['product.template'].search([('id', '=', vals['product_tmpl_id'])])
             vals['product_uom_id'] = product_template.uom_id.id
@@ -116,6 +122,15 @@ class MrpBom(models.Model):
             if rec.state != 'draft':
                 raise Warning(_('You cannot delete a record which is not in draft state!'))
         return super(MrpBom, self).unlink()
+
+    def has_duplicate_products(self, vals):
+        contains_duplicate_products = False
+        product_ids = self.bom_line_ids.mapped('product_id').ids
+        product_ids += [rec[2]['product_id'] for rec in vals['bom_line_ids'] if rec[2]]
+        if len(product_ids) != len(set(product_ids)):
+            contains_duplicate_products = True
+
+        return contains_duplicate_products
 
 
 class MrpBomLine(models.Model):
