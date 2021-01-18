@@ -209,7 +209,7 @@ class MrpProduction(models.Model):
     def has_duplicate_products(self, vals):
         contains_duplicate_products = False
         product_ids = self.create_delete_move_raw_ids.mapped('product_id').ids
-        product_ids += [rec[2]['product_id'] for rec in vals['create_delete_move_raw_ids'][1:] if rec[2]]
+        product_ids += [rec[2]['product_id'] for rec in vals['create_delete_move_raw_ids'] if rec[2]]
         if len(product_ids) != len(set(product_ids)):
             contains_duplicate_products = True
 
