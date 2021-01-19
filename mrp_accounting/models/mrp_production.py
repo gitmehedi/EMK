@@ -13,12 +13,12 @@ class MrpProduction(models.Model):
     @api.multi
     def button_mark_done(self):
         self.ensure_one()
-        # Check Precondition
         self.validate()
-
+        # execute the default operation
         res = super(MrpProduction, self).button_mark_done()
-
-        self.do_accounting()
+        # check for doing stock valuation accounting
+        if self.env.user.company_id.stock_valuation_accounting:
+            self.do_accounting()
 
         return res
 

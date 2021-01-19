@@ -12,6 +12,7 @@
         'delivery_order',
     ],
     'data': [
+        'views/inherited_mrp_config_settings_views.xml',
         'views/product_view.xml',
         'views/inherit_mrp_production_view.xml'
     ],

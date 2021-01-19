@@ -7,11 +7,15 @@ class Picking(models.Model):
 
     @api.multi
     def do_new_transfer(self):
+        # execute the default operation
         res = super(Picking, self).do_new_transfer()
-        if self.operating_unit_id.code == 'SCCL-DF':
-            if self.location_dest_id.name == 'Customers':
-                self.validate()
-                self.do_cogs_accounting()
+        # check for doing cogs accounting
+        if self.env.user.company_id.cogs_accounting:
+            if self.operating_unit_id.code == 'SCCL-DF':
+                if self.location_dest_id.name == 'Customers':
+                    self.validate()
+                    self.do_cogs_accounting()
+
         return res
 
     @api.multi
