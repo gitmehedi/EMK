@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'GBS Purchase Unit Price',
+    'name': 'GBS Product Unit Price Update',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Manufacturing',
@@ -13,13 +13,14 @@
     ],
     'summary': 'Override base module logic.',
     'description': """
-GBS Purchase Unit Price Update module
+GBS Product Unit Price Update module
 ==============================
 
 Key Features
 ------------
-* Unit Price update only for local purchase at "Anticipatory Stock".
-* Unit Price will not update for Foreign Purchase.""",
+* Product Unit Price Update for Local Purchase at "Anticipatory Stock".
+* Product Unit Price will not Update for Foreign Purchase.
+* Finish Goods Unit Price Update at Production""",
     'installable': True,
     'application': False,
 }
