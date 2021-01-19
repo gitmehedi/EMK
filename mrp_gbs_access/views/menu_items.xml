@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- BOM report menu -->
+        <report
+            string="BOM Cost"
+            id="mrp.action_report_bom_price"
+            model="mrp.bom"
+            name="mrp_bom_cost"
+            file="mrp_bom_cost"
+            report_type="qweb-html"
+            groups="account.group_account_user"
+        />
     </data>
 </odoo>
