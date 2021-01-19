@@ -1,3 +1,6 @@
+# imports of python lib
+import datetime
+
 # imports of odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -153,7 +156,7 @@ class MrpProduction(models.Model):
             line_vals.append((0, 0, credit_line_vals))
         AccountMove = self.env['account.move']
         if line_vals:
-            date = self._context.get('force_period_date', fields.Date.context_today(self))
+            date = datetime.datetime.strptime(self.date_planned_start, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
             new_account_move = AccountMove.create({
                 'journal_id': journal_id,
                 'line_ids': line_vals,
