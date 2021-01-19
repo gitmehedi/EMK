@@ -51,7 +51,7 @@ class MrpProduction(models.Model):
                 is_valid = False
                 categ_names_of_inventory_valuation.add(str(move.product_id.product_tmpl_id.categ_id.name))
 
-            if not move.product_id.product_tmpl_id.cogs_account_id.id:
+            if move.product_id.product_tmpl_id.sale_ok and not move.product_id.product_tmpl_id.cogs_account_id.id:
                 is_valid = False
                 product_names_of_cogs_account.add(str(move.product_id.product_tmpl_id.name))
 
