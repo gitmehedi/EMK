@@ -143,25 +143,11 @@ class MrpBom(models.Model):
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'
 
-    def _get_default_category_id(self):
-        return self.env['product.category'].search([], limit=1, order='id').id
-
-    categ_id = fields.Many2one(
-        'product.category', 'Internal Category', default=_get_default_category_id, domain="[('type','=','normal')]",
-        required=True, help="category for the current product")
-
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        res = super(MrpBomLine, self).onchange_product_id()
-        if self.product_id:
-            self.categ_id = self.product_id.categ_id.id
-
     @api.model
     def create(self, vals):
         if 'product_id' in vals:
             product = self.env['product.product'].search([('id', '=', vals['product_id'])])
             vals['product_uom_id'] = product.product_tmpl_id.uom_id.id
-            vals['categ_id'] = product.product_tmpl_id.categ_id.id
 
         return super(MrpBomLine, self).create(vals)
 
@@ -170,6 +156,5 @@ class MrpBomLine(models.Model):
         if 'product_id' in vals:
             product = self.env['product.product'].search([('id', '=', vals['product_id'])])
             vals['product_uom_id'] = product.product_tmpl_id.uom_id.id
-            vals['categ_id'] = product.product_tmpl_id.categ_id.id
 
         return super(MrpBomLine, self).write(vals)

@@ -67,9 +67,6 @@
                 <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
                     <attribute name="string">Qty</attribute>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="after">
-                    <field name="categ_id" options="{'no_open':True,'no_create':True}" readonly="1"/>
-                </xpath>
                 <notebook position="inside">
                     <page string="Versions">
                         <field name="old_version_ids">
