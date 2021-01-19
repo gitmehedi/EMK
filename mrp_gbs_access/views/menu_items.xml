@@ -11,5 +11,16 @@
             report_type="qweb-html"
             groups="account.group_account_user"
         />
+
+        <!-- MO report menu -->
+        <report
+            id="mrp_account.action_cost_struct_mrp_production"
+            model="mrp.production"
+            string="Cost Analysis"
+            report_type="qweb-html"
+            name="mrp_cost_structure"
+            file="mrp_cost_structure"
+            groups="account.group_account_user"
+            />
     </data>
 </odoo>

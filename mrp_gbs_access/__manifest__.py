@@ -20,7 +20,8 @@
         'mrp_accounting',
         'mrp_bom_extend',
         'mrp_bom_version',
-        'mrp_bom_operating_unit'
+        'mrp_bom_operating_unit',
+        'mrp_account'
     ],
 
     # always loaded
