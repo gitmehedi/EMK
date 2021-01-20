@@ -62,6 +62,7 @@ class MrpBomLine(models.Model):
 
     price_unit = fields.Float(string='Unit Price', store=True, readonly=True, compute='_compute_price_unit')
     price_subtotal = fields.Float(string='Amount', store=True, readonly=True, compute='_compute_price')
+    categ_id = fields.Many2one('product.category', 'Internal Category', store=False, compute='_compute_categ_id')
 
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.'),
@@ -77,3 +78,9 @@ class MrpBomLine(models.Model):
     def _compute_price(self):
         for rec in self:
             rec.price_subtotal = rec.price_unit * rec.product_qty
+
+    @api.depends('product_id')
+    def _compute_categ_id(self):
+        for rec in self:
+            if rec.product_id:
+                rec.categ_id = rec.product_id.categ_id.id
