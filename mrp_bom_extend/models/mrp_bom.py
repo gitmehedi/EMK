@@ -13,6 +13,10 @@ class MrpBom(models.Model):
     ], string='State', readonly=True, default='draft', track_visibility='onchange')
     amount_total = fields.Float(string='Total', store=True, readonly=True, compute='_compute_amount')
 
+    _sql_constraints = [
+        ('bom_qty_zero', 'CHECK (product_qty>0)', 'Quantity must be greater than 0.'),
+    ]
+
     @api.depends('bom_line_ids.price_subtotal')
     def _compute_amount(self):
         for rec in self:
@@ -65,7 +69,7 @@ class MrpBomLine(models.Model):
     categ_id = fields.Many2one('product.category', 'Internal Category', store=False, compute='_compute_categ_id')
 
     _sql_constraints = [
-        ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.'),
+        ('bom_line_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.'),
     ]
 
     @api.depends('product_id', 'product_uom_id')
