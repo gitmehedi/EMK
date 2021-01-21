@@ -131,7 +131,7 @@ class MrpBom(models.Model):
     def has_duplicate_products(self, vals):
         contains_duplicate_products = False
         if 'bom_line_ids' in vals:
-            product_ids = [rec[2]['product_id'] for rec in vals['bom_line_ids'] if rec[2]]
+            product_ids = [rec[2]['product_id'] for rec in vals['bom_line_ids'] if rec[2] and 'product_id' in rec[2]]
             if not self.env.context.get('new_bom_version'):
                 product_ids += self.bom_line_ids.mapped('product_id').ids
             if len(product_ids) != len(set(product_ids)):
