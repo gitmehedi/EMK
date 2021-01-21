@@ -21,6 +21,8 @@ class MrpProductProduce(models.TransientModel):
         for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
             if move.unit_factor:
                 move.quantity_done_store += quantity * move.unit_factor
+                # set To Consume for Raw Materials
+                move.product_uom_qty = move.quantity_done_store
         moves = self.production_id.move_finished_ids.filtered(
             lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel'))
         for move in moves:

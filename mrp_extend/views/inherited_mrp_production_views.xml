@@ -52,15 +52,18 @@
                     <attribute name="readonly">1</attribute>
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='quantity_available']" position="attributes">
+                    <attribute name="string">Available Qty</attribute>
+                </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='product_uom_qty']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='quantity_done']" position="attributes">
-                    <attribute name="string">Actual Consumed</attribute>
+                    <attribute name="string">Actual Qty</attribute>
                     <attribute name="attrs">{'readonly': ['|', '|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial']), ('check_to_done', '=', False)]}</attribute>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='product_uom_qty']" position="before">
-                    <field name="standard_qty" string="Standard Consume"/>
+                    <field name="standard_qty" string="Standard Qty"/>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='quantity_done']" position="after">
                     <field name="check_to_done" invisible="1"/>
@@ -89,6 +92,11 @@
                                 attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
                         </tree>
                     </field>
+                </xpath>
+
+                <!-- Finished Products -->
+                <xpath expr="//form/sheet/notebook/page[2]/field[@name='move_finished_ids']" position="attributes">
+                    <attribute name="readonly">1</attribute>
                 </xpath>
             </field>
         </record>
