@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<odoo>
-    <data noupdate="1">
-
-        <menuitem id="menu_agreements" name="Agreements" parent="account.menu_finance" sequence="5"
-                  groups="vendor_advance.group_vendor_agreement_manager,vendor_advance.group_vendor_agreement_user"/>
-    </data>
-</odoo>
