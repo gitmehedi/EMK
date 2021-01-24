@@ -16,6 +16,7 @@
     'depends': [
         'mrp',
         'mrp_operating_unit',
+        'mrp_operating_unit_extend',
         'mrp_extend',
         'mrp_accounting',
         'mrp_bom_extend',
