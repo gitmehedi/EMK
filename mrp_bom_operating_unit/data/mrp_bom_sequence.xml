@@ -18,8 +18,5 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
-
-        <delete model="ir.sequence" search="[('id','=',ref('mrp_bom_version.sequence_mrp_bom'))]"/>
-        <delete model="ir.model.data" search="[('module', '=', 'mrp_bom_version'), ('name', '=', 'sequence_mrp_bom')]"/>
     </data>
 </odoo>
