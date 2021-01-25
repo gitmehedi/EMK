@@ -13,10 +13,6 @@ class MrpBom(models.Model):
     ], string='State', readonly=True, default='draft', track_visibility='onchange')
     amount_total = fields.Float(string='Total', store=True, readonly=True, compute='_compute_amount')
 
-    _sql_constraints = [
-        ('qty_zero', 'CHECK (product_qty>0)', 'Quantity must be greater than 0.'),
-    ]
-
     @api.depends('bom_line_ids.price_subtotal')
     def _compute_amount(self):
         for rec in self:
@@ -25,6 +21,11 @@ class MrpBom(models.Model):
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_product_recursion(self):
         pass
+
+    @api.constrains('product_qty')
+    def _check_product_qty(self):
+        if self.product_qty <= 0:
+            raise ValidationError(_("Quantity must be greater than 0."))
 
     @api.constrains('bom_line_ids')
     def _check_bom_line_ids(self):
