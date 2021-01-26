@@ -9,6 +9,7 @@
         'mrp'
     ],
     'data': [
+        'views/product_view.xml',
         'views/product_users_views.xml',
     ],
     'summary': 'Relational Module Of Product and User for BOM/MO',
