@@ -12,7 +12,7 @@ class MrpProductProduce(models.TransientModel):
 
     @api.multi
     def do_produce(self):
-        """Override do_produce to remove rounding"""
+        """Override do_produce to set the value of product_uom_qty"""
         # Nothing to do for lots since values are created using default data (stock.move.lots)
         moves = self.production_id.move_raw_ids
         quantity = self.product_qty
@@ -20,17 +20,19 @@ class MrpProductProduce(models.TransientModel):
             raise UserError(_('You should at least produce some quantity'))
         for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
             if move.unit_factor:
-                move.quantity_done_store += quantity * move.unit_factor
+                rounding = move.product_uom.rounding
+                move.quantity_done_store += float_round(quantity * move.unit_factor, precision_rounding=rounding)
                 # set To Consume for Raw Materials
                 move.product_uom_qty = move.quantity_done_store
         moves = self.production_id.move_finished_ids.filtered(
             lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel'))
         for move in moves:
+            rounding = move.product_uom.rounding
             if move.product_id.id == self.production_id.product_id.id:
-                move.quantity_done_store += quantity
+                move.quantity_done_store += float_round(quantity, precision_rounding=rounding)
             elif move.unit_factor:
                 # byproducts handling
-                move.quantity_done_store += quantity * move.unit_factor
+                move.quantity_done_store += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         self.check_finished_move_lots()
         if self.production_id.state == 'confirmed':
             self.production_id.write({
