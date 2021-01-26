@@ -10,7 +10,7 @@
     ],
     'data': [
         'views/product_view.xml',
-        'views/product_users_views.xml',
+        'views/res_users_view.xml',
     ],
     'summary': 'Relational Module Of Product and User for BOM/MO',
     'description': """
