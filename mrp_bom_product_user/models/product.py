@@ -2,8 +2,10 @@
 from odoo import models, fields, api, _
 
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
 
     manufacture_ok = fields.Boolean(string="Can be Manufactured", default=False,
-                                    help="This is used for Allowing Products in User Account")
+                                    help="Only Checked Product Varianst(s) are available on User Account page "
+                                         "for Selecting Product Varianst(s) of Varianst(s) wise "
+                                         "BOM & Manufacturing access permission.")
