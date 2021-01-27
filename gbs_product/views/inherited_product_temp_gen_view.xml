@@ -48,7 +48,9 @@
                         <attribute name="string">Cost per unit</attribute>
                     </xpath>
                     <xpath expr="//field[@name='property_account_income_id']" position="after">
-                        <field name="cost_center_id" attrs="{'invisible': [('sale_ok', '=', False)]}"
+                        <field name="cost_center_id"
+                               groups="account.group_account_user"
+                               attrs="{'invisible': [('sale_ok', '=', False)]}"
                                options="{'no_open': 1, 'no_create': 1, 'no_create_edit': 1}"/>
                     </xpath>
 
