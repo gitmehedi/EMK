@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    cost_center_id = fields.Many2one('account.cost.center', string='Cost Center')
+
     @api.constrains('default_code')
     def _check_default_code(self):
         if self.default_code:
