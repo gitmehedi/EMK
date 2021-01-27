@@ -23,7 +23,6 @@
         'mrp_bom_version',
         'mrp_bom_operating_unit',
         'mrp_account',
-        'mrp_bom_product_user'
     ],
 
     # always loaded
