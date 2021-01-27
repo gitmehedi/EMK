@@ -22,7 +22,8 @@
         'mrp_bom_extend',
         'mrp_bom_version',
         'mrp_bom_operating_unit',
-        'mrp_account'
+        'mrp_account',
+        'mrp_bom_product_user'
     ],
 
     # always loaded
@@ -31,4 +32,6 @@
         'security/ir_rule.xml',
         'views/menu_items.xml',
     ],
+    'installable': True,
+    'application': False,
 }
