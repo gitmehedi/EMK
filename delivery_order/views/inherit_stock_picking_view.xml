@@ -110,7 +110,7 @@
                     <button name="force_assign" states="confirmed,waiting,partially_available"
                             string="Force Availability"
                             type="object"
-                            groups="stock.delivery_user,stock.group_stock_user,stock.group_stock_manager,account.group_account_user"/>
+                            groups="base.group_system"/>
 
                 </xpath>
 
