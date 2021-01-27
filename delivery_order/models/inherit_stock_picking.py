@@ -184,16 +184,27 @@ class InheritStockPicking(models.Model):
                 if shipment_date < curr_date:
                     raise UserError(_("Unable to deliver Goods due to 'LC Shipment Date' Expired. Please contact to appropriate person for LC Shipment Date Amendment. After that you can deliver the Goods."))
 
+        # check for available qty
+        self._check_available_quantity()
+
         res = super(InheritStockPicking, self).do_new_transfer()
 
         self._get_number_of_jar()
         self._set_date_done_do()
         return res
 
+    def _check_available_quantity(self):
+        if self.picking_type_id.code == 'outgoing':
+            for operation in self.pack_operation_product_ids:
+                move = self.move_lines.filtered(lambda l: l.product_id.id == operation.product_id.id)
+                on_hand_qty = move.availability + move.reserved_availability
+
+                if operation.product_qty > on_hand_qty:
+                    if operation.qty_done == 0 or operation.qty_done > on_hand_qty:
+                        raise UserError(_("Unable to Deliver Goods due to qty is not available in current stock."))
+
     def _set_report_related_vals_to_move(self):
         pass
-
-
 
     def _get_number_of_jar(self):
 
@@ -218,8 +229,6 @@ class InheritStockPicking(models.Model):
 
                 #Update stock Move for reporting purpose
                 self.move_lines.write({'packing_uom_id':self.pack_type.uom_id.id, 'jar_count':math.ceil(jar_count)})
-
-
 
     def _set_date_done_do(self):
         for move in self.move_lines:
