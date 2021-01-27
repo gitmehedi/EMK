@@ -73,7 +73,7 @@ class Picking(models.Model):
                 'debit': amount if amount > 0 else 0,
                 'credit': -amount if amount < 0 else 0,
                 'operating_unit_id': stock_pack_products.picking_id.operating_unit_id.id,
-
+                'cost_center_id': product.product_tmpl_id.cost_center_id.id
             }
 
             credit_line_vals = {
