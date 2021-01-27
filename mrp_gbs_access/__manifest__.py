@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'GBS Samuda Manufacturing Access',
+    'name': 'GBS Samuda Manufacturing Application with Access Rights',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Manufacturing',
@@ -23,6 +23,7 @@
         'mrp_bom_version',
         'mrp_bom_operating_unit',
         'mrp_account',
+        'mrp_bom_product_user'
     ],
 
     # always loaded
