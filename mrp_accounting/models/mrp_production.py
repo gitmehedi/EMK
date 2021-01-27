@@ -33,7 +33,6 @@ class MrpProduction(models.Model):
         categ_names_of_costing_method = set()
         categ_names_of_inventory_valuation = set()
         categ_names_of_stock_valuation_account = set()
-        product_names_of_cogs_account = set()
         categ_name_of_stock_journal = None
 
         for move in self.move_raw_ids:
@@ -54,10 +53,6 @@ class MrpProduction(models.Model):
                 is_valid = False
                 categ_names_of_inventory_valuation.add(str(move.product_id.product_tmpl_id.categ_id.name))
 
-            if move.product_id.product_tmpl_id.sale_ok and not move.product_id.product_tmpl_id.cogs_account_id.id:
-                is_valid = False
-                product_names_of_cogs_account.add(str(move.product_id.product_tmpl_id.name))
-
             if not move.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id:
                 is_valid = False
                 categ_names_of_stock_valuation_account.add(str(move.product_id.product_tmpl_id.categ_id.name))
@@ -75,9 +70,6 @@ class MrpProduction(models.Model):
         if categ_names_of_stock_valuation_account:
             message += _('- Stock Valuation Account is missing for the mentioned Product category(s). '
                          'Which are %s.\n') % str(tuple(categ_names_of_stock_valuation_account))
-        if product_names_of_cogs_account:
-            message += _('- COGS Account is missing for the mentioned Product(s). '
-                         'Which are %s.\n') % str(tuple(product_names_of_cogs_account))
         if categ_name_of_stock_journal:
             message += _('- Stock Journal is missing for "%s" product category.\n') % categ_name_of_stock_journal
 
