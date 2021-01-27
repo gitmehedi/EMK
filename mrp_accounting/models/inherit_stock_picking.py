@@ -23,32 +23,49 @@ class Picking(models.Model):
         is_valid = True
 
         message = ''
-        categ_names_of_costing_method = set()
-        categ_names_of_stock_valuation_account = set()
-        product_names_of_cogs_account = set()
+
+        costing_method_missing_categ_names = set()
+        stock_valuation_account_missing_categ_names = set()
+        raw_cogs_account_missing_product_names = set()
+        packing_cogs_account_missing_product_names = set()
+        cost_center_missing_product_names = set()
 
         for pack_operation_product in self.pack_operation_product_ids:
             if pack_operation_product.product_id.product_tmpl_id.categ_id.property_cost_method != 'average':
                 is_valid = False
-                categ_names_of_costing_method.add(str(pack_operation_product.product_id.product_tmpl_id.categ_id.name))
+                costing_method_missing_categ_names.add(str(pack_operation_product.product_id.product_tmpl_id.categ_id.name))
 
             if not pack_operation_product.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id:
                 is_valid = False
-                categ_names_of_stock_valuation_account.add(str(pack_operation_product.product_id.product_tmpl_id.categ_id.name))
+                stock_valuation_account_missing_categ_names.add(str(pack_operation_product.product_id.product_tmpl_id.categ_id.name))
 
-            if not pack_operation_product.product_id.product_tmpl_id.cogs_account_id.id:
+            if not pack_operation_product.product_id.product_tmpl_id.raw_cogs_account_id.id:
                 is_valid = False
-                product_names_of_cogs_account.add(str(pack_operation_product.product_id.product_tmpl_id.name))
+                raw_cogs_account_missing_product_names.add(str(pack_operation_product.product_id.product_tmpl_id.name))
 
-        if categ_names_of_costing_method:
+            if not pack_operation_product.product_id.product_tmpl_id.packing_cogs_account_id.id:
+                is_valid = False
+                packing_cogs_account_missing_product_names.add(str(pack_operation_product.product_id.product_tmpl_id.name))
+
+            if not pack_operation_product.product_id.product_tmpl_id.cost_center_id.id:
+                is_valid = False
+                cost_center_missing_product_names.add(str(pack_operation_product.product_id.product_tmpl_id.name))
+
+        if costing_method_missing_categ_names:
             message += _('- Costing Method must be "Average Price" for the mentioned Product category(s). '
-                         'Which are %s.\n') % str(tuple(categ_names_of_costing_method))
-        if categ_names_of_stock_valuation_account:
+                         'Which are %s.\n') % str(tuple(costing_method_missing_categ_names))
+        if stock_valuation_account_missing_categ_names:
             message += _('- Stock Valuation Account is missing for the mentioned Product category(s). '
-                         'Which are %s.\n') % str(tuple(categ_names_of_stock_valuation_account))
-        if product_names_of_cogs_account:
-            message += _('- COGS Account is missing for the mentioned Product(s). '
-                         'Which are %s.\n') % str(tuple(product_names_of_cogs_account))
+                         'Which are %s.\n') % str(tuple(stock_valuation_account_missing_categ_names))
+        if raw_cogs_account_missing_product_names:
+            message += _('- COGS Account (RM) is missing for the mentioned Product(s). '
+                         'Which are %s.\n') % str(tuple(raw_cogs_account_missing_product_names))
+        if packing_cogs_account_missing_product_names:
+            message += _('- COGS Account (PM) is missing for the mentioned Product(s). '
+                         'Which are %s.\n') % str(tuple(packing_cogs_account_missing_product_names))
+        if cost_center_missing_product_names:
+            message += _('- Cost Center is missing for the mentioned Product(s). '
+                         'Which are %s.\n') % str(tuple(cost_center_missing_product_names))
 
         if not is_valid:
             raise ValidationError(message)
@@ -66,7 +83,7 @@ class Picking(models.Model):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
-                'account_id': product.cogs_account_id.id,
+                'account_id': product.product_tmpl_id.raw_cogs_account_id.id,
                 'quantity': stock_pack_products.product_qty,
                 'ref': ref,
                 'partner_id': False,
