@@ -32,5 +32,5 @@
         'views/menu_items.xml',
     ],
     'installable': True,
-    'application': False,
+    'application': True,
 }
