@@ -133,7 +133,7 @@ class HRHolidays(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state != 'confirm':
+            if not holiday.parent_id and holiday.state != 'confirm':
                 raise ValidationError(('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
             if holiday.double_validation:
@@ -148,7 +148,7 @@ class HRHolidays(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate1']:
+            if not holiday.parent_id and holiday.state not in ['confirm', 'validate1']:
                 raise ValidationError(('Leave request must be confirmed in order to approve it.'))
             if holiday.state == 'validate1' and not ((holiday.env.user.has_group('hr_holidays.group_hr_holidays_user')
                                                      or holiday.env.user.has_group('gbs_application_group.group_dept_manager'))):
