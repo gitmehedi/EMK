@@ -5,12 +5,13 @@
     'category': 'Commercial',
     'version':'10.0.1.0.0',
     'depends': [
-        #'sale',
+        # 'sale',
         'stock',
         'sales_team',
         'purchase',
         'commercial',
         'hr_employee_operating_unit',
+        'base_bank_bd',
     ],
 
     'data': [
