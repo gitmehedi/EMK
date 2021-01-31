@@ -156,11 +156,11 @@ class GBSAccountInvoiceReport(models.Model):
         else:
             year = dt.year - year
             month = dt.month - month
-        return dt.replace(year=year, month=month)
+        return dt.replace(year=year, month=month, day=1)
 
     def _where(self):
         date_now = fields.Date.today()
-        date_from = self.subtract_date(date_now, month=1)
+        date_from = self.subtract_date(date_now, month=2)
         # From date string
         date_from_str = str(date_from.year) + '-' + str(date_from.month) + '-01'
         date_to = fields.Date.from_string(date_now)
