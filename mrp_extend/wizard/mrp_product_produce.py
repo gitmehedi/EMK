@@ -30,9 +30,13 @@ class MrpProductProduce(models.TransientModel):
             rounding = move.product_uom.rounding
             if move.product_id.id == self.production_id.product_id.id:
                 move.quantity_done_store += float_round(quantity, precision_rounding=rounding)
+                # set To Consume for Finish Goods
+                move.product_uom_qty = move.quantity_done_store
             elif move.unit_factor:
                 # byproducts handling
                 move.quantity_done_store += float_round(quantity * move.unit_factor, precision_rounding=rounding)
+                # set To Consume for Finish Goods
+                move.product_uom_qty = move.quantity_done_store
         self.check_finished_move_lots()
         if self.production_id.state == 'confirmed':
             self.production_id.write({
