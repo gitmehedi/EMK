@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_for_manufacturing_user" model="ir.rule">
+        <field name="name">Manufacturing User</field>
+        <field name="model_id" ref="stock.model_stock_picking_type"/>
+        <field name="domain_force">['|',('warehouse_id.operating_unit_id','=',False),('warehouse_id.operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('mrp.group_mrp_user'))]"/>
+    </record>
+
+    <record id="res_company_rule_manufacturing_user" model="ir.rule">
+        <field name="name">Manufacturing User</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field eval="False" name="global"/>
+        <field name="groups" eval="[(6, 0, [ref('mrp.group_mrp_user')])]"/>
+        <field name="domain_force">[('id','child_of',[user.company_id.id])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="mrp_operating_unit.ir_rule_production_order_allowed_operating_units" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+
+
+    <record model="ir.rule" id="mrp_bom_rule_user">
+        <field name="name">BOM: Product wise role for Manufacturing User</field>
+        <field name="model_id" ref="mrp.model_mrp_bom"/>
+        <field name="groups" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+        <field name="domain_force">[('product_id','in',user.product_ids.ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record model="ir.rule" id="mrp_bom_rule_adviser">
+        <field name="name">BOM: Allowed OU BOM for Manufacturing Adviser</field>
+        <field name="model_id" ref="mrp.model_mrp_bom"/>
+        <field name="groups" eval="[(4, ref('group_mrp_adviser'))]"/>
+        <field name="domain_force">['|',('operating_unit_id','=',False),('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+
+
+    <record model="ir.rule" id="mrp_production_rule_user">
+        <field name="name">MO: Product wise role for Manufacturing User</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="groups" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+        <field name="domain_force">[('product_id','in',user.product_ids.ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+
+    <record model="ir.rule" id="mrp_production_rule_adviser">
+        <field name="name">MO: Allowed OU Manufacturing for Manufacturing Adviser</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="groups" eval="[(4, ref('group_mrp_adviser'))]"/>
+        <field name="domain_force">['|',('operating_unit_id','=',False),('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

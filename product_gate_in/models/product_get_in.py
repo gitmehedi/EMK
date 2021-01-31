@@ -226,7 +226,7 @@ class ShipmentProductLine(models.Model):
                                 change_default=True)
     date_planned = fields.Date(string='Scheduled Date', index=True)
     product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='UOM',store=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Unit Price',store=True)
+    price_unit = fields.Float(string='Unit Price')
     product_qty = fields.Float(string='Quantity')
     parent_id = fields.Many2one('product.gate.in',
                                 string='Gate In')

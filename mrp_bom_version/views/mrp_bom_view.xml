@@ -1,52 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record model="ir.actions.act_window" id="mrp.mrp_bom_form_action">
-            <field name="domain">['|',('active','=',True),('active','=',False)]</field>
-        </record>
-
-        <record id="mrp.mrp_bom_tree_parent_view" model="ir.ui.view">
-            <field name="name">mrp.bom.tree</field>
-            <field name="model">mrp.bom</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="sequence"/>
-                </tree>
-            </field>
-        </record>
-
+        <!-- Tree View -->
         <record model="ir.ui.view" id="mrp_bom_version_tree_view">
             <field name="name">mrp.bom.version.tree</field>
             <field name="model">mrp.bom</field>
-            <field name="inherit_id" ref="mrp.mrp_bom_tree_parent_view"/>
+            <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
             <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="active" />
-                    <field name="version" />
-                    <field name="state" />
-                    <field name="historical_date"/>
-                    <button name="button_draft" type="object" string="Draft"
-                            groups="mrp_bom_version.group_mrp_bom_version"
-                            attrs="{'invisible':[('state','!=','active')]}"
-                            icon="terp-document-new" />
-                    <button name="button_activate" type="object" string="Activate"
-                            attrs="{'invisible':[('state','not in',(False, 'draft'))]}"
-                            icon="terp-camera_test"
-                            confirm="You will activate the BoM. If you haven't set a route yet, then you won't be able to do it after this. Are you sure you want to proceed?"/>
-                    <button name="button_new_version" type="object" string="New version"
-                            attrs="{'invisible':[('state','==','historical')]}"
-                            icon="gtk-execute"
-                            confirm="You are going to create a new version of this BoM. Are you sure?"/>
-                    <button name="button_historical" type="object" string="Historical"
-                            attrs="{'invisible':[('state','!=','active')]}"
-                            icon="gtk-convert"
-                            confirm="You are going to historize an BoM. Doing, not be able to unlock it unless you make a copy. Are you sure you want to proceed?"/>
-                </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">name desc</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_tmpl_id']" position="before">
+                    <field name="name" />
+                </xpath>
+                <xpath expr="//field[@name='routing_id']" position="after">
+                    <field name="state"/>
+                </xpath>
             </field>
         </record>
 
+        <!-- Form View -->
         <record model="ir.ui.view" id="mrp_bom_version_form_view">
             <field name="name">mrp.bom.version.form</field>
             <field name="model">mrp.bom</field>
@@ -54,45 +27,71 @@
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet" position="before">
                     <header>
-                        <button name="button_draft" type="object" string="Draft"
-                                groups="mrp_bom_version.group_mrp_bom_version"
-                                attrs="{'invisible':[('state','!=','active')]}"
-                                class="oe_highlight" />
-                        <button name="button_activate" type="object" string="Activate"
-                                attrs="{'invisible':[('state','not in',(False, 'draft'))]}"
-                                class="oe_highlight"
-                                confirm="You will activate the BoM. If you haven't set a route yet, then you won't be able to do it after this. Are you sure you want to proceed?"/>
-                        <button name="button_new_version" type="object" string="New version"
-                                attrs="{'invisible':[('state','==','historical')]}"
-                                class="oe_highlight"
-                                confirm="You are going to create a new version of this BoM. Are you sure?"/>
-                        <button name="button_historical" type="object" string="Historical"
-                                attrs="{'invisible':[('state','!=','active')]}"
-                                class="oe_highlight"
-                                confirm="You are going to historize an BoM. Doing, not be able to unlock it unless you make a copy. Are you sure you want to proceed?"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,active,historical" />
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
+                        <button name="action_new_version" type="object" string="New Version"
+                                groups="mrp.group_mrp_manager"
+                                attrs="{'invisible':[('state','in',('draft', 'historical'))]}"
+                                confirm="You are going to create a new version of this BOM. Are you sure?"
+                                class="oe_highlight"/>
+                        <field name="state"
+                               widget="statusbar"
+                               statusbar_visible="draft,confirmed,historical"
+                               attrs="{'invisible':[('state','==','historical')]}"/>
                     </header>
                 </xpath>
+                <xpath expr="//form/sheet/div[@name='button_box']/button[@name='toggle_active']" position="attributes">
+                    <attribute name="groups">mrp.group_mrp_manager</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('state','==','historical')]}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/div[@name='button_box']" position="after">
+                    <div class="oe_title">
+                        <h1><field name="name" nolabel="1"/></h1>
+                    </div>
+                </xpath>
                 <field name="company_id" position="after">
-                    <field name="version" />
+                    <field name="version" invisible="1"/>
                     <field name="historical_date" attrs="{'invisible': [('state','!=','historical')]}"/>
                 </field>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/field[@name='product_uom_id']" position="attributes">
+                    <attribute name="string">Unit of Measure</attribute>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/button[1][@name='action_see_attachments']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/button[2][@name='action_see_attachments']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
+                    <attribute name="string">Qty</attribute>
+                </xpath>
                 <notebook position="inside">
                     <page string="Versions">
-                        <field name="old_versions" />
+                        <field name="old_version_ids">
+                            <tree>
+                                <field name='name'/>
+                                <field name='historical_date' string="Historical Date"/>
+                                <field name='create_uid' string="Created by"/>
+                                <field name='state'/>
+                            </tree>
+                        </field>
                     </page>
                 </notebook>
             </field>
         </record>
 
+        <!-- Search View -->
         <record model="ir.ui.view" id="mrp_bom_version_search_view">
             <field name="name">mrp.bom.version.search</field>
             <field name="model">mrp.bom</field>
             <field name="inherit_id" ref="mrp.view_mrp_bom_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='code']" position="after">
-                    <field name="active" />
-                    <field name="state" />
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="state"/>
                 </xpath>
                 <xpath expr="//group" position="before">
                     <filter string="Active" domain="[('active','=',True)]" name="is_active_filter"/>

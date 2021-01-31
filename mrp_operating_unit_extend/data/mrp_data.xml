@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- For SCCL-DF -->
+        <record id="sequence_mrp_prod_sccl_df" model="ir.sequence">
+            <field name="name">Production order SCCL-DF</field>
+            <field name="code">mrp.production</field>
+            <field name="prefix">MO-OU-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- For SCCL-CTG -->
+        <record id="sequence_mrp_prod_sccl_ctg" model="ir.sequence">
+            <field name="name">Production order SCCL-CTG</field>
+            <field name="code">mrp.production</field>
+            <field name="prefix">MO-OU-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

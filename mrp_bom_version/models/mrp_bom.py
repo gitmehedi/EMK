@@ -1,165 +1,160 @@
-# -*- coding: utf-8 -*-
-# (c) 2015 Oihane Crucelaegui - AvanzOSC
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
-
-from odoo import models, fields, api
-from odoo.tools import config
+# imports of odoo
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning, ValidationError
 
 
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
-    _track = {
-        'state': {
-            'mrp_bom_version.mt_active': lambda self, cr, uid, obj,
-            ctx=None: obj.state == 'active',
-        },
-    }
+    @api.model
+    def _get_default_picking_type(self):
+        return self.env['stock.picking.type'].search([
+            ('code', '=', 'mrp_operation'),
+            ('warehouse_id.company_id', 'in', [self.env.context.get('company_id', self.env.user.company_id.id), False])]
+            , limit=1).id
 
-    @api.one
-    def _get_old_versions(self):
-        parent = self.parent_bom
-        old_version = self.env['mrp.bom']
-        while parent:
-            old_version += parent
-            parent = parent.parent_bom
-        self.old_versions = old_version
+    code = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
+    type = fields.Selection(readonly=True, states={'draft': [('readonly', False)]})
+    product_tmpl_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
+    product_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
+    bom_line_ids = fields.One2many(readonly=True, states={'draft': [('readonly', False)]})
+    product_qty = fields.Float(readonly=True, states={'draft': [('readonly', False)]})
+    product_uom_id = fields.Many2one(readonly=True)
+    sequence = fields.Integer(readonly=True, states={'draft': [('readonly', False)]})
+    routing_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
+    ready_to_produce = fields.Selection(readonly=True, states={'draft': [('readonly', False)]})
+    picking_type_id = fields.Many2one(default=_get_default_picking_type, readonly=True, states={'draft': [('readonly', False)]})
+    company_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
 
-    def _default_active(self):
-        """Needed for preserving normal flow when testing other modules."""
-        res = False
-        if config['test_enable']:
-            res = not bool(self.env.context.get('test_mrp_bom_version'))
-        return res
+    name = fields.Char(string='BOM Number', readonly=True, default='/')
+    active = fields.Boolean(string='Active', default=True, copy=True, readonly=True, track_visibility='onchange')
+    historical_date = fields.Date(string='Historical Date', readonly=True, track_visibility='onchange')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('historical', 'Historical')
+    ], string='State', readonly=True, default='draft', track_visibility='onchange')
 
-    def _default_state(self):
-        """Needed for preserving normal flow when testing other modules."""
-        res = 'draft'
-        if (config['test_enable'] and
-                not self.env.context.get('test_mrp_bom_version')):
-            res = 'active'
-        return res
-
-    active = fields.Boolean(
-        default=_default_active,
-        readonly=True, states={'draft': [('readonly', False)]})
-    historical_date = fields.Date(string='Historical Date', readonly=True)
-    state = fields.Selection(
-        selection=[('draft', 'Draft'), ('active', 'Active'),
-                   ('historical', 'Historical')], string='State',
-        index=True, readonly=True, default=_default_state, copy=False)
-    product_tmpl_id = fields.Many2one(
-        readonly=True, states={'draft': [('readonly', False)]})
-    product_id = fields.Many2one(
-        readonly=True, states={'draft': [('readonly', False)]})
-    product_qty = fields.Float(
-        readonly=True, states={'draft': [('readonly', False)]})
-    name = fields.Char(
-        states={'historical': [('readonly', True)]})
-    code = fields.Char(
-        states={'historical': [('readonly', True)]})
-    type = fields.Selection(
-        states={'historical': [('readonly', True)]})
-    company_id = fields.Many2one(
-        states={'historical': [('readonly', True)]})
-    product_uom = fields.Many2one(
-        states={'historical': [('readonly', True)]})
-    routing_id = fields.Many2one(
-        readonly=True, states={'draft': [('readonly', False)]})
-    bom_line_ids = fields.One2many(
-        readonly=True, states={'draft': [('readonly', False)]})
-    position = fields.Char(
-        states={'historical': [('readonly', True)]})
-    date_start = fields.Date(
-        states={'historical': [('readonly', True)]})
-    date_stop = fields.Date(
-        states={'historical': [('readonly', True)]})
-    property_ids = fields.Many2many(
-        states={'historical': [('readonly', True)]})
-    product_rounding = fields.Float(
-        states={'historical': [('readonly', True)]})
-    product_efficiency = fields.Float(
-        states={'historical': [('readonly', True)]})
-    # message_follower_ids = fields.Many2many(
-    #     states={'historical': [('readonly', True)]})
-    # message_ids = fields.One2many(
-    #     states={'historical': [('readonly', True)]})
-    version = fields.Integer(states={'historical': [('readonly', True)]},
-                             copy=False, default=1)
-    parent_bom = fields.Many2one(
-        comodel_name='mrp.bom', string='Parent BoM', copy=False)
-    old_versions = fields.Many2many(
-        comodel_name='mrp.bom', string='Old Versions',
-        compute='_get_old_versions')
+    version = fields.Integer(readonly=True, copy=False, default=0)
+    base_name = fields.Char(string='BOM Reference', readonly=True)
+    parent_bom_id = fields.Many2one('mrp.bom', string='Parent BoM', copy=True, ondelete='cascade')
+    old_version_ids = fields.One2many('mrp.bom', 'parent_bom_id', string='Old Versions', readonly=True, context={'active_test': False})
 
     @api.multi
-    def button_draft(self):
-        active_draft = self.env['mrp.config.settings']._get_parameter(
-            'active.draft')
-        self.write({
-            'active': active_draft and active_draft.value or False,
-            'state': 'draft',
-        })
+    def action_confirm(self):
+        if self.version > 0:
+            self.write({'state': 'confirmed'})
+        else:
+            name = self.env['ir.sequence'].next_by_code('mrp.bom') or _('New')
+            self.write({
+                'name': name,
+                'base_name': name,
+                'state': 'confirmed'
+            })
 
     @api.multi
-    def button_new_version(self):
+    def action_new_version(self):
         self.ensure_one()
-        new_bom = self._copy_bom()
-        self.button_historical()
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form, tree',
-            'view_mode': 'form',
-            'res_model': 'mrp.bom',
-            'res_id': new_bom.id,
-            'target': 'current',
-        }
+        view = self.env.ref('mrp_bom_version.mrp_bom_version_form_view')
+        bom = self.with_context(new_bom_version=True).copy()
 
-    def _copy_bom(self):
-        active_draft = self.env['mrp.config.settings']._get_parameter(
-            'active.draft')
-        new_bom = self.copy({
-            'version': self.version + 1,
-            'active': active_draft and active_draft.value or False,
-            'parent_bom': self.id,
-        })
-        return new_bom
+        if self.old_version_ids.ids:
+            for old in self.old_version_ids:
+                old.write({'parent_bom_id': bom.id})
 
-    @api.multi
-    def button_activate(self):
         self.write({
-            'active': True,
-            'state': 'active'
-        })
-
-    @api.multi
-    def button_historical(self):
-        self.write({
+            'parent_bom_id': bom.id,
             'active': False,
             'state': 'historical',
             'historical_date': fields.Date.today()
         })
 
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        """Add search argument for field type if the context says so. This
-        should be in old API because context argument is not the last one.
-        """
-        search_state = self.env.context.get('state', False)
-        if search_state:
-            args += [('state', '=', search_state)]
-        return super(MrpBom, self).search(args, offset=offset, limit=limit, order=order, count=count)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('BOM'),
+            'res_model': 'mrp.bom',
+            'res_id': bom.id,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'target': 'current',
+            'nodestroy': True,
+            'flags': {'initial_mode': 'edit'},
+        }
+
+    @api.multi
+    def copy(self, defaults=None):
+        if self.env.context.get('new_bom_version'):
+            defaults = {}
+            version = self.version
+            defaults.update({
+                'name': '%s-%02d' % (self.base_name, version + 1),
+                'version': version + 1,
+            })
+
+        return super(MrpBom, self).copy(defaults)
 
     @api.model
-    def _bom_find(
-            self, product_tmpl_id=None, product_id=None, properties=None):
-        """ Finds BoM for particular product and product uom.
-        @param product_tmpl_id: Selected product.
-        @param product_uom: Unit of measure of a product.
-        @param properties: List of related properties.
-        @return: False or BoM id.
-        """
-        bom_id = super(MrpBom, self.with_context(state='active'))._bom_find(
-            product_tmpl_id=product_tmpl_id, product_id=product_id,
-            properties=properties)
-        return bom_id
+    def create(self, vals):
+        if self.has_duplicate_products(vals):
+            raise ValidationError(_("Contains duplicate products in Raw material(s) list."))
+
+        if 'product_tmpl_id' in vals:
+            product_template = self.env['product.template'].search([('id', '=', vals['product_tmpl_id'])])
+            vals['product_uom_id'] = product_template.uom_id.id
+
+        return super(MrpBom, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if self.has_duplicate_products(vals):
+            raise ValidationError(_("Contains duplicate products in Raw material(s) list."))
+
+        if 'product_tmpl_id' in vals:
+            product_template = self.env['product.template'].search([('id', '=', vals['product_tmpl_id'])])
+            vals['product_uom_id'] = product_template.uom_id.id
+
+        return super(MrpBom, self).write(vals)
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise Warning(_('You cannot delete a record which is not in draft state!'))
+
+            manufacturing_orders = self.env['mrp.production'].search([('bom_id', 'in', rec.old_version_ids.ids)])
+            if len(manufacturing_orders) > 0:
+                raise Warning(_('You cannot delete a record which is used in Manufacturing Orders!'))
+
+        return super(MrpBom, self).unlink()
+
+    def has_duplicate_products(self, vals):
+        contains_duplicate_products = False
+        if 'bom_line_ids' in vals:
+            product_ids = [rec[2]['product_id'] for rec in vals['bom_line_ids'] if rec[2] and 'product_id' in rec[2]]
+            if not self.env.context.get('new_bom_version'):
+                product_ids += self.bom_line_ids.mapped('product_id').ids
+            if len(product_ids) != len(set(product_ids)):
+                contains_duplicate_products = True
+
+        return contains_duplicate_products
+
+
+class MrpBomLine(models.Model):
+    _inherit = 'mrp.bom.line'
+
+    @api.model
+    def create(self, vals):
+        if 'product_id' in vals:
+            product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product.product_tmpl_id.uom_id.id
+
+        return super(MrpBomLine, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'product_id' in vals:
+            product = self.env['product.product'].search([('id', '=', vals['product_id'])])
+            vals['product_uom_id'] = product.product_tmpl_id.uom_id.id
+
+        return super(MrpBomLine, self).write(vals)

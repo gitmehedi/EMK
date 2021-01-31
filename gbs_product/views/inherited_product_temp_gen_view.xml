@@ -44,24 +44,33 @@
                         <field name="uom_po_id" groups="product.group_uom" options="{'no_create': True}"
                                attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
                     </xpath>
+                    <xpath expr="//label[@for='standard_price']" position="attributes">
+                        <attribute name="string">Cost per unit</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='property_account_income_id']" position="after">
+                        <field name="cost_center_id"
+                               groups="account.group_account_user"
+                               attrs="{'invisible': [('sale_ok', '=', False)]}"
+                               options="{'no_open': 1, 'no_create': 1, 'no_create_edit': 1}"/>
+                    </xpath>
 
                     <!--<xpath expr="//field[@name='purchase_method']" position="replace">-->
                     <!--<field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"-->
                     <!--attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
                     <!--</xpath>-->
 
-                    <xpath expr="//label[@for='standard_price']" position="replace">
-                        <label for="standard_price" groups="base.group_user"
-                               attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
-                    </xpath>
+<!--                    <xpath expr="//label[@for='standard_price']" position="replace">-->
+<!--                        <label for="standard_price" groups="base.group_user"-->
+<!--                               attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
+<!--                    </xpath>-->
 
-                    <xpath expr="//div[@name='standard_price_uom']" position="replace">
-                        <div name="standard_price_uom" attrs="{'invisible': [('purchase_ok', '=', False)]}">
-                            <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"
-                                   class="oe_inline"
-                                   attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
-                        </div>
-                    </xpath>
+<!--                    <xpath expr="//div[@name='standard_price_uom']" position="replace">-->
+<!--                        <div name="standard_price_uom" attrs="{'invisible': [('purchase_ok', '=', False)]}">-->
+<!--                            <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"-->
+<!--                                   class="oe_inline"-->
+<!--                                   attrs="{'invisible': [('purchase_ok', '=', False)]}"/>-->
+<!--                        </div>-->
+<!--                    </xpath>-->
                 </data>
             </field>
         </record>

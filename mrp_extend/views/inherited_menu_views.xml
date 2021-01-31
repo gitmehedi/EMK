@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="mrp.menu_mrp_unbuild"
+                  name="Unbuild Orders"
+                  parent="mrp.menu_mrp_manufacturing"
+                  action="mrp.mrp_unbuild"
+                  groups="base.group_system"
+                  sequence="20"/>
+
+        <menuitem id="mrp.menu_mrp_scrap"
+                  name="Scrap"
+                  parent="mrp.menu_mrp_manufacturing"
+                  action="stock.action_stock_scrap"
+                  groups="base.group_system"
+                  sequence="25"/>
+
+        <menuitem id="mrp.mrp_message_menu"
+                  parent="mrp.menu_mrp_manufacturing"
+                  action="mrp.mrp_message_action_main"
+                  groups="base.group_system"
+                  sequence="26"/>
+
+        <menuitem id="mrp.menu_mrp_product_form"
+                  name="Products"
+                  action="mrp.product_template_action"
+                  parent="mrp.menu_mrp_bom"
+                  groups="base.group_system"/>
+
+    </data>
+</odoo>
