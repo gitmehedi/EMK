@@ -77,7 +77,8 @@ class Picking(models.Model):
         for stock_pack_products in self.pack_operation_product_ids:
 
             product = stock_pack_products.product_id
-            amount = product.standard_price * stock_pack_products.product_qty
+            # amount = product.standard_price * stock_pack_products.product_qty
+            amount = product.standard_price * stock_pack_products.qty_done
 
             debit_line_vals = {
                 'name': product.name,
