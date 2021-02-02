@@ -1,5 +1,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class Picking(models.Model):
@@ -77,10 +80,14 @@ class Picking(models.Model):
         for stock_pack_products in self.pack_operation_product_ids:
 
             product = stock_pack_products.product_id
-            amount = product.standard_price * stock_pack_products.product_qty
+            # amount = product.standard_price * stock_pack_products.product_qty
+            amount = product.standard_price * stock_pack_products.qty_done
+            _logger.info("COGS Entry: Product Name:  " + str(product.display_name) + " Standard_price: " + str(
+                product.standard_price) + " product_qty: " + str(stock_pack_products.qty_done))
 
+            label = product.display_name + ";Rate:" + str(product.standard_price) + ";Qty:" + str(stock_pack_products.qty_done)
             debit_line_vals = {
-                'name': product.name,
+                'name': label,
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
                 'account_id': product.product_tmpl_id.raw_cogs_account_id.id,
@@ -94,7 +101,7 @@ class Picking(models.Model):
             }
 
             credit_line_vals = {
-                'name': product.name,
+                'name': label,
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
                 'account_id': product.categ_id.property_stock_valuation_account_id.id,
