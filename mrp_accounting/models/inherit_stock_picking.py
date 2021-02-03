@@ -17,7 +17,7 @@ class Picking(models.Model):
         # check for doing cogs accounting
         if self.env.user.company_id.cogs_accounting:
             if self.operating_unit_id.code == 'SCCL-DF':
-                if self.location_dest_id.name == 'Customers':
+                if self.picking_type_id.code == 'outgoing':
                     self.validate()
                     # generate journal for cogs
                     self.do_cogs_accounting()
