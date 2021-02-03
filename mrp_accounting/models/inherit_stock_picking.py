@@ -9,15 +9,20 @@ class Picking(models.Model):
     _inherit = 'stock.picking'
 
     @api.multi
-    def do_new_transfer(self):
-        # execute the default operation
-        res = super(Picking, self).do_new_transfer()
+    def do_transfer(self):
+        # do default operation
+        res = super(Picking, self).do_transfer()
+
+        # cogs accounting region
         # check for doing cogs accounting
         if self.env.user.company_id.cogs_accounting:
             if self.operating_unit_id.code == 'SCCL-DF':
                 if self.location_dest_id.name == 'Customers':
                     self.validate()
+                    # generate journal for cogs
                     self.do_cogs_accounting()
+
+        # end region
 
         return res
 
