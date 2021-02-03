@@ -132,7 +132,7 @@ class ServerFileProcess(models.Model):
     @api.model
     def glif_process(self):
         """Run all scheduled backups."""
-        integration = self.search([('type', '=', 'glif'), ('method', '=', 'sftp'), ('status', '=', True)], limit=1)
+        integration = self.search([('type', '=', 'glif'), ('method', '=', 'local'), ('status', '=', True)], limit=1)
         if not integration:
             raise ValidationError(_("Record is not available with proper configuration"))
         return integration.glif_generate_process()
@@ -529,7 +529,7 @@ class ServerFileProcess(models.Model):
 
         with open(source_path, 'r') as file_ins:
             index = 0
-            debit, credit = 0.0, 0.0
+            debit, credit, debitNcredit = 0.0, 0.0, 0.0
             coa = {val.code: val.id for val in
                    self.env['account.account'].search([('level_id.name', '=', 'Layer 5'), ('active', '=', True)])}
             jrnl = {val.code: val.id for val in self.env['account.journal'].search([('active', '=', True)])}
@@ -712,12 +712,15 @@ class ServerFileProcess(models.Model):
                             line['credit'] = 0.0
                             line['amount_currency'] = fcy_amount
                             debit += float(amount)
+                            debitNcredit += round(float(amount),3) * -1
 
                         elif rec['JOURNAL-SEQ'] == '01':
                             line['debit'] = 0.0
                             line['credit'] = amount
                             line['amount_currency'] = fcy_amount
                             credit += float(amount)
+                            debitNcredit += round(float(amount), 3)
+
                         journal_entry += format_journal(line)
 
         if len(errors) > 0:
@@ -742,11 +745,11 @@ class ServerFileProcess(models.Model):
                 self.env.cr.execute(query)
 
                 if move_id.state == 'draft':
-                    if round(debit - credit, 3) > 0:
+                    if round(debit - credit, 3) > 0 and round(debitNcredit,3) != 0.000:
                         msg = 'Debit is greater than Credit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
-                    elif round(credit - debit, 3) > 0:
+                    elif round(credit - debit, 3) > 0 and round(debitNcredit,3) != 0.000:
                         msg = 'Credit is greater than Debit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
