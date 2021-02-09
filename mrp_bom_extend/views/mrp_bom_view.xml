@@ -18,19 +18,19 @@
                 <xpath expr="//form/sheet/group/group/field[@name='company_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']" position="after">
-                    <group>
-                        <group class="oe_subtotal_footer oe_right">
-                            <field name="amount_total" groups="account.group_account_user"/>
-                        </group>
-                    </group>
-                </xpath>
-                <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='product_uom_id']" position="after">
-                    <field name="price_unit" groups="account.group_account_user"/>
-                </xpath>
-                <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='operation_id']" position="after">
-                    <field name="price_subtotal" groups="account.group_account_user"/>
-                </xpath>
+<!--                <xpath expr="//form/sheet/notebook/page[1]/field[@name='bom_line_ids']" position="after">-->
+<!--                    <group>-->
+<!--                        <group class="oe_subtotal_footer oe_right">-->
+<!--                            <field name="amount_total" groups="account.group_account_user"/>-->
+<!--                        </group>-->
+<!--                    </group>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='product_uom_id']" position="after">-->
+<!--                    <field name="price_unit" groups="account.group_account_user"/>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='operation_id']" position="after">-->
+<!--                    <field name="price_subtotal" groups="account.group_account_user"/>-->
+<!--                </xpath>-->
                 <xpath expr="//form/sheet/notebook/page[1]/field/tree/field[@name='attribute_value_ids']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
