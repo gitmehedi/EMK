@@ -19,41 +19,8 @@ class Picking(models.Model):
     def do_new_transfer(self):
         res = super(Picking, self).do_new_transfer()
 
-        if self.location_dest_id.name == 'Customers':
-            sale_adv_pay_inv = self.env['sale.advance.payment.inv'].search([])
-
-            for stock_pack_products in self.pack_operation_product_ids:
-
-                if not sale_adv_pay_inv:
-                    if stock_pack_products.qty_done == 0 \
-                            or stock_pack_products.qty_done == stock_pack_products.product_qty:
-
-                        stock_pack_products.qty_done = stock_pack_products.product_qty
-                        self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
-                        self.sale_id.sudo().action_invoice_create(final=True)
-
-                    else:
-                        self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
-                        self.sale_id.sudo().action_invoice_create()
-
-                if stock_pack_products.qty_done == 0 \
-                        or stock_pack_products.qty_done == stock_pack_products.product_qty:
-                    stock_pack_products.qty_done = stock_pack_products.product_qty
-
-                    self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
-
-                    for do_invoices in sale_adv_pay_inv:
-                        do_invoices.advance_payment_method = 'all'
-                        self.sale_id.sudo().action_invoice_create(final=True)
-                        break;
-                else:
-                    self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
-                    for do_invoices in sale_adv_pay_inv:
-                        do_invoices.advance_payment_method = 'delivered'
-                        self.sale_id.sudo().action_invoice_create()
-                        break;
-
-        if self.location_dest_id.name =='Stock' and self.sale_id:
+        # update customer invoice for return product from customer
+        if self.location_dest_id.name == 'Stock' and self.sale_id:
             draft_invoices = self.sale_id.invoice_ids.filtered(lambda reg: reg.state == 'draft')
             if draft_invoices:
                 for stock_pack_products in self.pack_operation_product_ids:
@@ -81,5 +48,48 @@ class Picking(models.Model):
             #             so_line = self.sale_id.order_line.filtered(lambda line: line.product_id.id ==stock_pack_products.product_id.id)
             #             so_line.write({'qty_to_invoice': -pack_quantity})
             #     self.sale_id.sudo().action_invoice_create(final=True)
+
+        return res
+
+    @api.multi
+    def do_transfer(self):
+        """ override do_transfer to create a customer invoice for delivery orders """
+        # do default operation
+        res = super(Picking, self).do_transfer()
+
+        # create customer invoice for delivery order picking type
+        # check picking type
+        if res and self.picking_type_id.code == 'outgoing':
+            sale_adv_pay_inv = self.env['sale.advance.payment.inv'].search([])
+
+            for stock_pack_products in self.pack_operation_product_ids:
+                if not sale_adv_pay_inv:
+                    if stock_pack_products.qty_done == 0 \
+                            or stock_pack_products.qty_done == stock_pack_products.product_qty:
+
+                        stock_pack_products.qty_done = stock_pack_products.product_qty
+                        self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
+                        self.sale_id.sudo().action_invoice_create(final=True)
+
+                    else:
+                        self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
+                        self.sale_id.sudo().action_invoice_create()
+
+                if stock_pack_products.qty_done == 0 \
+                        or stock_pack_products.qty_done == stock_pack_products.product_qty:
+                    stock_pack_products.qty_done = stock_pack_products.product_qty
+
+                    self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
+
+                    for do_invoices in sale_adv_pay_inv:
+                        do_invoices.advance_payment_method = 'all'
+                        self.sale_id.sudo().action_invoice_create(final=True)
+                        break
+                else:
+                    self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
+                    for do_invoices in sale_adv_pay_inv:
+                        do_invoices.advance_payment_method = 'delivered'
+                        self.sale_id.sudo().action_invoice_create()
+                        break
 
         return res
