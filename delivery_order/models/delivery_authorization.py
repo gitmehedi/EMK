@@ -228,10 +228,16 @@ class DeliveryAuthorization(models.Model):
 
             self.env['delivery.order.line'].create(da_line)
 
-
+        # generate stock picking for a DO
         do_pool.create_delivery_order()
         do_pool.action_view_delivery()
 
+        # unreserve the reserve qty of stock pickings
+        if self.sale_order_id:
+            picking_to_unreserve = self.sale_order_id.picking_ids.filtered(
+                lambda x: x.quant_reserved_exist and (x.state in ['draft', 'partially_available', 'assigned']))
+            if picking_to_unreserve:
+                picking_to_unreserve.do_unreserve()
 
     # -----------------------
     # DA Back Order
