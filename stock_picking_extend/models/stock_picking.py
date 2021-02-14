@@ -76,6 +76,18 @@ class Picking(models.Model):
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
 
+    @api.multi
+    def _create_backorder(self, backorder_moves=[]):
+        res = super(Picking, self)._create_backorder(backorder_moves)
+
+        # res: list of backorder pickings
+        # unreserved the reserve qty of backorder pickings
+        for backorder_picking in res.filtered(lambda x: x.picking_type_id.code == 'outgoing'):
+            if backorder_picking.quant_reserved_exist and (backorder_picking.state in ['draft', 'partially_available', 'assigned']):
+                backorder_picking.do_unreserve()
+
+        return res
+
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
