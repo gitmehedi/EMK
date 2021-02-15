@@ -82,7 +82,7 @@ class Picking(models.Model):
 
         # res: list of backorder pickings
         # unreserved the reserve qty of backorder pickings
-        for backorder_picking in res.filtered(lambda x: x.picking_type_id.code == 'outgoing'):
+        for backorder_picking in res.filtered(lambda x: x.picking_type_id.code in ['outgoing', 'loan_outgoing']):
             if backorder_picking.quant_reserved_exist and (backorder_picking.state in ['draft', 'partially_available', 'assigned']):
                 backorder_picking.do_unreserve()
 
