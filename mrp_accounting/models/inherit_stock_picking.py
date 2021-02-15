@@ -9,15 +9,20 @@ class Picking(models.Model):
     _inherit = 'stock.picking'
 
     @api.multi
-    def do_new_transfer(self):
-        # execute the default operation
-        res = super(Picking, self).do_new_transfer()
+    def do_transfer(self):
+        # do default operation
+        res = super(Picking, self).do_transfer()
+
+        # cogs accounting region
         # check for doing cogs accounting
         if self.env.user.company_id.cogs_accounting:
             if self.operating_unit_id.code == 'SCCL-DF':
-                if self.location_dest_id.name == 'Customers':
+                if self.picking_type_id.code == 'outgoing':
                     self.validate()
+                    # generate journal for cogs
                     self.do_cogs_accounting()
+
+        # end region
 
         return res
 
@@ -91,7 +96,7 @@ class Picking(models.Model):
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
                 'account_id': product.product_tmpl_id.raw_cogs_account_id.id,
-                'quantity': stock_pack_products.product_qty,
+                'quantity': stock_pack_products.qty_done,
                 'ref': ref,
                 'partner_id': False,
                 'debit': amount if amount > 0 else 0,
@@ -105,7 +110,7 @@ class Picking(models.Model):
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
                 'account_id': product.categ_id.property_stock_valuation_account_id.id,
-                'quantity': stock_pack_products.product_qty,
+                'quantity': stock_pack_products.qty_done,
                 'ref': ref,
                 'partner_id': False,
                 'credit': amount if amount > 0 else 0,
