@@ -10,6 +10,7 @@
         'account',
         'purchase',
         'gbs_collection_batch',
+        'gbs_collection_letter_of_credit'
     ],
 
     'data': [
