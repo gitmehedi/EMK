@@ -31,9 +31,10 @@ class InheritedAccountInvoiceLine(models.Model):
 
             sale_order_pool = inv.env['sale.order'].search([('name', '=', inv.invoice_id.origin)])
 
-            inv._update_commission_related_vals(sale_order_pool)
+            if sale_order_pool:
+                inv._update_commission_related_vals(sale_order_pool)
 
-            commission = None
+            commission = 0
             for sale_line in sale_order_pool.order_line:
                 commission_type = sale_line.product_id.product_tmpl_id.commission_type
 
@@ -53,7 +54,7 @@ class InheritedAccountInvoiceLine(models.Model):
                         if inv.company_id.currency_id != sale_order_pool.currency_id:
                             commission = commission * sale_order_pool.currency_id.rate
 
-                inv.commission_amount = commission
+            inv.commission_amount = commission
 
-    commission_amount = fields.Float(string='Commission Amount', compute='_calculate_commission_amount',store=True)
+    commission_amount = fields.Float(string='Commission Amount', compute='_calculate_commission_amount', store=True)
 
