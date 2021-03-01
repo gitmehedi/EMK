@@ -38,7 +38,7 @@ class PaymentInstruction(models.Model):
                     self.code, response['error_code'], response['error_message'])
                 raise ValidationError(_(err_text))
             elif response == 'OkMessage':
-                payment.write({'state': 'approved','approver_id': self.env.user.id})
+                payment.write({'state': 'approved'})
                 if payment.invoice_id:
                     for line in payment.invoice_id.suspend_security().move_id.line_ids:
                         if line.account_id.internal_type in ('receivable', 'payable'):
