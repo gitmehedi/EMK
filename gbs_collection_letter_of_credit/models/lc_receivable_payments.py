@@ -131,12 +131,26 @@ class LCReceivablePayment(models.Model):
     @api.multi
     @api.depends('lc_id', 'date', 'invoice_ids')
     def _compute_rate_amounts(self):
-        for record in self:
-            if record.lc_id and record.invoice_ids:
-                record.currency_id = record.lc_id.currency_id.id
-                record.invoice_amount = sum(rec.residual for rec in record.invoice_ids)
-                record.currency_rate = record.invoice_ids[0].conversion_rate
-                record.amount_in_company_currency = sum(rec.residual*rec.conversion_rate for rec in record.invoice_ids)
+        for rec in self:
+            if rec.lc_id and rec.invoice_ids:
+                rec.currency_id = rec.lc_id.currency_id.id
+                rec.invoice_amount = sum(inv.residual for inv in rec.invoice_ids)
+
+                to_currency = rec.company_id.currency_id
+                from_currency = rec.invoice_ids[0].currency_id.with_context(
+                    date=rec.invoice_ids[0]._get_currency_rate_date() or fields.Date.context_today(rec.invoice_ids[0]))
+
+                # Set currency rate of a LC Collection
+                rec.currency_rate = to_currency.round(to_currency.rate / from_currency.rate)
+
+                # calculate total invoice amount in company currency
+                amount_in_company_currency = 0
+                for inv in rec.invoice_ids:
+                    from_currency = inv.currency_id.with_context(date=inv._get_currency_rate_date() or fields.Date.context_today(inv))
+                    amount_in_company_currency += inv.residual * to_currency.round(to_currency.rate / from_currency.rate)
+
+                # Set the Base Amount of a LC Collection
+                rec.amount_in_company_currency = amount_in_company_currency
 
     @api.multi
     @api.depends('lc_receivable_collection_ids.amount_in_company_currency',

@@ -6,7 +6,11 @@
     "website": "http://www.genweb2.com",
     "summary": "LC Collection Payments",
     "description":"Customize module for LC Collections.",
-    "depends": ["account","com_shipment","lc_sales_product","custom_amount_conversion"],
+    "depends": [
+        "account",
+        "com_shipment",
+        "lc_sales_product"
+    ],
     'data': [
         "security/ir.model.access.csv",
         "security/security.xml",

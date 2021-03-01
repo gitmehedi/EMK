@@ -6,15 +6,13 @@ class InheritAccountPayment(models.Model):
     _inherit = 'account.payment'
 
     conversion_rate = fields.Float(string='Conversion Rate')
-    hide_conversion_rate_field = fields.Boolean(compute='_compute_hide_conversion_rate_field', store=False)
+    conversion_rate_visibility = fields.Boolean(compute='_compute_fields_visibility')
 
     @api.depends('currency_id')
-    def _compute_hide_conversion_rate_field(self):
+    def _compute_fields_visibility(self):
         for rec in self:
-            if rec.company_id.currency_id.id and rec.currency_id.id != rec.company_id.currency_id.id:
-                rec.hide_conversion_rate_field = False
-            else:
-                rec.hide_conversion_rate_field = True
+            rec.conversion_rate_visibility = True if rec.company_id.currency_id.id and \
+                                                     rec.currency_id.id != rec.company_id.currency_id.id else False
 
     @api.onchange('currency_id', 'journal_id')
     def _onchange_currency_id(self):

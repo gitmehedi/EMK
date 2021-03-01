@@ -8,6 +8,10 @@ class InheritAccountInvoice(models.Model):
     @api.depends('invoice_line_ids.product_id','invoice_line_ids','invoice_line_ids.quantity')
     def _calculate_commission_amount(self):
         for inv in self:
+            # check invoice type
+            if inv.type == 'in_invoice':
+                break
+
             sale_order_pool = inv.env['sale.order'].search([('name', '=', inv.origin)])
 
             commission = None

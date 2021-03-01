@@ -126,6 +126,9 @@
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object"
                             groups="stock.group_stock_user,stock.delivery_user"/>
                 </xpath>
+                <xpath expr="//button[@name='do_unreserve']" position="replace">
+                    <button name="do_unreserve" string="Unreserve" groups="base.group_system" type="object" attrs="{'invisible': [('quant_reserved_exist', '=', False)]}"/>
+                </xpath>
 
             </field>
         </record>
