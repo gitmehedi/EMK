@@ -287,8 +287,21 @@ class ServerFileProcess(models.Model):
             return False
         filename = self.generate_filename()
 
+        def contain_fixed_length_of_line_in_file(file_path):
+            fixed_length = 117
+            with open(file_path, "r") as reader:
+                for line in reader:
+                    if len(line) != fixed_length:
+                        return False
+
+            return True
+        # END of contain_fixed_length_of_line_in_file
+
         def generate_file(record):
             move_ids = []
+            # for doing write operation
+            move_id_list = []
+
             file_path = os.path.join(record.source_path, filename)
             journals = self.env['account.move'].search([('is_cbs', '=', False),
                                                         ('is_sync', '=', False),
@@ -318,11 +331,23 @@ class ServerFileProcess(models.Model):
                         file.write(journal)
 
                     move_ids.append((0, 0, {'move_id': vals.id}))
-                    vals.write({'is_sync': True})
+                    move_id_list.append(vals.id)
+
+            # check for fixed length of the line in a file
+            if not contain_fixed_length_of_line_in_file(file_path):
+                os.remove(file_path)
+                return False
 
             if os.stat(file_path).st_size == 0:
                 os.remove(file_path)
-            return move_ids if os.path.exists(file_path) else False
+
+            if os.path.exists(file_path):
+                moves = self.env['account.move'].browse(move_id_list)
+                moves.write({'is_sync': True})
+                return move_ids
+            else:
+                return False
+        # END of generate_file
 
         record = self.env['server.file.process'].search([('method', '=', 'dest_sftp'),
                                                          ('type', '=', 'mdc'),
