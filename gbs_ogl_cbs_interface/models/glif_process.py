@@ -288,7 +288,7 @@ class ServerFileProcess(models.Model):
         filename = self.generate_filename()
 
         def contain_fixed_length_of_line_in_file(file_path):
-            fixed_length = 117
+            fixed_length = 117 + 2
             with open(file_path, "r") as reader:
                 for line in reader:
                     if len(line) != fixed_length:
@@ -335,7 +335,7 @@ class ServerFileProcess(models.Model):
 
             # check for fixed length of the line in a file
             if not contain_fixed_length_of_line_in_file(file_path):
-                os.remove(file_path)
+                # os.remove(file_path)
                 return False
 
             if os.stat(file_path).st_size == 0:
