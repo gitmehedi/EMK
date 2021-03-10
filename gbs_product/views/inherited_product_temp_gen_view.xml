@@ -53,6 +53,9 @@
                                attrs="{'invisible': [('sale_ok', '=', False)]}"
                                options="{'no_open': 1, 'no_create': 1, 'no_create_edit': 1}"/>
                     </xpath>
+                    <xpath expr="//field[@name='categ_id']" position="after">
+                        <field name="receive_over_ok" attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                    </xpath>
 
                     <!--<xpath expr="//field[@name='purchase_method']" position="replace">-->
                     <!--<field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"-->
