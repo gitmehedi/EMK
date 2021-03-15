@@ -295,6 +295,7 @@ class ServerFileProcess(models.Model):
                         return False
 
             return True
+
         # END of contain_fixed_length_of_line_in_file
 
         def generate_file(record):
@@ -303,10 +304,16 @@ class ServerFileProcess(models.Model):
             move_id_list = []
 
             file_path = os.path.join(record.source_path, filename)
+            fail_journals = self.env['account.move'].search([('is_cbs', '=', False),
+                                                             ('is_sync', '=', False),
+                                                             ('is_opening', '=', False),
+                                                             ('line_ids.is_bgl', '=', 'fail'),
+                                                             ('state', '=', 'posted')], order='id ASC')
+
             journals = self.env['account.move'].search([('is_cbs', '=', False),
                                                         ('is_sync', '=', False),
                                                         ('is_opening', '=', False),
-                                                        ('line_ids.is_bgl', '=', 'pass'),
+                                                        ('id', 'not in', fail_journals.ids),
                                                         ('state', '=', 'posted')], order='id ASC')
 
             with open(file_path, "w+") as file:
@@ -315,7 +322,8 @@ class ServerFileProcess(models.Model):
                         trn_type = '54' if val.debit > 0 else '04'
                         amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                         amount = ''.join(amount.split('.')).zfill(16)
-                        narration = re.sub(r'[|\n||\r|?|$|.|!]', r' ', val.name[:50])
+                        narr_text = re.sub('[^A-Za-z0-9-,.%()/:&]+', ' ', val.name)
+                        narration = narr_text[:50]
                         trn_ref_no = val.reconcile_ref if val.reconcile_ref else ''
                         date_array = val.date.split("-")
                         date = date_array[2] + date_array[1] + date_array[0]
@@ -347,6 +355,7 @@ class ServerFileProcess(models.Model):
                 return move_ids
             else:
                 return False
+
         # END of generate_file
 
         record = self.env['server.file.process'].search([('method', '=', 'dest_sftp'),
@@ -702,7 +711,7 @@ class ServerFileProcess(models.Model):
                             fcy_amt = np.float128(fcy_d_bef + '.' + fcy_d_after)
                             fcy_amount = "{:.3f}".format(fcy_amt)
                             if fcy_sign == '-':
-                                fcy_amount = '-' + fcy_amount   
+                                fcy_amount = '-' + fcy_amount
 
                         if len(fcy_amount) > 16:
                             errors += format_error(errObj.id, index,
