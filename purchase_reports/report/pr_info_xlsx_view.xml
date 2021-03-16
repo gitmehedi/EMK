@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_pr_info_xlsx" model="ir.actions.report.xml">
+            <field name="name">PR Info Report</field>
+            <field name="model">purchase.requisition.info.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">purchase_reports.pr_info_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>
