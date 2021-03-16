@@ -337,8 +337,7 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
 
     def generate_xlsx_report(self, workbook, data, obj):
 
-        # result_data = self.get_data(obj)
-        result_data = self.test(obj)
+        result_data = self.get_data(obj)
 
         # FORMAT
         bold = workbook.add_format({'bold': True, 'size': 10})
