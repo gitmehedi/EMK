@@ -379,7 +379,7 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
 
         row_inc = 0
         if obj.pr_no:
-            sheet.merge_range(6, 0, 6, 2, "Req. No.: " + obj.type, bold)
+            sheet.merge_range(6, 0, 6, 2, "Req. No.: " + obj.pr_no, bold)
             row_inc = 1
         if obj.date_from and obj.date_to:
             sheet.merge_range(6, 8, 6, 10, "Date: " + obj.date_from + " To " + obj.date_to, bold)
