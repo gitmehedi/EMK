@@ -50,7 +50,7 @@ class PurchaseRequisition(models.Model):
     @api.one
     def action_done(self):
         if self.sudo().env.user.has_group(
-                'commercial.group_commercial_user'):
+                'gbs_procure_n_commercial_access.group_pr_done'):
             self.suspend_security().write({'state': 'close'})
         else:
             self.write({'state': 'close'})
