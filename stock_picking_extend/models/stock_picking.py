@@ -32,6 +32,9 @@ class Picking(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)],'assigned':[('readonly', False)]})
 
+    challan_date = fields.Date(string='Challan Date', readonly=True,
+                               states={'draft': [('readonly', False)], 'assigned': [('readonly', False)]})
+
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):
         if self.partner_id and self.challan_bill_no:

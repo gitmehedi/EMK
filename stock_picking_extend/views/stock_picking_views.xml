@@ -39,6 +39,7 @@
                             <field name="partner_id" domain="[('supplier', '=', True),('parent_id', '=', False)]"
                                    attrs="{'invisible': [('picking_type_code', '=', 'internal')],'required':[('receive_type', 'in',['lc','other'])]}"/>
                             <field name="challan_bill_no" attrs="{'required':[('receive_type', 'in',['lc','other'])]}"/>
+                            <field name="challan_date"/>
                             <field name="date_done"/>
                             <label for="owner_id" groups="stock.group_tracking_owner"/>
                             <div groups="stock.group_tracking_owner">
@@ -444,6 +445,7 @@
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="challan_bill_no" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+                <field name="challan_date" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
             </xpath>
 
         </field>
