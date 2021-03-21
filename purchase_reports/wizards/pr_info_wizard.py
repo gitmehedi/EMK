@@ -12,7 +12,7 @@ class PurchaseRequisitionInfoWizard(models.TransientModel):
     type = fields.Selection([('all', 'All'), ('local', 'Local'), ('foreign', 'Foreign')],
                             default='all', string='Type')
     operating_unit_ids = fields.Many2many('operating.unit', string='Operating Unit',
-                                          domain=lambda self: [("id", "in", self.env.user.operating_unit_ids.ids)],
+                                          domain=lambda self: [("company_id", "=", self.env.user.company_id.id)],
                                           default=lambda self: self.env.user.default_operating_unit_id)
     is_only_pending = fields.Boolean(string='Only Pending')
 

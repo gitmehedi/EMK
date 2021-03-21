@@ -14,146 +14,146 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
     def get_data(self, obj):
         # main sql for testing
         full_sql = """SELECT
-                                pr.id AS pr_id,
-                                pr.name AS pr_name,
-                                (PRL_TBL.pr_confirm_date+interval '6h') AS pr_confirm_date,
-                                (PRL_TBL.pr_validate_date+interval '6h') AS pr_validate_date,
-                                (PRL_TBL.pr_approve_date+interval '6h') AS pr_approve_date,
-                                (PRL_TBL.pr_done_date+interval '6h')AS pr_done_date,
-                                PRPO_TBL.po_id,
-                                PRPO_TBL.po_name,
-                                (POAL.perform_date+interval '6h') AS po_approve_date,
-                                MRR_TBL.mrr_no,
-                                MRR_TBL.challan_no,
-                                (MRR_TBL.challan_date+interval '6h') AS challan_date,
-                                (MRR_TBL.qc_approve_date+interval '6h') AS qc_approve_date,
-                                (MRR_TBL.ss_validate_date+interval '6h') AS ss_validate_date,
-                                (MRR_TBL.ss_ac_approve_date+interval '6h') AS ss_ac_approve_date,
-                                (MRR_TBL.ss_approve_date+interval '6h') AS ss_approve_date
-                            FROM
-                                purchase_requisition pr
-                                LEFT JOIN ((SELECT
-                                                pr.id AS pr_id,
-                                                pr.name AS pr_name,
+                            pr.id AS pr_id,
+                            pr.name AS pr_name,
+                            (PRL_TBL.pr_confirm_date+interval '6h') AS pr_confirm_date,
+                            (PRL_TBL.pr_validate_date+interval '6h') AS pr_validate_date,
+                            (PRL_TBL.pr_approve_date+interval '6h') AS pr_approve_date,
+                            (PRL_TBL.pr_done_date+interval '6h')AS pr_done_date,
+                            PRPO_TBL.po_id,
+                            PRPO_TBL.po_name,
+                            (POAL.perform_date+interval '6h') AS po_approve_date,
+                            MRR_TBL.mrr_no,
+                            MRR_TBL.challan_no,
+                            (MRR_TBL.challan_date+interval '6h') AS challan_date,
+                            (MRR_TBL.qc_approve_date+interval '6h') AS qc_approve_date,
+                            (MRR_TBL.ss_validate_date+interval '6h') AS ss_validate_date,
+                            (MRR_TBL.ss_ac_approve_date+interval '6h') AS ss_ac_approve_date,
+                            (MRR_TBL.ss_approve_date+interval '6h') AS ss_approve_date
+                        FROM
+                            purchase_requisition pr
+                            LEFT JOIN ((SELECT
+                                            pr.id AS pr_id,
+                                            pr.name AS pr_name,
+                                            po.id AS po_id,
+                                            po.name AS po_name
+                                        FROM
+                                            purchase_requisition pr
+                                            INNER JOIN purchase_order po ON po.requisition_id=pr.id)
+                                        UNION
+                                        (SELECT
+                                            pr.id AS pr_id,
+                                            pr.name AS pr_name,
+                                            po.id AS po_id,
+                                            po.name AS po_name
+                                        FROM
+                                            purchase_requisition pr
+                                            INNER JOIN purchase_requisition_purchase_rfq_rel prprl ON prprl.purchase_requisition_id=pr.id
+                                            INNER JOIN purchase_rfq rfq ON rfq.id=prprl.purchase_rfq_id
+                                            INNER JOIN purchase_order po ON po.rfq_id=rfq.id)) PRPO_TBL ON PRPO_TBL.pr_id=pr.id
+                            LEFT JOIN (SELECT 
+                                            SS_TBL.po_id,
+                                            SS_TBL.po_name,
+                                            SS_TBL.mrr_no,
+                                            SS_TBL.challan_no,
+                                            SS_TBL.challan_date,
+                                            QCL_TBL.perform_date AS qc_approve_date,
+                                            SSL_TBL.ss_validate_date,
+                                            SSL_TBL.ss_ac_approve_date,
+                                            SSL_TBL.ss_approve_date
+                                        FROM
+                                            ((SELECT
                                                 po.id AS po_id,
-                                                po.name AS po_name
+                                                po.name AS po_name,
+                                                ss.id AS ss_picking_id,
+                                                ss.mrr_no,
+                                                (SELECT challan_bill_no FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
+                                                    WHERE rg.origin=po.name AND spt.code='incoming' LIMIT 1) AS challan_no,
+                                                (SELECT challan_date FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
+                                                    WHERE rg.origin=po.name AND spt.code='incoming' LIMIT 1) AS challan_date,
+                                                (SELECT qc.id FROM stock_picking qc JOIN stock_location sl ON sl.id=qc.location_dest_id 
+                                                    WHERE qc.origin=po.name AND sl.name='Quality Control' LIMIT 1) AS qc_picking_id
                                             FROM
-                                                purchase_requisition pr
-                                                INNER JOIN purchase_order po ON po.requisition_id=pr.id)
+                                                purchase_order po
+                                                LEFT JOIN stock_picking ss ON ss.origin=po.name AND (ss.check_ac_approve_button=true OR ss.check_approve_button=true OR ss.check_mrr_button=true)
+                                            WHERE
+                                                po.purchase_by IN ('cash', 'credit', 'tt'))
                                             UNION
                                             (SELECT
-                                                pr.id AS pr_id,
-                                                pr.name AS pr_name,
                                                 po.id AS po_id,
-                                                po.name AS po_name
+                                                po.name AS po_name,
+                                                ss.id AS ss_picking_id,
+                                                ss.mrr_no,
+                                                (SELECT challan_bill_no FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
+                                                    WHERE rg.origin=lc.name AND spt.code='incoming' LIMIT 1) AS challan_no,
+                                                (SELECT challan_date FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
+                                                    WHERE rg.origin=po.name AND spt.code='incoming' LIMIT 1) AS challan_date,
+                                                (SELECT qc.id FROM stock_picking qc JOIN stock_location sl ON sl.id=qc.location_dest_id 
+                                                    WHERE qc.origin=lc.name AND sl.name='Quality Control' LIMIT 1) AS qc_picking_id
                                             FROM
-                                                purchase_requisition pr
-                                                INNER JOIN purchase_requisition_purchase_rfq_rel prprl ON prprl.purchase_requisition_id=pr.id
-                                                INNER JOIN purchase_rfq rfq ON rfq.id=prprl.purchase_rfq_id
-                                                INNER JOIN purchase_order po ON po.rfq_id=rfq.id)) PRPO_TBL ON PRPO_TBL.pr_id=pr.id
-                                LEFT JOIN (SELECT 
-                                                SS_TBL.po_id,
-                                                SS_TBL.po_name,
-                                                SS_TBL.mrr_no,
-                                                SS_TBL.challan_no,
-                                                SS_TBL.challan_date,
-                                                QCL_TBL.perform_date AS qc_approve_date,
-                                                SSL_TBL.ss_validate_date,
-                                                SSL_TBL.ss_ac_approve_date,
-                                                SSL_TBL.ss_approve_date
-                                            FROM
-                                                ((SELECT
-                                                    po.id AS po_id,
-                                                    po.name AS po_name,
-                                                    ss.id AS ss_picking_id,
-                                                    ss.mrr_no,
-                                                    (SELECT challan_bill_no FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
-                                                        WHERE rg.origin=po.name AND spt.code='incoming' LIMIT 1) AS challan_no,
-                                                    (SELECT challan_date FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
-                                                        WHERE rg.origin=po.name AND spt.code='incoming' LIMIT 1) AS challan_date,
-                                                    (SELECT qc.id FROM stock_picking qc JOIN stock_location sl ON sl.id=qc.location_dest_id 
-                                                        WHERE qc.origin=po.name AND sl.name='Quality Control' LIMIT 1) AS qc_picking_id
-                                                FROM
-                                                    stock_picking ss
-                                                    LEFT JOIN purchase_order po ON po.name=ss.origin AND po.purchase_by IN ('cash', 'credit', 'tt')
-                                                WHERE
-                                                    ss.check_mrr_button=true)
-                                                UNION
-                                                (SELECT
-                                                    po.id AS po_id,
-                                                    po.name AS po_name,
-                                                    ss.id AS ss_picking_id,
-                                                    ss.mrr_no,
-                                                    (SELECT challan_bill_no FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
-                                                        WHERE rg.origin=lc.name AND spt.code='incoming' LIMIT 1) AS challan_no,
-                                                    (SELECT challan_date FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
-                                                        WHERE rg.origin=po.name AND spt.code='incoming' LIMIT 1) AS challan_date,
-                                                    (SELECT qc.id FROM stock_picking qc JOIN stock_location sl ON sl.id=qc.location_dest_id 
-                                                        WHERE qc.origin=lc.name AND sl.name='Quality Control' LIMIT 1) AS qc_picking_id
-                                                FROM
-                                                    stock_picking ss
-                                                    LEFT JOIN letter_credit lc ON lc.name=ss.origin
-                                                    LEFT JOIN po_lc_rel plr ON plr.lc_id=lc.id
-                                                    LEFT JOIN purchase_order po ON po.id=plr.po_id AND po.purchase_by='lc'
-                                                WHERE
-                                                    ss.check_mrr_button=true)) AS SS_TBL
-                                                LEFT JOIN stock_picking_action_log QCL_TBL ON QCL_TBL.picking_id=SS_TBL.qc_picking_id
-                                                LEFT JOIN (SELECT
-                                                                picking_id AS ss_picking_id,
-                                                                MAX(validate_date) AS ss_validate_date,
-                                                                MAX(ac_approve_date) AS ss_ac_approve_date,
-                                                                MAX(approve_date) AS ss_approve_date
-                                                            FROM
-                                                            (SELECT    
-                                                                picking_id,
-                                                                CASE ua.code
-                                                                  WHEN 6 THEN perform_date
-                                                                  ELSE NULL
-                                                                END AS validate_date,
-                                                                CASE ua.code
-                                                                  WHEN 8 THEN perform_date
-                                                                  ELSE NULL
-                                                                END AS ac_approve_date,
-                                                                CASE ua.code
-                                                                  WHEN 7 THEN perform_date
-                                                                  ELSE NULL
-                                                                END AS approve_date
-                                                            FROM      
-                                                                stock_picking_action_log spal
-                                                                JOIN users_action ua ON ua.id=spal.action_id) AS TBL_01
-                                                            GROUP BY
-                                                                picking_id) AS SSL_TBL ON SSL_TBL.ss_picking_id=SS_TBL.ss_picking_id) MRR_TBL ON MRR_TBL.po_id=PRPO_TBL.po_id
-                                LEFT JOIN purchase_order_action_log POAL ON POAL.order_id=PRPO_TBL.po_id
-                                LEFT JOIN (SELECT
-                                                requisition_id AS pr_id,
-                                                MAX(pr_confirm_date) AS pr_confirm_date,
-                                                MAX(pr_validate_date) AS pr_validate_date,
-                                                MAX(pr_approve_date) AS pr_approve_date,
-                                                MAX(pr_done_date) AS pr_done_date
-                                            FROM
-                                            (SELECT    
-                                                requisition_id,
-                                                CASE ua.code
-                                                  WHEN 1 THEN perform_date
-                                                  ELSE NULL
-                                                END AS pr_confirm_date,
-                                                CASE ua.code
-                                                  WHEN 2 THEN perform_date
-                                                  ELSE NULL
-                                                END AS pr_validate_date,
-                                                CASE ua.code
-                                                  WHEN 3 THEN perform_date
-                                                  ELSE NULL
-                                                END AS pr_approve_date,
-                                                CASE ua.code
-                                                  WHEN 4 THEN perform_date
-                                                  ELSE NULL
-                                                END AS pr_done_date
-                                            FROM      
-                                                purchase_requisition_action_log pral
-                                                LEFT JOIN users_action ua ON ua.id=pral.action_id) AS TBL
-                                            GROUP BY
-                                                requisition_id) PRL_TBL ON PRL_TBL.pr_id=pr.id
+                                                purchase_order po
+                                                LEFT JOIN po_lc_rel plr ON plr.po_id=po.id
+                                                LEFT JOIN letter_credit lc ON lc.id=plr.lc_id
+                                                LEFT JOIN stock_picking ss ON ss.origin=lc.name AND (ss.check_ac_approve_button=true OR ss.check_approve_button=true OR ss.check_mrr_button=true)
+                                            WHERE
+                                                po.purchase_by='lc')) AS SS_TBL
+                                            LEFT JOIN stock_picking_action_log QCL_TBL ON QCL_TBL.picking_id=SS_TBL.qc_picking_id
+                                            LEFT JOIN (SELECT
+                                                            picking_id AS ss_picking_id,
+                                                            MAX(validate_date) AS ss_validate_date,
+                                                            MAX(ac_approve_date) AS ss_ac_approve_date,
+                                                            MAX(approve_date) AS ss_approve_date
+                                                        FROM
+                                                        (SELECT    
+                                                            picking_id,
+                                                            CASE ua.code
+                                                              WHEN 6 THEN perform_date
+                                                              ELSE NULL
+                                                            END AS validate_date,
+                                                            CASE ua.code
+                                                              WHEN 8 THEN perform_date
+                                                              ELSE NULL
+                                                            END AS ac_approve_date,
+                                                            CASE ua.code
+                                                              WHEN 7 THEN perform_date
+                                                              ELSE NULL
+                                                            END AS approve_date
+                                                        FROM      
+                                                            stock_picking_action_log spal
+                                                            JOIN users_action ua ON ua.id=spal.action_id) AS TBL_01
+                                                        GROUP BY
+                                                            picking_id) AS SSL_TBL ON SSL_TBL.ss_picking_id=SS_TBL.ss_picking_id) MRR_TBL ON MRR_TBL.po_id=PRPO_TBL.po_id
+                            LEFT JOIN purchase_order_action_log POAL ON POAL.order_id=PRPO_TBL.po_id
+                            LEFT JOIN (SELECT
+                                            requisition_id AS pr_id,
+                                            MAX(pr_confirm_date) AS pr_confirm_date,
+                                            MAX(pr_validate_date) AS pr_validate_date,
+                                            MAX(pr_approve_date) AS pr_approve_date,
+                                            MAX(pr_done_date) AS pr_done_date
+                                        FROM
+                                        (SELECT    
+                                            requisition_id,
+                                            CASE ua.code
+                                              WHEN 1 THEN perform_date
+                                              ELSE NULL
+                                            END AS pr_confirm_date,
+                                            CASE ua.code
+                                              WHEN 2 THEN perform_date
+                                              ELSE NULL
+                                            END AS pr_validate_date,
+                                            CASE ua.code
+                                              WHEN 3 THEN perform_date
+                                              ELSE NULL
+                                            END AS pr_approve_date,
+                                            CASE ua.code
+                                              WHEN 4 THEN perform_date
+                                              ELSE NULL
+                                            END AS pr_done_date
+                                        FROM      
+                                            purchase_requisition_action_log pral
+                                            LEFT JOIN users_action ua ON ua.id=pral.action_id) AS TBL
+                                        GROUP BY
+                                            requisition_id) PRL_TBL ON PRL_TBL.pr_id=pr.id
                 """
 
         # segregated sql
@@ -181,10 +181,10 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
                                 (SELECT qc.id FROM stock_picking qc JOIN stock_location sl ON sl.id=qc.location_dest_id 
                                     WHERE qc.origin=po.name AND sl.name='Quality Control' LIMIT 1) AS qc_picking_id
                             FROM
-                                stock_picking ss
-                                LEFT JOIN purchase_order po ON po.name=ss.origin AND po.purchase_by IN ('cash', 'credit', 'tt')
+                                purchase_order po
+                                LEFT JOIN stock_picking ss ON ss.origin=po.name AND (ss.check_ac_approve_button=true OR ss.check_approve_button=true OR ss.check_mrr_button=true)
                             WHERE
-                                ss.check_mrr_button=true)
+                                po.purchase_by IN ('cash', 'credit', 'tt'))
                             UNION
                             (SELECT
                                 po.id AS po_id,
@@ -194,16 +194,16 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
                                 (SELECT challan_bill_no FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
                                     WHERE rg.origin=lc.name AND spt.code='incoming' LIMIT 1) AS challan_no,
                                 (SELECT challan_date FROM stock_picking rg JOIN stock_picking_type spt ON spt.id=rg.picking_type_id 
-                                    WHERE rg.origin=po.name AND spt.code='incoming' LIMIT 1) AS challan_date,
+                                    WHERE rg.origin=lc.name AND spt.code='incoming' LIMIT 1) AS challan_date,
                                 (SELECT qc.id FROM stock_picking qc JOIN stock_location sl ON sl.id=qc.location_dest_id 
                                     WHERE qc.origin=lc.name AND sl.name='Quality Control' LIMIT 1) AS qc_picking_id
                             FROM
-                                stock_picking ss
-                                LEFT JOIN letter_credit lc ON lc.name=ss.origin
-                                LEFT JOIN po_lc_rel plr ON plr.lc_id=lc.id
-                                LEFT JOIN purchase_order po ON po.id=plr.po_id AND po.purchase_by='lc'
+                                purchase_order po
+                                LEFT JOIN po_lc_rel plr ON plr.po_id=po.id
+                                LEFT JOIN letter_credit lc ON lc.id=plr.lc_id
+                                LEFT JOIN stock_picking ss ON ss.origin=lc.name AND (ss.check_ac_approve_button=true OR ss.check_approve_button=true OR ss.check_mrr_button=true)
                             WHERE
-                                ss.check_mrr_button=true)) AS SS_TBL
+                                po.purchase_by='lc')) AS SS_TBL
         """
         _stock_join = """
                         LEFT JOIN stock_picking_action_log QCL_TBL ON QCL_TBL.picking_id=SS_TBL.qc_picking_id
@@ -379,18 +379,18 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
 
         row_inc = 0
         if obj.pr_no:
-            sheet.merge_range(6, 0, 6, 2, "Req. No.: " + obj.pr_no, bold)
+            sheet.merge_range(6, 0, 6, 2, "Req. No: " + obj.pr_no, bold)
             row_inc = 1
         if obj.date_from and obj.date_to:
             sheet.merge_range(6, 8, 6, 10, "Date: " + obj.date_from + " To " + obj.date_to, bold)
             row_inc = 1
 
-        sheet.merge_range(6 + row_inc, 0, 6 + row_inc, 2, "Region Type: " + obj.type, bold)
+        sheet.merge_range(6 + row_inc, 0, 6 + row_inc, 2, "Region Type: " + obj.type.capitalize(), bold)
         sheet.merge_range(6 + row_inc, 8, 6 + row_inc, 10, "Operating Unit: " + self.get_operating_unit_name(obj), bold)
 
         # TABLE HEADER
         row, col = 7 + row_inc, 0
-        sheet.write(row, col, 'PR No.', th_cell_center)
+        sheet.write(row, col, 'PR No', th_cell_center)
         sheet.write(row, col + 1, 'PR Approved Date (PIC)', th_cell_center)
         sheet.write(row, col + 2, 'PR Approved Date (HOP)', th_cell_center)
         sheet.write(row, col + 3, 'PO Number', th_cell_center)
@@ -399,8 +399,8 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
         sheet.write(row, col + 6, 'Challan Date', th_cell_center)
         sheet.write(row, col + 7, 'QC Approve Date', th_cell_center)
         sheet.write(row, col + 8, 'SS Update Date', th_cell_center)
-        sheet.write(row, col + 9, 'MRR No.', th_cell_center)
-        sheet.write(row, col + 10, 'MRR Approved Date.', th_cell_center)
+        sheet.write(row, col + 9, 'MRR No', th_cell_center)
+        sheet.write(row, col + 10, 'MRR Approved Date', th_cell_center)
 
         # TABLE BODY
         row += 1
@@ -409,7 +409,7 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
             sheet.write(row, col + 1, rec['pr_validate_date'], td_cell_center)
             sheet.write(row, col + 2, rec['pr_approve_date'], td_cell_center)
             sheet.write(row, col + 3, rec['po_name'], td_cell_left)
-            sheet.write(row, col + 4, rec['po_approve_date'], td_cell_left)
+            sheet.write(row, col + 4, rec['po_approve_date'], td_cell_center)
             sheet.write(row, col + 5, rec['challan_no'], td_cell_left)
             sheet.write(row, col + 6, rec['challan_date'], td_cell_center)
             sheet.write(row, col + 7, rec['qc_approve_date'], td_cell_center)
