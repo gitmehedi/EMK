@@ -11,6 +11,7 @@
         'stock_picking_mrr'
     ],
     'data': [
+        'security/ir.model.access.csv',
         'data/users_action_data.xml'
     ],
 
