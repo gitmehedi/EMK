@@ -91,6 +91,18 @@ class Picking(models.Model):
 
         return res
 
+    @api.model
+    def _prepare_values_extra_move(self, op, product, remaining_qty):
+        res = super(Picking, self)._prepare_values_extra_move(op, product, remaining_qty)
+
+        moves = op.linked_move_operation_ids.filtered(lambda m: m.move_id.product_id == product and m.move_id.state != 'cancel')
+        res['price_unit'] = moves[0].move_id.price_unit
+        res['origin'] = op.picking_id.origin
+        res['picking_type_id'] = op.picking_id.picking_type_id.id
+        res['warehouse_id'] = op.picking_id.picking_type_id.warehouse_id.id
+
+        return res
+
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
