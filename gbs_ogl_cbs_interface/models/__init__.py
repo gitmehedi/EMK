@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import middleware_process
+from . import glif_process
 from . import api_interface
 from . import file_import
 from . import account_config

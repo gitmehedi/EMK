@@ -79,7 +79,7 @@
                       decoration-bf="state in ('approve',)">
                     <field name="name"/>
                     <field name="currency_id"/>
-                    <field name="rate"/>
+                    <field name="reverse_rate"/>
                     <field name="state"/>
                     <field name="active" invisible="1"/>
                 </tree>
