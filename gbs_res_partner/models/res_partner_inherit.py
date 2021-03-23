@@ -115,7 +115,7 @@ class ResPartner(models.Model):
                                              limit=1)
             if requested:
                 self.name = self.name if not requested.change_name else requested.change_name
-                self.active = self.status if not requested.status else requested.status
+                self.active = self.active if not requested.status else requested.status
                 self.website = self.website if not requested.website else requested.website
                 self.phone = self.phone if not requested.phone else requested.phone
                 self.mobile = self.mobile if not requested.mobile else requested.mobile

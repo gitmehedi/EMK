@@ -132,7 +132,7 @@ class ServerFileProcess(models.Model):
     @api.model
     def glif_process(self):
         """Run all scheduled backups."""
-        integration = self.search([('type', '=', 'glif'), ('method', '=', 'local'), ('status', '=', True)], limit=1)
+        integration = self.search([('type', '=', 'glif'), ('method', '=', 'sftp'), ('status', '=', True)], limit=1)
         if not integration:
             raise ValidationError(_("Record is not available with proper configuration"))
         return integration.glif_generate_process()
@@ -287,13 +287,33 @@ class ServerFileProcess(models.Model):
             return False
         filename = self.generate_filename()
 
+        def contain_fixed_length_of_line_in_file(file_path):
+            fixed_length = 117 + 2
+            with open(file_path, "r") as reader:
+                for line in reader:
+                    if len(line) != fixed_length:
+                        return False
+
+            return True
+
+        # END of contain_fixed_length_of_line_in_file
+
         def generate_file(record):
             move_ids = []
+            # for doing write operation
+            move_id_list = []
+
             file_path = os.path.join(record.source_path, filename)
+            fail_journals = self.env['account.move'].search([('is_cbs', '=', False),
+                                                             ('is_sync', '=', False),
+                                                             ('is_opening', '=', False),
+                                                             ('line_ids.is_bgl', '=', 'fail'),
+                                                             ('state', '=', 'posted')], order='id ASC')
+
             journals = self.env['account.move'].search([('is_cbs', '=', False),
                                                         ('is_sync', '=', False),
                                                         ('is_opening', '=', False),
-                                                        ('line_ids.is_bgl', '=', 'pass'),
+                                                        ('id', 'not in', fail_journals.ids),
                                                         ('state', '=', 'posted')], order='id ASC')
 
             with open(file_path, "w+") as file:
@@ -302,7 +322,8 @@ class ServerFileProcess(models.Model):
                         trn_type = '54' if val.debit > 0 else '04'
                         amount = format(val.debit, '.2f') if val.debit > 0 else format(val.credit, '.2f')
                         amount = ''.join(amount.split('.')).zfill(16)
-                        narration = re.sub(r'[|\n||\r|?|$|.|!]', r' ', val.name[:50])
+                        narr_text = re.sub('[^A-Za-z0-9-,.%()/:&]+', ' ', val.name)
+                        narration = narr_text[:50]
                         trn_ref_no = val.reconcile_ref if val.reconcile_ref else ''
                         date_array = val.date.split("-")
                         date = date_array[2] + date_array[1] + date_array[0]
@@ -312,23 +333,30 @@ class ServerFileProcess(models.Model):
                         sub_opu = str(val.sub_operating_unit_id.code) if val.sub_operating_unit_id.code else '001'
                         branch_code = str("00" + val.operating_unit_id.code) if val.operating_unit_id.code else '00001'
                         bgl = "0{0}{1}{2}".format(account_no, sub_opu, branch_code)
-                        branch = str(val.move_id.approver_id.default_operating_unit_id.code).zfill(5)
-                        maker = str(val.move_id.maker_id.login).zfill(7)
-                        checker = str(val.move_id.approver_id.login).zfill(7)
 
-                        journal = "{:2s}{:17s}{:16s}{:50s}{:20s}{:8s}{:4s}{:5}{:7}{:7}\r\n".format(trn_type, bgl,
-                                                                                                   amount, narration,
-                                                                                                   trn_ref_no, date,
-                                                                                                   cost_centre, branch,
-                                                                                                   maker, checker)
+                        journal = "{:2s}{:17s}{:16s}{:50s}{:20s}{:8s}{:4s}\r\n".format(trn_type, bgl, amount, narration,
+                                                                                       trn_ref_no, date, cost_centre)
                         file.write(journal)
 
                     move_ids.append((0, 0, {'move_id': vals.id}))
-                    vals.write({'is_sync': True})
+                    move_id_list.append(vals.id)
+
+            # check for fixed length of the line in a file
+            if not contain_fixed_length_of_line_in_file(file_path):
+                os.remove(file_path)
+                return False
 
             if os.stat(file_path).st_size == 0:
                 os.remove(file_path)
-            return move_ids if os.path.exists(file_path) else False
+
+            if os.path.exists(file_path):
+                moves = self.env['account.move'].browse(move_id_list)
+                moves.write({'is_sync': True})
+                return move_ids
+            else:
+                return False
+
+        # END of generate_file
 
         record = self.env['server.file.process'].search([('method', '=', 'dest_sftp'),
                                                          ('type', '=', 'mdc'),
@@ -529,7 +557,7 @@ class ServerFileProcess(models.Model):
 
         with open(source_path, 'r') as file_ins:
             index = 0
-            debit, credit, debitNcredit = 0.0, 0.0, 0.0
+            debit, credit = 0.0, 0.0
             coa = {val.code: val.id for val in
                    self.env['account.account'].search([('level_id.name', '=', 'Layer 5'), ('active', '=', True)])}
             jrnl = {val.code: val.id for val in self.env['account.journal'].search([('active', '=', True)])}
@@ -683,7 +711,7 @@ class ServerFileProcess(models.Model):
                             fcy_amt = np.float128(fcy_d_bef + '.' + fcy_d_after)
                             fcy_amount = "{:.3f}".format(fcy_amt)
                             if fcy_sign == '-':
-                                 fcy_amount = '-' + fcy_amount
+                                fcy_amount = '-' + fcy_amount
 
                         if len(fcy_amount) > 16:
                             errors += format_error(errObj.id, index,
@@ -712,15 +740,12 @@ class ServerFileProcess(models.Model):
                             line['credit'] = 0.0
                             line['amount_currency'] = fcy_amount
                             debit += float(amount)
-                            debitNcredit += round(float(amount),3) * -1
 
                         elif rec['JOURNAL-SEQ'] == '01':
                             line['debit'] = 0.0
                             line['credit'] = amount
                             line['amount_currency'] = fcy_amount
                             credit += float(amount)
-                            debitNcredit += round(float(amount), 3)
-
                         journal_entry += format_journal(line)
 
         if len(errors) > 0:
@@ -745,11 +770,11 @@ class ServerFileProcess(models.Model):
                 self.env.cr.execute(query)
 
                 if move_id.state == 'draft':
-                    if round(debit - credit, 3) > 0 and round(debitNcredit,3) != 0.000:
+                    if round(debit - credit, 3) > 0:
                         msg = 'Debit is greater than Credit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)
-                    elif round(credit - debit, 3) > 0 and round(debitNcredit,3) != 0.000:
+                    elif round(credit - debit, 3) > 0:
                         msg = 'Credit is greater than Debit. Mismatch Amount: {0}'.format(missmatch)
                         errObj.line_ids.create({'line_id': errObj.id, 'line_no': 'Debit/Credit Amount', 'details': msg})
                         self.unlink_move(move_id)

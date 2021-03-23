@@ -203,10 +203,6 @@
                                            groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}"
                                            groups="base.group_multi_company"/>
-                                    <field name="agreement_id"
-                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
-                                           domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase')]"
-                                           context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
                                     <field name="commercial_partner_id" invisible="1"/>
                                 </group>
                             </group>

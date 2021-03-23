@@ -27,6 +27,9 @@ class ReportTrialBalance(models.AbstractModel):
         if not context['include_profit_loss']:
             filters_init = filters_init + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
             filters = filters + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
+        else:
+            filters_init = filters_init + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
+            filters = filters + ' AND account_move_line.is_profit IS {0}'.format('TRUE')
 
         if context['date_to']:
             if context['operating_unit_ids'] or context['ex_operating_unit_ids']:
@@ -43,8 +46,12 @@ class ReportTrialBalance(models.AbstractModel):
                 filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
                                                     '("account_move_line"."date" <= %s) AND ("account_move_line"."date" >= %s) AND account_move_line.is_opening=TRUE')
             else:
-                filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
+                if not context['include_profit_loss']:
+                    filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
                                                     '("account_move_line"."date" < %s) AND ("account_move_line"."date" >= %s)')
+                else:
+                    filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
+                                                        '("account_move_line"."date" <= %s) AND ("account_move_line"."date" >= %s)')
 
         if context['date_from'] and context['date_to']:
             index = where_params_init.index(context['date_from'])

@@ -69,7 +69,7 @@
                         <field name="rate_ids" invisible="1"/>
                         <field name="code"/>
                         <field name="date"/>
-                        <field name="rate"/>
+                        <field name="reverse_rate"/>
                         <field name="state"/>
                         <field name="active" invisible="1"/>
                     </tree>
