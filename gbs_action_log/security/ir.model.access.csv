@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_users_action,access_users_action,model_users_action,base.group_user,1,1,1,0
+access_purchase_requisition_action_log,access_purchase_requisition_action_log,model_purchase_requisition_action_log,base.group_user,1,1,1,0
+access_purchase_order_action_log,access_purchase_order_action_log,model_purchase_order_action_log,base.group_user,1,1,1,0
+access_stock_picking_action_log,access_stock_picking_action_log,model_stock_picking_action_log,base.group_user,1,1,1,0

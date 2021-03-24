@@ -32,6 +32,9 @@ class Picking(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)],'assigned':[('readonly', False)]})
 
+    challan_date = fields.Date(string='Challan Date', readonly=True,
+                               states={'draft': [('readonly', False)], 'assigned': [('readonly', False)]})
+
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):
         if self.partner_id and self.challan_bill_no:
@@ -85,6 +88,18 @@ class Picking(models.Model):
         for backorder_picking in res.filtered(lambda x: x.picking_type_id.code in ['outgoing', 'loan_outgoing']):
             if backorder_picking.quant_reserved_exist and (backorder_picking.state in ['draft', 'partially_available', 'assigned']):
                 backorder_picking.do_unreserve()
+
+        return res
+
+    @api.model
+    def _prepare_values_extra_move(self, op, product, remaining_qty):
+        res = super(Picking, self)._prepare_values_extra_move(op, product, remaining_qty)
+
+        moves = op.linked_move_operation_ids.filtered(lambda m: m.move_id.product_id == product and m.move_id.state != 'cancel')
+        res['price_unit'] = moves[0].move_id.price_unit
+        res['origin'] = op.picking_id.origin
+        res['picking_type_id'] = op.picking_id.picking_type_id.id
+        res['warehouse_id'] = op.picking_id.picking_type_id.warehouse_id.id
 
         return res
 

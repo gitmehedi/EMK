@@ -25,6 +25,6 @@ class StockMove(models.Model):
             # if po.region_type in ('foreign') or po.purchase_by in ('lc','tt'):
             #     return
 
-            super(StockMove, self).product_price_update_before_done()
+        super(StockMove, self).product_price_update_before_done()
 
         # End Custom Logic For GBS
