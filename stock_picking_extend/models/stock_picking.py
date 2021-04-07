@@ -103,6 +103,30 @@ class Picking(models.Model):
 
         return res
 
+    @api.multi
+    def do_new_transfer(self):
+        for pick in self:
+            # Check whether The value of 'Date Of Transfer' field of a Delivery Order is set or not
+            # If not, then pop up a wizard to set the 'Date Of Transfer'
+            if pick.picking_type_id.code == 'outgoing' and not self.env.context.get('set_date_of_transfer', False):
+                view = self.env.ref('stock_picking_extend.view_stock_date_of_transfer_form')
+                wiz = self.env['stock.date.transfer'].create({'pick_id': pick.id})
+
+                return {
+                    'name': _('Please Enter The Date Of Transfer?'),
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'stock.date.transfer',
+                    'views': [(view.id, 'form')],
+                    'view_id': view.id,
+                    'target': 'new',
+                    'res_id': wiz.id,
+                    'context': self.env.context,
+                }
+
+        return super(Picking, self).do_new_transfer()
+
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'

@@ -21,6 +21,7 @@
         'report/inherit_stock_picking_report.xml',
         'wizard/inherit_stock_immediate_transfer_views.xml',
         'wizard/inherit_pack_operation_details_form.xml',
+        'wizard/stock_date_of_transfer_wizard.xml',
         'views/stock_picking_views.xml',
     ],
 }
