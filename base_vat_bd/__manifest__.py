@@ -10,7 +10,7 @@
         'account'
     ],
     'data': [
-        'views/inherited_res_partner_view.xml',
+        # 'views/inherited_res_partner_view.xml',
         'views/inherited_account_tax.xml',
         ],
     'description': 'Customer TAX And VAT Registration Details',
