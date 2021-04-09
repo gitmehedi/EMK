@@ -46,7 +46,7 @@ class IndentIndent(models.Model):
     indent_type = fields.Many2one('indent.type',string='Type',readonly=True, required = True, states={'draft': [('readonly', False)]})
     product_lines = fields.One2many('indent.product.lines', 'indent_id', 'Products', readonly=True, required = True,
                                     states={'draft': [('readonly', False)],'waiting_approval': [('readonly', False)]})
-    picking_id = fields.Many2one('stock.picking', 'Picking')
+    picking_id = fields.Many2one('stock.picking', 'Picking', copy=False)
     in_picking_id = fields.Many2one('stock.picking', 'Picking')
     description = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]})
     material_required_for = fields.Text('Required For', readonly=True, states={'draft': [('readonly', False)]})
@@ -253,7 +253,7 @@ class IndentIndent(models.Model):
                     'product_id': line.product_id.id,
                     'date': date_planned,
                     'date_expected': date_planned,
-                    'product_uom_qty': line.issue_qty,
+                    'product_uom_qty': line.product_uom_qty,
                     'product_uom': line.product_uom.id,
                     'location_id': location_id,
                     'location_dest_id': self.stock_location_id.id,
@@ -296,7 +296,8 @@ class IndentIndent(models.Model):
         else:
             self.action_picking_create(products)
             self.picking_id.action_confirm()
-            self.picking_id.force_assign()
+            # self.picking_id.force_assign()
+            self.picking_id.action_assign()
 
 
         action = self.env.ref('stock.action_picking_tree')
@@ -305,6 +306,11 @@ class IndentIndent(models.Model):
         result.pop('id', None)
         result['context'] = {}
         pick_ids = self._get_picking_id()
+
+        for p in self.env['stock.picking'].browse(pick_ids):
+            if p.state == 'confirmed':
+                p.action_assign()
+
         # choose the view_mode accordingly
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
