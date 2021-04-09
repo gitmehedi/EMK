@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="mrp_production_form_view" model="ir.ui.view">
+            <field name="name">mrp.production.form.inherit.mrp.extend</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <!-- Manufacturing Order (Base) -->
+                <xpath expr="//form/header/button[@name='open_produce_product'][2]" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='post_inventory']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='button_scrap']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/div/field[@name='product_uom_id']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='bom_id']" position="attributes">
+                    <attribute name="domain">
+                        ['&amp;', ('state', '=', 'confirmed'), '&amp;', '|', ('product_id','=',product_id),
+                        '&amp;', ('product_tmpl_id.product_variant_ids','=',product_id),
+                        ('product_id','=',False), ('type', '=', 'normal')]
+                    </attribute>
+                    <attribute name="options">{'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/div/button[@name='%(mrp.action_change_production_qty)d']" position="replace">
+                    <button type="action"
+                            name="%(mrp.action_change_production_qty)d"
+                            attrs="{'invisible': [('availability', 'in', ('assigned', 'none'))]}"
+                            string="Update" class="oe_link"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='routing_id']" position="after">
+                    <field name="production_continue" invisible="1"/>
+                </xpath>
+
+                <!-- Consumed Materials -->
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('availability', 'not in', ('assigned', 'none'))]}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='product_uom']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='quantity_available']" position="attributes">
+                    <attribute name="string">Available Qty</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='product_uom_qty']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='quantity_done']" position="attributes">
+                    <attribute name="string">Actual Qty</attribute>
+                    <attribute name="attrs">{'readonly': ['|', '|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial']), ('check_to_done', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='product_uom_qty']" position="before">
+                    <field name="standard_qty" string="Standard Qty"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']/tree/field[@name='quantity_done']" position="after">
+                    <field name="check_to_done" invisible="1"/>
+                </xpath>
+
+                <!-- Consumed Materials Copy for create and delete -->
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']" position="after">
+                    <field name="create_delete_move_raw_ids" options="{'reload_on_button': True}"
+                           attrs="{'invisible': [('availability', 'in', ('assigned', 'none'))]}"
+                           context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
+                        <tree editable="bottom" delete="1" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="1">
+                            <field name="product_id" required="1" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="product_uom" groups="product.group_uom" readonly="1" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="has_tracking" invisible="1"/>
+                            <field name="is_done" invisible="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
+                            <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="quantity_available" attrs="{'invisible': [('is_done', '=', True)]}"/>
+                            <field name="standard_qty" string="Standard Consume"/>
+                            <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume" groups="base.group_system"/>
+                            <field name="quantity_done" attrs="{'readonly': ['|', '|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial']), ('check_to_done', '=', False)]}" string="Actual Consumed"/>
+                            <field name="check_to_done" invisible="1"/>
+                            <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
+                                attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
+                        </tree>
+                    </field>
+                </xpath>
+
+                <!-- Finished Products -->
+                <xpath expr="//form/sheet/notebook/page[2]/field[@name='move_finished_ids']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

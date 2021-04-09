@@ -115,7 +115,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         filters = filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
 
         # Get move lines base on sql query and Calculate the total balance of move lines
-        sql = ('''SELECT l.id AS lid, invl.price_unit, invl.quantity AS qty, u.name AS unit_name, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
+        sql = ('''SELECT l.id AS lid, i.origin, invl.price_unit, invl.quantity AS qty, u.name AS unit_name, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
                     m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name\
                     FROM account_move_line l\
                     JOIN account_move m ON (l.move_id=m.id)\
@@ -126,7 +126,7 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                     LEFT JOIN product_uom u ON (invl.uom_id=u.id)\
                     JOIN account_journal j ON (l.journal_id=j.id)\
                     JOIN account_account acc ON (l.account_id = acc.id) \
-                    WHERE l.partner_id=%s AND l.account_id IN %s ''' + filters + ''' GROUP BY l.id, invl.price_unit, invl.quantity, u.name, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
+                    WHERE l.partner_id=%s AND l.account_id IN %s ''' + filters + ''' GROUP BY l.id, i.origin, invl.price_unit, invl.quantity, u.name, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY ''' + sql_sort)
         params = (partner_id, tuple(accounts.ids),) + tuple(where_params)
         cr.execute(sql, params)
 
@@ -212,43 +212,45 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
         sheet.set_column('A:A', 10)
         sheet.set_column('B:B', 6)
         sheet.set_column('C:C', 30)
-        sheet.set_column('D:D', 18)
-        sheet.set_column('E:E', 10)
+        sheet.set_column('D:D', 20)
+        sheet.set_column('E:E', 18)
         sheet.set_column('F:F', 10)
-        sheet.set_column('G:G', 13)
+        sheet.set_column('G:G', 10)
         sheet.set_column('H:H', 13)
         sheet.set_column('I:I', 13)
+        sheet.set_column('J:J', 13)
 
         # SHEET HEADER
-        sheet.merge_range(0, 0, 0, 8, docs.company_id.name, name_format)
-        sheet.merge_range(1, 0, 1, 8, docs.company_id.street, address_format)
-        sheet.merge_range(2, 0, 2, 8, docs.company_id.street2, address_format)
-        sheet.merge_range(3, 0, 3, 8, docs.company_id.city + '-' + docs.company_id.zip, address_format)
-        sheet.merge_range(4, 0, 4, 8, "Customer General Ledger", name_format)
+        sheet.merge_range(0, 0, 0, 9, docs.company_id.name, name_format)
+        sheet.merge_range(1, 0, 1, 9, docs.company_id.street, address_format)
+        sheet.merge_range(2, 0, 2, 9, docs.company_id.street2, address_format)
+        sheet.merge_range(3, 0, 3, 9, docs.company_id.city + '-' + docs.company_id.zip, address_format)
+        sheet.merge_range(4, 0, 4, 9, "Customer General Ledger", name_format)
         sheet.merge_range(5, 0, 5, 2, "Customer Name: " + docs.name, bold)
-        sheet.merge_range(5, 6, 5, 8, "Date: " + obj.date_from + " To " + obj.date_to, font_10)
+        sheet.merge_range(5, 7, 5, 9, "Date: " + obj.date_from + " To " + obj.date_to, bold)
 
         # TABLE HEADER
         row, col = 7, 0
         sheet.write(row, col, 'Date', th_cell_center)
         sheet.write(row, col + 1, 'Type', th_cell_center)
         sheet.write(row, col + 2, 'Particulars', th_cell_center)
-        sheet.write(row, col + 3, 'Ref', th_cell_center)
-        sheet.write(row, col + 4, 'Qty', th_cell_center)
-        sheet.write(row, col + 5, 'Rate', th_cell_center)
-        sheet.write(row, col + 6, 'Dr.', th_cell_center)
-        sheet.write(row, col + 7, 'Cr.', th_cell_center)
-        sheet.write(row, col + 8, 'Balance', th_cell_center)
+        sheet.write(row, col + 3, 'SO', th_cell_center)
+        sheet.write(row, col + 4, 'Ref', th_cell_center)
+        sheet.write(row, col + 5, 'Qty', th_cell_center)
+        sheet.write(row, col + 6, 'Rate', th_cell_center)
+        sheet.write(row, col + 7, 'Dr.', th_cell_center)
+        sheet.write(row, col + 8, 'Cr.', th_cell_center)
+        sheet.write(row, col + 9, 'Balance', th_cell_center)
 
         # TABLE BODY
         row += 1
         for account in accounts_result:
             for rec in account['move_lines']:
                 if init_balance and rec['lname'] == 'Opening Balance':
-                    sheet.merge_range(row, col, row, col + 5, rec['lname'], td_cell_center_bold)
-                    sheet.write(row, col + 6, rec['debit'], total_format)
-                    sheet.write(row, col + 7, rec['credit'], total_format)
-                    sheet.write(row, col + 8, rec['balance'], total_format)
+                    sheet.merge_range(row, col, row, col + 6, rec['lname'], td_cell_center_bold)
+                    sheet.write(row, col + 7, rec['debit'], total_format)
+                    sheet.write(row, col + 8, rec['credit'], total_format)
+                    sheet.write(row, col + 9, rec['balance'], total_format)
                     row += 1
                 else:
                     rate_format = workbook.add_format(
@@ -263,18 +265,19 @@ class CustomerGeneralLedgerXLSX(ReportXlsx):
                     sheet.write(row, col, rec['ldate'], td_cell_center)
                     sheet.write(row, col + 1, journal_type, td_cell_left)
                     sheet.write(row, col + 2, rec['lname'], td_cell_left)
-                    sheet.write(row, col + 3, rec['move_name'], td_cell_left)
-                    sheet.write(row, col + 4, qty_str, td_cell_right)
-                    sheet.write(row, col + 5, rec['price_unit'], rate_format)
-                    sheet.write(row, col + 6, rec['debit'], no_format)
-                    sheet.write(row, col + 7, rec['credit'], no_format)
-                    sheet.write(row, col + 8, rec['balance'], no_format)
+                    sheet.write(row, col + 3, rec['origin'], td_cell_left)
+                    sheet.write(row, col + 4, rec['move_name'], td_cell_left)
+                    sheet.write(row, col + 5, qty_str, td_cell_right)
+                    sheet.write(row, col + 6, rec['price_unit'], rate_format)
+                    sheet.write(row, col + 7, rec['debit'], no_format)
+                    sheet.write(row, col + 8, rec['credit'], no_format)
+                    sheet.write(row, col + 9, rec['balance'], no_format)
                     row += 1
 
-            sheet.merge_range(row, col, row, col + 5, 'Closing Balance', td_cell_center_bold)
-            sheet.write(row, col + 6, account['debit'], total_format)
-            sheet.write(row, col + 7, account['credit'], total_format)
-            sheet.write(row, col + 8, account['balance'], total_format)
+            sheet.merge_range(row, col, row, col + 6, 'Closing Balance', td_cell_center_bold)
+            sheet.write(row, col + 7, account['debit'], total_format)
+            sheet.write(row, col + 8, account['credit'], total_format)
+            sheet.write(row, col + 9, account['balance'], total_format)
             row += 1
 
 

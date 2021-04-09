@@ -130,7 +130,7 @@ class IndentIndent(models.Model):
     def _compute_default_picking_type(self):
         for indent in self:
             picking_type_obj = indent.env['stock.picking.type']
-            picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
+            picking_type_ids = picking_type_obj.suspend_security().search([('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
             picking_type_id = picking_type_ids and picking_type_ids[0] or False
             indent.picking_type_id = picking_type_id
 

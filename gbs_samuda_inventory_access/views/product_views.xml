@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="product_form_view_procurement_button" model="ir.ui.view">
+            <field name="name">inherited.product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(stock.action_view_change_product_quantity)d']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

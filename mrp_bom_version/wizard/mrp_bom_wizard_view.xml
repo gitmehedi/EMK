@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_mrp_bom_wizard_form" model="ir.ui.view">
+            <field name="name">mrp.bom.wizard.form</field>
+            <field name="model">mrp.bom.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Please Enter The Information" create="false" edit="false">
+                    <group>
+                        <group>
+                            <field name="historical_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_save" string="Save" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

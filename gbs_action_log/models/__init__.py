@@ -1,0 +1,8 @@
+import purchase_requisition
+import purchase_order
+import stock_picking
+
+import users_action
+import purchase_requisition_action_log
+import purchase_order_action_log
+import stock_picking_action_log

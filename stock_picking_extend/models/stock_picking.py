@@ -32,6 +32,9 @@ class Picking(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)],'assigned':[('readonly', False)]})
 
+    challan_date = fields.Date(string='Challan Date', readonly=True,
+                               states={'draft': [('readonly', False)], 'assigned': [('readonly', False)]})
+
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):
         if self.partner_id and self.challan_bill_no:
@@ -75,6 +78,54 @@ class Picking(models.Model):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
+
+    @api.multi
+    def _create_backorder(self, backorder_moves=[]):
+        res = super(Picking, self)._create_backorder(backorder_moves)
+
+        # res: list of backorder pickings
+        # unreserved the reserve qty of backorder pickings
+        for backorder_picking in res.filtered(lambda x: x.picking_type_id.code in ['outgoing', 'loan_outgoing']):
+            if backorder_picking.quant_reserved_exist and (backorder_picking.state in ['draft', 'partially_available', 'assigned']):
+                backorder_picking.do_unreserve()
+
+        return res
+
+    @api.model
+    def _prepare_values_extra_move(self, op, product, remaining_qty):
+        res = super(Picking, self)._prepare_values_extra_move(op, product, remaining_qty)
+
+        moves = op.linked_move_operation_ids.filtered(lambda m: m.move_id.product_id == product and m.move_id.state != 'cancel')
+        res['price_unit'] = moves[0].move_id.price_unit
+        res['origin'] = op.picking_id.origin
+        res['picking_type_id'] = op.picking_id.picking_type_id.id
+        res['warehouse_id'] = op.picking_id.picking_type_id.warehouse_id.id
+
+        return res
+
+    @api.multi
+    def do_new_transfer(self):
+        for pick in self:
+            # Check whether The value of 'Date Of Transfer' field of a Delivery Order is set or not
+            # If not, then pop up a wizard to set the 'Date Of Transfer'
+            if pick.picking_type_id.code == 'outgoing' and not self.env.context.get('set_date_of_transfer', False):
+                view = self.env.ref('stock_picking_extend.view_stock_date_of_transfer_form')
+                wiz = self.env['stock.date.transfer'].create({'pick_id': pick.id})
+
+                return {
+                    'name': _('Please Enter The Date Of Transfer?'),
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'stock.date.transfer',
+                    'views': [(view.id, 'form')],
+                    'view_id': view.id,
+                    'target': 'new',
+                    'res_id': wiz.id,
+                    'context': self.env.context,
+                }
+
+        return super(Picking, self).do_new_transfer()
 
 
 class StockPickingType(models.Model):

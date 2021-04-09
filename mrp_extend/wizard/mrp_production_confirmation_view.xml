@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_mrp_production_confirmation" model="ir.ui.view">
+        <field name="name">mrp.production.confirmation.mrp.extend</field>
+        <field name="model">mrp.production.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Continue Production">
+                <group>
+                    <p>
+                        You have produced less products than the Quantity To Produce.
+                    </p><p class="text-muted">
+                        Continue Production, if you expect to produce the remaining
+                        products later.  Do not continue production if you will not
+                        produce the remaining products.
+                    </p>
+                </group>
+                <footer>
+                    <button name="process" string="Continue Production" type="object" class="oe_highlight"/>
+                    <button name="process_cancel_production" string="No More Production" type="object" class="btn-primary"/>
+                    <button string="_Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    </data>
+</odoo>
