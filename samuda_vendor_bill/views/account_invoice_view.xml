@@ -26,6 +26,20 @@
         </field>
     </record>
 
+    <record id="inherit_invoice_supplier_form" model="ir.ui.view">
+        <field name="name">invoice.supplier.generic.form.inherit.samuda.vendor.bill</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="l10n_bd_account_tax.inherit_invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_tds']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_vat_payable']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="invoice_supplier_form" model="ir.ui.view">
         <field name="name">invoice.supplier.form.samuda.vendor.bill</field>
         <field name="model">account.invoice</field>
@@ -35,6 +49,13 @@
                 <attribute name="groups">account.group_account_manager,account.group_account_user</attribute>
             </xpath>
             <xpath expr="//button[@name='action_invoice_draft']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='amount_untaxed']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_tax']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
 
