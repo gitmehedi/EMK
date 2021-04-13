@@ -44,8 +44,14 @@ class InheritAccountPayment(models.Model):
 
     @api.multi
     def post(self):
+        # delete default_partner_type key from context
+        if 'default_partner_type' in self.env.context:
+            self.env.context = dict(self.env.context)
+            del self.env.context['default_partner_type']
+
         if self.sale_order_id.ids or self.is_auto_invoice_paid:
             self.invoice_ids = self.get_invoice_ids()
+
         # post payment
         res = super(InheritAccountPayment, self).post()
         for s_id in self.sale_order_id:
