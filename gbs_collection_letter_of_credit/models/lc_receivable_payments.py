@@ -91,6 +91,7 @@ class LCReceivablePayment(models.Model):
     @api.onchange('lc_id')
     def onchange_lc_id(self):
         if self.lc_id:
+            self.operating_unit_id = self.lc_id.operating_unit_id.id
             self.shipment_id = []
             self.invoice_ids = []
             self.currency_id = []
@@ -364,6 +365,22 @@ class LCReceivablePayment(models.Model):
         payment.write({'state': 'posted', 'move_name': move_obj.name})
 
         return payment
+
+    @api.model
+    def create(self, vals):
+        if 'operating_unit_id' not in vals:
+            lc = self.env['letter.credit'].search([('id', '=', vals['lc_id'])])
+            vals['operating_unit_id'] = lc.operating_unit_id.id
+
+        return super(LCReceivablePayment, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'lc_id' in vals:
+            lc = self.env['letter.credit'].search([('id', '=', vals['lc_id'])])
+            vals['operating_unit_id'] = lc.operating_unit_id.id
+
+        return super(LCReceivablePayment, self).write(vals)
 
     @api.multi
     def unlink(self):
