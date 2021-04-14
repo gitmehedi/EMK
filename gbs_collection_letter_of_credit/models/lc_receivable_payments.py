@@ -293,6 +293,7 @@ class LCReceivablePayment(models.Model):
 
     def _generate_debit_move_line(self, account_move_id, line):
         date = self.date
+        cost_center_id = False
         if 'account_journal_id' in line:
             account_id = line.account_journal_id.default_debit_account_id.id
             name = line.account_journal_id.name
@@ -303,6 +304,7 @@ class LCReceivablePayment(models.Model):
             name = line.product_id.name
             analytic_account_id = self.analytic_account_id.id
             amount_in_company_currency = line.amount_in_company_currency
+            cost_center_id = self.lc_id.product_lines[0].product_id.cost_center_id.id
         elif hasattr(line, 'narration'):
             account_id = line.account_id.id
             name = line.narration
@@ -326,6 +328,7 @@ class LCReceivablePayment(models.Model):
             'company_id': self.company_id.id,
             'amount_currency': line.amount_in_currency if hasattr(line, 'amount_in_currency') else 0,
             'currency_id': line.currency_id.id if hasattr(line, 'currency_id') else False,
+            'cost_center_id': cost_center_id
         }
         # account_move_line_obj.create(account_move_line_debit)
         return account_move_line_debit

@@ -9,7 +9,8 @@
     "depends": [
         "account",
         "com_shipment",
-        "lc_sales_product"
+        "lc_sales_product",
+        "account_cost_center"
     ],
     'data': [
         "security/ir.model.access.csv",
