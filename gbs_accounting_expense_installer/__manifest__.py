@@ -5,9 +5,6 @@
     'website': 'http://www.genweb2.com',
     'category': 'Accounting',
     'depends': [
-                'l10n_bd_account_tax',
-                'account_tax_challan',
-                'samuda_vendor_bill',
                 'gbs_vendor_payment',
                 ],
 
