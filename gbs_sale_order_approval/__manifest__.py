@@ -23,6 +23,7 @@
         'report_layout',
         'sale_stock', ## to hide delivery menu. it is inherited on this module
         'terms_setup',
+        'account_cost_center'
     ],
 
     'data': [

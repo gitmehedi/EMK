@@ -797,6 +797,12 @@ class InheritedSaleOrderLine(models.Model):
 
         return res
 
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(InheritedSaleOrderLine, self)._prepare_invoice_line(qty)
+        res['cost_center_id'] = self.product_id.cost_center_id.id
+        return res
+
 
 ########################
 # Sales team class
