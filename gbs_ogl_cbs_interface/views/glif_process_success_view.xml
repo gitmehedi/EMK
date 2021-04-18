@@ -10,6 +10,7 @@
                     <button name="unlink_glif" groups="gbs_ogl_cbs_interface.grp_api_interface_manager"
                             confirm="Are you sure to delete current GLIF which will also delete related CBS Journal?"
                             type="object" string="DELETE GLIF"/>
+                    <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <group>
@@ -19,6 +20,7 @@
                             <field name="move_id"/>
                         </group>
                         <group>
+                            <field name="glif_date"/>
                             <field name="start_date"/>
                             <field name="stop_date"/>
                             <field name="time"/>
@@ -39,12 +41,16 @@
         <field name="model">server.file.success</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="GLIF Success" edit="0" create="0" delete="0" duplicate="0">
+            <tree string="GLIF Success" edit="0" create="0" delete="0" duplicate="0"
+                  decoration-danger="state=='pending'" decoration-bf="state=='pending'"
+                  decoration-muted="state=='success'">
                 <field name="name"/>
+                <field name="glif_date"/>
                 <field name="start_date"/>
                 <field name="stop_date"/>
                 <field name="time"/>
-                <field name="upload_file"/>
+                <field name="move_id"/>
+                <field name="state"/>
                 <field name="status" invisible="1"/>
             </tree>
         </field>
@@ -56,9 +62,10 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="GLIF Success Search">
+                <field name="glif_date"/>
+                <field name="name"/>
                 <field name="start_date"/>
                 <field name="stop_date"/>
-                <field name="file_name"/>
             </search>
         </field>
     </record>

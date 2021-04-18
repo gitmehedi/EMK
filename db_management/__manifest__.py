@@ -11,10 +11,12 @@
     """,
     'depends': [
         'mtbl_access',
+        'gbs_ogl_cbs_interface',
     ],
     'data': [
         'views/menu_view.xml',
         'views/db_operations_view.xml',
+        'data/ir_cron.xml',
     ],
     'installable': True,
     'application': True,

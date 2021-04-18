@@ -1,6 +1,10 @@
 from odoo import api, fields, models, _, sql_db
 from odoo.service import db
 import subprocess, os, base64
+from odoo.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class DBOperationManage(models.Model):
@@ -9,6 +13,7 @@ class DBOperationManage(models.Model):
     _description = 'Database Duplicate and Replication'
     _order = 'id desc'
     _rec_name = 'destination_db'
+    _restore_call = []
 
     name = fields.Char(string="Title", required=True, track_visibility='onchange')
     source_db = fields.Char(string='Source Database', required=True, track_visibility='onchange')
@@ -29,7 +34,19 @@ class DBOperationManage(models.Model):
                                 track_visibility='onchange', string='Location')
     line_ids = fields.One2many('db.operation.manage.line', 'line_id')
 
-    @api.one
+    @api.model
+    def act_report_sync(self):
+        reports = self.env['server.file.success'].search([('state', '=', 'pending')])
+        db = self.search([], limit=1)
+        if len(reports) > 1:
+            restore = db.action_restore()
+            if restore:
+                for report in reports:
+                    report.write({'state': 'success'})
+        else:
+            raise ValidationError(_("Record is not available with proper configuration"))
+
+    @api.multi
     def action_duplicate(self):
         if self.source_db and self.destination_db:
             drop_db = True
@@ -45,8 +62,13 @@ class DBOperationManage(models.Model):
                     cr.execute("UPDATE auditlog_rule SET state='draft'")
                     cr.execute("UPDATE res_users SET active=False WHERE id !=1")
 
-    @api.one
+    @api.multi
     def action_restore(self):
+        if 'busy' in self._restore_call:
+            _logger.info("Database Sync Process Running", exc_info=True)
+            return None
+        else:
+            self._restore_call.append('busy')
         if self.source_db and self.destination_db:
             filepath = os.path.join(self.backup_path, self.destination_db + ".tar")
             if os.path.isfile(filepath):
@@ -86,6 +108,8 @@ class DBOperationManage(models.Model):
                     'query_result': base64.b64encode(output),
                     'line_id': self.id,
                 })
+                self._restore_call.remove('busy')
+                return True
 
 
 class DBOperationManageLine(models.Model):
