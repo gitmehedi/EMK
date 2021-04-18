@@ -711,6 +711,7 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self)._prepare_invoice()
 
         res['currency_id'] = self.currency_id.id
+        res['cost_center_id'] = self.order_line[0].product_id.cost_center_id.id
 
         return res
 
