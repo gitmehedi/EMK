@@ -10,5 +10,6 @@ class AccountInvoice(models.Model):
         if self:
             self.env.context = dict(self.env.context)
             self.env.context.update({'cost_center_id': self.invoice_line_ids[0].product_id.cost_center_id.id})
+            self.env.context.update({'operating_unit_id': self.operating_unit_id.id})
 
         return super(AccountInvoice, self).register_payment(payment_line, writeoff_acc_id, writeoff_journal_id)
