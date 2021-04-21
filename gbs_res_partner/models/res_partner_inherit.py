@@ -303,3 +303,15 @@ class HistoryResPartner(models.Model):
                                        'vendor_history_id', string='Service')
     designation_id = fields.Many2one('vendor.designation', string="Designation")
     contact_person = fields.Char(string='Contact Person')
+
+class InheritResUsers(models.Model):
+    _inherit = "res.users"
+
+    @api.model
+    def create(self, vals):
+        user = super(InheritResUsers, self).create(vals)
+        if user.partner_id:
+            user.partner_id.write({
+                'email': user.login + "@mtb.com"
+            })
+        return user
