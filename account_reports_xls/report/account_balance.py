@@ -22,7 +22,12 @@ class ReportTrialBalance(models.AbstractModel):
         filters_init = filters[:]
         where_params_init = where_params[:]
         context = self.env.context
-        move_ids = self.env['account.move'].search([('is_cbs', '=', True)])
+
+        curr_yr_start_date = context['date_from'][:4] + "-01-01"
+        curr_yr_end_date = context['date_to'][:4] + "-12-31"
+        move_ids = self.env['account.move'].search([('is_cbs', '=', True),
+                                                   ('date', '>=', curr_yr_start_date),
+                                                   ('date', '<=', curr_yr_end_date)])
 
         if not context['include_profit_loss']:
             filters_init = filters_init + ' AND account_move_line.is_profit IS NOT {0}'.format('TRUE')
@@ -48,17 +53,17 @@ class ReportTrialBalance(models.AbstractModel):
             else:
                 if not context['include_profit_loss']:
                     filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
-                                                    '("account_move_line"."date" < %s) AND ("account_move_line"."date" >= %s)')
+                                                        '("account_move_line"."date" < %s) AND ("account_move_line"."date" >= %s)')
                 else:
                     filters_init = filters_init.replace('("account_move_line"."date" >= %s)',
                                                         '("account_move_line"."date" <= %s) AND ("account_move_line"."date" >= %s)')
 
         if context['date_from'] and context['date_to']:
             index = where_params_init.index(context['date_from'])
-            where_params_init.insert(index + 1, context['date_from'][:4] + "-01-01")
+            where_params_init.insert(index + 1, curr_yr_start_date)
         elif context['date_from'] and not context['date_to']:
             index = where_params_init.index(context['date_from'])
-            where_params_init.insert(index + 1, context['date_from'][:4] + "-01-01")
+            where_params_init.insert(index + 1, curr_yr_start_date)
 
         if context['date_from']:
             if len(move_ids) > 0:
