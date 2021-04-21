@@ -46,7 +46,8 @@ class AccountPartialReconcile(models.Model):
                 'currency_id': currency.id,
                 'amount_currency': diff_in_currency,
                 'partner_id': rec.debit_move_id.partner_id.id,
-                'cost_center_id': self.env.context.get('cost_center_id', False)
+                'cost_center_id': self.env.context.get('cost_center_id', False),
+                'operating_unit_id': self.env.context.get('operating_unit_id', False)
             })
             for aml in aml_to_fix:
                 partial_rec = rec.env['account.partial.reconcile'].create({
@@ -88,7 +89,8 @@ class AccountPartialReconcile(models.Model):
                 'currency_id': currency.id,
                 'amount_currency': aml.amount_residual_currency,
                 'partner_id': self.debit_move_id.partner_id.id,
-                'cost_center_id': self.env.context.get('cost_center_id', False)})
+                'cost_center_id': self.env.context.get('cost_center_id', False),
+                'operating_unit_id': self.env.context.get('operating_unit_id', False)})
 
             partial_rec = super(AccountPartialReconcile, partial_reconciles).create({
                     'debit_move_id': aml.credit and account_payable_line.id or aml.id,

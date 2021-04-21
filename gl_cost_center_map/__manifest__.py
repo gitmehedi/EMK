@@ -7,7 +7,8 @@
     'version': '10.0.0.1',
     'depends': [
         'account',
-        'account_cost_center'
+        'account_cost_center',
+        'account_operating_unit'
     ],
     'data': [],
     'summary': 'Cost Center mapping in accounting journal (From LC Collection and Register Payment)',
