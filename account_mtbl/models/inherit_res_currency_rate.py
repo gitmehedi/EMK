@@ -7,12 +7,12 @@ class CurrencyRate(models.Model):
     _name = 'res.currency.rate'
     _inherit = ['res.currency.rate', 'mail.thread']
 
-    name = fields.Datetime(track_visibility='onchange',readonly=True,
+    name = fields.Datetime(track_visibility='onchange', readonly=True,
                            default=lambda self: fields.Datetime.now(),
                            states={'draft': [('readonly', False)]})
-    rate = fields.Float(track_visibility='onchange',readonly=True,
+    rate = fields.Float(track_visibility='onchange', readonly=True, required=True,
                         states={'draft': [('readonly', False)]})
-    currency_id = fields.Many2one(track_visibility='onchange',states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one(track_visibility='onchange', states={'draft': [('readonly', False)]}, required=True)
     company_id = fields.Many2one(track_visibility='onchange')
 
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange', readonly=True,
