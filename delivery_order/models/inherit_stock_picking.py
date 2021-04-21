@@ -157,15 +157,11 @@ class InheritStockPicking(models.Model):
         help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
 
     customer_name = fields.Char(string='Partner (Print)',
-                                states={'partially_available': [('readonly', True)],
-                                        'confirmed': [('readonly', True)],
-                                        'waiting': [('readonly', True)],
+                                states={'waiting': [('readonly', True)],
                                         'done': [('readonly', True)],
                                         'cancel': [('readonly', True)]})
 
-    shipping_address_print = fields.Text(string='Address (Print)', states={'partially_available': [('readonly', True)],
-                                                                            'confirmed': [('readonly', True)],
-                                                                            'waiting': [('readonly', True)],
+    shipping_address_print = fields.Text(string='Address (Print)', states={ 'waiting': [('readonly', True)],
                                                                             'done': [('readonly', True)],
                                                                             'cancel': [('readonly', True)]})
 
