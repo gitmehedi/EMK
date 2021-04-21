@@ -30,7 +30,11 @@ class StockMove(models.Model):
     @api.multi
     def move_validate(self):
         moves_todo = super(StockMove, self).move_validate()
-        moves_todo.write({'date': moves_todo[0].production_id.date_planned_start or moves_todo[0].raw_material_production_id.date_planned_start})
+        if moves_todo:
+            date_planned_start = moves_todo[0].production_id.date_planned_start or moves_todo[0].raw_material_production_id.date_planned_start
+            if date_planned_start:
+                moves_todo.write({'date': date_planned_start})
+
         return moves_todo
 
     @api.multi
