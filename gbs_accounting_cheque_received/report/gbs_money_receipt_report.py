@@ -20,8 +20,6 @@ class PayrollReportPivotal(models.AbstractModel):
         else:
             currency = docs.company_id.currency_id
 
-
-        data['sale_order_id'] = docs.sale_order_id.name
         data['partner_id'] = docs.partner_id.name
         data['cheque_amount'] = docs.cheque_amount
         data['is_cheque_payment'] = docs.is_cheque_payment
@@ -47,4 +45,3 @@ class PayrollReportPivotal(models.AbstractModel):
         }
         
         return self.env['report'].render('gbs_accounting_cheque_received.report_money_receipt', docargs)
-    
