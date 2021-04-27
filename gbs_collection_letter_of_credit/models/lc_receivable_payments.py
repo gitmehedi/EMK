@@ -301,6 +301,7 @@ class LCReceivablePayment(models.Model):
             name = line.account_journal_id.name
             analytic_account_id = False
             amount_in_company_currency = line.amount_in_company_currency
+            partner_id = self.lc_id.second_party_applicant.id
         elif 'product_id' in line:
             account_id = line.account_id.id
             name = line.product_id.name
@@ -313,6 +314,7 @@ class LCReceivablePayment(models.Model):
             name = line.narration
             analytic_account_id = self.analytic_account_id.id
             amount_in_company_currency = line.amount_in_company_currency
+            partner_id = self.lc_id.second_party_applicant.id
         else:
             account_id = line['account_id']
             name = 'Currency exchange rate difference'
