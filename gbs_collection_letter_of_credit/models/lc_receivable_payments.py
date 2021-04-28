@@ -520,7 +520,7 @@ class LCReceivableMiscellaneous(models.Model):
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
         if self.currency_id:
-            self.currency_rate = self.charges_parent_id.company_id.currency_id.rate / \
+            self.currency_rate = self.miscellaneous_parent_id.company_id.currency_id.rate / \
                                  self.currency_id.with_context(date=fields.Date.context_today(self)).rate
 
     @api.onchange('currency_id', 'currency_rate', 'amount_in_currency')
