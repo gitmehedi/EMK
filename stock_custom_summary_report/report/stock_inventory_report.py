@@ -125,8 +125,8 @@ class StockInventoryReport(models.AbstractModel):
                            uom_name,
                            category,
                            cost_val AS rate_dk,
-                           Sum(product_qty_in - product_qty_out)                AS qty_dk,
-                           ( cost_val * Sum(product_qty_in - product_qty_out) ) AS val_dk
+                           ROUND(Sum(product_qty_in - product_qty_out), 4)                AS qty_dk,
+                           ( cost_val * ROUND(Sum(product_qty_in - product_qty_out), 4) ) AS val_dk
                     FROM   (
                             SELECT sm.product_id,
                                     pt.name,
@@ -331,8 +331,8 @@ class StockInventoryReport(models.AbstractModel):
                    uom_name,
                    category,
                    cost_val AS rate_ck,
-                   Sum(product_qty_in - product_qty_out)                AS qty_ck,
-                   ( cost_val * Sum(product_qty_in - product_qty_out) ) AS val_ck
+                   ROUND(Sum(product_qty_in - product_qty_out), 4)                AS qty_ck,
+                   ( cost_val * ROUND(Sum(product_qty_in - product_qty_out), 4) ) AS val_ck
             FROM   (SELECT sm.product_id,
                            pt.name,
                            pp.default_code                  AS code,
