@@ -29,9 +29,9 @@ class SalesCommissionGenerate(models.Model):
             if self.line_ids:
                 self.line_ids.unlink()
 
-
-            invoices = comm.env['account.invoice'].search(
-                [('date_invoice', '<=', comm.till_date), ('is_commission_generated', '=', False)])
+            invoices = comm.env['account.invoice'].search([('date_invoice', '<=', comm.till_date),
+                                                           ('is_commission_generated', '=', False),
+                                                           ('type', '=', 'out_invoice'), ('state', '!=', 'cancel')])
 
             rec = {record.partner_id.id: [] for record in invoices}
 
