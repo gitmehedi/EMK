@@ -16,6 +16,10 @@ class Currency(models.Model):
 
     @api.model
     def amount_to_word(self, number, is_add_currency=True,currency='BDT'):
+
+        dp = self.env['decimal.precision'].precision_get('Account')
+        number = round(number, dp)
+
         dev = {100: "Hundred", 1000: "Thousand", 100000: "Lac", 10000000: "Crore", 1000000000: "Billion"}
         result = ""
         # Split amount for decimal value
