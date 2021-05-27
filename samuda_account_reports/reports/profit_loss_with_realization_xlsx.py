@@ -3,106 +3,52 @@ from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 from odoo.tools.misc import formatLang
 from odoo.tools import float_compare, float_round
 
-
-INCOME_EXPENSE_SEQUENCE = {
+IE_ORDER = {
     0: 'net_revenue',
     1: 'cogs',
     2: 'depreciation',
     3: 'amortization',
     4: 'factory_overhead',
     5: 'indirect_income',
-    6: 'indirect_expense'
+    6: 'administrative',
+    7: 'finance',
+    8: 'marketing',
+    9: 'distribution'
 }
-INCOME_EXPENSE_STRING = {
+IE_NAME = {
     'net_revenue': 'Net Revenue',
     'cogs': 'Cost Of Goods Sold',
     'depreciation': 'Depreciation',
     'amortization': 'Amortization',
     'factory_overhead': 'Factory Overhead',
     'indirect_income': 'Indirect Incomes',
-    'indirect_expense': 'Indirect Expenses'
-}
-INCOME_EXPENSE_ACCOUNT_CODE = {
-    'depreciation': 5601,
-    'amortization': 5602,
-    'factory_overhead': 5527,
-    'indirect_income': 4316
-}
-
-INDIRECT_EXPENSE_SEQUENCE = {
-    0: 'administrative',
-    1: 'finance',
-    2: 'marketing',
-    3: 'distribution'
-}
-INDIRECT_EXPENSE_STRING = {
     'administrative': 'Administrative Expenses',
     'finance': 'Finance Expenses',
     'marketing': 'Marketing Expenses',
     'distribution': 'Distribution Expenses'
 }
-INDIRECT_EXPENSE_ACCOUNT_CODE = {
+IE_ACCOUNT = {
+    'depreciation': 5601,
+    'amortization': 5602,
+    'factory_overhead': 5527,
+    'indirect_income': 4316,
     'administrative': 5815,
     'finance': 5890,
     'marketing': 5929,
     'distribution': 5100
 }
+EXPENSE = ['cogs', 'depreciation', 'amortization', 'factory_overhead']
+INDIRECT_EXPENSE = ['administrative', 'finance', 'marketing', 'distribution']
 
 
 class ProfitLossWithRealizationXLSX(ReportXlsx):
-
-    def prepare_comparison_data(self, report_data):
-        for n in range(len(INCOME_EXPENSE_SEQUENCE)):
-            if INCOME_EXPENSE_SEQUENCE[n] == 'indirect_expense':
-                for s in range(len(INDIRECT_EXPENSE_SEQUENCE)):
-                    cost_center_ids = set()
-                    for exp_data in report_data:
-                        cc_ids = map(lambda x: x['cost_center_id'], exp_data[INCOME_EXPENSE_SEQUENCE[n]][INDIRECT_EXPENSE_SEQUENCE[s]])
-                        cost_center_ids.update(set(cc_ids))
-
-                    for exp_data in report_data:
-                        d_list = []
-                        cc_ids = map(lambda x: x['cost_center_id'], exp_data[INCOME_EXPENSE_SEQUENCE[n]][INDIRECT_EXPENSE_SEQUENCE[s]])
-                        diff_ids = cost_center_ids.difference(set(cc_ids))
-                        for cc_id in list(diff_ids):
-                            cc_name = self.env['account.cost.center'].search([('id', '=', cc_id)])[0].name
-                            d_list.append({'cost_center_id': cc_id, 'name': cc_name, 'quantity': 0, 'amount': 0})
-                        if d_list:
-                            d_list.extend(exp_data[INCOME_EXPENSE_SEQUENCE[n]][INDIRECT_EXPENSE_SEQUENCE[s]])
-                            exp_data[INCOME_EXPENSE_SEQUENCE[n]][INDIRECT_EXPENSE_SEQUENCE[s]] = sorted(d_list, key=lambda l: (l['cost_center_id'], l['name']))
-            else:
-                key = 'account_id' if INCOME_EXPENSE_SEQUENCE[n] == 'indirect_income' else 'cost_center_id'
-                model = 'account.account' if INCOME_EXPENSE_SEQUENCE[n] == 'indirect_income' else 'account.cost.center'
-                unique_ids = set()
-                for data in report_data:
-                    ids = map(lambda x: x[key], data[INCOME_EXPENSE_SEQUENCE[n]])
-                    unique_ids.update(set(ids))
-
-                for data in report_data:
-                    d_list = []
-                    ids = map(lambda x: x[key], data[INCOME_EXPENSE_SEQUENCE[n]])
-                    diff_ids = unique_ids.difference(set(ids))
-                    for d_id in list(diff_ids):
-                        name = self.env[model].search([('id', '=', d_id)])[0].name
-                        d_list.append({key: d_id, 'name': name, 'quantity': 0, 'amount': 0})
-                    if d_list:
-                        d_list.extend(data[INCOME_EXPENSE_SEQUENCE[n]])
-                        data[INCOME_EXPENSE_SEQUENCE[n]] = sorted(d_list, key=lambda l: (l[key], l['name']))
-
-        return report_data
 
     def _get_net_revenue(self, obj, date_from, date_to):
         vat_refund_data_list = []
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
 
         _total_vat_refund_sql_str = """SELECT
                                             aml.cost_center_id,
@@ -162,13 +108,8 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
             where_clause += """ AND aml.account_id IN ((SELECT raw_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id=%s) UNION
                                             (SELECT packing_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id=%s))""" % (obj.cost_center_id.id, obj.cost_center_id.id)
         else:
@@ -197,19 +138,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
         JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
         WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
         UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INCOME_EXPENSE_ACCOUNT_CODE['depreciation'], self.env.user.company_id.id, INCOME_EXPENSE_ACCOUNT_CODE['depreciation'], self.env.user.company_id.id)
+        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['depreciation'], self.env.user.company_id.id, IE_ACCOUNT['depreciation'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                             aml.cost_center_id,
@@ -233,19 +167,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
                 JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
                 WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
                 UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INCOME_EXPENSE_ACCOUNT_CODE['amortization'], self.env.user.company_id.id, INCOME_EXPENSE_ACCOUNT_CODE['amortization'], self.env.user.company_id.id)
+                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['amortization'], self.env.user.company_id.id, IE_ACCOUNT['amortization'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                             aml.cost_center_id,
@@ -269,19 +196,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
                         JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
                         WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
                         UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INCOME_EXPENSE_ACCOUNT_CODE['factory_overhead'], self.env.user.company_id.id, INCOME_EXPENSE_ACCOUNT_CODE['factory_overhead'], self.env.user.company_id.id)
+                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['factory_overhead'], self.env.user.company_id.id, IE_ACCOUNT['factory_overhead'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                             aml.cost_center_id,
@@ -306,19 +226,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
                                 JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
                                 WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
                                 UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INCOME_EXPENSE_ACCOUNT_CODE['indirect_income'], self.env.user.company_id.id, INCOME_EXPENSE_ACCOUNT_CODE['indirect_income'], self.env.user.company_id.id)
+                                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['indirect_income'], self.env.user.company_id.id, IE_ACCOUNT['indirect_income'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                         aml.account_id,
@@ -343,19 +256,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
                                         JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
                                         WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
                                         UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INDIRECT_EXPENSE_ACCOUNT_CODE['administrative'], self.env.user.company_id.id, INDIRECT_EXPENSE_ACCOUNT_CODE['administrative'], self.env.user.company_id.id)
+                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['administrative'], self.env.user.company_id.id, IE_ACCOUNT['administrative'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                         aml.cost_center_id,
@@ -380,19 +286,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
                                         JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
                                         WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
                                         UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INDIRECT_EXPENSE_ACCOUNT_CODE['finance'], self.env.user.company_id.id, INDIRECT_EXPENSE_ACCOUNT_CODE['finance'], self.env.user.company_id.id)
+                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['finance'], self.env.user.company_id.id, IE_ACCOUNT['finance'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                         aml.cost_center_id,
@@ -417,19 +316,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
                                         JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
                                         WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
                                         UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INDIRECT_EXPENSE_ACCOUNT_CODE['marketing'], self.env.user.company_id.id, INDIRECT_EXPENSE_ACCOUNT_CODE['marketing'], self.env.user.company_id.id)
+                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['marketing'], self.env.user.company_id.id, IE_ACCOUNT['marketing'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                         aml.cost_center_id,
@@ -454,19 +346,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         data_list = []
         cr = self.env.cr
 
-        where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        if not obj.all_entries:
-            where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
-
+        where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
                                         JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
                                         WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
                                         UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (INDIRECT_EXPENSE_ACCOUNT_CODE['distribution'], self.env.user.company_id.id, INDIRECT_EXPENSE_ACCOUNT_CODE['distribution'], self.env.user.company_id.id)
+                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['distribution'], self.env.user.company_id.id, IE_ACCOUNT['distribution'], self.env.user.company_id.id)
 
         _sql_str = """SELECT
                         aml.cost_center_id,
@@ -487,52 +372,32 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
 
         return data_list
 
-    def _get_indirect_expense(self, obj, date_from, date_to):
-        expense_dict = {}
-        expense_dict['administrative'] = self._get_administrative_expense(obj, date_from, date_to)
-        expense_dict['finance'] = self._get_finance_expense(obj, date_from, date_to)
-        expense_dict['marketing'] = self._get_marketing_expense(obj, date_from, date_to)
-        expense_dict['distribution'] = self._get_distribution_expense(obj, date_from, date_to)
+    def finalize_comparison_table_data(self, data_list):
+        for n in range(len(IE_ORDER)):
+            attr_name = 'cost_center_id'
+            model_name = 'account.cost.center'
+            if IE_ORDER[n] == 'indirect_income':
+                attr_name = 'account_id'
+                model_name = 'account.account'
 
-        return expense_dict
+            unique_ids = set()
+            for item in data_list:
+                id_list = map(lambda x: x[attr_name], item[IE_ORDER[n]])
+                unique_ids.update(set(id_list))
 
-    @staticmethod
-    def calculate_profit(data_dict):
-        net_revenue = cogs = depreciation = amortization = factory_overhead = indirect_income = indirect_expense = 0.0
+            for item in data_list:
+                temp_list = []
+                id_list = map(lambda x: x[attr_name], item[IE_ORDER[n]])
+                diff_ids = unique_ids.difference(set(id_list))
+                for d_id in list(diff_ids):
+                    name = self.env[model_name].search([('id', '=', d_id)])[0].name
+                    temp_list.append({attr_name: d_id, 'name': name, 'quantity': 0, 'amount': 0})
 
-        revenue_data_list = data_dict.get('net_revenue')
-        cogs_data_list = data_dict.get('cogs')
-        depreciation_data_list = data_dict.get('depreciation')
-        amortization_data_list = data_dict.get('amortization')
-        factory_overhead_data_list = data_dict.get('factory_overhead')
-        indirect_income_data_list = data_dict.get('indirect_income')
-        indirect_expense_data_dict = data_dict.get('indirect_expense')
+                if temp_list:
+                    temp_list.extend(item[IE_ORDER[n]])
+                    item[IE_ORDER[n]] = sorted(temp_list, key=lambda l: (l[attr_name], l['name']))
 
-        net_revenue += float(sum(item['amount'] for item in revenue_data_list))
-        cogs += float(sum(item['amount'] for item in cogs_data_list))
-        depreciation += float(sum(item['amount'] for item in depreciation_data_list))
-        amortization += float(sum(item['amount'] for item in amortization_data_list))
-        factory_overhead += float(sum(item['amount'] for item in factory_overhead_data_list))
-        indirect_income += float(sum(item['amount'] for item in indirect_income_data_list))
-
-        for expense_data_list in indirect_expense_data_dict.values():
-            indirect_expense += float(sum(item['amount'] for item in expense_data_list))
-
-        gross_profit = net_revenue - cogs - depreciation - amortization - factory_overhead
-        profit_before_indirect_expense = gross_profit + indirect_income
-        net_profit = profit_before_indirect_expense - indirect_expense
-
-        amount_dict = {
-            'net_revenue': net_revenue,
-            'cogs': cogs,
-            'depreciation': depreciation,
-            'amortization': amortization,
-            'factory_overhead': factory_overhead,
-            'indirect_income': indirect_income,
-            'indirect_expense': indirect_expense
-        }
-
-        return gross_profit, profit_before_indirect_expense, net_profit, net_revenue, amount_dict
+        return data_list
 
     @staticmethod
     def _get_query_where_clause(obj, date_from, date_to):
@@ -546,6 +411,42 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
 
         return where_clause
 
+    @staticmethod
+    def get_net_sales_qty_vals(data_list):
+        net_sales_qty_vals = {}
+        for item in data_list:
+            net_sales_qty_vals[item['cost_center_id']] = item['quantity']
+
+        return net_sales_qty_vals
+
+    @staticmethod
+    def calc_income_expense(data_dict):
+        income_expense_vals = {}
+        for _, value in IE_ORDER.items():
+            d_list = data_dict.get(value)
+            income_expense_vals[value] = float(sum(item['amount'] for item in d_list)) or 0.0
+
+        return income_expense_vals
+
+    @staticmethod
+    def calc_profit(income_expense_vals):
+        expense = indirect_expense = 0.0
+        net_revenue = income_expense_vals.get('net_revenue')
+        indirect_income = income_expense_vals.get('indirect_income')
+        for key, value in income_expense_vals.items():
+            if key in EXPENSE:
+                expense += value
+            elif key in INDIRECT_EXPENSE:
+                indirect_expense += value
+            else:
+                pass
+
+        gross_profit = net_revenue - expense
+        profit_before_indirect_expense = gross_profit + indirect_income
+        net_profit = profit_before_indirect_expense - indirect_expense
+
+        return gross_profit, profit_before_indirect_expense, net_profit
+
     def generate_xlsx_report(self, workbook, data, obj):
         report_data = []
         comparison_table = obj.get_periods()
@@ -557,22 +458,16 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
             temp_dict['amortization'] = self._get_amortization(obj, tbl[0], tbl[1])
             temp_dict['factory_overhead'] = self._get_factory_overhead(obj, tbl[0], tbl[1])
             temp_dict['indirect_income'] = self._get_indirect_income(obj, tbl[0], tbl[1])
-            temp_dict['indirect_expense'] = self._get_indirect_expense(obj, tbl[0], tbl[1])
+            temp_dict['administrative'] = self._get_administrative_expense(obj, tbl[0], tbl[1])
+            temp_dict['finance'] = self._get_finance_expense(obj, tbl[0], tbl[1])
+            temp_dict['marketing'] = self._get_marketing_expense(obj, tbl[0], tbl[1])
+            temp_dict['distribution'] = self._get_distribution_expense(obj, tbl[0], tbl[1])
             report_data.append(temp_dict)
-            # for n in range(len(comparison_table) - 1):
-            #     report_data.append(temp_dict)
-            # break
 
-        report_data = self.prepare_comparison_data(report_data)
+        if obj.comparison:
+            report_data = self.finalize_comparison_table_data(report_data)
 
         # FORMAT
-        bold = workbook.add_format({'bold': True, 'size': 10})
-        center = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
-        font_10 = workbook.add_format({'size': 10})
-        font_12 = workbook.add_format({'bold': True, 'size': 12})
-        no_format = workbook.add_format({'num_format': '#,###0.00', 'size': 10, 'border': 1})
-        total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 10, 'border': 1})
-
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
@@ -591,7 +486,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         td_cell_right_bold = workbook.add_format({'align': 'right', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
 
         # WORKSHEET
-        sheet = workbook.add_worksheet('Income Statement')
+        sheet = workbook.add_worksheet('Profit and Loss with realization')
 
         # SET CELL WIDTH
         col = 0
@@ -616,7 +511,6 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         for index, value in enumerate(comparison_table):
             if index == 0:
                 sheet.write(row, col, '', th_cell_center)
-            # sheet.merge_range(row, col + 1, row, col + 4, 'January 2021', th_cell_center)
             sheet.merge_range(row, col + 1, row, col + 4, obj.get_full_date_names(value[1], value[0]), th_cell_center)
             col += 5
 
@@ -634,95 +528,95 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         # TABLE BODY
         row += 1
         col = 0
-        for index, r_data in enumerate(report_data):
-            gross_profit, profit_before_indirect_expense, net_profit, net_revenue, amount_dict = self.calculate_profit(r_data)
+        for index, value in enumerate(report_data):
+            income_expense_vals = self.calc_income_expense(value)
+            net_revenue = income_expense_vals.get('net_revenue')
+            gross_profit, profit_before_indirect_expense, net_profit = self.calc_profit(income_expense_vals)
+            net_sales_qty_vals = {}
 
-            for s in range(len(INCOME_EXPENSE_SEQUENCE)):
-                val = r_data.get(INCOME_EXPENSE_SEQUENCE[s])
-                amount = amount_dict.get(INCOME_EXPENSE_SEQUENCE[s])
+            for n in range(len(IE_ORDER)):
+                data_list = value.get(IE_ORDER[n])
+                amount_total = income_expense_vals.get(IE_ORDER[n])
+                net_sales_qty_vals = self.get_net_sales_qty_vals(data_list) if IE_ORDER[n] == 'net_revenue' else net_sales_qty_vals
 
                 # gross profit row
-                if INCOME_EXPENSE_SEQUENCE[s] == 'indirect_income':
+                if IE_ORDER[n] == 'indirect_income':
+                    gross_profit_formatted = formatLang(self.env, float_round(gross_profit, precision_digits=3))
+                    on_sale = float_round((gross_profit * 100) / net_revenue, precision_digits=3)
+
                     if index == 0:
                         sheet.write(row, col, 'Gross Profit', td_cell_left_bold)
                     sheet.write(row, col + 1, '', td_cell_center)
                     sheet.write(row, col + 2, '', td_cell_center)
-                    sheet.write(row, col + 3, formatLang(self.env, float_round(gross_profit, precision_digits=3)), td_cell_right_bold)
-                    sheet.write(row, col + 4, float_round((gross_profit * 100) / net_revenue, precision_digits=3), td_cell_right_bold)
+                    sheet.write(row, col + 3, gross_profit_formatted, td_cell_right_bold)
+                    sheet.write(row, col + 4, on_sale, td_cell_right_bold)
+                    row += 1
+
+                # income, expense parent row
+                on_sale = float_round((amount_total * 100) / net_revenue, precision_digits=3)
+                amount_total = formatLang(self.env, float_round(amount_total, precision_digits=3))
+
+                if index == 0:
+                    sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
+                sheet.write(row, col + 1, '', td_cell_center)
+                sheet.write(row, col + 2, '', td_cell_center)
+                sheet.write(row, col + 3, amount_total, td_cell_right_bold)
+                sheet.write(row, col + 4, on_sale, td_cell_right_bold)
+                row += 1
+
+                # child row
+                for item in data_list:
+                    qty = item['quantity']
+                    if IE_ORDER[n] != 'indirect_income':
+                        qty = net_sales_qty_vals.get(item['cost_center_id']) or qty
+
+                    net_realization = float(item['amount'] / qty) if qty > 0 else 0.0
+                    on_sale = float(item['amount'] * 100) / net_revenue
+
+                    if index == 0:
+                        sheet.write(row, col, '         ' + item['name'], td_cell_left)
+                    sheet.write(row, col + 1, float_round(float(qty), precision_digits=3), td_cell_right)
+                    sheet.write(row, col + 2, float_round(net_realization, precision_digits=3), td_cell_right)
+                    sheet.write(row, col + 3, formatLang(self.env, float_round(float(item['amount']), precision_digits=3)), td_cell_right)
+                    sheet.write(row, col + 4, float_round(on_sale, precision_digits=3), td_cell_right)
                     row += 1
 
                 # profit before indirect expenses row
-                if INCOME_EXPENSE_SEQUENCE[s] == 'indirect_expense':
+                if IE_ORDER[n] == 'indirect_income':
+                    on_sale = float_round((profit_before_indirect_expense * 100) / net_revenue, precision_digits=3)
+                    profit_before_indirect_expense = formatLang(self.env, float_round(profit_before_indirect_expense, precision_digits=3))
+
                     if index == 0:
                         sheet.write(row, col, 'Profit Before Indirect Expenses', td_cell_left_bold)
                     sheet.write(row, col + 1, '', td_cell_center)
                     sheet.write(row, col + 2, '', td_cell_center)
-                    sheet.write(row, col + 3, formatLang(self.env, float_round(profit_before_indirect_expense, precision_digits=3)), td_cell_right_bold)
-                    sheet.write(row, col + 4, float_round((profit_before_indirect_expense * 100) / net_revenue, precision_digits=3), td_cell_right_bold)
+                    sheet.write(row, col + 3, profit_before_indirect_expense, td_cell_right_bold)
+                    sheet.write(row, col + 4, on_sale, td_cell_right_bold)
                     row += 1
 
-                # income, expense parent row
-                if index == 0:
-                    sheet.write(row, col, INCOME_EXPENSE_STRING[INCOME_EXPENSE_SEQUENCE[s]], td_cell_left_bold)
-                sheet.write(row, col + 1, '', td_cell_center)
-                sheet.write(row, col + 2, '', td_cell_center)
-                sheet.write(row, col + 3, formatLang(self.env, float_round(amount, precision_digits=3)), td_cell_right_bold)
-                sheet.write(row, col + 4, float_round((amount * 100) / net_revenue, precision_digits=3), td_cell_right_bold)
+                    # inderect expense row
+                    indirect_expense_amount_total = sum(income_expense_vals[e] for e in INDIRECT_EXPENSE)
+                    on_sale = float_round((indirect_expense_amount_total * 100) / net_revenue, precision_digits=3)
+                    indirect_expense_amount_total = formatLang(self.env, float_round(indirect_expense_amount_total, precision_digits=3))
 
-                # income, expense child row
-                if INCOME_EXPENSE_SEQUENCE[s] != 'indirect_expense':
+                    if index == 0:
+                        sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
+                    sheet.write(row, col + 1, '', td_cell_center)
+                    sheet.write(row, col + 2, '', td_cell_center)
+                    sheet.write(row, col + 3, indirect_expense_amount_total, td_cell_right_bold)
+                    sheet.write(row, col + 4, on_sale, td_cell_right_bold)
                     row += 1
-                    for v in val:
-                        net_realization = 0.0
-                        if float(v['quantity']) > 0:
-                            net_realization = float(v['amount'] / v['quantity'])
-                        on_sale = float(v['amount'] * 100) / net_revenue
-
-                        if index == 0:
-                            sheet.write(row, col, '         ' + v['name'], td_cell_left)
-                        sheet.write(row, col + 1, float_round(float(v['quantity']), precision_digits=3), td_cell_right)
-                        sheet.write(row, col + 2, float_round(net_realization, precision_digits=3), td_cell_right)
-                        sheet.write(row, col + 3, formatLang(self.env, float_round(float(v['amount']), precision_digits=3)), td_cell_right)
-                        sheet.write(row, col + 4, float_round(on_sale, precision_digits=3), td_cell_right)
-                        row += 1
-                else:
-                    row += 1
-                    for seq in range(len(INDIRECT_EXPENSE_SEQUENCE)):
-                        indirect_expense_val = val.get(INDIRECT_EXPENSE_SEQUENCE[seq])
-                        total_expense_amount = float(sum(v['amount'] for v in indirect_expense_val))
-
-                        # indirect expenses parent row
-                        if index == 0:
-                            sheet.write(row, col, '         ' + INDIRECT_EXPENSE_STRING[INDIRECT_EXPENSE_SEQUENCE[seq]], td_cell_left_bold)
-                        sheet.write(row, col + 1, '', td_cell_center)
-                        sheet.write(row, col + 2, '', td_cell_center)
-                        sheet.write(row, col + 3, formatLang(self.env, float_round(total_expense_amount, precision_digits=3)), td_cell_right_bold)
-                        sheet.write(row, col + 4, float_round((total_expense_amount * 100) / net_revenue, precision_digits=3), td_cell_right_bold)
-
-                        row += 1
-                        for exp_val in indirect_expense_val:
-                            net_realization = 0.0
-                            if float(exp_val['quantity']) > 0:
-                                net_realization = float(v['amount'] / exp_val['quantity'])
-
-                            on_sale = float(exp_val['amount'] * 100) / net_revenue
-
-                            # indirect expense child row
-                            if index == 0:
-                                sheet.write(row, col, '                  ' + exp_val['name'], td_cell_left)
-                            sheet.write(row, col + 1, float_round(float(exp_val['quantity']), precision_digits=3), td_cell_right)
-                            sheet.write(row, col + 2, float_round(net_realization, precision_digits=3), td_cell_right)
-                            sheet.write(row, col + 3, formatLang(self.env, float_round(float(exp_val['amount']), precision_digits=3)), td_cell_right)
-                            sheet.write(row, col + 4, float_round(on_sale, precision_digits=3), td_cell_right)
-                            row += 1
 
             # net profit row
+            on_sale = float_round((net_profit * 100) / net_revenue, precision_digits=3)
+            net_profit = formatLang(self.env, float_round(net_profit, precision_digits=3))
+
             if index == 0:
                 sheet.write(row, col, 'Net Profit', td_cell_left_bold)
             sheet.write(row, col + 1, '', td_cell_center)
             sheet.write(row, col + 2, '', td_cell_center)
-            sheet.write(row, col + 3, formatLang(self.env, float_round(net_profit, precision_digits=3)), td_cell_right_bold)
-            sheet.write(row, col + 4, float_round((net_profit * 100) / net_revenue, precision_digits=3), td_cell_right_bold)
+            sheet.write(row, col + 3, net_profit, td_cell_right_bold)
+            sheet.write(row, col + 4, on_sale, td_cell_right_bold)
 
             # set starting row for comparison
             row = 7
