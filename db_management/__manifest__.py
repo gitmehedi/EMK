@@ -15,6 +15,7 @@
     ],
     'data': [
         'views/menu_view.xml',
+        'wizards/db_password_wizard.xml',
         'views/db_operations_view.xml',
         'data/ir_cron.xml',
     ],

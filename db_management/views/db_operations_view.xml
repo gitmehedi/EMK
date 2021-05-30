@@ -5,7 +5,7 @@
             <field name="name">view.account.app.config.form</field>
             <field name="model">db.operation.manage</field>
             <field name="arch" type="xml">
-                <form string="Database Sync" duplicate="0">
+                <form string="Database Sync" duplicate="0" delete="0">
                     <header>
                         <button name="action_duplicate" string="Sync Database" type="object"
                                 confirm="Are you sure to sync database?"
@@ -31,17 +31,11 @@
                                 <field name="source_db"/>
                                 <field name="source_ip" attrs="{'required': [('location', '=', 'remote')]}"/>
                                 <field name="source_port" attrs="{'required': [('location', '=', 'remote')]}"/>
-                                <field name="source_db_user" attrs="{'required': [('location', '=', 'remote')]}"/>
-                                <field name="source_db_pass" attrs="{'required': [('location', '=', 'remote')]}"
-                                       password="True"/>
                             </group>
                             <group>
                                 <field name="destination_db"/>
                                 <field name="dest_ip" attrs="{'required': [('location', '=', 'remote')]}"/>
                                 <field name="dest_port" attrs="{'required': [('location', '=', 'remote')]}"/>
-                                <field name="dest_db_user" attrs="{'required': [('location', '=', 'remote')]}"/>
-                                <field name="dest_db_pass" attrs="{'required': [('location', '=', 'remote')]}"
-                                       password="True"/>
                             </group>
                         </group>
                         <notebook>
@@ -68,7 +62,7 @@
             <field name="name">view.db.operation.manage.tree</field>
             <field name="model">db.operation.manage</field>
             <field name="arch" type="xml">
-                <tree string="Sync" duplicate="0"
+                <tree string="Sync" duplicate="0" delete="0"
                           decoration-info="location=='local'" decoration-success="location=='remote'"
                           decoration-bf="location in ('local','remote')" >
                     <field name="name"/>

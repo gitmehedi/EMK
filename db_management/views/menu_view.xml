@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="main_menu_db" name="Database Operations" parent="base.menu_administration" sequence="7"/>
+    <menuitem id="main_menu_db"
+              name="Database Operations" parent="gbs_ogl_cbs_interface.main_interface"
+              groups="mtbl_access.group_mtbl_sys_admin"
+              sequence="50"/>
 </odoo>
