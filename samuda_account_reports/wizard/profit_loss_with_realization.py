@@ -1,5 +1,6 @@
 import calendar
 from odoo import api, fields, models , _
+from odoo.exceptions import UserError
 from datetime import timedelta, datetime
 
 
@@ -118,12 +119,23 @@ class ProfitLossRealizationWizard(models.TransientModel):
     @api.multi
     def button_export_xlsx(self):
         self.ensure_one()
+        if self.date_filter_cmp == 'custom':
+            if self.date_from == self.date_from_cmp and self.date_to == self.date_to_cmp:
+                raise UserError(_('Comparison date range should be different.'))
+
         return self.env['report'].get_action(self, report_name='samuda_account_reports.profit_loss_with_realization_xlsx')
 
     def get_full_date_names(self, dt_to, dt_from=None):
         convert_date = self.env['ir.qweb.field.date'].value_to_html
+
+        if self.date_filter_cmp == 'custom' and dt_from == self.date_from_cmp and dt_to == self.date_to_cmp:
+            date_from = convert_date(dt_from, None)
+            date_to = convert_date(dt_to, None)
+            return (_('From %s to %s')) % (date_from, date_to)
+
         date_to = convert_date(dt_to, None)
         dt_to = datetime.strptime(dt_to, "%Y-%m-%d")
+
         if dt_from:
             date_from = convert_date(dt_from, None)
         if 'month' in self.date_filter:

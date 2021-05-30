@@ -39,53 +39,26 @@ IE_ACCOUNT = {
 }
 EXPENSE = ['cogs', 'depreciation', 'amortization', 'factory_overhead']
 INDIRECT_EXPENSE = ['administrative', 'finance', 'marketing', 'distribution']
+INCOME_USER_TYPE_ID = 14
 
 
 class ProfitLossWithRealizationXLSX(ReportXlsx):
 
     def _get_net_revenue(self, obj, date_from, date_to):
-        vat_refund_data_list = []
         data_list = []
         cr = self.env.cr
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-
-        _total_vat_refund_sql_str = """SELECT
-                                            aml.cost_center_id,
-                                            acc.name AS name,
-                                            ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
-                                        FROM
-                                            account_move_line aml
-                                            JOIN account_move mv ON mv.id=aml.move_id
-                                            JOIN account_account_account_tag aaat ON aaat.account_account_id=aml.account_id
-                                            JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
-                                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
-                                        """ + where_clause + """ AND aat.name IN ('Sales-Vat','Sales-Refund')
-                                        GROUP BY aml.cost_center_id,acc.name ORDER BY aml.cost_center_id"""
-
-        cr.execute(_total_vat_refund_sql_str)
-        for row in cr.dictfetchall():
-            vat_refund_data_list.append(row)
-
-        account_ids = []
-        if obj.cost_center_id:
-            product_templates = self.env['product.template'].search([('cost_center_id', '=', obj.cost_center_id.id), ('sale_ok', '=', True), ('active', '=', True)])
-            account_ids.extend(product_templates.mapped('property_account_income_id').ids)
-            account_ids.extend(product_templates.mapped('sale_type_account_ids').mapped('account_id').ids)
-        else:
-            product_templates = self.env['product.template'].search([('cost_center_id', '!=', 'null'), ('sale_ok', '=', True), ('active', '=', True)])
-            account_ids.extend(product_templates.mapped('property_account_income_id').ids)
-            account_ids.extend(product_templates.mapped('sale_type_account_ids').mapped('account_id').ids)
-
+        account_ids = self.env['account.account'].search([('user_type_id', '=', INCOME_USER_TYPE_ID)]).ids
         if account_ids:
             param = (tuple(account_ids),)
             where_clause += " AND aml.account_id IN %s" % param
 
-        _total_sales_sql_str = """SELECT
+        _net_revenue_sql_str = """SELECT
                                     aml.cost_center_id,
                                     acc.name AS name,
                                     COALESCE(SUM(aml.quantity), 0) AS quantity,
-                                    ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                                    -(SUM(aml.debit)-SUM(aml.credit)) AS amount
                                 FROM
                                     account_move_line aml
                                     JOIN account_move mv ON mv.id=aml.move_id
@@ -93,13 +66,8 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                                 """ + where_clause + """ GROUP BY aml.cost_center_id,acc.name 
                                 ORDER BY aml.cost_center_id"""
 
-        cr.execute(_total_sales_sql_str)
+        cr.execute(_net_revenue_sql_str)
         for row in cr.dictfetchall():
-            vat_refund_line = filter(lambda x: x['cost_center_id'] == row['cost_center_id'], vat_refund_data_list)
-            if vat_refund_line:
-                amount = row['amount'] - vat_refund_line[0]['amount']
-                row['amount'] = amount
-
             data_list.append(row)
 
         return data_list
@@ -399,8 +367,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
 
         return data_list
 
-    @staticmethod
-    def _get_query_where_clause(obj, date_from, date_to):
+    def _get_query_where_clause(self, obj, date_from, date_to):
         where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
         if not obj.all_entries:
             where_clause += " AND mv.state='posted'"
@@ -408,6 +375,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
             where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
         if obj.cost_center_id:
             where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
+        where_clause += " AND aml.company_id=%s" % self.env.user.company_id.id
 
         return where_clause
 
@@ -446,6 +414,14 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         net_profit = profit_before_indirect_expense - indirect_expense
 
         return gross_profit, profit_before_indirect_expense, net_profit
+
+    @staticmethod
+    def calc_on_sale(amount, net_revenue):
+        on_sale = 0.0
+        if net_revenue > 0:
+            on_sale = float_round((amount * 100) / net_revenue, precision_digits=3)
+
+        return on_sale
 
     def generate_xlsx_report(self, workbook, data, obj):
         report_data = []
@@ -541,19 +517,19 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
 
                 # gross profit row
                 if IE_ORDER[n] == 'indirect_income':
-                    gross_profit_formatted = formatLang(self.env, float_round(gross_profit, precision_digits=3))
-                    on_sale = float_round((gross_profit * 100) / net_revenue, precision_digits=3)
+                    on_sale = self.calc_on_sale(gross_profit, net_revenue)
+                    gross_profit = formatLang(self.env, float_round(gross_profit, precision_digits=3))
 
                     if index == 0:
                         sheet.write(row, col, 'Gross Profit', td_cell_left_bold)
                     sheet.write(row, col + 1, '', td_cell_center)
                     sheet.write(row, col + 2, '', td_cell_center)
-                    sheet.write(row, col + 3, gross_profit_formatted, td_cell_right_bold)
+                    sheet.write(row, col + 3, gross_profit, td_cell_right_bold)
                     sheet.write(row, col + 4, on_sale, td_cell_right_bold)
                     row += 1
 
                 # income, expense parent row
-                on_sale = float_round((amount_total * 100) / net_revenue, precision_digits=3)
+                on_sale = self.calc_on_sale(amount_total, net_revenue)
                 amount_total = formatLang(self.env, float_round(amount_total, precision_digits=3))
 
                 if index == 0:
@@ -571,19 +547,19 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                         qty = net_sales_qty_vals.get(item['cost_center_id']) or qty
 
                     net_realization = float(item['amount'] / qty) if qty > 0 else 0.0
-                    on_sale = float(item['amount'] * 100) / net_revenue
+                    on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
 
                     if index == 0:
                         sheet.write(row, col, '         ' + item['name'], td_cell_left)
                     sheet.write(row, col + 1, float_round(float(qty), precision_digits=3), td_cell_right)
                     sheet.write(row, col + 2, float_round(net_realization, precision_digits=3), td_cell_right)
                     sheet.write(row, col + 3, formatLang(self.env, float_round(float(item['amount']), precision_digits=3)), td_cell_right)
-                    sheet.write(row, col + 4, float_round(on_sale, precision_digits=3), td_cell_right)
+                    sheet.write(row, col + 4, on_sale, td_cell_right)
                     row += 1
 
                 # profit before indirect expenses row
                 if IE_ORDER[n] == 'indirect_income':
-                    on_sale = float_round((profit_before_indirect_expense * 100) / net_revenue, precision_digits=3)
+                    on_sale = self.calc_on_sale(profit_before_indirect_expense, net_revenue)
                     profit_before_indirect_expense = formatLang(self.env, float_round(profit_before_indirect_expense, precision_digits=3))
 
                     if index == 0:
@@ -596,11 +572,11 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
 
                     # inderect expense row
                     indirect_expense_amount_total = sum(income_expense_vals[e] for e in INDIRECT_EXPENSE)
-                    on_sale = float_round((indirect_expense_amount_total * 100) / net_revenue, precision_digits=3)
+                    on_sale = self.calc_on_sale(indirect_expense_amount_total, net_revenue)
                     indirect_expense_amount_total = formatLang(self.env, float_round(indirect_expense_amount_total, precision_digits=3))
 
                     if index == 0:
-                        sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
+                        sheet.write(row, col, 'Indirect Expenses', td_cell_left_bold)
                     sheet.write(row, col + 1, '', td_cell_center)
                     sheet.write(row, col + 2, '', td_cell_center)
                     sheet.write(row, col + 3, indirect_expense_amount_total, td_cell_right_bold)
@@ -608,7 +584,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     row += 1
 
             # net profit row
-            on_sale = float_round((net_profit * 100) / net_revenue, precision_digits=3)
+            on_sale = self.calc_on_sale(net_profit, net_revenue)
             net_profit = formatLang(self.env, float_round(net_profit, precision_digits=3))
 
             if index == 0:

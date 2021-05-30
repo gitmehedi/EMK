@@ -48,7 +48,7 @@
 
         <menuitem action="action_profit_loss_realization_wizard"
                   id="menu_profit_loss_realization"
-                  parent="account_reports.account_reports_legal_statements_menu" groups="account.group_account_user"
+                  parent="account_reports.account_reports_legal_statements_menu"
                   sequence="25"/>
     </data>
 </odoo>
