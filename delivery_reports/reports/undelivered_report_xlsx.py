@@ -19,7 +19,7 @@ class UndeliveredReportXLSX(ReportXlsx):
     def _get_query_where_clause(self, obj):
         where_str = """WHERE 
                             sp.operating_unit_id=%s 
-                            AND DATE(sp.date_done + interval '6h') BETWEEN DATE('%s')+time '00:00' AND DATE('%s')+time '23:59:59'""" % (obj.operating_unit_id.id, obj.date_today, obj.date_today)
+                            AND DATE(sp.date_done + interval '6h') <= DATE('%s')+time '23:59:59'""" % (obj.operating_unit_id.id, obj.date_today)
 
         if obj.product_tmpl_id and not obj.product_id:
             product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id)]).ids
