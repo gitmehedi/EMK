@@ -8,15 +8,16 @@
         'account_reports',
         'report_xlsx',
         'report',
+        'base',
+        'account'
     ],
     'summary': "This module generate custom account reports",
-    'description': """
-        Customize reporting module to generate report by product wise,
-        unit wise and in between date range.
-    """,
+    'description': """Different type of account reports""",
     'data': [
         'reports/profit_loss_with_realization_xlsx_view.xml',
+        'reports/account_general_ledger_xlsx_view.xml',
         'wizard/profit_loss_with_realization_view.xml',
+        'wizard/account_general_ledger_wizard_view.xml',
     ],
     'installable': True,
     'application': False,
