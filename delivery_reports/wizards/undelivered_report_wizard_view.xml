@@ -38,6 +38,7 @@
 				  name="Undelivered Report"
                   action="action_undelivered_report_wizard"
                   parent="stock.menu_warehouse_report"
+				  groups="stock.delivery_user"
 				  sequence="110"/>
 
     </data>

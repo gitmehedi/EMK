@@ -39,6 +39,7 @@
 				  name="Delivery Report"
                   action="action_delivery_report_wizard"
                   parent="stock.menu_warehouse_report"
+				  groups="stock.delivery_user"
 				  sequence="100"/>
 
     </data>
