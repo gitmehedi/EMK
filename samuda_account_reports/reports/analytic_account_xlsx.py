@@ -10,7 +10,7 @@ class AnalyticAccountXLSX(ReportXlsx):
         if where_clause.strip():
             wheres.append(where_clause.strip())
         filters = "".join(wheres)
-        filters = filters.replace('account_move_line', 'l')
+        filters = filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
         sql = ('''SELECT DISTINCT l.account_id\
                     FROM account_move_line l\
                     JOIN account_move m ON (l.move_id=m.id)\
@@ -43,7 +43,7 @@ class AnalyticAccountXLSX(ReportXlsx):
 
         return date_start, date_end
 
-    def _get_account_move_entry(self, used_context):
+    def _get_account_move_entry(self, obj, used_context):
         cr = self.env.cr
         aml_obj = self.env['account.move.line']
         accounts = self._get_accounts(aml_obj, used_context)
@@ -53,6 +53,13 @@ class AnalyticAccountXLSX(ReportXlsx):
         # OPENING BALANCE
         move_lines = dict(map(lambda x: (x, 0.0), accounts.ids))
         filters = " AND m.state='posted'" if used_context['state'] == 'posted' else ""
+        if obj.operating_unit_id:
+            filters += " AND l.operating_unit_id=%s" % obj.operating_unit_id.id
+        if obj.cost_center_id:
+            filters += " AND l.cost_center_id=%s" % obj.cost_center_id.id
+        if used_context['analytic_account_ids']:
+            filters += " AND l.analytic_account_id=%s" % used_context['analytic_account_ids'].id
+
         fy_date_start, fy_date_end = self._get_fiscal_year_date_range(used_context['date_from'])
         opening_journal_ids = self.env['account.journal'].search([('type', '=', 'situation')])
         sql_of_opening_balance = """
@@ -149,7 +156,7 @@ class AnalyticAccountXLSX(ReportXlsx):
         used_context['lang'] = self.env.context.get('lang') or 'en_US'
 
         # result data
-        accounts_result = self._get_account_move_entry(used_context)
+        accounts_result = self._get_account_move_entry(obj, used_context)
 
         # FORMAT
         bold = workbook.add_format({'bold': True, 'size': 10})
