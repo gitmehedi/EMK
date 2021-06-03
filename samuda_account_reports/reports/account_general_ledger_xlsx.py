@@ -252,4 +252,4 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
             row += 1
 
 
-AccountGeneralLedgerXLSX('report.gbs_account.account_general_ledger_xlsx', 'account.general.ledger.wizard', parser=report_sxw.rml_parse)
+AccountGeneralLedgerXLSX('report.samuda_account_reports.account_general_ledger_xlsx', 'account.general.ledger.wizard', parser=report_sxw.rml_parse)

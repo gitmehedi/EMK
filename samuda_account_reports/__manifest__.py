@@ -6,18 +6,19 @@
     'category': 'Accounting',
     'depends': [
         'account_reports',
+        'analytic',
         'report_xlsx',
-        'report',
-        'base',
-        'account'
+        'report'
     ],
     'summary': "This module generate custom account reports",
     'description': """Different type of account reports""",
     'data': [
         'reports/profit_loss_with_realization_xlsx_view.xml',
         'reports/account_general_ledger_xlsx_view.xml',
+        'reports/analytic_account_xlsx_view.xml',
         'wizard/profit_loss_with_realization_view.xml',
         'wizard/account_general_ledger_wizard_view.xml',
+        'wizard/analytic_account_wizard_view.xml',
     ],
     'installable': True,
     'application': False,
