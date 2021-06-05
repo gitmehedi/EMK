@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="cheque_print_wizard_view" model="ir.ui.view">
+			<field name="name">cheque.print.wizard</field>
+			<field name="model">cheque.print.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+							<field name="is_cross_cheque"/>
+							<field name="pay_to" />
+							<field name="date_on_cheque"/>
+							<field name="amount" />
+							<field name="amount_in_word"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="hide_field" invisible="1"/>
+							<field name="narration" />
+                    </group>
+                    <footer>
+						<button name ="button_print_pdf" string="Print Preview" type="object" class="oe_highlight"/>
+                        <button name ="button_print_on_printer" string="Print Cheque" type="object" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+
+		<act_window id="action_check_print_wizard_vendor_payment"
+			key2="client_print_multi"
+			name="Cheque Print"
+            res_model="cheque.print.wizard"
+            src_model="account.payment"
+            view_mode="form" target="new" view_type="form" />
+
+		<act_window id="action_check_print_wizard_journal_entry"
+			key2="client_print_multi"
+			name="Cheque Print"
+            res_model="cheque.print.wizard"
+            src_model="account.move"
+            view_mode="form" target="new" view_type="form" />
+
+    </data>
+</odoo>
