@@ -14,7 +14,7 @@ class ChequePrintWizard(models.TransientModel):
     date_on_cheque = fields.Date("Date On Cheque", required=True)
     amount = fields.Float("Amount", required=True)
     amount_in_word = fields.Char("Amount In Word", required=True)
-    narration = fields.Text("Narration", required=True)
+    narration = fields.Char("Narration", required=True)
 
     hide_field = fields.Boolean(string='Hide')
     

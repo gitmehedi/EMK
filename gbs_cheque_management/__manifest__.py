@@ -12,7 +12,6 @@
         'report',
     ],
     'data': [
-        # 'report/vendor_general_ledger_xlsx_view.xml',
         'wizard/cheque_print_wizard_view.xml',
     ],
     'installable': True,
