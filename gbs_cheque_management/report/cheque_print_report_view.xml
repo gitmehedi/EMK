@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_cheque_print"
+                model="account.payment"
+                string="Cheque Print"
+                report_type="qweb-pdf"
+                menu="False"
+                name="gbs_cheque_management.report_cheque_print"
+                file="gbs_cheque_management.report_cheque_print"
+                paperformat="report_layout.paperformat_backend_portrait"
+        />
+        <template id="report_cheque_print">
+            <t t-call="report.html_container">
+                 <div class="page" style="page-break-inside:auto">
+                    <div class="row">
+                        <t t-if="data['is_cross_cheque']">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong>A/C Payee</strong>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                </div>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <span t-esc="data['pay_to']"/>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_on_cheque'],'%Y-%m-%d'))"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <span t-esc="data['amount_in_word']"/>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                Tk. **<span t-esc="formatLang(data['amount'])"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

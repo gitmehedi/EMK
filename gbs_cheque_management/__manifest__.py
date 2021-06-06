@@ -12,7 +12,8 @@
         'report',
     ],
     'data': [
-        'wizard/cheque_print_wizard_view.xml',
+        'report/cheque_print_report_view.xml',
+        'wizard/cheque_print_wizard_view.xml'
     ],
     'installable': True,
     'application': False,
