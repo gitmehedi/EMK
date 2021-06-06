@@ -283,9 +283,9 @@ class PurchaseOrder(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
-            requested_date = datetime.strptime(vals['date_order'], "%Y-%m-%d %H:%M:%S").date()
+            requested_date = datetime.strptime(fields.Date.today(), "%Y-%m-%d").date()
             op_unit_obj = self.env['operating.unit'].search([('id', '=', vals['operating_unit_id'])])
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date,op_unit_obj) or '/'
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation', requested_date, op_unit_obj) or '/'
         if not vals.get('requisition_id'):
             vals['check_po_action_button'] = True
         partner_currency_id = self.env['res.partner'].search([('id', '=', vals['partner_id'])]).property_purchase_currency_id
