@@ -14,7 +14,7 @@
 							<field name="amount_in_word"/>
 							<field name="hide_field" invisible="1"/>
 							<field name="hide_field" invisible="1"/>
-							<field name="narration" />
+							<field name="reference" />
                     </group>
                     <footer>
 						<button name ="button_print_pdf" string="Print Preview" type="object" class="oe_highlight"/>
