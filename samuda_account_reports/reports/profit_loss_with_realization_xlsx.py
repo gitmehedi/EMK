@@ -388,6 +388,14 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         return net_sales_qty_vals
 
     @staticmethod
+    def get_net_sales_amount_vals(data_list):
+        net_sales_amount_vals = {}
+        for item in data_list:
+            net_sales_amount_vals[item['cost_center_id']] = item['amount']
+
+        return net_sales_amount_vals
+
+    @staticmethod
     def calc_income_expense(data_dict):
         income_expense_vals = {}
         for _, value in IE_ORDER.items():
@@ -509,11 +517,13 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
             net_revenue = income_expense_vals.get('net_revenue')
             gross_profit, profit_before_indirect_expense, net_profit = self.calc_profit(income_expense_vals)
             net_sales_qty_vals = {}
+            net_sales_amount_vals = {}
 
             for n in range(len(IE_ORDER)):
                 data_list = value.get(IE_ORDER[n])
                 amount_total = income_expense_vals.get(IE_ORDER[n])
                 net_sales_qty_vals = self.get_net_sales_qty_vals(data_list) if IE_ORDER[n] == 'net_revenue' else net_sales_qty_vals
+                net_sales_amount_vals = self.get_net_sales_amount_vals(data_list) if IE_ORDER[n] == 'net_revenue' else net_sales_amount_vals
 
                 # gross profit row
                 if IE_ORDER[n] == 'indirect_income':
@@ -547,7 +557,17 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                         qty = net_sales_qty_vals.get(item['cost_center_id']) or qty
 
                     net_realization = float(item['amount'] / qty) if qty > 0 else 0.0
-                    on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
+                    # on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
+
+                    # on sale calculation
+                    if IE_ORDER[n] == 'net_revenue':
+                        on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
+                    elif IE_ORDER[n] == 'indirect_income':
+                        on_sale = 0
+                        if obj.cost_center_id:
+                            on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
+                    else:
+                        on_sale = self.calc_on_sale(float(item['amount']), net_sales_amount_vals.get(item['cost_center_id'], 0))
 
                     if index == 0:
                         sheet.write(row, col, '         ' + item['name'], td_cell_left)
