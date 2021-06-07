@@ -18,7 +18,7 @@ class UndeliveredReportXLSX(ReportXlsx):
 
     def _get_query_where_clause(self, obj):
         where_str = """WHERE 
-                            sp.operating_unit_id=%s 
+                            sp.operating_unit_id=%s AND sp.state NOT IN ('done','cancel')
                             AND DATE(sp.date_done + interval '6h') <= DATE('%s')+time '23:59:59'""" % (obj.operating_unit_id.id, obj.date_today)
 
         if obj.product_tmpl_id and not obj.product_id:
@@ -87,6 +87,10 @@ class UndeliveredReportXLSX(ReportXlsx):
 
         return undelivered_dict
 
+    @staticmethod
+    def get_formatted_date(date_str, date_format):
+        return datetime.datetime.strptime(date_str, "%Y-%m-%d").strftime(date_format)
+
     def generate_xlsx_report(self, workbook, data, obj):
         result_data = self._get_undelivered_data(obj)
 
@@ -122,7 +126,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.set_column(2, 2, 16)
         sheet.set_column(3, 3, 16)
         sheet.set_column(4, 4, 17)
-        sheet.set_column(5, 5, 18)
+        sheet.set_column(5, 5, 19)
         sheet.set_column(6, 6, 18)
         sheet.set_column(7, 7, 16)
         sheet.set_column(8, 8, 10)
@@ -143,7 +147,7 @@ class UndeliveredReportXLSX(ReportXlsx):
                 row += 1
 
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, 7, row, 9, "Date: " + obj.date_today, bold)
+        sheet.merge_range(row, 7, row, 9, "Date: " + self.get_formatted_date(obj.date_today, "%d-%m-%Y"), bold)
         row += 1
 
         # TABLE HEADER
@@ -153,7 +157,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.write(row, col + 2, 'SO Date', th_cell_center)
         sheet.write(row, col + 3, 'Ordered Qty (MT)', th_cell_center)
         sheet.write(row, col + 4, 'Delivered Qty (MT)', th_cell_center)
-        sheet.write(row, col + 5, 'Adjustmet/Cancel Qty', th_cell_center)
+        sheet.write(row, col + 5, 'Adjustment/Cancel Qty', th_cell_center)
         sheet.write(row, col + 6, 'Undelivered Qty (MT)', th_cell_center)
         sheet.write(row, col + 7, 'Unit Price', th_cell_center)
         sheet.write(row, col + 8, 'Currency', th_cell_center)

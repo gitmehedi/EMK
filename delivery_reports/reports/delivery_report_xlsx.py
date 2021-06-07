@@ -123,6 +123,10 @@ class DeliveryReportXLSX(ReportXlsx):
 
         return delivery_done_dict
 
+    @staticmethod
+    def get_formatted_date(date_str, date_format):
+        return datetime.datetime.strptime(date_str, "%Y-%m-%d").strftime(date_format)
+
     def generate_xlsx_report(self, workbook, data, obj):
         result_data = self._get_delivery_done(obj)
 
@@ -180,7 +184,7 @@ class DeliveryReportXLSX(ReportXlsx):
                 row += 1
 
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, 8, row, 10, "Date: " + obj.date_from + " To " + obj.date_to, bold)
+        sheet.merge_range(row, 8, row, 10, "Date: " + self.get_formatted_date(obj.date_from, "%d-%m-%Y") + " To " + self.get_formatted_date(obj.date_to, "%d-%m-%Y"), bold)
         row += 1
 
         # TABLE HEADER
