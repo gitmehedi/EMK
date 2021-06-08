@@ -560,12 +560,8 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     # on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
 
                     # on sale calculation
-                    if IE_ORDER[n] == 'net_revenue':
+                    if IE_ORDER[n] in ['net_revenue', 'indirect_income']:
                         on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
-                    elif IE_ORDER[n] == 'indirect_income':
-                        on_sale = 0
-                        if obj.cost_center_id:
-                            on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
                     else:
                         on_sale = self.calc_on_sale(float(item['amount']), net_sales_amount_vals.get(item['cost_center_id'], 0))
 
