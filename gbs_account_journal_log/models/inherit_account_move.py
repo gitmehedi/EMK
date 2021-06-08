@@ -10,6 +10,7 @@ class InheritAccountMove(models.Model):
         res = super(InheritAccountMove, self)._get_default_journal()
         return res
 
+    state = fields.Selection(track_visibility='onchange')
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True,
                        default=fields.Date.context_today, track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True,
