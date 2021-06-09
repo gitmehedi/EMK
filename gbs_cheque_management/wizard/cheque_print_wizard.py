@@ -47,7 +47,7 @@ class ChequePrintWizard(models.TransientModel):
     date_on_cheque = fields.Date("Date On Cheque", required=True, default=_default_date_on_cheque)
     amount = fields.Float("Amount", required=True, default=_default_amount)
     amount_in_word = fields.Char("Amount In Word", required=True)
-    reference = fields.Char("Reference")
+    # reference = fields.Char("Reference")
 
     @api.onchange('amount')
     def _onchange_amount(self):

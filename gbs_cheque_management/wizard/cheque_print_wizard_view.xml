@@ -12,7 +12,7 @@
 						<field name="date_on_cheque"/>
 						<field name="amount" />
 						<field name="amount_in_word"/>
-						<field name="reference" />
+<!--						<field name="reference" />-->
                     </group>
                     <footer>
 						<button name ="button_print_pdf" string="Print Preview" type="object" class="oe_highlight"/>
