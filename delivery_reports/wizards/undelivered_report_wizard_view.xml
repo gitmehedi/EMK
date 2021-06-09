@@ -38,8 +38,13 @@
 				  name="Undelivered Report"
                   action="action_undelivered_report_wizard"
                   parent="stock.menu_warehouse_report"
-				  groups="stock.delivery_user"
-				  sequence="110"/>
+				  groups="stock.delivery_user,stock.group_stock_user"
+				  sequence="7"/>
+
+		<menuitem id="menu_sales_undelivered_report_submenu"
+				  name="Undelivered Report"
+				  parent="delivery_order.delivery_menu"
+				  action="action_undelivered_report_wizard" sequence="7"/>
 
     </data>
 </odoo>

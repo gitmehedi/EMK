@@ -39,8 +39,13 @@
 				  name="Delivery Report"
                   action="action_delivery_report_wizard"
                   parent="stock.menu_warehouse_report"
-				  groups="stock.delivery_user"
-				  sequence="100"/>
+				  groups="stock.delivery_user,stock.group_stock_user"
+				  sequence="7"/>
+
+		<menuitem id="menu_sales_delivery_report_submenu"
+				  name="Delivery Report"
+				  parent="delivery_order.delivery_menu"
+				  action="action_delivery_report_wizard" sequence="6"/>
 
     </data>
 </odoo>

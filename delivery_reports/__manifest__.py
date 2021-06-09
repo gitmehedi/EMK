@@ -5,6 +5,7 @@
     'category': 'Sales',
     'version': '10.1.1.1',
     'depends': [
+        'delivery_order',
         'report_xlsx',
         'report',
         'stock'
