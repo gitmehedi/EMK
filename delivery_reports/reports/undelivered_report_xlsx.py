@@ -40,7 +40,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         where_clause = self._get_query_where_clause(obj)
         sql_str = """SELECT
                         DISTINCT sp.origin AS so_no,
-                        spo.product_id,
+                        sm.product_id,
                         sp.partner_id,
                         rp.name AS partner_name,
                         so.date_order AS so_date,
@@ -53,11 +53,11 @@ class UndeliveredReportXLSX(ReportXlsx):
                         ((sol.product_uom_qty-sol.qty_delivered) * sol.price_unit) AS amount,
                         NULL AS cancel_qty
                     FROM
-                        stock_pack_operation spo
-                        JOIN stock_picking sp ON sp.id=spo.picking_id
+                        stock_move sm
+                        JOIN stock_picking sp ON sp.id=sm.picking_id
                         JOIN stock_picking_type spt ON spt.id=sp.picking_type_id AND spt.code='outgoing'
                         JOIN operating_unit ou ON ou.id=sp.operating_unit_id
-                        JOIN product_product pp ON pp.id=spo.product_id
+                        JOIN product_product pp ON pp.id=sm.product_id
                         JOIN res_partner rp ON rp.id=sp.partner_id
                         JOIN sale_order so ON so.name=sp.origin
                         JOIN sale_order_line sol ON sol.order_id=so.id
