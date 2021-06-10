@@ -24,12 +24,12 @@ class UndeliveredReportXLSX(ReportXlsx):
         if obj.product_tmpl_id and not obj.product_id:
             product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id)]).ids
             if len(product_ids) > 1:
-                where_str += """ AND spo.product_id IN %s""" % (tuple(product_ids),)
+                where_str += """ AND sm.product_id IN %s""" % (tuple(product_ids),)
             else:
-                where_str += """ AND spo.product_id=%s""" % product_ids[0]
+                where_str += """ AND sm.product_id=%s""" % product_ids[0]
 
         if obj.product_id:
-            where_str += """ AND spo.product_id=%s""" % obj.product_id.id
+            where_str += """ AND sm.product_id=%s""" % obj.product_id.id
 
         if obj.partner_id:
             where_str += """ AND sp.partner_id=%s""" % obj.partner_id.id
