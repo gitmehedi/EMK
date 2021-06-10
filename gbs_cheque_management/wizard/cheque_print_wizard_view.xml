@@ -8,6 +8,7 @@
 			    <form>
                     <group>
 						<field name="is_cross_cheque"/>
+
 						<field name="pay_to" />
 						<field name="date_on_cheque"/>
 						<field name="amount" />
@@ -15,8 +16,8 @@
 <!--						<field name="reference" />-->
                     </group>
                     <footer>
-						<button name ="button_print_pdf" string="Print Preview" type="object" class="oe_highlight"/>
-                        <button name ="button_print_on_printer" string="Print Cheque" type="object" class="oe_highlight"/>
+						<button name ="button_print_pdf" string="Print In PDF" type="object" class="oe_highlight"/>
+                        <!--<button name ="button_print_on_printer" string="Print Cheque" type="object" class="oe_highlight"/>-->
                         <button special="cancel" string="Cancel" />
                     </footer>
                 </form>
