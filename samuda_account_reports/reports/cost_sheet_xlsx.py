@@ -675,6 +675,7 @@ class CostSheetXLSX(ReportXlsx):
             report_data_list = self.finalize_comparison_table_data(report_data_list)
 
         # FORMAT
+        bold = workbook.add_format({'bold': True, 'size': 10})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
@@ -711,8 +712,15 @@ class CostSheetXLSX(ReportXlsx):
         sheet.merge_range(3, 0, 3, 2, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
         sheet.merge_range(4, 0, 4, 2, "Cost Sheet of " + obj.cost_center_id.name, name_format)
 
+        sheet.write(6, 0, "Cost Center: " + obj.cost_center_id.name, bold)
+
+        if obj.operating_unit_id:
+            sheet.merge_range(6, 1, 6, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
+        else:
+            sheet.merge_range(6, 1, 6, 2, "Operating Unit: All", bold)
+
         # TABLE HEADER
-        row, col = 6, 0
+        row, col = 8, 0
         for index, value in enumerate(comparison_table):
             if index == 0:
                 sheet.write(row, col, '', th_cell_center)
@@ -784,7 +792,7 @@ class CostSheetXLSX(ReportXlsx):
                 # END CHILD ROWS
 
             # set starting row for comparison
-            row = 10
+            row = 12
             col += 3
 
 
