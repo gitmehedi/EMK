@@ -9,35 +9,88 @@
                 menu="False"
                 name="gbs_cheque_management.report_cheque_print"
                 file="gbs_cheque_management.report_cheque_print"
-                paperformat="report_layout.paperformat_backend_portrait"
+                paperformat="report_layout.custom_cheque_paperformat"
         />
+
+
         <template id="report_cheque_print">
-            <t t-call="report.html_container">
+            <t class="br1" t-call="report.html_container">
                  <div class="page" style="page-break-inside:auto">
-                    <div class="row">
+                     <style type="text/css">
+                            html, body, * {
+                                margin: 0;
+                                padding: 0;
+                                box-sizing: border-box !important;
+                            }
+                         .page {
+                            position: relative;
+<!--                            background-image: url('/gbs_cheque_management/static/src/img/cheque.png');-->
+<!--                            background-repeat: no-repeat;-->
+                            min-height: 260mm;
+                            background-size: 100% auto;
+                         }
+                         .br1 { border: 1px solid #333 !important;}
+                         .ac-pay {
+                            position: absolute;
+                            left:20px;
+                            top:20px;
+                            z-index: 1;
+                            transform: rotate(-15deg);
+                            padding: 2px 0;
+                            border-top: 1px double #222;
+                            border-bottom: 1px double #222;
+                         }
+                         .pay-to {
+                            position: absolute;
+                            left:80px;
+                            top:102px;
+                            z-index: 1;
+                         }
+                         .date-on-cheque {
+                            position: absolute;
+                            left:490px;
+                            top:50px;
+                            z-index: 1;
+                         }
+                         .amount-in-word {
+                            position: absolute;
+                            left: 135px;
+                            top: 135px;
+                            z-index: 1;
+                            width: 300px;
+                            height: auto;
+                            line-height: 24px;
+                            max-width: 300px;
+                            overflow-x: hidden;
+                            word-break: break-word;
+                         }
+                         .amount {
+                            position: absolute;
+                            left: 480px;
+                            top: 152px;
+                            z-index: 1;
+                         }
+                     </style>
+                    <div class="content">
                         <t t-if="data['is_cross_cheque']">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <strong>A/C Payee</strong>
-                                </div>
-                                <div class="col-xs-6 text-right">
-                                </div>
+                            <div class="ac-pay">
+                                <strong>A/C Payee</strong>
                             </div>
                         </t>
-                        <div class="row">
-                            <div class="col-xs-6">
+                        <div class="group">
+                            <div class="pay-to">
                                 <span t-esc="data['pay_to']"/>
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="date-on-cheque">
                                 <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_on_cheque'],'%Y-%m-%d'))"/>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-6">
+                        <div class="group">
+                            <div class="amount-in-word">
                                 <span t-esc="data['amount_in_word']"/>
                             </div>
-                            <div class="col-xs-6 text-right">
-                                Tk. **<span t-esc="formatLang(data['amount'])"/>
+                            <div class="amount">
+                                **<span t-esc="formatLang(data['amount'])"/>
                             </div>
                         </div>
                     </div>
