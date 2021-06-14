@@ -7,6 +7,7 @@
     'sequence': 31,
     'depends': [
         'account',
+        'gbs_application_group'
     ],
     'data': [
         'views/account_journal_view.xml',

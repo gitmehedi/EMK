@@ -281,22 +281,27 @@ class IndentIndent(models.Model):
 
     @api.multi
     def action_view_picking(self):
-        products = self.product_lines.filtered(lambda x: x.qty_available_now > 0)
+        # products = self.product_lines.filtered(lambda x: x.qty_available_now > 0)
+        products = self.product_lines
         if not products:
             raise UserError('Stock not available for any products!!!')
         for product in products:
             # if product.qty_available_now <= 0:
             #     raise UserError('Stock not available!!!')
-            if product.qty_available_now < product.product_uom_qty:
-                product.issue_qty = product.qty_available_now
-            else:
-                product.issue_qty = product.product_uom_qty
+
+            # if product.qty_available_now < product.product_uom_qty:
+            #     product.issue_qty = product.qty_available_now
+            # else:
+            #     product.issue_qty = product.product_uom_qty
+
+            product.issue_qty = product.product_uom_qty
         if self.picking_id:
             pass
         else:
             self.action_picking_create(products)
             self.picking_id.action_confirm()
             self.picking_id.force_assign()
+            self.picking_id.do_unreserve()
 
 
         action = self.env.ref('stock.action_picking_tree')

@@ -159,4 +159,12 @@
     <delete model="account.financial.html.report.line" search="[('id','=',ref('account_reports.account_financial_report_equity0'))]"/>
     <delete model="ir.model.data" search="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_report_equity0')]"/>
 
+    <!-- Menu -->
+    <record id="account.menu_print_journal" model="ir.ui.menu">
+        <field name="groups_id" eval="[(5,)]"/>
+    </record>
+    <record id="account_reports.account_reports_legal_statements_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.group_legal_statement')])]"/>
+    </record>
+
 </odoo>

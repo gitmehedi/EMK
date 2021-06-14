@@ -39,6 +39,9 @@
                 <xpath expr="//form/sheet/group/group/field[@name='routing_id']" position="after">
                     <field name="production_continue" invisible="1"/>
                 </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='date_planned_start']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '=', 'done')]}</attribute>
+                </xpath>
 
                 <!-- Consumed Materials -->
                 <xpath expr="//form/sheet/notebook/page[1]/field[@name='move_raw_ids']" position="attributes">

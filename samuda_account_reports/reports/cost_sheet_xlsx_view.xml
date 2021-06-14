@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_cost_sheet_xlsx" model="ir.actions.report.xml">
+            <field name="name">Cost Sheet</field>
+            <field name="model">cost.sheet.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">samuda_account_reports.cost_sheet_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>

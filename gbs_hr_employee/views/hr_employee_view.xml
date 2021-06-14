@@ -18,6 +18,9 @@
                         <field name="employee_sequence"/>
                         <field name="total_pf"/>
                     </xpath>
+                    <xpath expr="//field[@name='address_id']" position="attributes">
+                        <attribute name="options">{'no_create':1,'no_create_edit':1,'no_open':1,'always_reload':1,'highlight_first_line':1}</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>

@@ -21,6 +21,11 @@
         <field name="category_id" ref="module_category_sale"/>
     </record>
 
+    <record id="group_legal_statement" model="res.groups">
+        <field name="name">Legal Statements Reports</field>
+        <field name="category_id" ref="module_category_sale"/>
+    </record>
+
     <record id="group_cxo" model="res.groups">
         <field name="name">CXO(Director)</field>
         <field name="category_id" ref="module_category_sale"/>
@@ -53,6 +58,11 @@
 
     <record id="group_service_product_manager" model="res.groups">
         <field name="name">Service Manager</field>
+        <field name="category_id" ref="module_category_sale"/>
+    </record>
+
+    <record id="group_journal_entry_post" model="res.groups">
+        <field name="name">Journal Entry Posted</field>
         <field name="category_id" ref="module_category_sale"/>
     </record>
 
