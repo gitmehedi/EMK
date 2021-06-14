@@ -53,13 +53,7 @@ class AnalyticAccountXLSX(ReportXlsx):
         # OPENING BALANCE
         move_lines = dict(map(lambda x: (x, 0.0), accounts.ids))
         filters = " AND m.state='posted'" if used_context['state'] == 'posted' else ""
-        if obj.operating_unit_id:
-            filters += " AND l.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            filters += " AND l.cost_center_id=%s" % obj.cost_center_id.id
-        if used_context['analytic_account_ids']:
-            filters += " AND l.analytic_account_id=%s" % used_context['analytic_account_ids'].id
-
+        filters += " AND l.analytic_account_id=%s" % used_context['analytic_account_ids'].id
         fy_date_start, fy_date_end = self._get_fiscal_year_date_range(used_context['date_from'])
         opening_journal_ids = self.env['account.journal'].search([('type', '=', 'situation')])
         sql_of_opening_balance = """
@@ -140,17 +134,13 @@ class AnalyticAccountXLSX(ReportXlsx):
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         journal_ids = self.env['account.journal'].search([('type', '!=', 'situation')])
-        ou_name = obj.operating_unit_id.name if obj.operating_unit_id else 'All'
-        cc_name = obj.cost_center_id.name if obj.cost_center_id else 'All'
 
         # create context dictionary
-        used_context = {}
+        used_context = dict()
         used_context['journal_ids'] = journal_ids.ids or False
         used_context['state'] = 'all' if obj.all_entries else 'posted'
         used_context['date_from'] = obj.date_from
         used_context['date_to'] = obj.date_to
-        used_context['operating_unit_ids'] = obj.operating_unit_id.ids or False
-        used_context['cost_center_ids'] = obj.cost_center_id or False
         used_context['analytic_account_ids'] = docs or False
         used_context['strict_range'] = True if obj.date_from else False
         used_context['lang'] = self.env.context.get('lang') or 'en_US'
@@ -182,7 +172,7 @@ class AnalyticAccountXLSX(ReportXlsx):
         sheet = workbook.add_worksheet('Analytic Report')
 
         # SET CELL WIDTH
-        sheet.set_column(0, 0, 30)
+        sheet.set_column(0, 0, 40)
         sheet.set_column(1, 1, 20)
         sheet.set_column(2, 2, 15)
         sheet.set_column(3, 3, 15)
@@ -194,8 +184,6 @@ class AnalyticAccountXLSX(ReportXlsx):
         sheet.merge_range(2, 0, 2, 4, docs.company_id.street2, address_format)
         sheet.merge_range(3, 0, 3, 4, docs.company_id.city + '-' + docs.company_id.zip, address_format)
         sheet.merge_range(4, 0, 4, 4, "Analytic Report", name_format)
-        sheet.merge_range(5, 0, 5, 1, "Operating Unit: " + ou_name, bold)
-        sheet.merge_range(5, 3, 5, 4, "Cost Center: " + cc_name, bold)
         sheet.merge_range(6, 0, 6, 1, "Analytic Account: " + docs.name, bold)
         sheet.merge_range(6, 3, 6, 4, "Date: " + obj.date_from + " To " + obj.date_to, bold)
 

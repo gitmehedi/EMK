@@ -12,8 +12,6 @@ class AnalyticAccountWizard(models.TransientModel):
     date_from = fields.Date("Date From", required=True)
     date_to = fields.Date("Date To", required=True)
     all_entries = fields.Boolean(string='Include Unposted Entries', default=False)
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
-    cost_center_id = fields.Many2one('account.cost.center', string='Cost Center')
 
     @api.constrains('date_from', 'date_to')
     def _check_date_range(self):
