@@ -6,17 +6,9 @@
 			<field name="model">account.general.ledger.wizard</field>
 			<field name="arch" type="xml">
 			    <form>
-                    <group>
-                        <group>
-                            <field name="target_move" widget="radio"/>
-                            <field name="display_account" widget="radio"/>
-                        </group>
-                        <group>
-                            <field name="operating_unit_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                            <field name="cost_center_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                            <field name="analytic_account_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                            <field name="department_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                        </group>
+                    <group col="4">
+                        <field name="target_move" widget="radio"/>
+                        <field name="display_account" widget="radio"/>
                     </group>
                     <group col="4">
                         <field name="date_from"/>
