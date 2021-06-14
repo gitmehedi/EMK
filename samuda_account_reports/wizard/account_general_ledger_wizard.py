@@ -17,10 +17,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     display_account = fields.Selection([('all', 'All'), ('movement', 'With movements'),
                                         ('not_zero', 'With balance is not equal to 0'), ],
                                        string='Display Accounts', required=True, default='movement')
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
-    cost_center_id = fields.Many2one('account.cost.center', string='Cost Center')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    department_id = fields.Many2one('hr.department', string='Department')
 
     @api.constrains('date_from', 'date_to')
     def _check_date_range(self):

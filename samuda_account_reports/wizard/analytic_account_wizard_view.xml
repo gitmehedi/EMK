@@ -16,8 +16,6 @@
                         </div>
                     </group>
                     <group col="4">
-                        <field name="cost_center_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                        <field name="operating_unit_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>

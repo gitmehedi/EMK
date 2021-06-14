@@ -95,14 +95,19 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
 
         # Get move lines base on sql query and Calculate the total balance of move lines
         sql = ('''SELECT l.id AS lid, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
-                    m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name\
+                    m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name,\
+                    ou.name AS operating_unit_name, aaa.name AS analytic_name, d.name AS department_name, cc.name AS cost_center_name\
                     FROM account_move_line l\
                     JOIN account_move m ON (l.move_id=m.id)\
                     LEFT JOIN res_currency c ON (l.currency_id=c.id)\
                     LEFT JOIN res_partner p ON (l.partner_id=p.id)\
                     JOIN account_journal j ON (l.journal_id=j.id)\
-                    JOIN account_account acc ON (l.account_id = acc.id) \
-                    WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name ORDER BY l.date, l.move_id''')
+                    JOIN account_account acc ON (l.account_id = acc.id)\
+                    LEFT JOIN operating_unit ou ON ou.id=l.operating_unit_id\
+                    LEFT JOIN account_analytic_account aaa ON aaa.id=l.analytic_account_id\
+                    LEFT JOIN hr_department d ON d.id=l.department_id\
+                    LEFT JOIN account_cost_center cc ON cc.id=l.cost_center_id\
+                    WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name, ou.name, aaa.name, d.name, cc.name ORDER BY l.date, l.move_id''')
         params = (tuple(accounts.ids),) + tuple(where_params)
         cr.execute(sql, params)
 
@@ -147,10 +152,6 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         used_context['date_from'] = obj.date_from or False
         used_context['date_to'] = obj.date_to or False
         used_context['display_account'] = obj.display_account
-        used_context['operating_unit_ids'] = obj.operating_unit_id.ids or False
-        used_context['cost_center_ids'] = obj.cost_center_id or False
-        used_context['department_ids'] = obj.department_id or False
-        used_context['analytic_account_ids'] = obj.analytic_account_id or False
         used_context['strict_range'] = True if obj.date_from else False
         used_context['lang'] = self.env.context.get('lang') or 'en_US'
 
@@ -188,18 +189,22 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         sheet.set_column(4, 4, 18)
         sheet.set_column(5, 5, 22)
         sheet.set_column(6, 6, 15)
-        sheet.set_column(7, 7, 15)
-        sheet.set_column(8, 8, 15)
+        sheet.set_column(7, 7, 20)
+        sheet.set_column(8, 8, 20)
         sheet.set_column(9, 9, 15)
+        sheet.set_column(10, 10, 15)
+        sheet.set_column(11, 11, 15)
+        sheet.set_column(12, 12, 15)
+        sheet.set_column(13, 13, 15)
 
         # SHEET HEADER
-        sheet.merge_range(0, 0, 0, 9, docs.company_id.name, name_format)
-        sheet.merge_range(1, 0, 1, 9, docs.company_id.street, address_format)
-        sheet.merge_range(2, 0, 2, 9, docs.company_id.street2, address_format)
-        sheet.merge_range(3, 0, 3, 9, docs.company_id.city + '-' + docs.company_id.zip, address_format)
-        sheet.merge_range(4, 0, 4, 9, "General Ledger", name_format)
-        sheet.merge_range(5, 0, 5, 2, "Account: " + docs.code + " " + docs.name, bold)
-        sheet.merge_range(5, 7, 5, 9, "Date: " + obj.date_from + " To " + obj.date_to, bold)
+        sheet.merge_range(0, 0, 0, 13, docs.company_id.name, name_format)
+        sheet.merge_range(1, 0, 1, 13, docs.company_id.street, address_format)
+        sheet.merge_range(2, 0, 2, 13, docs.company_id.street2, address_format)
+        sheet.merge_range(3, 0, 3, 13, docs.company_id.city + '-' + docs.company_id.zip, address_format)
+        sheet.merge_range(4, 0, 4, 13, "General Ledger", name_format)
+        sheet.merge_range(5, 0, 5, 4, "Account: " + docs.code + " " + docs.name, bold)
+        sheet.merge_range(5, 11, 5, 13, "Date: " + obj.date_from + " To " + obj.date_to, bold)
 
         # TABLE HEADER
         row, col = 7, 0
@@ -209,21 +214,25 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         sheet.write(row, col + 3, 'Ref', th_cell_center)
         sheet.write(row, col + 4, 'Move', th_cell_center)
         sheet.write(row, col + 5, 'Entry Label', th_cell_center)
-        sheet.write(row, col + 6, 'Debit', th_cell_center)
-        sheet.write(row, col + 7, 'Credit', th_cell_center)
-        sheet.write(row, col + 8, 'Balance', th_cell_center)
-        sheet.write(row, col + 9, 'Currency', th_cell_center)
+        sheet.write(row, col + 6, 'Operating Unit', th_cell_center)
+        sheet.write(row, col + 7, 'Analytic Account', th_cell_center)
+        sheet.write(row, col + 8, 'Department', th_cell_center)
+        sheet.write(row, col + 9, 'Cost Center', th_cell_center)
+        sheet.write(row, col + 10, 'Debit', th_cell_center)
+        sheet.write(row, col + 11, 'Credit', th_cell_center)
+        sheet.write(row, col + 12, 'Balance', th_cell_center)
+        sheet.write(row, col + 13, 'Currency', th_cell_center)
 
         # TABLE BODY
         row += 1
         for account in accounts_result:
             for rec in account['move_lines']:
                 if rec['lid'] == 0:
-                    sheet.merge_range(row, col, row, col + 5, rec['lname'], td_cell_center_bold)
-                    sheet.write(row, col + 6, rec['debit'], total_format)
-                    sheet.write(row, col + 7, rec['credit'], total_format)
-                    sheet.write(row, col + 8, rec['balance'], total_format)
-                    sheet.write(row, col + 9, rec['amount_currency'], total_format)
+                    sheet.merge_range(row, col, row, col + 9, rec['lname'], td_cell_center_bold)
+                    sheet.write(row, col + 10, rec['debit'], total_format)
+                    sheet.write(row, col + 11, rec['credit'], total_format)
+                    sheet.write(row, col + 12, rec['balance'], total_format)
+                    sheet.write(row, col + 13, rec['amount_currency'], total_format)
                     row += 1
                 else:
                     if rec['amount_currency'] > 0:
@@ -238,17 +247,21 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
                     sheet.write(row, col + 3, rec['lref'], td_cell_left)
                     sheet.write(row, col + 4, rec['move_name'], td_cell_center)
                     sheet.write(row, col + 5, rec['lname'], td_cell_left)
-                    sheet.write(row, col + 6, rec['debit'], no_format)
-                    sheet.write(row, col + 7, rec['credit'], no_format)
-                    sheet.write(row, col + 8, rec['balance'], no_format)
-                    sheet.write(row, col + 9, amount_currency_str, td_cell_right)
+                    sheet.write(row, col + 6, rec['operating_unit_name'], td_cell_center)
+                    sheet.write(row, col + 7, rec['analytic_name'], td_cell_left)
+                    sheet.write(row, col + 8, rec['department_name'], td_cell_left)
+                    sheet.write(row, col + 9, rec['cost_center_name'], td_cell_center)
+                    sheet.write(row, col + 10, rec['debit'], no_format)
+                    sheet.write(row, col + 11, rec['credit'], no_format)
+                    sheet.write(row, col + 12, rec['balance'], no_format)
+                    sheet.write(row, col + 13, amount_currency_str, td_cell_right)
                     row += 1
 
-            sheet.merge_range(row, col, row, col + 5, 'Closing Balance', td_cell_center_bold)
-            sheet.write(row, col + 6, account['debit'], total_format)
-            sheet.write(row, col + 7, account['credit'], total_format)
-            sheet.write(row, col + 8, account['balance'], total_format)
-            sheet.write(row, col + 9, '', td_cell_center)
+            sheet.merge_range(row, col, row, col + 9, 'Closing Balance', td_cell_center_bold)
+            sheet.write(row, col + 10, account['debit'], total_format)
+            sheet.write(row, col + 11, account['credit'], total_format)
+            sheet.write(row, col + 12, account['balance'], total_format)
+            sheet.write(row, col + 13, '', td_cell_center)
             row += 1
 
 
