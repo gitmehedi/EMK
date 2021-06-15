@@ -5,10 +5,11 @@ from odoo.exceptions import ValidationError,UserError
 class PurchaseReportWizard(models.TransientModel):
     _name = 'purchase.report.wizard'
 
-    date_from = fields.Date("Date From",required=True)
-    date_to = fields.Date("Date To",required=True)
-    partner_id = fields.Many2one('res.partner', string='Supplier',domain=[('supplier', '=', True),('parent_id', '=', False)])
-    operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True,
+    date_from = fields.Date("Date From", required=True)
+    date_to = fields.Date("Date To", required=True)
+    partner_id = fields.Many2one('res.partner', string='Supplier', domain=[('supplier', '=', True),
+                                                                           ('parent_id', '=', False)])
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
     @api.constrains('date_from', 'date_to')
@@ -33,5 +34,4 @@ class PurchaseReportWizard(models.TransientModel):
         data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
 
-        return self.env['report'].get_action(self, 'stock_purchase_custom_report.purchase_report_template',
-                                             data=data)
+        return self.env['report'].get_action(self, 'stock_purchase_custom_report.purchase_report_template', data=data)
