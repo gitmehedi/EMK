@@ -62,14 +62,14 @@
                             font-weight: bold;
                             position: absolute;
                             left: 630px;
-                            top: 75px;
+                            top: 73px;
                             z-index: 1;
                          }
                          .amount-in-word {
                             font-weight: bold;
                             position: absolute;
                             left: 180px;
-                            top: 175px;
+                            top: 173px;
                             z-index: 1;
                             width: 300px;
                             height: auto;
@@ -83,7 +83,7 @@
                             font-weight: bold;
                             position: absolute;
                             left: 615px;
-                            top: 188px;
+                            top: 186px;
                             z-index: 1;
                          }
                      </style>
