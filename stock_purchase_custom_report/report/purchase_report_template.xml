@@ -58,77 +58,74 @@
                             </thead>
                             <tbody>
                                 <t t-foreach="lines" t-as="data">
-                                    <t t-if="data_value['product']">
-                                        <tr style="page-break-inside: avoid" class="text-left">
-                                            <td colspan="9" style="padding: 0px;">
-                                                <strong>
-                                                    <t t-esc="data"/>
-                                                </strong>
+                                    <tr style="page-break-inside: avoid" class="text-left">
+                                        <td colspan="9" style="padding: 0px;">
+                                            <strong>
+                                                <t t-esc="data_value['partner_name']"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="data_value['product']" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <!--<t t-esc="line['m_date']" t-options='{"widget": "date"}'/>-->
+                                                <t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['m_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['mrr']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['code']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['qty_in_tk']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['uom_name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['rate_in']"/>
+                                            </td>
+                                            <td></td>
+                                            <td class="text-right">
+                                                <t t-esc="line['val_in_tk']"/>
                                             </td>
                                         </tr>
-                                        <t t-foreach="data_value['product']" t-as="line">
-                                            <tr>
-                                                <td>
-                                                    <!--<t t-esc="line['m_date']" t-options='{"widget": "date"}'/>-->
-                                                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['m_date'],'%Y-%m-%d %H:%M:%S'))"/>
-                                                </td>
-                                                <td>
-                                                    <t t-esc="line['mrr']"/>
-                                                </td>
-                                                <td>
-                                                    <t t-esc="line['code']"/>
-                                                </td>
-                                                <td>
-                                                    <t t-esc="line['name']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <t t-esc="line['qty_in_tk']"/>
-                                                </td>
-                                                <td>
-                                                    <t t-esc="line['uom_name']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <t t-esc="line['rate_in']"/>
-                                                </td>
-                                                <td></td>
-                                                <td class="text-right">
-                                                    <t t-esc="line['val_in_tk']"/>
-                                                </td>
-
-                                            </tr>
-                                        </t>
-                                        <t t-if="data_value['product']">
-                                            <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
-                                                <td colspan="3" class="text-left">
-                                                    <t t-esc="data_value['sub-total']['title']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <t t-esc="data_value['sub-total']['total_in_qty']"/>
-                                                </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-right">
-                                                    <t t-esc="data_value['sub-total']['total_in_val']"/>
-                                                </td>
-                                            </tr>
-                                        </t>
                                     </t>
+
+                                    <!-- SUB TOTAL -->
+                                    <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
+                                        <td colspan="4" class="text-left">
+                                            Sub Total
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="formatLang(sum(p['qty_in_tk'] for p in data_value['product']))"/>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <t t-esc="formatLang(sum(p['val_in_tk'] for p in data_value['product']))"/>
+                                        </td>
+                                    </tr>
                                 </t>
+
+                                <!-- GRAND TOTAL -->
                                 <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
-                                    <td colspan="3" class="text-left">
+                                    <td colspan="4" class="text-left">
                                         <t t-esc="total['title']"/>
                                     </td>
                                     <td class="text-right">
-                                        <t t-esc="total['total_in_qty']"/>
+                                        <t t-esc="formatLang(total['total_in_qty'])"/>
                                     </td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
                                     <td class="text-right">
-                                        <t t-esc="total['total_in_val']"/>
+                                        <t t-esc="formatLang(total['total_in_val'])"/>
                                     </td>
                                 </tr>
                             </tbody>

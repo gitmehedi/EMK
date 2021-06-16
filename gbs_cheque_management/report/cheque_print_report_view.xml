@@ -9,35 +9,104 @@
                 menu="False"
                 name="gbs_cheque_management.report_cheque_print"
                 file="gbs_cheque_management.report_cheque_print"
-                paperformat="report_layout.paperformat_backend_portrait"
+                paperformat="report_layout.custom_cheque_paperformat"
         />
+
+
         <template id="report_cheque_print">
-            <t t-call="report.html_container">
+            <t class="br1" t-call="report.html_container">
                  <div class="page" style="page-break-inside:auto">
-                    <div class="row">
+                     <style type="text/css">
+                         @page {
+                            size: 273mm 204mm landscape !important;
+                            background: #ccc;
+                         }
+
+                         @media print {
+                            @page {
+                                size: 273mm 204mm landscape !important;
+                            }
+                         }
+
+                         html, body, * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box !important;
+                         }
+                         .page {
+                            position: relative;
+                            min-height: 204mm;
+                            background-size: 100% auto;
+                         }
+                         .br1 { border: 1px solid #333 !important;}
+                         .ac-pay {
+                            position: absolute;
+                            left:40px;
+                            top:40px;
+                            z-index: 1;
+                            transform: rotate(-35deg);
+                            -webkit-transform: rotate(-35deg);
+                            padding: 2px 0;
+                            border-top: 1px double #222;
+                            border-bottom: 1px double #222;
+                         }
+                         .pay-to {
+                            font-weight: bold;
+                            position: absolute;
+                            left:110px;
+                            top:127px;
+                            z-index: 1;
+                         }
+                         .date-on-cheque {
+                            font-size: 1.25em;
+                            font-weight: bold;
+                            position: absolute;
+                            left: 630px;
+                            top: 73px;
+                            z-index: 1;
+                         }
+                         .amount-in-word {
+                            font-weight: bold;
+                            position: absolute;
+                            left: 180px;
+                            top: 173px;
+                            z-index: 1;
+                            width: 300px;
+                            height: auto;
+                            line-height: 1.75em;
+                            max-width: 320px;
+                            overflow-x: hidden;
+                            word-break: break-word;
+                         }
+                         .amount {
+                            font-size: 1.25em;
+                            font-weight: bold;
+                            position: absolute;
+                            left: 615px;
+                            top: 186px;
+                            z-index: 1;
+                         }
+                     </style>
+                    <div class="content">
                         <t t-if="data['is_cross_cheque']">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <strong>A/C Payee</strong>
-                                </div>
-                                <div class="col-xs-6 text-right">
-                                </div>
+                            <div class="ac-pay">
+                                <strong>A/C Payee</strong>
                             </div>
                         </t>
-                        <div class="row">
-                            <div class="col-xs-6">
+                        <div class="group">
+                            <div class="pay-to">
                                 <span t-esc="data['pay_to']"/>
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="date-on-cheque">
                                 <span t-esc="time.strftime('%d-%b-%Y',time.strptime(data['date_on_cheque'],'%Y-%m-%d'))"/>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-6">
+                        <div class="group">
+                            <div class="amount-in-word">
                                 <span t-esc="data['amount_in_word']"/>
                             </div>
-                            <div class="col-xs-6 text-right">
-                                Tk. **<span t-esc="formatLang(data['amount'])"/>
+                            <div class="amount">
+                                **<span t-esc="formatLang(data['amount'])"/>
                             </div>
                         </div>
                     </div>

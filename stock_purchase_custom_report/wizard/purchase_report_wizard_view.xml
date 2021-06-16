@@ -9,14 +9,14 @@
                 <form string="Report Options">
                     <group>
                         <group>
+                            <field name="partner_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                             <field name="date_from"/>
-                            <field name="date_to"/>
                         </group>
                         <group>
                             <field name="operating_unit_id"
                                    options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
-                            <field name="partner_id"
-                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="date_to"/>
                         </group>
                     </group>
                     <footer>
