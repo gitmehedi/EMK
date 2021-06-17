@@ -17,57 +17,73 @@
             <t class="br1" t-call="report.html_container">
                  <div class="page" style="page-break-inside:auto">
                      <style type="text/css">
-                            html, body, * {
-                                margin: 0;
-                                padding: 0;
-                                box-sizing: border-box !important;
+                         @page {
+                            size: 273mm 204mm landscape !important;
+                            background: #ccc;
+                         }
+
+                         @media print {
+                            @page {
+                                size: 273mm 204mm landscape !important;
                             }
+                         }
+
+                         html, body, * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box !important;
+                         }
                          .page {
                             position: relative;
-<!--                            background-image: url('/gbs_cheque_management/static/src/img/cheque.png');-->
-<!--                            background-repeat: no-repeat;-->
-                            min-height: 260mm;
+                            min-height: 204mm;
                             background-size: 100% auto;
                          }
                          .br1 { border: 1px solid #333 !important;}
                          .ac-pay {
                             position: absolute;
-                            left:20px;
-                            top:20px;
+                            left:40px;
+                            top:40px;
                             z-index: 1;
-                            transform: rotate(-15deg);
+                            transform: rotate(-35deg);
+                            -webkit-transform: rotate(-35deg);
                             padding: 2px 0;
                             border-top: 1px double #222;
                             border-bottom: 1px double #222;
                          }
                          .pay-to {
+                            font-weight: bold;
                             position: absolute;
-                            left:80px;
-                            top:102px;
+                            left:110px;
+                            top:127px;
                             z-index: 1;
                          }
                          .date-on-cheque {
+                            font-size: 1.25em;
+                            font-weight: bold;
                             position: absolute;
-                            left:490px;
-                            top:50px;
+                            left: 630px;
+                            top: 73px;
                             z-index: 1;
                          }
                          .amount-in-word {
+                            font-weight: bold;
                             position: absolute;
-                            left: 135px;
-                            top: 135px;
+                            left: 180px;
+                            top: 173px;
                             z-index: 1;
                             width: 300px;
                             height: auto;
-                            line-height: 24px;
-                            max-width: 300px;
+                            line-height: 1.75em;
+                            max-width: 320px;
                             overflow-x: hidden;
                             word-break: break-word;
                          }
                          .amount {
+                            font-size: 1.25em;
+                            font-weight: bold;
                             position: absolute;
-                            left: 480px;
-                            top: 152px;
+                            left: 615px;
+                            top: 186px;
                             z-index: 1;
                          }
                      </style>
