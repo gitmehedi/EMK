@@ -49,24 +49,53 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         cr = self.env.cr
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        account_ids = self.env['account.account'].search([('user_type_id', '=', INCOME_USER_TYPE_ID)]).ids
-        if account_ids:
-            param = (tuple(account_ids),)
-            where_clause += " AND aml.account_id IN %s" % param
 
-        _net_revenue_sql_str = """SELECT
-                                    aml.cost_center_id,
-                                    acc.name AS name,
-                                    COALESCE(SUM(aml.quantity), 0) AS quantity,
-                                    -(SUM(aml.debit)-SUM(aml.credit)) AS amount
-                                FROM
-                                    account_move_line aml
-                                    JOIN account_move mv ON mv.id=aml.move_id
-                                    JOIN account_cost_center acc ON acc.id=aml.cost_center_id
-                                """ + where_clause + """ GROUP BY aml.cost_center_id,acc.name 
-                                ORDER BY aml.cost_center_id"""
+        sql_str = """SELECT
+                        cost_center_id,
+                        name,
+                        SUM(quantity) AS quantity,
+                        SUM(amount) AS amount
+                    FROM
+                        ((SELECT
+                            aml.cost_center_id,
+                            acc.name,
+                            0 AS product_id,
+                            0 AS quantity,
+                            -(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        FROM
+                            account_move_line aml
+                            JOIN account_move mv ON mv.id=aml.move_id
+                            JOIN account_account_account_tag aaat on aaat.account_account_id=aml.account_id
+                            JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                        """ + where_clause + """
+                            AND aat.name IN ('Refund','Vat')
+                        GROUP BY aml.cost_center_id,acc.name 
+                        ORDER BY aml.cost_center_id)
+                        UNION
+                        (SELECT
+                            aml.cost_center_id,
+                            acc.name,
+                            l.product_id,
+                            CASE 
+                                WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(SUM(aml.quantity), 0)
+                                ELSE (p.ratio_in_percentage * COALESCE(SUM(aml.quantity), 0) / 100) 
+                            END as quantity,
+                            -(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        FROM
+                            account_move_line aml
+                            JOIN account_move mv ON mv.id=aml.move_id
+                            JOIN account_invoice i ON i.move_id=mv.id
+                            JOIN account_invoice_line l ON l.invoice_id=i.id
+                            JOIN product_product p ON p.id=l.product_id
+                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                        """ + where_clause + """
+                        GROUP BY aml.cost_center_id,acc.name,l.product_id,p.ratio_in_percentage 
+                        ORDER BY aml.cost_center_id)) AS tbl
+                    GROUP BY cost_center_id,name
+        """
 
-        cr.execute(_net_revenue_sql_str)
+        cr.execute(sql_str)
         for row in cr.dictfetchall():
             data_list.append(row)
 
