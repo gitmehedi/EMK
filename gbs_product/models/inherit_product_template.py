@@ -20,3 +20,4 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     standard_price = fields.Float(track_visibility='onchange')
+    ratio_in_percentage = fields.Float(string='Ratio In Percentage', default=0.0, track_visibility='onchange')
