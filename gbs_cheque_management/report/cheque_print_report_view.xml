@@ -51,11 +51,13 @@
                             border-bottom: 1px double #222;
                          }
                          .pay-to {
+                            font-size: 1.125em;
                             font-weight: bold;
                             position: absolute;
                             left:110px;
-                            top:127px;
+                            top:129px;
                             z-index: 1;
+                            white-space: nowrap;
                          }
                          .date-on-cheque {
                             font-size: 1.25em;
@@ -66,6 +68,7 @@
                             z-index: 1;
                          }
                          .amount-in-word {
+                            font-size: 1.125em;
                             font-weight: bold;
                             position: absolute;
                             left: 180px;
