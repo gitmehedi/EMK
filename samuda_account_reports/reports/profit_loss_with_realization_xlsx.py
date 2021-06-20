@@ -3,53 +3,58 @@ from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 from odoo.tools.misc import formatLang
 from odoo.tools import float_compare, float_round
 
-IE_ORDER = {
+
+GRP_ORDER = {
     0: 'net_revenue',
     1: 'cogs',
     2: 'depreciation',
     3: 'amortization',
     4: 'factory_overhead',
-    5: 'indirect_income',
-    6: 'administrative',
-    7: 'finance',
-    8: 'marketing',
-    9: 'distribution'
+    5: 'gross_profit',
+    6: 'indirect_income',
+    7: 'profit_before_indirect_expense',
+    8: 'indirect_expense',
+    9: 'administrative',
+    10: 'finance',
+    11: 'marketing',
+    12: 'distribution',
+    13: 'net_profit'
 }
-IE_NAME = {
+GRP_NAME = {
     'net_revenue': 'Net Revenue',
     'cogs': 'Cost Of Goods Sold',
     'depreciation': 'Depreciation',
     'amortization': 'Amortization',
     'factory_overhead': 'Factory Overhead',
+    'gross_profit': 'Gross Profit',
     'indirect_income': 'Indirect Incomes',
+    'profit_before_indirect_expense': 'Profit Before Indirect Expenses',
+    'indirect_expense': 'Indirect Expenses',
     'administrative': 'Administrative Expenses',
     'finance': 'Finance Expenses',
     'marketing': 'Marketing Expenses',
-    'distribution': 'Distribution Expenses'
+    'distribution': 'Distribution Expenses',
+    'net_profit': 'Net Profit'
 }
-IE_ACCOUNT = {
-    'depreciation': 5601,
-    'amortization': 5602,
-    'factory_overhead': 5527,
-    'indirect_income': 4316,
-    'administrative': 5815,
-    'finance': 5890,
-    'marketing': 5929,
-    'distribution': 5100
+GRP_ACCOUNT_TAG = {
+    'depreciation': 'NR-Depreciation',
+    'amortization': 'NR-Amortization',
+    'factory_overhead': 'NR-Factory Exp',
+    'indirect_income': 'NR-Indirect Inc',
+    'administrative': 'NR-Admin Exp',
+    'finance': 'NR-Finance Exp',
+    'marketing': 'NR-Marketing Exp',
+    'distribution': 'NR-Dist Exp'
 }
-EXPENSE = ['cogs', 'depreciation', 'amortization', 'factory_overhead']
-INDIRECT_EXPENSE = ['administrative', 'finance', 'marketing', 'distribution']
-INCOME_USER_TYPE_ID = 14
+GRP_TOTAL_NAMES = ['gross_profit', 'profit_before_indirect_expense', 'indirect_expense', 'net_profit']
 
 
 class ProfitLossWithRealizationXLSX(ReportXlsx):
 
     def _get_net_revenue(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-
         sql_str = """SELECT
                         cost_center_id,
                         name,
@@ -95,15 +100,14 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     GROUP BY cost_center_id,name
         """
 
-        cr.execute(sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
 
-        return data_list
+        return item_list
 
     def _get_cogs(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
         if obj.cost_center_id:
@@ -113,11 +117,11 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
             where_clause += """ AND aml.account_id IN ((SELECT raw_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id IS NOT NULL) UNION
                                                         (SELECT packing_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id IS NOT NULL))"""
 
-        _sql_str = """SELECT
+        sql_str = """SELECT
                         aml.cost_center_id,
                         acc.name AS name,
                         COALESCE(SUM(aml.quantity), 0) AS quantity,
-                        ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
                         JOIN account_move mv ON mv.id=aml.move_id
@@ -125,28 +129,31 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     """ + where_clause + """
                     GROUP BY aml.cost_center_id,acc.name
                     ORDER BY aml.cost_center_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
+
+        return item_list
 
     def _get_depreciation(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-        JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-        UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['depreciation'], self.env.user.company_id.id, IE_ACCOUNT['depreciation'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['depreciation'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
+        sql_str = """SELECT
                             aml.cost_center_id,
                             acc.name AS name,
                             COALESCE(SUM(aml.quantity), 0) AS quantity,
-                            ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                            (SUM(aml.debit)-SUM(aml.credit)) AS amount
                         FROM
                             account_move_line aml
                             JOIN account_move mv ON mv.id=aml.move_id
@@ -154,87 +161,95 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                         """ + where_clause + """
                         GROUP BY aml.cost_center_id,acc.name
                         ORDER BY aml.cost_center_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
+
+        return item_list
 
     def _get_amortization(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-                JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-                UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['amortization'], self.env.user.company_id.id, IE_ACCOUNT['amortization'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['amortization'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
-                            aml.cost_center_id,
-                            acc.name AS name,
-                            COALESCE(SUM(aml.quantity), 0) AS quantity,
-                            ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
-                        FROM
-                            account_move_line aml
-                            JOIN account_move mv ON mv.id=aml.move_id
-                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
-                        """ + where_clause + """
-                        GROUP BY aml.cost_center_id,acc.name
-                        ORDER BY aml.cost_center_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
+        sql_str = """SELECT
+                        aml.cost_center_id,
+                        acc.name AS name,
+                        COALESCE(SUM(aml.quantity), 0) AS quantity,
+                        (SUM(aml.debit)-SUM(aml.credit)) AS amount
+                    FROM
+                        account_move_line aml
+                        JOIN account_move mv ON mv.id=aml.move_id
+                        JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                    """ + where_clause + """
+                    GROUP BY aml.cost_center_id,acc.name
+                    ORDER BY aml.cost_center_id"""
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
+
+        return item_list
 
     def _get_factory_overhead(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-                        JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-                        UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['factory_overhead'], self.env.user.company_id.id, IE_ACCOUNT['factory_overhead'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['factory_overhead'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
-                            aml.cost_center_id,
-                            acc.name AS name,
-                            COALESCE(SUM(aml.quantity), 0) AS quantity,
-                            ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
-                        FROM
-                            account_move_line aml
-                            JOIN account_move mv ON mv.id=aml.move_id
-                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
-                        """ + where_clause + """
-                        GROUP BY aml.cost_center_id,acc.name
-                        ORDER BY aml.cost_center_id"""
+        sql_str = """SELECT
+                        aml.cost_center_id,
+                        acc.name AS name,
+                        COALESCE(SUM(aml.quantity), 0) AS quantity,
+                        (SUM(aml.debit)-SUM(aml.credit)) AS amount
+                    FROM
+                        account_move_line aml
+                        JOIN account_move mv ON mv.id=aml.move_id
+                        JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                    """ + where_clause + """
+                    GROUP BY aml.cost_center_id,acc.name
+                    ORDER BY aml.cost_center_id"""
 
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
 
-        return data_list
+        return item_list
 
     def _get_indirect_income(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-                                JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-                                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-                                UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['indirect_income'], self.env.user.company_id.id, IE_ACCOUNT['indirect_income'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['indirect_income'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
+        sql_str = """SELECT
                         aml.account_id,
                         aa.name,
                         0 AS quantity,
-                        ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        -(SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
                         JOIN account_move mv ON mv.id=aml.move_id
@@ -243,28 +258,31 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     """ + where_clause + """ 
                     GROUP BY aml.account_id,aa.name 
                     ORDER BY aml.account_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
+
+        return item_list
 
     def _get_administrative_expense(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-                                        JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-                                        UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['administrative'], self.env.user.company_id.id, IE_ACCOUNT['administrative'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['administrative'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
+        sql_str = """SELECT
                         aml.cost_center_id,
                         acc.name AS name,
                         0 AS quantity,
-                        ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
                         JOIN account_move mv ON mv.id=aml.move_id
@@ -273,28 +291,31 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     """ + where_clause + """ 
                     GROUP BY aml.cost_center_id,acc.name 
                     ORDER BY aml.cost_center_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
+
+        return item_list
 
     def _get_finance_expense(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-                                        JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-                                        UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['finance'], self.env.user.company_id.id, IE_ACCOUNT['finance'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['finance'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
+        sql_str = """SELECT
                         aml.cost_center_id,
                         acc.name AS name,
                         0 AS quantity,
-                        ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
                         JOIN account_move mv ON mv.id=aml.move_id
@@ -303,28 +324,31 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     """ + where_clause + """ 
                     GROUP BY aml.cost_center_id,acc.name 
                     ORDER BY aml.cost_center_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
+
+        return item_list
 
     def _get_marketing_expense(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-                                        JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-                                        UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['marketing'], self.env.user.company_id.id, IE_ACCOUNT['marketing'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['marketing'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
+        sql_str = """SELECT
                         aml.cost_center_id,
                         acc.name AS name,
                         0 AS quantity,
-                        ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
                         JOIN account_move mv ON mv.id=aml.move_id
@@ -333,28 +357,31 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     """ + where_clause + """ 
                     GROUP BY aml.cost_center_id,acc.name 
                     ORDER BY aml.cost_center_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
+
+        return item_list
 
     def _get_distribution_expense(self, obj, date_from, date_to):
-        data_list = []
-        cr = self.env.cr
+        item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        where_clause += """ AND aml.account_id IN ((SELECT ac.id FROM account_account ac 
-                                        JOIN account_account asp ON asp.id=ac.parent_id JOIN account_account ap ON ap.id=asp.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s)
-                                        UNION (SELECT ac.id FROM account_account ac JOIN account_account ap ON ap.id=ac.parent_id 
-                                        WHERE ap.id=%s AND ac.internal_type!='view' AND ac.company_id=%s))""" % (IE_ACCOUNT['distribution'], self.env.user.company_id.id, IE_ACCOUNT['distribution'], self.env.user.company_id.id)
+        where_clause += """ AND aml.account_id IN (SELECT 
+                                                        aa.id 
+                                                    FROM 
+                                                        account_account aa
+                                                        JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
+                                                        JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
+                                                    WHERE
+                                                        aat.name='%s' AND aa.company_id=%s)""" % (GRP_ACCOUNT_TAG['distribution'], self.env.user.company_id.id)
 
-        _sql_str = """SELECT
+        sql_str = """SELECT
                         aml.cost_center_id,
                         acc.name AS name,
                         0 AS quantity,
-                        ABS(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
                         JOIN account_move mv ON mv.id=aml.move_id
@@ -363,38 +390,43 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     """ + where_clause + """ 
                     GROUP BY aml.cost_center_id,acc.name 
                     ORDER BY aml.cost_center_id"""
-        cr.execute(_sql_str)
-        for row in cr.dictfetchall():
-            data_list.append(row)
 
-        return data_list
+        self.env.cr.execute(sql_str)
+        for row in self.env.cr.dictfetchall():
+            item_list.append(row)
 
-    def finalize_comparison_table_data(self, data_list):
-        for n in range(len(IE_ORDER)):
+        return item_list
+
+    def finalize_comparison_table_data(self, item_list):
+        for k in range(len(GRP_ORDER)):
+
+            if GRP_ORDER[k] in GRP_TOTAL_NAMES:
+                continue
+
             attr_name = 'cost_center_id'
             model_name = 'account.cost.center'
-            if IE_ORDER[n] == 'indirect_income':
+            if GRP_ORDER[k] == 'indirect_income':
                 attr_name = 'account_id'
                 model_name = 'account.account'
 
             unique_ids = set()
-            for item in data_list:
-                id_list = map(lambda x: x[attr_name], item[IE_ORDER[n]])
+            for item in item_list:
+                id_list = map(lambda x: x[attr_name], item[GRP_ORDER[k]])
                 unique_ids.update(set(id_list))
 
-            for item in data_list:
+            for item in item_list:
                 temp_list = []
-                id_list = map(lambda x: x[attr_name], item[IE_ORDER[n]])
+                id_list = map(lambda x: x[attr_name], item[GRP_ORDER[k]])
                 diff_ids = unique_ids.difference(set(id_list))
                 for d_id in list(diff_ids):
                     name = self.env[model_name].search([('id', '=', d_id)])[0].name
                     temp_list.append({attr_name: d_id, 'name': name, 'quantity': 0, 'amount': 0})
 
                 if temp_list:
-                    temp_list.extend(item[IE_ORDER[n]])
-                    item[IE_ORDER[n]] = sorted(temp_list, key=lambda l: (l[attr_name], l['name']))
+                    temp_list.extend(item[GRP_ORDER[k]])
+                    item[GRP_ORDER[k]] = sorted(temp_list, key=lambda l: (l[attr_name], l['name']))
 
-        return data_list
+        return item_list
 
     def _get_query_where_clause(self, obj, date_from, date_to):
         where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
@@ -409,56 +441,53 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         return where_clause
 
     @staticmethod
-    def get_net_sales_qty_vals(data_list):
-        net_sales_qty_vals = {}
-        for item in data_list:
-            net_sales_qty_vals[item['cost_center_id']] = item['quantity']
+    def prepare_sales_quantity_vals(item_list):
+        vals = {}
+        for item in item_list:
+            vals[item['cost_center_id']] = item['quantity']
 
-        return net_sales_qty_vals
-
-    @staticmethod
-    def get_net_sales_amount_vals(data_list):
-        net_sales_amount_vals = {}
-        for item in data_list:
-            net_sales_amount_vals[item['cost_center_id']] = item['amount']
-
-        return net_sales_amount_vals
+        return vals
 
     @staticmethod
-    def calc_income_expense(data_dict):
-        income_expense_vals = {}
-        for _, value in IE_ORDER.items():
-            d_list = data_dict.get(value)
-            income_expense_vals[value] = float(sum(item['amount'] for item in d_list)) or 0.0
+    def prepare_sales_amount_vals(item_list):
+        vals = {}
+        for item in item_list:
+            vals[item['cost_center_id']] = item['amount']
 
-        return income_expense_vals
-
-    @staticmethod
-    def calc_profit(income_expense_vals):
-        expense = indirect_expense = 0.0
-        net_revenue = income_expense_vals.get('net_revenue')
-        indirect_income = income_expense_vals.get('indirect_income')
-        for key, value in income_expense_vals.items():
-            if key in EXPENSE:
-                expense += value
-            elif key in INDIRECT_EXPENSE:
-                indirect_expense += value
-            else:
-                pass
-
-        gross_profit = net_revenue - expense
-        profit_before_indirect_expense = gross_profit + indirect_income
-        net_profit = profit_before_indirect_expense - indirect_expense
-
-        return gross_profit, profit_before_indirect_expense, net_profit
+        return vals
 
     @staticmethod
     def calc_on_sale(amount, net_revenue):
         on_sale = 0.0
         if net_revenue > 0:
-            on_sale = float_round((amount * 100) / net_revenue, precision_digits=3)
+            on_sale = (amount * 100) / net_revenue
 
         return on_sale
+
+    @staticmethod
+    def calc_group_total(item_dict):
+        net_revenue = indirect_income = expense = indirect_expense = 0.0
+
+        for key, item_list in item_dict.items():
+            if key == 'net_revenue':
+                net_revenue += float(sum(item['amount'] for item in item_list)) or 0.0
+            elif key in ['cogs', 'depreciation', 'amortization', 'factory_overhead']:
+                expense += float(sum(item['amount'] for item in item_list)) or 0.0
+            elif key in ['administrative', 'finance', 'marketing', 'distribution']:
+                indirect_expense += float(sum(item['amount'] for item in item_list)) or 0.0
+            else:
+                indirect_income += float(sum(item['amount'] for item in item_list)) or 0.0
+
+        gross_profit = net_revenue - expense
+        profit_before_indirect_expense = gross_profit + indirect_income
+        net_profit = profit_before_indirect_expense - indirect_expense
+
+        return {
+            'gross_profit': gross_profit,
+            'profit_before_indirect_expense': profit_before_indirect_expense,
+            'indirect_expense': indirect_expense,
+            'net_profit': net_profit
+        }
 
     def generate_xlsx_report(self, workbook, data, obj):
         report_data = []
@@ -542,104 +571,61 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         row += 1
         col = 0
         for index, value in enumerate(report_data):
-            income_expense_vals = self.calc_income_expense(value)
-            net_revenue = income_expense_vals.get('net_revenue')
-            gross_profit, profit_before_indirect_expense, net_profit = self.calc_profit(income_expense_vals)
-            net_sales_qty_vals = {}
-            net_sales_amount_vals = {}
+            nr_item_list = value.get('net_revenue', [])
+            net_revenue = sum(float(item['amount']) for item in nr_item_list)
+            group_total_dict = self.calc_group_total(value)
+            cc_wise_sales_qty_dict = self.prepare_sales_quantity_vals(nr_item_list)
+            cc_wise_sales_amount_dict = self.prepare_sales_amount_vals(nr_item_list)
 
-            for n in range(len(IE_ORDER)):
-                data_list = value.get(IE_ORDER[n])
-                amount_total = income_expense_vals.get(IE_ORDER[n])
-                net_sales_qty_vals = self.get_net_sales_qty_vals(data_list) if IE_ORDER[n] == 'net_revenue' else net_sales_qty_vals
-                net_sales_amount_vals = self.get_net_sales_amount_vals(data_list) if IE_ORDER[n] == 'net_revenue' else net_sales_amount_vals
-
-                # gross profit row
-                if IE_ORDER[n] == 'indirect_income':
-                    on_sale = self.calc_on_sale(gross_profit, net_revenue)
-                    gross_profit = formatLang(self.env, float_round(gross_profit, precision_digits=3))
+            for k in range(len(GRP_ORDER)):
+                # GROUP TOTAL ROW
+                if GRP_ORDER[k] in GRP_TOTAL_NAMES:
+                    grp_amount = group_total_dict.get(GRP_ORDER[k], 0)
+                    grp_on_sale = self.calc_on_sale(grp_amount, net_revenue)
 
                     if index == 0:
-                        sheet.write(row, col, 'Gross Profit', td_cell_left_bold)
+                        sheet.write(row, col, GRP_NAME[GRP_ORDER[k]], td_cell_left_bold)
                     sheet.write(row, col + 1, '', td_cell_center)
                     sheet.write(row, col + 2, '', td_cell_center)
-                    sheet.write(row, col + 3, gross_profit, td_cell_right_bold)
-                    sheet.write(row, col + 4, on_sale, td_cell_right_bold)
+                    sheet.write(row, col + 3, formatLang(self.env, float_round(grp_amount, precision_digits=2)), td_cell_right_bold)
+                    sheet.write(row, col + 4, float_round(grp_on_sale, precision_digits=2), td_cell_right_bold)
                     row += 1
+                    continue
+                # GROUP TOTAL ROW
 
-                # income, expense parent row
-                on_sale = self.calc_on_sale(amount_total, net_revenue)
-                amount_total = formatLang(self.env, float_round(amount_total, precision_digits=3))
+                item_list = value.get(GRP_ORDER[k])
+
+                # PARENT ROW
+                pr_amount = float(sum(item['amount'] for item in item_list)) or 0.0
+                pr_on_sale = self.calc_on_sale(pr_amount, net_revenue)
 
                 if index == 0:
-                    sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
+                    sheet.write(row, col, GRP_NAME[GRP_ORDER[k]], td_cell_left_bold)
                 sheet.write(row, col + 1, '', td_cell_center)
                 sheet.write(row, col + 2, '', td_cell_center)
-                sheet.write(row, col + 3, amount_total, td_cell_right_bold)
-                sheet.write(row, col + 4, on_sale, td_cell_right_bold)
+                sheet.write(row, col + 3, formatLang(self.env, float_round(pr_amount, precision_digits=2)), td_cell_right_bold)
+                sheet.write(row, col + 4, float_round(pr_on_sale, precision_digits=2), td_cell_right_bold)
                 row += 1
+                # PARENT ROW
 
-                # child row
-                for item in data_list:
-                    qty = item['quantity']
-                    if IE_ORDER[n] != 'indirect_income':
-                        qty = net_sales_qty_vals.get(item['cost_center_id']) or qty
-
-                    net_realization = float(item['amount'] / qty) if qty > 0 else 0.0
-                    # on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
-
-                    # on sale calculation
-                    if IE_ORDER[n] in ['net_revenue', 'indirect_income']:
-                        on_sale = self.calc_on_sale(float(item['amount']), net_revenue)
-                    else:
-                        on_sale = self.calc_on_sale(float(item['amount']), net_sales_amount_vals.get(item['cost_center_id'], 0))
+                # CHILD ROW
+                for item in item_list:
+                    sales_amount = cc_wise_sales_amount_dict.get(item['cost_center_id'], 0.0) if 'cost_center_id' in item else net_revenue
+                    ch_qty = cc_wise_sales_qty_dict.get(item['cost_center_id'], 0.0) if 'cost_center_id' in item else item['quantity']
+                    ch_amount = float(item['amount']) or 0.0
+                    ch_net_realization = (ch_amount / ch_qty) if ch_qty > 0 else 0.0
+                    ch_on_sale = self.calc_on_sale(ch_amount, sales_amount)
 
                     if index == 0:
                         sheet.write(row, col, '         ' + item['name'], td_cell_left)
-                    sheet.write(row, col + 1, float_round(float(qty), precision_digits=3), td_cell_right)
-                    sheet.write(row, col + 2, float_round(net_realization, precision_digits=3), td_cell_right)
-                    sheet.write(row, col + 3, formatLang(self.env, float_round(float(item['amount']), precision_digits=3)), td_cell_right)
-                    sheet.write(row, col + 4, on_sale, td_cell_right)
+                    sheet.write(row, col + 1, formatLang(self.env, float_round(ch_qty, precision_digits=2)), td_cell_right)
+                    sheet.write(row, col + 2, formatLang(self.env, float_round(ch_net_realization, precision_digits=2)), td_cell_right)
+                    sheet.write(row, col + 3, formatLang(self.env, float_round(ch_amount, precision_digits=3)), td_cell_right)
+                    sheet.write(row, col + 4, float_round(ch_on_sale, precision_digits=2), td_cell_right)
                     row += 1
+                # CHILD ROW
 
-                # profit before indirect expenses row
-                if IE_ORDER[n] == 'indirect_income':
-                    on_sale = self.calc_on_sale(profit_before_indirect_expense, net_revenue)
-                    profit_before_indirect_expense = formatLang(self.env, float_round(profit_before_indirect_expense, precision_digits=3))
-
-                    if index == 0:
-                        sheet.write(row, col, 'Profit Before Indirect Expenses', td_cell_left_bold)
-                    sheet.write(row, col + 1, '', td_cell_center)
-                    sheet.write(row, col + 2, '', td_cell_center)
-                    sheet.write(row, col + 3, profit_before_indirect_expense, td_cell_right_bold)
-                    sheet.write(row, col + 4, on_sale, td_cell_right_bold)
-                    row += 1
-
-                    # inderect expense row
-                    indirect_expense_amount_total = sum(income_expense_vals[e] for e in INDIRECT_EXPENSE)
-                    on_sale = self.calc_on_sale(indirect_expense_amount_total, net_revenue)
-                    indirect_expense_amount_total = formatLang(self.env, float_round(indirect_expense_amount_total, precision_digits=3))
-
-                    if index == 0:
-                        sheet.write(row, col, 'Indirect Expenses', td_cell_left_bold)
-                    sheet.write(row, col + 1, '', td_cell_center)
-                    sheet.write(row, col + 2, '', td_cell_center)
-                    sheet.write(row, col + 3, indirect_expense_amount_total, td_cell_right_bold)
-                    sheet.write(row, col + 4, on_sale, td_cell_right_bold)
-                    row += 1
-
-            # net profit row
-            on_sale = self.calc_on_sale(net_profit, net_revenue)
-            net_profit = formatLang(self.env, float_round(net_profit, precision_digits=3))
-
-            if index == 0:
-                sheet.write(row, col, 'Net Profit', td_cell_left_bold)
-            sheet.write(row, col + 1, '', td_cell_center)
-            sheet.write(row, col + 2, '', td_cell_center)
-            sheet.write(row, col + 3, net_profit, td_cell_right_bold)
-            sheet.write(row, col + 4, on_sale, td_cell_right_bold)
-
-            # set starting row for comparison
+            # SET STARTING ROW,COLUMN FOR COMPARISON
             row = 7
             col += 5
 
