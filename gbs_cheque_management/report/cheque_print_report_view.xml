@@ -57,6 +57,7 @@
                             left:110px;
                             top:129px;
                             z-index: 1;
+                            white-space: nowrap;
                          }
                          .date-on-cheque {
                             font-size: 1.25em;
