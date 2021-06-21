@@ -21,3 +21,8 @@ class ProductProduct(models.Model):
 
     standard_price = fields.Float(track_visibility='onchange')
     ratio_in_percentage = fields.Float(string='Ratio In Percentage', default=0.0, track_visibility='onchange')
+
+    @api.constrains('ratio_in_percentage')
+    def _check_ratio_in_percentage(self):
+        if self.ratio_in_percentage < 0 or self.ratio_in_percentage > 100:
+            raise ValidationError('Ratio In Percentage must be between 0 to 100!!')
