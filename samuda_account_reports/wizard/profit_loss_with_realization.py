@@ -1,6 +1,6 @@
 import calendar
 from odoo import api, fields, models , _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from datetime import timedelta, datetime
 
 
@@ -27,6 +27,21 @@ class ProfitLossRealizationWizard(models.TransientModel):
     all_entries = fields.Boolean(string='Include Unposted Entries', default=False)
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
     cost_center_id = fields.Many2one('account.cost.center', string='Cost Center')
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_range(self):
+        if self.date_from > self.date_to and self.date_filter == 'custom':
+            raise ValidationError(_("Start date must be less then End date!!"))
+
+    @api.constrains('date_from_cmp', 'date_to_cmp')
+    def _check_date_range_cmp(self):
+        if self.date_from_cmp > self.date_to_cmp and self.date_filter_cmp == 'custom':
+            raise ValidationError(_("Start date for comp. must be less then End date for comp.!!"))
+
+    @api.constrains('periods_number')
+    def _check_periods_number(self):
+        if self.periods_number < 0 and self.date_filter_cmp:
+            raise ValidationError('Number of periods can not be negative!!')
 
     @api.depends('comparison')
     def _get_comparison(self):

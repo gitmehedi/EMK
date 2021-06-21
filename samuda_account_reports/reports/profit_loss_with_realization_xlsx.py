@@ -510,6 +510,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
             report_data = self.finalize_comparison_table_data(report_data)
 
         # FORMAT
+        bold = workbook.add_format({'bold': True, 'size': 10})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
@@ -548,8 +549,18 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         sheet.merge_range(3, 0, 3, 4, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
         sheet.merge_range(4, 0, 4, 4, "Statement of Comprehensive Income", name_format)
 
+        if obj.cost_center_id:
+            sheet.merge_range(6, 0, 6, 1, "Cost Center: " + obj.cost_center_id.name, bold)
+        else:
+            sheet.merge_range(6, 0, 6, 1, "Cost Center: All", bold)
+
+        if obj.operating_unit_id:
+            sheet.merge_range(6, 3, 6, 4, "Operating Unit: " + obj.operating_unit_id.name, bold)
+        else:
+            sheet.merge_range(6, 3, 6, 4, "Operating Unit: All", bold)
+
         # TABLE HEADER
-        row, col = 5, 0
+        row, col = 8, 0
         for index, value in enumerate(comparison_table):
             if index == 0:
                 sheet.write(row, col, '', th_cell_center)
@@ -588,7 +599,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     sheet.write(row, col + 1, '', td_cell_center)
                     sheet.write(row, col + 2, '', td_cell_center)
                     sheet.write(row, col + 3, formatLang(self.env, float_round(grp_amount, precision_digits=2)), td_cell_right_bold)
-                    sheet.write(row, col + 4, float_round(grp_on_sale, precision_digits=2), td_cell_right_bold)
+                    sheet.write(row, col + 4, formatLang(self.env, float_round(grp_on_sale, precision_digits=2)), td_cell_right_bold)
                     row += 1
                     continue
                 # GROUP TOTAL ROW
@@ -604,7 +615,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                 sheet.write(row, col + 1, '', td_cell_center)
                 sheet.write(row, col + 2, '', td_cell_center)
                 sheet.write(row, col + 3, formatLang(self.env, float_round(pr_amount, precision_digits=2)), td_cell_right_bold)
-                sheet.write(row, col + 4, float_round(pr_on_sale, precision_digits=2), td_cell_right_bold)
+                sheet.write(row, col + 4, formatLang(self.env, float_round(pr_on_sale, precision_digits=2)), td_cell_right_bold)
                 row += 1
                 # PARENT ROW
 
@@ -621,12 +632,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     sheet.write(row, col + 1, formatLang(self.env, float_round(ch_qty, precision_digits=2)), td_cell_right)
                     sheet.write(row, col + 2, formatLang(self.env, float_round(ch_net_realization, precision_digits=2)), td_cell_right)
                     sheet.write(row, col + 3, formatLang(self.env, float_round(ch_amount, precision_digits=3)), td_cell_right)
-                    sheet.write(row, col + 4, float_round(ch_on_sale, precision_digits=2), td_cell_right)
+                    sheet.write(row, col + 4, formatLang(self.env, float_round(ch_on_sale, precision_digits=2)), td_cell_right)
                     row += 1
                 # CHILD ROW
 
             # SET STARTING ROW,COLUMN FOR COMPARISON
-            row = 7
+            row = 10
             col += 5
 
 
