@@ -40,7 +40,7 @@ class ProfitLossRealizationWizard(models.TransientModel):
 
     @api.constrains('periods_number')
     def _check_periods_number(self):
-        if self.periods_number < 0 and self.date_filter_cmp:
+        if self.periods_number < 0 and self.date_filter_cmp in ['previous_period', 'same_last_year']:
             raise ValidationError('Number of periods can not be negative!!')
 
     @api.depends('comparison')
