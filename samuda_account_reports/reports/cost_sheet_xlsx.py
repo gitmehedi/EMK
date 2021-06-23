@@ -601,20 +601,24 @@ class CostSheetXLSX(ReportXlsx):
 
     @staticmethod
     def calc_group_total(item_dict):
-        income = direct_material = labour_charge = manufacturing_cost = total_cost = 0.0
+        income = direct_material = labour_charge = utility_bill = manufacturing_cost = total_cost = 0.0
 
         for key, item_list in item_dict.items():
             if key == 'labour_charge':
                 labour_charge += float(sum(item['amount'] for item in item_list)) or 0.0
+            elif key == 'utility_bill':
+                utility_bill += float(sum(item['amount'] for item in item_list)) or 0.0
             elif key in ['revenue', 'indirect_income']:
                 income += float(sum(item['amount'] for item in item_list)) or 0.0
-            elif key in ['raw_material', 'packing_material', 'utility_bill']:
+            elif key in ['raw_material', 'packing_material']:
                 direct_material += float(sum(item['amount'] for item in item_list)) or 0.0
             elif key in ['factory_overhead', 'amortization', 'depreciation']:
                 manufacturing_cost += float(sum(item['amount'] for item in item_list)) or 0.0
             else:
                 total_cost += float(sum(item['amount'] for item in item_list)) or 0.0
 
+        total_cost += labour_charge + utility_bill + manufacturing_cost
+        direct_material += utility_bill
         prime_cost = direct_material + labour_charge
         manufacturing_cost += prime_cost
         profit_loss = income - total_cost
@@ -749,8 +753,8 @@ class CostSheetXLSX(ReportXlsx):
             if index == 0:
                 sheet.write(row-3, col, '', th_cell_center)
                 sheet.write(row-2, col, '', th_cell_center)
-            sheet.merge_range(row-3, col + 1, row-3, col + 2, 'Sales Quantity: ' + str(sale_qty) + ' MT', th_cell_center)
-            sheet.merge_range(row-2, col + 1, row-2, col + 2, 'Production Quantity: ' + str(production_qty) + ' MT', th_cell_center)
+            sheet.merge_range(row-3, col + 1, row-3, col + 2, 'Sales Quantity: ' + formatLang(self.env, float_round(sale_qty, precision_digits=2)) + ' MT', th_cell_center)
+            sheet.merge_range(row-2, col + 1, row-2, col + 2, 'Production Quantity: ' + formatLang(self.env, float_round(production_qty, precision_digits=2)) + ' MT', th_cell_center)
             # SALES AND PRODUCTION QUANTITY ROW
 
             for n in range(len(IE_ORDER)):
@@ -761,8 +765,8 @@ class CostSheetXLSX(ReportXlsx):
                 if IE_ORDER[n] in GROUP_TOTAL_NAMES:
                     if index == 0:
                         sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
-                    sheet.write(row, col + 1, float_round(grp_amount, precision_digits=2), td_cell_right_bold)
-                    sheet.write(row, col + 2, float_round(grp_rate, precision_digits=2), td_cell_right_bold)
+                    sheet.write(row, col + 1, formatLang(self.env, float_round(grp_amount, precision_digits=2)), td_cell_right_bold)
+                    sheet.write(row, col + 2, formatLang(self.env, float_round(grp_rate, precision_digits=2)), td_cell_right_bold)
                     row += 1
                     continue
                 # END GROUP TOTAL ROW
@@ -775,8 +779,8 @@ class CostSheetXLSX(ReportXlsx):
 
                 if index == 0:
                     sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
-                sheet.write(row, col + 1, float_round(pr_amount, precision_digits=2), td_cell_right_bold)
-                sheet.write(row, col + 2, float_round(pr_rate, precision_digits=2), td_cell_right_bold)
+                sheet.write(row, col + 1, formatLang(self.env, float_round(pr_amount, precision_digits=2)), td_cell_right_bold)
+                sheet.write(row, col + 2, formatLang(self.env, float_round(pr_rate, precision_digits=2)), td_cell_right_bold)
                 row += 1
                 # END PARENT ROW
 
@@ -786,8 +790,8 @@ class CostSheetXLSX(ReportXlsx):
 
                     if index == 0:
                         sheet.write(row, col, '         ' + item['name'], td_cell_left)
-                    sheet.write(row, col + 1, float_round(float(item['amount']), precision_digits=2), td_cell_right)
-                    sheet.write(row, col + 2, float_round(ch_rate, precision_digits=2), td_cell_right)
+                    sheet.write(row, col + 1, formatLang(self.env, float_round(float(item['amount']), precision_digits=2)), td_cell_right)
+                    sheet.write(row, col + 2, formatLang(self.env, float_round(ch_rate, precision_digits=2)), td_cell_right)
                     row += 1
                 # END CHILD ROWS
 
