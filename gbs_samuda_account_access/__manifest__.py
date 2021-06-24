@@ -21,6 +21,7 @@
 
 
     'data': [
+        'security/ir.model.access.csv',
         'views/inherited_account_view.xml',
         'views/inherited_account.xml',
         'security/ir_rule.xml',

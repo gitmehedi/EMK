@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+account.access_account_account_manager,account.account,account.model_account_account,account.group_account_manager,1,0,0,0
+access_chart_of_account_manager,account.account,account.model_account_account,gbs_application_group.group_chart_of_account_manager,1,1,1,1

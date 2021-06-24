@@ -101,6 +101,11 @@
         <field name="sequence">110</field>
     </record>
 
+    <record id="group_chart_of_account_manager" model="res.groups">
+        <field name="name">Chart of Accounts Manager</field>
+        <field name="category_id" ref="module_category_sale"/>
+    </record>
+
     <!--Invisible Group-->
     <record id="make_invisible" model="res.groups">
         <field name="name">Invisible</field>
