@@ -83,6 +83,28 @@ class LCReceivablePayment(models.Model):
         if len(self.lc_receivable_collection_ids.ids) <= 0:
             raise ValidationError(_('You have to provide Fund Transfer'))
 
+        if any(c.amount_in_currency < 0 for c in self.lc_receivable_collection_ids):
+            raise ValidationError(_('Amount In Currency of Fund Transfer cannot be negative!!'))
+
+        if any(c.amount_in_company_currency < 0 for c in self.lc_receivable_collection_ids):
+            raise ValidationError(_('BDT Amount of Fund Transfer cannot be negative!!'))
+
+    @api.constrains('lc_receivable_charges_ids')
+    def constrains_lc_receivable_charges_ids(self):
+        if any(c.amount_in_currency < 0 for c in self.lc_receivable_charges_ids):
+            raise ValidationError(_('Amount In Currency of Charges cannot be negative!!'))
+
+        if any(c.amount_in_company_currency < 0 for c in self.lc_receivable_charges_ids):
+            raise ValidationError(_('BDT Amount of Charges cannot be negative!!'))
+
+    @api.constrains('lc_receivable_miscellaneous_ids')
+    def constrains_lc_receivable_miscellaneous_ids(self):
+        if any(c.amount_in_currency < 0 for c in self.lc_receivable_miscellaneous_ids):
+            raise ValidationError(_('Amount In Currency of Loan/Exchange cannot be negative!!'))
+
+        if any(c.amount_in_company_currency < 0 for c in self.lc_receivable_miscellaneous_ids):
+            raise ValidationError(_('BDT Amount of Loan/Exchange cannot be negative!!'))
+
     @api.onchange('narration')
     def onchange_narration(self):
         if self.narration:
@@ -200,40 +222,72 @@ class LCReceivablePayment(models.Model):
 
     @api.multi
     def action_approve(self):
-        account_move_obj = self.env['account.move']
-        # account_move_line_obj = self.env['account.move.line']
-        acc_move_line_list = []
-        for collection_line in self.lc_receivable_collection_ids:
-            acc_move_line_list.append(collection_line)
-        for charge_line in self.lc_receivable_charges_ids:
-            acc_move_line_list.append(charge_line)
-        for misc_line in self.lc_receivable_miscellaneous_ids:
-            acc_move_line_list.append(misc_line)
-        move_obj = False
-        if acc_move_line_list:
-            move_obj = self._generate_move(account_move_obj, self.journal_id)
-            account_move_id = move_obj.id
-            credit_amount = sum(i.amount_in_company_currency for i in acc_move_line_list)
-            # currency is different
-            amount_currency = self.invoice_amount if self.currency_id.id != self.company_id.currency_id.id else 0
-            move_line_vals = []
-            account_id = self.invoice_ids[0].account_id.id
-            # name = "Customer Payment"
-            name = self.narration
-            credit_move_obj = self._generate_credit_move_line(account_move_id, account_id, credit_amount, amount_currency, name)
-            move_line_vals.append(credit_move_obj)
-            for line in acc_move_line_list:
-                debit_move_obj = self._generate_debit_move_line(account_move_id, line)
-                move_line_vals.append(debit_move_obj)
+        aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
+        move_obj = self.env['account.move']
+        move = self._generate_move(move_obj, self.journal_id)
 
-            move_obj.line_ids = move_line_vals
-            move_obj.post()
-            self.lc_pay_and_reconcile(self.journal_id, move_obj, credit_amount)
+        # credit part
+        name = self.narration
+        account_id = self.invoice_ids[0].account_id.id
+        amount_currency = self.invoice_amount if self.currency_id.id != self.company_id.currency_id.id else 0
+        currency_id = self.currency_id.id if self.currency_id.id != self.company_id.currency_id.id else False
 
-        for invoice_id in self.invoice_ids:
-            credit_aml_id = [i.id for i in move_obj.line_ids if i.account_id.internal_type in ('receivable', 'payable')]
-            invoice_id.assign_outstanding_credit(credit_aml_id)
-        self.write({'state': 'approve', 'account_move_id': move_obj.id})
+        credit = 0.0
+        credit += sum(collection.amount_in_company_currency for collection in self.lc_receivable_collection_ids)
+        credit += sum(charge.amount_in_company_currency for charge in self.lc_receivable_charges_ids)
+        credit += sum(misc.amount_in_company_currency for misc in self.lc_receivable_miscellaneous_ids)
+
+        credit_aml_dict = self._generate_credit_move_line(move.id, account_id, credit, amount_currency, name,
+                                                          currency_id)
+        aml_obj.create(credit_aml_dict)
+
+        # debit part
+        for collection in self.lc_receivable_collection_ids:
+            account_id = collection.account_journal_id.default_debit_account_id.id
+            debit = collection.amount_in_company_currency
+            amount_currency = collection.amount_in_currency
+            name = collection.account_journal_id.name
+            currency_id = collection.currency_id.id
+
+            debit_aml_dict = self._generate_debit_move_line(move.id, account_id, debit, amount_currency, name,
+                                                            currency_id)
+            aml_obj.create(debit_aml_dict)
+
+        for charge in self.lc_receivable_charges_ids:
+            account_id = charge.account_id.id
+            debit = charge.amount_in_company_currency
+            amount_currency = charge.amount_in_currency
+            name = charge.product_id.name
+            currency_id = charge.currency_id.id
+
+            debit_aml_dict = self._generate_debit_move_line(move.id, account_id, debit, amount_currency, name,
+                                                            currency_id)
+            debit_aml_dict.update({'analytic_account_id': self.analytic_account_id.id,
+                                   'cost_center_id': self.lc_id.product_lines[0].product_id.cost_center_id.id})
+            aml_obj.create(debit_aml_dict)
+
+        for misc in self.lc_receivable_miscellaneous_ids:
+            account_id = misc.account_id.id
+            debit = misc.amount_in_company_currency
+            amount_currency = misc.amount_in_currency
+            name = misc.narration
+            currency_id = misc.currency_id.id
+
+            debit_aml_dict = self._generate_debit_move_line(move.id, account_id, debit, amount_currency, name,
+                                                            currency_id)
+            debit_aml_dict.update({'analytic_account_id': self.analytic_account_id.id})
+            aml_obj.create(debit_aml_dict)
+
+        # post journal entries
+        move.post()
+
+        self.lc_pay_and_reconcile(self.journal_id, move, credit)
+
+        for invoice in self.invoice_ids:
+            credit_aml_id = [i.id for i in move.line_ids if i.account_id.internal_type in ('receivable', 'payable')]
+            invoice.assign_outstanding_credit(credit_aml_id)
+
+        self.write({'state': 'approve', 'account_move_id': move.id})
 
     @api.multi
     def action_cancel(self):
@@ -251,92 +305,54 @@ class LCReceivablePayment(models.Model):
         self.lc_id.analytic_account_id = analytic_account.id
         self.analytic_acc_create = False
 
-    def _generate_move(self,account_move_obj,journal):
-        date = self.date[0:10]
+    def _generate_move(self, move_obj, journal):
         if not journal.sequence_id:
             raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
             raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
 
+        date = self.date[0:10]
         name = journal.with_context(ir_sequence_date=date).sequence_id.next_by_id()
-        account_move_id = False
-        if not account_move_id:
-            account_move_dict = {
-                'name': name,
-                'date': date,
-                # 'ref': '',
-                'ref': self.lc_id.name,
-                'company_id': self.company_id.id,
-                'journal_id': journal.id,
-                'operating_unit_id': self.operating_unit_id.id,
-            }
-            account_move = account_move_obj.create(account_move_dict)
-        return account_move
+        move_dict = {
+            'name': name,
+            'date': date,
+            'ref': self.lc_id.name,
+            'company_id': self.company_id.id,
+            'journal_id': journal.id,
+            'operating_unit_id': self.operating_unit_id.id
+        }
+        move = move_obj.create(move_dict)
 
-    def _generate_credit_move_line(self, account_move_id, account_id, credit_amount, amount_currency, name):
-        date = self.date
-        account_move_line_credit = 0, 0, {
+        return move
+
+    def _generate_credit_move_line(self, move_id, account_id, credit, amount_currency, name, currency_id):
+        return {
             'account_id': account_id,
             'analytic_account_id': self.analytic_account_id.id,
-            'credit': credit_amount,
-            'amount_currency': -amount_currency if amount_currency > 0 else amount_currency,
-            'date_maturity': date,
+            'date_maturity': self.date,
+            'amount_currency': -amount_currency,
+            'credit': credit,
             'debit':  False,
             'name': name,
             'operating_unit_id':  self.operating_unit_id.id,
             'partner_id': self.invoice_ids[0].partner_id.id,
-            'move_id': account_move_id,
-            'company_id': self.company_id.id,
-            'currency_id': self.currency_id.id if self.currency_id.id != self.company_id.currency_id.id else False,
+            'move_id': move_id,
+            'currency_id': currency_id
         }
-        # account_move_line_obj.create(account_move_line_credit)
-        return account_move_line_credit
 
-    def _generate_debit_move_line(self, account_move_id, line):
-        date = self.date
-        cost_center_id = False
-        partner_id = False
-        if 'account_journal_id' in line:
-            account_id = line.account_journal_id.default_debit_account_id.id
-            name = line.account_journal_id.name
-            analytic_account_id = False
-            amount_in_company_currency = line.amount_in_company_currency
-            partner_id = self.lc_id.second_party_applicant.id
-        elif 'product_id' in line:
-            account_id = line.account_id.id
-            name = line.product_id.name
-            analytic_account_id = self.analytic_account_id.id
-            amount_in_company_currency = line.amount_in_company_currency
-            cost_center_id = self.lc_id.product_lines[0].product_id.cost_center_id.id
-            partner_id = self.lc_id.second_party_applicant.id
-        elif hasattr(line, 'narration'):
-            account_id = line.account_id.id
-            name = line.narration
-            analytic_account_id = self.analytic_account_id.id
-            amount_in_company_currency = line.amount_in_company_currency
-            partner_id = self.lc_id.second_party_applicant.id
-        else:
-            account_id = line['account_id']
-            name = 'Currency exchange rate difference'
-            analytic_account_id = False
-            amount_in_company_currency = line['amount_in_company_currency']
-        account_move_line_debit = 0, 0, {
+    def _generate_debit_move_line(self, move_id, account_id, debit, amount_currency, name, currency_id):
+        return {
             'account_id': account_id,
-            'analytic_account_id': analytic_account_id,
+            'date_maturity': self.date,
+            'amount_currency': amount_currency,
             'credit': False,
-            'date_maturity': date,
-            'debit': amount_in_company_currency,
+            'debit': debit,
             'name': name,
-            'operating_unit_id':  self.operating_unit_id.id,
-            'partner_id': partner_id,
-            'move_id': account_move_id,
-            'company_id': self.company_id.id,
-            'amount_currency': line.amount_in_currency if hasattr(line, 'amount_in_currency') else 0,
-            'currency_id': line.currency_id.id if hasattr(line, 'currency_id') else False,
-            'cost_center_id': cost_center_id
+            'operating_unit_id': self.operating_unit_id.id,
+            'partner_id': self.lc_id.second_party_applicant.id,
+            'move_id': move_id,
+            'currency_id': currency_id
         }
-        # account_move_line_obj.create(account_move_line_debit)
-        return account_move_line_debit
 
     @api.multi
     def lc_pay_and_reconcile(self, pay_journal,move_obj, pay_amount=None):
