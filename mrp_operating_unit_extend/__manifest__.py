@@ -11,7 +11,8 @@
         "ir_sequence_operating_unit"
     ],
     "data": [
-        "data/mrp_data.xml"
+        "data/mrp_data.xml",
+        "views/inherited_mrp_unbuild_views.xml"
     ],
     "summary": "Generate Manufacturing Orders name with operating unit",
     "installable": True,

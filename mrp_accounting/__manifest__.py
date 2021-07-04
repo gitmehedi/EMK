@@ -14,7 +14,8 @@
     'data': [
         'views/inherited_mrp_config_settings_views.xml',
         'views/product_view.xml',
-        'views/inherit_mrp_production_view.xml'
+        'views/inherit_mrp_production_view.xml',
+        'views/inherited_mrp_unbuild_views.xml'
     ],
     'summary': 'MRP Accounting',
     'installable': True,

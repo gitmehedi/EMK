@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mrp_unbuild_form_view" model="ir.ui.view">
+            <field name="name">mrp.unbuild.form.inherit.mrp.operating.unit.extend</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="inherit_id" ref="mrp.mrp_unbuild_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group/field[@name='mo_id']" position="after">
+                    <field name="operating_unit_id"
+                           options='{"no_open": 1, "no_create": 1, "no_create_edit":1}'
+                           attrs="{'readonly': ['|', '|', ('mo_id', '!=', False), ('has_moves', '=', True)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

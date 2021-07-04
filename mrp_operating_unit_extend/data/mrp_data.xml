@@ -11,6 +11,15 @@
             <field name="number_increment">1</field>
         </record>
 
+        <record id="sequence_mrp_unbuild_sccl_df" model="ir.sequence">
+            <field name="name">Unbuild Order SCCL-DF</field>
+            <field name="code">mrp.unbuild</field>
+            <field name="prefix">UB-OU-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
         <!-- For SCCL-CTG -->
         <record id="sequence_mrp_prod_sccl_ctg" model="ir.sequence">
             <field name="name">Production order SCCL-CTG</field>
@@ -20,5 +29,15 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+
+        <record id="sequence_mrp_unbuild_sccl_ctg" model="ir.sequence">
+            <field name="name">Unbuild Order SCCL-CTG</field>
+            <field name="code">mrp.unbuild</field>
+            <field name="prefix">UB-OU-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
     </data>
 </odoo>
