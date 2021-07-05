@@ -80,7 +80,7 @@ class InheritResPartner(models.Model):
                     account_account_id = rec.property_account_payable_id
 
                 if super(InheritResPartner, rec).unlink():
-                    res = account_account_id.unlink() if account_account_id.id else False
+                    res = account_account_id.suspend_security().unlink() if account_account_id.id else False
 
             else:
                 res = super(InheritResPartner, rec).unlink()
