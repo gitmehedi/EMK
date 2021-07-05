@@ -24,8 +24,8 @@
         'mtbl_access',
         'gbs_res_partner',
         'account_currency_wrapper',
-        'account_tax_challan'
-        # 'account_tds'
+        'account_tax_challan',
+        'account_fx_revaluation'
     ],
     "data": [
         'security/security.xml',

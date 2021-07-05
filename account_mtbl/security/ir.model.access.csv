@@ -143,3 +143,7 @@ access_history_res_currency_rate_grp_finance,access_history_res_currency_rate_gr
 
 access_account_level_tb,access_account_level_tb,gbs_account_level.model_account_account_level,group_tb_user,1,0,0,0
 access_account_move_tb,access_account_move_tb,account.model_account_move,group_tb_user,1,0,0,0
+
+access_his_red_curr_rate_user,access_his_red_curr_rate_user,model_history_res_currency_rate,base.group_multi_currency,1,0,0,0
+access_his_red_curr_rate_man,access_his_red_curr_rate_man,model_history_res_currency_rate,base.group_multi_currency,1,1,1,0
+

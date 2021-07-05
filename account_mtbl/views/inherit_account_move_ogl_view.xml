@@ -115,7 +115,7 @@
                 action="action_move_journal_line_ogl" name="OGL"
                 id="menu_action_move_journal_line_ogl_form"
                 parent="account.menu_action_move_journal_line_form"
-                groups="account.group_account_user"
+                groups="account.group_account_user,group_tb_user"
                 sequence="10"/>
     </data>
 </odoo>

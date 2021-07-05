@@ -137,7 +137,7 @@
         <menuitem action="action_move_journal_line_cbs" name="CBS"
                   id="menu_action_move_journal_line_cbs_form"
                   parent="account.menu_action_move_journal_line_form"
-                  groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"
+                  groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin,account_mtbl.group_tb_user"
                   sequence="5"/>
     </data>
 </odoo>
