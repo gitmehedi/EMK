@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <menuitem id="main_interface" name="Interface" sequence="200"
+    <menuitem id="main_interface" name="Interface" sequence="80"
               web_icon="account_fam,static/description/icon.png"
               groups="grp_api_interface_manager,grp_api_group_finance,grp_api_branc_user"/>
 

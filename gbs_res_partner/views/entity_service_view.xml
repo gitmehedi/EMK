@@ -98,7 +98,4 @@
         </field>
     </record>
 
-    <!--<menuitem action="action_entity_service" id="menu_action_entity_service"-->
-              <!--parent="account.account_account_menu" sequence="41"-->
-              <!--groups="mtbl_access.group_mtbl_sys_admin"/>-->
 </odoo>

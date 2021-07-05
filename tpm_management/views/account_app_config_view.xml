@@ -115,7 +115,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_account_app_config" parent="account.account_account_menu" action="action_account_app_config"
-                  sequence="100"/>
+        <menuitem id="menu_account_app_config" parent="main_menu_config" action="action_account_app_config"
+                  sequence="10"/>
     </data>
 </odoo>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="main_menu_tpm" name="TPM Operations" parent="account.menu_finance" sequence="13"
-              />
+    <menuitem id="main_tpm" name="TPM Operations" sequence="60"/>
+    <menuitem id="main_menu_tpm" name="TPM Operations" parent="main_tpm" sequence="10"/>
+    <menuitem id="main_menu_config" name="Configuration" parent="main_tpm" sequence="20"/>
 </odoo>

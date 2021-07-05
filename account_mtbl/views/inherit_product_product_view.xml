@@ -248,6 +248,6 @@
             </field>
         </record>
         <menuitem id="product_product_menu_vendor" action="product_product_action1"
-                  parent="account.menu_finance_configuration" sequence="10"/>
+                  parent="menu_vendor_operation_config" sequence="10"/>
     </data>
 </odoo>
