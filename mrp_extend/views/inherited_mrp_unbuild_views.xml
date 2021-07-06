@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Tree View -->
+        <record id="mrp_unbuild_tree_view" model="ir.ui.view">
+            <field name="name">mrp.unbuild.tree.inherit.mrp.extend</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="inherit_id" ref="mrp.mrp_unbuild_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-success">state == 'done'</attribute>
+                    <attribute name="decoration-danger">state not in ('cancel','done')</attribute>
+                    <attribute name="decoration-muted">state == 'cancel'</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Form View -->
         <record id="mrp_unbuild_form_view" model="ir.ui.view">
             <field name="name">mrp.unbuild.form.inherit.mrp.extend</field>
             <field name="model">mrp.unbuild</field>

@@ -5,7 +5,7 @@
                   name="Unbuild Orders"
                   parent="mrp.menu_mrp_manufacturing"
                   action="mrp.mrp_unbuild"
-                  groups="base.group_system"
+                  groups="mrp_gbs_access.group_mrp_adviser"
                   sequence="20"/>
 
         <menuitem id="mrp.menu_mrp_scrap"
