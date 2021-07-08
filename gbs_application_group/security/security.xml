@@ -106,6 +106,16 @@
         <field name="category_id" ref="module_category_sale"/>
     </record>
 
+    <record id="group_sale_return" model="res.groups">
+        <field name="name">Sales Return</field>
+        <field name="category_id" ref="module_category_sale"/>
+    </record>
+
+    <record id="group_sale_refund" model="res.groups">
+        <field name="name">Sales Refund</field>
+        <field name="category_id" ref="module_category_sale"/>
+    </record>
+
     <!--Invisible Group-->
     <record id="make_invisible" model="res.groups">
         <field name="name">Invisible</field>
