@@ -33,6 +33,7 @@ class MrpUnbuild(models.Model):
             ('warehouse_id.company_id', 'in', [self.env.context.get('company_id', self.env.user.company_id.id), False])],
             limit=1).id
 
+    mo_id = fields.Many2one('mrp.production', domain="[('product_id', '=', product_id), ('state', '=', 'done')]")
     state = fields.Selection(selection_add=[('cancel', 'Cancelled')], track_visibility='onchange')
     date_unbuild = fields.Date(string='Date', copy=False, states={'done': [('readonly', True)]})
     has_moves = fields.Boolean(compute='_compute_has_moves')
@@ -52,7 +53,6 @@ class MrpUnbuild(models.Model):
         if self.mo_id:
             self.date_unbuild = self.mo_id.date_planned_start
             self.bom_id = self.mo_id.bom_id
-            self.picking_type_id = self.mo_id.picking_type_id
 
         if not self.mo_id:
             self.bom_id = self.env['mrp.bom']._bom_find(product=self.product_id)
