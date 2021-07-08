@@ -398,7 +398,7 @@
 
             <xpath expr="//header/button[@name='%(stock.act_stock_return_picking)d']" position="replace">
                 <button name="%(stock.act_stock_return_picking)d" string="Return" states="done"
-                        type="action" groups="stock.group_stock_user"/>
+                        type="action" groups="gbs_application_group.group_sale_return"/>
             </xpath>
 
             <!--<xpath expr="//header/button[@name='do_print_picking']" position="attributes">-->
