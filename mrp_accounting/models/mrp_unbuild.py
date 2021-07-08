@@ -30,23 +30,23 @@ class MrpUnbuild(models.Model):
                                                 'operating_unit_id': self.operating_unit_id.id,
                                                 'company_id': self.bom_id.company_id.id})
 
-        # credit part
-        account_id = consume_moves[0].product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
-        credit = sum(sm.product_uom_qty * sm.price_unit for sm in produce_moves)
-        credit_aml_dict = self._prepare_credit_move_line(move.id, account_id, credit)
-        aml_obj.create(credit_aml_dict)
-
         # debit part
         for sm in produce_moves:
             account_id = sm.product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
             debit = sm.product_uom_qty * sm.price_unit
 
-            aml = move.line_ids.filtered(lambda x: x.account_id.id == account_id)
+            aml = move.line_ids.filtered(lambda x: x.account_id.id == account_id and x.debit > 0)
             if aml:
                 aml.debit += debit
             else:
                 debit_aml_dict = self._prepare_debit_move_line(move.id, account_id, debit)
                 aml_obj.create(debit_aml_dict)
+
+        # credit part
+        account_id = consume_moves[0].product_id.product_tmpl_id.categ_id.property_stock_valuation_account_id.id
+        credit = sum(line.debit for line in move.line_ids if line.debit > 0)
+        credit_aml_dict = self._prepare_credit_move_line(move.id, account_id, credit)
+        aml_obj.create(credit_aml_dict)
 
         # post journal entries
         move.post()
