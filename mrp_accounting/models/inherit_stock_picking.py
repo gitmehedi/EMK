@@ -8,6 +8,10 @@ _logger = logging.getLogger(__name__)
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
+    cogs_move_id = fields.Many2one('account.move', string='COGS Journal Entry', readonly=True, index=True,
+                                   ondelete='restrict', copy=False,
+                                   help="Link to the automatically generated Journal Items.")
+
     @api.multi
     def do_transfer(self):
         # do default operation
@@ -20,7 +24,8 @@ class Picking(models.Model):
                 if self.picking_type_id.code == 'outgoing':
                     self.validate()
                     # generate journal for cogs
-                    self.do_cogs_accounting()
+                    move = self.do_cogs_accounting()
+                    self.write({'cogs_move_id': move.id})
 
         # end region
 
@@ -122,12 +127,14 @@ class Picking(models.Model):
             move_lines = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
 
             AccountMove = self.env['account.move']
-            date = self._context.get('force_period_date', fields.Date.context_today(self))
+            # date = self._context.get('force_period_date', fields.Date.context_today(self))
             journal_id = stock_pack_products.product_id.categ_id.property_stock_journal.id
 
             new_account_move = AccountMove.create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
-                'date': date,
+                'date': self.date_done,
                 'ref': ref})
             new_account_move.post()
+
+        return new_account_move
