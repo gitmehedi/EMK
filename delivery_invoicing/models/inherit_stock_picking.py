@@ -45,11 +45,17 @@ class Picking(models.Model):
 
                     stock_pack_products.qty_done = stock_pack_products.product_qty
                     self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
-                    self.sale_id.sudo().action_invoice_create(final=True)
+                    new_invoice_ids = self.sale_id.sudo().action_invoice_create(final=True)
+                    for inv_id in new_invoice_ids:
+                        new_invoice = self.env['account.invoice'].browse(inv_id)
+                        new_invoice.write({'date_invoice': self.date_done})
 
                 else:
                     self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
-                    self.sale_id.sudo().action_invoice_create()
+                    new_invoice_ids = self.sale_id.sudo().action_invoice_create()
+                    for inv_id in new_invoice_ids:
+                        new_invoice = self.env['account.invoice'].browse(inv_id)
+                        new_invoice.write({'date_invoice': self.date_done})
 
             if stock_pack_products.qty_done == 0 \
                     or stock_pack_products.qty_done == stock_pack_products.product_qty:
@@ -59,13 +65,19 @@ class Picking(models.Model):
 
                 for do_invoices in sale_adv_pay_inv:
                     do_invoices.advance_payment_method = 'all'
-                    self.sale_id.sudo().action_invoice_create(final=True)
+                    new_invoice_ids = self.sale_id.sudo().action_invoice_create(final=True)
+                    for inv_id in new_invoice_ids:
+                        new_invoice = self.env['account.invoice'].browse(inv_id)
+                        new_invoice.write({'date_invoice': self.date_done})
                     break
             else:
                 self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
                 for do_invoices in sale_adv_pay_inv:
                     do_invoices.advance_payment_method = 'delivered'
-                    self.sale_id.sudo().action_invoice_create()
+                    new_invoice_ids = self.sale_id.sudo().action_invoice_create()
+                    for inv_id in new_invoice_ids:
+                        new_invoice = self.env['account.invoice'].browse(inv_id)
+                        new_invoice.write({'date_invoice': self.date_done})
                     break
 
     def update_invoice_for_picking_return(self):
