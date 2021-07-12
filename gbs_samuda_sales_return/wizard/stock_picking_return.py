@@ -11,7 +11,7 @@ class ReturnPicking(models.TransientModel):
         picking = self.env['stock.picking'].browse(self.env.context['active_id'])
         amount = sum(line.credit for line in picking.cogs_move_id.line_ids)
         price_unit = amount / picking.pack_operation_product_ids[0].qty_done
-
+    
         return price_unit
 
     price_unit = fields.Float(string='COGS Unit Price', digits=dp.get_precision('Product Price'), default=_get_default_price_unit)
