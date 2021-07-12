@@ -18,6 +18,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                                         ('not_zero', 'With balance is not equal to 0'), ],
                                        string='Display Accounts', required=True, default='movement')
 
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+
     @api.constrains('date_from', 'date_to')
     def _check_date_range(self):
         dt_range = self.env['date.range'].search(
