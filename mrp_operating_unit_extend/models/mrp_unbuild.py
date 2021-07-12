@@ -1,3 +1,6 @@
+# imports of python
+import datetime
+
 # imports of odoo
 from odoo import api, fields, models, _
 
@@ -39,8 +42,9 @@ class MrpUnbuild(models.Model):
             vals['operating_unit_id'] = mo.operating_unit_id.id
 
         if not vals.get('name'):
+            requested_date = datetime.datetime.strptime(fields.Date.today(), "%Y-%m-%d").date()
             ou = self.env['operating.unit'].search([('id', '=', vals['operating_unit_id'])])
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('mrp.unbuild', None, ou) or _('New')
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('mrp.unbuild', requested_date, ou) or _('New')
 
         location = self.env.ref('stock.stock_location_stock')
         picking_type = self.env['stock.picking.type'].search([
