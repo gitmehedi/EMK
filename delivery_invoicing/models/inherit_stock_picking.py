@@ -1,3 +1,8 @@
+# imports of python
+import pytz
+from datetime import datetime
+
+# import of odoo
 from odoo import models, fields, api,_
 from odoo.exceptions import UserError
 
@@ -48,14 +53,14 @@ class Picking(models.Model):
                     new_invoice_ids = self.sale_id.sudo().action_invoice_create(final=True)
                     for inv_id in new_invoice_ids:
                         new_invoice = self.env['account.invoice'].browse(inv_id)
-                        new_invoice.write({'date_invoice': self.date_done})
+                        new_invoice.write({'date_invoice': self.convert_time_as_timezone(self.date_done)})
 
                 else:
                     self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
                     new_invoice_ids = self.sale_id.sudo().action_invoice_create()
                     for inv_id in new_invoice_ids:
                         new_invoice = self.env['account.invoice'].browse(inv_id)
-                        new_invoice.write({'date_invoice': self.date_done})
+                        new_invoice.write({'date_invoice': self.convert_time_as_timezone(self.date_done)})
 
             if stock_pack_products.qty_done == 0 \
                     or stock_pack_products.qty_done == stock_pack_products.product_qty:
@@ -68,7 +73,7 @@ class Picking(models.Model):
                     new_invoice_ids = self.sale_id.sudo().action_invoice_create(final=True)
                     for inv_id in new_invoice_ids:
                         new_invoice = self.env['account.invoice'].browse(inv_id)
-                        new_invoice.write({'date_invoice': self.date_done})
+                        new_invoice.write({'date_invoice': self.convert_time_as_timezone(self.date_done)})
                     break
             else:
                 self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
@@ -77,7 +82,7 @@ class Picking(models.Model):
                     new_invoice_ids = self.sale_id.sudo().action_invoice_create()
                     for inv_id in new_invoice_ids:
                         new_invoice = self.env['account.invoice'].browse(inv_id)
-                        new_invoice.write({'date_invoice': self.date_done})
+                        new_invoice.write({'date_invoice': self.convert_time_as_timezone(self.date_done)})
                     break
 
     # def update_invoice_for_picking_return(self):
@@ -132,3 +137,9 @@ class Picking(models.Model):
                         qty = line.quantity - pack_qty
                         pack_qty = pack_qty - line.quantity
                         line.sudo().write({'quantity': qty if qty > 0 else 0})
+
+    def convert_time_as_timezone(self, datetime_str):
+        user_tz = self.env.user.tz or pytz.utc
+        local = pytz.timezone(user_tz)
+        dt = datetime.strftime(pytz.utc.localize(datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")).astimezone(local), "%Y-%m-%d %H:%M:%S")
+        return dt
