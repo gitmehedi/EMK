@@ -80,23 +80,55 @@ class Picking(models.Model):
                         new_invoice.write({'date_invoice': self.date_done})
                     break
 
+    # def update_invoice_for_picking_return(self):
+    #     """ Update customer invoice for DC return from customer """
+    #     if self.sale_id:
+    #         draft_invoices = self.sale_id.invoice_ids.filtered(lambda reg: reg.state == 'draft')
+    #         if draft_invoices:
+    #             for stock_pack_products in self.pack_operation_product_ids:
+    #                 pack_quantity = 0.0
+    #                 if stock_pack_products.qty_done:
+    #                     pack_quantity = stock_pack_products.qty_done
+    #                 else:
+    #                     pack_quantity = stock_pack_products.product_qty
+    #                 for draft_invoice in draft_invoices:
+    #                     invoice_line = draft_invoice.invoice_line_ids.filtered(lambda line: line.product_id.id == stock_pack_products.product_id.id and line.quantity >= pack_quantity)
+    #                     if invoice_line:
+    #                         res_invoice_line = invoice_line[0]
+    #                         aval_qty = res_invoice_line.quantity - pack_quantity
+    #                         res_invoice_line.sudo().write({'quantity': aval_qty})
+    #         else:
+    #             raise UserError(_('Unable to return the product because \
+    #                                         there are no invoice in draft stage for this Sale Order.'))
+
     def update_invoice_for_picking_return(self):
         """ Update customer invoice for DC return from customer """
-        if self.sale_id:
-            draft_invoices = self.sale_id.invoice_ids.filtered(lambda reg: reg.state == 'draft')
-            if draft_invoices:
-                for stock_pack_products in self.pack_operation_product_ids:
-                    pack_quantity = 0.0
-                    if stock_pack_products.qty_done:
-                        pack_quantity = stock_pack_products.qty_done
-                    else:
-                        pack_quantity = stock_pack_products.product_qty
-                    for draft_invoice in draft_invoices:
-                        invoice_line = draft_invoice.invoice_line_ids.filtered(lambda line: line.product_id.id == stock_pack_products.product_id.id and line.quantity >= pack_quantity)
-                        if invoice_line:
-                            res_invoice_line = invoice_line[0]
-                            aval_qty = res_invoice_line.quantity - pack_quantity
-                            res_invoice_line.sudo().write({'quantity': aval_qty})
-            else:
-                raise UserError(_('Unable to return the product because \
-                                            there are no invoice in draft stage for this Sale Order.'))
+        invoices = self.sale_id.invoice_ids.filtered(lambda inv: inv.state == 'draft')
+        if not invoices:
+            raise UserError(
+                _('Unable to return the product because there are no invoice in draft stage for this Sale Order.'))
+
+        return_qty = sum(pack.qty_done or pack.product_qty for pack in self.pack_operation_product_ids)
+        invoice_qty = sum(line.quantity for inv in invoices for line in inv.invoice_line_ids)
+
+        if return_qty > invoice_qty:
+            raise UserError(_('Unable to return the product because return quantity is greater than invoice quantity.'))
+
+        for pack in self.pack_operation_product_ids:
+            is_deduct = False
+            pack_qty = pack.qty_done or pack.product_qty
+            for inv in invoices:
+                line = inv.invoice_line_ids.filtered(lambda line: line.product_id.id == pack.product_id.id and line.quantity >= pack_qty)
+                if line:
+                    qty = line.quantity - return_qty
+                    line.sudo().write({'quantity': qty})
+                    is_deduct = True
+                    break
+
+            if not is_deduct:
+                for inv in invoices:
+                    if pack_qty > 0:
+                        line = inv.invoice_line_ids.filtered(lambda line: line.product_id.id == pack.product_id.id)
+                        qty = line.quantity - pack_qty
+                        pack_qty = pack_qty - line.quantity
+                        line.sudo().write({'quantity': qty if qty > 0 else 0})
