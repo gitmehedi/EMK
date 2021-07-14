@@ -12,6 +12,7 @@
     'data': [
         'wizard/mrp_production_confirmation_view.xml',
         'views/inherited_mrp_production_views.xml',
+        'views/inherited_mrp_unbuild_views.xml',
         'views/inherited_menu_views.xml'
     ],
     'summary': 'Adding standard qty field and modified existing features',

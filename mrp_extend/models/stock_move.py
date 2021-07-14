@@ -35,6 +35,10 @@ class StockMove(models.Model):
             if date_planned_start:
                 moves_todo.write({'date': date_planned_start})
 
+            date_unbuild = moves_todo[0].consume_unbuild_id.date_unbuild or moves_todo[0].unbuild_id.date_unbuild
+            if date_unbuild:
+                moves_todo.write({'date': date_unbuild})
+
         return moves_todo
 
     @api.multi

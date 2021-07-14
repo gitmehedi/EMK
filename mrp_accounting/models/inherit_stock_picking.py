@@ -1,12 +1,18 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import logging
+import pytz
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
 
 class Picking(models.Model):
     _inherit = 'stock.picking'
+
+    cogs_move_id = fields.Many2one('account.move', string='COGS Journal Entry', readonly=True, index=True,
+                                   ondelete='restrict', copy=False,
+                                   help="Link to the automatically generated Journal Items.")
 
     @api.multi
     def do_transfer(self):
@@ -20,7 +26,8 @@ class Picking(models.Model):
                 if self.picking_type_id.code == 'outgoing':
                     self.validate()
                     # generate journal for cogs
-                    self.do_cogs_accounting()
+                    move = self.do_cogs_accounting()
+                    self.write({'cogs_move_id': move.id})
 
         # end region
 
@@ -122,12 +129,18 @@ class Picking(models.Model):
             move_lines = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
 
             AccountMove = self.env['account.move']
-            date = self._context.get('force_period_date', fields.Date.context_today(self))
             journal_id = stock_pack_products.product_id.categ_id.property_stock_journal.id
+
+            # convert datetime to local time
+            user_tz = self.env.user.tz or pytz.utc
+            local = pytz.timezone(user_tz)
+            dt = datetime.strftime(pytz.utc.localize(datetime.strptime(self.date_done, "%Y-%m-%d %H:%M:%S")).astimezone(local), "%Y-%m-%d %H:%M:%S")
 
             new_account_move = AccountMove.create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
-                'date': date,
+                'date': dt,
                 'ref': ref})
             new_account_move.post()
+
+        return new_account_move

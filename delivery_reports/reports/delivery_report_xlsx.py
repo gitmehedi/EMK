@@ -104,13 +104,14 @@ class DeliveryReportXLSX(ReportXlsx):
 
         self.env.cr.execute(sql_str)
         for row in self.env.cr.dictfetchall():
+            returned_qty = sum(map(lambda d: d['returned_qty'], filter(lambda x: x['delivery_challan_no'] == row['delivery_challan_no'], delivery_returned_list)))
+            row['delivered_qty'] = row['delivered_qty'] - returned_qty
+            row['amount'] = row['amount'] - row['price_unit'] * returned_qty
+
             if row['currency_name'] != company_currency_name:
                 conversion_rate = conversion_rate_dict.get(row['currency_name'], 1.0)
                 amount = row['amount'] * conversion_rate
                 row['amount'] = amount
-
-            returned_qty = sum(map(lambda d: d['returned_qty'], filter(lambda x: x['delivery_challan_no'] == row['delivery_challan_no'], delivery_returned_list)))
-            row['delivered_qty'] = row['delivered_qty'] - returned_qty
 
             if row['product_id'] in delivery_done_dict:
                 delivery_done_dict[row['product_id']]['deliveries'].append(row)

@@ -30,5 +30,5 @@ class InheritResPartner(models.Model):
             'parent_id': parent_id,
         }
 
-        acc = acc_pool.create(vals)
+        acc = acc_pool.suspend_security().create(vals)
         return acc

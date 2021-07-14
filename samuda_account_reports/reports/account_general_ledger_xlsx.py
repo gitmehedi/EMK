@@ -37,6 +37,9 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
                                      'invoice_number': '', 'partner_name': ''}
 
         filters = " AND m.state='posted'" if used_context['state'] == 'posted' else ""
+        if used_context['operating_unit_ids']:
+            filters += " AND l.operating_unit_id IN (%s)" % tuple(used_context['operating_unit_ids'])
+
         fy_date_start, fy_date_end = self._get_fiscal_year_date_range(used_context['date_from'])
         opening_journal_ids = self.env['account.journal'].search([('type', '=', 'situation')])
         sql_of_opening_balance = """
@@ -154,6 +157,7 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         used_context['display_account'] = obj.display_account
         used_context['strict_range'] = True if obj.date_from else False
         used_context['lang'] = self.env.context.get('lang') or 'en_US'
+        used_context['operating_unit_ids'] = obj.operating_unit_id.ids or False
 
         # result data
         accounts_result = self._get_account_move_entry(docs, used_context)
@@ -205,6 +209,8 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         sheet.merge_range(4, 0, 4, 13, "General Ledger", name_format)
         sheet.merge_range(5, 0, 5, 4, "Account: " + docs.code + " " + docs.name, bold)
         sheet.merge_range(5, 11, 5, 13, "Date: " + obj.date_from + " To " + obj.date_to, bold)
+        if obj.operating_unit_id:
+            sheet.merge_range(5, 8, 5, 9, "Operating Unit: " + obj.operating_unit_id.code, bold)
 
         # TABLE HEADER
         row, col = 7, 0
