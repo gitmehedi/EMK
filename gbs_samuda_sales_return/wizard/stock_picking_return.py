@@ -14,9 +14,11 @@ class ReturnPicking(models.TransientModel):
     _inherit = 'stock.return.picking'
 
     def _get_default_price_unit(self):
-        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
-        amount = sum(line.credit for line in picking.cogs_move_id.line_ids)
-        price_unit = amount / picking.pack_operation_product_ids[0].qty_done
+        price_unit = 0
+        if 'active_id' in self.env.context:
+            picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+            amount = sum(line.credit for line in picking.cogs_move_id.line_ids)
+            price_unit = amount / picking.pack_operation_product_ids[0].qty_done
     
         return price_unit
 
