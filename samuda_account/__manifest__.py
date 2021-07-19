@@ -7,13 +7,16 @@
     'summary': "",
     'depends': [
         'account',
-        'samuda_so_type'
+        'samuda_so_type',
+        'account_invoice_merge'
     ],
 
     'data': [
         'security/ir.model.access.csv',
+        'wizard/invoice_merge_view.xml',
         'views/sale_type_product_acc.xml',
         'views/inherit_invoice_lc_view.xml',
+        'views/account_view.xml',
     ],
     'installable': True,
     'application': True,

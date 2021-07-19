@@ -5,6 +5,7 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     so_id = fields.Many2one('sale.order', string='SO No', readonly=True)
+    date_invoice = fields.Date(states={'draft': [('readonly', True)]}, track_visibility='onchange')
 
     @api.onchange('sale_type_id')
     def onchange_sale_type_id(self):
