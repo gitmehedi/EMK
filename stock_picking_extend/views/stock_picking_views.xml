@@ -379,6 +379,12 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_cancel']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting"
+                        string="Cancel" groups="base.group_user" type="object" class="btn-primary btn-danger mr24 pull-right oe_read_only"/>
+            </xpath>
             <xpath expr="//button[@name='action_see_move_scrap']" position="before">
                 <button class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
                     <field string="Documents" name="doc_count" widget="statinfo"/>
