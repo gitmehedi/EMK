@@ -1,6 +1,26 @@
 <?xml version="1.0"?>
 <odoo>
-    <record id="view_member_application_form" model="ir.ui.view">
+    <record id="member_app_tree_view" model="ir.ui.view">
+        <field name="name">Members</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Members" decoration-bf="state == 'invoice'"
+                  decoration-success="state in ('application','invoice')" decoration-muted="state == 'reject'">
+                <field name="member_sequence"/>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="birthdate"/>
+                <field name="occupation"/>
+                <field name="highest_certification"/>
+                <field name="gender"/>
+                <field name="membership_state"/>
+                <field name="state"/>
+                <field name="user_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="member_app_form_view" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="priority" eval="1"/>
@@ -109,7 +129,8 @@
                             <field name="mobile" widget="phone"/>
                             <field name="fax" invisible="True"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" readonly="True" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="email" readonly="True" widget="email"
+                                   attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="title" options='{"no_open": True}' invisible="True"
                                    attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang" invisible="True"/>
@@ -165,93 +186,97 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="member_kanban_view">
-            <field name="name">member.res.partner.kanban</field>
-            <field name="model">res.partner</field>
-            <field name="arch" type="xml">
-                <kanban class="o_res_partner_kanban">
-                    <field name="color"/>
-                    <field name="display_name"/>
-                    <field name="title"/>
-                    <field name="email" readonly="True"/>
-                    <field name="parent_id"/>
-                    <field name="is_company"/>
-                    <field name="function"/>
-                    <field name="phone"/>
-                    <field name="street"/>
-                    <field name="street2"/>
-                    <field name="zip"/>
-                    <field name="city"/>
-                    <field name="country_id"/>
-                    <field name="mobile"/>
-                    <field name="state_id"/>
-                    <field name="category_id"/>
-                    <field name="image_small"/>
-                    <field name="type"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click o_res_partner_kanban">
-                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
-                                <div class="o_kanban_image">
-                                    <t t-if="record.image_small.raw_value">
-                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
+    <record id="member_app_kanban_view" model="ir.ui.view">
+        <field name="name">member.res.partner.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban">
+                <field name="color"/>
+                <field name="display_name"/>
+                <field name="title"/>
+                <field name="email" readonly="True"/>
+                <field name="parent_id"/>
+                <field name="is_company"/>
+                <field name="function"/>
+                <field name="phone"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="mobile"/>
+                <field name="state_id"/>
+                <field name="category_id"/>
+                <field name="image_small"/>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_res_partner_kanban">
+                            <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                            <div class="o_kanban_image">
+                                <t t-if="record.image_small.raw_value">
+                                    <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
+                                </t>
+                                <t t-if="!record.image_small.raw_value">
+                                    <t t-if="record.type.raw_value === 'delivery'">
+                                        <img t-att-src='_s + "/base/static/src/img/truck.png"'
+                                             class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                     </t>
-                                    <t t-if="!record.image_small.raw_value">
-                                        <t t-if="record.type.raw_value === 'delivery'">
-                                            <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                    <t t-if="record.type.raw_value === 'invoice'">
+                                        <img t-att-src='_s + "/base/static/src/img/money.png"'
+                                             class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                    </t>
+                                    <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+                                        <t t-if="record.is_company.raw_value === true">
+                                            <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
                                         </t>
-                                        <t t-if="record.type.raw_value === 'invoice'">
-                                            <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
-                                         </t>
-                                        <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
-                                            <t t-if="record.is_company.raw_value === true">
-                                                <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
-                                            </t>
-                                            <t t-if="record.is_company.raw_value === false">
-                                                <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
-                                            </t>
+                                        <t t-if="record.is_company.raw_value === false">
+                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
                                         </t>
                                     </t>
-                                </div>
-                                <div class="oe_kanban_details">
-                                    <strong class="oe_partner_heading"><field name="display_name"/></strong>
-                                    <ul>
-                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
-                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
-                                        <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
-                                        <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
-                                        <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
-                                        <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
-                                        <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email" readonly="True"/></li>
-                                    </ul>
-                                    <div class="oe_kanban_partner_links"/>
-                                </div>
+                                </t>
                             </div>
+                            <div class="oe_kanban_details">
+                                <strong class="oe_partner_heading">
+                                    <field name="display_name"/>
+                                </strong>
+                                <ul>
+                                    <li t-if="record.parent_id.raw_value and !record.function.raw_value">
+                                        <field name="parent_id"/>
+                                    </li>
+                                    <li t-if="!record.parent_id.raw_value and record.function.raw_value">
+                                        <field name="function"/>
+                                    </li>
+                                    <li t-if="record.parent_id.raw_value and record.function.raw_value">
+                                        <field name="function"/>
+                                        at
+                                        <field name="parent_id"/>
+                                    </li>
+                                    <li t-if="record.city.raw_value and !record.country_id.raw_value">
+                                        <field name="city"/>
+                                    </li>
+                                    <li t-if="!record.city.raw_value and record.country_id.raw_value">
+                                        <field name="country_id"/>
+                                    </li>
+                                    <li t-if="record.city.raw_value and record.country_id.raw_value"><field
+                                            name="city"/>,
+                                        <field name="country_id"/>
+                                    </li>
+                                    <li t-if="record.email.raw_value" class="o_text_overflow">
+                                        <field name="email" readonly="True"/>
+                                    </li>
+                                </ul>
+                                <div class="oe_kanban_partner_links"/>
+                            </div>
+                        </div>
 
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-    <record model="ir.ui.view" id="inheritrd_membership_members_tree">
-            <field name="name">Members</field>
-            <field name="model">res.partner</field>
-            <field name="arch" type="xml">
-                <tree string="Members">
-                    <field name="member_sequence"/>
-                    <field name="name"/>
-                    <field name="phone"/>
-                    <field name="email"/>
-                    <field name="birthdate"/>
-                    <field name="occupation"/>
-                    <field name="highest_certification"/>
-                    <field name="gender"/>
-                    <field name="membership_state"/>
-                    <field name="user_id" invisible="1"/>
-                </tree>
-            </field>
-        </record>
-    <record model="ir.actions.act_window" id="action_membership_pending_applicant">
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_member_app_pending" model="ir.actions.act_window">
         <field name="name">Pending Applications</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
@@ -259,96 +284,97 @@
         <field name="context">{'mcount':'application','default_is_applicant':True}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to add a new Applicant
+                Click to add a new Application
             </p>
         </field>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_tree">
+    <record id="action_member_app_pending_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="inheritrd_membership_members_tree"/>
-        <field name="act_window_id" ref="action_membership_pending_applicant"/>
+        <field name="view_id" ref="member_app_tree_view"/>
+        <field name="act_window_id" ref="action_member_app_pending"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_form">
+    <record id="action_member_app_pending_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_member_application_form"/>
-        <field name="act_window_id" ref="action_membership_pending_applicant"/>
+        <field name="view_id" ref="member_app_form_view"/>
+        <field name="act_window_id" ref="action_member_app_pending"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_kanban">
+    <record id="action_member_app_pending_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="member_kanban_view"/>
-        <field name="act_window_id" ref="action_membership_pending_applicant"/>
+        <field name="view_id" ref="member_app_kanban_view"/>
+        <field name="act_window_id" ref="action_member_app_pending"/>
     </record>
-    <menuitem id="menu_membership" sequence="10" parent="menu_member_general"
-              action="action_membership_pending_applicant"
+    <menuitem id="menu_member_app_pending" sequence="10" parent="menu_member_app"
+              action="action_member_app_pending"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
-    <record model="ir.actions.act_window" id="action_membership_applicant">
-        <field name="name">Applicants</field>
+    <record id="action_member_app_approved" model="ir.actions.act_window">
+        <field name="name">Approved Application</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('free_member','=',False),('state','in',['invoice','member'])]</field>
         <field name="context">{'mcount':'invoice'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to add a new Applicant
+                Click to add a new Application
             </p>
         </field>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
-        <field name="sequence" eval="2"/>
+    <record id="action_member_app_approved_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="membership.membership_members_tree"/>
-        <field name="act_window_id" ref="action_membership_applicant"/>
+        <field name="view_id" ref="member_app_tree_view"/>
+        <field name="act_window_id" ref="action_member_app_approved"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_members_view_form">
+    <record id="action_member_app_approved_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_member_application_form"/>
-        <field name="act_window_id" ref="action_membership_applicant"/>
+        <field name="view_id" ref="member_app_form_view"/>
+        <field name="act_window_id" ref="action_member_app_approved"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_members_view_kanban">
-        <field name="sequence" eval="1"/>
+    <record id="action_member_app_approved_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="base.res_partner_kanban_view"/>
-        <field name="act_window_id" ref="action_membership_applicant"/>
+        <field name="view_id" ref="member_app_kanban_view"/>
+        <field name="act_window_id" ref="action_member_app_approved"/>
     </record>
-    <menuitem id="menu_membership_applicant" sequence="5" parent="menu_member_general"
-              action="action_membership_applicant"
+    <menuitem id="menu_member_app_approved" sequence="5" parent="menu_member_app"
+              action="action_member_app_approved"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-    <record model="ir.actions.act_window" id="action_membership_applicant_reject">
-        <field name="name">Rejected Applicants</field>
+
+    <record id="action_member_app_reject" model="ir.actions.act_window">
+        <field name="name">Rejected Application</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('is_applicant','=',True),('state','=','reject')]</field>
         <field name="context">{'mcount':'reject'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to add a new Applicant
+                Click to add a new Application
             </p>
         </field>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_tree">
-        <field name="sequence" eval="2"/>
+    <record id="action_member_app_reject_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="membership.membership_members_tree"/>
-        <field name="act_window_id" ref="action_membership_applicant_reject"/>
+        <field name="view_id" ref="member_app_tree_view"/>
+        <field name="act_window_id" ref="action_member_app_reject"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_form">
+    <record id="action_member_app_reject_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_member_application_form"/>
-        <field name="act_window_id" ref="action_membership_applicant_reject"/>
+        <field name="view_id" ref="member_app_form_view"/>
+        <field name="act_window_id" ref="action_member_app_reject"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_kanban">
-        <field name="sequence" eval="1"/>
+    <record id="action_member_app_reject_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="base.res_partner_kanban_view"/>
-        <field name="act_window_id" ref="action_membership_applicant_reject"/>
+        <field name="view_id" ref="member_app_kanban_view"/>
+        <field name="act_window_id" ref="action_member_app_reject"/>
     </record>
-    <menuitem id="menu_membership_applicant_reject" sequence="10" parent="menu_member_general"
-              action="action_membership_applicant_reject"
+    <menuitem id="menu_member_app_reject" sequence="10" parent="menu_member_app"
+              action="action_member_app_reject"
               groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
 </odoo>

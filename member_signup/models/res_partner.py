@@ -32,46 +32,53 @@ def now(**kwargs):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
+    _order = 'member_sequence desc'
 
-    member_sequence = fields.Char()
+    member_sequence = fields.Char(string="ID")
 
     signup_token = fields.Char(copy=False)
     signup_type = fields.Char(string='Signup Token Type', copy=False)
-    signup_expiration = fields.Datetime(copy=False)
+    signup_expiration = fields.Datetime(copy=False, track_visibility="onchange")
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
-    birthdate = fields.Date("Birth Date")
-    auto_renew = fields.Boolean(string='Auto Renew', default=False)
+    birthdate = fields.Date("Date of Birth", track_visibility="onchange")
+    auto_renew = fields.Boolean(string='Auto Renew', default=False, track_visibility="onchange")
 
-    last_place_of_study = fields.Char(string='Last or Current Place of Study')
-    place_of_study = fields.Char(string='Place of Study')
-    field_of_study = fields.Char(string='Field of Study')
+    last_place_of_study = fields.Char(string='Last or Current Place of Study', track_visibility="onchange")
+    place_of_study = fields.Char(string='Place of Study', track_visibility="onchange")
+    field_of_study = fields.Char(string='Field of Study', track_visibility="onchange")
     alumni_institute = fields.Char(
-        string='If you are an alumni of an American institution, which school did you attend?')
-    current_employee = fields.Char(string='Current Employer')
-    work_title = fields.Char(string='Work Title')
-    work_phone = fields.Char(string='Work Phone')
-    signature_image = fields.Binary(string='Signature')
-    is_applicant = fields.Boolean(default=False)
-    info_about_emk = fields.Text(string="How did you learn about the EMK Center?")
-    application_ref = fields.Text(string="Application Ref")
+        string='If you are an alumni of an American institution, which school did you attend?',
+        track_visibility="onchange")
+    current_employee = fields.Char(string='Current Employer', track_visibility="onchange")
+    work_title = fields.Char(string='Work Title', track_visibility="onchange")
+    work_phone = fields.Char(string='Work Phone', track_visibility="onchange")
+    signature_image = fields.Binary(string='Signature', track_visibility="onchange")
+    is_applicant = fields.Boolean(default=False, track_visibility="onchange")
+    info_about_emk = fields.Text(string="How did you learn about the EMK Center?", track_visibility="onchange")
+    application_ref = fields.Text(string="Application Ref", track_visibility="onchange")
 
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
+    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender',
+                              track_visibility="onchange")
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
-                                         string="Have you worked, or studied in the U.S?")
-    usa_work_or_study_place = fields.Text(string="If yes, where in the U.S have you worked, or studied?")
+                                         string="Have you worked, or studied in the U.S?", track_visibility="onchange")
+    usa_work_or_study_place = fields.Text(string="If yes, where in the U.S have you worked, or studied?",
+                                          track_visibility="onchange")
 
-    nationality_id = fields.Many2one("res.country", "Nationality")
-    occupation = fields.Many2one('member.occupation', string='Occupation')
-    occupation_other = fields.Char(string='Occupation Others')
-    subject_of_interest = fields.Many2many('member.subject.interest', string='Subjects of Interest')
-    subject_of_interest_others = fields.Char()
-    highest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
-    highest_certification_other = fields.Char(string='Highest Certification Achieved Others')
+    nationality_id = fields.Many2one("res.country", "Nationality", track_visibility="onchange")
+    occupation = fields.Many2one('member.occupation', string='Occupation', track_visibility="onchange")
+    occupation_other = fields.Char(string='Occupation Others', track_visibility="onchange")
+    subject_of_interest = fields.Many2many('member.subject.interest', string='Subjects of Interest',
+                                           track_visibility="onchange")
+    subject_of_interest_others = fields.Char(string="Subject of Interest Others", track_visibility="onchange")
+    highest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved',
+                                            track_visibility="onchange")
+    highest_certification_other = fields.Char(string='Highest Certification Achieved Others',
+                                              track_visibility="onchange")
 
     state = fields.Selection(
         [('application', 'Application'), ('invoice', 'Invoiced'),
-         ('member', 'Membership'), ('reject', 'Reject')], default='application')
+         ('member', 'Membership'), ('reject', 'Reject')], default='application', track_visibility="onchange")
 
     @api.onchange('birthdate')
     def validate_birthdate(self):

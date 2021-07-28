@@ -110,10 +110,7 @@
 
     <record id="membership.action_membership_members" model="ir.actions.act_window">
         <field name="domain">[('free_member','=',True)]</field>
-        <field name="context">{}
-        </field>
+        <field name="context">{}</field>
     </record>
 
-    <menuitem name="Applicant" id="menu_member_general" sequence="0" parent="membership.menu_association"
-              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 </odoo>

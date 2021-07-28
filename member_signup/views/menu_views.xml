@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem name="Members" id="menu_member_general" sequence="0" parent="membership.menu_association"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+
+    <menuitem name="Applications" id="menu_member_app" sequence="0" parent="membership.menu_association"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+</odoo>
