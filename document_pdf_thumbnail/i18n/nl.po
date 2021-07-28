@@ -1,0 +1,40 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * document_pdf_thumbnail
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-28 06:08+0000\n"
+"PO-Revision-Date: 2017-12-28 06:08+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: document_pdf_thumbnail
+#: model:ir.model.fields,field_description:document_pdf_thumbnail.field_ir_attachment_display_image_kanban
+msgid "Medium image"
+msgstr "Medium image"
+
+#. module: document_pdf_thumbnail
+#: model:ir.model,name:document_pdf_thumbnail.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: document_pdf_thumbnail
+#. openerp-web
+#: code:addons/document_pdf_thumbnail/static/src/xml/thread.xml:22
+#, python-format
+msgid "Delete this attachment"
+msgstr "Verwijder deze bijlage"
+
+#. module: document_pdf_thumbnail
+#. openerp-web
+#: code:addons/document_pdf_thumbnail/static/src/xml/thread.xml:24
+#, python-format
+msgid "Uploading"
+msgstr "Uploaden"

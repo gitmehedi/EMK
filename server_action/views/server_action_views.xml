@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="server_action.list">
+            <field name="name">server_action list</field>
+            <field name="model">server.action</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="server" />
+                    <field name="username" />
+                </tree>
+            </field>
+        </record>
+        
+        <!-- explicit form view definition -->
+        
+        <record model="ir.ui.view" id="server_action.form">
+            <field name="name">server_action form</field>
+            <field name="model">server.action</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                		<button name="test_connection" string="Test Connection" class="btn-primary" type="object" />
+                        <button name="action_start" string="Start" class="btn-primary" type="object" />
+                        <button name="action_stop" string="Stop" class="btn-primary" type="object" />
+                        <button name="action_restart" string="Restart" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="server" />
+                            <field name="username" />
+                            <field name="password" password="True" />
+                        </group>
+                        <notebook>
+                            <page name="server_commands" string="Commands">
+                                <group>
+                                    <field name="start_command" />
+                                    <field name="stop_command" />
+                                    <field name="restart_command" />
+                                </group>
+                            </page>
+                            <page name="server_instruction" string="Instruction">
+                                <group string="Instruction">
+                                    <field name="description"  nolabel="1" placeholder="Instruction"/>
+                                </group>
+                            </page>
+                            <page name="server_history" string="History">
+                                <field name="history_ids" nolabel="1" readonly="1">
+                                    <tree>
+                                        <field name="server_id" />
+                                        <field name="create_date" />
+                                        <field name="create_uid" />
+                                        <field name="state" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="server_action.action_window">
+            <field name="name">Server Action</field>
+            <field name="res_model">server.action</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        
+
+        <!-- Top menu item -->
+
+        <menuitem name="Server Action" id="server_action.menu_root" groups="server_action.group_server_action"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Server Action" id="server_action.menu_server_action" web_icon="server_action,static/description/icon.png" 
+            parent="server_action.menu_root" />
+
+        <!-- actions -->
+
+        <menuitem name="Server" id="server_action.menu_submenu_server_action"
+            parent="server_action.menu_server_action" action="server_action.action_window" />
+
+    </data>
+</odoo>

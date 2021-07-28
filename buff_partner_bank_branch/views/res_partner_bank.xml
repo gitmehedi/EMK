@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="add_to_res_partner_bank">
+      <field name="name">add.to.res.partner.bank</field>
+      <field name="model">res.partner.bank</field>
+      <field name="inherit_id" ref="base.view_partner_bank_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='bank_id']" position="after">
+          <field name="branch"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

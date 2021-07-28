@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CustomMessagePopup">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput" style="height:260px !important">
+                <p class="title">
+                    <t t-esc=" widget.options.title || 'Message' " />
+                </p>
+                <p class="body">
+                    <t t-esc="  widget.options.body || '' " />
+                </p>
+                <div class="footer">
+                    <div class="button cancel">
+                        OK
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    
+</templates>

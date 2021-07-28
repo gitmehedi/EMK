@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_server_action,server.action,model_server_action,server_action.group_server_action,1,1,1,1
+access_server_action_history,Server.action.history,model_server_action_history,server_action.group_server_action,1,1,1,1

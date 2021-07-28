@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Attachment">
+        <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name" style="width:40em !important;">
+            <a t-attf-href="/web/content/#{attachment.id}?download=1">
+                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(attachment.mimetype)"/>
+                <t t-set="webpdf" t-value="new RegExp('application.*(pdf)').test(attachment.mimetype)"/>
+                <div t-if="!webimage and !webpdf" class="o_image" t-att-data-mimetype="attachment.mimetype" style="position:inherit !important;"/><br/>
+                <div t-if="webimage" class="o_kanban_attachment_image">
+                    <img t-attf-src="/web/image/#{attachment.id}?download=1"/>
+                </div>
+                <div t-if="webpdf" class="o_kanban_attachment_image">
+                    <img t-attf-src="/web/image/ir.attachment/#{attachment.id}/display_image_kanban"/>
+                </div>
+                <span class='o_attachment_name' style="margin-top:0px !important;"><t t-esc='attachment.name'/></span>
+            </a>
+            <br/><br/>
+
+            <t t-if="editable">
+                <div class="o_attachment_delete">
+                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                </div>
+                <div class="o_attachment_progress_bar">
+                    Uploading
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

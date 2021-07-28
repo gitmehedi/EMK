@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_document_file_kanban_inherits">
+            <field name="name">ir.attachment kanban.inherit</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="mail.view_document_file_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban/templates" position="before">
+                    <field name="display_image_kanban"/>
+                </xpath>
+                <xpath expr="//kanban/templates//div/a" position="replace">
+                    <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                        <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                        <t t-set="webpdf" t-value="new RegExp('application.*(pdf)').test(record.mimetype.value)"/>
+                        <div t-if="!webimage and !webpdf" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                        <div t-if="webimage" class="o_kanban_attachment_image">
+                            <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
+                        </div>
+                        <div t-if="webpdf" class="o_kanban_attachment_image">
+                            <img t-attf-src="/web/image/ir.attachment/#{record.id.value}/display_image_kanban"/>
+                        </div>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_attachment_form_inherits_new" model="ir.ui.view">
+            <field name="name">ir.attachment.kanban.inherit.new</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="base.view_attachment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group/field[@name='mimetype']" position="after">
+                    <field name="display_image_kanban" invisible="1" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

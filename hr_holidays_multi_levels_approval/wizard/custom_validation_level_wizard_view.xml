@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="custom_validation_level_wizard_view" model="ir.ui.view">
+            <field name="name">custom.validation.level.wizard</field>
+            <field name="model">custom.validation.level.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Approver Chain Level" create="false" edit="false">
+                    <div>
+                        <group>
+                            <field name="validation_level"/>
+                        </group>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_record" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

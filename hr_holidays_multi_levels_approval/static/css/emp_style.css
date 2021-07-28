@@ -1,0 +1,12 @@
+.custom_btn {
+  margin-left: 100cm;
+  font-weight: normal;
+  width: 132px !important;
+  height: 40px;
+  color: #666;
+  padding: 0;
+  border: 1px solid #dddddd;
+  border-radius: 0;
+  box-shadow: none;
+  background: deepskyblue;
+}

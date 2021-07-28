@@ -1,0 +1,5 @@
+bokeh
+pexpect
+httpagentparser
+PyPDF2
+Wand

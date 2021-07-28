@@ -1,0 +1,14 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Server Details -->
+        <record id="test_server_1" model="server.action"> 
+             <field name="name">Test Server 1</field>
+             <field name="server">000.000.000.00</field>
+             <field name="username">root</field>
+             <field name="password">***********</field>
+             <field name="start_command">sudo service odoo start</field>
+             <field name="stop_command">sudo service odoo stop</field>
+             <field name="restart_command">sudo service odoo restart</field>
+        </record>    
+    </data>
+</odoo>

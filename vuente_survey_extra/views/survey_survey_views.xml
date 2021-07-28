@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <record id="survey_survey_lead" model="ir.ui.view">
+            <field name="name">survey.survey.view.form.inherit.lead</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Categories">
+                        <field name="category_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <field name="title" position="after">
+                    <field name="description"/>
+                </field>
+                <field name="quizz_mode" position="after">
+                    <field name="lead_survey"/>
+                    <field name="partner_survey"/>
+                    <field name="campaign_id"/>
+                </field>
+            </field>
+       </record>
+       
+   </data>
+</openerp>

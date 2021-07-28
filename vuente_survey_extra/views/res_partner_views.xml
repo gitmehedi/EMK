@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <record id="res_partner_survey" model="ir.ui.view">
+            <field name="name">survey.page.view.form.inherit.conditional</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Survey Answers">
+                        <field name="survey_ids"/>
+                    </page>
+                </notebook>
+            </field>
+       </record>
+       
+   </data>
+</openerp>

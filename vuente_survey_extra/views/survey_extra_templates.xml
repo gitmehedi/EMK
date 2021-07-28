@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Hide the conditional questions by default -->
+        <template id="survey_conditional" inherit_id="survey.page">
+            <xpath expr="//div[@class='js_question-wrapper']" position="before">
+                <!-- dynamic javascript, onclick of the conditional question -->
+                <script t-if="question.conditional">
+                   $("input[name='<t t-esc="survey.id"/>_<t t-esc="page.id"/>_<t t-esc="question.conditional_question_id.id"/>']").click(function() {
+                       if (this.value == <t t-esc="question.conditional_option_id.id"/>) {
+                           //Show the conditional question
+                           $("div[id='<t t-esc="survey.id"/>_<t t-esc="page.id"/>_<t t-esc="question.id"/>']").css('display', 'inline-block');
+                       } else {
+                           //Hide the question if they go back and change thier choice
+                           $("div[id='<t t-esc="survey.id"/>_<t t-esc="page.id"/>_<t t-esc="question.id"/>']").css('display', 'none');                       
+                       }
+                   });
+                </script>
+            </xpath>
+            <xpath expr="//div[@class='js_question-wrapper']" position="attributes">
+                <attribute name="t-attf-style">#{question.conditional and 'display:none;' ''}</attribute>
+            </xpath>
+            <xpath expr="//div[@class='js_errzone alert alert-danger']" position="before">
+                <t t-if="question.type == 'binary'"><t t-call="vuente_survey_extra.binary"/></t>
+            </xpath>            
+        </template>
+
+        <template id="binary">
+            <input type="file" t-att-name="prefix"/>
+        </template>                
+
+        <template id="survey_lead" inherit_id="survey.sfinished">
+            <xpath expr="//div[@class='jumbotron mt32']" position="inside">
+                <section class="html_form" data-form-model="crm.lead" data-form-id="0" t-if="survey.lead_survey">
+                      <h2>Enter Info</h2>
+                      <form role="form" method="GET" t-attf-action="/survey/lead/#{survey.id}">
+                        <div id="html_fields" class="oe_structure" style="margin-left:-15px;">
+                          <section data-form-type="textbox" data-field-id="1" class="oe_snippet_body html_form_field col-md-12">
+                            <div class="form-group">
+                              <label class="control-label" for="name" style="font-weight: normal">Name</label>
+                              <input type="text" class="form-control" name="name" maxlength="100"/>
+                            </div>
+                          </section>
+                          <section data-form-type="textbox" data-field-id="2" class="oe_snippet_body html_form_field col-md-12">
+                            <div class="form-group">
+                              <label class="control-label" for="email" style="font-weight: normal">Email</label>
+                              <input type="email" class="form-control" name="email" maxlength="100"/>
+                            </div>
+                          </section>
+                        </div>
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <input type="submit" class="btn btn-primary btn-lg" value="Submit"/>
+                      </form>
+                </section>
+
+                <section class="html_form" data-form-model="crm.lead" data-form-id="0" t-if="survey.partner_survey">
+                      <h2>Enter Info</h2>
+                      <form role="form" method="GET" t-attf-action="/survey/partner/#{survey.id}">
+                        <div id="html_fields" class="oe_structure" style="margin-left:-15px;">
+                          <section data-form-type="textbox" data-field-id="2" class="oe_snippet_body html_form_field col-md-12">
+                            <div class="form-group">
+                              <label class="control-label" for="email" style="font-weight: normal">Email</label>
+                              <input type="email" class="form-control" name="email" maxlength="100"/>
+                            </div>
+                          </section>
+                        </div>
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <input type="submit" class="btn btn-primary btn-lg" value="Submit"/>
+                      </form>
+                </section>
+
+            </xpath>
+        </template>
+        
+    </data>
+</openerp>

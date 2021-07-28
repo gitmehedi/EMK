@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <!-- Just because I need the survey id in the question form -->
+        <record id="survey_page_con_survey" model="ir.ui.view">
+            <field name="name">survey.page.view.form.inherit.conditional</field>
+            <field name="model">survey.page</field>
+            <field name="inherit_id" ref="survey.survey_page_form"/>
+            <field name="arch" type="xml">
+                <field name="question_ids" position="before">
+                    <field name="survey_id" invisible="True"/>
+                </field>
+                <field name="question_ids" position="attributes">
+                    <attribute name="context">{'default_page_id': active_id, 'default_survey_id': survey_id}</attribute>
+                </field>
+            </field>
+       </record>
+       
+   </data>
+</openerp>
