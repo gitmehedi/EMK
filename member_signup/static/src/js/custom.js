@@ -2,9 +2,10 @@ $(function () {
     var dateformat = 'yy-mm-dd'
 
     $("#birthdate").datepicker({
+        minDate: new Date(1900,1-1,1), maxDate: '-15Y',
         changeMonth: true,
         changeYear: true,
-        yearRange: "-100:+0",
+        yearRange: "-100:-15",
         dateFormat: dateformat
     });
     $('#birthdate').datepicker("option", "dateFormat", dateformat);
@@ -58,9 +59,9 @@ $(function () {
 
 
 
-    $('#hightest_certification').change(function(){
-        var val = $('#hightest_certification option:selected').text().trim().toLowerCase();
-        var selector = $('#hightest_certification_other');
+    $('#highest_certification').change(function(){
+        var val = $('#highest_certification option:selected').text().trim().toLowerCase();
+        var selector = $('#highest_certification_other');
         if (val=="other"){
             selector.attr('required','required');
             selector.parent().show();
@@ -129,7 +130,7 @@ $(function () {
 
     $("#file").on('change',function(e){
         var self = this;
-        if (self.files[0].size>307200){
+        if (self.files[0].size>207200){
             alert('File size is larger than system accept.');
             $(self).val('');
         }

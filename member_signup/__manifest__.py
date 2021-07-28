@@ -27,7 +27,7 @@
         'data/email_template.xml',
         'data/member_sequence.xml',
         'views/application_applicant_views.xml',
-        'views/product_template_views.xml',
+        # 'views/product_template_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_views.xml',
         'views/res_users_views.xml',

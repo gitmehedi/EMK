@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging, werkzeug, base64, json
-import cStringIO
+import werkzeug, base64
 import json
 import logging
 import werkzeug.wrappers
+from datetime import datetime
 from PIL import Image, ImageFont, ImageDraw
 
 from odoo import http, tools, _
 from odoo.addons.member_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.http import request, Response
-
 from odoo.addons.opa_utility.models.utility import Utility as utility
 
 _logger = logging.getLogger(__name__)
@@ -95,32 +94,40 @@ class MemberApplicationContoller(Home):
         if not qcontext.get('token') and not qcontext.get('member_signup_enabled'):
             raise werkzeug.exceptions.NotFound()
 
-        if request.httprequest.method == 'POST':
+        if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):
+            qcontext["error"] = _("Another user is already registered using email [{0}]".format(qcontext.get("email")))
+
+        if 'birthdate' in qcontext:
+            applicant_age = datetime.now() - datetime.strptime(qcontext.get('birthdate'), '%Y-%m-%d')
+            if not qcontext['highest_certification'] and (applicant_age.days < (18 * 365)):
+                qcontext["error"] = _(
+                    "Applicant with Date of Birth [{0}] is under 18 years old.".format(qcontext.get('birthdate')))
+
+        if request.httprequest.method == 'POST' and ('error' not in qcontext):
             try:
                 auth_data = self.create_applicant(qcontext)
                 if auth_data:
-                    res_obj = request.env['res.partner'].sudo()
-                    recipient_email = res_obj.groupmail({'group': ['Officer'], 'category': 'Membership'})
-                    vals = {
+                    mail_ins = request.env['res.partner'].sudo()
+                    recipient_email = mail_ins.groupmail({'group': ['Officer'], 'category': 'Membership'})
+                    mail_applicant = {
                         'template': 'member_signup.member_application_email_template',
                         'email_to': auth_data['email'],
                         'context': auth_data,
                     }
 
-                    officer = {
+                    mail_officer = {
                         'template': 'member_signup.mem_app_email_to_officer_tmpl',
                         'email_to': recipient_email,
                         'context': auth_data,
                     }
-                    res_obj.mailsend(vals)
-                    res_obj.mailsend(officer)
-                    return request.render('member_signup.success', {'name': auth_data['name']})
+                    try:
+                        mail_ins.mailsend(mail_applicant)
+                        mail_ins.mailsend(mail_officer)
+                        return request.render('member_signup.success', {'name': auth_data['name']})
+                    except:
+                        return request.render('member_signup.success', {'name': auth_data['name']})
             except (SignupError, AssertionError), e:
-                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):
-                    qcontext["error"] = _("Another user is already registered using this email address.")
-                else:
-                    _logger.error(e.message)
-                    qcontext['error'] = _("Could not create a new account.")
+                qcontext['error'] = _("Could not create a new account.")
 
         qcontext['firstname'] = None if 'firstname' not in qcontext else qcontext['firstname']
         qcontext['middlename'] = None if 'middlename' not in qcontext else qcontext['middlename']
@@ -149,9 +156,9 @@ class MemberApplicationContoller(Home):
         if 'occupation' in qcontext:
             qcontext['occupation'] = int(qcontext['occupation']) if qcontext['occupation'] else ''
 
-        if 'hightest_certification' in qcontext:
-            qcontext['hightest_certification'] = int(qcontext['hightest_certification']) if qcontext[
-                'hightest_certification'] else ''
+        if 'highest_certification' in qcontext:
+            qcontext['highest_certification'] = int(qcontext['highest_certification']) if qcontext[
+                'highest_certification'] else ''
 
         if 'subject_of_interest' not in qcontext:
             qcontext['subject_of_interest'] = []
@@ -167,8 +174,8 @@ class MemberApplicationContoller(Home):
         if 'subject_of_interest_ids' not in qcontext:
             qcontext['subject_of_interest_ids'] = self.generateDropdown('member.subject.interest')
 
-        if 'hightest_certification_ids' not in qcontext:
-            qcontext['hightest_certification_ids'] = self.generateDropdown('member.certification')
+        if 'highest_certification_ids' not in qcontext:
+            qcontext['highest_certification_ids'] = self.generateDropdown('member.certification')
 
         if 'usa_work_or_study_ids' not in qcontext:
             qcontext['usa_work_or_study_ids'] = {'yes': 'Yes', 'no': 'No'}
@@ -293,8 +300,8 @@ class MemberApplicationContoller(Home):
             'subject_of_interest',
             'subject_of_interest_others',
             'last_place_of_study',
-            'hightest_certification',
-            'hightest_certification_other',
+            'highest_certification',
+            'highest_certification_other',
             'field_of_study',
             'place_of_study',
             'usa_work_or_study',

@@ -7,6 +7,7 @@ from urlparse import urljoin
 
 from odoo.exceptions import UserError, ValidationError, Warning
 from odoo import api, fields, models, _
+from smtplib import SMTP, SMTPException, SMTPAuthenticationError
 
 from odoo.addons.opa_utility.models.utility import Utility as utility
 
@@ -65,8 +66,8 @@ class ResPartner(models.Model):
     occupation_other = fields.Char(string='Occupation Others')
     subject_of_interest = fields.Many2many('member.subject.interest', string='Subjects of Interest')
     subject_of_interest_others = fields.Char()
-    hightest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
-    hightest_certification_other = fields.Char(string='Highest Certification Achieved Others')
+    highest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
+    highest_certification_other = fields.Char(string='Highest Certification Achieved Others')
 
     state = fields.Selection(
         [('application', 'Application'), ('invoice', 'Invoiced'),
@@ -382,14 +383,17 @@ class ResPartner(models.Model):
 
         context = {
             'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
+            'logo': self.env.user.company_id.logo,
             'lang': self.env.user.lang,
         }
 
         for key, val in vals['context'].iteritems():
             context[key] = val
-
-        template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
-        _logger.info("Email sending status of user.")
+        try:
+            template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
+            _logger.info("Email sending status of user.")
+        except:
+            _logger.info("Email doesn't send properly.")
 
     @api.model
     def groupmail(self, val):

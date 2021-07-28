@@ -1,7 +1,7 @@
 from openerp import models, fields,_
 from openerp import api
 from odoo.http import request
-import pyodbc
+# import pyodbc
 import datetime
 from datetime import timedelta
 import logging

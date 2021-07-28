@@ -2,7 +2,7 @@ from odoo import fields, http, _
 from odoo.http import request
 import datetime
 import json
-from bson import json_util
+# from bson import json_util
 
 class emp_roster(http.Controller):
 
