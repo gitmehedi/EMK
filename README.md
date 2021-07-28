@@ -1,51 +1,40 @@
-# [gbs]
+# EMK Project
 ## Genweb2 ERP Based Business Solution
 
-### Repositiory which are need to run Samdua ERP
+### Repository needed to run EMK Project
+```
+$ git clone -b 10.0 --single-branch https://github.com/OCA/server-tools.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/web.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/hr.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/event.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/reporting-engine.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/contract.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/vertical-association.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/partner-contact.git
+$ git clone -b 10.0 --single-branch https://github.com/thinkopensolutions/tko-addons.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/operating-unit.git
+$ git clone -b oca --single-branch https://github.com/genweb2/gbs.git
+$ git clone -b emk --single-branch https://github.com/genweb2/gbs.git
+```
 
-1. Clone odoo version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://www.github.com/odoo/odoo.git ```<br/>
 
-2. Clone genweb2 GBS version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/genweb2/gbs.git ```<br/>
+### Install software which are needed for device configuration
 
-3. Clone custom repository for Operating Unit version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/OCA/operating-unit.git ```<br/>
-
-4. Clone custom repository for HR version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/OCA/hr.git ```<br/>
-
-5. Clone custom repository for WEB version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/OCA/web.git ```<br/>
-
-6. Clone custom repository for Server Tools version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/OCA/server-tools.git ```<br/>
-
-7. Clone custom repository for Odoo Community Addons version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://bitbucket.org/matiarrahman/odoo-community-addons.git ```<br/>
-
-8. Clone custom repository for Sale Workflow version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/OCA/sale-workflow.git ```<br/>
-
-9. Clone custom repository for Purchase Workflow version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/OCA/purchase-workflow.git ```<br/>
-
-10. Clone custom repository for Partner Contact version 10.0
-<br/>```$ git clone -b 10.0 --single-branch https://github.com/OCA/partner-contact.git ```<br/>
-
-### Install software which are needed for device configuation
-
-```$ sudo su```<br />
-```$ curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -```<br />
-```$ curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql.list```<br />
-```$ exit```<br />
-```$ sudo apt-get update```<br />
-```$ sudo apt-get python-dev```<br />
-```$ sudo apt-get install msodbcsql mssql-tools unixodbc-dev```<br />
-```$ sudo pip install pyodbc```<br />
+```
+$ sudo su
+$ curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+$ curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql.list
+$ exit
+$ sudo apt-get update
+$ sudo apt-get python-dev
+$ sudo apt-get install msodbcsql mssql-tools unixodbc-dev
+$ sudo pip install pyodbc
+```
 
 <strong>Note:</strong> https://docs.microsoft.com/en-us/azure/sql-database/sql-database-connect-query-python
 
 ### Install python package for reporting
 
-```$sudo pip install xlsxwriter```<br />
+```
+$ sudo pip install xlsxwriter
+```
