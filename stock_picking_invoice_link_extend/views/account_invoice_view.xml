@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">related.pickings.account.invoice.form.inherit.stock.picking.invoice.link.extend</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="stock_picking_invoice_link.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='pickings']" position="attributes">
+                    <attribute name="string">Delivery Info</attribute>
+                </xpath>
+                <xpath expr="//notebook/page[@name='pickings']/field[@name='picking_ids']" position="replace">
+                    <field name="picking_ids">
+                        <tree>
+                            <field name="name"/>
+                            <field name="location_dest_id"/>
+                            <field name="partner_id"/>
+                            <field name="min_date"/>
+                            <field name="date_done"/>
+                            <field name="origin"/>
+                            <field name="backorder_id"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
