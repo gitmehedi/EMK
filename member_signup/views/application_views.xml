@@ -7,10 +7,10 @@
             <tree string="Members" decoration-bf="state == 'invoice'"
                   decoration-success="state in ('application','invoice')" decoration-muted="state == 'reject'">
                 <field name="member_sequence"/>
-                <field name="name"/>
+                <field name="name" style="color: blue;"/>
                 <field name="phone"/>
                 <field name="email"/>
-                <field name="birthdate"/>
+                <field name="birth_date"/>
                 <field name="occupation"/>
                 <field name="highest_certification"/>
                 <field name="gender"/>
@@ -62,21 +62,24 @@
                         <field name="company_type" widget="radio" invisible="True"
                                class="oe_edit_only"
                                options="{'horizontal': true}"/>
-
                         <h1>
-                            <field name="member_sequence" readonly="True"
-                                   attrs="{'invisible':[('member_sequence','=',False)]}"/>
+                            <field name="member_sequence" readonly="True" style="color: green;"
+                               attrs="{'invisible':[('member_sequence','=',False)]}"/>
                             <br/>
                             <field name="name" default_focus="1" placeholder="Name"
                                    attrs="{'required' : [('is_company', '=',True)],
                                    'readonly' : [('is_company', '=',False)]}"/>
+                            <br/>
                         </h1>
-                        <group attrs="{'invisible': [('is_company', '=', True)]}">
-                            <field name="firstname" required="True"/>
-                            <field name="middlename"/>
-                            <field name="lastname" required="True"/>
-                        </group>
 
+
+                        <div class="oe_edit_only">
+                            <group attrs="{'invisible': [('is_company', '=', True)]}">
+                                <field name="firstname" required="True"/>
+                                <field name="middlename"/>
+                                <field name="lastname" required="True"/>
+                            </group>
+                        </div>
                         <div class="o_row">
                             <field name="parent_id" invisible="True"
                                    placeholder="Company"
@@ -119,6 +122,7 @@
                                        attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                            <field name="birth_date"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."
                                    options="{'no_create_edit': True}" invisible="True"/>
                         </group>
@@ -142,7 +146,6 @@
                             <group>
                                 <group string="Basic Information">
                                     <field name="gender" widget="radio" options="{'horizontal': true}"/>
-                                    <field name="birthdate"/>
                                     <field name="occupation"
                                            options="{'no_create_edit':True,'no_open':True}"/>
                                     <field name="occupation_other"/>
@@ -374,7 +377,7 @@
         <field name="view_id" ref="member_app_kanban_view"/>
         <field name="act_window_id" ref="action_member_app_reject"/>
     </record>
-    <menuitem id="menu_member_app_reject" sequence="10" parent="menu_member_app"
+    <menuitem id="menu_member_app_reject" sequence="15" parent="menu_member_app"
               action="action_member_app_reject"
               groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
 </odoo>

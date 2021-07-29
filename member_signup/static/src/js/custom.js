@@ -1,16 +1,16 @@
 $(function () {
     var dateformat = 'yy-mm-dd'
 
-    $("#birthdate").datepicker({
+    $("#birth_date").datepicker({
         minDate: new Date(1900,1-1,1), maxDate: '-15Y',
         changeMonth: true,
         changeYear: true,
         yearRange: "-100:-15",
         dateFormat: dateformat
     });
-    $('#birthdate').datepicker("option", "dateFormat", dateformat);
+    $('#birth_date').datepicker("option", "dateFormat", dateformat);
 
-    $('#birthdate').change(function(){
+    $('#birth_date').change(function(){
      var currDate = $(this).val();
      if (currDate){
         var serverDate = new Date().getTime();

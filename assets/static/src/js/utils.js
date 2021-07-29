@@ -2,15 +2,15 @@ $(function()
 {
     var dateformat = 'yy-mm-dd'
 
-    $("#birthdate").datepicker({
+    $("#birth_date").datepicker({
         changeMonth: true,
         changeYear: true,
         yearRange: "-100:+0",
         dateFormat: dateformat
     });
-    $('#birthdate').datepicker("option", "dateFormat", dateformat);
+    $('#birth_date').datepicker("option", "dateFormat", dateformat);
 
-    $('#birthdate').change(function(){
+    $('#birth_date').change(function(){
         var currDate = $(this).val();
         if (currDate){
             var serverDate = new Date().getTime();

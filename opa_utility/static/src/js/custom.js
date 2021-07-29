@@ -1,14 +1,14 @@
 $(function () {
     var dateformat = 'yy-mm-dd'
 
-    $("#birthdate").datepicker({
+    $("#birth_date").datepicker({
         changeMonth: true,
         changeYear: true,
         dateFormat: dateformat
     });
-    $('#birthdate').datepicker("option", "dateFormat", dateformat);
+    $('#birth_date').datepicker("option", "dateFormat", dateformat);
 
-    $('#birthdate').change(function(){
+    $('#birth_date').change(function(){
      currDate = $(this).val();
      if (currDate){
         serverDate = new Date().toLocaleDateString();

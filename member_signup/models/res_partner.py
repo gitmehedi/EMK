@@ -41,7 +41,7 @@ class ResPartner(models.Model):
     signup_expiration = fields.Datetime(copy=False, track_visibility="onchange")
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
-    birthdate = fields.Date("Date of Birth", track_visibility="onchange")
+    birth_date = fields.Date("Date of Birth", track_visibility="onchange")
     auto_renew = fields.Boolean(string='Auto Renew', default=False, track_visibility="onchange")
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study', track_visibility="onchange")
@@ -80,18 +80,18 @@ class ResPartner(models.Model):
         [('application', 'Application'), ('invoice', 'Invoiced'),
          ('member', 'Membership'), ('reject', 'Reject')], default='application', track_visibility="onchange")
 
-    @api.onchange('birthdate')
+    @api.onchange('birth_date')
     def validate_birthdate(self):
-        if self.birthdate:
+        if self.birth_date:
             today = str(datetime.now().date())
-            if self.birthdate > today:
+            if self.birth_date > today:
                 raise UserError(
                     _('Birth Date should not greater than current date.'))
 
-    @api.constrains('birthdate')
+    @api.constrains('birth_date')
     def _check_birthdate(self):
         today = str(datetime.now().date())
-        if self.birthdate > today:
+        if self.birth_date > today:
             raise ValueError(_('Birth Date should not greater than current date.'))
 
     @api.onchange('email')

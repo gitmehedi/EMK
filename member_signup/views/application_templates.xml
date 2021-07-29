@@ -72,11 +72,11 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group form-field">
-                            <label for="birthdate" class="control-label">Date of Birth</label>
-                            <input type="text" name="birthdate" t-att-value="birthdate" maxlength="10"
+                            <label for="birth_date" class="control-label">Date of Birth</label>
+                            <input type="text" name="birth_date" t-att-value="birth_date" maxlength="10"
                                    placeholder="1960-12-31"
                                    minlength="10" class="form-control input-sm reqfield"
-                                   id="birthdate" required="required"/>
+                                   id="birth_date" required="required"/>
 
                         </div>
                     </div>

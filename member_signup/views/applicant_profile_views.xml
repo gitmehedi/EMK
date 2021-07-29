@@ -113,7 +113,7 @@
                             <group>
                                 <group string="Basic Information">
                                     <field name="gender" widget="radio" options="{'horizontal': true}"/>
-                                    <field name="birthdate"/>
+                                    <field name="birth_date"/>
                                     <field name="occupation"
                                            options="{'no_create_edit':True,'no_open':True}"/>
                                     <field name="occupation_other"/>

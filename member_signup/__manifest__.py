@@ -31,7 +31,6 @@
         'views/application_views.xml',
         'views/member_views.xml',
         # 'views/product_template_views.xml',
-        'views/res_partner_views.xml',
         'views/res_config_views.xml',
         'views/res_users_views.xml',
         'views/application_templates.xml',

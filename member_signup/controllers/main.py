@@ -97,11 +97,11 @@ class MemberApplicationContoller(Home):
         if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):
             qcontext["error"] = _("Another user is already registered using email [{0}]".format(qcontext.get("email")))
 
-        if 'birthdate' in qcontext:
-            applicant_age = datetime.now() - datetime.strptime(qcontext.get('birthdate'), '%Y-%m-%d')
+        if 'birth_date' in qcontext:
+            applicant_age = datetime.now() - datetime.strptime(qcontext.get('birth_date'), '%Y-%m-%d')
             if not qcontext['highest_certification'] and (applicant_age.days < (18 * 365)):
                 qcontext["error"] = _(
-                    "Applicant with Date of Birth [{0}] is under 18 years old.".format(qcontext.get('birthdate')))
+                    "Applicant with Date of Birth [{0}] is under 18 years old.".format(qcontext.get('birth_date')))
 
         if request.httprequest.method == 'POST' and ('error' not in qcontext):
             try:
@@ -284,7 +284,7 @@ class MemberApplicationContoller(Home):
             'middlename',
             'lastname',
             'password',
-            'birthdate',
+            'birth_date',
             'street',
             'street2',
             'city',
