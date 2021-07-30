@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="membership_withdrawal_reason_form_view" model="ir.ui.view">
+        <field name="name">membership.withdrawal_reason.form</field>
+        <field name="model">membership.withdrawal_reason</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Membership Withdrawal">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="membership_withdrawal_reason_tree_view" model="ir.ui.view">
+        <field name="model">membership.withdrawal_reason</field>
+        <field name="inherit_id" ref="membership_withdrawal.membership_withdrawal_reason_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Membership withdrawal reasons" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False">
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="membership_withdrawal.membership_withdrawal_reason_action" model="ir.actions.act_window">
+        <field name="name">Membership Withdrawal Reasons</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
