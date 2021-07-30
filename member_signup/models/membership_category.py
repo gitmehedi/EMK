@@ -21,11 +21,15 @@ class InheritedProductTemplate(models.Model):
 
     list_price = fields.Float(track_visibility='onchange')
     membership_status = fields.Boolean(string='Default Membership', default=False, track_visibility='onchange')
-    membership = fields.Boolean(help='Check if the product is eligible for membership.',track_visibility='onchange')
+    membership = fields.Boolean(help='Check if the product is eligible for membership.', track_visibility='onchange')
     membership_date_from = fields.Date(string='Membership Start Date',
-                                       help='Date from which membership becomes active.',track_visibility='onchange')
+                                       help='Date from which membership becomes active.', track_visibility='onchange')
     membership_date_to = fields.Date(string='Membership End Date',
-                                     help='Date until which membership remains active.',track_visibility='onchange')
+                                     help='Date until which membership remains active.', track_visibility='onchange')
+    membership_category_id = fields.Many2one(track_visibility='onchange')
+    active = fields.Boolean(track_visibility='onchange')
+    membership_type = fields.Selection(string="Membership Type", track_visibility='onchange')
+    property_account_income_id = fields.Many2one(track_visibility='onchange')
 
     @api.constrains('name')
     def _check_name(self):
@@ -34,8 +38,12 @@ class InheritedProductTemplate(models.Model):
             raise Exception(_('Name should not be duplicate.'))
 
 
-class InheritedMembershipWithdrawalReason(models.Model):
-    _inherit = "membership.withdrawal_reason"
+class MembershipWithdrawalReason(models.Model):
+    _name = 'membership.withdrawal_reason'
+    _inherit = ['membership.withdrawal_reason', 'mail.thread', 'ir.needaction_mixin']
+
+    name = fields.Char(track_visibility='onchange')
+    status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name')
     def _check_name(self):

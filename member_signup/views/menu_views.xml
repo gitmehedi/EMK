@@ -5,4 +5,13 @@
 
     <menuitem name="Applications" id="menu_member_app" sequence="0" parent="membership.menu_association"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+
+
+    <record id="membership_withdrawal.membership_withdrawal_reason_action" model="ir.actions.act_window">
+        <field name="name">Membership Withdrawal Reasons</field>
+    </record>
+
+    <record id="membership_withdrawal.menu_membership_withdrawal_reason" model="ir.ui.menu">
+        <field name="name">Membership Withdrawal</field>
+    </record>
 </odoo>

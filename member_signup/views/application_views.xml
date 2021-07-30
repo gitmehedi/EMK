@@ -7,7 +7,7 @@
             <tree string="Members" decoration-bf="state == 'invoice'"
                   decoration-success="state in ('application','invoice')" decoration-muted="state == 'reject'">
                 <field name="member_sequence"/>
-                <field name="name" style="color: blue;"/>
+                <field name="name"/>
                 <field name="phone"/>
                 <field name="email"/>
                 <field name="birth_date"/>

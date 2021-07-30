@@ -21,7 +21,7 @@
                 <field name="state" invisible="True"/>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px; text-align:center;"
                      attrs="{'invisible': [('membership_days_remaining','&gt;','company_id.expire_notification_days'),('state','=','member')]}">
-                    Current Membership will expire soon, see
+                    Current membership will expire soon, see
                     <strong style="color: red;">Membership</strong>
                     tab.
                     <br/>
@@ -48,7 +48,7 @@
 
             <xpath expr="//field[@name='name']" position="before">
                 <field name="member_sequence" readonly="True" style="color: green;"
-                       attrs="{'invisible':[('member_sequence','=',False)]}"/>
+                       attrs="{'invisible':[('member_sequence','=',False)]}"/> <br/>
             </xpath>
             <xpath expr="//field[@name='lastname']" position="attributes">
                 <attribute name="required">True</attribute>
@@ -131,7 +131,7 @@
             </xpath>
         </field>
     </record>
-    <record model="ir.ui.view" id="inherit_membership_members_tree">
+    <record id="inherit_membership_members_tree" model="ir.ui.view" >
         <field name="name">Members</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="membership.membership_members_tree"/>
@@ -146,8 +146,8 @@
                     <field name="occupation"/>
                     <field name="highest_certification"/>
                     <field name="gender"/>
-                    <field name="membership_state"/>
-                    <field name="membership_last_start"/>
+                    <field name="membership_state" string="Membership Status"/>
+                    <field name="membership_last_start" string="Membership Start Date"/>
                     <field name="membership_stop"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
