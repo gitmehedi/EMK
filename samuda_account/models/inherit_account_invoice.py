@@ -6,6 +6,13 @@ class AccountInvoice(models.Model):
 
     so_id = fields.Many2one('sale.order', string='SO No', readonly=True)
     date_invoice = fields.Date(states={'draft': [('readonly', True)]}, track_visibility='onchange')
+    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True,
+                                compute='_compute_pack_type')
+
+    @api.depends('so_id')
+    def _compute_pack_type(self):
+        for rec in self:
+            rec.pack_type = rec.so_id.pack_type
 
     @api.onchange('sale_type_id')
     def onchange_sale_type_id(self):
