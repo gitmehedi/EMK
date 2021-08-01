@@ -71,9 +71,9 @@ class ResPartner(models.Model):
     subject_of_interest = fields.Many2many('member.subject.interest', string='Subjects of Interest',
                                            track_visibility="onchange")
     subject_of_interest_others = fields.Char(string="Subject of Interest Others", track_visibility="onchange")
-    hightest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved',
+    highest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved',
                                             track_visibility="onchange")
-    hightest_certification_other = fields.Char(string='Highest Certification Achieved Others',
+    highest_certification_other = fields.Char(string='Highest Certification Achieved Others',
                                               track_visibility="onchange")
 
     state = fields.Selection(

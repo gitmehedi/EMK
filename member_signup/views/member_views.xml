@@ -87,9 +87,9 @@
                         </group>
                         <group string="Educational Information">
                             <field name="last_place_of_study"/>
-                            <field name="hightest_certification"
+                            <field name="highest_certification"
                                    options="{'no_create_edit':True,'no_open':True}"/>
-                            <field name="hightest_certification_other"
+                            <field name="highest_certification_other"
                                    options="{'no_create_edit':True,'no_open':True}"/>
                             <field name="field_of_study"/>
                             <field name="place_of_study"/>
@@ -144,7 +144,7 @@
                     <field name="email"/>
                     <field name="birth_date"/>
                     <field name="occupation"/>
-                    <field name="hightest_certification"/>
+                    <field name="highest_certification"/>
                     <field name="gender"/>
                     <field name="membership_state" string="Membership Status"/>
                     <field name="membership_last_start" string="Membership Start Date"/>
