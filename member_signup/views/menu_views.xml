@@ -7,6 +7,7 @@
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 
+
     <record id="membership_withdrawal.membership_withdrawal_reason_action" model="ir.actions.act_window">
         <field name="name">Membership Withdrawal Reasons</field>
     </record>

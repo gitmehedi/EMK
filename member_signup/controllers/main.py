@@ -99,7 +99,7 @@ class MemberApplicationContoller(Home):
 
         if 'birth_date' in qcontext:
             applicant_age = datetime.now() - datetime.strptime(qcontext.get('birth_date'), '%Y-%m-%d')
-            if not qcontext['highest_certification'] and (applicant_age.days < (18 * 365)):
+            if not qcontext['hightest_certification'] and (applicant_age.days < (18 * 365)):
                 qcontext["error"] = _(
                     "Applicant with Date of Birth [{0}] is under 18 years old.".format(qcontext.get('birth_date')))
 
@@ -156,9 +156,9 @@ class MemberApplicationContoller(Home):
         if 'occupation' in qcontext:
             qcontext['occupation'] = int(qcontext['occupation']) if qcontext['occupation'] else ''
 
-        if 'highest_certification' in qcontext:
-            qcontext['highest_certification'] = int(qcontext['highest_certification']) if qcontext[
-                'highest_certification'] else ''
+        if 'hightest_certification' in qcontext:
+            qcontext['hightest_certification'] = int(qcontext['hightest_certification']) if qcontext[
+                'hightest_certification'] else ''
 
         if 'subject_of_interest' not in qcontext:
             qcontext['subject_of_interest'] = []
@@ -174,8 +174,8 @@ class MemberApplicationContoller(Home):
         if 'subject_of_interest_ids' not in qcontext:
             qcontext['subject_of_interest_ids'] = self.generateDropdown('member.subject.interest')
 
-        if 'highest_certification_ids' not in qcontext:
-            qcontext['highest_certification_ids'] = self.generateDropdown('member.certification')
+        if 'hightest_certification_ids' not in qcontext:
+            qcontext['hightest_certification_ids'] = self.generateDropdown('member.certification')
 
         if 'usa_work_or_study_ids' not in qcontext:
             qcontext['usa_work_or_study_ids'] = {'yes': 'Yes', 'no': 'No'}
@@ -300,8 +300,8 @@ class MemberApplicationContoller(Home):
             'subject_of_interest',
             'subject_of_interest_others',
             'last_place_of_study',
-            'highest_certification',
-            'highest_certification_other',
+            'hightest_certification',
+            'hightest_certification_other',
             'field_of_study',
             'place_of_study',
             'usa_work_or_study',

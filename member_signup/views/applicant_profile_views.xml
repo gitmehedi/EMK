@@ -104,7 +104,8 @@
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" readonly="True" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="email" readonly="True" widget="email"
+                                   attrs="{'required': [('user_ids','!=', [])]}"/>
                         </group>
                     </group>
 
@@ -123,9 +124,9 @@
                                 </group>
                                 <group string="Educational Information">
                                     <field name="last_place_of_study"/>
-                                    <field name="highest_certification"
+                                    <field name="hightest_certification"
                                            options="{'no_create_edit':True,'no_open':True}"/>
-                                    <field name="highest_certification_other"/>
+                                    <field name="hightest_certification_other"/>
                                     <field name="field_of_study"/>
                                     <field name="place_of_study"/>
                                     <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
@@ -155,8 +156,10 @@
     </record>
 
     <record id="act_mem_app" model="ir.actions.act_window">
-        <field name="name">Approved Application</field>
+        <field name="name">Application</field>
         <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
     </record>
 
@@ -174,7 +177,9 @@
         <field name="act_window_id" ref="act_mem_app"/>
     </record>
 
-    <menuitem name="Approved Application" id="menu_applicant" sequence="0" action="act_mem_app"
+    <menuitem name="Application" id="menu_applicant" sequence="0" action="act_mem_app" parent="menu_main_applicant"
+              groups="membership_user.group_mem_user_applicant"/>
+    <menuitem name="Application" id="menu_main_applicant" sequence="0" action="act_mem_app"
               groups="membership_user.group_mem_user_applicant"/>
 
 </odoo>

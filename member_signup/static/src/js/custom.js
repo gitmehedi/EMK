@@ -59,9 +59,9 @@ $(function () {
 
 
 
-    $('#highest_certification').change(function(){
-        var val = $('#highest_certification option:selected').text().trim().toLowerCase();
-        var selector = $('#highest_certification_other');
+    $('#hightest_certification').change(function(){
+        var val = $('#hightest_certification option:selected').text().trim().toLowerCase();
+        var selector = $('#hightest_certification_other');
         if (val=="other"){
             selector.attr('required','required');
             selector.parent().show();

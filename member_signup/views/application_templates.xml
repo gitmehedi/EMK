@@ -239,21 +239,21 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group form-field">
-                            <label for="highest_certification"  class="control-label">Highest Certification Achieved
+                            <label for="hightest_certification"  class="control-label">Highest Certification Achieved
                             </label>
-                            <select class="form-control input-sm" name="highest_certification" id="highest_certification">
+                            <select class="form-control input-sm" name="hightest_certification" id="hightest_certification">
                                 <option value="">--Please Select--</option>
-                                <t t-foreach="highest_certification_ids" t-as='label'>
+                                <t t-foreach="hightest_certification_ids" t-as='label'>
                                     <option t-att-value="label_value[0]"
-                                            t-att-selected="'selected' if highest_certification==label_value[0] else None">
+                                            t-att-selected="'selected' if hightest_certification==label_value[0] else None">
                                         <t t-esc="label_value[1]"/>
                                     </option>
                                 </t>
                             </select>
                         </div>
                         <div class="form-group form-field" style="display:none;">
-                            <input type="text" name="highest_certification_other"
-                                   t-att-value="highest_certification_other" id="highest_certification_other"
+                            <input type="text" name="hightest_certification_other"
+                                   t-att-value="hightest_certification_other" id="hightest_certification_other"
                                    class="form-control input-sm reqfield"/>
                         </div>
                     </div>
