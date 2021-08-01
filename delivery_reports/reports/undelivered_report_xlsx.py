@@ -47,6 +47,7 @@ class UndeliveredReportXLSX(ReportXlsx):
                         sol.product_uom_qty AS ordered_qty,
                         sol.qty_delivered AS delivered_qty,
                         (sol.product_uom_qty-sol.qty_delivered) AS undelivered_qty,
+                        pm.packaging_mode AS packing_mode,
                         sol.price_unit,
                         sol.currency_id,
                         rc.name AS currency_name,
@@ -62,12 +63,12 @@ class UndeliveredReportXLSX(ReportXlsx):
                         JOIN sale_order so ON so.name=sp.origin
                         JOIN sale_order_line sol ON sol.order_id=so.id
                         JOIN res_currency rc ON rc.id=sol.currency_id
+                        LEFT JOIN product_packaging_mode pm ON pm.id=so.pack_type
                     """ + where_clause + """ ORDER BY so.date_order"""
 
         undelivered_dict = {}
         conversion_rate_dict = self._get_conversion_rate()
         company_currency_name = self.env.user.company_id.currency_id.name
-        products = self.env['product.product'].search([('sale_ok', '=', True), ('active', '=', True)])
 
         self.env.cr.execute(sql_str)
         for row in self.env.cr.dictfetchall():
@@ -79,7 +80,7 @@ class UndeliveredReportXLSX(ReportXlsx):
             if row['product_id'] in undelivered_dict:
                 undelivered_dict[row['product_id']]['sale_orders'].append(row)
             else:
-                product = products.filtered(lambda x: x.id == row['product_id'])
+                product = self.env['product.product'].browse(row['product_id'])
                 undelivered_dict[row['product_id']] = {}
                 undelivered_dict[row['product_id']]['product_name'] = product.display_name
                 undelivered_dict[row['product_id']]['sale_orders'] = []
@@ -128,26 +129,27 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.set_column(4, 4, 17)
         sheet.set_column(5, 5, 19)
         sheet.set_column(6, 6, 18)
-        sheet.set_column(7, 7, 16)
-        sheet.set_column(8, 8, 10)
-        sheet.set_column(9, 9, 18)
+        sheet.set_column(7, 7, 18)
+        sheet.set_column(8, 8, 16)
+        sheet.set_column(9, 9, 10)
+        sheet.set_column(10, 10, 18)
 
         # SHEET HEADER
         conversion_rate_dict = self._get_conversion_rate()
-        sheet.merge_range(0, 0, 0, 9, self.env.user.company_id.name, name_format)
-        sheet.merge_range(1, 0, 1, 9, self.env.user.company_id.street, address_format)
-        sheet.merge_range(2, 0, 2, 9, self.env.user.company_id.street2, address_format)
-        sheet.merge_range(3, 0, 3, 9, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
-        sheet.merge_range(4, 0, 4, 9, "Undelivered Report", name_format)
+        sheet.merge_range(0, 0, 0, 10, self.env.user.company_id.name, name_format)
+        sheet.merge_range(1, 0, 1, 10, self.env.user.company_id.street, address_format)
+        sheet.merge_range(2, 0, 2, 10, self.env.user.company_id.street2, address_format)
+        sheet.merge_range(3, 0, 3, 10, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
+        sheet.merge_range(4, 0, 4, 10, "Undelivered Report", name_format)
 
         row = 5
         for key, val in conversion_rate_dict.items():
             if key != self.env.user.company_id.currency_id.name:
-                sheet.merge_range(row, 7, row, 9, key + ": " + str(val), bold)
+                sheet.merge_range(row, 8, row, 10, key + ": " + str(val), bold)
                 row += 1
 
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, 7, row, 9, "Date: " + self.get_formatted_date(obj.date_today, "%d-%m-%Y"), bold)
+        sheet.merge_range(row, 8, row, 10, "Date: " + self.get_formatted_date(obj.date_today, "%d-%m-%Y"), bold)
         row += 1
 
         # TABLE HEADER
@@ -159,15 +161,16 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.write(row, col + 4, 'Delivered Qty (MT)', th_cell_center)
         sheet.write(row, col + 5, 'Adjustment/Cancel Qty', th_cell_center)
         sheet.write(row, col + 6, 'Undelivered Qty (MT)', th_cell_center)
-        sheet.write(row, col + 7, 'Unit Price', th_cell_center)
-        sheet.write(row, col + 8, 'Currency', th_cell_center)
-        sheet.write(row, col + 9, 'Amount (BDT)', th_cell_center)
+        sheet.write(row, col + 7, 'Packing Mode', th_cell_center)
+        sheet.write(row, col + 8, 'Unit Price', th_cell_center)
+        sheet.write(row, col + 9, 'Currency', th_cell_center)
+        sheet.write(row, col + 10, 'Amount (BDT)', th_cell_center)
 
         # TABLE BODY
         grand_total_amount = 0.0
         row += 1
         for index, value in result_data.items():
-            sheet.merge_range(row, col, row, col + 9, value['product_name'], td_cell_left_bold)
+            sheet.merge_range(row, col, row, col + 10, value['product_name'], td_cell_left_bold)
             row += 1
 
             for rec in value['sale_orders']:
@@ -178,9 +181,10 @@ class UndeliveredReportXLSX(ReportXlsx):
                 sheet.write(row, col + 4, rec['delivered_qty'], no_format)
                 sheet.write(row, col + 5, rec['cancel_qty'], no_format)
                 sheet.write(row, col + 6, rec['undelivered_qty'], no_format)
-                sheet.write(row, col + 7, rec['price_unit'], no_format)
-                sheet.write(row, col + 8, rec['currency_name'], td_cell_center)
-                sheet.write(row, col + 9, rec['amount'], no_format)
+                sheet.write(row, col + 7, rec['packing_mode'], td_cell_center)
+                sheet.write(row, col + 8, rec['price_unit'], no_format)
+                sheet.write(row, col + 9, rec['currency_name'], td_cell_center)
+                sheet.write(row, col + 10, rec['amount'], no_format)
                 row += 1
 
             # SUB TOTAL
@@ -192,13 +196,14 @@ class UndeliveredReportXLSX(ReportXlsx):
             sheet.write(row, col + 6, sub_total_undelivered_qty, total_format)
             sheet.write(row, col + 7, '', total_format)
             sheet.write(row, col + 8, '', total_format)
-            sheet.write(row, col + 9, sub_total_amount, total_format)
+            sheet.write(row, col + 9, '', total_format)
+            sheet.write(row, col + 10, sub_total_amount, total_format)
             row += 1
             # END
 
         # GRAND TOTAL
-        sheet.merge_range(row, col, row, col + 8, 'Grand Total', td_cell_left_bold)
-        sheet.write(row, col + 9, grand_total_amount, total_format)
+        sheet.merge_range(row, col, row, col + 9, 'Grand Total', td_cell_left_bold)
+        sheet.write(row, col + 10, grand_total_amount, total_format)
         # END
 
 
