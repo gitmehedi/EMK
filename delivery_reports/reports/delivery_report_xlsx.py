@@ -22,7 +22,7 @@ class DeliveryReportXLSX(ReportXlsx):
                             AND DATE(sp.date_done + interval '6h') BETWEEN DATE('%s')+time '00:00' AND DATE('%s')+time '23:59:59'""" % (obj.operating_unit_id.id, obj.date_from, obj.date_to)
 
         if obj.product_tmpl_id and not obj.product_id:
-            product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id)]).ids
+            product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id), '|', ('active', '=', True), ('active', '=', False)]).ids
             if len(product_ids) > 1:
                 where_str += """ AND spo.product_id IN %s""" % (tuple(product_ids),)
             else:
