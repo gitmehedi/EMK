@@ -94,8 +94,8 @@
                             <label for="mobile" class="control-label">Mobile</label>
                             <input type="text" name="mobile" t-att-value="mobile" id="mobile"
                                    placeholder="01900000000"
-                                   class="form-control input-sm number" data-minlength="11"
-                                   data-maxlength="14" />
+                                   class="form-control input-sm number reqfield" data-minlength="11"
+                                   data-maxlength="14" required="required"/>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -154,7 +154,7 @@
                                 <div class="form-group form-field">
                                     <input type="text" name="zipcode" t-att-value="zipcode" id="zipcode" minlength="2"
                                            maxlength="30"  placeholder="Zip"
-                                           class="form-control input-sm "/>
+                                           class="form-control input-sm reqfield" required="required"/>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -195,15 +195,15 @@
                                 of Interest: (Please
                                 check all that apply)
                             </label>
-                            <div class="mar-btm">
+                            <div class="mar-btm required">
                                 <t t-foreach="subject_of_interest_ids" t-as='label'>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox"
+
+                                        <input type="checkbox" required="required"
                                                name="subject_of_interest"
                                                t-att-value="label_value[0]"
                                                t-att-checked="'checked' if label_value[0] in subject_of_interest else None"/>
                                         <t t-esc="label_value[1]"/>
-                                    </label>
+
                                 </t>
                             </div>
                         </div>
@@ -233,15 +233,15 @@
                             </label>
                             <input type="text" name="last_place_of_study" t-att-value="last_place_of_study"
                                    id="last_place_of_study" placeholder="Last or Current Place of Study"
-                                   class="form-control input-sm" data-maxlength="50"
-                                   data-minlength="2"/>
+                                   class="form-control input-sm reqfield" data-maxlength="50"
+                                   data-minlength="2" required="required"/>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group form-field">
                             <label for="highest_certification"  class="control-label">Highest Certification Achieved
                             </label>
-                            <select class="form-control input-sm" name="highest_certification" id="highest_certification">
+                            <select class="form-control input-sm reqfield" name="highest_certification" id="highest_certification" required="required">
                                 <option value="">--Please Select--</option>
                                 <t t-foreach="highest_certification_ids" t-as='label'>
                                     <option t-att-value="label_value[0]"
@@ -262,8 +262,8 @@
                             <label for="field_of_study" class="control-label">Field of Study</label>
                             <input type="text" name="field_of_study" t-att-value="field_of_study"
                                    placeholder="Field of Study"
-                                   class="form-control input-sm" id="field_of_study"
-                                   data-minlength="2" data-maxlength="50"/>
+                                   class="form-control input-sm reqfield" id="field_of_study"
+                                   data-minlength="2" data-maxlength="50" required="required"/>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -271,7 +271,7 @@
                             <label for="place_of_study" class="control-label">Place of Study</label>
                             <input type="text" name="place_of_study" t-att-value="place_of_study"
                                    placeholder="Place of Study"
-                                   class="form-control input-sm" id="place_of_study"/>
+                                   class="form-control input-sm reqfield" id="place_of_study" required="required"/>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -284,7 +284,7 @@
                                 <t t-foreach="usa_work_or_study_ids" t-as='label'>
                                     <label class="radio-inline">
                                         <input type="radio" name="usa_work_or_study" t-att-value="label"
-                                               t-att-checked="'checked' if label==usa_work_or_study else None"/>
+                                               t-att-checked="'checked' if label==usa_work_or_study else None" required="required"/>
                                         <t t-esc="label_value"/>
                                     </label>
                                 </t>
@@ -371,19 +371,19 @@
                         </div>
                         <div class="col-md-6">
                             <div class="wrap_signature pull-left" id="wrap_signature">
-                                <input id="signature-image-upload" name="signature_image" class="hidden"
-                                       type="file">
+                                <input id="signature-image-upload" name="signature_image" class="hidden reqfield"
+                                       type="file" required="required">
                                     <img id="signature_image"/>
                                 </input>
                                 <div class="signature_image_layer">
-                                    <p class="img_desc text-center">Click here to upload singnature.</p>
+                                    <p class="img_desc text-center">Click here to upload signature.</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="img__wrap  pull-right" id="img_wrap">
-                                <input id="member-image-upload" class="hidden" type="file" name="image">
+                                <input id="member-image-upload" class="hidden reqfield" type="file" name="image" required="required">
                                     <img id="member_image"/>
                                 </input>
                                 <div class="member_image_layer">

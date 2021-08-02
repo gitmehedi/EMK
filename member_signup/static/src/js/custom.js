@@ -2,7 +2,7 @@ $(function () {
     var dateformat = 'yy-mm-dd'
 
     $("#birth_date").datepicker({
-        minDate: new Date(1900,1-1,1), maxDate: '-15Y',
+        minDate: new Date(1900,1-1,1), maxDate: '-18Y',
         changeMonth: true,
         changeYear: true,
         yearRange: "-100:-15",
@@ -53,6 +53,12 @@ $(function () {
         }else{
             selector.val('').removeAttr('required');
             selector.parent().hide();
+        }
+        cbx_group = $("input[name=subject_of_interest]");
+
+        cbx_group.prop('required', true);
+        if(cbx_group.is(":checked")){
+          cbx_group.prop('required', false);
         }
     });
 
