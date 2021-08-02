@@ -32,7 +32,7 @@ class UndeliveredReportXLSX(ReportXlsx):
             where_str += """ AND sm.product_id=%s""" % obj.product_id.id
 
         if obj.partner_id:
-            where_str += """ AND sp.partner_id=%s""" % obj.partner_id.id
+            where_str += """ AND so.partner_id=%s""" % obj.partner_id.id
 
         return where_str
 
@@ -41,7 +41,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         sql_str = """SELECT
                         DISTINCT sp.origin AS so_no,
                         sm.product_id,
-                        sp.partner_id,
+                        so.partner_id,
                         rp.name AS partner_name,
                         so.date_order AS so_date,
                         sol.product_uom_qty AS ordered_qty,
@@ -59,9 +59,9 @@ class UndeliveredReportXLSX(ReportXlsx):
                         JOIN stock_picking_type spt ON spt.id=sp.picking_type_id AND spt.code='outgoing'
                         JOIN operating_unit ou ON ou.id=sp.operating_unit_id
                         JOIN product_product pp ON pp.id=sm.product_id
-                        JOIN res_partner rp ON rp.id=sp.partner_id
                         JOIN sale_order so ON so.name=sp.origin
                         JOIN sale_order_line sol ON sol.order_id=so.id
+                        JOIN res_partner rp ON rp.id=so.partner_id
                         JOIN res_currency rc ON rc.id=sol.currency_id
                         LEFT JOIN product_packaging_mode pm ON pm.id=so.pack_type
                     """ + where_clause + """ ORDER BY so.date_order"""

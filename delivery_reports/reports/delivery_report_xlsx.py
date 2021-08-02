@@ -32,7 +32,7 @@ class DeliveryReportXLSX(ReportXlsx):
             where_str += """ AND spo.product_id=%s""" % obj.product_id.id
 
         if obj.partner_id:
-            where_str += """ AND sp.partner_id=%s""" % obj.partner_id.id
+            where_str += """ AND so.partner_id=%s""" % obj.partner_id.id
 
         return where_str
 
@@ -49,7 +49,9 @@ class DeliveryReportXLSX(ReportXlsx):
                         JOIN operating_unit ou ON ou.id=sp.operating_unit_id
                         JOIN product_product pp ON pp.id=spo.product_id
                         JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                        JOIN res_partner rp ON rp.id=sp.partner_id
+                        JOIN stock_picking dc ON dc.name=sp.origin
+                        JOIN sale_order so ON so.name=dc.origin
+                        JOIN res_partner rp ON rp.id=so.partner_id
         """ + where_clause + """ AND sp.state!='cancel' GROUP BY sp.origin"""
 
         self.env.cr.execute(sql_str)
@@ -63,7 +65,7 @@ class DeliveryReportXLSX(ReportXlsx):
         sql_str = """SELECT
                         spo.product_id,
                         pt.name AS product_name,
-                        sp.partner_id,
+                        so.partner_id,
                         rp.name AS partner_name,
                         sp.origin AS so_no,
                         so.date_order AS so_date,
@@ -84,15 +86,15 @@ class DeliveryReportXLSX(ReportXlsx):
                         JOIN operating_unit ou ON ou.id=sp.operating_unit_id
                         JOIN product_product pp ON pp.id=spo.product_id
                         JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                        JOIN res_partner rp ON rp.id=sp.partner_id
                         JOIN sale_order so ON so.name=sp.origin
                         JOIN sale_order_line sol ON sol.order_id=so.id
+                        JOIN res_partner rp ON rp.id=so.partner_id
                         JOIN res_currency rc ON rc.id=sol.currency_id
                         LEFT JOIN letter_credit lc ON lc.id=so.lc_id
                         LEFT JOIN product_packaging_mode pm ON pm.id=so.pack_type
                     """ + where_clause + """ AND sp.state='done'
                     GROUP BY
-                        sp.name,spo.product_id,pt.name,sp.partner_id,rp.name,sp.origin,so.date_order,
+                        sp.name,spo.product_id,pt.name,so.partner_id,rp.name,sp.origin,so.date_order,
                         sp.date_done,sp.vat_challan_id,lc.name,pm.packaging_mode,spo.qty_done,sol.price_unit,sol.currency_id,rc.name
                     ORDER BY 
                         sp.date_done
