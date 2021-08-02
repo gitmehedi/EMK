@@ -13,11 +13,11 @@
         </record>
 
         <record id="invoice_form" model="ir.ui.view">
-            <field name="name">account.invoice.form.inherit.samuda.account</field>
+            <field name="name">account.invoice.form.inherit.second.samuda.account</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='user_id']" position="before">
+                <xpath expr="//form/sheet/group/group/field[@name='user_id']" position="before">
                     <field name="pack_type"/>
                 </xpath>
             </field>
