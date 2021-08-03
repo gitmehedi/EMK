@@ -162,26 +162,20 @@
         <field name="view_mode">form</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
     </record>
-
-    <record model="ir.actions.act_window.view" id="act_mem_app_view_form">
+    <record id="act_mem_app_view_form" model="ir.actions.act_window.view" >
         <field name="sequence" eval="2"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_mem_app_form"/>
+        <field name="view_id" ref="member_app_form_view"/>
         <field name="act_window_id" ref="act_mem_app"/>
     </record>
 
-    <record model="ir.actions.act_window.view" id="act_mem_applicant_view_tree">
+    <record id="act_mem_applicant_view_tree" model="ir.actions.act_window.view" >
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="membership.membership_members_tree"/>
+        <field name="view_id" ref="member_app_tree_view"/>
         <field name="act_window_id" ref="act_mem_app"/>
     </record>
-
-    <menuitem name="Application" id="menu_main_applicant" sequence="0"
-              groups="membership_user.group_mem_user_applicant"/>
 
     <menuitem name="Application" id="menu_applicant" sequence="0" action="act_mem_app" parent="menu_main_applicant"
               groups="membership_user.group_mem_user_applicant"/>
-
-
 </odoo>
