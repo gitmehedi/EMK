@@ -13,8 +13,8 @@ $ git clone -b 10.0 --single-branch https://github.com/OCA/vertical-association.
 $ git clone -b 10.0 --single-branch https://github.com/OCA/partner-contact.git
 $ git clone -b 10.0 --single-branch https://github.com/thinkopensolutions/tko-addons.git
 $ git clone -b 10.0 --single-branch https://github.com/OCA/operating-unit.git
-$ git clone -b oca --single-branch https://github.com/genweb2/gbs.git
-$ git clone -b emk --single-branch https://github.com/genweb2/gbs.git
+$ git clone -b oca --single-branch https://github.com/genweb2/gbs.git oca
+$ git clone -b emk_dev --single-branch https://github.com/genweb2/gbs.git emk_dev
 ```
 
 
