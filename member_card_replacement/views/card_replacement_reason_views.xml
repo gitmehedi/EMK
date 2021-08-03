@@ -27,7 +27,7 @@
             <field name="model">member.card.replacement.reason</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="Card Replacements Reason">
+                <tree string="Card Replacements Reason" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False">
                     <field name="name"/>
                     <field name="status"/>
                 </tree>
