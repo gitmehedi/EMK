@@ -92,9 +92,9 @@ $(function () {
     $('input[name=usa_work_or_study]').change(function(){
         var val = $("input:checked[name=usa_work_or_study]:checked").val();
         if (val=='yes'){
-            $('#usa_work_or_study_place').attr('required','required').addClass('odooreq').parent().show();
+            $('#usa_work_or_study_place').attr('required','required').addClass('reqfield').parent().show();
         }else{
-            $('#usa_work_or_study_place').removeClass('odooreq').parent().hide();
+            $('#usa_work_or_study_place').removeAttr('required').removeClass('reqfield').val('').parent().hide();
         }
     });
 
