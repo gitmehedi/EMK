@@ -26,7 +26,7 @@
         <field name="model">member.occupation</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Occupation">
+            <tree string="Occupation" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False" >
                 <field name="name"/>
                 <field name="status"/>
             </tree>
@@ -75,7 +75,7 @@
         <field name="model">member.subject.interest</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Subject of Interest">
+            <tree string="Subject of Interest" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False">
                 <field name="name"/>
                 <field name="status"/>
             </tree>
@@ -124,7 +124,7 @@
         <field name="model">member.certification</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Certification">
+            <tree string="Certification" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False">
                 <field name="name"/>
                 <field name="status"/>
             </tree>
