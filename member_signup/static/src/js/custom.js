@@ -2,7 +2,7 @@ $(function () {
     var dateformat = 'yy-mm-dd'
 
     $("#birth_date").datepicker({
-        minDate: new Date(1900,1-1,1), maxDate: '-18Y',
+        minDate: new Date(1900,1-1,1), maxDate: '-16Y',
         changeMonth: true,
         changeYear: true,
         yearRange: "-100:-15",
