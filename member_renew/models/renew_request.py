@@ -3,19 +3,21 @@ from odoo import models, fields, api, _
 
 class RenewRequest(models.Model):
     _name = 'renew.request'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Membership Renew Request'
     _rec_name = 'membership_id'
     _order = 'id desc'
 
-    membership_id = fields.Many2one('res.partner', string='Name', required=True,
+    membership_id = fields.Many2one('res.partner', string='Name', required=True, track_visibility="onchange",
                                     readonly=True, states={'request': [('readonly', False)]})
     request_date = fields.Date(string='Requst Date', default=fields.Date.today(), required=True,
+                               track_visibility="onchange",
                                readonly=True, states={'request': [('readonly', False)]})
 
-    approve_date = fields.Date(string='Approve Date', default=fields.Date.today(),
+    approve_date = fields.Date(string='Approve Date', default=fields.Date.today(), track_visibility="onchange",
                                readonly=True, states={'request': [('readonly', False)]})
     state = fields.Selection([('request', 'Request'), ('invoice', 'Invoiced'), ('done', 'Done'), ('reject', 'Reject')],
-                             default='request', string='State')
+                             default='request', string='State', track_visibility="onchange")
 
     @api.one
     def act_invoice(self):

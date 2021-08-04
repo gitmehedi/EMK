@@ -74,7 +74,7 @@
         <field name="model">payment.session</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Sessions" decoration-bf="state in ['opened','validate']"
+            <tree string="Sessions" decoration-bf="state in ['opened']"
                   decoration-success="state == 'opened'" decoration-info="state == 'validate'"
                   decoration-muted="state == 'closed'">
                 <field name="name" string="Session ID"/>
