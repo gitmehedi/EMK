@@ -14,8 +14,9 @@ class PaymentSession(models.Model):
     def get_default_user(self):
         return self.env.user.partner_id
 
-    name = fields.Char(string='Name', track_visibility="onchange")
-    start_at = fields.Datetime(default=fields.Datetime.now, string='Opening Date', required=True, readonly=True,
+    name = fields.Char(string='Name', readonly=True, track_visibility="onchange")
+    start_at = fields.Datetime(default=fields.Datetime.now, string='Opening Date', required=True,
+                               readonly=True, states={'opened': [('readonly', False)]},
                                track_visibility="onchange")
     stop_at = fields.Datetime(string='Closing Date', readonly=True, states={'draft': [('readonly', False)]},
                               track_visibility="onchange")
@@ -27,6 +28,7 @@ class PaymentSession(models.Model):
     service_fee_ids = fields.One2many('service.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
                                       string='Service Fee', track_visibility="onchange")
     user_id = fields.Many2one('res.partner', string='Responsible', required=True, default=get_default_user,
+                              readonly=True, states={'opened': [('readonly', False)]},
                               track_visibility="onchange")
     open = fields.Boolean(default=True, track_visibility="onchange")
 
