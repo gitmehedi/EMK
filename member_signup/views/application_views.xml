@@ -280,7 +280,7 @@
     </record>
 
     <record id="action_member_app_pending" model="ir.actions.act_window">
-        <field name="name">Pending Applications</field>
+        <field name="name">Pending Application</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('is_applicant','=',True),('state','=','application')]</field>

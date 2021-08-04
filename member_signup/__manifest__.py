@@ -27,6 +27,7 @@
         'data/email_template.xml',
         'data/member_sequence.xml',
         'views/menu_views.xml',
+        'wizard/set_membership_views.xml',
         'views/applicant_profile_views.xml',
         'views/application_views.xml',
         'views/member_views.xml',

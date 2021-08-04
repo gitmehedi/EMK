@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 class MemberPayment(models.Model):
     _name = 'member.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Member Fee Payment'
     _order = 'id desc'
 
     @api.model
@@ -24,23 +25,27 @@ class MemberPayment(models.Model):
         if len(journal) > 0:
             return journal
 
-    due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True)
+    due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True,
+                              track_visibility="onchange")
     paid_amount = fields.Float(string='Paid Amount', required=True,
-                               readonly=True, states={'open': [('readonly', False)]})
-    payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'open': [('readonly', False)]})
+                               readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
+    payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'open': [('readonly', False)]},
+                              track_visibility="onchange")
     date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True,
-                       states={'open': [('readonly', False)]})
+                       states={'open': [('readonly', False)]}, track_visibility="onchange")
     membership_id = fields.Many2one('res.partner', string='Applicant/Member', required=True,
                                     domain=['&', ('is_applicant', '=', True), ('credit', '>', 0)],
-                                    readonly=True, states={'open': [('readonly', False)]})
+                                    readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
-                                 readonly=True, states={'open': [('readonly', False)]})
+                                 readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
 
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,
-                                 required=True, default=_get_session)
-    state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State')
+                                 required=True, default=_get_session, track_visibility="onchange")
+    state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State',
+                             track_visibility="onchange")
 
+    @api.onchange('membership_id')
     def onchange_membership(self):
         if self.membership_id:
             self.due_amount = self.membership_id.credit
@@ -101,11 +106,12 @@ class MemberPayment(models.Model):
 
                 if rec.state == 'paid' and self.membership_id.state == 'invoice':
                     seq = self.env['ir.sequence'].next_by_code('res.partner.member')
+                    membership_state = 'paid' if inv_amount > 0 else 'free'
                     self.membership_id.write({'state': 'member',
                                               'member_sequence': seq,
                                               'application_ref': self.membership_id.member_sequence,
-                                              'free_member': self.membership_id.member_sequence,
-                                              'membership_state': 'free'
+                                              'free_member': True,
+                                              'membership_state': membership_state
                                               })
                     for inv_line in invoice.invoice_line_ids:
                         mem_inv = self.env['membership.membership_line'].search([

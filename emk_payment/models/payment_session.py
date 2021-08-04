@@ -9,7 +9,6 @@ class PaymentSession(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Payment Session"
     _order = 'id desc'
-    _description = 'Payment Session'
 
     @api.model
     def get_default_user(self):
@@ -31,9 +30,8 @@ class PaymentSession(models.Model):
                               track_visibility="onchange")
     open = fields.Boolean(default=True, track_visibility="onchange")
 
-    state = fields.Selection(
-        [('opened', 'Opened'), ('validate', 'Validate'), ('closed', 'Closed')], default='opened', string='State',
-        track_visibility="onchange")
+    state = fields.Selection([('opened', 'Opened'), ('validate', 'Validate'), ('closed', 'Closed')], default='opened',
+                             string='State', track_visibility="onchange")
 
     @api.depends('member_fee_ids', 'service_fee_ids')
     def _compute_total_amount(self):

@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError, UserError
 class ServicePayment(models.Model):
     _name = 'service.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Service Payment'
     _rec_name = 'membership_id'
     _order = 'collection_date DESC, id desc'
 
@@ -24,28 +25,31 @@ class ServicePayment(models.Model):
         if len(journal) > 0:
             return journal
 
-    paid_amount = fields.Float(string='Payment Amount', compute='_compute_paid_amount', store=True)
-    comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
+    paid_amount = fields.Float(string='Payment Amount', compute='_compute_paid_amount', store=True,
+                               track_visibility="onchange")
+    comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]},
+                           track_visibility="onchange")
     collection_date = fields.Date(default=fields.Datetime.now, string='Date', required=True, readonly=True,
-                                  states={'open': [('readonly', False)]})
+                                  states={'open': [('readonly', False)]}, track_visibility="onchange")
     membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
-                                    readonly=True, states={'open': [('readonly', False)]})
+                                    readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
-                                 readonly=True, states={'open': [('readonly', False)]})
+                                 readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
 
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,
-                                 required=True, default=_get_session)
+                                 required=True, default=_get_session, track_visibility="onchange")
     payment_type_id = fields.Many2one('product.template', string='Payment Type', required=True,
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
                                               ('sale_ok', '=', False)],
-                                      readonly=True, states={'open': [('readonly', False)]})
-    check_type = fields.Char()
+                                      readonly=True, states={'open': [('readonly', False)]},
+                                      track_visibility="onchange")
+    check_type = fields.Char(track_visibility="onchange")
     card_replacement_id = fields.Many2one('member.card.replacement', string='Card Replacement',
                                           domain=[('state', '=', 'approve')], readonly=True,
-                                          states={'open': [('readonly', False)]})
+                                          states={'open': [('readonly', False)]}, track_visibility="onchange")
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open',
-                             string='State')
+                             string='State', track_visibility="onchange")
 
     def _compute_session(self):
         for rec in self:

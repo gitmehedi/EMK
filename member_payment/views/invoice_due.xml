@@ -180,7 +180,7 @@
         <field name="model">account.invoice</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Due Invoice" create="0">
+            <tree string="Due Invoice" create="0" decoration-danger="state == 'open'">
                 <field name="partner_id" groups="base.group_user" string="Customer"/>
                 <field name="date_invoice"/>
                 <field name="number"/>

@@ -5,6 +5,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="membership.view_partner_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button string="Set Membership" name="%(action_set_membership)d" type="action"
+                        groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+            </xpath>
             <xpath expr="//form" position="attributes">
                 <attribute name="create">false</attribute>
             </xpath>
@@ -19,13 +23,18 @@
             </xpath>
             <xpath expr="//form/header" position="after">
                 <field name="state" invisible="True"/>
+                <field name="company_id"/>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px; text-align:center;"
-                     attrs="{'invisible': [('membership_days_remaining','&gt;','company_id.expire_notification_days'),('state','=','member')]}">
+                     attrs="{'invisible': ['|',('membership_days_remaining','&gt;',30),('membership_days_remaining','=',0)]}">
                     Current membership will expire soon, see
                     <strong style="color: red;">Membership</strong>
                     tab.
                     <br/>
                     Please request for renew membership or active auto-renew feature.
+                </div>
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px; text-align:center;"
+                     attrs="{'invisible': [('membership_days_remaining','!=',0),('state','=','member')]}">
+                    <strong style="color: red;">Membership Expired</strong>
                 </div>
             </xpath>
             <xpath expr="//form/sheet/div/button[@name='toggle_active']" position="before">
@@ -48,7 +57,8 @@
 
             <xpath expr="//field[@name='name']" position="before">
                 <field name="member_sequence" readonly="True" style="color: green;"
-                       attrs="{'invisible':[('member_sequence','=',False)]}"/> <br/>
+                       attrs="{'invisible':[('member_sequence','=',False)]}"/>
+                <br/>
             </xpath>
             <xpath expr="//field[@name='lastname']" position="attributes">
                 <attribute name="required">True</attribute>
@@ -71,7 +81,9 @@
             <xpath expr="//field[@name='lang']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-
+            <xpath expr="//group/group[field[@name='free_member']]" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
 
             <xpath expr="//notebook/page[@autofocus='autofocus']" position="before">
                 <page name="member_personal_information" string="Personal Information" autofocus="autofocus">
@@ -131,13 +143,14 @@
             </xpath>
         </field>
     </record>
-    <record id="inherit_membership_members_tree" model="ir.ui.view" >
-        <field name="name">Members</field>
+    <record id="inherit_membership_members_tree" model="ir.ui.view">
+        <field name="name">Member</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="membership.membership_members_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Members" create="0">
+                <tree string="Members" create="0" decoration-danger="membership_days_remaining == 0 "
+                      decoration-success="membership_days_remaining > 0 ">
                     <field name="member_sequence" string="Membership ID"/>
                     <field name="name"/>
                     <field name="phone"/>
@@ -146,9 +159,9 @@
                     <field name="occupation"/>
                     <field name="highest_certification"/>
                     <field name="gender"/>
-                    <field name="membership_state" string="Membership Status"/>
                     <field name="membership_last_start" string="Membership Start Date"/>
                     <field name="membership_stop"/>
+                    <field name="membership_days_remaining"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
             </xpath>

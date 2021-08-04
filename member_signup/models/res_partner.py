@@ -34,7 +34,7 @@ class ResPartner(models.Model):
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
     _order = 'member_sequence desc'
 
-    member_sequence = fields.Char(string="ID")
+    member_sequence = fields.Char(string="ID", track_visibility="onchange")
 
     signup_token = fields.Char(copy=False)
     signup_type = fields.Char(string='Signup Token Type', copy=False)
