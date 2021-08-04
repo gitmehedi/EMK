@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_set_membership_wizard_form" model="ir.ui.view">
+        <field name="name">set.membership.wizard.form</field>
+        <field name="model">set.membership.wizard</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Expiration Lists">
+                <group>
+                    <group>
+                        <label id="membership_seq" string="Membership ID"/>
+                        <div>
+                            <field name="membership_seq"/>
+                        </div>
+                    </group>
+                </group>
+                <footer>
+                    <button string='Confirm' name="set_membership" type='object' class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_set_membership" model="ir.actions.act_window">
+        <field name="name">Set Membership</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">set.membership.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
