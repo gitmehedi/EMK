@@ -2,6 +2,7 @@ from odoo import models, fields, api, exceptions
 
 class ChecklistType(models.Model):
     _name = 'hr.exit.checklist.type'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     # Model Fields
     name = fields.Char(string='Name', size=100, required=True, help='Please enter name.')

@@ -24,6 +24,7 @@
                             <group>
                                 <field name="max_seat"/>
                                 <field name="min_seat"/>
+                                <field name="status"/>
                             </group>
                         </group>
                     </sheet>

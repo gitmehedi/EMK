@@ -8,7 +8,7 @@
             <field name="name">date.range.inherit.tree</field>
             <field name="model">date.range</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Date range">
+                <tree editable="bottom" string="Date range" decoration-bf="active == True" decoration-success="active == True" decoration-muted="active == False" >
                     <field name="name"/>
                     <field name="type_id" domain="[('holiday_year','=', 1)]" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     <field name="date_start"/>
@@ -51,7 +51,7 @@
             <field name="name">date.range.inherit.tree1</field>
             <field name="model">date.range</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Date range">
+                <tree editable="bottom" string="Date range"  decoration-bf="active == True" decoration-success="active == True" decoration-muted="active == False" >
                     <field name="name"/>
                     <field name="type_id" domain="[('holiday_month','=', 1)]" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     <field name="date_start"/>
