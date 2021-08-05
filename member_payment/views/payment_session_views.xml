@@ -35,7 +35,7 @@
                         <page string="Membership Fee">
                             <field name="member_fee_ids">
                                 <tree string="Membership Payment" decoration-bf="state == 'draft'" create="0" edit="0" delete="0"
-                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
+                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'" >
                                     <field name="membership_id"/>
                                     <field name="payment_ref"/>
                                     <field name="journal_id"/>
@@ -73,8 +73,7 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <tree string="Sessions" decoration-bf="state in ['opened','validate']"
-                  decoration-success="state == 'opened'" decoration-info="state == 'validate'"
-                  decoration-muted="state == 'closed'">
+                  decoration-success="state == 'opened'" decoration-muted="state == 'closed' or state == 'validate'" >
                 <field name="name" string="Session ID"/>
                 <field name="user_id"/>
                 <field name="start_at"/>
