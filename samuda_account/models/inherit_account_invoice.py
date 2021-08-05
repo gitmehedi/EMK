@@ -31,7 +31,7 @@ class AccountInvoice(models.Model):
                                 so_obj = self.env['sale.order'].search([('name', '=', self.origin)])
                                 if so_obj.pack_type == sale_acc_line.packing_mode_id:
                                     inv_line.account_id = sale_acc_line.account_id.id
-                                    break;
+                                    break
 
 
 class AccountInvoiceLine(models.Model):
@@ -53,15 +53,16 @@ class AccountInvoiceLine(models.Model):
                             so_obj = self.env['sale.order'].search([('name', '=', self.invoice_id.origin)])
                             if so_obj.pack_type == sale_acc_line.packing_mode_id:
                                 self.account_id = sale_acc_line.account_id.id
-                                break;
+                                break
 
 
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
     @api.multi
-    def do_new_transfer(self):
-        res = super(Picking, self).do_new_transfer()
+    def do_transfer(self):
+        res = super(Picking, self).do_transfer()
+
         product_acc_list = self.env['sale.type.product.account'].search(
             [('product_id', '=', self.sale_id.product_id.id)])
 
@@ -79,6 +80,6 @@ class Picking(models.Model):
                                 so_obj = self.env['sale.order'].search([('name', '=', self.origin)])
                                 if so_obj.pack_type == sale_acc_line.packing_mode_id:
                                     inv_line.account_id = sale_acc_line.account_id.id
-                                    break;
+                                    break
 
         return res
