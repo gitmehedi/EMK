@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="membership_categories_form_view" model="ir.ui.view">
+        <field name="name">membership.membership_category.form</field>
+        <field name="model">membership.membership_category</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Membership Categories">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="membership_category_tree_view" model="ir.ui.view">
+        <field name="model">membership.membership_category</field>
+        <field name="inherit_id" ref="membership_extension.membership_category_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Membership Categories" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False">
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="membership_extension.membership_category_action" model="ir.actions.act_window">
+        <field name="name">Membership Categories</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

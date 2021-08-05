@@ -6,7 +6,12 @@ from odoo import models, fields, api, _
 
 
 class InheritedMembershipCategory(models.Model):
-    _inherit = "membership.membership_category"
+    _name = "membership.membership_category"
+    _inherit = ['membership.membership_category', 'mail.thread', 'ir.needaction_mixin']
+    _description = 'Membership Category'
+
+    name = fields.Char(track_visibility='onchange')
+    status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name')
     def _check_name(self):

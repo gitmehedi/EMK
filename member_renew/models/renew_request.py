@@ -9,7 +9,8 @@ class RenewRequest(models.Model):
     _order = 'id desc'
 
     membership_id = fields.Many2one('res.partner', string='Name', required=True, track_visibility="onchange",
-                                    readonly=True, states={'request': [('readonly', False)]})
+                                    domain=[('state', '=', 'member')], readonly=True,
+                                    states={'request': [('readonly', False)]})
     request_date = fields.Date(string='Requst Date', default=fields.Date.today(), required=True,
                                track_visibility="onchange",
                                readonly=True, states={'request': [('readonly', False)]})

@@ -14,8 +14,8 @@ class MemberCardReplacement(models.Model):
                                                  states={'request': [('readonly', '=', False)]},
                                                  track_visibility="onchange")
     membership_id = fields.Many2one("res.partner", string="Membership", required=True,
-                                    readonly=True, states={'request': [('readonly', '=', False)]},
-                                    track_visibility="onchange")
+                                    domain=[('state', '=', 'member')], readonly=True,
+                                    states={'request': [('readonly', '=', False)]}, track_visibility="onchange")
     request_date = fields.Date(string="Request Date", default=fields.Date.today, required=True,
                                readonly=True, states={'request': [('readonly', '=', False)]},
                                track_visibility="onchange")
