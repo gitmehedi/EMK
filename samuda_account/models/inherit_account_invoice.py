@@ -4,6 +4,9 @@ from odoo import models, fields, api
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    sale_type_id = fields.Many2one(comodel_name='sale.order.type', readonly=True,
+                                   states={'draft': [('readonly', False)]})
+    team_id = fields.Many2one('crm.team', readonly=True, states={'draft': [('readonly', False)]})
     so_id = fields.Many2one('sale.order', string='SO No', readonly=True)
     date_invoice = fields.Date(states={'draft': [('readonly', True)]}, track_visibility='onchange')
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True,
