@@ -18,14 +18,17 @@ _logger = logging.getLogger(__name__)
 
 class MemberApplicationContoller(Home):
 
-    @http.route()
-    def web_login(self, *args, **kw):
+    @http.route(website=True, auth="public")
+    def web_login(self, redirect=None, *args, **kw):
         ensure_db()
         response = super(MemberApplicationContoller, self).web_login(*args, **kw)
         response.qcontext.update(self.get_auth_signup_config())
         if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
             # Redirect if already logged in and redirect param is present
             return http.redirect_with_hash(request.params.get('redirect'))
+        elif request.env['res.users'].browse(request.uid).has_group('base.group_portal'):
+            redirect = '/web?' + request.httprequest.query_string
+            return http.redirect_with_hash(redirect)
         return response
 
     def get_auth_signup_config(self):
