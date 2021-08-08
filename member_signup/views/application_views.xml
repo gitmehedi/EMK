@@ -309,7 +309,7 @@
         <field name="view_id" ref="member_app_kanban_view"/>
         <field name="act_window_id" ref="action_member_app_pending"/>
     </record>
-    <menuitem id="menu_member_app_pending" sequence="10" parent="menu_member_app"
+    <menuitem id="menu_member_app_pending" sequence="5" parent="menu_member_app"
               action="action_member_app_pending"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
@@ -343,7 +343,7 @@
         <field name="view_id" ref="member_app_kanban_view"/>
         <field name="act_window_id" ref="action_member_app_approved"/>
     </record>
-    <menuitem id="menu_member_app_approved" sequence="5" parent="menu_member_app"
+    <menuitem id="menu_member_app_approved" sequence="10" parent="menu_member_app"
               action="action_member_app_approved"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
