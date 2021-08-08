@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_service_types_form" model="ir.ui.view">
+        <field name="name">product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Service Types">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="type" invisible="True"/>
+                            <field name="categ_id" invisible="True"/>
+                            <field name="list_price"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="view_service_types_tree" model="ir.ui.view">
+        <field name="name">product.template.tree</field>
+        <field name="model">product.template</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Service Fee">
+                <field name="name"/>
+                <field name="type" invisible="True"/>
+                <field name="categ_id" invisible="True"/>
+                <field name="list_price"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_service_fee_product">
+        <field name="name">Service Types</field>
+        <field name="res_model">product.template</field>
+        <field name="domain">[('type','=','service'),('sale_ok','=',False),('purchase_ok','=',False)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a new service Types
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Service Types" id="service_fee" action="action_service_fee_product" sequence="100"
+              parent="membership.menu_marketing_config_association"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+
+</odoo>

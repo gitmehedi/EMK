@@ -31,7 +31,7 @@ class ServicePayment(models.Model):
                            track_visibility="onchange")
     collection_date = fields.Date(default=fields.Datetime.now, string='Date', required=True, readonly=True,
                                   states={'open': [('readonly', False)]}, track_visibility="onchange")
-    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
+    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,  domain=[('state', '=', 'member')],
                                     readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
