@@ -10,7 +10,7 @@
                     <attribute name="string">Delivery Info</attribute>
                 </xpath>
                 <xpath expr="//notebook/page[@name='pickings']/field[@name='picking_ids']" position="replace">
-                    <field name="picking_ids">
+                    <field name="picking_ids" style="pointer-events:none;">
                         <tree>
                             <field name="name"/>
                             <field name="location_dest_id"/>
