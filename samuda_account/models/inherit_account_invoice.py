@@ -4,7 +4,18 @@ from odoo import models, fields, api
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    sale_type_id = fields.Many2one(comodel_name='sale.order.type', readonly=True,
+                                   states={'draft': [('readonly', False)]})
+    team_id = fields.Many2one('crm.team', readonly=True, states={'draft': [('readonly', False)]})
     so_id = fields.Many2one('sale.order', string='SO No', readonly=True)
+    date_invoice = fields.Date(states={'draft': [('readonly', True)]}, track_visibility='onchange')
+    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True,
+                                compute='_compute_pack_type')
+
+    @api.depends('so_id')
+    def _compute_pack_type(self):
+        for rec in self:
+            rec.pack_type = rec.so_id.pack_type
 
     @api.onchange('sale_type_id')
     def onchange_sale_type_id(self):
@@ -23,7 +34,7 @@ class AccountInvoice(models.Model):
                                 so_obj = self.env['sale.order'].search([('name', '=', self.origin)])
                                 if so_obj.pack_type == sale_acc_line.packing_mode_id:
                                     inv_line.account_id = sale_acc_line.account_id.id
-                                    break;
+                                    break
 
 
 class AccountInvoiceLine(models.Model):
@@ -45,15 +56,16 @@ class AccountInvoiceLine(models.Model):
                             so_obj = self.env['sale.order'].search([('name', '=', self.invoice_id.origin)])
                             if so_obj.pack_type == sale_acc_line.packing_mode_id:
                                 self.account_id = sale_acc_line.account_id.id
-                                break;
+                                break
 
 
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
     @api.multi
-    def do_new_transfer(self):
-        res = super(Picking, self).do_new_transfer()
+    def do_transfer(self):
+        res = super(Picking, self).do_transfer()
+
         product_acc_list = self.env['sale.type.product.account'].search(
             [('product_id', '=', self.sale_id.product_id.id)])
 
@@ -71,6 +83,6 @@ class Picking(models.Model):
                                 so_obj = self.env['sale.order'].search([('name', '=', self.origin)])
                                 if so_obj.pack_type == sale_acc_line.packing_mode_id:
                                     inv_line.account_id = sale_acc_line.account_id.id
-                                    break;
+                                    break
 
         return res

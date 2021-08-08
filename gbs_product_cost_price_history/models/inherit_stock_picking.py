@@ -8,7 +8,7 @@ class InheritStockPicking(models.Model):
     @api.multi
     def do_transfer(self):
         for record in self.move_lines:
-            if record.location_dest_id.name == 'Stock':
+            if record.location_dest_id.name == 'Stock' and record.product_id.purchase_ok:
                 self._set_cost_price(record)
 
         return super(InheritStockPicking, self).do_transfer()

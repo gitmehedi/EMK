@@ -22,7 +22,7 @@ class DeliveryReportXLSX(ReportXlsx):
                             AND DATE(sp.date_done + interval '6h') BETWEEN DATE('%s')+time '00:00' AND DATE('%s')+time '23:59:59'""" % (obj.operating_unit_id.id, obj.date_from, obj.date_to)
 
         if obj.product_tmpl_id and not obj.product_id:
-            product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id)]).ids
+            product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id), '|', ('active', '=', True), ('active', '=', False)]).ids
             if len(product_ids) > 1:
                 where_str += """ AND spo.product_id IN %s""" % (tuple(product_ids),)
             else:
@@ -32,7 +32,7 @@ class DeliveryReportXLSX(ReportXlsx):
             where_str += """ AND spo.product_id=%s""" % obj.product_id.id
 
         if obj.partner_id:
-            where_str += """ AND sp.partner_id=%s""" % obj.partner_id.id
+            where_str += """ AND so.partner_id=%s""" % obj.partner_id.id
 
         return where_str
 
@@ -49,7 +49,9 @@ class DeliveryReportXLSX(ReportXlsx):
                         JOIN operating_unit ou ON ou.id=sp.operating_unit_id
                         JOIN product_product pp ON pp.id=spo.product_id
                         JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                        JOIN res_partner rp ON rp.id=sp.partner_id
+                        JOIN stock_picking dc ON dc.name=sp.origin
+                        JOIN sale_order so ON so.name=dc.origin
+                        JOIN res_partner rp ON rp.id=so.partner_id
         """ + where_clause + """ AND sp.state!='cancel' GROUP BY sp.origin"""
 
         self.env.cr.execute(sql_str)
@@ -63,7 +65,7 @@ class DeliveryReportXLSX(ReportXlsx):
         sql_str = """SELECT
                         spo.product_id,
                         pt.name AS product_name,
-                        sp.partner_id,
+                        so.partner_id,
                         rp.name AS partner_name,
                         sp.origin AS so_no,
                         so.date_order AS so_date,
@@ -71,6 +73,7 @@ class DeliveryReportXLSX(ReportXlsx):
                         sp.name AS delivery_challan_no,
                         sp.vat_challan_id AS vat_challan_no,
                         lc.name AS contract_no,
+                        pm.packaging_mode AS packing_mode,
                         spo.qty_done AS delivered_qty,
                         sol.price_unit,
                         sol.currency_id,
@@ -83,15 +86,16 @@ class DeliveryReportXLSX(ReportXlsx):
                         JOIN operating_unit ou ON ou.id=sp.operating_unit_id
                         JOIN product_product pp ON pp.id=spo.product_id
                         JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                        JOIN res_partner rp ON rp.id=sp.partner_id
                         JOIN sale_order so ON so.name=sp.origin
                         JOIN sale_order_line sol ON sol.order_id=so.id
+                        JOIN res_partner rp ON rp.id=so.partner_id
                         JOIN res_currency rc ON rc.id=sol.currency_id
                         LEFT JOIN letter_credit lc ON lc.id=so.lc_id
+                        LEFT JOIN product_packaging_mode pm ON pm.id=so.pack_type
                     """ + where_clause + """ AND sp.state='done'
                     GROUP BY
-                        sp.name,spo.product_id,pt.name,sp.partner_id,rp.name,sp.origin,so.date_order,
-                        sp.date_done,sp.vat_challan_id,lc.name,spo.qty_done,sol.price_unit,sol.currency_id,rc.name
+                        sp.name,spo.product_id,pt.name,so.partner_id,rp.name,sp.origin,so.date_order,
+                        sp.date_done,sp.vat_challan_id,lc.name,pm.packaging_mode,spo.qty_done,sol.price_unit,sol.currency_id,rc.name
                     ORDER BY 
                         sp.date_done
         """
@@ -100,7 +104,6 @@ class DeliveryReportXLSX(ReportXlsx):
         conversion_rate_dict = self._get_conversion_rate()
         company_currency_name = self.env.user.company_id.currency_id.name
         delivery_returned_list = self._get_delivery_returned(obj)
-        products = self.env['product.product'].search([('sale_ok', '=', True), ('active', '=', True)])
 
         self.env.cr.execute(sql_str)
         for row in self.env.cr.dictfetchall():
@@ -116,7 +119,7 @@ class DeliveryReportXLSX(ReportXlsx):
             if row['product_id'] in delivery_done_dict:
                 delivery_done_dict[row['product_id']]['deliveries'].append(row)
             else:
-                product = products.filtered(lambda x: x.id == row['product_id'])
+                product = self.env['product.product'].browse(row['product_id'])
                 delivery_done_dict[row['product_id']] = {}
                 delivery_done_dict[row['product_id']]['product_name'] = product.display_name
                 delivery_done_dict[row['product_id']]['deliveries'] = []
@@ -165,27 +168,28 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.set_column(4, 4, 17)
         sheet.set_column(5, 5, 17)
         sheet.set_column(6, 6, 18)
-        sheet.set_column(7, 7, 16)
-        sheet.set_column(8, 8, 10)
+        sheet.set_column(7, 7, 18)
+        sheet.set_column(8, 8, 16)
         sheet.set_column(9, 9, 10)
-        sheet.set_column(10, 10, 18)
+        sheet.set_column(10, 10, 10)
+        sheet.set_column(11, 11, 18)
 
         # SHEET HEADER
         conversion_rate_dict = self._get_conversion_rate()
-        sheet.merge_range(0, 0, 0, 10, self.env.user.company_id.name, name_format)
-        sheet.merge_range(1, 0, 1, 10, self.env.user.company_id.street, address_format)
-        sheet.merge_range(2, 0, 2, 10, self.env.user.company_id.street2, address_format)
-        sheet.merge_range(3, 0, 3, 10, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
-        sheet.merge_range(4, 0, 4, 10, "Delivery Report", name_format)
+        sheet.merge_range(0, 0, 0, 11, self.env.user.company_id.name, name_format)
+        sheet.merge_range(1, 0, 1, 11, self.env.user.company_id.street, address_format)
+        sheet.merge_range(2, 0, 2, 11, self.env.user.company_id.street2, address_format)
+        sheet.merge_range(3, 0, 3, 11, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
+        sheet.merge_range(4, 0, 4, 11, "Delivery Report", name_format)
 
         row = 5
         for key, val in conversion_rate_dict.items():
             if key != self.env.user.company_id.currency_id.name:
-                sheet.merge_range(row, 8, row, 10, key + ": " + str(val), bold)
+                sheet.merge_range(row, 9, row, 11, key + ": " + str(val), bold)
                 row += 1
 
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, 8, row, 10, "Date: " + self.get_formatted_date(obj.date_from, "%d-%m-%Y") + " To " + self.get_formatted_date(obj.date_to, "%d-%m-%Y"), bold)
+        sheet.merge_range(row, 9, row, 11, "Date: " + self.get_formatted_date(obj.date_from, "%d-%m-%Y") + " To " + self.get_formatted_date(obj.date_to, "%d-%m-%Y"), bold)
         row += 1
 
         # TABLE HEADER
@@ -197,16 +201,17 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.write(row, col + 4, 'Delivery Challan No.', th_cell_center)
         sheet.write(row, col + 5, 'Vat Challan No.', th_cell_center)
         sheet.write(row, col + 6, 'LC/TT/Sales Contract', th_cell_center)
-        sheet.write(row, col + 7, 'Delivery Qty (MT)', th_cell_center)
-        sheet.write(row, col + 8, 'Unit Price', th_cell_center)
-        sheet.write(row, col + 9, 'Currency', th_cell_center)
-        sheet.write(row, col + 10, 'Amount (BDT)', th_cell_center)
+        sheet.write(row, col + 7, 'Packing Mode', th_cell_center)
+        sheet.write(row, col + 8, 'Delivery Qty (MT)', th_cell_center)
+        sheet.write(row, col + 9, 'Unit Price', th_cell_center)
+        sheet.write(row, col + 10, 'Currency', th_cell_center)
+        sheet.write(row, col + 11, 'Amount (BDT)', th_cell_center)
 
         # TABLE BODY
         grand_total_amount = 0.0
         row += 1
         for index, value in result_data.items():
-            sheet.merge_range(row, col, row, col + 10, value['product_name'], td_cell_left_bold)
+            sheet.merge_range(row, col, row, col + 11, value['product_name'], td_cell_left_bold)
             row += 1
 
             for rec in value['deliveries']:
@@ -218,10 +223,11 @@ class DeliveryReportXLSX(ReportXlsx):
                     sheet.write(row, col + 4, rec['delivery_challan_no'], td_cell_center)
                     sheet.write(row, col + 5, rec['vat_challan_no'], td_cell_left)
                     sheet.write(row, col + 6, rec['contract_no'], td_cell_left)
-                    sheet.write(row, col + 7, rec['delivered_qty'], no_format)
-                    sheet.write(row, col + 8, rec['price_unit'], no_format)
-                    sheet.write(row, col + 9, rec['currency_name'], td_cell_center)
-                    sheet.write(row, col + 10, rec['amount'], no_format)
+                    sheet.write(row, col + 7, rec['packing_mode'], td_cell_center)
+                    sheet.write(row, col + 8, rec['delivered_qty'], no_format)
+                    sheet.write(row, col + 9, rec['price_unit'], no_format)
+                    sheet.write(row, col + 10, rec['currency_name'], td_cell_center)
+                    sheet.write(row, col + 11, rec['amount'], no_format)
                     row += 1
 
             # SUB TOTAL
@@ -229,17 +235,17 @@ class DeliveryReportXLSX(ReportXlsx):
             sub_total_amount = sum(map(lambda x: x['amount'], filter(lambda v: v['delivered_qty'] > 0, value['deliveries'])))
             grand_total_amount += float(sub_total_amount)
 
-            sheet.merge_range(row, col, row, col + 6, 'Sub Total', td_cell_left_bold)
-            sheet.write(row, col + 7, sub_total_delivered_qty, total_format)
-            sheet.write(row, col + 8, '', total_format)
+            sheet.merge_range(row, col, row, col + 7, 'Sub Total', td_cell_left_bold)
+            sheet.write(row, col + 8, sub_total_delivered_qty, total_format)
             sheet.write(row, col + 9, '', total_format)
-            sheet.write(row, col + 10, sub_total_amount, total_format)
+            sheet.write(row, col + 10, '', total_format)
+            sheet.write(row, col + 11, sub_total_amount, total_format)
             row += 1
             # END
 
         # GRAND TOTAL
-        sheet.merge_range(row, col, row, col + 9, 'Grand Total', td_cell_left_bold)
-        sheet.write(row, col + 10, grand_total_amount, total_format)
+        sheet.merge_range(row, col, row, col + 10, 'Grand Total', td_cell_left_bold)
+        sheet.write(row, col + 11, grand_total_amount, total_format)
         # END
 
 

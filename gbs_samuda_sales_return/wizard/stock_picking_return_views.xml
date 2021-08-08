@@ -19,6 +19,9 @@
             <xpath expr="//field[@name='to_refund_so']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='to_refund_so']" position="after">
+                <field name="available_qty" invisible="1"/>
+            </xpath>
         </field>
     </record>
 </odoo>

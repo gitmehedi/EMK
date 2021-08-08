@@ -219,7 +219,7 @@ class InheritStockPicking(models.Model):
                 vals['jar_count'] = math.ceil(jar_count)
                 vals['packing_mode_id'] = self.pack_type.id
                 vals['jar_type'] = self.pack_type.uom_id.display_name.upper().strip()
-                vals['date'] = datetime.datetime.now().date()
+                vals['date'] = datetime.now().date()
 
                 delivery_jar_count_obj.create(vals)
 

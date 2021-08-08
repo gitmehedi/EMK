@@ -4,13 +4,21 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 
 
+class ReturnPickingLine(models.TransientModel):
+    _inherit = "stock.return.picking.line"
+
+    available_qty = fields.Float("Available Quantity", digits=dp.get_precision('Product Unit of Measure'))
+
+
 class ReturnPicking(models.TransientModel):
     _inherit = 'stock.return.picking'
 
     def _get_default_price_unit(self):
-        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
-        amount = sum(line.credit for line in picking.cogs_move_id.line_ids)
-        price_unit = amount / picking.pack_operation_product_ids[0].qty_done
+        price_unit = 0
+        if 'active_id' in self.env.context:
+            picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+            amount = sum(line.credit for line in picking.cogs_move_id.line_ids)
+            price_unit = amount / picking.pack_operation_product_ids[0].qty_done
     
         return price_unit
 
@@ -20,6 +28,8 @@ class ReturnPicking(models.TransientModel):
     def _check_quantity(self):
         if any(move.quantity < 0 for move in self.product_return_moves):
             raise ValidationError(_("Quantity cannot be negative"))
+        if any(move.quantity > move.available_qty for move in self.product_return_moves):
+            raise ValidationError(_("Quantity cannot be more than available quantity"))
 
     @api.model
     def default_get(self, fields):
@@ -28,6 +38,7 @@ class ReturnPicking(models.TransientModel):
         if 'product_return_moves' in res:
             for move in res['product_return_moves']:
                 move[2]['to_refund_so'] = True
+                move[2]['available_qty'] = move[2]['quantity']
 
         return res
 

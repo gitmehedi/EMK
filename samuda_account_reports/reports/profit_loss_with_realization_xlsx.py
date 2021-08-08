@@ -605,6 +605,8 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                 # GROUP TOTAL ROW
 
                 item_list = value.get(GRP_ORDER[k])
+                # sorted list
+                item_list = sorted(item_list, key=lambda i: i['name'])
 
                 # PARENT ROW
                 pr_amount = float(sum(item['amount'] for item in item_list)) or 0.0
@@ -621,7 +623,10 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
 
                 # CHILD ROW
                 for item in item_list:
-                    sales_amount = cc_wise_sales_amount_dict.get(item['cost_center_id'], 0.0) if 'cost_center_id' in item else net_revenue
+                    sales_amount = net_revenue
+                    if 'cost_center_id' in item and GRP_ORDER[k] != 'net_revenue':
+                        sales_amount = cc_wise_sales_amount_dict.get(item['cost_center_id'], 0.0)
+
                     ch_qty = cc_wise_sales_qty_dict.get(item['cost_center_id'], 0.0) if 'cost_center_id' in item else item['quantity']
                     ch_amount = float(item['amount']) or 0.0
                     ch_net_realization = (ch_amount / ch_qty) if ch_qty > 0 else 0.0
