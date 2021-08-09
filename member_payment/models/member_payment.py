@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, Warning
 
 
 class MemberPayment(models.Model):
@@ -44,6 +44,13 @@ class MemberPayment(models.Model):
                                  required=True, default=_get_session, track_visibility="onchange")
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State',
                              track_visibility="onchange")
+
+    @api.constrains('membership_id')
+    def check_duplicate(self):
+        rec = self.search([('membership_id', '=', self.membership_id.id), ('state', 'in', ['open'])])
+        if len(rec) > 1:
+            raise ValidationError(
+                _('Currently a record exist for processing with member'.format(self.membership_id.name)))
 
     @api.onchange('membership_id')
     def onchange_membership(self):
@@ -166,3 +173,10 @@ class MemberPayment(models.Model):
         if self.membership_id:
             name = '[%s] %s' % (self.membership_id.member_sequence, self.membership_id.name)
         return (self.id, name)
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('paid',):
+                raise Warning(_('[Warning] Paid record cannot deleted.'))
+        return super(MemberPayment, self).unlink()

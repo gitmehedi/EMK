@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, Warning
 
 
 class MemberCardReplacement(models.Model):
@@ -38,6 +39,13 @@ class MemberCardReplacement(models.Model):
         [('request', 'Request'), ('authenticate', 'Authenticate'), ('approve', 'Approve'), ('paid', 'Paid'),
          ('reject', 'Reject')],
         string="State", default='request', track_visibility="onchange")
+
+    @api.constrains('membership_id')
+    def check_duplicate(self):
+        rec = self.search(
+            [('membership_id', '=', self.membership_id.id), ('state', 'in', ['request', 'authenticate', 'approve'])])
+        if len(rec) > 1:
+            raise ValidationError(_('Currently a record exist for processing with member'.format(self.membership_id.name)))
 
     @api.one
     def act_request(self):
@@ -84,3 +92,10 @@ class MemberCardReplacement(models.Model):
             return [('state', 'in', ['authenticate'])]
         elif context.get('mcount') == 'approve':
             return [('state', 'in', ['approve'])]
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('authenticate', 'approve', 'paid', 'reject'):
+                raise Warning(_('[Warning] Record cannot deleted.'))
+        return super(MemberCardReplacement, self).unlink()

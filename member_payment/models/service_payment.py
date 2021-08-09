@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, Warning
 
 
 class ServicePayment(models.Model):
@@ -31,7 +31,8 @@ class ServicePayment(models.Model):
                            track_visibility="onchange")
     collection_date = fields.Date(default=fields.Datetime.now, string='Date', required=True, readonly=True,
                                   states={'open': [('readonly', False)]}, track_visibility="onchange")
-    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,  domain=[('state', '=', 'member')],
+    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
+                                    domain=[('state', '=', 'member')],
                                     readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
@@ -50,6 +51,13 @@ class ServicePayment(models.Model):
                                           states={'open': [('readonly', False)]}, track_visibility="onchange")
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open',
                              string='State', track_visibility="onchange")
+
+    @api.constrains('membership_id')
+    def check_duplicate(self):
+        rec = self.search([('membership_id', '=', self.membership_id.id), ('state', 'in', ['open'])])
+        if len(rec) > 1:
+            raise ValidationError(
+                _('Currently a record exist for processing with member'.format(self.membership_id.name)))
 
     def _compute_session(self):
         for rec in self:
@@ -115,3 +123,10 @@ class ServicePayment(models.Model):
                 payment.post()
                 if payment:
                     self.state = 'paid'
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('paid', 'cancel'):
+                raise Warning(_('[Warning] Paid record cannot deleted.'))
+        return super(ServicePayment, self).unlink()

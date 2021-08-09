@@ -54,6 +54,7 @@
             <tree string="Card Replacement" decoration-bf="state in ['request','authenticate','approve','paid']"
                   decoration-info="state == 'request'" decoration-success="state in ['authenticate','approve']"
                   decoration-muted="state == 'paid'" decoration-danger="state == 'reject'">
+                <field name="name"/>
                 <field name="membership_id"/>
                 <field name="request_date"/>
                 <field name="authorize_date" attrs="{'invisible': [('state', '=', 'request')]}"/>

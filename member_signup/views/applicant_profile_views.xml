@@ -176,6 +176,6 @@
         <field name="act_window_id" ref="act_mem_app"/>
     </record>
 
-    <menuitem name="Application" id="menu_applicant" sequence="0" action="act_mem_app" parent="menu_main_applicant"
+    <menuitem name="Application" id="menu_applicant" sequence="3" action="act_mem_app" parent="menu_main_applicant"
               groups="membership_user.group_mem_user_applicant"/>
 </odoo>
