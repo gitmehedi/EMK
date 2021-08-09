@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_renew_member_request" model="ir.sequence">
+            <field name="name">Renew Membership Request Sequence</field>
+            <field name="code">renew.member.request.seq</field>
+            <field name="prefix">RR/%(year)s/</field>
+            <field name="padding">2</field>
+            <field eval="1" name="number_increment"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

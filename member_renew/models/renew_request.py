@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError,Warning
 
 
 class RenewRequest(models.Model):
@@ -8,10 +9,11 @@ class RenewRequest(models.Model):
     _rec_name = 'membership_id'
     _order = 'id desc'
 
+    name = fields.Char(string='Name', readonly=True)
     membership_id = fields.Many2one('res.partner', string='Name', required=True, track_visibility="onchange",
                                     domain=[('state', '=', 'member')], readonly=True,
                                     states={'request': [('readonly', False)]})
-    request_date = fields.Date(string='Requst Date', default=fields.Date.today(), required=True,
+    request_date = fields.Date(string='Request Date', default=fields.Date.today(), required=True,
                                track_visibility="onchange",
                                readonly=True, states={'request': [('readonly', False)]})
 
@@ -20,10 +22,17 @@ class RenewRequest(models.Model):
     state = fields.Selection([('request', 'Request'), ('invoice', 'Invoiced'), ('done', 'Done'), ('reject', 'Reject')],
                              default='request', string='State', track_visibility="onchange")
 
+    @api.constrains('membership_id')
+    def check_duplicate(self):
+        rec = self.search([('membership_id', '=', self.membership_id.id), ('state', 'in', ['request', 'invoice'])])
+        if len(rec) > 1:
+            raise ValidationError(_('Currently a record exist for processing with member'.format(self.membership_id.name)))
+
     @api.one
     def act_invoice(self):
         if 'request' in self.state:
             self.membership_id._create_invoice()
+            self.name = self.env['ir.sequence'].next_by_code('member.card.replacement.seq')
             self.state = 'invoice'
 
     @api.one
@@ -39,3 +48,10 @@ class RenewRequest(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'request')]
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('invoice', 'done', 'reject'):
+                raise Warning(_('[Warning] Record cannot deleted.'))
+        return super(RenewRequest, self).unlink()

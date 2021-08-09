@@ -43,6 +43,7 @@
         <field name="arch" type="xml">
             <tree string="Renew Request"
                   colors="green:state=='request'; gray:state=='done';blue:state=='invoice';red:state=='done';">
+                <field name="name"/>
                 <field name="membership_id"/>
                 <field name="request_date"/>
                 <field name="approve_date"/>
