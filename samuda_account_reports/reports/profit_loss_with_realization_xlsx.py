@@ -90,7 +90,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                         FROM
                             account_move_line aml
                             JOIN account_move mv ON mv.id=aml.move_id
-                            JOIN account_invoice i ON i.move_id=mv.id
+                            JOIN account_invoice i ON i.move_id=mv.id AND i.type='out_invoice'
                             JOIN account_invoice_line l ON l.invoice_id=i.id
                             JOIN product_product p ON p.id=l.product_id
                             JOIN account_cost_center acc ON acc.id=aml.cost_center_id
