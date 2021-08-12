@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="emk_member_data_import_form" model="ir.ui.view">
+            <field name="name">emk.member.data.import.form</field>
+            <field name="model">emk.member.data.import</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="%(gbs_data_migration.action_emk_member_data_import_wizard)d"
+                                groups="gbs_data_migration.group_data_migration_admin"
+                                type="action" string="Upload" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <div>
+                            <h1>
+                                <field name="code"/>
+                            </h1>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="emk_member_data_import_tree" model="ir.ui.view">
+            <field name="name">emk.member.data.import.tree</field>
+            <field name="model">emk.member.data.import</field>
+            <field name="arch" type="xml">
+                <tree string="Member Data Import">
+                    <field name="code"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_emk_member_data_import" model="ir.actions.act_window">
+            <field name="name">Member Data Import</field>
+            <field name="res_model">emk.member.data.import</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_emk_member_data_import" name="Member"
+                  parent="menu_data_migration"
+                  sequence="20" groups="group_data_migration_admin"
+                  action="action_emk_member_data_import"/>
+    </data>
+</odoo>
