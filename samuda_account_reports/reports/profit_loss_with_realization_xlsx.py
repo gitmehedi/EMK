@@ -74,7 +74,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                             JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                             JOIN account_cost_center acc ON acc.id=aml.cost_center_id
                         """ + where_clause + """
-                            AND aat.name IN ('Refund','Vat')
+                            AND aat.name IN ('Refund','Vat', 'Rental-Inc')
                         GROUP BY aml.cost_center_id,acc.name 
                         ORDER BY aml.cost_center_id)
                         UNION
