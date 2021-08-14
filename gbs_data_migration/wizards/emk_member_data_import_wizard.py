@@ -13,6 +13,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from odoo.exceptions import ValidationError, Warning
+from odoo.addons.opa_utility.models.utility import Utility as utility
 
 
 class EMKMemberDataImportWizard(models.TransientModel):
@@ -204,12 +205,12 @@ class EMKMemberDataImportWizard(models.TransientModel):
             id_number = line['id number'].strip()
             membership_categories = line['membership categories'].strip()
             membership_status = line['membership status'].strip()
-            joining_date = self.date_format(line['joining date'].strip())
-            membership_expire = self.date_format(line['membership expire'].strip())
+            joining_date = utility.date_format(line['joining date'].strip())
+            membership_expire = utility.date_format(line['membership expire'].strip())
             first_name = line['first name'].strip()
             middle_name = line['middle name'].strip()
             last_name = line['last name'].strip()
-            date_of_birth = line['date of birth'].strip()
+            date_of_birth = utility.date_format(line['date of birth'].strip())
             gender = line['gender'].strip()
             phone = line['phone'].strip()
             address = line['address'].strip()
@@ -242,17 +243,12 @@ class EMKMemberDataImportWizard(models.TransientModel):
             else:
                 hca = mcer[hca]
 
-            if email in partner.keys():
-                # errors += self.format_error(line_no, 'EMAIL [{0}] invalid value'.format(email))
-                continue
-
-            # if data is valid, create model object.
             if len(errors) == 0:
                 val['member_sequence'] = id_number
                 val['firstname'] = first_name
                 val['middlename'] = middle_name
                 val['lastname'] = last_name
-                # val['birth_date'] = date_of_birth
+                val['birth_date'] = date_of_birth
                 val['phone'] = phone
                 val['street'] = address
                 val['city'] = city
@@ -272,13 +268,12 @@ class EMKMemberDataImportWizard(models.TransientModel):
                 val['membership_last_start'] = joining_date
                 val['membership_stop'] = membership_expire
 
-                member_cat = self.env['product.template'].search(
-                    [('membership_category_id', '=', mc[membership_categories]), ('active', '=', True)])
-
                 state = 'paid'
                 if 'Honorary Member':
                     state = 'free'
 
+                member_cat = self.env['product.template'].search(
+                    [('membership_category_id', '=', mc[membership_categories]), ('active', '=', True)])
                 member_line = {
                     'date': joining_date,
                     'date_from': joining_date,
@@ -288,8 +283,14 @@ class EMKMemberDataImportWizard(models.TransientModel):
                     'member_price': member_cat.list_price
                 }
 
-                val['member_lines'] = [(0, 0, member_line)]
-                self.env['res.partner'].create(val)
+                if email in partner.keys():
+                    exist = self.env['res.partner'].search([('email', '=', email)])[0]
+                    exist.write(val)
+                    member_line['partner'] = exist.id
+                    self.env['membership.membership_line'].create(member_line)
+                else:
+                    val['member_lines'] = [(0, 0, member_line)]
+                    self.env['res.partner'].create(val)
 
         if len(errors) > 0:
             file_path = os.path.join(os.path.expanduser("~"), "FAM_ERR_" + fields.Datetime.now())
@@ -301,16 +302,9 @@ class EMKMemberDataImportWizard(models.TransientModel):
                         MEMBERSHIP_LAST_START = SUB.DATE,
                         MEMBERSHIP_STOP = SUB.DATE_TO
                     FROM
-                        (SELECT *
-                            FROM MEMBERSHIP_MEMBERSHIP_LINE) AS SUB
+                        (SELECT * FROM MEMBERSHIP_MEMBERSHIP_LINE) AS SUB
                     WHERE RP.ID = SUB.PARTNER
                         AND RP.STATE = 'member'
                         AND FREE_MEMBER = TRUE"""
             self.env.cr.execute(query)
 
-    def date_format(self, data):
-        if data:
-            date = data.split('/')
-            return "{0}/{1}/{2}".format(date[1], date[0], date[2])
-        else:
-            return ""

@@ -7,6 +7,9 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, Warning
 
+DATE_PFORMAT = "%d/%m/%Y"
+DATE_MFORMAT = "%Y-%m-%d"
+
 
 class Utility:
     message = {
@@ -24,7 +27,9 @@ class Utility:
 
     @staticmethod
     def check_email(val):
-        match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', val)
+        match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', val.lower())
+        print "------", val
+
         if match == None:
             raise ValidationError(_('Please provide valid email'))
 
@@ -33,3 +38,13 @@ class Utility:
         match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', val)
         if match == None:
             raise ValidationError(_('Please provide valid URL'))
+
+    @staticmethod
+    def date_format(val):
+        if val:
+            data = datetime.strptime(val, DATE_PFORMAT)
+            date = data.strftime(DATE_MFORMAT)
+            print "---------", date
+            return date
+        else:
+            return None
