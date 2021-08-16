@@ -15,7 +15,7 @@
                     <sheet>
                         <div>
                             <h1>
-                                <field name="code"/>
+                                <field name="date"/>
                             </h1>
                         </div>
                     </sheet>
@@ -32,7 +32,6 @@
             <field name="model">emk.member.data.import</field>
             <field name="arch" type="xml">
                 <tree string="Member Data Import">
-                    <field name="code"/>
                     <field name="date"/>
                 </tree>
             </field>

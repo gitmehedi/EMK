@@ -183,7 +183,7 @@ class EMKMemberDataImportWizard(models.TransientModel):
                         'highest certification achieved',
                         'place of study',
                         'current employer',
-                        'active',
+                        'field of study',
                         ]
 
         # retrieve existing data from database
@@ -222,9 +222,10 @@ class EMKMemberDataImportWizard(models.TransientModel):
             occupation_other = ''
             last_or_curr = line['last or current place of study'].strip()
             hca = line['highest certification achieved'].strip()
+            field_of_study = line['field of study'].strip()
             place_of_study = line['place of study'].strip()
             current_employer = line['current employer'].strip()
-            active = line['active']
+
 
             mc, product, moc, msi, mcer, partner
             if not id_number:
@@ -252,7 +253,7 @@ class EMKMemberDataImportWizard(models.TransientModel):
                 val['phone'] = phone
                 val['street'] = address
                 val['city'] = city
-                val['zipcode'] = zip
+                val['zip'] = zip
                 val['mobile'] = mobile
                 val['gender'] = gender.lower()
                 val['email'] = email
@@ -261,12 +262,14 @@ class EMKMemberDataImportWizard(models.TransientModel):
                 val['last_place_of_study'] = last_or_curr
                 val['highest_certification'] = hca
                 val['place_of_study'] = place_of_study
+                val['field_of_study'] = field_of_study
                 val['current_employee'] = current_employer
                 val['state'] = 'member'
                 val['free_member'] = True
                 val['membership_start'] = joining_date
                 val['membership_last_start'] = joining_date
                 val['membership_stop'] = membership_expire
+                val['membership_status'] = membership_status.lower()
 
                 state = 'paid'
                 if 'Honorary Member':
@@ -288,10 +291,11 @@ class EMKMemberDataImportWizard(models.TransientModel):
                     exist.write(val)
                     member_line['partner'] = exist.id
                     self.env['membership.membership_line'].create(member_line)
+                    print index, "-------UPDATE---------", email
                 else:
                     val['member_lines'] = [(0, 0, member_line)]
                     self.env['res.partner'].create(val)
-
+                    print index,"-------CREATE---------", email
         if len(errors) > 0:
             file_path = os.path.join(os.path.expanduser("~"), "FAM_ERR_" + fields.Datetime.now())
             with open(file_path, "w+") as file:

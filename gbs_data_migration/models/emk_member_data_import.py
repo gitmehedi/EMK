@@ -10,7 +10,7 @@ class EMKMemberDataImport(models.Model):
     _order = 'id desc'
 
     code = fields.Char(string='Code', track_visibility='onchange', readonly=True)
-    date = fields.Date(string='Date', default=fields.Datetime.now, track_visibility='onchange')
+    date = fields.Datetime(string='Date', default=fields.Datetime.now, track_visibility='onchange', readonly=True)
 
     @api.multi
     def unlink(self):
