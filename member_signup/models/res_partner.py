@@ -76,6 +76,9 @@ class ResPartner(models.Model):
     highest_certification_other = fields.Char(string='Highest Certification Achieved Others',
                                               track_visibility="onchange")
 
+    membership_status = fields.Selection(
+        [('active', 'Active'), ('inactive', 'In-Active'), ('restricted', 'Restricted')], string='Membership Status')
+
     state = fields.Selection(
         [('application', 'Application'), ('invoice', 'Invoiced'),
          ('member', 'Membership'), ('reject', 'Reject')], default='application', track_visibility="onchange")
