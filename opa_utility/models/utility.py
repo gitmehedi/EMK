@@ -28,8 +28,6 @@ class Utility:
     @staticmethod
     def check_email(val):
         match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', val.lower())
-        print "------", val
-
         if match == None:
             raise ValidationError(_('Please provide valid email'))
 
@@ -44,7 +42,6 @@ class Utility:
         if val:
             data = datetime.strptime(val, DATE_PFORMAT)
             date = data.strftime(DATE_MFORMAT)
-            print "---------", date
             return date
         else:
             return None
