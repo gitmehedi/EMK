@@ -34,7 +34,7 @@ class MemberPayment(models.Model):
     date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True,
                        states={'open': [('readonly', False)]}, track_visibility="onchange")
     membership_id = fields.Many2one('res.partner', string='Applicant/Member', required=True,
-                                    domain=['|', ('is_applicant', '=', True), ('credit', '>', 0)],
+                                    domain=[('credit', '>', 0)],
                                     readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
@@ -117,6 +117,7 @@ class MemberPayment(models.Model):
                 if rec.state == 'paid' and self.membership_id.state == 'invoice':
                     membership_state = 'paid' if inv_amount > 0 else 'free'
                     self.membership_id.write({'state': 'member',
+                                              'member_sequence': '',
                                               'application_ref': self.membership_id.member_sequence,
                                               'free_member': True,
                                               'membership_status': 'active',

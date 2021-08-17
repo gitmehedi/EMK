@@ -32,7 +32,7 @@ def now(**kwargs):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
-    _order = 'member_sequence desc'
+    _order = 'id desc'
 
     member_sequence = fields.Char(string="ID", track_visibility="onchange")
 

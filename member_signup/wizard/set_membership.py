@@ -19,6 +19,12 @@ class SetMembershipWizard(models.TransientModel):
                 raise ValidationError(_("Membership ID [{0}] should not duplicate".format(self.membership_seq)))
             else:
                 seq.write({'member_sequence': self.membership_seq})
+                vals = {
+                    'template': 'member_signup.member_approval_email_template',
+                    'email_to': seq.email,
+                    'context': {'name': seq.name},
+                }
+                seq.mailsend(vals)
 
             return {
                 'view_type': 'form',
