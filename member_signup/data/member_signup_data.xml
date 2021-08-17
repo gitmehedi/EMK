@@ -16,5 +16,17 @@
             <field name="value" ref="default_member_template_user"/>
         </record>
 
+        <record id="membership_withdrawal.reason_unsatisfied" model="membership.withdrawal_reason">
+            <field name="name">Inactive</field>
+        </record>
+
+        <record id="membership_withdrawal.reason_company_bankrupt" model="membership.withdrawal_reason">
+            <field name="name">Unauthorized Activity</field>
+        </record>
+
+        <record id="membership_withdrawal.reason_other" model="membership.withdrawal_reason">
+            <field name="name">Suspicious Activity</field>
+        </record>
+
     </data>
 </odoo>
