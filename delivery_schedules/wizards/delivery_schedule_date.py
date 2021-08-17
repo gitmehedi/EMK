@@ -24,7 +24,7 @@ class DeliveryScheduleDate(models.TransientModel):
                 vals = {}
                 vals['partner_id'] = line.partner_id.id
                 vals['pending_do'] = line.pending_do.id
-                vals['do_qty'] = line.do_qty
+                vals['ordered_qty'] = line.ordered_qty
                 vals['undelivered_qty'] = line.undelivered_qty
                 vals['uom_id'] = line.uom_id.id
                 vals['scheduled_qty'] = line.scheduled_qty

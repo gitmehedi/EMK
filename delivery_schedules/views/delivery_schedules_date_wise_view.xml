@@ -11,8 +11,8 @@
                     <sheet>
                         <group>
                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="pending_do"/>
-                            <field name="do_qty"/>
+                            <field name="delivery_order_id"/>
+                            <field name="ordered_qty"/>
                             <field name="undelivered_qty"/>
                             <field name="uom_id"
                                    options="{'no_open': True, 'no_create': True}"/>
@@ -32,8 +32,8 @@
             <field name="arch" type="xml">
                 <tree string="Delivery Schedule Date Wise" create="false" edit="false">
                     <field name="partner_id"/>
-                    <field name="pending_do"/>
-                    <field name="do_qty"/>
+                    <field name="delivery_order_id"/>
+                    <field name="ordered_qty"/>
                     <field name="undelivered_qty"/>
                     <field name="uom_id"/>
                     <field name="scheduled_qty"/>
@@ -50,7 +50,7 @@
         </record>
 
 
-        <!--<menuitem id="delivery_schedule_submenu" name="Delivery Schedules Date Wise"-->
+        <!--<menuitem id="menu_delivery_schedules" name="Delivery Schedules Date Wise"-->
                   <!--parent="delivery_order.delivery_menu"-->
                   <!--groups="delivery_schedules.group_delivery_schedule_manager"-->
                   <!--action="delivery_schedule_date_wise_action" sequence="5"/>-->
