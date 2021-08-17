@@ -189,7 +189,7 @@ class ResPartner(models.Model):
         product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
                                                         limit=1)
         if not product_id:
-            raise UserError(_('Please configure your default Memebership.'))
+            raise UserError(_('Please configure your default Membership.'))
 
         ins_inv = self.env['account.invoice']
         journal_id = self.env['account.journal'].search([('code', '=', 'INV')])

@@ -137,7 +137,7 @@ class MemberPayment(models.Model):
                     rm_grp.write({'users': [(3, self.membership_id.user_ids.id)]})
                     add_grp = self.env['res.groups'].sudo().search(
                         [('name', '=', 'Membership User'), ('category_id.name', '=', 'Membership')])
-                    add_grp.write({'users': [(6, 0, [self.membership_id.user_ids.id])]})
+                    add_grp.write({'users': [(4, self.membership_id.user_ids.id)]})
 
                     vals = {
                         'template': 'member_payment.member_payment_confirmation_tmpl',
