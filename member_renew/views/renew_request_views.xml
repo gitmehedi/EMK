@@ -12,8 +12,6 @@
                             states="request" groups="membership_user.group_mem_user_officer"/>
                     <button string='Reject' name="act_reject" type='object'
                             states="request" groups="membership_user.group_mem_user_officer"/>
-                    <button string='Done' name="act_done" type='object' class="oe_highlight"
-                            states="invoice" groups="membership_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="request,invoice,done"/>
                 </header>
                 <sheet>
@@ -25,6 +23,7 @@
                         </group>
                         <group>
                             <field name="request_date"/>
+                            <field name="invoice_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         </group>
                     </group>
                 </sheet>

@@ -233,6 +233,7 @@ class ResPartner(models.Model):
                 'context': {'name': self.name},
             }
             self.mailsend(vals)
+            return inv
 
     @api.model
     def sendinvoice(self, inv):

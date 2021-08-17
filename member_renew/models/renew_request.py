@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError,Warning
+from odoo.exceptions import ValidationError, Warning
 
 
 class RenewRequest(models.Model):
@@ -19,6 +19,7 @@ class RenewRequest(models.Model):
 
     approve_date = fields.Date(string='Approve Date', default=fields.Date.today(), track_visibility="onchange",
                                readonly=True, states={'request': [('readonly', False)]})
+    invoice_id = fields.Many2one('account.invoice', string='Invoice', track_visibility="onchange", readonly=True)
     state = fields.Selection([('request', 'Request'), ('invoice', 'Invoiced'), ('done', 'Done'), ('reject', 'Reject')],
                              default='request', string='State', track_visibility="onchange")
 
@@ -26,14 +27,18 @@ class RenewRequest(models.Model):
     def check_duplicate(self):
         rec = self.search([('membership_id', '=', self.membership_id.id), ('state', 'in', ['request', 'invoice'])])
         if len(rec) > 1:
-            raise ValidationError(_('Currently a record exist for processing with member'.format(self.membership_id.name)))
+            raise ValidationError(
+                _('Currently a record exist for processing with member'.format(self.membership_id.name)))
 
     @api.one
     def act_invoice(self):
         if 'request' in self.state:
-            self.membership_id._create_invoice()
-            self.name = self.env['ir.sequence'].next_by_code('member.card.replacement.seq')
-            self.state = 'invoice'
+            invoice_id = self.membership_id._create_invoice()
+            sequence = self.env['ir.sequence'].next_by_code('renew.member.request.seq')
+            self.write({'name': sequence,
+                        'invoice_id': invoice_id.id,
+                        'state': 'invoice',
+                        })
 
     @api.one
     def act_done(self):
@@ -47,7 +52,7 @@ class RenewRequest(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'request')]
+        return [('state', 'in', ['request', 'invoice'])]
 
     @api.multi
     def unlink(self):

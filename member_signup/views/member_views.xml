@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form/header" position="inside">
                 <button string="Set Membership" name="%(action_set_membership)d" type="action"
+                        attrs="{'invisible':[('member_sequence','!=',False)]}"
                         groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
             </xpath>
             <xpath expr="//form" position="attributes">
@@ -83,6 +84,11 @@
             </xpath>
             <xpath expr="//group/group[field[@name='free_member']]" position="attributes">
                 <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//group/group[field[@name='free_member']]" position="before">
+                <group>
+                    <field name="membership_status"/>
+                </group>
             </xpath>
 
             <xpath expr="//notebook/page[@autofocus='autofocus']" position="before">
@@ -178,14 +184,12 @@
                 <search string="Membership Partners">
                     <field name="name"
                            filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
-                    <field name="category_id"/>
-
+                    <field name="member_sequence"/>
+                    <field name="email"/>
+                    <field name="mobile"/>
+                    <field name="phone"/>
                     <field name="membership_start" invisible="1"/>
                     <field name="membership_stop" string="End Membership Date"/>
-                    <filter string="Customers" name="customer" domain="[('customer','=',1)]"/>
-                    <separator/>
-                    <filter string="Vendors" name="supplier" domain="[('supplier','=',1)]"/>
-                    <separator/>
                     <filter name="all_non_members"
                             domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]"
                             string="All non Members" help="None/Canceled/Old/Waiting"/>
@@ -193,14 +197,11 @@
                             string="All Members" help="Invoiced/Paid/Free"/>
                     <group expand="0" string="Group By" colspan="10" col="8">
                         <filter string="Membership Status" domain="[]" context="{'group_by': 'membership_status'}"/>
-                        <filter string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
-                        <filter string="Associate Member" name="associate" domain="[]"
-                                context="{'group_by':'associate_member'}"/>
-                        <filter string=" Membership State" domain="[]" context="{'group_by':'membership_state'}"/>
                         <filter string="Start Month" help="Starting Month Of Membership" domain="[]"
                                 context="{'group_by':'membership_start'}"/>
                         <filter string="End Month" help="Ending Month Of Membership" domain="[]"
                                 context="{'group_by':'membership_stop'}"/>
+                        <filter string="Gender" domain="[]" context="{'group_by': 'gender'}"/>
                     </group>
                 </search>
             </xpath>

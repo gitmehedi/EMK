@@ -45,7 +45,8 @@ class MemberCardReplacement(models.Model):
         rec = self.search(
             [('membership_id', '=', self.membership_id.id), ('state', 'in', ['request', 'authenticate', 'approve'])])
         if len(rec) > 1:
-            raise ValidationError(_('Currently a record exist for processing with member'.format(self.membership_id.name)))
+            raise ValidationError(
+                _('Currently a record exist for processing with member'.format(self.membership_id.name)))
 
     @api.one
     def act_request(self):
@@ -85,13 +86,7 @@ class MemberCardReplacement(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        context = self.env.context
-        if context.get('mcount') == 'request':
-            return [('state', 'in', ['request'])]
-        elif context.get('mcount') == 'authenticate':
-            return [('state', 'in', ['authenticate'])]
-        elif context.get('mcount') == 'approve':
-            return [('state', 'in', ['approve'])]
+        return [('state', 'in', ['request', 'authenticate', 'approve'])]
 
     @api.multi
     def unlink(self):

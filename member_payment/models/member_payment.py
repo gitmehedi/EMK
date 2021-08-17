@@ -34,7 +34,7 @@ class MemberPayment(models.Model):
     date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True,
                        states={'open': [('readonly', False)]}, track_visibility="onchange")
     membership_id = fields.Many2one('res.partner', string='Applicant/Member', required=True,
-                                    domain=['&', ('is_applicant', '=', True), ('credit', '>', 0)],
+                                    domain=['|', ('is_applicant', '=', True), ('credit', '>', 0)],
                                     readonly=True, states={'open': [('readonly', False)]}, track_visibility="onchange")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
@@ -71,6 +71,9 @@ class MemberPayment(models.Model):
     def member_payment(self):
         if self.state != 'open':
             raise UserError(_('You are not in valid state.'))
+        if not self.membership_id.user_ids:
+            raise ValidationError(
+                _("This user does not have any access credentials. Please create it first."))
 
         invoice = self.env['account.invoice'].search(
             [('partner_id', '=', self.membership_id.id), ('state', '=', 'open')],
@@ -112,12 +115,11 @@ class MemberPayment(models.Model):
                     self.payment_ref = str(rec.display_name)
 
                 if rec.state == 'paid' and self.membership_id.state == 'invoice':
-                    seq = self.env['ir.sequence'].next_by_code('res.partner.member')
                     membership_state = 'paid' if inv_amount > 0 else 'free'
                     self.membership_id.write({'state': 'member',
-                                              'member_sequence': seq,
                                               'application_ref': self.membership_id.member_sequence,
                                               'free_member': True,
+                                              'membership_status': 'active',
                                               'membership_state': membership_state
                                               })
                     for inv_line in invoice.invoice_line_ids:
@@ -142,9 +144,12 @@ class MemberPayment(models.Model):
                         'email_to': self.membership_id.email,
                         'context': {'name': self.membership_id.name},
                     }
-
+                    renew_req = self.env['renew.request'].search([('invoice_id', '=', invoice.id)])
+                    if renew_req:
+                        renew_req.write({'state': 'done'})
+                    else:
+                        self.env['rfid.generation'].create({'membership_id': self.membership_id.id})
                     self.env['res.partner'].mailsend(vals)
-                    self.env['rfid.generation'].create({'membership_id': self.membership_id.id})
 
         if rem_amount > 0:
             payment = self.env['account.payment'].create({
