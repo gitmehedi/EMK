@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class SetMembershipWizard(models.TransientModel):
-    _name = 'set.membership.wizard'
+    _name = 'set.membership.sequence.wizard'
 
     membership_seq = fields.Char(required=True, string='Membership ID')
 
