@@ -13,7 +13,7 @@ class DeliveryScheduleLine(models.Model):
                                  states={'draft': [('readonly', False)]})
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', required=True, readonly=True,
                                     states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    delivery_order_id = fields.Many2one('delivery.order', string='Pending D.O', readonly=True, track_visibility='onchange')
+    delivery_order_id = fields.Many2one('delivery.order', string='Pending Delivery Order', readonly=True, track_visibility='onchange')
     ordered_qty = fields.Float(string='Ordered Qty', readonly=True, store=True, compute='_compute_ordered_qty')
     undelivered_qty = fields.Float(string='Undelivered Qty', readonly=True)
     scheduled_qty = fields.Float(string='Scheduled Qty.', readonly=True, track_visibility='onchange',
@@ -29,7 +29,7 @@ class DeliveryScheduleLine(models.Model):
     ], default='draft', track_visibility='onchange')
 
     product_id = fields.Many2one('product.product', string='Product', readonly=True, track_visibility='onchange')
-    uom_id = fields.Many2one('product.uom', string="Unit of Measure", readonly=True)
+    uom_id = fields.Many2one('product.uom', string="UoM", readonly=True)
     operating_unit_id = fields.Many2one('operating.unit', related='schedule_id.operating_unit_id',
                                         string='Operating Unit', store=True)
 
@@ -57,10 +57,10 @@ class DeliveryScheduleLine(models.Model):
     @api.constrains('scheduled_qty')
     def _check_scheduled_qty(self):
         if self.scheduled_qty > self.undelivered_qty:
-            raise Warning('Schedule quantity can not larger than Undelivered Qty.!')
+            raise ValidationError('Schedule quantity can not larger than Undelivered Qty.!')
 
         if self.scheduled_qty <= 0:
-            raise ValueError(_('Schedule quantity has to be strictly positive.'))
+            raise ValidationError(_('Schedule quantity has to be strictly positive.'))
 
         if self.unscheduled_qty < 0:
             delivery_schedules_lines = self.env['delivery.schedules.line'].search(
@@ -74,10 +74,15 @@ class DeliveryScheduleLine(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.sale_order_id = False
-        sale_orders = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id),
-                                                            ('operating_unit_id', '=', self.schedule_id.operating_unit_id.id),
-                                                            ('state', '=', 'done')])
-        sale_order_lines = sale_orders.mapped('order_line').filtered(lambda x: x.product_uom_qty > x.qty_delivered)
+        # get sale order of which delivery authorization is approved
+        delivery_authorizations = self.env['delivery.authorization'].sudo().search([
+            ('sale_order_id.partner_id', '=', self.partner_id.id),
+            ('operating_unit_id', '=', self.schedule_id.operating_unit_id.id),
+            ('state', '=', 'close')
+        ])
+
+        sale_order_lines = delivery_authorizations.mapped('sale_order_id').mapped('order_line').filtered(
+            lambda x: x.product_uom_qty > x.qty_delivered)
         sale_order_ids = sale_order_lines.mapped('order_id')
 
         if len(sale_order_ids) == 1:
@@ -95,20 +100,29 @@ class DeliveryScheduleLine(models.Model):
         self.scheduled_qty = False
 
         if self.sale_order_id:
-            self.delivery_order_id = self.env['delivery.order'].sudo().search([('sale_order_id', '=', self.sale_order_id.id),
-                                                                               ('state', '=', 'approved')])
-            line = self.delivery_order_id.line_ids[0]
-            self.product_id = line.product_id
-            self.uom_id = line.uom_id
-            self.ordered_qty = line.quantity
-            self.undelivered_qty = line.quantity - line.qty_delivered
+            self.delivery_order_id = self.env['delivery.order'].sudo().search([
+                ('sale_order_id', '=', self.sale_order_id.id),
+                ('state', '=', 'approved')
+            ])
+            if self.delivery_order_id.line_ids:
+                line = self.delivery_order_id.line_ids[0]
+                self.product_id = line.product_id
+                self.uom_id = line.uom_id
+                self.ordered_qty = line.quantity
+                self.undelivered_qty = line.quantity - line.qty_delivered
 
     @api.model
     def create(self, vals):
         if 'delivery_order_id' not in vals:
             delivery_order = self.env['delivery.order'].sudo().search([('sale_order_id', '=', vals['sale_order_id']),
                                                                        ('state', '=', 'approved')])
+            if not delivery_order:
+                raise Warning(_('There is no pending delivery order.'))
+            if not delivery_order.line_ids:
+                raise Warning(_('There is no product line of pending delivery order.'))
+
             line = delivery_order.line_ids[0]
+
             vals['delivery_order_id'] = delivery_order.id
             vals['product_id'] = line.product_id.id
             vals['ordered_qty'] = line.quantity
@@ -124,9 +138,9 @@ class DeliveryScheduleLine(models.Model):
                                                                        ('state', '=', 'approved')])
 
             if not delivery_order:
-                raise Warning(_('There is no pending delivery order'))
+                raise Warning(_('There is no pending delivery order.'))
             if not delivery_order.line_ids:
-                raise Warning(_('There is no product'))
+                raise Warning(_('There is no product line of pending delivery order.'))
 
             line = delivery_order.line_ids[0]
 
@@ -145,14 +159,14 @@ class DeliveryScheduleLine(models.Model):
 
         return super(DeliveryScheduleLine, self).unlink()
 
-    @api.multi
-    def action_approve(self):
-        line = self.env['delivery.order.line'].search([('parent_id', '=', self.delivery_order_id.id),
-                                                       ('product_id', '=', self.product_id.id)])
-
-        self.write({'ordered_qty': line.quantity,
-                    'undelivered_qty': line.quantity - line.qty_delivered,
-                    'state': 'done'})
+    # @api.multi
+    # def action_approve(self):
+    #     line = self.env['delivery.order.line'].search([('parent_id', '=', self.delivery_order_id.id),
+    #                                                    ('product_id', '=', self.product_id.id)])
+    #
+    #     self.write({'ordered_qty': line.quantity,
+    #                 'undelivered_qty': line.quantity - line.qty_delivered,
+    #                 'state': 'done'})
 
     # @api.multi
     # def action_delivery(self):

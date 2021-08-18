@@ -65,16 +65,16 @@
                             <notebook colspan="4">
                                 <page string="Customers">
                                     <field name="line_ids">
-                                        <tree string="List" editable="bottom">
+                                        <tree string="List" editable="bottom" decoration-success="state == 'done'">
                                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="sale_order_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="delivery_order_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="product_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="ordered_qty"/>
                                             <field name="undelivered_qty"/>
-                                            <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="scheduled_qty"/>
                                             <field name="unscheduled_qty" invisible="1"/>
+                                            <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="remarks"/>
                                             <field name="state" readonly="1"/>
                                         </tree>
@@ -91,8 +91,8 @@
                                                     <field name="product_id"/>
                                                     <field name="ordered_qty"/>
                                                     <field name="undelivered_qty"/>
-                                                    <field name="uom_id"/>
                                                     <field name="scheduled_qty"/>
+                                                    <field name="uom_id"/>
                                                 </group>
                                             </group>
                                             <group>
@@ -154,6 +154,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Delivery Instruction" edit="false" create="false" delete="false">
+                    <field name="requested_date" readonly="True"/>
                     <field name="partner_id" readonly="True"/>
                     <field name="sale_order_id" readonly="True"/>
                     <field name="delivery_order_id" readonly="True" string="D.O."/>
@@ -163,8 +164,8 @@
                     <field name="unscheduled_qty" invisible="1"/>
                     <field name="remarks" readonly="True"/>
                     <field name="state" readonly="True" invisible="1"/>
-                    <button name="action_approve" class="oe_highlight" icon="fa-check-square"
-                            type="object" attrs="{'invisible': [('state', '!=', 'approve')]}"/>
+<!--                    <button name="action_approve" class="oe_highlight" icon="fa-check-square"-->
+<!--                            type="object" attrs="{'invisible': [('state', '!=', 'approve')]}"/>-->
 <!--                    <button name="action_delivery" string="Delivery" class="oe_stat_button"-->
 <!--                            type="object" attrs="{'invisible': [('state', '!=', 'approve')]}"/>-->
                 </tree>
