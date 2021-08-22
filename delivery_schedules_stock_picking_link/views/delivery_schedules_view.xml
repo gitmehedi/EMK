@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="delivery_schedules.view_delivery_schedules_line_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="after">
-                    <button name="action_delivery" string="Delivery" class="oe_highlight" icon="fa-external-link"
-                            type="object" attrs="{'invisible': [('state', '!=', 'approve')]}"/>
+                    <button name="action_delivery" string="Delivery" class="oe_stat_button" icon="fa-truck"
+                            type="object" groups="stock.delivery_user" attrs="{'invisible': [('state', '!=', 'approve')]}"/>
                 </xpath>
             </field>
         </record>
