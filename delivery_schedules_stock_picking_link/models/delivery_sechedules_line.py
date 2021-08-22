@@ -7,6 +7,9 @@ class DeliverySchedulesLine(models.Model):
 
     @api.multi
     def action_delivery(self):
+        if self.requested_date > fields.Datetime.now():
+            raise UserError(_('Requested Date cannot be greater than today.'))
+
         picking = self.sale_order_id.mapped('picking_ids').filtered(lambda i: i.state not in ['done', 'cancel'] and i.picking_type_id.code == 'outgoing')
 
         # check qty availability
@@ -15,8 +18,7 @@ class DeliverySchedulesLine(models.Model):
 
         # if qty is not available in the stock, notify the user with a message
         if picking.state != 'assigned':
-            raise UserError(
-                _('Unable to Deliver Goods due to qty is not available in current stock.'))
+            raise UserError(_('Unable to Deliver Goods due to qty is not available in current stock.'))
 
         if not picking.pack_operation_product_ids:
             raise UserError(_("You cannot do that on a DC that does not have any operations line."))
