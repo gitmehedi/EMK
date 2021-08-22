@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding='utf-8'?>
 <odoo>
-    <data>
+    <data noupdate="1">
+        <record id="event.group_event_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="base.module_category_event_management"/>
+        </record>
+
+        <record id="event.group_event_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="base.module_category_event_management"/>
+            <field name="implied_ids" eval="[(4, ref('group_event_user')),(4, ref('group_event_administration'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
         <record id="group_event_organizer" model="res.groups">
             <field name="name">Event Organizer</field>
             <field name="category_id" ref="base.module_category_event_management"/>
-            <field name="comment">Organizer will have an access event form which shows only readonly mode.
-            </field>
+            <field name="comment">Organizer will have an access event form which shows only readonly mode.</field>
         </record>
 
         <record id="group_event_participant" model="res.groups">
@@ -24,8 +36,5 @@
             </field>
         </record>
 
-        <record id="event.group_event_manager" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('group_event_administration'))]"/>
-        </record>
     </data>
 </odoo>

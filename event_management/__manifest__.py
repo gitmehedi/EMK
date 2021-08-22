@@ -20,9 +20,8 @@
         'create_partner_user',
     ],
     'data': [
-        'security/security.xml',
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
+        # 'security/ir_rule.xml',
         'data/ir_sequence.xml',
         'data/menu_view.xml',
         'data/data.xml',

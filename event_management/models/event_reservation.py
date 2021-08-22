@@ -40,7 +40,7 @@ class EventReservation(models.Model):
                                readonly=True, states={'draft': [('readonly', False)]})
     request_date = fields.Datetime(string='Requested Date', required=True, track_visibility='onchange',
                                    readonly=True, states={'draft': [('readonly', False)]})
-    description = fields.Html('Description', track_visibility='onchange', required=True,sanitize = False,
+    description = fields.Html('Description', track_visibility='onchange', required=True, sanitize=False,
                               readonly=True, states={'draft': [('readonly', False)]})
 
     payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type',
@@ -53,11 +53,11 @@ class EventReservation(models.Model):
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), track_visibility='onchange',
                                      required=True,
                                      readonly=True, states={'draft': [('readonly', False)]})
-    rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange',sanitize = True,
+    rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange', sanitize=True,
                                    readonly=True, states={'draft': [('readonly', False)]})
     date_of_payment = fields.Date(string="Expected Date for Payment", track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
-    notes = fields.Html(string="Comments/Notes", track_visibility='onchange',sanitize = False,
+    notes = fields.Html(string="Comments/Notes", track_visibility='onchange', sanitize=False,
                         readonly=True, states={'draft': [('readonly', False)]})
     paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
                                      string="Participation Charge", readonly=True,
@@ -66,8 +66,9 @@ class EventReservation(models.Model):
                                           states={'draft': [('readonly', False)]})
     space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Do you need EMK Space?",
                                 readonly=True, states={'draft': [('readonly', False)]})
-    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],readonly=True,
-                                          string='Available Seat',default="limited",states={'draft': [('readonly', False)]})
+    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], readonly=True,
+                                          string='Available Seat', default="limited",
+                                          states={'draft': [('readonly', False)]})
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
                                  states={'draft': [('readonly', False)]})
 
@@ -85,8 +86,8 @@ class EventReservation(models.Model):
 
     @api.constrains('event_name')
     def _check_name(self):
-        name = self.search([('event_name','=ilike',self.event_name)])
-        if len(name)>1:
+        name = self.search([('event_name', '=ilike', self.event_name)])
+        if len(name) > 1:
             raise Exception(_('Event Name should not be duplicate.'))
 
     @api.multi
@@ -94,9 +95,7 @@ class EventReservation(models.Model):
         for reserve in self:
             if reserve.state != 'draft':
                 raise UserError(_('You cannot delete a record which is not in draft state!'))
-        return super(EventReservation,self).unlink()
-
-
+        return super(EventReservation, self).unlink()
 
     @api.one
     def act_draft(self):
@@ -112,7 +111,7 @@ class EventReservation(models.Model):
     def act_confirm(self):
         if self.state == 'on_process':
             vals = {
-                'name' : self.event_name,
+                'name': self.event_name,
                 'organizer_id': self.organizer_id.id,
                 'event_type_id': self.event_type_id.id,
                 'date_begin': self.start_date,
@@ -132,7 +131,8 @@ class EventReservation(models.Model):
                     (0, 0, {
                         'interval_unit': 'now',
                         'interval_type': 'after_sub',
-                        'template_id': self.env['ir.model.data'].xmlid_to_res_id('event_registration.event_confirmation_registration')}),
+                        'template_id': self.env['ir.model.data'].xmlid_to_res_id(
+                            'event_registration.event_confirmation_registration')}),
                 ]
             }
             event = self.env['event.event'].create(vals)
@@ -210,15 +210,15 @@ class EventReservation(models.Model):
             if ser.name == 'Event Organization Fee':
                 if self.payment_type == 'paid':
                     if self.paid_amount == 0:
-                        raise ValueError(_("Paid Amount not defined properly as Event required payment."))
+                        raise ValidationError(_("Please set paid amount which is required for paid event"))
                     vals = {
                         'amount': self.paid_amount,
                         'subject': 'Event Fee',
                     }
 
             if ser.name == 'Event Refund Fee':
-                if self.paid_amount == 0:
-                    raise ValueError(_("Refundable Amount not defined properly as Event required payment."))
+                if self.refundable_amount == 0:
+                    raise ValidationError(_("Please set refundable amount which is required for free event."))
                 vals = {
                     'amount': self.refundable_amount,
                     'subject': 'Refundable Amount',
