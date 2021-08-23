@@ -10,7 +10,17 @@ class DeliverySchedulesLine(models.Model):
     @api.multi
     def action_delivery(self):
         if self.requested_date > fields.Datetime.now():
-            raise UserError(_('Requested Date cannot be greater than today.'))
+            text = 'Requested Date cannot be greater than today.'
+            wizard = self.env['message.box.wizard'].create({'text': text})
+            return {
+                'name': _('Warning Message'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'message.box.wizard',
+                'target': 'new',
+                'res_id': wizard.id,
+            }
 
         picking = self.sale_order_id.mapped('picking_ids').filtered(lambda i: i.state not in ['done', 'cancel'] and i.picking_type_id.code == 'outgoing')
 
@@ -20,10 +30,30 @@ class DeliverySchedulesLine(models.Model):
 
         # if qty is not available in the stock, notify the user with a message
         if picking.state != 'assigned':
-            raise UserError(_('Unable to Deliver Goods due to qty is not available in current stock.'))
+            text = 'Unable to Deliver Goods due to qty is not available in current stock.'
+            wizard = self.env['message.box.wizard'].create({'text': text})
+            return {
+                'name': _('Warning Message'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'message.box.wizard',
+                'target': 'new',
+                'res_id': wizard.id,
+            }
 
         if not picking.pack_operation_product_ids:
-            raise UserError(_("You cannot do that on a DC that does not have any operations line."))
+            text = 'You cannot do that on a DC that does not have any operations line.'
+            wizard = self.env['message.box.wizard'].create({'text': text})
+            return {
+                'name': _('Warning Message'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'message.box.wizard',
+                'target': 'new',
+                'res_id': wizard.id,
+            }
 
         # for single operation product
         picking.pack_operation_product_ids[0].write({'qty_done': self.scheduled_qty})

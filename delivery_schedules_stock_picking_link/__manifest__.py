@@ -9,6 +9,7 @@
         'delivery_order'
     ],
     'data': [
+        'wizards/message_box_view.xml',
         'views/delivery_schedules_view.xml',
         'views/stock_picking_view.xml'
     ],
