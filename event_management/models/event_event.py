@@ -69,7 +69,8 @@ class EventEvent(models.Model):
 
 
 class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+    _name = 'event.registration'
+    _inherit = ['event.registration', 'mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
 
     date_of_birth = fields.Date(string='Date of Birth', required=True)
@@ -78,13 +79,16 @@ class EventRegistration(models.Model):
     profession_id = fields.Many2one('attendee.profession', string='Profession', required=True, default=False)
     card_number = fields.Char(string='Card Number')
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['draft', 'open'])]
+
 
 class AttendeeProfession(models.Model):
     _name = 'attendee.profession'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
     _description = 'Attendee Profession'
-
 
     name = fields.Char(string='Profession', required=True)
     status = fields.Boolean(default=True)

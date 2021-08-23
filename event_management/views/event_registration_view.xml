@@ -44,6 +44,21 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="inherited_view_event_registration_tree">
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-bf">state in ('draft','open')</attribute>
+                    <attribute name="decoration-warning">state == 'draft'</attribute>
+                    <attribute name="decoration-success">state == 'open'</attribute>
+                    <attribute name="decoration-danger">state == 'cancel'</attribute>
+                    <attribute name="decoration-muted">state == 'done'</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
 <!--        <record model="ir.ui.view" id="inherit_event_registration_view_form_inherit_barcode">-->
 <!--            <field name="name">inherit.event.registration.view.form.inherit.barcode</field>-->
 <!--            <field name="inherit_id" ref="event_barcode.event_registration_view_form_inherit_barcode"/>-->
