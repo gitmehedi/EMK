@@ -36,6 +36,7 @@ class StockPicking(models.Model):
                 delivery_schedules_line.write({
                     'ordered_qty': line.quantity,
                     'undelivered_qty': line.quantity - line.qty_delivered,
+                    'stock_picking_id': self.id,
                     'state': 'done'
                 })
 

@@ -5,6 +5,8 @@ from odoo.exceptions import UserError, ValidationError
 class DeliverySchedulesLine(models.Model):
     _inherit = 'delivery.schedules.line'
 
+    stock_picking_id = fields.Many2one('stock.picking', string='Picking Reference')
+
     @api.multi
     def action_delivery(self):
         if self.requested_date > fields.Datetime.now():
@@ -33,5 +35,12 @@ class DeliverySchedulesLine(models.Model):
             'default_picking_type_id': picking.picking_type_id.id,
             'contact_display': 'partner_address'
         }
+
+        return action
+
+    @api.multi
+    def action_delivery_detail(self):
+        action = self.env.ref('stock.action_picking_form').read()[0]
+        action['res_id'] = self.stock_picking_id.id
 
         return action
