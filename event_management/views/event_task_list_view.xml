@@ -74,7 +74,7 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem id="menu_event_task_list" action="action_event_task_list"
-                  parent="menu_event_general" groups="event.group_event_user"/>
+        <menuitem id="menu_event_task_list" action="action_event_task_list" sequence="10"
+                  parent="menu_event_operations" groups="event.group_event_user"/>
     </data>
 </odoo>

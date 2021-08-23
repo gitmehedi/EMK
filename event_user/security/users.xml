@@ -1,34 +1,16 @@
 <?xml version="1.0" encoding='utf-8'?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <record id="event.group_event_user" model="res.groups">
-            <field name="name">User</field>
+            <field name="name">Event Officer</field>
+            <field name="sequence">1</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="base.module_category_event_management"/>
         </record>
 
-        <record id="event.group_event_manager" model="res.groups">
-            <field name="name">Manager</field>
-            <field name="category_id" ref="base.module_category_event_management"/>
-            <field name="implied_ids" eval="[(4, ref('group_event_user')),(4, ref('group_event_administration'))]"/>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
-        </record>
-
-        <record id="group_event_organizer" model="res.groups">
-            <field name="name">Event Organizer</field>
-            <field name="category_id" ref="base.module_category_event_management"/>
-            <field name="comment">Organizer will have an access event form which shows only readonly mode.</field>
-        </record>
-
-        <record id="group_event_participant" model="res.groups">
-            <field name="name">Event Participant</field>
-            <field name="category_id" ref="base.module_category_event_management"/>
-            <field name="comment">Event Participant will have an access application form which shows only readonly mode.
-            </field>
-        </record>
-
         <record id="group_event_administration" model="res.groups">
-            <field name="name">Administration Department</field>
+            <field name="name">Event Manager</field>
+            <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_event_management"/>
             <field name="implied_ids" eval="[(4, ref('event.group_event_user'))]"/>
             <field name="comment">Administration Department will have an access application form which shows only
@@ -36,5 +18,28 @@
             </field>
         </record>
 
+        <record id="event.group_event_manager" model="res.groups">
+            <field name="name">Event Settings</field>
+            <field name="sequence">15</field>
+            <field name="category_id" ref="base.module_category_event_management"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('event.group_event_user')),(4, ref('group_event_administration'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_event_participant" model="res.groups">
+            <field name="name">Event Ex Participant</field>
+            <field name="sequence">20</field>
+            <field name="category_id" ref="base.module_category_event_management"/>
+            <field name="comment">Event Participant will have an access application form which shows only readonly mode.
+            </field>
+        </record>
+
+        <record id="group_event_organizer" model="res.groups">
+            <field name="name">Event Ex Organizer</field>
+            <field name="sequence">25</field>
+            <field name="category_id" ref="base.module_category_event_management"/>
+            <field name="comment">Organizer will have an access event form which shows only readonly mode.</field>
+        </record>
     </data>
 </odoo>

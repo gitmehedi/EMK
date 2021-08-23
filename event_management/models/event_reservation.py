@@ -21,6 +21,7 @@ class EventReservation(models.Model):
                                    readonly=True, states={'draft': [('readonly', False)]})
     event_type_id = fields.Many2one('event.type', string='Event Type', required=True, track_visibility='onchange',
                                     readonly=True, states={'draft': [('readonly', False)]})
+    event_id = fields.Many2one('event.event', string='Event', track_visibility='onchange', readonly=True)
     org_type_id = fields.Many2one('event.organization.type', string="Organization Type", required=True,
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
@@ -137,7 +138,11 @@ class EventReservation(models.Model):
             }
             event = self.env['event.event'].create(vals)
             if event:
-                self.name = self.env['ir.sequence'].next_by_code('event.reservation')
+                seq = self.env['ir.sequence'].next_by_code('event.reservation')
+                self.write({
+                    'name': seq,
+                    'event_id': event.id
+                })
                 self._create_invoice()
             self.state = 'confirm'
 
@@ -225,3 +230,7 @@ class EventReservation(models.Model):
                 }
 
             create_invoice(ser, vals)
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['draft', 'on_process', 'confirm'])]
