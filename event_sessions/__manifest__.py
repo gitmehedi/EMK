@@ -9,6 +9,7 @@
     'depends': [
         'event',
         'event_mail',
+        'event_user',
         'event_management',
     ],
     'data': [

@@ -10,6 +10,8 @@ from locale import setlocale, LC_ALL
 
 class EventSession(models.Model):
     _name = 'event.session'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = 'event_id desc'
     _description = 'Event session'
 
     seats_min = fields.Integer(string="Minimum seats")
@@ -217,6 +219,25 @@ class EventSession(models.Model):
             'default_session_id': self.id,
         }
         return action
+
+    @api.multi
+    def act_confirmed(self):
+        if self.state == 'unconfirmed':
+            self.state = 'confirmed'
+
+    @api.multi
+    def act_unconfirmed(self):
+        if self.state == 'confirmed':
+            self.state = 'unconfirmed'
+
+    @api.multi
+    def act_done(self):
+        if self.state == 'confirmed':
+            self.state = 'done'
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['unconfirmed', 'confirmed'])]
 
 
 class EventRoomBook(models.Model):

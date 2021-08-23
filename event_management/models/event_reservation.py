@@ -159,7 +159,7 @@ class EventReservation(models.Model):
     @api.model
     def _create_invoice(self):
         serv_name = ['Event Organization Fee', 'Event Refund Fee']
-        serivces = self.env['product.product'].search([('name', 'in', serv_name), ('active', '=', serv_name)],
+        serivces = self.env['product.product'].search([('name', 'in', serv_name), ('active', 'in', serv_name)],
                                                       order='id desc')
         if len(serivces) != 2:
             raise UserError(_('Please configure your event services.'))
@@ -209,7 +209,7 @@ class EventReservation(models.Model):
                         'subject': vals['subject']
                     },
                 }
-                self.env['mail.mail'].mailsend(vals)
+                # self.env['mail.mail'].mailsend(vals)
 
         for ser in serivces:
             if ser.name == 'Event Organization Fee':
