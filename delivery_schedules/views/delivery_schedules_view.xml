@@ -158,6 +158,7 @@
                     <field name="partner_id" readonly="True"/>
                     <field name="sale_order_id" readonly="True"/>
                     <field name="delivery_order_id" readonly="True" string="D.O."/>
+                    <field name="product_id" readonly="1"/>
                     <field name="ordered_qty"/>
                     <field name="undelivered_qty"/>
                     <field name="scheduled_qty" readonly="True"/>
