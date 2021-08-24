@@ -8,6 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 class EventTaskList(models.Model):
     _name = 'event.task.list'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = 'id desc'
     _rec_name = 'task_id'
     _description = "Event Task"
 
@@ -17,26 +18,20 @@ class EventTaskList(models.Model):
                                    states={'draft': [('readonly', False)]})
     task_feedback = fields.Text(string='Task Feedback', track_visibility='onchange', readonly=True,
                                 states={'start': [('readonly', False)]})
-    assign_date = fields.Datetime(string="Assign Date", track_visibility='onchange', readonly=True, required=True,
+    assign_date = fields.Datetime(string="Assign Date", track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)]})
     task_start = fields.Datetime(string='Task Start', track_visibility='onchange', readonly=True,
-                                 states={'start': [('readonly', False)],'draft': [('readonly', False)]})
+                                 states={'start': [('readonly', False)], 'draft': [('readonly', False)]})
     task_stop = fields.Datetime(string='Task Stop', track_visibility='onchange', readonly=True,
-                                states={'start': [('readonly', False)],'draft': [('readonly', False)]})
-
-    event_id = fields.Many2one('event.event', string='Event', readonly=True, required=True,
+                                states={'start': [('readonly', False)], 'draft': [('readonly', False)]})
+    event_id = fields.Many2one('event.event', string='Event Name', readonly=True, required=True,
                                states={'draft': [('readonly', False)]})
     assign_emp_id = fields.Many2one('res.partner', string='Assign To', required=True, track_visibility='onchange',
                                     readonly=True, states={'draft': [('readonly', False)]})
-    task_id = fields.Many2one('event.task.type', string='Task Name', required=True, track_visibility='onchange',
-                              domain=[('status', '=', True)],
-                              readonly=True, states={'draft': [('readonly', False)]})
+    task_id = fields.Many2one('event.task.type', string='Event Task Type', required=True, track_visibility='onchange',
+                              domain=[('status', '=', True)], readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('assign', 'Assigned'), ('start', 'Start'), ('finish', 'Finish')],
                              default='draft', track_visibility='onchange')
-
-    @api.model
-    def _needaction_domain_get(self):
-        return [('state', 'in', ['assign', 'start'])]
 
     @api.one
     def act_draft(self):
@@ -63,8 +58,7 @@ class EventTaskList(models.Model):
 
     @api.one
     def button_assign(self):
-            self.write({'state': 'assign'})
-
+        self.write({'state': 'assign'})
 
     @api.multi
     def unlink(self):
@@ -72,3 +66,7 @@ class EventTaskList(models.Model):
             if task.state != 'draft':
                 raise UserError(_('You cannot delete a record which is not in assigned state!'))
         return super(EventTaskList, self).unlink()
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['assign', 'start'])]

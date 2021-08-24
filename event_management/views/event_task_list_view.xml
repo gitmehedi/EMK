@@ -26,10 +26,11 @@
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="assign_emp_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="task_duration" widget="float_time"/>
+
                             </group>
                             <group>
-                                <field name="assign_date" states="assign,start,finish"/>
+                                <field name="task_duration" widget="float_time"/>
+                                <field name="assign_date" states="draft,assign,start,finish"/>
                                 <field name="task_start" states="start,finish"/>
                                 <field name="task_stop" states="finish"/>
                             </group>
@@ -53,18 +54,38 @@
             <field name="name">event.task.list.tree</field>
             <field name="model">event.task.list</field>
             <field name="arch" type="xml">
-                <tree string="Event Task List" decoration-bf="state=='start'" decoration-danger="state=='assign'"
+                <tree string="Event Task List" decoration-bf="state in ('start','assign','draft')"
+                      decoration-info="state=='assign'" colors="orange:state == 'draft';"
                       decoration-success="state=='start'" decoration-muted="state=='finish'">
-                    <field name="task_id"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                    <field name="assign_emp_id"
-                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                    <field name="task_id"/>
+                    <field name="event_id"/>
+                    <field name="assign_emp_id"/>
                     <field name="task_duration" widget="float_time" sum="Task Duration"/>
                     <field name="assign_date"/>
                     <field name="task_start"/>
                     <field name="task_stop"/>
                     <field name="state"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_task_list_search">
+            <field name="name">event.task.list.search</field>
+            <field name="model">event.task.list</field>
+            <field name="arch" type="xml">
+                <search string="Event Management">
+                    <field name="task_id"/>
+                    <field name="event_id"/>
+                    <field name="assign_emp_id"/>
+                    <field name="assign_date"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Event" domain="[]" context="{'group_by':'event_id'}"/>
+                        <filter string="Assigned Employee" domain="[]" context="{'group_by':'assign_emp_id'}"/>
+                        <filter string="Assign Date" domain="[]" context="{'group_by':'assign_date'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
