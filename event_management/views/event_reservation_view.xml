@@ -19,15 +19,15 @@
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar"/>
                         <div class="oe_title">
-                            <label class="oe_edit_only" for="organizer_id" string="Organizer Name"/>
+                            <label class="oe_edit_only" for="event_name" string="Event Name"/>
                             <h1>
-                                <field name="organizer_id" placeholder="Organizer Name" default_focus="1" tabindex="1"
-                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                <field name="event_name" placeholder="Event Name" default_focus="1"/>
                             </h1>
                         </div>
                         <group>
                             <group>
-                                <field name="event_name"/>
+                                <field name="organizer_id" tabindex="1"
+                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="event_id" attrs="{'invisible':[('state','in',['draft','on_process'])]}"/>
                                 <field name="contact_number"/>
                                 <field name="work_email"/>
@@ -54,10 +54,10 @@
                                 <field name="payment_type"/>
                                 <field name="mode_of_payment" attrs="{'required':[('payment_type','=','paid')]}"/>
                                 <field name="paid_amount" attrs="{'required':[('payment_type','=','paid')]}"/>
-                            </group>
-                            <group>
                                 <field name="refundable_amount"/>
                                 <field name="date_of_payment" attrs="{'required':[('payment_type','=','paid')]}"/>
+                            </group>
+                            <group>
                                 <field name="paid_attendee" widget="radio"/>
                                 <field name="participating_amount" attrs="{'required':[('paid_attendee','=','yes')]}"/>
                             </group>

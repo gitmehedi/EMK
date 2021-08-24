@@ -25,8 +25,7 @@ class EventReservation(models.Model):
     org_type_id = fields.Many2one('event.organization.type', string="Organization Type", required=True,
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
-    facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested",
-                                      track_visibility='onchange',
+    facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
                                       readonly=True, states={'draft': [('readonly', False)]})
     contact_number = fields.Char(string="Contact Number", readonly=True, related='organizer_id.mobile')
     work_email = fields.Char(string="Email", readonly=True, related='organizer_id.email')
@@ -40,12 +39,13 @@ class EventReservation(models.Model):
     end_date = fields.Datetime(string='End Date', required=True, track_visibility='onchange',
                                readonly=True, states={'draft': [('readonly', False)]})
     request_date = fields.Datetime(string='Requested Date', required=True, track_visibility='onchange',
+                                   default=fields.Datetime.now,
                                    readonly=True, states={'draft': [('readonly', False)]})
     description = fields.Html('Description', track_visibility='onchange', required=True, sanitize=False,
                               readonly=True, states={'draft': [('readonly', False)]})
 
     payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type',
-                                    readonly=True, states={'draft': [('readonly', False)]})
+                                    readonly=True, states={'draft': [('readonly', False)]}, )
     mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')], required=True, default='cash',
                                        string='Mode Of Payment', track_visibility='onchange',
                                        readonly=True, states={'draft': [('readonly', False)]})
@@ -63,12 +63,12 @@ class EventReservation(models.Model):
     paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
                                      string="Participation Charge", readonly=True,
                                      states={'draft': [('readonly', False)]})
-    participating_amount = fields.Integer(string="Participation Amount", readonly=True,
-                                          states={'draft': [('readonly', False)]})
+    participating_amount = fields.Float(string="Participation Amount", readonly=True,
+                                        states={'draft': [('readonly', False)]})
     space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Do you need EMK Space?",
                                 readonly=True, states={'draft': [('readonly', False)]})
-    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], readonly=True,
-                                          string='Available Seat', default="limited",
+    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], required=True,
+                                          readonly=True, string='Available Seat', default="limited",
                                           states={'draft': [('readonly', False)]})
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
                                  states={'draft': [('readonly', False)]})
@@ -77,13 +77,17 @@ class EventReservation(models.Model):
         [('draft', 'Draft'), ('on_process', 'On Process'), ('confirm', 'Confirmed'), ('done', 'Done'),
          ('cancel', 'Cancelled')], string="State", default="draft", track_visibility='onchange')
 
-    @api.multi
-    @api.constrains('date_begin')
-    def _check_date_begin(self):
-        dt_now = fields.datetime.now()
-        date_begin = datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') + timedelta(minutes=1)
-        if date_begin < dt_now:
-            raise ValidationError(_("Event start date cannot be past date from current date"))
+    @api.constrains('start_date', 'end_date')
+    def _check_start_date(self):
+        if self.start_date:
+            dt_now = fields.datetime.now()
+            start_date = datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') + timedelta(minutes=1)
+            if start_date < dt_now:
+                raise ValidationError(_("Event start date cannot be past date from current date."))
+            if self.start_date > self.end_date:
+                raise ValidationError(_("Event end date must greater than event end date."))
+        if self.end_date and not self.start_date:
+            self.end_date = ''
 
     @api.constrains('event_name')
     def _check_name(self):
@@ -91,11 +95,33 @@ class EventReservation(models.Model):
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
+    @api.constrains('payment_type', 'paid_amount', 'refundable_amount')
+    def _check_payment(self):
+        if self.payment_type == 'paid':
+            if not self.paid_amount:
+                raise ValidationError(
+                    _('Paid amount should have value when event type is [Paid]'.format(self.payment_type)))
+            if not self.refundable_amount:
+                raise ValidationError(
+                    _('Refundable amount should have value when event type is [Paid]'.format(self.payment_type)))
+        else:
+            if not self.refundable_amount:
+                raise ValidationError(
+                    _('Refundable amount should have value when event type is [Free]'.format(self.payment_type)))
+
+    @api.constrains('paid_attendee')
+    def _check_participating_amount(self):
+        if self.paid_attendee == 'yes':
+            if not self.participating_amount:
+                raise ValidationError(_('Participation Amount should have value when event type is [Yes]'))
+        else:
+            self.participating_amount = 0
+
     @api.multi
     def unlink(self):
         for reserve in self:
             if reserve.state != 'draft':
-                raise ValidationError(_('You cannot delete a record which is not in draft state!'))
+                raise ValidationError(_('[DELETE] Record cannot delete except draft state'))
         return super(EventReservation, self).unlink()
 
     @api.one
@@ -115,7 +141,7 @@ class EventReservation(models.Model):
                 'name': self.event_name,
                 'organizer_id': self.organizer_id.id,
                 'event_type_id': self.event_type_id.id,
-                'date_begin': self.start_date,
+                'start_date': self.start_date,
                 'date_end': self.end_date,
                 'payment_type': self.payment_type,
                 'mode_of_payment': self.mode_of_payment,
