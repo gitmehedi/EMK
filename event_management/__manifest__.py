@@ -20,11 +20,11 @@
         'create_partner_user',
     ],
     'data': [
+        'data/email_template.xml',
         'security/ir.model.access.csv',
         # 'security/ir_rule.xml',
         'data/ir_sequence.xml',
         'data/data.xml',
-        'data/email_template.xml',
         'views/menu_view.xml',
         'views/event_type_view.xml',
         'views/dashboard.xml',
@@ -38,7 +38,6 @@
         'views/res_partner_views.xml',
         'views/event_reservation_view.xml',
         'views/event_organization_type_view.xml',
-
         'report/report_event_completion_form.xml',
         'report/monthly_event_report_view.xml',
         'wizard/wizard_monthly_event_view.xml',

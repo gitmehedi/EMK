@@ -39,3 +39,7 @@ class EventRoomBook(models.Model):
         if len(data) > 1:
             raise UserError(
                 _('[{0}] room already book for another event, please choose another.'.format(self.room_id.name)))
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('status', '=', True)]

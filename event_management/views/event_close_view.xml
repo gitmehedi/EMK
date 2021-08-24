@@ -1,29 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record id="event_close_tree_view" model="ir.ui.view">
-            <field name="name">event_close_tree_view</field>
-            <field name="model">event.close</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="event_id"/>
-                    <field name="event_type_id"/>
-                    <field name="organizer_id"/>
-                    <field name="start_date"/>
-                    <field name="end_date"/>
-                    <field name="activity_duration"/>
-                    <field name="total_participants"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
         <record id="event_close_form_view" model="ir.ui.view">
             <field name="name">event_close_form_view</field>
             <field name="model">event.close</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="act_submit" string="Submit" type="object" class="oe_highlight"
+                        <button name="act_submit" string="Confirm" type="object" class="oe_highlight"
                                 states="draft"/>
                         <button name="act_approve" string="Approve" type="object" class="oe_highlight"
                                 states="confirm"/>
@@ -36,7 +20,7 @@
                     <sheet>
                         <h1>
                             <field name="event_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
-                            attrs="{'readonly': [('state','!=','draft')]}"/>
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
                         </h1>
                         <group>
                             <group>
@@ -74,7 +58,7 @@
                                 </tree>
                             </field>
                         </group>
-                    
+
                         <notebook>
                             <page string="Information">
                                 <group>
@@ -139,6 +123,44 @@
                 </form>
             </field>
         </record>
+
+        <record id="event_close_tree_view" model="ir.ui.view">
+            <field name="name">event.close.tree.view</field>
+            <field name="model">event.close</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="state in ('draft','confirm','approve')"
+                      decoration-info="state=='confirm'" colors="orange:state == 'draft';red:state == 'cancel'"
+                      decoration-success="state=='approve'" decoration-muted="state=='close'">
+                    <field name="event_id"/>
+                    <field name="organizer_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="activity_duration"/>
+                    <field name="total_participants"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="event_close_search_view" model="ir.ui.view">
+            <field name="name">event.close.search.view</field>
+            <field name="model">event.close</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="event_id"/>
+                    <field name="organizer_id"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Event" domain="[]" context="{'group_by':'event_id'}"/>
+                        <filter string="Organizer" domain="[]" context="{'group_by':'organizer_id'}"/>
+                        <filter string="Male" domain="[]" context="{'group_by':'male_participants'}"/>
+                        <filter string="Female" domain="[]" context="{'group_by':'female_participants'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="event_close_action" model="ir.actions.act_window">
             <field name="name">Event Close</field>
             <field name="res_model">event.close</field>
@@ -146,9 +168,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Menu items -->
         <menuitem id="event_close_menu" name="Event Close" sequence="20" groups="event_user.group_event_administration"
                   parent="menu_event_operations" action="event_close_action"/>
-
     </data>
 </odoo>
