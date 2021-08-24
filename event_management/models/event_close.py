@@ -2,7 +2,7 @@
 
 import logging
 from odoo import models, fields, api, exceptions,_
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 _logger = logging.getLogger(__name__)
@@ -124,13 +124,13 @@ class EventClose(models.Model):
     def _check_name(self):
         name = self.search([('event_id', '=ilike', self.event_id.name)])
         if len(name) > 1:
-            raise Exception(_('Name should not be duplicate.'))
+            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
     @api.multi
     def unlink(self):
         for event in self:
             if event.state != 'draft':
-                raise UserError(_('You cannot delete a record which is not in draft state!'))
+                raise ValidationError(_('You cannot delete a record which is not in draft state!'))
         return super(EventClose, self).unlink()
 
 

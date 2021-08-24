@@ -26,4 +26,4 @@ class EventRoom(models.Model):
     def _check_name(self):
         name = self.search([('name', '=ilike', self.name)])
         if len(name) > 1:
-            raise Exception(_('Name should not be duplicate.'))
+            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))

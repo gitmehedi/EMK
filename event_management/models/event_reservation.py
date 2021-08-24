@@ -89,13 +89,13 @@ class EventReservation(models.Model):
     def _check_name(self):
         name = self.search([('event_name', '=ilike', self.event_name)])
         if len(name) > 1:
-            raise Exception(_('Event Name should not be duplicate.'))
+            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
     @api.multi
     def unlink(self):
         for reserve in self:
             if reserve.state != 'draft':
-                raise UserError(_('You cannot delete a record which is not in draft state!'))
+                raise ValidationError(_('You cannot delete a record which is not in draft state!'))
         return super(EventReservation, self).unlink()
 
     @api.one
@@ -162,7 +162,7 @@ class EventReservation(models.Model):
         serivces = self.env['product.product'].search([('name', 'in', serv_name), ('active', 'in', serv_name)],
                                                       order='id desc')
         if len(serivces) != 2:
-            raise UserError(_('Please configure your event services.'))
+            raise ValidationError(_('Please configure your event services.'))
 
         def create_invoice(service, vals):
             ins_inv = self.env['account.invoice']

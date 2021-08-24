@@ -26,11 +26,11 @@ class EventManagementType(models.Model):
     def _check_name(self):
         name = self.search([('name', '=ilike', self.name)])
         if len(name) > 1:
-            raise Exception(_('Name should not be duplicate.'))
+            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
     @api.multi
     def unlink(self):
         for event in self:
             if event.event_count > 0:
-                raise UserError(_('You cannot delete a record which has existing event!'))
+                raise ValidationError(_('You cannot delete a record which has existing event!'))
         return super(EventManagementType, self).unlink()

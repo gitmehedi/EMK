@@ -54,13 +54,13 @@ class EventEvent(models.Model):
     def _check_name(self):
         name = self.search([('name', '=ilike', self.name)])
         if len(name) > 1:
-            raise Exception(_('Name should not be duplicate.'))
+            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
     @api.multi
     def unlink(self):
         for event in self:
             if event.state == 'done':
-                raise UserError(_('You cannot delete a record which is not in draft state!'))
+                raise ValidationError(_('You cannot delete a record which is not in draft state!'))
         return super(EventEvent, self).unlink()
 
     @api.model
