@@ -401,7 +401,7 @@ class ResPartner(models.Model):
         for key, val in vals['context'].iteritems():
             context[key] = val
         try:
-            template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
+            template.with_context(context).send_mail(self.env.user.partner_id.id, force_send=True, raise_exception=True)
             _logger.info("Email sending status of user.")
         except:
             _logger.info("Email doesn't send properly.")

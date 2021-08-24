@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 class EventClose(models.Model):
     _name = 'event.close'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = 'id desc'
     _rec_name = 'event_id'
     _description = 'Event Close'
 
@@ -98,10 +99,10 @@ class EventClose(models.Model):
         if self.state == 'draft':
             vals = {
                 'template': 'event_management.event_close_email_to_organizer_tmpl',
-                'emailto': self.work_email if self.work_email else None,
+                'email_to': self.work_email if self.work_email else None,
                 'context': {'organizer_name': self.organizer_id.name, 'event_name': self.event_id.name}
             }
-            self.env['res.partner'].mailsend(vals)
+            self.env['res.partner'].event_mailsend(vals)
             self.state = "confirm"
 
     @api.one
@@ -109,10 +110,10 @@ class EventClose(models.Model):
         if self.state == 'confirm':
             vals = {
                 'template': 'event_management.event_clearance_email_to_organizer_tmpl',
-                'emailto': self.work_email if self.work_email else None,
+                'email_to': self.work_email if self.work_email else None,
                 'context': {'organizer_name': self.organizer_id.name, 'event_name': self.event_id.name}
             }
-            self.env['res.partner'].mailsend(vals)
+            self.env['res.partner'].event_mailsend(vals)
             self.state = "approve"
 
     @api.one

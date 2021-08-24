@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
+import logging
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
 class EventManagementType(models.Model):
@@ -26,3 +26,32 @@ class EventManagementType(models.Model):
         action['context'] = {}
         action['domain'] = [('organizer_id', '=', self.id)]
         return action
+
+    @api.model
+    def event_mailsend(self, vals):
+        template = False
+        try:
+            template = self.env.ref(vals['template'], raise_if_not_found=False)
+        except ValueError:
+            pass
+
+        assert template._name == 'mail.template'
+
+        template.write({
+            'email_to': vals['email_to'] if 'email_to' in vals else '',
+            'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals else [],
+        })
+
+        context = {
+            'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
+            'logo': self.env.user.company_id.logo,
+            'lang': self.env.user.lang,
+        }
+
+        for key, val in vals['context'].iteritems():
+            context[key] = val
+        try:
+            template.with_context(context).send_mail(self.env.user.partner_id.id, force_send=True, raise_exception=True)
+            _logger.info("Email sending status of user.")
+        except:
+            _logger.info("Email doesn't send properly.")
