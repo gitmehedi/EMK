@@ -144,5 +144,20 @@
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="inherit_view_event_tree">
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="colors">orange:state=='draft';green:state=='confirm';grey:state=='done';red:state=='cancel';</attribute>
+                    <attribute name="decoration-bf">state in ('draft','confirm')</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="event.action_event_view">
+            <field name="view_mode">tree,kanban,calendar,form</field>
+            <field name="context">{}</field>
+        </record>
     </data>
 </odoo>

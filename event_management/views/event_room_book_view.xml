@@ -5,14 +5,14 @@
             <field name="name">event.room.reservation.view.tree</field>
             <field name="model">event.room.book</field>
             <field name="arch" type="xml">
-                <tree create="0" delete="0" decoration-bf="status == True"
-                      colors="green:status == True;grey:status == False">
+                <tree create="0" delete="0" decoration-bf="state in ('assign','assign')"
+                      colors="green:state == 'assign';grey:state == 'done';red:state == 'cancel'">
                     <field name="room_id"/>
                     <field name="event_id"/>
                     <field name="event_start"/>
                     <field name="event_stop"/>
                     <field name="seat_no"/>
-                    <field name="status"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -24,10 +24,11 @@
                 <search string="Event Management">
                     <field name="room_id"/>
                     <field name="event_id"/>
-                    <field name="status"/>
+                    <field name="state"/>
                     <group expand="0" string="Group By">
                         <filter string="Event Room" domain="[]" context="{'group_by':'room_id'}"/>
                         <filter string="Event" domain="[]" context="{'group_by':'event_id'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class EventEvent(models.Model):
     _inherit = 'event.event'
+    _order = 'id desc'
 
     organizer_id = fields.Many2one('res.partner', string='Organizer Name', domain=[('is_organizer', '=', True)],
                                    default=False, required=True, readonly=False, states={'done': [('readonly', True)]})
@@ -18,7 +19,6 @@ class EventEvent(models.Model):
     date_begin = fields.Datetime(string='Start Date', required=True,
                                  track_visibility='onchange',
                                  states={'confirm': [('readonly', True)], 'done': [('readonly', True)]})
-
     payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type',
                                     readonly=False, states={'done': [('readonly', True)]})
     mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')], required=True, default='cash',
@@ -56,12 +56,38 @@ class EventEvent(models.Model):
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
+    @api.one
+    def button_done(self):
+        if self.state == 'confirmed':
+            # self.event_book_ids
+            # self.registration_ids
+            # self.event_book_ids
+            # self.event_task_ids
+            # self.session_ids
+
+            self.state = 'done'
+
+        # event_book_ids
+
     @api.multi
     def unlink(self):
         for event in self:
             if event.state == 'done':
                 raise ValidationError(_('You cannot delete a record which is not in draft state!'))
         return super(EventEvent, self).unlink()
+
+    @api.multi
+    @api.depends('name', 'date_begin', 'date_end')
+    def name_get(self):
+        result = []
+        for event in self:
+            date_begin = fields.Datetime.from_string(event.date_begin)
+            date_end = fields.Datetime.from_string(event.date_end)
+            dates = [fields.Date.to_string(fields.Datetime.context_timestamp(event, dt)) for dt in
+                     [date_begin, date_end] if dt]
+            dates = sorted(set(dates))
+            result.append((event.id, '%s [%s]' % (event.name, ' - '.join(dates))))
+        return result
 
     @api.model
     def _needaction_domain_get(self):

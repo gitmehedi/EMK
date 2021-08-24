@@ -49,7 +49,7 @@ class EventClose(models.Model):
     age_group = fields.Selection([('one', 'Below 18'), ('two', '18-35'), ('three', 'Over 18')], 'Age Group',
                                  readonly=True, states={'draft': [('readonly', False)]})
     non_usg = fields.Selection([('yes', 'Yes'), ('no', 'No')], readonly=True, states={'draft': [('readonly', True)]})
-    event_summary = fields.Text('Summary of event', track_visibility='onchange', readonly=True,
+    event_summary = fields.Text('Summary of Event', track_visibility='onchange', readonly=True,
                                 states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('approve', 'Approved'), ('close', 'Close'),
                               ('cancel', 'Canceled')], string="State", default="draft", track_visibility='onchange')
