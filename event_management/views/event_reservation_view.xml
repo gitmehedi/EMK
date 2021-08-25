@@ -14,7 +14,7 @@
                         <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
                         <button name="act_cancel" string="Cancel" type="object"
                                 states="draft"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm"/>
                     </header>
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar"/>
@@ -85,9 +85,8 @@
             <field name="name">event.reservation.tree.view</field>
             <field name="model">event.reservation</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="state in ['on_process','draft']"
-                      decoration-success="state in ['on_process','draft']"
-                      decoration-info="state=='confirm'" decoration-muted="state in ['cancel','done']">
+                <tree decoration-bf="state in ['draft','on_process','confirm']"
+                      colors="orange:state=='draft';green:state=='on_process';grey:state=='confirm';salmon:state=='cancel';lavender:state=='done';">
                     <field name="name"/>
                     <field name="event_name"/>
                     <field name="event_id"/>

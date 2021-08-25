@@ -213,7 +213,7 @@
         <field name="view_mode">tree,form,calendar</field>
     </record>
 
-    <menuitem id="event_session_menu" name="Sessions" sequence="20"
+    <menuitem id="event_session_menu" name="Sessions" sequence="10"
               parent="event_management.menu_event_general" action="act_event_session_form"
               groups="event_user.group_event_administration,event.group_event_manager"/>
 </odoo>

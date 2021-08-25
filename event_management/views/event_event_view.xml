@@ -144,7 +144,6 @@
                 </xpath>
             </field>
         </record>
-
         <record model="ir.ui.view" id="inherit_view_event_tree">
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_tree"/>
@@ -152,6 +151,9 @@
                 <xpath expr="//tree" position="attributes">
                     <attribute name="colors">orange:state=='draft';green:state=='confirm';grey:state=='done';red:state=='cancel';</attribute>
                     <attribute name="decoration-bf">state in ('draft','confirm')</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="organizer_id"/>
                 </xpath>
             </field>
         </record>
