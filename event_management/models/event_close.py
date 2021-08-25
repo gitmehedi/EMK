@@ -36,11 +36,11 @@ class EventClose(models.Model):
     start_date = fields.Datetime(string='Start Date', readonly=True, related='event_id.date_begin')
     end_date = fields.Datetime(string='End Date', related='event_id.date_end', readonly=True)
     activity_duration = fields.Datetime(string='Activity Duration', readonly=True)
-    total_participants = fields.Integer('Total Participants', compute='compute_total_participants', readonly=True,
+    total_participants = fields.Integer('Total Participants', compute='compute_participants', readonly=True,
                                         store=True)
-    male_participants = fields.Integer('Total Male Participants', compute='compute_male_participants', readonly=True,
+    male_participants = fields.Integer('Male Participants', compute='compute_participants', readonly=True,
                                        store=True)
-    female_participants = fields.Integer('Total Female Participants', compute='compute_female_participants',
+    female_participants = fields.Integer('Female Participants', compute='compute_participants',
                                          readonly=True, store=True)
     website = fields.Char('Website')
     attach_file = fields.Char('Attach a File')
@@ -70,19 +70,20 @@ class EventClose(models.Model):
             self.event_associate_ids = vals
 
     @api.multi
-    @api.depends('start_date', 'end_date')
-    def compute_total_participants(self):
-        self.total_participants = 10
+    @api.depends('event_id')
+    def compute_participants(self):
+        for record in self:
+            if record.event_id:
+                male, female = 0, 0
+                for rec in record.event_id.registration_ids:
+                    if rec.gender == 'male':
+                        male += 1
+                    if rec.gender == 'female':
+                        female += 1
 
-    @api.multi
-    @api.depends('start_date', 'end_date')
-    def compute_male_participants(self):
-        self.male_participants = 11
-
-    @api.multi
-    @api.depends('start_date', 'end_date')
-    def compute_female_participants(self):
-        self.female_participants = 12
+                self.total_participants = male + female
+                self.male_participants = male
+                self.female_participants = female
 
     @api.one
     def act_cancel(self):
@@ -119,14 +120,15 @@ class EventClose(models.Model):
     @api.one
     def act_close(self):
         if self.state == 'approve':
-            self.state = "close"
-            self.event_id.button_done()
+            res = self.event_id.button_done()
+            if res:
+                self.state = "close"
 
     @api.constrains('event_id')
     def _check_name(self):
-        name = self.search([('event_id', '=ilike', self.event_id.name)])
+        name = self.search([('event_id', '=ilike', self.event_id.name), ('state', 'not in', ['cancel'])])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
+            raise ValidationError(_('[DUPLICATE] Event already exist, choose another.'))
 
     @api.multi
     def unlink(self):

@@ -58,16 +58,33 @@ class EventEvent(models.Model):
 
     @api.one
     def button_done(self):
-        if self.state == 'confirmed':
-            # self.event_book_ids
-            # self.registration_ids
-            # self.event_book_ids
-            # self.event_task_ids
-            # self.session_ids
 
-            self.state = 'done'
+        if self.state == 'confirm':
+            message = ''
+            rooms = [room.state for room in self.event_book_ids if room.state == 'assign']
+            if len(rooms) > 0:
+                message += '- Registered room still in open status, either close or cancel. \n'
 
-        # event_book_ids
+            regs = [reg.state for reg in self.registration_ids if reg.state == 'open']
+            if len(regs) > 0:
+                message += '- Registered participant still in open status, either close or cancel. \n'
+
+            tasks = [task.state for task in self.event_task_ids if task.state == 'draft']
+            if len(tasks) > 0:
+                message += '- Assign task still in open status, either close or cancel. \n'
+
+            sess = [ses.state for ses in self.session_ids if ses.state in ['unconfirmed', 'confirmed']]
+            if len(sess) > 0:
+                message += '- Registered sessions still in open status, either close or cancel. \n'
+
+            if len(message) > 0:
+                msg = "Review mention point in event [{0}]\n\n".format(self.display_name) + message
+                raise ValidationError(_(msg))
+            else:
+                self.state = "done"
+                return True
+        else:
+            raise ValidationError(_("Event not in confirm state, please check event [{0}]".format(self.display_name)))
 
     @api.multi
     def unlink(self):

@@ -38,7 +38,7 @@ evm_etl_adm,evm_etl_adm,model_event_task_list,event_user.group_event_administrat
 
 res_partner_adm,res_partner_adm,model_res_partner,event_user.group_event_administration,1,1,1,0
 
-event_close_adm,event_close_adm,model_event_close,event_user.group_event_administration,1,1,1,0
+event_close_adm,event_close_adm,model_event_close,event_user.group_event_administration,1,1,1,1
 
 event_associate_adm,event_associate_adm,model_event_associate,event_user.group_event_administration,1,1,1,0
 

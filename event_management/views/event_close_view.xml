@@ -13,7 +13,7 @@
                                 states="confirm"/>
                         <button name="act_close" string="Close Event" type="object" states="approve"
                                 class="oe_highlight"/>
-                        <button name="act_reset" string="Reset to Draft" type="object" states="confirm,approve"/>
+                        <button name="act_reset" string="Reset to Draft" type="object" states="confirm"/>
                         <button name="act_cancel" string="Cancel" type="object" states="confirm,approve"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,close"/>
                     </header>
@@ -129,8 +129,7 @@
             <field name="model">event.close</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="state in ('draft','confirm','approve')"
-                      decoration-info="state=='confirm'" colors="orange:state == 'draft';red:state == 'cancel'"
-                      decoration-success="state=='approve'" decoration-muted="state=='close'">
+                      colors="orange:state=='draft';green:state=='confirm';grey:state=='approve';salmon:state=='cancel';silver:state=='close';">
                     <field name="event_id"/>
                     <field name="organizer_id"/>
                     <field name="start_date"/>
