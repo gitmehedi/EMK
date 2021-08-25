@@ -141,6 +141,7 @@ class EventReservation(models.Model):
                 'name': self.event_name,
                 'organizer_id': self.organizer_id.id,
                 'event_type_id': self.event_type_id.id,
+                'expected_session': self.total_session,
                 'date_begin': self.start_date,
                 'date_end': self.end_date,
                 'payment_type': self.payment_type,

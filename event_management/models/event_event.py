@@ -36,6 +36,7 @@ class EventEvent(models.Model):
     image_medium = fields.Binary(string='Medium-sized photo', attachment=True)
     participating_amount = fields.Integer(string="Participation Amount", readonly=True,
                                           states={'confirm': [('readonly', False)]})
+    expected_session = fields.Integer(string="No. of Sessions", readonly=True)
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):

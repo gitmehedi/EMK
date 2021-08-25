@@ -234,6 +234,9 @@ class EventSession(models.Model):
     def act_done(self):
         if self.state == 'confirmed':
             self.state = 'done'
+    @api.one
+    def button_assign(self):
+        self.write({'state': 'assign'})
 
     @api.model
     def _needaction_domain_get(self):

@@ -55,8 +55,7 @@
             <field name="model">event.task.list</field>
             <field name="arch" type="xml">
                 <tree string="Event Task List" decoration-bf="state in ('start','assign','draft')"
-                      decoration-info="state=='assign'" colors="orange:state == 'draft';"
-                      decoration-success="state=='start'" decoration-muted="state=='finish'">
+                      colors="orange:state=='draft';green:state=='assign';salmon:state=='start';silver:state=='finish';">
                     <field name="task_id"/>
                     <field name="event_id"/>
                     <field name="assign_emp_id"/>

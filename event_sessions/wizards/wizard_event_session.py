@@ -12,68 +12,31 @@ from pytz import timezone, utc
 class WizardEventSession(models.TransientModel):
     _name = "wizard.event.session"
 
-    name = fields.Char(
-        "Session info",
-        required=True,
-        help="It will be generated according to given parameters",
-        default='/',
-    )
-    event_id = fields.Many2one(
-        comodel_name="event.event", readonly=True, on_delete="cascade",
-        default=lambda self: self.env.context["active_id"], required=True,
-    )
-    event_date_begin = fields.Datetime(
-        related="event_id.date_begin",
-        readonly=True,
-        help="Set it up in the event configuration"
-             "Sessions will be generated from this date",
-    )
-    event_date_end = fields.Datetime(
-        related="event_id.date_end",
-        readonly=True,
-        help="Set it up in the event configuration"
-             "Sessions will be generated up to this date",
-    )
-    event_date_tz = fields.Selection(
-        related="event_id.date_tz",
-        readonly=True,
-        help="Set it up in the event configuration"
-             "Sessions will be generated up to this date",
-    )
-    mondays = fields.Boolean(
-        help="Create sessions on Mondays",
-    )
-    tuesdays = fields.Boolean(
-        help="Create sessions on Tuesdays",
-    )
-    wednesdays = fields.Boolean(
-        help="Create sessions on Wednesdays",
-    )
-    thursdays = fields.Boolean(
-        help="Create sessions on Thursdays",
-    )
-    fridays = fields.Boolean(
-        help="Create sessions on Fridays",
-    )
-    saturdays = fields.Boolean(
-        help="Create sessions on Saturdays",
-    )
-    sundays = fields.Boolean(
-        help="Create sessions on Sundays",
-    )
-    delete_existing_sessions = fields.Boolean(
-        default=True,
-        help="Check in order to delete every previous session for this event"
-    )
-    session_hour_ids = fields.One2many(
-        comodel_name='wizard.event.session.hours',
-        inverse_name='wizard_event_session_id',
-        string='Hours',
-    )
-    event_mail_template_id = fields.Many2one(
-        comodel_name='event.mail.template',
-        string='Mail Schedule Template',
-    )
+    name = fields.Char("Session Info", default='/', required=True,
+                       help="It will be generated according to given parameters")
+    event_id = fields.Many2one(comodel_name="event.event", readonly=True, on_delete="cascade",
+                               default=lambda self: self.env.context["active_id"], required=True)
+    event_date_begin = fields.Datetime(related="event_id.date_begin", readonly=True,
+                                       help="Set it up in the event configuration"
+                                            "Sessions will be generated from this date")
+    event_date_end = fields.Datetime(related="event_id.date_end", readonly=True,
+                                     help="Set it up in the event configuration"
+                                          "Sessions will be generated up to this date")
+    event_date_tz = fields.Selection(related="event_id.date_tz", readonly=True,
+                                     help="Set it up in the event configuration"
+                                          "Sessions will be generated up to this date")
+    mondays = fields.Boolean(help="Create sessions on Mondays")
+    tuesdays = fields.Boolean(help="Create sessions on Tuesdays")
+    wednesdays = fields.Boolean(help="Create sessions on Wednesdays")
+    thursdays = fields.Boolean(help="Create sessions on Thursdays")
+    fridays = fields.Boolean(help="Create sessions on Fridays")
+    saturdays = fields.Boolean(help="Create sessions on Saturdays")
+    sundays = fields.Boolean(help="Create sessions on Sundays")
+    delete_existing_sessions = fields.Boolean(default=True, string="Delete Existing Sessions",
+                                              help="Check in order to delete every previous session for this event")
+    session_hour_ids = fields.One2many(comodel_name='wizard.event.session.hours',
+                                       inverse_name='wizard_event_session_id', string='Hours')
+    event_mail_template_id = fields.Many2one(comodel_name='event.mail.template', string='Mail Schedule Template')
 
     @api.multi
     @api.constrains('session_hour_ids')
@@ -82,14 +45,9 @@ class WizardEventSession(models.TransientModel):
             for hour_b in self.session_hour_ids:
                 if hour_a != hour_b:
                     if hour_a.start_time == hour_b.start_time:
-                        raise ValidationError(
-                            _("There are overlapping hours!")
-                        )
-                    elif hour_b.start_time < \
-                            hour_a.start_time < hour_b.end_time:
-                        raise ValidationError(
-                            _("There are overlapping hours!")
-                        )
+                        raise ValidationError(_("There are overlapping hours!"))
+                    elif hour_b.start_time < hour_a.start_time < hour_b.end_time:
+                        raise ValidationError(_("There are overlapping hours!"))
 
     @api.multi
     def weekdays(self):
@@ -108,11 +66,8 @@ class WizardEventSession(models.TransientModel):
     def existing_sessions(self, date):
         """Return existing sessions that match some criteria."""
         # Todo: Improve match
-        return self.env["event.session"].search(
-            [("event_id", "=", self.event_id.id),
-             ("date_begin", "=", date),
-             ("start_time", "=", self.start_time)],
-        )
+        return self.env["event.session"].search([("event_id", "=", self.event_id.id),
+                                                 ("date_begin", "=", date), ("start_time", "=", self.start_time)])
 
     def _prepare_session_values(self, date_begin, date_end):
         vals = {
@@ -125,13 +80,10 @@ class WizardEventSession(models.TransientModel):
         }
         mail_template = (
                 self.event_mail_template_id or
-                self.env['ir.values'].get_default(
-                    'event.config.settings', 'event_mail_template_id'))
+                self.env['ir.values'].get_default('event.config.settings', 'event_mail_template_id'))
 
         if mail_template:
-            template_values = \
-                self.env['event.session']._session_mails_from_template(
-                    self.event_id.id, mail_template)
+            template_values = self.env['event.session']._session_mails_from_template(self.event_id.id, mail_template)
             vals['event_mail_ids'] = template_values
         return vals
 
@@ -139,12 +91,8 @@ class WizardEventSession(models.TransientModel):
     def generate_sessions(self):
         self.ensure_one()
         session_obj = self.env["event.session"]
-        event_start = utc.localize(
-            fields.Datetime.from_string(self.event_date_begin)
-        )
-        event_end = utc.localize(
-            fields.Datetime.from_string(self.event_date_end)
-        )
+        event_start = utc.localize(fields.Datetime.from_string(self.event_date_begin))
+        event_end = utc.localize(fields.Datetime.from_string(self.event_date_end))
         weekdays = self.weekdays()
         current = event_start
         current = current.replace(hour=event_end.hour, minute=event_end.minute)
@@ -155,9 +103,7 @@ class WizardEventSession(models.TransientModel):
             for hour in self.session_hour_ids:
                 start_time = datetime.min + timedelta(hours=hour.start_time)
                 end_time = datetime.min + timedelta(hours=hour.end_time)
-                current_start = datetime.combine(
-                    current.date(), start_time.time(),
-                )
+                current_start = datetime.combine(current.date(), start_time.time())
                 current_end = datetime.combine(current.date(), end_time.time())
                 # Convert to UTC from user TZ
                 local_tz = timezone(self.env.user.tz)
@@ -168,9 +114,7 @@ class WizardEventSession(models.TransientModel):
                 if current_start < event_start or current_end > event_end:
                     continue
                 # TODO: Check that no session exists with this data
-                session_obj.create(
-                    self._prepare_session_values(current_start, current_end)
-                )
+                session_obj.create(self._prepare_session_values(current_start, current_end))
             current += timedelta(days=1)
 
     @api.multi
@@ -204,17 +148,17 @@ class WizardEventSession(models.TransientModel):
                     'event_stop': ses.date_end,
                 }
                 ses.event_book_ids.create(bes_reg)
-
-            for tec in self.event_id.event_task_ids:
+            tasks = self.env['event.task.list'].search(
+                [('event_id', '=', self.event_id.id), ('session_id', '=', False)])
+            for tec in tasks:
                 tes_reg = {
                     'session_id': ses.id,
+                    'event_id': tec.event_id.id,
                     'assign_emp_id': tec.assign_emp_id.id,
                     'task_id': tec.task_id.id,
                     'task_duration': tec.task_duration,
                     'task_description': tec.task_description,
-                    'assign_date': ses.date_begin,
-                    'task_start': ses.date_begin,
-                    'task_stop': ses.date_end,
+                    'assign_date': ses.date_begin
                 }
                 ses.event_task_ids.create(tes_reg)
 
@@ -222,9 +166,7 @@ class WizardEventSession(models.TransientModel):
 class WizardEventSessionHours(models.TransientModel):
     _name = "wizard.event.session.hours"
 
-    wizard_event_session_id = fields.Many2one(
-        comodel_name='wizard.event.session'
-    )
+    wizard_event_session_id = fields.Many2one(comodel_name='wizard.event.session')
     start_time = fields.Float(required=True)
     end_time = fields.Float(required=True)
 
@@ -235,15 +177,11 @@ class WizardEventSessionHours(models.TransientModel):
     def _check_zero_duration(self):
         for hour in self:
             if hour.start_time == hour.end_time:
-                raise ValidationError(
-                    _("There are sessions with no duration!")
-                )
+                raise ValidationError(_("There are sessions with no duration!"))
 
     @api.multi
     @api.constrains('start_time', 'end_time')
     def _check_hour_validity(self):
         for hour in self:
             if hour.start_time > 23.99 or hour.end_time > 23.99:
-                raise ValidationError(
-                    _("You've entered invalid hours!")
-                )
+                raise ValidationError(_("You've entered invalid hours!"))
