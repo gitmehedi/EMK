@@ -44,7 +44,7 @@
         </record>
 
         <record id="data_import_wizard_action_view" model="ir.actions.act_window">
-            <field name="name">Import Data</field>
+            <field name="name">Import Attendee</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">data.import.wizard</field>
             <field name="view_type">form</field>

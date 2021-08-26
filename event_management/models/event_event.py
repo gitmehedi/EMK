@@ -117,10 +117,10 @@ class EventRegistration(models.Model):
     _inherit = ['event.registration', 'mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
 
-    date_of_birth = fields.Date(string='Date of Birth', required=True)
+    date_of_birth = fields.Date(string='Date of Birth')
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], required=True,
                               default='male', string='Gender')
-    profession_id = fields.Many2one('attendee.profession', string='Profession', required=True, default=False)
+    profession_id = fields.Many2one('attendee.profession', string='Profession', default=False)
     card_number = fields.Char(string='Card Number')
 
     @api.model
