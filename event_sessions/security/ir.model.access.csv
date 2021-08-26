@@ -1,7 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_event_session_user,event.session.user,event_sessions.model_event_session,event.group_event_user,1,0,0,0
-access_event_session_manager,event.session.manager,event_sessions.model_event_session,event.group_event_manager,1,1,1,1
-access_event_session_admin,event.session.admin,event_sessions.model_event_session,event_user.group_event_administration,1,1,1,1
-access_event_session_organizer,event.session.organizer,event_sessions.model_event_session,event_user.group_event_organizer,1,0,0,0
-access_event_session_attend_organizer,event.session.attend.organizer,event_sessions.model_event_session_attend,event_user.group_event_organizer,1,0,0,0
-access_event_session_attend_admin,event.session.attend.admin,event_sessions.model_event_session_attend,event_user.group_event_administration,1,1,1,0
+
+
+evt_session_usr,evt_session_usr,event_sessions.model_event_session,event.group_event_user,1,0,0,0
+evt_session_adm,evt_session_adm,event_sessions.model_event_session,event_user.group_event_administration,1,1,1,1
+evt_session_mng,evt_session_mng,event_sessions.model_event_session,event.group_event_manager,1,1,1,1
+
+evt_session_attend_usr,evt_session_attend_usr,event_sessions.model_event_session_attend,event.group_event_user,1,0,0,0
+evt_session_attend_adm,evt_session_attend_adm,event_sessions.model_event_session_attend,event_user.group_event_administration,1,1,1,1
+evt_session_attend_mng,evt_session_attend_mng,event_sessions.model_event_session_attend,event.group_event_manager,1,1,1,1

@@ -15,7 +15,6 @@
         'report_layout',
         'mail_send',
         'event_user',
-        'data_import',
         'website_event_filter_selector',
         'event_user',
         'event_management',
