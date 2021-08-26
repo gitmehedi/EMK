@@ -1,0 +1,852 @@
+name,gender,date_of_birth,email,phone,department_name,job_title
+Abdul Halim,Male,1975-01-14,1856806723@yopmail.com,1856806723,Blow Mould,Helper
+Abdul Jabber,Male,1975-01-15,1856806724@yopmail.com,1856806724,HR & Admin (SCCL-CTG),Officer
+Abdul Kader Meah,Male,1975-01-14,1856806725@yopmail.com,1856806725,Transport,Truck Driver
+Abdullah Al Mamun Tarafder,Male,1975-01-14,1856806726@yopmail.com,1856806726,Production (SCCL-DF),"Operator, Brine"
+Abdullah Al Ragib,Male,1975-01-14,1856806727@yopmail.com,1856806727,Production (SCCL-DF),Engineer
+Abdul Mannan,Male,1975-01-14,1856806728@yopmail.com,1856806728,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Abdur Rahim,Male,1975-01-14,1856806729@yopmail.com,1856806729,Blow Mould,Trainee Asst. Operator
+Abdur Rahim,Male,1975-01-14,1856806730@yopmail.com,1856806730,Transport,Lorry Driver
+Abdur Rahman Bhayan,Male,1975-01-14,1856806731@yopmail.com,1856806731,Mechanical (SCCL-DF),Supervisor
+Abdur Razzak,Male,1975-01-14,1856806732@yopmail.com,1856806732,,
+Abdur Rob,Male,1975-01-14,1856806733@yopmail.com,1856806733,HR & Admin (SCCL-CTG),Imam
+A.B.M Taufikul Islam,Male,1975-01-14,1856806734@yopmail.com,1856806734,Sales & Marketing (H2o2),Assistant. Manager
+Abu Hanif,Male,1975-01-14,1856806735@yopmail.com,1856806735,Production (SCCL-DF),"Operator, HCL,Hypo Storage"
+Abul Faruque,Male,1975-01-14,1856806736@yopmail.com,1856806736,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+Abul Hasam,Male,1975-01-14,1856806737@yopmail.com,1856806737,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+Abul Hasan,Male,1975-01-14,1856806738@yopmail.com,1856806738,HR & Admin (SCCL-DF),Officer
+Abul Kalam,Male,1975-01-14,1856806739@yopmail.com,1856806739,Transport,Driver
+Abu Shaed Mahbub Hasan,Male,1975-01-14,1856806740@yopmail.com,1856806740,Electrical & Instrument (SCCL-DF),"Manager, Electrical."
+Abu Syed,Male,1975-01-14,1856806741@yopmail.com,1856806741,Electrical & Instrument (SCCL-CTG),Helper
+Abu taher,Male,1975-01-14,1856806742@yopmail.com,1856806742,Mechanical (SCCL-CTG),Helper
+Adesh Barua,Male,1975-01-14,1856806743@yopmail.com,1856806743,Blow Mould,Helper
+Adnan Rahman Sourav,Male,1975-01-14,1856806744@yopmail.com,1856806744,Electrical & Instrument (SCCL-CTG),S.Asst. Engineer
+Ahmed Hossain Khan,Male,1975-01-14,1856806745@yopmail.com,1856806745,Production (SCCL-CTG),Operator
+Alauddin Khan,Male,1975-01-14,1856806746@yopmail.com,1856806746,Production (SCCL-DF),"Operator, Brine"
+Ali Ahmed,Male,1975-01-14,1856806747@yopmail.com,1856806747,HR & Admin (SPL-HO),"Officer, Admin"
+Alok Dey,Male,1975-01-14,1856806748@yopmail.com,1856806748,Security,Asst.Inspector
+Amar Kanti Dhar,Male,1975-01-14,1856806749@yopmail.com,1856806749,Security,Security Guard
+Anwar Kabir,Male,1975-01-14,1856806750@yopmail.com,1856806750,Blow Mould,Helper
+Apon Barua,Male,1975-01-14,1856806751@yopmail.com,1856806751,Blow Mould,Helper
+Arif,Male,1975-01-14,1856806752@yopmail.com,1856806752,Electrical & Instrument (SCCL-DF),Assistant Technician
+ASM Shahed Hossain Khan,Male,1975-01-14,1856806753@yopmail.com,1856806753,Production (SCCL-CTG),Deputy Manager
+ASM Shahidul Alam,Male,1975-01-14,1856806754@yopmail.com,1856806754,Production (SCCL-CTG),Sr.Officer
+ASM Shahidul Alam,Male,1975-01-14,1856806755@yopmail.com,1856806755,,
+Ataharul Islam,Male,1975-01-14,1856806756@yopmail.com,1856806756,Electrical & Instrument (SCCL-DF),Engineer
+Atiqur Rahman,Male,1975-01-14,1856806757@yopmail.com,1856806757,Quality Assurance (SCCL-CTG),Lab Helper
+Aynal Hossain,Male,1975-01-14,1856806758@yopmail.com,1856806758,Blow Mould,Asst.Optr
+Ayub Ali-1,Male,1975-01-14,1856806759@yopmail.com,1856806759,Transport,Helper
+Azizul Haque,Male,1975-01-14,1856806760@yopmail.com,1856806760,Mechanical (SCCL-DF),Assistant Technician
+Barkat Ali,Male,1975-01-14,1856806761@yopmail.com,1856806761,Production (SCCL-DF),Asst. General Manager
+Belayet Hossain,Male,1975-01-14,1856806762@yopmail.com,1856806762,Blow Mould,Asst.Optr
+Bijoy Das,Male,1975-01-14,1856806763@yopmail.com,1856806763,Blow Mould,Helper
+Biraj Chandra Pal,Male,1975-01-14,1856806764@yopmail.com,1856806764,Production (SCCL-CTG),Deputy Manager
+Chandra Kanta Barua,Male,1975-01-14,1856806765@yopmail.com,1856806765,Security,Officer
+Debashish Saha,Male,1975-01-14,1856806766@yopmail.com,1856806766,Quality Assurance (SCCL-DF),"Sr.Chemist, QC"
+Depankar Basak,Male,1975-01-14,1856806767@yopmail.com,1856806767,Quality Assurance (SCCL-CTG),Sr.Chemist
+Dewan Mahmudur Rahman,Male,1975-01-14,1856806768@yopmail.com,1856806768,Sales & Marketing (Caustic),"DGM, Sales & Marketing"
+Dostogir Hossain Rony,Male,1975-01-14,1856806769@yopmail.com,1856806769,Transport,Lorry Helper
+Dulal Chandra Barua,Male,1975-01-14,1856806770@yopmail.com,1856806770,Transport,Driver
+Entaj Ali Meah,Male,1975-01-14,1856806771@yopmail.com,1856806771,Transport,Lorry Helper
+Farhad Ahmed,Male,1975-01-14,1856806772@yopmail.com,1856806772,Supply Chain Foreign (SCCL-HO),Manager
+Faruque Hossain,Male,1975-01-14,1856806773@yopmail.com,1856806773,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Farzana Afroze,Male,1975-01-14,1856806774@yopmail.com,1856806774,Management (SCCL-HO),Chirperson
+Fazal Ahmed,Male,1975-01-14,1856806775@yopmail.com,1856806775,Store (SCCL-CTG),Store Clerk
+F.M.Faisail Alam,Male,1975-01-14,1856806776@yopmail.com,1856806776,Sales & Marketing (SSCL-HO),Asst.Officer
+Gius Uddin,Male,1975-01-14,1856806777@yopmail.com,1856806777,Accounts & Finance (SCCL-CTG),Sr. Manager
+Hasanur Rashid,Male,1975-01-14,1856806778@yopmail.com,1856806778,Mechanical (SCCL-CTG),Sr.Mech 
+Hasibul Kabir,Male,1975-01-14,1856806779@yopmail.com,1856806779,Mechanical (SCCL-DF),Deputy Manager
+Hasin Raihan Rony,Male,1975-01-14,1856806780@yopmail.com,1856806780,Electrical & Instrument (SCCL-DF),Trainee Engineer
+hsib,Male,1975-01-14,1856806781@yopmail.com,1856806781,,
+Ibrahim Khalil,Male,1975-01-14,1856806782@yopmail.com,1856806782,HR & Admin (SCCL-HO),Assistant. Manager
+Iftekhar Kabir,Male,1975-01-14,1856806783@yopmail.com,1856806783,Operation (SPPL-HO),Chief Engineer
+Imam Masud Rony,Male,1975-01-14,1856806784@yopmail.com,1856806784,Mechanical (SCCL-CTG),Lathe Operator
+Irtiza Hossen,Male,1975-01-14,1856806785@yopmail.com,1856806785,Quality Assurance (SCCL-CTG),T/Chemist
+Ismail Hossain,Male,1975-01-14,1856806786@yopmail.com,1856806786,Production (SCCL-DF),"Operator, CPW"
+Jabed Chowdhury,Male,1975-01-14,1856806787@yopmail.com,1856806787,HR & Admin (SCCL-CTG),Assistant. Manager
+Jafor Ahmed,Male,1975-01-14,1856806788@yopmail.com,1856806788,Transport,Lorry Helper
+Jahidur Rahman,Male,1975-01-14,1856806789@yopmail.com,1856806789,HR & Admin (SCCL-DF),Security Officer
+Jamal Uddin,Male,1975-01-14,1856806790@yopmail.com,1856806790,Transport,Lorry Driver
+Jamir Uddin,Male,1975-01-14,1856806791@yopmail.com,1856806791,Transport,Lorry Helper
+Jitu Barua,Male,1975-01-14,1856806792@yopmail.com,1856806792,Quality Assurance (SCCL-CTG),"Chemist, QC"
+Kalim Ullah,Male,1975-01-14,1856806793@yopmail.com,1856806793,Production (SCCL-CTG),"Senior Engineer, DCS"
+Kamol Kumar Nath,Male,1975-01-14,1856806794@yopmail.com,1856806794,Blow Mould,Officer
+Kazi Md. Altaf Hossain,Male,1975-01-14,1856806795@yopmail.com,1856806795,Mechanical (SCCL-DF),Operator
+Kazi Md. Babul Mia,Male,1975-01-14,1856806796@yopmail.com,1856806796,Transport,Lorry Driver
+Lalin Marma,Male,1975-01-14,1856806797@yopmail.com,1856806797,HR & Admin (SSCL-CTG),Peon
+Mahbub Hasan,Male,1975-01-14,1856806798@yopmail.com,1856806798,Quality Assurance (SCCL-CTG),Trainee Chemist
+Mahmudul Hasan,Male,1975-01-14,1856806799@yopmail.com,1856806799,Quality Assurance (SCCL-DF),"Chemist, QC"
+Mahmudullah Algalib,Male,1975-01-14,1856806800@yopmail.com,1856806800,HR & Admin (SCCL-HO),Officer
+Main Uddin Ahmed,Male,1975-01-14,1856806801@yopmail.com,1856806801,Accounts & Finance (SPPL-HO),Officer
+M. A. Jabbar,Male,1975-01-14,1856806802@yopmail.com,1856806802,Regulatory Affairs,Sr. Officer
+ Mamunur Rashid Patwary,Male,1975-01-14,1856806803@yopmail.com,1856806803,Production (SCCL-DF),"Asst. Manager, CL2,HCL & Hypo"
+Manjur Alam,Male,1975-01-14,1856806804@yopmail.com,1856806804,Store (SCCL-CTG),Officer
+Manjur Hossain,Male,1975-01-14,1856806805@yopmail.com,1856806805,Blow Mould,Helper
+Manzurul Alam,Male,1975-01-14,1856806806@yopmail.com,1856806806,Production (SCCL-CTG),Sr.Officer
+Masud Alam,Male,1975-01-14,1856806807@yopmail.com,1856806807,HR & Admin (SSCL-CTG),Driver
+Masud Rana,Male,1975-01-14,1856806808@yopmail.com,1856806808,Quality Assurance (SCCL-DF),"Asst. General Manager,Quality Assurance"
+Md. Abdul Hannan Ali,Male,1975-01-14,1856806809@yopmail.com,1856806809,HR & Admin (SCCL-DF),Security Guard
+Md.Abdul Hannan Sarker,Male,1975-01-14,1856806810@yopmail.com,1856806810,Quality Assurance (SCCL-DF),"Chemist, QC"
+Md. Abdul Kader,Male,1975-01-14,1856806811@yopmail.com,1856806811,Operation (SPL-DF),Fitter
+Md. Abdul Kader,Male,1975-01-14,1856806812@yopmail.com,1856806812,Transport,Lorry Helper
+Md. Abdul Kader,Male,1975-01-14,1856806813@yopmail.com,1856806813,,
+Md.Abdul Kaiom Bishas,Male,1975-01-14,1856806814@yopmail.com,1856806814,Service (SPL-DF),Technician
+Md.Abdul Kaium Mazumder,Male,1975-01-14,1856806815@yopmail.com,1856806815,Sales & Marketing (SSCL-HO),Sr.Executive
+Md. Abdullah,Male,1975-01-14,1856806816@yopmail.com,1856806816,Blow Mould,Helper
+Md. Abdul Mannan,Male,1975-01-14,1856806817@yopmail.com,1856806817,Transport, Truck Driver
+Md. Abdul Monnaf,Male,1975-01-14,1856806818@yopmail.com,1856806818,Production (SCCL-CTG),Trainee Engineer
+Md.Abdur Rahman 2,Male,1975-01-14,1856806819@yopmail.com,1856806819,Mechanical (SCCL-DF),Assistant Mechanical Fitter
+Md. Abdur Rauf,Male,1975-01-14,1856806820@yopmail.com,1856806820,Mechanical (SCCL-DF),"Operator, Caco3"
+Md.Abdur Razzak,Male,1975-01-14,1856806821@yopmail.com,1856806821,Production (SCCL-DF),"Operator, HCL & Hypo,ETP"
+Md. Abdus Samad,Male,1975-01-14,1856806822@yopmail.com,1856806822,Store (SCCL-DF),Store Assistant
+Md. Abubakar Siddique,Male,1975-01-14,1856806823@yopmail.com,1856806823,Production (SPPL-CTG),Engineer (Process)
+Md. Abu Bakkar,Male,1975-01-14,1856806824@yopmail.com,1856806824,HR & Admin (SCCL-DF),Security Inspector
+Md.Abu Jaher,Male,1975-01-14,1856806825@yopmail.com,1856806825,Electrical & Instrument (SCCL-DF),Technician
+Md. Abul Kashem,Male,1975-01-14,1856806826@yopmail.com,1856806826,Mechanical (SCCL-DF),Jr. Technician
+Md.Abul Khair Titu,Male,1975-01-14,1856806827@yopmail.com,1856806827,HR & Admin (SCCL-HO),Driver
+Md.Abu Sayad Khan,Male,1975-01-14,1856806828@yopmail.com,1856806828,Production (SCCL-CTG),Operator
+Md. Abu Sufian Khandokar,Male,1975-01-14,1856806829@yopmail.com,1856806829,Sales & Marketing (Caustic),Executive
+Md. Abu Toyub,Male,1975-01-14,1856806830@yopmail.com,1856806830,Transport,Lorry Driver
+Md. Abu Yousuf,Male,1975-01-14,1856806831@yopmail.com,1856806831,Service (SPL-DF),"Manager, Electrical."
+Md. Ahadul Alam,Male,1975-01-14,1856806832@yopmail.com,1856806832,HR & Admin (SCCL-CTG),Officer
+Md.Ahamudul Hoque,Male,1975-01-14,1856806833@yopmail.com,1856806833,Accounts & Finance (SPPL-HO),Sr.Officer
+Md.Ahsanul Haque Khan,Male,1975-01-14,1856806834@yopmail.com,1856806834,Production (SSCL-CTG),IPE
+Md.Akter Hossain,Male,1975-01-14,1856806835@yopmail.com,1856806835,Production (SCCL-DF),"Operator, Brine"
+Md.Akter Hossain,Male,1975-01-14,1856806836@yopmail.com,1856806836,Production (SCCL-CTG),Helper
+Md.Akther Hossen Rana,Male,1975-01-14,1856806837@yopmail.com,1856806837,HR & Admin (SCCL-HO),Driver
+Md.Alamgir,Male,1975-01-14,1856806838@yopmail.com,1856806838,HR & Admin (SCCL-HO),Peon
+Md. Alamgir,Male,1975-01-14,1856806839@yopmail.com,1856806839,Security,Security Guard
+Md.Al-Amin,Male,1975-01-14,1856806840@yopmail.com,1856806840,Sales & Marketing (SSCL-HO),"Sr.Executive,Sales & Marketing"
+Md. Al Hasan Rabbi,Male,1975-01-14,1856806841@yopmail.com,1856806841,Blow Mould,Helper
+MD. Aman Ullah Al-Amin,Male,1975-01-14,1856806842@yopmail.com,1856806842,Production (SSCL-CTG),IPE
+Md.Aminur Rahman,Male,1975-01-14,1856806843@yopmail.com,1856806843,Production (SCCL-DF),"Operator, DM,CW,WP"
+Md.Anam Hossain,Male,1975-01-14,1856806844@yopmail.com,1856806844,HR & Admin (SCCL-DF),Driver
+Md.Anamul Kibria,Male,1975-01-14,1856806845@yopmail.com,1856806845,Sales & Marketing (H2o2),"DGM, Sales & Marketing"
+Md.Anwar Hossain,Male,1975-01-14,1856806846@yopmail.com,1856806846,HR & Admin (SCCL-HO),Driver
+Md.Anwar Hossain,Male,1975-01-14,1856806847@yopmail.com,1856806847,Mechanical (SCCL-DF),Lathe Operator
+Md. Anwar Ulla,Male,1975-01-14,1856806848@yopmail.com,1856806848,Production (SCCL-DF),"Operator, Flaking"
+Md. Arafath Khan,Male,1975-01-14,1856806849@yopmail.com,1856806849,Production (SCCL-CTG),Operator
+Md. Arif,Male,1975-01-14,1856806850@yopmail.com,1856806850,Transport,Lorry Helper
+Md. Arif Hossain,Male,1975-01-14,1856806851@yopmail.com,1856806851,Quality Assurance (SCCL-DF),Lab Assistant
+Md. Arif Mia,Male,1975-01-14,1856806852@yopmail.com,1856806852,Mechanical (SCCL-DF),Jr. Technician
+Md. Ariful Islam,Male,1975-01-14,1856806853@yopmail.com,1856806853,Production (SCCL-CTG), Assistant Engineer
+Md. Ariful Islam,Male,1975-01-14,1856806854@yopmail.com,1856806854,HR & Admin (SCCL-DF),Security Guard
+Md. Ariful Islam,Male,1975-01-14,1856806855@yopmail.com,1856806855,Mechanical (SCCL-DF),Trainee Engineer
+Md.Ariful Islam,Male,1975-01-14,1856806856@yopmail.com,1856806856,Quality Assurance (SCCL-DF),"Chemist, QC"
+Md. Ariful Islam (Babul),Male,1975-01-14,1856806857@yopmail.com,1856806857,Store (SCCL-DF),Store Helper
+Md. Asadul Islam,Male,1975-01-14,1856806858@yopmail.com,1856806858,Quality Assurance (SCCL-DF),Trainee Chemist
+Md. Asadul Islam,Male,1975-01-14,1856806859@yopmail.com,1856806859,Operation (SPL-DF),Asst. Technician
+Md.Asaduzzaman,Male,1975-01-14,1856806860@yopmail.com,1856806860,Production (SCCL-DF),"Operator, Chlorine Drying"
+Md. Ashraful Alam,Male,1975-01-14,1856806861@yopmail.com,1856806861,Production (SCCL-DF),Sr.Engineer
+Md. Ashraful Alam,Male,1975-01-14,1856806862@yopmail.com,1856806862,Mechanical (SCCL-DF),"Engineer, Mechanical"
+Md.Ashraful Alam,Male,1975-01-14,1856806863@yopmail.com,1856806863,HR & Admin (SCCL-DF),Security Guard
+Md.Ashraful Alam,Male,1975-01-14,1856806864@yopmail.com,1856806864,Mechanical (SCCL-DF),Assistant Technician
+Md.Ashraful Islam,Male,1975-01-14,1856806865@yopmail.com,1856806865,Production (SCCL-DF),Operator
+Md. Asraful Islam,Male,1975-01-14,1856806866@yopmail.com,1856806866,Operation (SPL-DF),Trainee Engineer
+Md.Ataur Rahaman,Male,1975-01-14,1856806867@yopmail.com,1856806867,Production (SCCL-DF),Manager
+Md. Ataur Rahman,Male,1975-01-14,1856806868@yopmail.com,1856806868,HR & Admin (SCCL-DF),Security Guard
+Md. Ataur Rahman,Male,1975-01-14,1856806869@yopmail.com,1856806869,Regulatory Affairs,Officer
+Md.Atiar Rahman,Male,1975-01-14,1856806870@yopmail.com,1856806870,Blow Mould,Helper
+Md. Atikur Rahman,Male,1975-01-14,1856806871@yopmail.com,1856806871,Production (SCCL-CTG),Trainee Engineer
+Md.Atuar Hossain,Male,1975-01-14,1856806872@yopmail.com,1856806872,Blow Mould,Operator
+Md.Ayub Ali-2,Male,1975-01-14,1856806873@yopmail.com,1856806873,Transport,Helper
+Md.Azizul Hoque,Male,1975-01-14,1856806874@yopmail.com,1856806874,Production (SCCL-DF),Assistant. Manager
+Md. Babul,Male,1975-01-14,1856806875@yopmail.com,1856806875,Transport, Truck Driver
+Md.Babul Islam,Male,1975-01-14,1856806876@yopmail.com,1856806876,HR & Admin (SCCL-DF),Security Guard
+Md. Badul,Male,1975-01-14,1856806877@yopmail.com,1856806877,HR & Admin (SCCL-HO),Driver
+Md.Belal Hossain,Male,1975-01-14,1856806878@yopmail.com,1856806878,Production (SCCL-DF),Operator
+Md. Belal Hossain Mazumder,Male,1975-01-14,1856806879@yopmail.com,1856806879,Operation (SPPL-HO),Project Manager
+Md.Borhan Ali,Male,1975-01-14,1856806880@yopmail.com,1856806880,Mechanical (SCCL-DF),Assistant Technician
+Md. Daudul Islam,Male,1975-01-14,1856806881@yopmail.com,1856806881,HR & Admin (SPPL-HO),Officer
+Md. Delowar (3),Male,1975-01-14,1856806882@yopmail.com,1856806882,Mechanical (SCCL-DF),Jr. Technician
+Md.Delowar Hossain,Male,1975-01-14,1856806883@yopmail.com,1856806883,Production (SCCL-DF),"Operator, Flaking"
+Md.Delowar Hossen 2,Male,1975-01-14,1856806884@yopmail.com,1856806884,Mechanical (SCCL-DF),Jr.Technician
+Md. Delwar Hossain,Male,1975-01-14,1856806885@yopmail.com,1856806885,HR & Admin (SCCL-DF),Jr. Officer
+Md.Easin,Male,1975-01-14,1856806886@yopmail.com,1856806886,Transport,Lorry Helper
+Md. Ekramul Haque,Male,1975-01-14,1856806887@yopmail.com,1856806887,Production (SCCL-DF),"Operator, Brine"
+Md. Elias Ahammed,Male,1975-01-14,1856806888@yopmail.com,1856806888,Quality Assurance (SCCL-DF),"Chemist, QC"
+Md. Elius Ovi,Male,1975-01-14,1856806889@yopmail.com,1856806889,Mechanical (SCCL-CTG),Fitter 
+Md.Emdadul Haque ,Male,1975-01-14,1856806890@yopmail.com,1856806890,HR & Admin (SCCL-DF),Security Guard
+Md.Emdadul Huque Mazumder ,Male,1975-01-14,1856806891@yopmail.com,1856806891,Sales & Marketing (SSCL-HO),Sr.Executive
+Md. Eyasin Ali,Male,1975-01-14,1856806892@yopmail.com,1856806892,Production (SPPL-CTG),Engineer
+Md. Fajor Ali,Male,1975-01-14,1856806893@yopmail.com,1856806893,HR & Admin (SCCL-HO),Driver
+Md.Farid Uddin Masud,Male,1975-01-14,1856806894@yopmail.com,1856806894,Production (SCCL-DF),Process Chemist
+Md.Faruk,Male,1975-01-14,1856806895@yopmail.com,1856806895,Transport,Lorry Driver
+Md. Faruk,Male,1975-01-14,1856806896@yopmail.com,1856806896,Production (SCCL-DF),"Operator, Flaking"
+Md.Fazlur Rahman,Male,1975-01-14,1856806897@yopmail.com,1856806897,Electrical & Instrument (SCCL-DF),Electrician
+Md.Ferdousur Rahaman,Male,1975-01-14,1856806898@yopmail.com,1856806898,Production (SCCL-DF),Sr.Officer
+Md.Forhad Hossain,Male,1975-01-14,1856806899@yopmail.com,1856806899,Sales & Marketing (H2o2),Assistant Officer
+Md.Foridul Hashan,Male,1975-01-14,1856806900@yopmail.com,1856806900,Production (SCCL-DF),"Operator, Liquid Chlorine"
+Md. Foysal Monsoor,Male,1975-01-14,1856806901@yopmail.com,1856806901,Production (SCCL-CTG),Trainee Engineer
+Md.Hafizur Rahman,Male,1975-01-14,1856806902@yopmail.com,1856806902,Mechanical (SCCL-DF),Asst.Supervisor
+Md.Hafizur Rahman,Male,1975-01-14,1856806903@yopmail.com,1856806903,HR & Admin (SCCL-DF),Assistant. Manager
+Md.Haidar Ali ,Male,1975-01-14,1856806904@yopmail.com,1856806904,HR & Admin (SCCL-HO),Asst.Supervisor
+Md.Harun,Male,1975-01-14,1856806905@yopmail.com,1856806905,Transport,Driver
+Md. Hasan,Male,1975-01-14,1856806906@yopmail.com,1856806906,Service (SPL-DF),Technician
+Md. Hasanur Rahman,Male,1975-01-14,1856806907@yopmail.com,1856806907,Blow Mould,Asst. Operator
+Md.Hasanuzzaman,Male,1975-01-14,1856806908@yopmail.com,1856806908,Electrical & Instrument (SCCL-CTG),Helper
+Md.Hazrat Belal,Male,1975-01-14,1856806909@yopmail.com,1856806909,Mechanical (SCCL-DF),Assistant Technician
+Md. Helal Uddin,Male,1975-01-14,1856806910@yopmail.com,1856806910,Transport,Lorry Helper
+Md.Helal Uddin,Male,1975-01-14,1856806911@yopmail.com,1856806911,Quality Assurance (SCCL-DF),Lab Assistant
+Md.Humayun Kabir Chy,Male,1975-01-14,1856806912@yopmail.com,1856806912,HR & Admin (SCCL-DF),Security Inspector
+Md.Ibrahim Khalil,Male,1975-01-14,1856806913@yopmail.com,1856806913,HR & Admin (SCCL-HO),Driver
+Md.Idrish,Male,1975-01-14,1856806914@yopmail.com,1856806914,Transport,Lorry Driver
+Md.Idrish (SY),Male,1975-01-14,1856806915@yopmail.com,1856806915,Security,SY.Guard
+Md.Imran Ahamed,Male,1975-01-14,1856806916@yopmail.com,1856806916,HR & Admin (SCCL-HO),Peon
+Md.Imran Hossain,Male,1975-01-14,1856806917@yopmail.com,1856806917,Production (SCCL-DF),"Operator, Boiler"
+Md. Iqbal Hossain,Male,1975-01-14,1879895919@yopmail.com,1879895919,Production (SPPL-CTG),Engineer (Process)
+Md.Iqbal Hossain,Male,1975-01-14,1817272742@yopmail.com,1817272742,Quality Assurance (SCCL-CTG),Helper
+Md.Iskander ,Male,1975-01-14,1840863241@yopmail.com,1840863241,Store (SCCL-DF),Officer
+Md.Iskander Mirza,Male,1975-01-14,1762408605@yopmail.com,1762408605,Production (SCCL-DF),"Operator, DM,CW,WP"
+Md. Ismail Hawlader,Male,1975-01-14,1814170453@yopmail.com,1814170453,HR & Admin (SCCL-HO),Driver
+Md. Jahangir Alam,Male,1975-01-14,1814170454@yopmail.com,1814170454,HR & Admin (SCCL-DF),Security Guard
+Md.Jahangir Alam,Male,1975-01-14,1814170455@yopmail.com,1814170455,Production (SCCL-DF),"Operator, DM,CW,WP"
+Md. Jahangir Alam Sumon,Male,1975-01-14,1814170456@yopmail.com,1814170456,HR & Admin (SCCL-DF),Vehicle Mechanic
+Md.Jahangir Hossain,Male,1975-01-14,1814170457@yopmail.com,1814170457,Mechanical (SCCL-DF),Mechanical Fitter
+Md. Jahed Hossain,Male,1975-01-14,1814170458@yopmail.com,1814170458,Production (SPPL-CTG),Junior Operator
+Md. Jahidul Islam,Male,1975-01-14,1814170459@yopmail.com,1814170459,Accounts & Finance (SCCL-DF),"Imam cum Officer, Admin"
+Md. Jahirul Islam,Male,1975-01-14,1814170460@yopmail.com,1814170460,Production (SCCL-DF),"Operator, Flaking"
+Md. Jakaria,Male,1975-01-14,1814170461@yopmail.com,1814170461,Regulatory Affairs,Sr. Officer
+Md.Jamal Hossain,Male,1975-01-14,1814170462@yopmail.com,1814170462,Mechanical (SCCL-DF),Technician
+Md.Jamal Hossain,Male,1975-01-14,1814170463@yopmail.com,1814170463,Production (SCCL-DF),"Operator, Brine"
+Md.Jamshed Hossain,Male,1975-01-14,1814170464@yopmail.com,1814170464,Production (SCCL-DF),"Operator, CPW"
+Md.Jashem Uddin Chowdhury,Male,1975-01-14,1814170465@yopmail.com,1814170465,Transport,Driver
+ Md.Jasim uddin ,Male,1975-01-14,1814170466@yopmail.com,1814170466,Service (SPL-CTG),Technician
+Md.Jasim Uddin,Male,1975-01-14,1814170467@yopmail.com,1814170467,Production (SCCL-DF),"Operator, HCL,Hypo Storage"
+Md.Jewel Babu,Male,1975-01-14,1814170468@yopmail.com,1814170468,Production (SCCL-DF),"Operator, DM,CW,WP"
+Md.Jobaydur Rahman,Male,1975-01-14,1814170469@yopmail.com,1814170469,Mechanical (SCCL-DF),Deputy Manager
+Md. Kabir Ahmed,Male,1975-01-14,1814170470@yopmail.com,1814170470,HR & Admin (SCCL-DF),Security Guard
+Md.Kabir Hossain,Male,1975-01-14,1814170471@yopmail.com,1814170471,Mechanical (SCCL-DF),Asst.Supervisor
+Md.Kabir Khan,Male,1975-01-14,1814170472@yopmail.com,1814170472,Electrical & Instrument (SCCL-DF),Sub Station Tecnician
+Md.Kadom Ali,Male,1975-01-14,1814170473@yopmail.com,1814170473,Mechanical (SCCL-DF),Assistant Technician
+Md.Kamaruzzaman,Male,1975-01-14,1814170474@yopmail.com,1814170474,Supply Chain Foreign (SCCL-HO),Officer
+Md.Kamrul Islam(Milon),Male,1975-01-14,1814170475@yopmail.com,1814170475,Mechanical (SCCL-DF),Assistant Technician
+Md.Kamruzzaman,Male,1975-01-14,1814170476@yopmail.com,1814170476,Operation (SCCL-HO),Chief Operating Officer
+Md.Karimul Haque,Male,1975-01-14,1814170477@yopmail.com,1814170477,Mechanical (SCCL-DF),Assistant Mechanical Fitter
+Md.Khaled Hossain,Male,1975-01-14,1814170478@yopmail.com,1814170478,Supply Chain Local (SCCL-HO),Jr.Officer
+Md. Khalil,Male,1975-01-14,1814170479@yopmail.com,1814170479,HR & Admin (SCCL-CTG),Cook
+Md.Khorshed Alam,Male,1975-01-14,1814170480@yopmail.com,1814170480,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+Md.Khurshedul Alam,Male,1975-01-14,1814170481@yopmail.com,1814170481,Electrical & Instrument (SCCL-CTG),Officer
+Md.Liton Hasan,Male,1975-01-14,1814170482@yopmail.com,1814170482,Production (SCCL-DF),Boiler Operator
+Md.Lokman,Male,1975-01-14,1814170483@yopmail.com,1814170483,Mechanical (SCCL-DF),Jr.Technician
+Md.Mahabub Alam,Male,1975-01-14,1814170484@yopmail.com,1814170484,Security,SY.Guard
+Md.Mahdi Abdullah,Male,1975-01-14,1814170485@yopmail.com,1814170485,Production (SCCL-DF),Process Chemist
+Md.Mahedi Hasan 2,Male,1975-01-14,1814170486@yopmail.com,1814170486,Mechanical (SCCL-DF),Assistant Technician
+Md.Mahidur Alam,Male,1975-01-14,1814170487@yopmail.com,1814170487,Production (SCCL-DF),Operator
+Md.Mahmudul Hasan,Male,1975-01-14,1814170488@yopmail.com,1814170488,Service (SPL-DF),Technician
+Md.Mahmudul Hasan,Male,1975-01-14,1814170489@yopmail.com,1814170489,Production (SCCL-DF),Deputy Manager
+Md. Mainnuddin Khan,Male,1975-01-14,1814170490@yopmail.com,1814170490,Operation (SPL-DF),Electrician
+Md.Mainuddin,Male,1975-01-14,1814170491@yopmail.com,1814170491,Electrical & Instrument (SCCL-CTG),Helper
+Md.Main uddin Ahmed,Male,1975-01-14,1814170492@yopmail.com,1814170492,Production (SCCL-CTG),"Senior Engineer, DCS"
+Md.Mamunul Islam,Male,1975-01-14,1814170493@yopmail.com,1814170493,Operation (SCCL-CTG),Sr.Deputy General Manager
+Md.Mamunur Rashid,Male,1975-01-14,1814170494@yopmail.com,1814170494,HR & Admin (SPL-HO),"Office Assistant , Admin"
+Md. Masud Rana,Male,1975-01-14,1814170495@yopmail.com,1814170495,Production (SCCL-DF),"Officer, DCS"
+Md. Maswoodul Islam,Male,1975-01-14,1814170496@yopmail.com,1814170496,Operation (SCCL-HO),AGM
+Md.Matiar Rahman,Male,1975-01-14,1814170497@yopmail.com,1814170497,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Md. Mizanur Rahman,Male,1975-01-14,1814170498@yopmail.com,1814170498,Sales & Marketing Export (SCCL-CTG),Jr. Officer
+Md.Mizanur Rahman,Male,1975-01-14,1814170499@yopmail.com,1814170499,Supply Chain Foreign (SCCL-HO),Officer
+Md.Mizanur Rahman,Male,1975-01-14,1814170500@yopmail.com,1814170500,Production (SPPL-CTG),Engineer (Process)
+Md.Mizanur Rahman 1,Male,1975-01-14,1814170501@yopmail.com,1814170501,Mechanical (SCCL-DF),Junior Mechanical Fitter
+Md.Mizanur Rahman-2,Male,1975-01-14,1814170502@yopmail.com,1814170502,Production (SCCL-DF),"Operator, Flaking"
+Md. Moazzem Hossain,Male,1975-01-14,1814170503@yopmail.com,1814170503,HR & Admin (SCCL-DF),Security Guard
+Md. Mohai Minul Islam,Male,1975-01-14,1814170504@yopmail.com,1814170504,Electrical & Instrument (SCCL-DF),Trainee Engineer
+Md.Mohiuddin Bhuiyan,Male,1975-01-14,1814170505@yopmail.com,1814170505,Mechanical (SCCL-DF),Assistant Technician
+Md.Mohsin,Male,1975-01-14,1814170506@yopmail.com,1814170506,Transport,Driver
+Md.Mojammel Haque,Male,1975-01-14,1814170507@yopmail.com,1814170507,Store (SCCL-DF),Store Assistant
+Md. Moksedul Momin,Male,1975-01-14,1814170508@yopmail.com,1814170508,Production (SCCL-DF),Sr.Officer
+Md. Mokter Hosen,Male,1975-01-14,1814170509@yopmail.com,1814170509,Security,SY.Guard
+Md. Mominur Rahman,Male,1975-01-14,1814170510@yopmail.com,1814170510,Blow Mould,Production Officer
+Md. Monir hossain,Male,1975-01-14,1814170511@yopmail.com,1814170511,Transport,Lorry Helper
+Md.Monjurul Hoque,Male,1975-01-14,1814170512@yopmail.com,1814170512,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Md. Monoarul Islam,Male,1975-01-14,1814170513@yopmail.com,1814170513,Accounts & Finance (SCCL-DF),Asst. Manager
+Md.Montu Mondol,Male,1975-01-14,1814170514@yopmail.com,1814170514,Mechanical (SCCL-DF),Assistant Technician
+Md. Morshed Alam,Male,1975-01-14,1814170515@yopmail.com,1814170515,Blow Mould,Helper
+Md.Mosharaf Hossain,Male,1975-01-14,1814170516@yopmail.com,1814170516,HR & Admin (SCCL-DF),Asst.Officer
+Md. Mostafizur Rahman,Male,1975-01-14,1814170517@yopmail.com,1814170517,Mechanical (SCCL-DF),sub Asst. Engineer
+Md. Mostafizur Rahman,Male,1975-01-14,1814170518@yopmail.com,1814170518,Mechanical (SCCL-DF),Jr.Technician
+Md. Mostafizur Rahman,Male,1975-01-14,1814170519@yopmail.com,1814170519,Operation (SPL-HO),Director
+Md. Mostakim Billah,Male,1975-01-14,1814170520@yopmail.com,1814170520,Transport,Lorry Helper
+Md. Motaher,Male,1975-01-14,1814170521@yopmail.com,1814170521,Transport, Truck Driver
+Md.Motiur Rahman Monju,Male,1975-01-14,1814170522@yopmail.com,1814170522,HR & Admin (SCCL-DF),Security Guard
+Md.Mozidul Haque,Male,1975-01-14,1814170523@yopmail.com,1814170523,Mechanical (SCCL-DF),Junior Welder
+Md. Moznu Molla,Male,1975-01-14,1814170524@yopmail.com,1814170524,Production (SCCL-DF),"Operator,Pay-loader"
+Md. Mustafizur Rahman,Male,1975-01-14,1814170525@yopmail.com,1814170525,Operation (SPL-DF),Asst.Manager
+Md. Mustakim Billa,Male,1975-01-14,1814170526@yopmail.com,1814170526,Accounts & Finance (SCCL-DF),"Asst. Officer, Vat & Export"
+Md. Nahid Hasan,Male,1975-01-14,1814170527@yopmail.com,1814170527,Operation (SPL-DF),Peon
+Md.Nahid Hossain,Male,1975-01-14,1814170528@yopmail.com,1814170528,Commercial (SCCL-HO),Deputy Manager
+Md.Nahid Sultan,Male,1975-01-14,1814170529@yopmail.com,1814170529,HR & Admin (SCCL-DF),Security Guard
+Md.Nahidul Islam,Male,1975-01-14,1814170530@yopmail.com,1814170530,Accounts & Finance (SPPL-HO),Assistant Officer
+Md. Nahiduzzaman,Male,1975-01-14,1814170531@yopmail.com,1814170531,Mechanical (SCCL-CTG),"Engineer,Mechanical"
+Md. Nannu Mollah,Male,1975-01-14,1814170532@yopmail.com,1814170532,Operation (SPL-DF),Electrician
+Md.Nasir Hossen,Male,1975-01-14,1814170533@yopmail.com,1814170533,Production (SCCL-DF),"Operator, Flaking"
+Md.Nasiruzzaman,Male,1975-01-14,1814170534@yopmail.com,1814170534,Production (SCCL-DF),"Operator, Brine"
+Md. Nazmul Hasan,Male,1975-01-14,1814170535@yopmail.com,1814170535,HR & Admin (SCCL-DF),Security Guard
+Md. Nazmul Hasan,Male,1975-01-14,1814170536@yopmail.com,1814170536,Mechanical (SCCL-DF),"Sr. Engineer, Mechanical"
+Md. Nazmul Hassan,Male,1975-01-14,1814170537@yopmail.com,1814170537,Accounts & Finance (SPPL-HO),Officer
+Md. Nazmul Hossain,Male,1975-01-14,1814170538@yopmail.com,1814170538,Quality Assurance (SPPL-CTG),Lab Helper
+Md. Niaz Morshed,Male,1975-01-14,1814170539@yopmail.com,1814170539,Production (SPPL-CTG),Engineer (Process)
+Md. Nobiruzzaman,Male,1975-01-14,1814170540@yopmail.com,1814170540,Operation (SPL-DF),Electrician
+Md. Noor Nabi,Male,1975-01-14,1814170541@yopmail.com,1814170541,Blow Mould,Asst. Operator
+Md. Noyab Hossain ,Male,1975-01-14,1814170542@yopmail.com,1814170542,HR & Admin (SPL-HO),Driver
+Md. Nur Hosen,Male,1975-01-14,1814170543@yopmail.com,1814170543,HR & Admin (SCCL-DF),Security Guard
+Md.Nur Hossain,Male,1975-01-14,1814170544@yopmail.com,1814170544,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Md. Nur Nabi,Male,1975-01-14,1814170545@yopmail.com,1814170545,Accounts & Finance (SCCL-HO),Assistant. Manager
+Md. Nurul Absar,Male,1975-01-14,1814170546@yopmail.com,1814170546,Transport,Lorry Driver
+Md. Nurul Abser,Male,1975-01-14,1814170547@yopmail.com,1814170547,HR & Admin (SPPL-CTG),Security Guard
+Md. Nurul Amin Chowdhury,Male,1975-01-14,1814170548@yopmail.com,1814170548,HR & Admin (SPPL-CTG),Security Guard
+Md. Nurul Hossain,Male,1975-01-14,1814170549@yopmail.com,1814170549,Mechanical (SCCL-DF),Manager
+Md.Nurul Huda,Male,1975-01-14,1814170550@yopmail.com,1814170550,Quality Assurance (SCCL-DF),Asst.Officer
+Md. Nurul Islam,Male,1975-01-14,1814170551@yopmail.com,1814170551,HR & Admin (SCCL-HO),Driver
+Md. Nurur Rahman,Male,1975-01-14,1814170552@yopmail.com,1814170552,Mechanical (SCCL-CTG),Sr.Officer
+Md.Nuru Zaman Hossen,Male,1975-01-14,1814170553@yopmail.com,1814170553,HR & Admin (SCCL-HO),Peon
+Md. Obaidullaho,Male,1975-01-14,1814170554@yopmail.com,1814170554,HR & Admin (SCCL-DF),Security Guard
+Md.Ohidul Islam,Male,1975-01-14,1814170555@yopmail.com,1814170555,Store (SCCL-DF),Store Helper
+Md. Oli Ahmed,Male,1975-01-14,1814170556@yopmail.com,1814170556,Transport,Lorry Helper
+Md.Osman Ali,Male,1975-01-14,1814170557@yopmail.com,1814170557,HR & Admin (SCCL-CTG),Peon
+Md. Osman Sheikh,Male,1975-01-14,1814170558@yopmail.com,1814170558,Store (SCCL-DF),Store Assistant
+Md. Rafiq,Male,1975-01-14,1814170559@yopmail.com,1814170559,Transport, Truck Driver
+Md.Rafiqul Islam,Male,1975-01-14,1814170560@yopmail.com,1814170560,Operation (SPPL-HO),Advisor
+Md.Rafiqul Islam,Male,1975-01-14,1814170561@yopmail.com,1814170561,Electrical & Instrument (SCCL-DF),Supervisor
+Md. Rafi Uddin Basunia,Male,1975-01-14,1814170562@yopmail.com,1814170562,Production (SCCL-CTG), Assistant Engineer
+Md. Rahat Ali,Male,1975-01-14,1814170563@yopmail.com,1814170563,Operation (SPL-DF),Assistant Technician
+Md. Rajib Kazi,Male,1975-01-14,1814170564@yopmail.com,1814170564,Store (SCCL-DF),Store Assistant
+Md. Rakib Uddin,Male,1975-01-14,1814170565@yopmail.com,1814170565,Production (SCCL-CTG),Trainee Engineer
+Md. Rana,Male,1975-01-14,1814170566@yopmail.com,1814170566,Transport, Truck Driver
+Md.Rasel Mahmud,Male,1975-01-14,1814170567@yopmail.com,1814170567,Quality Assurance (SCCL-DF),"Chemist, QC"
+Md. Rasel Mia,Male,1975-01-14,1814170568@yopmail.com,1814170568,HR & Admin (SCCL-DF),Security Guard
+Md.Rashadul Haque,Male,1975-01-14,1814170569@yopmail.com,1814170569,Regulatory Affairs,Officer
+Md.Razu Ahmed,Male,1975-01-14,1814170570@yopmail.com,1814170570,Production (SCCL-DF),"Operator, CPW"
+Md. Rezaul Karim,Male,1975-01-14,1814170571@yopmail.com,1814170571,HR & Admin (SCCL-DF),"Sr. Officer, Delivery"
+Md.Rezaul Karim Shakil,Male,1975-01-14,1814170572@yopmail.com,1814170572,Delivery & VAT (SCCL-CTG),Jr. Officer
+Md. Riyad Arafin,Male,1975-01-14,1814170573@yopmail.com,1814170573,Accounts & Finance (SSCL-HO),"Officer,Accounts"
+Md. Robel Miazi,Male,1975-01-14,1814170574@yopmail.com,1814170574,Production (SCCL-DF),"Operator, DM,CW,WP"
+Md. Robiul Hossain,Male,1975-01-14,1814170575@yopmail.com,1814170575,Mechanical (SCCL-DF),Jr.Technician
+Md.Robiul Molla,Male,1975-01-14,1814170576@yopmail.com,1814170576,HR & Admin (SCCL-HO),Driver
+Md. Rokibul Hossain,Male,1975-01-14,1814170577@yopmail.com,1814170577,Electrical & Instrument (SCCL-DF),Sub Assistant Engineer
+Md. Roni Ali,Male,1975-01-14,1814170578@yopmail.com,1814170578,Mechanical (SCCL-DF),"Sr. Engineer, Mechanical"
+Md. Rukanuzzaman,Male,1975-01-14,1814170579@yopmail.com,1814170579,Operation (SPL-DF),Engineer
+Md.Rukunuzzaman Kanchon,Male,1975-01-14,1814170580@yopmail.com,1814170580,Commercial (SCCL-HO),Officer
+Md.Ruman Mahmud,Male,1975-01-14,1814170581@yopmail.com,1814170581,Service (SPL-CTG),Technician
+Md. Sagor Ali,Male,1975-01-14,1814170582@yopmail.com,1814170582,HR & Admin (SCCL-DF),Security Guard
+Md. Saidul Islam,Male,1975-01-14,1814170583@yopmail.com,1814170583,Mechanical (SCCL-DF),Jr.Technician
+Md.Saidur Rahman,Male,1975-01-14,1814170584@yopmail.com,1814170584,HR & Admin (SCCL-DF),Security Guard
+Md.Saiful Alam,Male,1975-01-14,1814170585@yopmail.com,1814170585,HR & Admin (SPPL-CTG),Peon
+Md.Saiful Islam,Male,1975-01-14,1814170586@yopmail.com,1814170586,Operation (SCCL-HO),Deputy Manager
+Md. Saiful islam-2,Male,1975-01-14,1814170587@yopmail.com,1814170587,Transport,Lorry Helper
+Md. Saiful Islam 3,Male,1975-01-14,1814170588@yopmail.com,1814170588,Transport, Truck Driver
+Md. Saiful Islam Roni,Male,1975-01-14,1814170589@yopmail.com,1814170589,Mechanical (SCCL-DF),Jr.Technician
+Md. Sakhawat Hossain,Male,1975-01-14,1814170590@yopmail.com,1814170590,Supply Chain Local (SCCL-HO),Officer
+Md. Sakibul Islam,Male,1975-01-14,1814170591@yopmail.com,1814170591,Quality Assurance (SCCL-DF),Lab Assistant
+Md. Salauddin Bakaul,Male,1975-01-14,1814170592@yopmail.com,1814170592,Production (SCCL-CTG),Deputy Manager
+Md.Salim,Male,1975-01-14,1814170593@yopmail.com,1814170593,Production (SCCL-DF),"Operator, DM,CW,WP"
+Md. Sanwar Hossain,Male,1975-01-14,1814170594@yopmail.com,1814170594,Production (SCCL-DF),"Operator, HCL,Hypo Storage"
+Md.Sarif Anayet Hossen,Male,1975-01-14,1814170595@yopmail.com,1814170595,Production (SCCL-DF),"Operator, CPW"
+Md.Sariful Islam,Male,1975-01-14,1814170596@yopmail.com,1814170596,Accounts & Finance (SCCL-DF),Deputy Manager (Vat)
+Md. Sarwar Uddin,Male,1975-01-14,1814170597@yopmail.com,1814170597,Transport, Truck Driver
+Md.Selim,Male,1975-01-14,1814170598@yopmail.com,1814170598,Mechanical (SCCL-DF),PVC Helper
+Md.Shafiqul Islam-Jr 2,Male,1975-01-14,1814170599@yopmail.com,1814170599,Mechanical (SCCL-DF),Assistant Rigger
+Md.Shahadat Hossain,Male,1975-01-14,1814170600@yopmail.com,1814170600,Production (SCCL-CTG),Officer
+Md.Shah Alam,Male,1975-01-14,1814170601@yopmail.com,1814170601,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Md. Shahidul Islam,Male,1975-01-14,1814170602@yopmail.com,1814170602,Mechanical (SCCL-DF),Technician
+Md. Shahidul Islam,Male,1975-01-14,1814170603@yopmail.com,1814170603,Quality Assurance (SCCL-DF),Lab Assistant
+Md.Shahidul Islam,Male,1975-01-14,1814170604@yopmail.com,1814170604,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+Md.Shahid Ullah,Male,1975-01-14,1814170605@yopmail.com,1814170605,HR & Admin (SCCL-DF),Jr. Officer
+Md.Shahjalal,Male,1975-01-14,1814170606@yopmail.com,1814170606,Production (SCCL-DF),"Manager, CL2,HCl & Hypo"
+Md. Shaidur Rahman,Male,1975-01-14,1814170607@yopmail.com,1814170607,Production (SCCL-DF),Operator
+Md. Shajahan Miagi,Male,1975-01-14,1814170608@yopmail.com,1814170608,HR & Admin (SPPL-CTG),Jr. Officer
+Md.Shakawath Hossain,Male,1975-01-14,1814170609@yopmail.com,1814170609,Accounts & Finance (SCCL-HO),Deputy Manager
+Md.Shakhawat Hossain,Male,1975-01-14,1814170610@yopmail.com,1814170610,Mechanical (SCCL-DF),Assistant Mechanical Fitter
+Md.Shakhawat Hossain,Male,1975-01-14,1814170611@yopmail.com,1814170611,Production (SCCL-DF),"Operator, Chlorine Bottling"
+Md. Shawkat Hossain,Male,1975-01-14,1814170612@yopmail.com,1814170612,Accounts & Finance (SPPL-HO),Jr. Officer
+Md. Sheikh Hossain,Male,1975-01-14,1814170613@yopmail.com,1814170613,Operation (SPPL-CTG),Jr. Officer (operation)
+Md. Shijen Murad,Male,1975-01-14,1814170614@yopmail.com,1814170614,Production (SCCL-CTG),Trainee Operater
+Md. Shohrab Hosen,Male,1975-01-14,1814170615@yopmail.com,1814170615,Accounts & Finance (SSCL-HO),Asst. Manager
+Md.Shohrab Mridha,Male,1975-01-14,1814170616@yopmail.com,1814170616,HR & Admin (SPPL-HO),Driver
+Md Siddiqur Rahaman,Male,1975-01-14,1814170617@yopmail.com,1814170617,HR & Admin (SCCL-HO),Peon
+Md. Siraj,Male,1975-01-14,1814170618@yopmail.com,1814170618,Mechanical (SCCL-CTG),Lathe machine Operator
+Md.Sobuj,Male,1975-01-14,1814170619@yopmail.com,1814170619,Mechanical (SCCL-DF),Crane Operator
+Md. Sohel,Male,1975-01-14,1814170620@yopmail.com,1814170620,Transport, Truck Driver
+Md.Sohel Rana,Male,1975-01-14,1814170621@yopmail.com,1814170621,Production (SCCL-DF),"Operator, Brine"
+Md. Sojib Miah,Male,1975-01-14,1814170622@yopmail.com,1814170622,Quality Assurance (SCCL-DF),Lab Assistant
+Md.Suborno Rahman,Male,1975-01-14,1814170623@yopmail.com,1814170623,Production (SCCL-DF),Asst. Manager
+Md.Suhag Mia,Male,1975-01-14,1814170624@yopmail.com,1814170624,Quality Assurance (SCCL-DF),Lab Assistant
+Md. Tareq Rahman,Male,1975-01-14,1814170625@yopmail.com,1814170625,Production (SCCL-DF),Operator
+Md.Tariq Bin Wahab,Male,1975-01-14,1814170626@yopmail.com,1814170626,Sales & Marketing,"Assistant Officer, Sales & Marketing"
+Md.Topejjal Hossain,Male,1975-01-14,1814170627@yopmail.com,1814170627,HR & Admin (SCCL-DF),Security Guard
+Md.Towhidul Islam,Male,1975-01-14,1814170628@yopmail.com,1814170628,Production (SSCL-CTG),Operator
+Md. Wahiduzzaman,Male,1975-01-14,1814170629@yopmail.com,1814170629,HR & Admin (SCCL-HO),Sr.Officer
+Md. Yeakub,Male,1975-01-14,1814170630@yopmail.com,1814170630,Transport,Vehicle Mechanic
+Md. Yousuf,Male,1975-01-14,1814170631@yopmail.com,1814170631,Electrical & Instrument (SCCL-CTG),Deputy Manager
+Md. Yousuf [Deputy Manager],Male,1975-01-14,1814170632@yopmail.com,1814170632,,
+Md.Yousuf Sikder,Male,1975-01-14,1814170633@yopmail.com,1814170633,Electrical & Instrument (SCCL-DF),Assist Electrician cum Diesel Generator Operator
+Md. Zahid Hasan,Male,1975-01-14,1814170634@yopmail.com,1814170634,Mechanical (SCCL-DF),Jr. Technician
+Md. Zahir Uddin,Male,1975-01-14,1814170635@yopmail.com,1814170635,Quality Assurance (SCCL-CTG),Chemist
+Md.Zahirul Islam Bhuiyan,Male,1975-01-14,1814170636@yopmail.com,1814170636,Delivery & VAT (SCCL-CTG),Sr.Officer
+Md. Ziaur Rahman,Male,1975-01-14,1814170637@yopmail.com,1814170637,Sales & Marketing (SSCL-HO),"Sr.Executive,Sales & Marketing"
+Milon Gazi,Male,1975-01-14,1814170638@yopmail.com,1814170638,Electrical & Instrument (SCCL-DF),Fitter
+Mizanur Rahman,Male,1975-01-14,1814170639@yopmail.com,1814170639,Production (SCCL-CTG),Operator
+Mobarak Hossain,Male,1975-01-14,1814170640@yopmail.com,1814170640,Electrical & Instrument (SCCL-CTG),Operator
+Mofizul Islam Monir,Male,1975-01-14,1814170641@yopmail.com,1814170641,Electrical & Instrument (SCCL-CTG),Instrument 
+Mohammad Akramuzzaman,Male,1975-01-14,1814170642@yopmail.com,1814170642,Accounts & Finance (SCCL-HO),"Sr. DGM, Accounts & Finance"
+ Mohammad Al Ameen,Male,1975-01-14,1814170643@yopmail.com,1814170643,Production (SCCL-CTG),Engineer
+Mohammad Alhaj Mia,Male,1975-01-14,1814170644@yopmail.com,1814170644,Store (SCCL-DF),Asst. Manager (Store In-Charge)
+Mohammad Arif,Male,1975-01-14,1814170645@yopmail.com,1814170645,Mechanical (SCCL-CTG),Mech 
+Mohammad Arifur Rahman,Male,1975-01-14,1814170646@yopmail.com,1814170646,Production (SCCL-DF),"Sr. Officer, Flaking"
+Mohammad Easin,Male,1975-01-14,1814170647@yopmail.com,1814170647,Mechanical (SCCL-CTG),AGM
+Mohammad Faisal Matin,Male,1975-01-14,1814170648@yopmail.com,1814170648,Operation (SPL-DF),Engineer
+Mohammad Ishaque,Male,1975-01-14,1814170649@yopmail.com,1814170649,Store (SCCL-CTG),Sr.Officer
+Mohammad Ismail,Male,1975-01-14,1814170650@yopmail.com,1814170650,Production (SSCL-CTG),Operator
+Mohammad Ismail Hosen,Male,1975-01-14,1814170651@yopmail.com,1814170651,Production (SSCL-CTG),Lab. Asst.
+Mohammad Jahangir Khan,Male,1975-01-14,1814170652@yopmail.com,1814170652,Transport,Tank Lorry Helper
+Mohammad Jakir,Male,1975-01-14,1814170653@yopmail.com,1814170653,Transport,Lorry Helper
+Mohammad Kausar Uddin,Male,1975-01-14,1814170654@yopmail.com,1814170654,Service (SPL-CTG),Technician
+Mohammad Mehedi Hasan,Male,1975-01-14,1814170655@yopmail.com,1814170655,Production (SCCL-CTG),Engineer
+Mohammad Mohsin,Male,1975-01-14,1814170656@yopmail.com,1814170656,Production (SCCL-DF),Sr.Officer
+Mohammad Mustafa Haider,Male,1975-01-14,1814170657@yopmail.com,1814170657,Management (SCCL-HO),Managing Director
+Mohammad Osman,Male,1975-01-14,1814170658@yopmail.com,1814170658,Transport,Lorry Helper
+Mohammad Shah Newaz,Male,1975-01-14,1814170659@yopmail.com,1814170659,Electrical & Instrument (SCCL-CTG),Trainee Engineer
+Mohammad Shakil hossain,Male,1975-01-14,1814170660@yopmail.com,1814170660,Production (SCCL-CTG),Operator
+Mohammad Zahed,Male,1975-01-14,1814170661@yopmail.com,1814170661,Blow Mould,Helper
+Mohammed Sadmath Islam,Male,1975-01-14,1814170662@yopmail.com,1814170662,Mechanical (SCCL-CTG),Trainee Engineer
+Mohan Chowhan Shanto,Male,1975-01-14,1814170663@yopmail.com,1814170663,Mechanical (SCCL-DF),Deputy Manager
+Mohd. Ohidul Islam,Male,1975-01-14,1814170664@yopmail.com,1814170664,Electrical & Instrument (SCCL-DF),"Sr. Engineer, Electrical"
+Mohe Uddin,Male,1975-01-14,1814170665@yopmail.com,1814170665,Production (SSCL-CTG),Operator
+Mondol Baspor,Male,1975-01-14,1814170666@yopmail.com,1814170666,HR & Admin (SCCL-DF),Cleaner
+Mongmongsing Marma,Male,1975-01-14,1814170667@yopmail.com,1814170667,Blow Mould,Helper
+Monir Hossain Sayem,Male,1975-01-14,1814170668@yopmail.com,1814170668,Blow Mould,Helper
+Monirul Islam,Male,1975-01-14,1814170669@yopmail.com,1814170669,Production (SCCL-CTG),Sr.Optr 
+Morshed Alam,Male,1975-01-14,1814170670@yopmail.com,1814170670,Transport,Lorry Helper
+Morshedul Alam,Male,1975-01-14,1814170671@yopmail.com,1814170671,Sales & Marketing (Export),Manager
+Moslem Miah,Male,1975-01-14,1814170672@yopmail.com,1814170672,Mechanical (SCCL-DF),PVC Fitter
+Mostofa Kamal,Male,1975-01-14,1814170673@yopmail.com,1814170673,Mechanical (SCCL-DF),Assistant Rigger
+Mr. Abdul Alim,Male,1975-01-14,1814170674@yopmail.com,1814170674,Production (SPPL-CTG),L.P.G Helper
+Mr. Abdul Goni,Male,1975-01-14,1814170675@yopmail.com,1814170675,HR & Admin (SPPL-CTG),Canteen Supervisor
+Mr. Abdul Halim,Male,1975-01-14,1814170676@yopmail.com,1814170676,Production (SPPL-CTG),Sr. Movement Operator
+Mr. Abdul Malek,Male,1975-01-14,1814170677@yopmail.com,1814170677,HR & Admin (SPPL-CTG),Boat Helper
+Mr.Abdul Momen,Male,1975-01-14,1814170678@yopmail.com,1814170678,HR & Admin (SPPL-CTG),Security Inspector
+Mr. Abdur Rahman,Male,1975-01-14,1814170679@yopmail.com,1814170679,HR & Admin (SPPL-CTG),Security Guard
+Mr.Abdur Rahman,Male,1975-01-14,1814170680@yopmail.com,1814170680,Production (SCCL-DF),"Operator, Brine"
+Mr.Abdur Razzak,Male,1975-01-14,1814170681@yopmail.com,1814170681,Mechanical (SCCL-CTG),Helper
+Mr.Abdur Razzaque,Male,1975-01-14,1814170682@yopmail.com,1814170682,Electrical & Instrument (SCCL-DF),Inst.Technician
+Mr. Abdur Rouf,Male,1975-01-14,1814170683@yopmail.com,1814170683,Sales & Marketing (SSCL-HO),Assistant. Manager
+Mr. Abu Naser Mohammad (Shahin),Male,1975-01-14,1814170684@yopmail.com,1814170684,Inspection & Safety (SPPL-CTG),Officer
+Mr.Abu Sufian ,Male,1975-01-14,1814170685@yopmail.com,1814170685,Commercial (SCCL-HO),Assistant Officer
+Mr. Abu Taher,Male,1975-01-14,1814170686@yopmail.com,1814170686,Electrical (SPPL-CTG),Technician
+Mr. Abu Taher,Male,1975-01-14,1814170687@yopmail.com,1814170687,HR & Admin (SPPL-CTG),Cook
+Mr.Abu Taher Sohel,Male,1975-01-14,1814170688@yopmail.com,1814170688,Sales & Marketing (Export),Officer
+Mr. Afsar Hossen,Male,1975-01-14,1814170689@yopmail.com,1814170689,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr.Ainal,Male,1975-01-14,1814170690@yopmail.com,1814170690,Mechanical (SCCL-DF),Assistant Technician
+Mr.Ajit Barua,Male,1975-01-14,1814170691@yopmail.com,1814170691,Security,SY.Guard
+Mr.A.K.M. Samiul Hossain,Male,1975-01-14,1814170692@yopmail.com,1814170692,Service (SPL-DF),Engineer
+Mr. Al Ameen,Male,1975-01-14,1814170693@yopmail.com,1814170693,Transport,Lorry Helper
+Mr. Alamgir,Male,1975-01-14,1814170694@yopmail.com,1814170694,HR & Admin (SCCL-DF),Peon
+Mr.Al Amin,Male,1975-01-14,1814170695@yopmail.com,1814170695,Mechanical (SCCL-DF),Assistant Technician
+Mr.Alauddin,Male,1975-01-14,1814170696@yopmail.com,1814170696,HR & Admin (SCCL-HO),Driver
+Mr.Ali Hasan,Male,1975-01-14,1814170697@yopmail.com,1814170697,Transport,Driver
+Mr.Ali Nur,Male,1975-01-14,1814170698@yopmail.com,1814170698,Production (SPPL-CTG),Junior Operator
+Mr. Ali Zaker Showan,Male,1975-01-14,1814170699@yopmail.com,1814170699,Production (SPPL-CTG),Engineer
+Mr.Amin,Male,1975-01-14,1814170700@yopmail.com,1814170700,HR & Admin (SCCL-HO),Driver
+Mr.Amit Das,Male,1975-01-14,1814170701@yopmail.com,1814170701,Sales & Marketing (H2o2),Assistant. Manager
+Mr. Amit Kumar Saha,Male,1975-01-14,1814170702@yopmail.com,1814170702,Store (SPPL-CTG),Officer
+Mr. Amit Shor ,Male,1975-01-14,1814170703@yopmail.com,1814170703,Mechanical (SCCL-DF),Engineer
+Mr. Amjad Hossain,Male,1975-01-14,1814170704@yopmail.com,1814170704,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr.Anamul Hasan,Male,1975-01-14,1814170705@yopmail.com,1814170705,Sales & Marketing (SSCL-HO),Executive (S & M)
+Mr. Animesh Saha,Male,1975-01-14,1814170706@yopmail.com,1814170706,Service (SPL-DF),Sr. Technician
+Mr. Anowar Hossain,Male,1975-01-14,1814170707@yopmail.com,1814170707,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Anup Barua,Male,1975-01-14,1814170708@yopmail.com,1814170708,Service (SPL-CTG),Driver
+Mr. Arif  Moinuddin,Male,1975-01-14,1814170709@yopmail.com,1814170709,Quality Assurance (SPPL-CTG),Lab Helper
+Mr. Arijit Paul,Male,1975-01-14,1814170710@yopmail.com,1814170710,Accounts & Finance (SPPL-CTG),Officer
+Mr. Arman Hossain,Male,1975-01-14,1814170711@yopmail.com,1814170711,HR & Admin (SPPL-CTG),Imam
+Mr.Asaduzzaman,Male,1975-01-14,1814170712@yopmail.com,1814170712,Mechanical (SCCL-DF),Jr.Technician
+Mr.Asaduzzaman,Male,1975-01-14,1814170713@yopmail.com,1814170713,HR & Admin (SCCL-DF),Security Guard
+Mr. Ashik-Ul-Alam Bhuiyan,Male,1975-01-14,1814170714@yopmail.com,1814170714,Production (SPPL-CTG),Engineer
+Mr. Atikur Rahaman,Male,1975-01-14,1814170715@yopmail.com,1814170715,Quality Assurance (SPPL-CTG),Lab Helper
+Mr. Aunkan Sikder,Male,1975-01-14,1814170716@yopmail.com,1814170716,Electrical & Instrument (SCCL-DF),Sub Assistant Engineer
+Mr. Avijit Dasgupta,Male,1975-01-14,1814170717@yopmail.com,1814170717,Mechanical (SPPL-CTG),Asst. General Manager
+Mr.Ayub Khan,Male,1975-01-14,1814170718@yopmail.com,1814170718,Security,SY.Guard
+Mr.Azam Khan,Male,1975-01-14,1814170719@yopmail.com,1814170719,Transport,Driver
+Mr. Azizur Rahman,Male,1975-01-14,1814170720@yopmail.com,1814170720,Mechanical (SPPL-CTG),Sr. Mechanic
+ Mr. Babla Barua,Male,1975-01-14,1814170721@yopmail.com,1814170721,Electrical (SPPL-CTG),Operator
+ Mr. Badal Kanti Chowdhury,Male,1975-01-14,1814170722@yopmail.com,1814170722,Mechanical (SPPL-CTG),Sr.Executive
+Mr. Bashu Deb Mozumder,Male,1975-01-14,1814170723@yopmail.com,1814170723,Store (SPPL-CTG),Store Assistant
+Mr. Bekash Barua,Male,1975-01-14,1814170724@yopmail.com,1814170724,Mechanical (SPPL-CTG),Welder
+Mr.Bikash Kanti Das,Male,1975-01-14,1814170725@yopmail.com,1814170725,Operation (SCCL-HO),General Manager
+Mr.Billal Hossen Babu,Male,1975-01-14,1814170726@yopmail.com,1814170726,HR & Admin (SCCL-DF),Gardener
+Mr. Biplop Saha,Male,1975-01-14,1814170727@yopmail.com,1814170727,Production (SPPL-CTG),Officer
+Mr. Chaila Marma,Male,1975-01-14,1814170728@yopmail.com,1814170728,HR & Admin (SCCL-CTG),Cook
+Mr. Chand Mohon Rudra Pal,Male,1975-01-14,1814170729@yopmail.com,1814170729,Electrical & Instrument (SCCL-DF),Chief Engineer
+Mr.Delower Hossen 1,Male,1975-01-14,1814170730@yopmail.com,1814170730,Mechanical (SCCL-DF),Assistant Technician
+Mr. Devarshi Das,Male,1975-01-14,1814170731@yopmail.com,1814170731,Operation (SPL-DF),Engineer
+Mr.Didarul Huq,Male,1975-01-14,1814170732@yopmail.com,1814170732,Sales & Marketing (Caustic),Assistant. Manager
+Mr. Dipen Saha,Male,1975-01-14,1814170733@yopmail.com,1814170733,Production (SPPL-CTG),Junior Operator
+Mr.Disher Barua,Male,1975-01-14,1814170734@yopmail.com,1814170734,Transport,Lorry Helper
+Mr. Elias,Male,1975-01-14,1814170735@yopmail.com,1814170735,Blow Mould,Helper
+Mr. Enamul Hoque,Male,1975-01-14,1814170736@yopmail.com,1814170736,HR & Admin (SPPL-CTG),Security Guard
+Mr. Fakhrul Ameen,Male,1975-01-14,1814170737@yopmail.com,1814170737,Operation (SPPL-HO),Advisor
+Mr. Forhad Mia,Male,1975-01-14,1814170738@yopmail.com,1814170738,Production (SPPL-CTG),Trainee Operater
+Mr. Forkan Uddin,Male,1975-01-14,1814170739@yopmail.com,1814170739,Mechanical (SPPL-CTG),Sub Assistant Engineer
+Mr.Gaffar,Male,1975-01-14,1814170740@yopmail.com,1814170740,Mechanical (SCCL-DF),Technician
+Mr.Gopal Boisnab,Male,1975-01-14,1814170741@yopmail.com,1814170741,HR & Admin (SCCL-CTG),Mali 
+Mr.Gourungo Haldar,Male,1975-01-14,1814170742@yopmail.com,1814170742,Production (SCCL-DF),"Operator,Electrolyzer & Dechlorination"
+Mr. Habibur Rahman,Male,1975-01-14,1814170743@yopmail.com,1814170743,Production (SPPL-CTG),Operator
+Mr.Habibur Rahman,Male,1975-01-14,1814170744@yopmail.com,1814170744,HR & Admin (SCCL-DF),Security Guard
+Mr.Hamidul Islam,Male,1975-01-14,1814170745@yopmail.com,1814170745,Mechanical (SCCL-DF),Jr.Technician
+Mr.Hasan Syed Reza,Male,1975-01-14,1814170746@yopmail.com,1814170746,Electrical & Instrument (SCCL-CTG),"Engineer, Electrical"
+Mr.H.M.Shaheed Sarwar,Male,1975-01-14,1814170747@yopmail.com,1814170747,Transport,Officer
+Mr.Humayun Kabir,Male,1975-01-14,1814170748@yopmail.com,1814170748,Accounts & Finance (SCCL-HO),"Asst. Officer, Accounts & Finance"
+Mr. Imam Hossain,Male,1975-01-14,1814170749@yopmail.com,1814170749,Production (SPPL-CTG),Operator
+Mr.Istiak Hossain,Male,1975-01-14,1814170750@yopmail.com,1814170750,Mechanical (SCCL-DF),Trainee SA Engineer
+Mr.Jahangin Alam,Male,1975-01-14,1814170751@yopmail.com,1814170751,HR & Admin (SCCL-HO),Driver
+Mr. Jahangir Alam,Male,1975-01-14,1814170752@yopmail.com,1814170752,HR & Admin (SPPL-CTG),Driver
+Mr. Jahangir Alam,Male,1975-01-14,1814170753@yopmail.com,1814170753,Electrical (SPPL-CTG),Operator
+Mr. Jahirul Alam Papel,Male,1975-01-14,1814170754@yopmail.com,1814170754,Quality Assurance (SPPL-CTG),"Chemist, QC"
+Mr.Jalal Hossain,Male,1975-01-14,1814170755@yopmail.com,1814170755,HR & Admin (SPPL-CTG),Cook Helper
+Mr. Jamil Hasan Emon,Male,1975-01-14,1814170756@yopmail.com,1814170756,Sales & Marketing (SPPL-HO),Sr.Executive
+Mr.Jayanto Prashad Mitra,Male,1975-01-14,1814170757@yopmail.com,1814170757,Quality Assurance (SPPL-CTG),Lab Tester
+Mr. Jewel Chandra Das,Male,1975-01-14,1814170758@yopmail.com,1814170758,Production (SPPL-CTG),Junior Operator
+Mr. Jiku Saha,Male,1975-01-14,1814170759@yopmail.com,1814170759,Production (SPPL-CTG),Junior Operator
+Mr. Jindar Ali Shaikh,Male,1975-01-14,1814170760@yopmail.com,1814170760,Instrument & Control (SPPL-CTG),Inst.Technician
+Mr. Joni Molla,Male,1975-01-14,1814170761@yopmail.com,1814170761,Production (SCCL-DF),Operator
+Mr. Joy Bhowmick,Male,1975-01-14,1814170762@yopmail.com,1814170762,Production (SPPL-CTG),Jr. Officer
+Mr. Kamal Hossain,Male,1975-01-14,1814170763@yopmail.com,1814170763,HR & Admin (SPPL-CTG),Security Guard
+Mr.Kamruzzaman,Male,1975-01-14,1814170764@yopmail.com,1814170764,HR & Admin (SCCL-DF),"Operator, HCL & Hypo,ETP"
+Mr. Kawser,Male,1975-01-14,1814170765@yopmail.com,1814170765,HR & Admin (SCCL-DF),Security Guard
+Mr.Kawser Hossen,Male,1975-01-14,1814170766@yopmail.com,1814170766,Mechanical (SCCL-DF),Assistant Technician
+Mr.Kazi Md.Selim,Male,1975-01-14,1814170767@yopmail.com,1814170767,HR & Admin (SPPL-CTG),Security Guard
+Mr. Kazi Muhammed Wazed,Male,1975-01-14,1814170768@yopmail.com,1814170768,Electrical (SPPL-CTG),Operator
+Mr. Khademul Islam,Male,1975-01-14,1814170769@yopmail.com,1814170769,Production (SPPL-CTG),Jr. Officer
+Mr. Khairul Islam,Male,1975-01-14,1814170770@yopmail.com,1814170770,Production (SPPL-CTG),Boiler Operator
+Mr.Khalilur Rahman,Male,1975-01-14,1814170771@yopmail.com,1814170771,HR & Admin (SCCL-DF),Security Guard
+Mr.Khorshed Alam,Male,1975-01-14,1814170772@yopmail.com,1814170772,Store (SSCL-CTG),Asst.Officer
+Mr. Khurshed Alam,Male,1975-01-14,1814170773@yopmail.com,1814170773,Production (SPPL-CTG),Operator
+Mr.Khurshed Alam,Male,1975-01-14,1814170774@yopmail.com,1814170774,Production (SCCL-DF),Sr.Officer
+Mr. Khurshid Alam,Male,1975-01-14,1814170775@yopmail.com,1814170775,Production (SPPL-CTG),Helper
+Mr.Liton Mia,Male,1975-01-14,1814170776@yopmail.com,1814170776,Mechanical (SCCL-DF),Jr.Technician
+Mr. Maain Uddin,Male,1975-01-14,1814170777@yopmail.com,1814170777,Production (SPPL-CTG),Jetty Operator
+Mr. Mahbubul Hasan Khan,Male,1975-01-14,1814170778@yopmail.com,1814170778,Inspection & Safety (SPPL-CTG),Manager
+Mr.Mahedi Hasan 1,Male,1975-01-14,1814170779@yopmail.com,1814170779,Mechanical (SCCL-DF),Assistant Technician
+Mr.Mahfuzur Rahman,Male,1975-01-14,1814170780@yopmail.com,1814170780,Operation (SCCL-HO),Advisor
+Mr. Mahfzul Karim,Male,1975-01-14,1814170781@yopmail.com,1814170781,HR & Admin (SPPL-CTG),Security Guard
+Mr.Maksud,Male,1975-01-14,1814170782@yopmail.com,1814170782,Sales & Marketing (SSCL-HO),Executive (S & M)
+Mr. Mamunur Rashid,Male,1975-01-14,1814170783@yopmail.com,1814170783,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Manik Chakroborty,Male,1975-01-14,1814170784@yopmail.com,1814170784,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr.Mansur Alam,Male,1975-01-14,1814170785@yopmail.com,1814170785,Security,SY.Guard
+Mr.Masud Rana,Male,1975-01-14,1814170786@yopmail.com,1814170786,Sales & Marketing (H2o2),Deputy Manager
+Mr.Masud Rana,Male,1975-01-14,1814170787@yopmail.com,1814170787,Electrical & Instrument (SCCL-DF),Assistant Electrician
+Mr. Masum Billah,Male,1975-01-14,1814170788@yopmail.com,1814170788,Production (SPPL-CTG),Engineer (Process)
+Mr.Masum Billah,Male,1975-01-14,1814170789@yopmail.com,1814170789,Mechanical (SCCL-DF),Technician
+Mr. Md. Abdul Jynal Wasim,Male,1975-01-14,1814170790@yopmail.com,1814170790,HR & Admin (SPPL-CTG),Cook
+Mr. Md Abdullah Al Noman,Male,1975-01-14,1814170791@yopmail.com,1814170791,Electrical (SPPL-CTG),Asst. General Manager
+Mr. Md. Abdul Latif,Male,1975-01-14,1814170792@yopmail.com,1814170792,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Abdul Mannan,Male,1975-01-14,1814170793@yopmail.com,1814170793,Mechanical (SPPL-CTG),Foreman
+Mr. Md. Abdur Rahim,Male,1975-01-14,1814170794@yopmail.com,1814170794,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Md. Abidur Rahaman,Male,1975-01-14,1814170795@yopmail.com,1814170795,Production (SPPL-CTG),Shift-In-Charge
+Mr. Md. Abu bakar Siddique,Male,1975-01-14,1814170796@yopmail.com,1814170796,Accounts & Finance (SPPL-CTG),"Officer,VAT"
+Mr. Md. Abul Kalam,Male,1975-01-14,1814170797@yopmail.com,1814170797,Electrical (SPPL-CTG),Technician
+Mr. Md. Abul Kasam,Male,1975-01-14,1814170798@yopmail.com,1814170798,Mechanical (SPPL-CTG),Mechanic
+Mr. Md. Abul Kashem Miah,Male,1975-01-14,1814170799@yopmail.com,1814170799,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Abu Naser,Male,1975-01-14,1814170800@yopmail.com,1814170800,Production (SPPL-CTG),Sr.Operator
+Mr. Md. Abu Taher,Male,1975-01-14,1814170801@yopmail.com,1814170801,Inspection & Safety (SPPL-CTG),Fire Attendent Driver
+Mr. Md. Afsar Uddin,Male,1975-01-14,1814170802@yopmail.com,1814170802,Production (SPPL-CTG),Sr. Movement Operator
+Mr.Md. Ahmed Kabir,Male,1975-01-14,1814170803@yopmail.com,1814170803,Store (SPPL-CTG),Sr.Officer
+Mr. Md. Akbar Hossain,Male,1975-01-14,1814170804@yopmail.com,1814170804,Mechanical (SPPL-CTG),Asst Engineer
+Mr. Md. Akteruzzaman,Male,1975-01-14,1814170805@yopmail.com,1814170805,Production (SPPL-CTG),Movement Operator
+Mr. Md. Alamgir,Male,1975-01-14,1814170806@yopmail.com,1814170806,HR & Admin (SPPL-CTG),Peon
+Mr. Md. Alauddin,Male,1975-01-14,1814170807@yopmail.com,1814170807,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Md. Ali Hossain,Male,1975-01-14,1814170808@yopmail.com,1814170808,Inspection & Safety (SPPL-CTG),Trainee Fire Fighter
+Mr. Md. Aminul Islam,Male,1975-01-14,1814170809@yopmail.com,1814170809,HR & Admin (SPPL-CTG),Officer
+Mr. Md. Anam Hossen,Male,1975-01-14,1814170810@yopmail.com,1814170810,HR & Admin (SPPL-CTG),Security Guard
+Mr.Md.Arshadul Mustafa,Male,1975-01-14,1814170811@yopmail.com,1814170811,Production (SSCL-CTG),T/Chemist
+Mr. Md. Asraful Islam,Male,1975-01-14,1814170812@yopmail.com,1814170812,HR & Admin (SPPL-CTG),Cook
+Mr. Md. Belal Hossain,Male,1975-01-14,1814170813@yopmail.com,1814170813,Inspection & Safety (SPPL-CTG),Fire Fighter Shift Leader
+Mr. Md. Belel Hossen,Male,1975-01-14,1814170814@yopmail.com,1814170814,HR & Admin (SPPL-CTG),Assistant Security Inspector
+ Mr. Md. Daloar Hosan  ,Male,1975-01-14,1814170815@yopmail.com,1814170815,Electrical (SPPL-CTG),Technician
+Mr. Md. Didarul Alam,Male,1975-01-14,1814170816@yopmail.com,1814170816,Electrical (SPPL-CTG),Sr.Technician
+Mr. Md. Emrul Kayes Khan,Male,1975-01-14,1814170817@yopmail.com,1814170817,Production (SPPL-CTG),LPG Operator
+Mr. Md. Eyasin,Male,1975-01-14,1814170818@yopmail.com,1814170818,Mechanical (SPPL-CTG),Meachanical Fitter
+Mr. Md. Farhad Hossen,Male,1975-01-14,1814170819@yopmail.com,1814170819,Production (SPPL-CTG),Junior Operator
+Mr. Md. Faruk-I-Azam,Male,1975-01-14,1814170820@yopmail.com,1814170820,Accounts & Finance (SPPL-CTG),Sr.Officer
+Mr. Md. Harun,Male,1975-01-14,1814170821@yopmail.com,1814170821,HR & Admin (SPPL-CTG),Driver
+Mr. Md. Hasan,Male,1975-01-14,1814170822@yopmail.com,1814170822,Inspection & Safety (SPPL-CTG),Fire Attendent Driver
+Mr. Md. Helal,Male,1975-01-14,1814170823@yopmail.com,1814170823,Mechanical (SPPL-CTG),Carpenter
+ Mr. Md. Ibrahim khalil,Male,1975-01-14,1814170824@yopmail.com,1814170824,Production (SPPL-CTG),Operator
+Mr. Md.Imtiaz Uddin,Male,1975-01-14,1814170825@yopmail.com,1814170825,Production (SPPL-CTG),LPG Operator
+Mr. Md. Ishaque Mia,Male,1975-01-14,1814170826@yopmail.com,1814170826,Store (SPPL-CTG),Officer
+Mr. Md. Ismaiel,Male,1975-01-14,1814170827@yopmail.com,1814170827,HR & Admin (SPPL-CTG),Security Guard
+Mr.Md. Jahangir Alam,Male,1975-01-14,1814170828@yopmail.com,1814170828,Production (SSCL-CTG),PO
+Mr. Md. Jahid Hassan Emon,Male,1975-01-14,1814170829@yopmail.com,1814170829,Production (SPPL-CTG),"Helper, process"
+Mr. Md. Jashim Uddin,Male,1975-01-14,1814170830@yopmail.com,1814170830,Mechanical (SPPL-CTG),Mechanic
+Mr. Md. Jaynal Abdin,Male,1975-01-14,1814170831@yopmail.com,1814170831,Production (SPPL-CTG),Boiler Operator
+Mr. Md. Kaiser Hamid,Male,1975-01-14,1814170832@yopmail.com,1814170832,Mechanical (SPPL-CTG),Sub Assistant Engineer
+Mr. Md. Kalim Ullah,Male,1975-01-14,1814170833@yopmail.com,1814170833,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Kayem Hosin,Male,1975-01-14,1814170834@yopmail.com,1814170834,Production (SPPL-CTG),Operator
+Mr. Md. Khokan,Male,1975-01-14,1814170835@yopmail.com,1814170835,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Khorshed Alam Chy.,Male,1975-01-14,1814170836@yopmail.com,1814170836,Electrical (SPPL-CTG),Asst Engineer
+Mr. Md. Liton,Male,1975-01-14,1814170837@yopmail.com,1814170837,Mechanical (SPPL-CTG),Fitter
+Mr. Md. Lokman Hakim,Male,1975-01-14,1814170838@yopmail.com,1814170838,Quality Assurance (SPPL-CTG),Lab Tester
+Mr. Md. Mahmudul Hasan,Male,1975-01-14,1814170839@yopmail.com,1814170839,Production (SPPL-CTG),Engineer
+Mr. Md. Main Uddin,Male,1975-01-14,1814170840@yopmail.com,1814170840,Instrument & Control (SPPL-CTG),Sr.Technician
+Mr. Md. Manto Mia,Male,1975-01-14,1814170841@yopmail.com,1814170841,HR & Admin (SPPL-CTG),Peon
+Mr. Md. Masud Alam Patwary,Male,1975-01-14,1814170842@yopmail.com,1814170842,Production (SPPL-CTG),Operator
+Mr. Md. Minhajul Siddique,Male,1975-01-14,1814170843@yopmail.com,1814170843,Production (SSCL-CTG),IPE
+Mr. Md. Miraz Hossain,Male,1975-01-14,1814170844@yopmail.com,1814170844,Production (SPPL-CTG),Operator
+Mr. Md. Mizanur Rahaman,Male,1975-01-14,1814170845@yopmail.com,1814170845,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Md. Mizanur Rahman,Male,1975-01-14,1814170846@yopmail.com,1814170846,Production (SPPL-CTG),Sr.Operator
+Mr. Md. Mizanur Rahman,Male,1975-01-14,1814170847@yopmail.com,1814170847,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Mohammad Ullah,Male,1975-01-14,1814170848@yopmail.com,1814170848,Production (SPPL-CTG),Movement Helper
+Mr. Md. Mohin Uddin,Male,1975-01-14,1814170849@yopmail.com,1814170849,Production (SPPL-CTG),Jetty Operator
+Mr. Md. Moinul Islam Khan,Male,1975-01-14,1814170850@yopmail.com,1814170850,Production (SPPL-CTG),Movement Operator
+Mr. Md. Mosleh Uddin ,Male,1975-01-14,1814170851@yopmail.com,1814170851,HR & Admin (SPPL-CTG),Security In-Charge
+Mr. Md. Mubarak Hossen,Male,1975-01-14,1814170852@yopmail.com,1814170852,Mechanical (SPPL-CTG),Crane Operator
+Mr. Md. Muksul Miner,Male,1975-01-14,1814170853@yopmail.com,1814170853,Production (SPPL-CTG),Sub Assistant Engineer
+Mr. Md Mushfiqur Rahman,Male,1975-01-14,1814170854@yopmail.com,1814170854,Instrument & Control (SPPL-CTG),Asst.Manager
+Mr. Md. Muzahid Dalim,Male,1975-01-14,1814170855@yopmail.com,1814170855,Production (SPPL-CTG),Movement Helper
+ Mr. Md. Nazrul Islam,Male,1975-01-14,1814170856@yopmail.com,1814170856,Production (SPPL-CTG),Trainee Operater
+Mr. Md. Nurul Akhter,Male,1975-01-14,1814170857@yopmail.com,1814170857,Production (SPPL-CTG),Sr. Movement Operator
+Mr. Md. Oashim Uddin,Male,1975-01-14,1814170858@yopmail.com,1814170858,HR & Admin (SPPL-CTG),Peon
+Mr. Md. Osman Goni,Male,1975-01-14,1814170859@yopmail.com,1814170859,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Md. Rajaul Karim,Male,1975-01-14,1814170860@yopmail.com,1814170860,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Rakibul Islam,Male,1975-01-14,1814170861@yopmail.com,1814170861,Production (SPPL-CTG),Sr. Movement Operator
+Mr. Md. Rasel Chowdhury,Male,1975-01-14,1814170862@yopmail.com,1814170862,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Robiul Islam,Male,1975-01-14,1814170863@yopmail.com,1814170863,Production (SPPL-CTG),Trainee Operater
+ Mr. Md. Saidul Islam,Male,1975-01-14,1814170864@yopmail.com,1814170864,Electrical (SPPL-CTG),Foremen
+Mr. Md. Saifuddin,Male,1975-01-14,1814170865@yopmail.com,1814170865,HR & Admin (SPPL-CTG),Boat Operator 
+Mr. Md. Saiful Islam (Babu),Male,1975-01-14,1814170866@yopmail.com,1814170866,HR & Admin (SPPL-CTG),Assistant Security Inspector
+Mr. Md. Salauddin,Male,1975-01-14,1814170867@yopmail.com,1814170867,HR & Admin (SPPL-CTG),Assistant Security Inspector
+Mr. Md. Sarfuddin Chowdhury Sharif,Male,1975-01-14,1814170868@yopmail.com,1814170868,Quality Assurance (SPPL-CTG),Asst. General Manager
+Mr. Md. Sariful Islam,Male,1975-01-14,1814170869@yopmail.com,1814170869,Production (SPPL-CTG),Trainee Operater
+Mr. Md. Sazzad Hossain,Male,1975-01-14,1814170870@yopmail.com,1814170870,Mechanical (SPPL-CTG),Fitter
+Mr. Md. Shafiqul Islam,Male,1975-01-14,1814170871@yopmail.com,1814170871,Production (SPPL-CTG),Shift-In-Charge
+Mr. Md. Shahajhan Rashed,Male,1975-01-14,1814170872@yopmail.com,1814170872,Electrical (SPPL-CTG),Technician
+Mr. Md. Shahed Uddin,Male,1975-01-14,1814170873@yopmail.com,1814170873,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Md. Shams Uddin Bhuiyan,Male,1975-01-14,1814170874@yopmail.com,1814170874,Production (SPPL-CTG),Boiler Operator
+Mr. Md. Sohel,Male,1975-01-14,1814170875@yopmail.com,1814170875,HR & Admin (SPPL-CTG),Boat Helper
+Mr. Md. Solaiman,Male,1975-01-14,1814170876@yopmail.com,1814170876,Production (SPPL-CTG),Operator
+Mr. Md. Sujan Mia,Male,1975-01-14,1814170877@yopmail.com,1814170877,Production (SPPL-CTG),Trainee Operater
+Mr. Md. Taraf Ali Rabin,Male,1975-01-14,1814170878@yopmail.com,1814170878,Instrument & Control (SPPL-CTG),Sr.Technician
+Mr. Md. Tara Mia,Male,1975-01-14,1814170879@yopmail.com,1814170879,HR & Admin (SPPL-CTG),Security Guard
+Mr. Md. Tareq Hossain,Male,1975-01-14,1814170880@yopmail.com,1814170880,Production (SPPL-CTG),Movement Operator
+Mr. Md. Tawsif Hasan Khan,Male,1975-01-14,1814170881@yopmail.com,1814170881,Electrical (SPPL-CTG),Engineer
+Mr. Md. Touhidul Islam,Male,1975-01-14,1814170882@yopmail.com,1814170882,Supply Chain Local (SPPL-CTG),Jr. Officer
+Mr. Md. Yasin,Male,1975-01-14,1814170883@yopmail.com,1814170883,Production (SPPL-CTG),Engineer
+Mr. Md. Yunus,Male,1975-01-14,1814170884@yopmail.com,1814170884,Electrical (SPPL-CTG),Technician
+Mr. Mehidi Hasan,Male,1975-01-14,1814170885@yopmail.com,1814170885,Electrical & Instrument (SCCL-DF),Asst. Electric
+Mr. Mijanur Rahaman,Male,1975-01-14,1814170886@yopmail.com,1814170886,Supply Chain Local (SPPL-CTG),Jr. Officer
+Mr.Mir Hossen,Male,1975-01-14,1814170887@yopmail.com,1814170887,Mechanical (SCCL-DF),Assistant Technician
+Mr. Mizanur Rahman,Male,1975-01-14,1814170888@yopmail.com,1814170888,HR & Admin (SPPL-CTG),Security Guard
+Mr. Mohammad Abul Khair,Male,1975-01-14,1814170889@yopmail.com,1814170889,HR & Admin (SPPL-CTG),Driver
+Mr. Mohammad Alamgir Khan,Male,1975-01-14,1814170890@yopmail.com,1814170890,HR & Admin (SPPL-CTG),Security Guard
+Mr. Mohammad Ismail,Male,1975-01-14,1814170891@yopmail.com,1814170891,Inspection & Safety (SPPL-CTG),Trainee Fighter Shift Leader
+Mr. Mohammad Minhaz Uddin,Male,1975-01-14,1814170892@yopmail.com,1814170892,Production (SPPL-CTG),Sr.Operator
+Mr. Mohammad Rashedul Alam,Male,1975-01-14,1814170893@yopmail.com,1814170893,Inspection & Safety (SPPL-CTG),Fire Fighter
+Mr. Mohammad Sadequl Islam,Male,1975-01-14,1814170894@yopmail.com,1814170894,Production (SPPL-CTG),Asst. General Manager
+Mr. Mohammad Salim,Male,1975-01-14,1814170895@yopmail.com,1814170895,Mechanical (SPPL-CTG),Lathe machine Operator
+Mr. Mohammad Shafiqur Rahman,Male,1975-01-14,1814170896@yopmail.com,1814170896,HR & Admin (SPPL-CTG),Assistant Inspector
+Mr. Mohammad Towhidul Alam Bhuiyan,Male,1975-01-14,1814170897@yopmail.com,1814170897,Instrument & Control (SPPL-CTG),Asst. General Manager
+Mr. Mohammad Yousuf,Male,1975-01-14,1814170898@yopmail.com,1814170898,HR & Admin (SPPL-CTG),Security Guard
+Mr. Mohammad Nurul Hoque,Male,1975-01-14,1814170899@yopmail.com,1814170899,HR & Admin (SPPL-CTG),Security Inspector
+Mr. Mohammed Nasir Uddin,Male,1975-01-14,1814170900@yopmail.com,1814170900,Production (SPPL-CTG),Sr.Operator
+ Mr. Mohammed Tipu,Male,1975-01-14,1814170901@yopmail.com,1814170901,Electrical (SPPL-CTG),Electrician
+Mr. Mohammed Touhidul Alam,Male,1975-01-14,1814170902@yopmail.com,1814170902,Electrical (SPPL-CTG),Engineer
+Mr. Mohammed  Belal,Male,1975-01-14,1814170903@yopmail.com,1814170903,Mechanical (SPPL-CTG),Meachanical Techanician
+Mr. Mohin Uddin,Male,1975-01-14,1814170904@yopmail.com,1814170904,Production (SPPL-CTG),Movement Helper
+Mr. Mokaddes Ali,Male,1975-01-14,1814170905@yopmail.com,1814170905,Instrument & Control (SPPL-CTG),Ins. Helper
+Mr.Momin Miah,Male,1975-01-14,1814170906@yopmail.com,1814170906,HR & Admin (SCCL-DF),Security Sub Inspector
+Mr.Mominul Islam,Male,1975-01-14,1814170907@yopmail.com,1814170907,Store (SCCL-DF),Store Helper
+Mr.Mongseu Marma,Male,1975-01-14,1814170908@yopmail.com,1814170908,Mechanical (SCCL-CTG),Sr.Optr 
+Mr.Monjelur Rahman,Male,1975-01-14,1814170909@yopmail.com,1814170909,HR & Admin (SCCL-DF),Jr. Officer
+Mr.Morshed Alam,Male,1975-01-14,1814170910@yopmail.com,1814170910,Electrical & Instrument (SCCL-DF),Electrician
+Mr.Morshed Meah,Male,1975-01-14,1814170911@yopmail.com,1814170911,Mechanical (SCCL-CTG),Mech 
+Mr.Mosarouf Hosen,Male,1975-01-14,1814170912@yopmail.com,1814170912,Production (SCCL-DF),"Operator, Brine"
+Mr. Moshiur Rahaman,Male,1975-01-14,1814170913@yopmail.com,1814170913,Accounts & Finance (SCCL-HO),Senior Manager
+Mr. Muhammed Hasan Mahmud,Male,1975-01-14,1814170914@yopmail.com,1814170914,Mechanical (SPPL-CTG),Engineer
+Mr. Nahid Hasan,Male,1975-01-14,1814170915@yopmail.com,1814170915,Accounts & Finance (SPPL-CTG),Officer
+Mr. Najim Hossen,Male,1975-01-14,1814170916@yopmail.com,1814170916,Quality Assurance (SPPL-CTG),Lab Helper
+Mr.Nasir Hossain,Male,1975-01-14,1814170917@yopmail.com,1814170917,HR & Admin (SCCL-DF),Peon
+Mr.Nasir Uddin,Male,1975-01-14,1814170918@yopmail.com,1814170918,Security,Sr.Inspector
+Mr.Nazim Uddin,Male,1975-01-14,1814170919@yopmail.com,1814170919,Production (SCCL-DF),"Operator, Boiler"
+Mr. Neloy Saha,Male,1975-01-14,1814170920@yopmail.com,1814170920,Quality Assurance (SPPL-CTG),Lab Helper
+Mr.Nobinur Rahman,Male,1975-01-14,1814170921@yopmail.com,1814170921,Operation (SPL-DF),Asst. Manager
+Mr.Nur Kabir,Male,1975-01-14,1814170922@yopmail.com,1814170922,Production (SCCL-CTG),Operator
+Mr.Nur-Mohammad,Male,1975-01-14,1814170923@yopmail.com,1814170923,Mechanical (SCCL-CTG),Lathe Operator
+Mr.Nur Nabi,Male,1975-01-14,1814170924@yopmail.com,1814170924,Electrical & Instrument (SCCL-DF),Electrician
+Mr.Nurul Amin,Male,1975-01-14,1814170925@yopmail.com,1814170925,HR & Admin (SCCL-DF),Driver
+Mr.Nurul Huda,Male,1975-01-14,1814170926@yopmail.com,1814170926,Mechanical (SCCL-DF),Assistant Technician
+Mr.Nurul Islam,Male,1975-01-14,1814170927@yopmail.com,1814170927,Electrical & Instrument (SCCL-DF),Inst.Technician
+Mr.Nurul Kabir,Male,1975-01-14,1814170928@yopmail.com,1814170928,Transport,Driver
+Mr. Nuru Safa,Male,1975-01-14,1814170929@yopmail.com,1814170929,HR & Admin (SPPL-CTG),Cleaner
+Mr.Omar Faruque,Male,1975-01-14,1814170930@yopmail.com,1814170930,Mechanical (SCCL-DF),Jr.Technician
+Mr.Osman Gani Bacchu,Male,1975-01-14,1814170931@yopmail.com,1814170931,Transport,Mechanics
+Mr.Pappu,Male,1975-01-14,1814170932@yopmail.com,1814170932,Mechanical (SCCL-DF),Technician
+Mr. Paritush Chandra Pondith,Male,1975-01-14,1814170933@yopmail.com,1814170933,Production (SPPL-CTG),Engineer
+Mr. Pinku Loodh,Male,1975-01-14,1814170934@yopmail.com,1814170934,Production (SPPL-CTG),Movement Operator
+Mr.Plash Datta,Male,1975-01-14,1814170935@yopmail.com,1814170935,Production (SSCL-CTG),"Chemist, QC"
+Mr.Poritosh Mojumder,Male,1975-01-14,1814170936@yopmail.com,1814170936,Service (SPL-DF),Assistant. Manager
+Mr. Pradip Kumar Sutra,Male,1975-01-14,1814170937@yopmail.com,1814170937,Mechanical (SCCL-DF),Operator
+Mr. Pranab Kumar Saha,Male,1975-01-14,1814170938@yopmail.com,1814170938,Operation (SPPL-CTG),Chief Executive Officer
+Mr. Prasenjit Kumar Devsharma,Male,1975-01-14,1814170939@yopmail.com,1814170939,Mechanical (SCCL-DF),Engineer
+Mr.Rafee Ahmed,Male,1975-01-14,1814170940@yopmail.com,1814170940,Commercial (SCCL-HO),Officer
+Mr.Rafiq Ahmad FCMA,Male,1975-01-14,1814170941@yopmail.com,1814170941,Accounts & Finance (SCCL-HO),Advisor
+Mr. Rahul Barua,Male,1975-01-14,1814170942@yopmail.com,1814170942,Production (SPPL-CTG),Junior Operator
+Mr. Rajesh Ghosh,Male,1975-01-14,1814170943@yopmail.com,1814170943,Production (SCCL-DF),Trainee Engineer
+Mr. Rajib Chowdhury,Male,1975-01-14,1814170944@yopmail.com,1814170944,Mechanical (SPPL-CTG),Engineer
+ Mr. Rajib Malakar,Male,1975-01-14,1814170945@yopmail.com,1814170945,Electrical (SPPL-CTG),Technician
+Mr. Rana Barua,Male,1975-01-14,1814170946@yopmail.com,1814170946,Security,Inspector
+Mr. Rasel Iqbal,Male,1975-01-14,1814170947@yopmail.com,1814170947,Production (SPPL-CTG),Sub Assistant Engineer
+Mr.Rasel Mahmud,Male,1975-01-14,1814170948@yopmail.com,1814170948,Mechanical (SCCL-DF),Assistant Technician
+Mr.Rashidunnabi,Male,1975-01-14,1814170949@yopmail.com,1814170949,Electrical & Instrument (SCCL-DF),Assistant Electrician
+Mr. Remon Barua,Male,1975-01-14,1814170950@yopmail.com,1814170950,Blow Mould,Helper
+Mr.Remon Hossain,Male,1975-01-14,1814170951@yopmail.com,1814170951,Mechanical (SCCL-DF),Technician
+Mr.Riad,Male,1975-01-14,1814170952@yopmail.com,1814170952,Mechanical (SCCL-DF),Technician
+Mr. Riajul Islam,Male,1975-01-14,1814170953@yopmail.com,1814170953,Electrical & Instrument (SCCL-DF),Ins. Helper
+Mr. Ripan Chakma,Male,1975-01-14,1814170954@yopmail.com,1814170954,Electrical (SPPL-CTG),Sub-Asstt Engineer
+Mr. Rixon Malakar,Male,1975-01-14,1814170955@yopmail.com,1814170955,HR & Admin (SPPL-CTG),"Officer, Admin"
+Mr.Rokunuzzaman,Male,1975-01-14,1814170956@yopmail.com,1814170956,Accounts & Finance (SCCL-HO),Assistant. Manager
+Mr. Romgan Ali,Male,1975-01-14,1814170957@yopmail.com,1814170957,Mechanical (SCCL-DF),Technician
+Mr.Rubel,Male,1975-01-14,1814170958@yopmail.com,1814170958,Mechanical (SCCL-DF),Assistant Technician
+Mr. Ruhul Amin,Male,1975-01-14,1814170959@yopmail.com,1814170959,Service (SPL-DF),Technician
+ Mr.Sabuj Hossain,Male,1975-01-14,1814170960@yopmail.com,1814170960,HR & Admin (SPL-HO),Caretaker
+Mr. Sadhan Kumar Sha,Male,1975-01-14,1814170961@yopmail.com,1814170961,Operation (SPL-DF),Sr. Technician
+Mr.Sagor,Male,1975-01-14,1814170962@yopmail.com,1814170962,HR & Admin (SCCL-HO),Peon
+Mr. Sahadat Hossain,Male,1975-01-14,1814170963@yopmail.com,1814170963,Mechanical (SCCL-DF),Operator
+Mr. Saidul Hasan,Male,1975-01-14,1814170964@yopmail.com,1814170964,Production (SPPL-CTG),Asst. General Manager
+Mr. Saidul Islam,Male,1975-01-14,1814170965@yopmail.com,1814170965,Mechanical (SCCL-DF),Operator
+Mr.Saidul Islam-2,Male,1975-01-14,1814170966@yopmail.com,1814170966,HR & Admin (SCCL-DF),Operator Brine
+Mr.Saiful Islam,Male,1975-01-14,1814170967@yopmail.com,1814170967,Security,SY.Guard
+Mr.Saiful Islam,Male,1975-01-14,1814170968@yopmail.com,1814170968,Quality Assurance (SCCL-DF),Lab Assistant
+Mr.Saju Mutsuddi,Male,1975-01-14,1814170969@yopmail.com,1814170969,Service (SPL-CTG),Deputy Manager
+Mr.Salauddin Khokon,Male,1975-01-14,1814170970@yopmail.com,1814170970,Production (SCCL-DF),"Operator, Pay-loader"
+Mr. Samsul Alam,Male,1975-01-14,1814170971@yopmail.com,1814170971,Production (SPPL-CTG),Sub Assistant Engineer
+Mr.Sanjit Majumder,Male,1975-01-14,1814170972@yopmail.com,1814170972,HR & Admin (SCCL-CTG),Cleaner
+Mr.Santash ,Male,1975-01-14,1814170973@yopmail.com,1814170973,Mechanical (SCCL-DF),Jr. Technician
+Mr. Sarwar Kamal,Male,1975-01-14,1814170974@yopmail.com,1814170974,Production (SPPL-CTG),Sr.Officer
+Mr. Sayad Ahmed Sikder,Male,1975-01-14,1814170975@yopmail.com,1814170975,HR & Admin (SPPL-CTG),Security Guard
+Mr. Saylesh Chandra Pal,Male,1975-01-14,1814170976@yopmail.com,1814170976,Instrument & Control (SPPL-CTG),Sr.Technician
+Mrs.Fatema Tuz Zohora,Male,1975-01-14,1814170977@yopmail.com,1814170977,Quality Assurance (SSCL-CTG),Chemist(R&D)
+Mr.Shadiqul Haqe,Male,1975-01-14,1814170978@yopmail.com,1814170978,HR & Admin (SCCL-DF),Security Guard
+Mr.Shafiqul Islam,Male,1975-01-14,1814170979@yopmail.com,1814170979,HR & Admin (SCCL-HO),Driver
+Mr.Shahab Ali,Male,1975-01-14,1814170980@yopmail.com,1814170980,HR & Admin (SCCL-DF),Security Guard
+Mr. Shahadath Hossan,Male,1975-01-14,1814170981@yopmail.com,1814170981,Production (SPPL-CTG),Junior Operator
+Mr.Shahidul Islam-2,Male,1975-01-14,1814170982@yopmail.com,1814170982,Mechanical (SCCL-DF),Assistant Technician
+Mr.Shaifuddin,Male,1975-01-14,1814170983@yopmail.com,1814170983,Blow Mould,Helper
+Mr. Shakawat Hossen,Male,1975-01-14,1814170984@yopmail.com,1814170984,Production (SPPL-CTG),Trainee Operater
+Mr. Sharan Barua,Male,1975-01-14,1814170985@yopmail.com,1814170985,Quality Assurance (SPPL-CTG),"Chemist, QC"
+Mr.Sheikh Abdullah Shawon,Male,1975-01-14,1814170986@yopmail.com,1814170986,Operation (SPPL-HO),Technician
+Mr.Sheikh Ruhul Quddus,Male,1975-01-14,1814170987@yopmail.com,1814170987,Accounts & Finance (SCCL-HO),"Senior Officer,"
+Mr. Shikat Babu Rubal,Male,1975-01-14,1814170988@yopmail.com,1814170988,Production (SPPL-CTG),Officer
+Mr.Shofi Alam,Male,1975-01-14,1814170989@yopmail.com,1814170989,Transport,Driver
+Mr. Sirajul Munir,Male,1975-01-14,1814170990@yopmail.com,1814170990,Quality Assurance (SPPL-CTG),Asstt. Chemist
+Mrs.Nipa Das gupta,Male,1975-01-14,1814170991@yopmail.com,1814170991,Quality Assurance (SSCL-CTG),Chemist(R&D)
+Mr. Soila Marma,Male,1975-01-14,1814170992@yopmail.com,1814170992,HR & Admin (SCCL-DF),Asst. Manager
+Mr. Sourav Biswas,Male,1975-01-14,1814170993@yopmail.com,1814170993,Electrical (SPPL-CTG),Trainee Engineer
+Mrs.Shahanara Ferdous,Male,1975-01-14,1814170994@yopmail.com,1814170994,HR & Admin (SCCL-HO),Jr. Officer
+Mr. Sudipta Mitra,Male,1975-01-14,1814170995@yopmail.com,1814170995,Production (SPPL-CTG),Engineer (Process)
+Mr. Sujan Saha,Male,1975-01-14,1814170996@yopmail.com,1814170996,Production (SPPL-CTG),Trainee Operater
+Mr. Sujoy Saha,Male,1975-01-14,1814170997@yopmail.com,1814170997,Operation (SPL-DF),Technician
+Mr. Sukanta Dev Roy,Male,1975-01-14,1814170998@yopmail.com,1814170998,Mechanical (SPPL-CTG),Sub Assistant Engineer
+Mr. Sukanto ,Male,1975-01-14,1814170999@yopmail.com,1814170999,Operation (SPL-DF),Asst. Technician
+Mr.Sumon Kumar Mondol,Male,1975-01-14,1814171000@yopmail.com,1814171000,Electrical & Instrument (SCCL-DF),Sub Assistant Engineer
+Mr. Swadesh Roy,Male,1975-01-14,1814171001@yopmail.com,1814171001,Production (SCCL-DF),Operator
+Mr. Swapan Chandra Mazumdar,Male,1975-01-14,1814171002@yopmail.com,1814171002,Production (SPPL-CTG),Jetty Operator
+Mr.Tajul Islam,Male,1975-01-14,1814171003@yopmail.com,1814171003,Mechanical (SCCL-DF),Mechanical Fitter
+Mr. Tanvir Ahmed,Male,1975-01-14,1814171004@yopmail.com,1814171004,Production (SPPL-CTG),Engineer (Process)
+Mr.Tapan Das,Male,1975-01-14,1814171005@yopmail.com,1814171005,Security,SY.Guard
+Mr. Tapan Dey,Male,1975-01-14,1814171006@yopmail.com,1814171006,Electrical (SPPL-CTG),"Sr. Operator, Electrical"
+Mr. Tapas Nag,Male,1975-01-14,1814171007@yopmail.com,1814171007,Production (SPPL-CTG),Jr. Officer
+Mr. Taposh Debnath,Male,1975-01-14,1814171008@yopmail.com,1814171008,Production (SPPL-CTG),Trainee Operater
+Mr.Tareq Mahmud,Male,1975-01-14,1814171009@yopmail.com,1814171009,Mechanical (SPPL-CTG),"Sub-Asstt Engineer,Civil"
+Mr. Thanbir Islam,Male,1975-01-14,1814171010@yopmail.com,1814171010,Inspection & Safety (SPPL-CTG),Trainee Fire Fighter
+Mr. Tuhidul Islam,Male,1975-01-14,1814171011@yopmail.com,1814171011,Production (SSCL-CTG),Operator
+Mr. Ubaching Marma,Male,1975-01-14,1814171012@yopmail.com,1814171012,Production (SSCL-CTG),Lab. Asst.
+Mr. Uttam Kumar Dey,Male,1975-01-14,1814171013@yopmail.com,1814171013,HR & Admin (SPPL-CTG),Driver
+Mr. Wahidunnabi,Male,1975-01-14,1814171014@yopmail.com,1814171014,Accounts & Finance (SCCL-HO),Senior Manager
+Mr. Yeakub Hossain Saiful,Male,1975-01-14,1814171015@yopmail.com,1814171015,Electrical (SPPL-CTG),Helper
+Mr. Younus Ali,Male,1975-01-14,1814171016@yopmail.com,1814171016,Production (SPPL-CTG),L.P.G Helper
+Mr. Zahed,Male,1975-01-14,1814171017@yopmail.com,1814171017,Transport,Lorry Driver
+Muhammad Alamgir Hossen,Male,1975-01-14,1814171018@yopmail.com,1814171018,Production (SCCL-CTG), Assistant Engineer
+Muhammad Rejwan Billah,Male,1975-01-14,1814171019@yopmail.com,1814171019,Production (SPPL-CTG),Engineer
+Muhammad Safiuddin,Male,1975-01-14,1814171020@yopmail.com,1814171020,Sales & Marketing (Export),"Sr.Executive, Export"
+Muzahidul Islam,Male,1975-01-14,1814171021@yopmail.com,1814171021,HR & Admin (SCCL-DF),Security Inspector
+Naim Uddin,Male,1975-01-14,1814171022@yopmail.com,1814171022,Production (SCCL-CTG),Operator
+Najim Uddin Majumder,Male,1975-01-14,1814171023@yopmail.com,1814171023,Electrical (SPPL-CTG),Sub-Asstt Engineer
+Nasim Anwar,Male,1975-01-14,1814171024@yopmail.com,1814171024,Operation (SCCL-HO),Advisor
+Nasir Uddin,Male,1975-01-14,1814171025@yopmail.com,1814171025,Transport,Lorry Driver
+Nayem Uddin,Male,1975-01-14,1814171026@yopmail.com,1814171026,Quality Assurance (SCCL-CTG),Helper
+Nazmul Wadud,Male,1975-01-14,1814171027@yopmail.com,1814171027,Sales & Marketing (SSCL-HO),Deputy  Manager (S & M)
+Nazrul Islam,Male,1975-01-14,1814171028@yopmail.com,1814171028,Transport,fork lift Operator
+Nipok Chandra Ghosh,Male,1975-01-14,1814171029@yopmail.com,1814171029,Electrical & Instrument (SCCL-DF),Assistant. Manager
+Nobel Barua,Male,1975-01-14,1814171030@yopmail.com,1814171030,Transport,Helper
+Noyon Kumar  Barua,Male,1975-01-14,1814171031@yopmail.com,1814171031,Production (SCCL-CTG),Sr.Optr 
+Nur Alam,Male,1975-01-14,1814171032@yopmail.com,1814171032,Transport,Helper
+Nurun Nobi,Male,1975-01-14,1814171033@yopmail.com,1814171033,Production (SCCL-CTG),Operator
+Pankaj Chowdhury,Male,1975-01-14,1814171034@yopmail.com,1814171034,Production (SCCL-CTG),Sr.Optr 
+Parimal Chandra Paul,Male,1975-01-14,1814171035@yopmail.com,1814171035,Electrical & Instrument (SCCL-DF),Asst.Supervisor
+Parvez Meah,Male,1975-01-14,1814171036@yopmail.com,1814171036,Transport,Helper
+Parwat Bawm,Male,1975-01-14,1814171037@yopmail.com,1814171037,Quality Assurance (SCCL-CTG),Lab Helper
+Payer Mohammad,Male,1975-01-14,1814171038@yopmail.com,1814171038,Transport,Lorry Helper
+Pradip Kumar pal,Male,1975-01-14,1814171039@yopmail.com,1814171039,Production (SSCL-CTG),Operator
+Prakash Paul,Male,1975-01-14,1814171040@yopmail.com,1814171040,Mechanical (SCCL-CTG),Sr.Mech 
+Rahat Khan Anik,Male,1975-01-14,1814171041@yopmail.com,1814171041,Accounts & Finance (SPPL-HO),Officer
+Rajesh Mutsuddi,Male,1975-01-14,1814171042@yopmail.com,1814171042,Production (SSCL-CTG),AGM
+Rajib Debnath,Male,1975-01-14,1814171043@yopmail.com,1814171043,Production (SCCL-DF),"Operator, Flaking"
+Rashed Khan,Male,1975-01-14,1814171044@yopmail.com,1814171044,Security,SY.Guard
+Rashedul Islam,Male,1975-01-14,1814171045@yopmail.com,1814171045,Delivery & VAT (SSCL-CTG),Jr. Officer
+Rezaul Khan,Male,1975-01-14,1814171046@yopmail.com,1814171046,Mechanical (SCCL-DF),Assistant Technician
+Rizwana Kalam,Male,1975-01-14,1814171047@yopmail.com,1814171047,Management (SCCL-HO),Director
+Ronald Rupam Biswas,Male,1975-01-14,1814171048@yopmail.com,1814171048,Production (SCCL-CTG),Trainee Engineer
+Rony Barua Chowdhury,Male,1975-01-14,1814171049@yopmail.com,1814171049,Security,Security Guard
+Sabbir Ahmed,Male,1975-01-14,1814171050@yopmail.com,1814171050,Quality Assurance (SCCL-CTG),Lab Assistant
+Saidul Islam,Male,1975-01-14,1814171051@yopmail.com,1814171051,Electrical & Instrument (SCCL-DF),Assistant Electrician
+Sajjad Hossain,Male,1975-01-14,1814171052@yopmail.com,1814171052,Production (SCCL-CTG),Operator
+Salim Ahmed,Male,1975-01-14,1814171053@yopmail.com,1814171053,Blow Mould,Deputy Manager
+Santo Talukder,Male,1975-01-14,1814171054@yopmail.com,1814171054,Security,SY.Guard
+Sarwar Kamal Rayhan,Male,1975-01-14,1814171055@yopmail.com,1814171055,Production (SCCL-CTG),Trainee Engineer
+Sazzad Hossain,Male,1975-01-14,1814171056@yopmail.com,1814171056,Electrical (SPPL-CTG),Sub-Asstt Engineer
+Shadhan Kumar Kundu,Male,1975-01-14,1814171057@yopmail.com,1814171057,HR & Admin (SCCL-DF),Security Guard
+Shafayet Jamil,Male,1975-01-14,1814171058@yopmail.com,1814171058,Production (SCCL-CTG),Engineer
+"Shafiqul Islam,Sr-01",Male,1975-01-14,1814171059@yopmail.com,1814171059,Mechanical (SCCL-DF),Mechanical Fitter
+Shafiul Azam Sujan,Male,1975-01-14,1814171060@yopmail.com,1814171060,Transport,Lorry Helper
+Shafiul Islam Sumon,Male,1975-01-14,1814171061@yopmail.com,1814171061,Mechanical (SCCL-DF),Technician
+Shafkat Bin Jamal,Male,1975-01-14,1814171062@yopmail.com,1814171062,Production (SCCL-CTG),Trainee Production Engineer
+Shahinul Islam,Male,1975-01-14,1814171063@yopmail.com,1814171063,Production (SCCL-DF),Process Chemist
+Shakauat Hossain Khan Pathan,Male,1975-01-14,1814171064@yopmail.com,1814171064,Production (SCCL-DF),Operator
+Shakil,Male,1975-01-14,1814171065@yopmail.com,1814171065,Accounts & Finance (SCCL-HO),Senior Officer
+Sharif Ahmad,Male,1975-01-14,1814171066@yopmail.com,1814171066,Production (SCCL-DF),"Asst. Manager, Flaking"
+Shariful Alam,Male,1975-01-14,1814171067@yopmail.com,1814171067,Production (SCCL-CTG),Engineer
+Sheikh Md. Rafsan,Male,1975-01-14,1814171068@yopmail.com,1814171068,Sales & Marketing (Caustic),Officer
+Shifuddin,Male,1975-01-14,1814171069@yopmail.com,1814171069,Transport,Lorry Helper
+Shiplo Das,Male,1975-01-14,1814171070@yopmail.com,1814171070,Blow Mould,Helper
+Showkat Hossen,Male,1975-01-14,1814171071@yopmail.com,1814171071,Delivery & VAT (SCCL-CTG),Jr. Officer
+Shuvankar Biswas,Male,1975-01-14,1814171072@yopmail.com,1814171072,Electrical & Instrument (SCCL-DF),Engineer
+Shuvasis Datta,Male,1975-01-14,1814171073@yopmail.com,1814171073,Instrument & Control (SPPL-CTG),Engineer
+Shuvo Raj Paul,Male,1975-01-14,1814171074@yopmail.com,1814171074,Electrical (SPPL-CTG),"Engineer, Electrical"
+Siraj Meah,Male,1975-01-14,1814171075@yopmail.com,1814171075,Transport,Helper
+SM Osman,Male,1975-01-14,1814171076@yopmail.com,1814171076,Store (SCCL-CTG),Store Clerk
+SM Sarwar Alam,Male,1975-01-14,1814171077@yopmail.com,1814171077,Electrical & Instrument (SCCL-CTG),Sr. Manager
+Sohel Ahmed,Male,1975-01-14,1814171078@yopmail.com,1814171078,Service (SPL-CTG),SAE
+Sohel Rana,Male,1975-01-14,1814171079@yopmail.com,1814171079,Transport,Lorry Driver
+Sourav Barua,Male,1975-01-14,1814171080@yopmail.com,1814171080,Production (SCCL-CTG),Trainee Engineer
+Sourov Mutsuddy,Male,1975-01-14,1814171081@yopmail.com,1814171081,Operation (SPL-HO),Deputy General Manager
+Sowmitro Baidho,Male,1975-01-14,1814171082@yopmail.com,1814171082,Production (SCCL-CTG),Sr.Optr 
+Sudham Kumar ,Male,1975-01-14,1814171083@yopmail.com,1814171083,Electrical & Instrument (SCCL-DF),
+Sugata Chakma,Male,1975-01-14,1814171084@yopmail.com,1814171084,Operation (SPPL-CTG),Jr. Officer (operation)
+Sujit Kumer Choudhury,Male,1975-01-14,1814171085@yopmail.com,1814171085,Production (SCCL-DF),Manager
+Sultan Ahmed,Male,1975-01-14,1814171086@yopmail.com,1814171086,Transport, Truck Driver
+Sultan Ahmed,Male,1975-01-14,1814171087@yopmail.com,1814171087,,
+Suman Chandra Saha,Male,1975-01-14,1814171088@yopmail.com,1814171088,Production (SCCL-DF),Sr.Officer
+Sumon Barua,Male,1975-01-14,1814171089@yopmail.com,1814171089,Mechanical (SCCL-CTG),Fitter
+Suruj Meah,Male,1975-01-14,1814171090@yopmail.com,1814171090,Electrical & Instrument (SCCL-CTG),Electrician
+Syed Aminul Islam,Male,1975-01-14,1814171091@yopmail.com,1814171091,Production (SCCL-CTG),Trainee Production Engineer
+Syed Muhamad Amran,Male,1975-01-14,1814171092@yopmail.com,1814171092,Supply Chain Local (SCCL-HO),Manager
+Tamzid Azim,Male,1975-01-14,1814171093@yopmail.com,1814171093,Electrical (SPPL-CTG),"Engineer, Electrical"
+Tarek Ahmed,Male,1975-01-14,1814171094@yopmail.com,1814171094,Production (SCCL-CTG),Trainee Engineer
+Tayab Mostafa Mamun,Male,1975-01-14,1814171095@yopmail.com,1814171095,Production (SSCL-CTG),Operater
+Thaimong Marma,Male,1975-01-14,1814171096@yopmail.com,1814171096,Security,SY.Guard
+Thuihalau Marma,Male,1975-01-14,1814171097@yopmail.com,1814171097,Quality Assurance (SCCL-CTG),Helper
+Tota Miah,Male,1975-01-14,1814171098@yopmail.com,1814171098,Production (SCCL-DF),Asst.Officer
+Uday Som,Male,1975-01-14,1814171099@yopmail.com,1814171099,Production (SCCL-CTG),Trainee Production Engineer
+Utpal Komer Prasadi,Male,1975-01-14,1814171100@yopmail.com,1814171100,Production (SCCL-DF),Sr. Deputy General Manager (Plant In-charge)
+Uttam Chakraborty,Male,1975-01-14,1814171101@yopmail.com,1814171101,Production (SCCL-CTG),Asst. Manager
+Yasin Arafat,Male,1975-01-14,1814171102@yopmail.com,1814171102,Electrical & Instrument (SCCL-CTG),Operator
+Zahidul Islam Sayeem,Male,1975-01-14,1814171103@yopmail.com,1814171103,Production,"Engineer, IPE"
+Zayed Iqbal Marshal,Male,1975-01-14,1814171104@yopmail.com,1814171104,Production (SCCL-CTG),Sr.Officer
