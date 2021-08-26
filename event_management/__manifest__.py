@@ -28,7 +28,6 @@
         'wizard/data_import_wizard_view.xml',
         'views/menu_view.xml',
         'views/event_type_view.xml',
-        'views/dashboard.xml',
         'views/event_room_view.xml',
         'views/event_room_book_view.xml',
         'views/event_task_type_view.xml',

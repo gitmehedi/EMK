@@ -21,7 +21,9 @@
                     <attribute name="groups">event_user.group_event_administration</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
                     <attribute name="groups">event_user.group_event_administration</attribute>
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="attributes">
                     <attribute name="required">True</attribute>
@@ -35,10 +37,14 @@
                     <attribute name="required">True</attribute>
                     <attribute name="attrs">{'readonly' : [('state','=','done')]}</attribute>
                 </xpath>
+                <xpath expr="//field[@name='event_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='email']" position="after">
-                    <field name="date_of_birth" attrs="{'readonly' : [('state','=','done')]}"/>
+                    <field name="date_of_birth" required="True" attrs="{'readonly' : [('state','=','done')]}"/>
                     <field name="gender" attrs="{'readonly' : [('state','=','done')]}"/>
-                    <field name="profession_id" attrs="{'readonly' : [('state','=','done')]}"/>
+                    <field name="profession_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                           attrs="{'readonly' : [('state','=','done')]}"/>
                     <field name="card_number" attrs="{'readonly' : [('state','=','done')]}"/>
                 </xpath>
             </field>
@@ -48,33 +54,70 @@
             <field name="model">event.registration</field>
             <field name="inherit_id" ref="event.view_event_registration_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-bf">state in ('draft','open')</attribute>
-                    <attribute name="decoration-warning">state == 'draft'</attribute>
-                    <attribute name="decoration-success">state == 'open'</attribute>
-                    <attribute name="decoration-danger">state == 'cancel'</attribute>
-                    <attribute name="decoration-muted">state == 'done'</attribute>
+                <xpath expr="//tree" position="replace">
+                    <tree string="Registration" decoration-bf="state in ('draft','open')"
+                          colors="orange:state=='draft';green:state=='open';salmon:state=='cancel';silver:state=='done';">
+                        <field name="event_id"/>
+                        <field name="create_date"/>
+                        <field name="name"/>
+                        <field name="phone"/>
+                        <field name="email"/>
+                        <field name="state"/>
+                        <field name="message_needaction" invisible="1"/>
+                        <button name="confirm_registration" string="Confirm Registration" states="draft" type="object"
+                                icon="fa-check text-success"/>
+                        <button name="button_reg_close" string="Attended the Event" states="open" type="object"
+                                icon="fa-level-down text-success"/>
+                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"
+                                icon="fa-times-circle text-danger"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="inherit_view_registration_search">
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_registration_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="replace">
+                    <search string="Event Registration">
+                        <field name="id" string="Registration ID"/>
+                        <field name="event_id" string="Registration ID"/>
+                        <field name="name" string="Participant"
+                               filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
+                        <separator/>
+                        <field name="event_id"/>
+                        <field name="partner_id" string="Organizer"/>
+                        <group expand="0" string="Group By">
+                            <filter string="Organizer" domain="[]" context="{'group_by':'partner_id'}"/>
+                            <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
+                            <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                            <filter string="Registration Day" domain="[]" context="{'group_by': 'create_date:day'}"/>
+                            <filter string="Registration Month" domain="[]"
+                                    context="{'group_by': 'create_date:month'}"/>
+                        </group>
+                    </search>
                 </xpath>
             </field>
         </record>
 
 
-<!--        <record model="ir.ui.view" id="inherit_event_registration_view_form_inherit_barcode">-->
-<!--            <field name="name">inherit.event.registration.view.form.inherit.barcode</field>-->
-<!--            <field name="inherit_id" ref="event_barcode.event_registration_view_form_inherit_barcode"/>-->
-<!--            <field name="model">event.registration</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <xpath expr="//field[@name='barcode']" position="replace"></xpath>-->
-<!--                <xpath expr="//form/sheet/group" position="before">-->
-<!--                    <div class="oe_title">-->
-<!--                        <label for="barcode"/>-->
-<!--                        <h2>-->
-<!--                            <field name="barcode"/>-->
-<!--                        </h2>-->
-<!--                    </div>-->
-<!--                </xpath>-->
-<!--            </field>-->
-<!--        </record>-->
+        <!--        <record model="ir.ui.view" id="inherit_event_registration_view_form_inherit_barcode">-->
+        <!--            <field name="name">inherit.event.registration.view.form.inherit.barcode</field>-->
+        <!--            <field name="inherit_id" ref="event_barcode.event_registration_view_form_inherit_barcode"/>-->
+        <!--            <field name="model">event.registration</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <xpath expr="//field[@name='barcode']" position="replace"></xpath>-->
+        <!--                <xpath expr="//form/sheet/group" position="before">-->
+        <!--                    <div class="oe_title">-->
+        <!--                        <label for="barcode"/>-->
+        <!--                        <h2>-->
+        <!--                            <field name="barcode"/>-->
+        <!--                        </h2>-->
+        <!--                    </div>-->
+        <!--                </xpath>-->
+        <!--            </field>-->
+        <!--        </record>-->
 
 
         <record model="ir.ui.view" id="view_attendee_profession_form">
