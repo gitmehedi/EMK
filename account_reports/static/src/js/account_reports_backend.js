@@ -327,6 +327,25 @@ var account_report_generic = Widget.extend(ControlPanelMixin, {
             });
 
         }
+
+        if (this.report_context.unit_ids && this.report_context.unit) {
+
+            this.$searchview_buttons.find(".o_account_reports_unit_auto_complete").select2();
+            var selection = [];
+            for (i = 0; i < this.report_context.unit_ids.length; i++) {
+                var dept = this.report_context.unit_ids[i];
+                selection.push({id:dept[0], text:dept[1]});
+            }
+            this.$searchview_buttons.find('.o_account_reports_unit_auto_complete').data().select2.updateSelection(selection);
+
+            this.$searchview_buttons.find('.o_account_reports_add_unit').bind('click', function (event) {
+                var report_context = {};
+                var value = self.$searchview_buttons.find(".o_account_reports_unit_auto_complete").select2("val");
+                report_context.unit_ids = value;
+                self.restart(report_context);
+            });
+
+        }
         // End Bappy
 
         this.$searchview_buttons.find('li').bind('click', function (event) {event.stopImmediatePropagation();});

@@ -281,6 +281,28 @@
                 </li>
             </ul>
         </div>
+
+
+        <div class="btn-group o_dropdown o_account_reports_unit-filter" t-if="context.unit">
+            <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="fa fa-filter"/>Unit:
+                <span class="caret"/>
+            </a>
+            <ul class="dropdown-menu o_filters_menu" role="menu">
+                <li style='margin-left: 10px; margin-right: 10px;'>
+                    <label>Unit</label><br />
+                    <div class="form-group">
+                        <select class="o_account_reports_unit_auto_complete" multiple="multiple" style="min-width: 100px;">
+                            <t t-foreach="context.available_unit_ids" t-as="a">
+                                <option t-att-value="a[0]"><t t-esc="a[1]" /></option>
+                            </t>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary o_account_reports_add_unit">Apply</button>
+                </li>
+            </ul>
+        </div>
+
         <!--End Bappy-->
 
 

@@ -21,6 +21,7 @@ class ReportAccountFinancialReport(models.Model):
     initial_balance = fields.Boolean('Show Initial Balance Columns')
     cost_center = fields.Boolean('Show Cost Center Filter')
     department = fields.Boolean('Show Department Filter')
+    unit = fields.Boolean('Show Unit Filter')
     line_ids = fields.One2many('account.financial.html.report.line', 'financial_report_id', string='Lines')
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('no_date_range', 'Based on a single date'),
@@ -161,7 +162,8 @@ class ReportAccountFinancialReport(models.Model):
             analytic_account_ids=context_id.analytic_account_ids,
             analytic_tag_ids=context_id.analytic_tag_ids,
             cost_center_ids=context_id.cost_center_ids,
-            department_ids=context_id.department_ids
+            department_ids=context_id.department_ids,
+            operating_unit_ids=context_id.unit_ids.ids
         ).get_lines(self, context_id, currency_table, linesDicts)
         return res
 

@@ -38,6 +38,7 @@ class report_account_general_ledger(models.AbstractModel):
             'analytic_tag_ids': context_id.analytic_tag_ids,
             'cost_center_ids': context_id.cost_center_ids,
             'department_ids': context_id.department_ids,
+            'unit_ids': context_id.unit_ids
         })
         return self.with_context(new_context)._lines(line_id)
 
@@ -191,6 +192,8 @@ class report_account_general_ledger(models.AbstractModel):
             base_domain += [('cost_center_id', 'in', context['cost_center_ids'].ids)]
         if context.get('department_ids'):
             base_domain += [('department_id', 'in', context['department_ids'].ids)]
+        if context.get('unit_ids'):
+            base_domain += [('unit_id', 'in', context['unit_ids'].ids)]
         for account_id, result in results.items():
             domain = list(base_domain)  # copying the base domain
             domain.append(('account_id', '=', account_id))

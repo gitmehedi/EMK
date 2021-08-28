@@ -119,6 +119,16 @@ class AccountReportDepartmentManager(models.TransientModel):
     def get_available_department_ids_and_names(self):
         return [[a.id, a.name] for a in self.env['hr.department'].search([], order='name asc')]
 
+class AccountReportUnitManager(models.TransientModel):
+    _name = 'account.report.unit.manager'
+    _description = 'manages unit filters for reports'
+
+    unit_ids = fields.Many2many('operating.unit', relation='account_report_context_unit_rel')
+
+    @api.multi
+    def get_available_unit_ids_and_names(self):
+        return [[a.id, a.name] for a in self.env['operating.unit'].search([], order='name asc')]
+
 #       Bappy End
 
 class AccountReportContextCommon(models.TransientModel):
@@ -131,6 +141,7 @@ class AccountReportContextCommon(models.TransientModel):
         'account.report.analytic.manager': 'analytic_manager_id',
         'account.report.cost.center.manager': 'cost_center_manager_id',
         'account.report.department.manager': 'department_manager_id',
+        'account.report.unit.manager': 'unit_manager_id',
     }
 
     @api.model
@@ -231,6 +242,7 @@ class AccountReportContextCommon(models.TransientModel):
     analytic_manager_id = fields.Many2one('account.report.analytic.manager', string='Analytic Filters Manager', required=True, ondelete='cascade')
     cost_center_manager_id = fields.Many2one('account.report.cost.center.manager', string='Cost Center Filters Manager', required=True, ondelete='cascade')
     department_manager_id = fields.Many2one('account.report.department.manager', string='Department Filters Manager', required=True, ondelete='cascade')
+    unit_manager_id = fields.Many2one('account.report.unit.manager', string='Unit Filters Manager', required=True, ondelete='cascade')
 
     def get_tax_action(self, tax_type, active_id):
         name = tax_type == 'net' and _('Net Tax Lines') or _('Tax Lines')
@@ -551,6 +563,12 @@ class AccountReportContextCommon(models.TransientModel):
         result['report_context']['department_ids'] = [(t.id, t.name) for t in self.department_ids]
         result['report_context']['available_department_ids'] = self.department_manager_id.get_available_department_ids_and_names()
 
+        if hasattr(rcontext['report'], 'unit'):
+            result['report_context']['unit'] = rcontext['report'].unit
+
+        result['report_context']['unit_ids'] = [(t.id, t.name) for t in self.unit_ids]
+        result['report_context']['available_unit_ids'] = self.unit_manager_id.get_available_unit_ids_and_names()
+
         return result
 
     @api.model
@@ -705,7 +723,7 @@ class AccountReportContextCommon(models.TransientModel):
                     given_context[field] = False
                 if given_context[field] == 'none':
                     given_context[field] = None
-                if field in ['analytic_account_ids', 'analytic_tag_ids', 'company_ids', 'cost_center_ids', 'department_ids']: #  Needs to be treated differently as they are many2many
+                if field in ['analytic_account_ids', 'analytic_tag_ids', 'company_ids', 'cost_center_ids', 'department_ids', 'unit_ids']: #  Needs to be treated differently as they are many2many
                     update[field] = [(6, 0, [int(id) for id in given_context[field]])]
                 else:
                     update[field] = given_context[field]
