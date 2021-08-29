@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-    <menuitem name="Members Payment" id="sub_pay_daily_operations" parent="membership.menu_association"
+    <menuitem name="Member Payments" id="sub_menu_member_payment" parent="emk_payment.main_menu_payment"
               groups="membership_user.group_mem_user_officer" sequence="1"/>
 </odoo>

@@ -32,33 +32,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Invoice Payments">
-                            <field name="member_fee_ids">
-                                <tree string="Invoice Payment" decoration-bf="state == 'draft'"
-                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
-                                    <field name="invoice_type"/>
-                                    <field name="payment_partner_id"/>
-                                    <field name="payment_ref"/>
-                                    <field name="journal_id"/>
-                                    <field name="date"/>
-                                    <field name="state"/>
-                                    <field name="paid_amount" sum="paid_amount"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Service Payments">
-                            <field name="service_fee_ids">
-                                <tree string="Service Payment" decoration-bf="state == 'draft'"
-                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
-                                    <field name="payment_type_id"/>
-                                    <field name="membership_id"/>
-                                    <field name="journal_id"/>
-                                    <field name="collection_date"/>
-                                    <field name="state"/>
-                                    <field name="paid_amount" sum="paid_amount"/>
-                                </tree>
-                            </field>
-                        </page>
+
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -97,7 +71,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_payment_session" parent="sub_pay_daily_operations"
+    <menuitem id="menu_payment_session" parent="sub_menu_payment"
               action="action_payment_session" sequence="5"
               groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
 

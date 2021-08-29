@@ -7,13 +7,11 @@ from odoo.exceptions import ValidationError, UserError
 class PaymentSession(models.Model):
     _inherit = 'payment.session'
 
-    total_amount = fields.Float(string="Total Amount", digits=(10, 2), compute="_compute_total_amount",
-                                track_visibility="onchange")
-
-    member_fee_ids = fields.One2many('member.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
+    member_fee_ids = fields.One2many('invoice.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
                                      string='Membership Fee', track_visibility="onchange")
     service_fee_ids = fields.One2many('service.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
                                       string='Service Fee', track_visibility="onchange")
+    total_amount = fields.Float(compute="_compute_total_amount")
 
     @api.depends('member_fee_ids', 'service_fee_ids')
     def _compute_total_amount(self):

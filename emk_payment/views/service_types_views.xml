@@ -10,9 +10,9 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="type" invisible="True"/>
+                            <field name="type"/>
                             <field name="categ_id" invisible="True"/>
-                            <field name="list_price"/>
+                            <field name="list_price" string="Price" required="True"/>
                         </group>
                     </group>
                 </sheet>
@@ -32,7 +32,7 @@
                 <field name="name"/>
                 <field name="type" invisible="True"/>
                 <field name="categ_id" invisible="True"/>
-                <field name="list_price"/>
+                <field name="list_price" string="Price"/>
             </tree>
         </field>
     </record>
@@ -42,13 +42,12 @@
         <field name="domain">[('type','=','service'),('sale_ok','=',False),('purchase_ok','=',False)]</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Create a new service Types
+                Create a new Service Types
             </p>
         </field>
     </record>
 
-    <menuitem name="Service Types" id="service_fee" action="action_service_fee_product" sequence="100"
-              parent="membership.menu_marketing_config_association"
+    <menuitem name="Service Types" id="service_fee" action="action_service_fee_product" sequence="1"
+              parent="sub_menu_config"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-
 </odoo>

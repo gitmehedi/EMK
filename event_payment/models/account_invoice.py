@@ -2,8 +2,7 @@ from odoo import models, fields, api, _
 
 
 class ResPartner(models.Model):
-    _name = 'account.invoice'
-    _inherit = ['account.invoice', 'mail.thread', 'ir.needaction_mixin']
+    _inherit = 'account.invoice'
 
     @api.multi
     def notify_due_invoice(self):
@@ -15,5 +14,3 @@ class ResPartner(models.Model):
                 'context': {'name': rec.partner_id.name},
             }
             self.env['res.partner'].mailsend(vals)
-
-

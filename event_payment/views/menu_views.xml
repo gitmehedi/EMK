@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem name="Event Payments" id="menu_event_payment" parent="emk_payment.main_menu_payment"
+              groups="membership_user.group_mem_user_officer,event_user.group_event_administration" sequence="10"/>
+</odoo>

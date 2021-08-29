@@ -21,11 +21,6 @@ class PaymentSession(models.Model):
                               track_visibility="onchange")
     total_amount = fields.Float(string="Total Amount", digits=(10, 2), compute="_compute_total_amount",
                                 track_visibility="onchange")
-
-    member_fee_ids = fields.One2many('invoice.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
-                                     string='Membership Fee', track_visibility="onchange")
-    service_fee_ids = fields.One2many('service.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
-                                      string='Service Fee', track_visibility="onchange")
     user_id = fields.Many2one('res.partner', string='Responsible', required=True, default=get_default_user,
                               track_visibility="onchange")
     open = fields.Boolean(default=True, track_visibility="onchange")
@@ -33,12 +28,6 @@ class PaymentSession(models.Model):
     state = fields.Selection([('opened', 'Opened'), ('validate', 'Validate'), ('closed', 'Closed')], default='opened',
                              string='State', track_visibility="onchange")
 
-    @api.depends('member_fee_ids', 'service_fee_ids')
-    def _compute_total_amount(self):
-        for rec in self:
-            mem_coll = sum([val.paid_amount for val in rec.member_fee_ids])
-            ser_coll = sum([val.paid_amount for val in rec.service_fee_ids])
-            rec.total_amount = mem_coll + ser_coll
 
     @api.model
     def create(self, vals):

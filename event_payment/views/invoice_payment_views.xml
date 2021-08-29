@@ -71,7 +71,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_membership_fee" parent="sub_pay_daily_operations"
+    <menuitem id="menu_membership_fee" parent="menu_event_payment"
               action="action_membership_payment" sequence="15"
               groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
 

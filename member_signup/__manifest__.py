@@ -41,7 +41,6 @@
         'views/member_config_views.xml',
         'views/rfid_generation_views.xml',
         'views/member_config_settings_view.xml',
-        'views/service_types_views.xml',
         'report/rfid_print_views.xml',
     ],
     'installable': True,

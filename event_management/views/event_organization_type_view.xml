@@ -43,7 +43,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_organization_type">
-            <field name="name">Event Organization Types</field>
+            <field name="name">Organization Types</field>
             <field name="res_model">event.organization.type</field>
             <field name="view_type">form</field>
         </record>

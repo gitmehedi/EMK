@@ -14,3 +14,8 @@ class ResPartner(models.Model):
                 'context': {'name': rec.partner_id.name},
             }
             self.env['res.partner'].mailsend(vals)
+
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'open')]

@@ -180,7 +180,7 @@
         <field name="model">account.invoice</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Due Invoice" create="0" decoration-danger="state == 'open'">
+            <tree string="Due Invoice" create="0">
                 <field name="partner_id" groups="base.group_user" string="Customer"/>
                 <field name="date_invoice"/>
                 <field name="number"/>
@@ -226,8 +226,8 @@
         <field name="act_window_id" ref="act_invoice_due"/>
     </record>
 
-    <menuitem id="sub_due_invoice" parent="sub_menu_member_payment" sequence="15"
-              action="act_invoice_due" groups="membership_user.group_mem_user_officer"/>
-
+    <menuitem id="sub_due_invoice" parent="menu_event_payment" sequence="20"
+              action="act_invoice_due"
+              groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
 
 </odoo>

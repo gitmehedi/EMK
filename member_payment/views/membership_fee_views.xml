@@ -68,8 +68,8 @@
         </field>
     </record>
 
-    <menuitem id="menu_membership_fee" parent="sub_pay_daily_operations"
-              action="action_membership_payment" sequence="10"
+    <menuitem id="menu_membership_fee" parent="sub_menu_member_payment"
+              action="action_membership_payment" sequence="5"
               groups="membership_user.group_mem_user_officer"/>
 
 
