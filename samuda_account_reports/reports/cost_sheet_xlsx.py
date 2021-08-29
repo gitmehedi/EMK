@@ -16,13 +16,14 @@ IE_ORDER = {
     9: 'amortization',
     10: 'depreciation',
     11: 'manufacturing_cost',
-    12: 'cogs',
-    13: 'administrative',
-    14: 'finance',
-    15: 'marketing',
-    16: 'distribution',
-    17: 'total_cost',
-    18: 'profit_loss'
+    12: 'direct_cost_and_depreciation',
+    13: 'cogs',
+    14: 'administrative',
+    15: 'finance',
+    16: 'marketing',
+    17: 'distribution',
+    18: 'total_cost',
+    19: 'profit_loss'
 }
 IE_NAME = {
     'revenue': 'Revenue',
@@ -37,6 +38,7 @@ IE_NAME = {
     'amortization': 'Amortization',
     'depreciation': 'Depreciation',
     'manufacturing_cost': 'Manufacturing Cost',
+    'direct_cost_and_depreciation': 'Direct Cost & Depreciation',
     'cogs': 'Cost Of Goods Sold',
     'administrative': 'Administrative Expenses',
     'finance': 'Finance Expenses',
@@ -58,7 +60,7 @@ ACCOUNT_TAG = {
     'distribution': 'CS-Dist Exp'
 }
 
-GROUP_TOTAL_NAMES = ['direct_material', 'prime_cost', 'manufacturing_cost', 'total_cost', 'profit_loss']
+GROUP_TOTAL_NAMES = ['direct_material', 'prime_cost', 'manufacturing_cost', 'direct_cost_and_depreciation', 'total_cost', 'profit_loss']
 INCOME_USER_TYPE_ID = 14
 RM_CATEGORY_ID = 69
 PM_CATEGORY_ID = 70
@@ -79,23 +81,54 @@ class CostSheetXLSX(ReportXlsx):
     def _get_revenue(self, obj, date_from, date_to):
         item_list = []
 
+        # prepare where clause
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
         account_ids = self.env['account.account'].search([('user_type_id', '=', INCOME_USER_TYPE_ID)]).ids
         if account_ids:
             param = (tuple(account_ids),)
             where_clause += " AND aml.account_id IN %s" % param
+        # end
 
+        # get sales qty
         sql_str = """SELECT
-                        aml.cost_center_id,
-                        acc.name,
-                        COALESCE(SUM(aml.quantity), 0) AS quantity,
-                        -(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        cost_center_id,
+                        name,
+                        SUM(quantity) AS quantity,
+                        SUM(amount) AS amount
                     FROM
-                        account_move_line aml
-                        JOIN account_move mv ON mv.id=aml.move_id
-                        JOIN account_cost_center acc ON acc.id=aml.cost_center_id
-                    """ + where_clause + """ GROUP BY aml.cost_center_id,acc.name 
-                    ORDER BY aml.cost_center_id"""
+                        ((SELECT
+                            aml.cost_center_id,
+                            acc.name,
+                            CASE 
+                                WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(SUM(aml.quantity), 0)
+                                ELSE (p.ratio_in_percentage * COALESCE(SUM(aml.quantity), 0) / 100) 
+                            END AS quantity,
+                            0 AS amount
+                        FROM
+                            account_move_line aml
+                            JOIN account_move mv ON mv.id=aml.move_id
+                            JOIN account_invoice i ON i.move_id=mv.id AND i.type='out_invoice'
+                            JOIN account_invoice_line l ON l.invoice_id=i.id
+                            JOIN product_product p ON p.id=l.product_id
+                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                        """ + where_clause + """
+                        GROUP BY aml.cost_center_id,acc.name,p.ratio_in_percentage 
+                        ORDER BY aml.cost_center_id)
+                        UNION
+                        (SELECT
+                            aml.cost_center_id,
+                            acc.name,
+                            COALESCE(SUM(aml.quantity), 0) AS quantity,
+                            -(SUM(aml.debit)-SUM(aml.credit)) AS amount
+                        FROM
+                            account_move_line aml
+                            JOIN account_move mv ON mv.id=aml.move_id
+                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                        """ + where_clause + """ 
+                        GROUP BY aml.cost_center_id,acc.name 
+                        ORDER BY aml.cost_center_id)) AS tbl
+                    GROUP BY cost_center_id,name
+        """
 
         self.env.cr.execute(sql_str)
         for row in self.env.cr.dictfetchall():
@@ -137,48 +170,32 @@ class CostSheetXLSX(ReportXlsx):
         return item_list
 
     def _get_raw_material(self, obj, date_from, date_to):
-        where_clause = """ WHERE mrp.state='done' AND m.state='done' AND m.company_id=%s AND pt.cost_center_id=%s
-        AND DATE(m.date + interval '6h') BETWEEN DATE('%s')+time '00:00' AND DATE('%s')+time '23:59:59'""" % (
-        self.env.user.company_id.id, obj.cost_center_id.id, date_from, date_to)
+        item_list = []
+        Product = self.env['product.product']
+
+        # Where Clause
+        where_clause = """ 
+                        WHERE
+                            DATE(m.date + interval '6h') BETWEEN DATE('%s')+time '00:00' AND DATE('%s')+time '23:59:59'
+                            AND pt.cost_center_id=%s
+                            AND m.company_id=%s 
+                            AND m.state='done'
+                """ % (date_from, date_to, obj.cost_center_id.id, self.env.user.company_id.id)
 
         if obj.operating_unit_id:
             where_clause += " AND mrp.operating_unit_id=%s" % obj.operating_unit_id.id
 
-        sql = """SELECT
-                        SUM(m.quantity_done_store) AS quantity
-                    FROM
-                        stock_move m
-                        JOIN mrp_production mrp ON mrp.id=m.production_id
-                        JOIN product_product pp ON pp.id=m.product_id
-                        JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                        JOIN account_cost_center acc ON acc.id=pt.cost_center_id
-                    """ + where_clause
+        # PRODUCTION QTY
+        sql_str_of_production_qty = self._prepare_query_of_production_quantity(where_clause)
+        # execute the query
+        self.env.cr.execute(sql_str_of_production_qty)
+        production_qty = sum(row['quantity'] for row in self.env.cr.dictfetchall()) or 0.0
 
-        production_qty = 0
-        self.env.cr.execute(sql)
-        for row in self.env.cr.dictfetchall():
-            production_qty += row['quantity'] or 0.0
+        # RAW MATERIAL
+        where_clause += " AND t.categ_id!=%s" % PM_CATEGORY_ID
+        sql_str_of_raw_material = self._prepare_query_of_raw_and_packing_material(where_clause)
 
-        sql_str = """SELECT
-                        m.product_id,
-                        t.name,
-                        0.0 AS quantity,
-                        SUM(m.quantity_done_store * m.price_unit) AS amount
-                    FROM
-                        stock_move m
-                        JOIN product_product p ON p.id=m.product_id
-                        JOIN product_template t ON t.id=p.product_tmpl_id
-                        JOIN product_category c ON c.id=t.categ_id
-                        JOIN mrp_production mrp ON mrp.id=m.raw_material_production_id
-                        JOIN product_product pp ON pp.id=mrp.product_id
-                        JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                        JOIN account_cost_center acc ON acc.id=pt.cost_center_id
-                    """ + where_clause + """ AND t.categ_id!=%s GROUP BY m.product_id,t.name ORDER BY m.product_id,t.name""" % PM_CATEGORY_ID
-
-        item_list = []
-        Product = self.env['product.product']
-
-        self.env.cr.execute(sql_str)
+        self.env.cr.execute(sql_str_of_raw_material)
         for row in self.env.cr.dictfetchall():
             product = Product.search([('id', '=', row['product_id']), ('active', '=', True)])
             row['name'] = product[0].display_name
@@ -188,48 +205,32 @@ class CostSheetXLSX(ReportXlsx):
         return item_list
 
     def _get_packing_material(self, obj, date_from, date_to):
-        where_clause = """ WHERE mrp.state='done' AND m.state='done' AND m.company_id=%s AND pt.cost_center_id=%s
-                AND DATE(m.date + interval '6h') BETWEEN DATE('%s')+time '00:00' AND DATE('%s')+time '23:59:59'""" % (
-            self.env.user.company_id.id, obj.cost_center_id.id, date_from, date_to)
+        item_list = []
+        Product = self.env['product.product']
+
+        # Where Clause
+        where_clause = """ 
+                        WHERE
+                            DATE(m.date + interval '6h') BETWEEN DATE('%s')+time '00:00' AND DATE('%s')+time '23:59:59'
+                            AND pt.cost_center_id=%s
+                            AND m.company_id=%s 
+                            AND m.state='done'
+                """ % (date_from, date_to, obj.cost_center_id.id, self.env.user.company_id.id)
 
         if obj.operating_unit_id:
             where_clause += " AND mrp.operating_unit_id=%s" % obj.operating_unit_id.id
 
-        sql = """SELECT
-                    SUM(m.quantity_done_store) AS quantity
-                FROM
-                    stock_move m
-                    JOIN mrp_production mrp ON mrp.id=m.production_id
-                    JOIN product_product pp ON pp.id=m.product_id
-                    JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                    JOIN account_cost_center acc ON acc.id=pt.cost_center_id
-                """ + where_clause
+        # PRODUCTION QTY
+        sql_str_of_production_qty = self._prepare_query_of_production_quantity(where_clause)
+        # execute the query
+        self.env.cr.execute(sql_str_of_production_qty)
+        production_qty = sum(row['quantity'] for row in self.env.cr.dictfetchall()) or 0.0
 
-        production_qty = 0
-        self.env.cr.execute(sql)
-        for row in self.env.cr.dictfetchall():
-            production_qty += row['quantity'] or 0.0
+        # PACKING MATERIAL
+        where_clause += " AND t.categ_id=%s" % PM_CATEGORY_ID
+        sql_str_of_packing_material = self._prepare_query_of_raw_and_packing_material(where_clause)
 
-        sql_str = """SELECT
-                        m.product_id,
-                        t.name,
-                        0.0 AS quantity,
-                        SUM(m.quantity_done_store * m.price_unit) AS amount
-                    FROM
-                        stock_move m
-                        JOIN product_product p ON p.id=m.product_id
-                        JOIN product_template t ON t.id=p.product_tmpl_id
-                        JOIN product_category c ON c.id=t.categ_id
-                        JOIN mrp_production mrp ON mrp.id=m.raw_material_production_id
-                        JOIN product_product pp ON pp.id=mrp.product_id
-                        JOIN product_template pt ON pt.id=pp.product_tmpl_id
-                        JOIN account_cost_center acc ON acc.id=pt.cost_center_id
-                    """ + where_clause + """ AND t.categ_id=%s GROUP BY m.product_id,t.name ORDER BY m.product_id,t.name""" % PM_CATEGORY_ID
-
-        item_list = []
-        Product = self.env['product.product']
-
-        self.env.cr.execute(sql_str)
+        self.env.cr.execute(sql_str_of_packing_material)
         for row in self.env.cr.dictfetchall():
             product = Product.search([('id', '=', row['product_id']), ('active', '=', True)])
             row['name'] = product[0].display_name
@@ -600,8 +601,85 @@ class CostSheetXLSX(ReportXlsx):
         return data_list
 
     @staticmethod
+    def _prepare_query_of_production_quantity(where_clause):
+        sql_str = """SELECT
+                        SUM(quantity) AS quantity
+                    FROM
+                        ((SELECT
+                            SUM(m.quantity_done_store) AS quantity
+                        FROM
+                            stock_move m
+                            JOIN mrp_production mrp ON mrp.id=m.production_id AND mrp.state='done'
+                            JOIN product_product pp ON pp.id=m.product_id
+                            JOIN product_template pt ON pt.id=pp.product_tmpl_id
+                            JOIN account_cost_center acc ON acc.id=pt.cost_center_id
+                        """ + where_clause + """)
+                        UNION
+                        (SELECT
+                            -SUM(m.quantity_done_store) AS quantity
+                        FROM
+                            stock_move m
+                            JOIN mrp_unbuild mrp ON mrp.id=m.consume_unbuild_id AND mrp.state='done'
+                            JOIN product_product pp ON pp.id=m.product_id
+                            JOIN product_template pt ON pt.id=pp.product_tmpl_id
+                            JOIN account_cost_center acc ON acc.id=pt.cost_center_id
+                        """ + where_clause + """)) AS tbl
+        """
+
+        return sql_str
+
+    @staticmethod
+    def _prepare_query_of_raw_and_packing_material(where_clause):
+        sql_str = """SELECT
+                        product_id,
+                        name,
+                        0.0 AS quantity,
+                        COALESCE(SUM(amount),0) AS amount
+                    FROM
+                        ((SELECT
+                            m.product_id,
+                            t.name,
+                            SUM(m.quantity_done_store * m.price_unit) AS amount
+                        FROM
+                            stock_move m
+                            JOIN product_product p ON p.id=m.product_id
+                            JOIN product_template t ON t.id=p.product_tmpl_id
+                            JOIN product_category c ON c.id=t.categ_id
+                            JOIN mrp_production mrp ON mrp.id=m.raw_material_production_id AND mrp.state='done'
+                            JOIN product_product pp ON pp.id=mrp.product_id
+                            JOIN product_template pt ON pt.id=pp.product_tmpl_id
+                            JOIN account_cost_center acc ON acc.id=pt.cost_center_id
+                        """ + where_clause + """
+                        GROUP BY 
+                            m.product_id,t.name)
+                        UNION
+                        (SELECT
+                            m.product_id,
+                            t.name,
+                            -SUM(m.quantity_done_store * m.price_unit) AS amount
+                        FROM
+                            stock_move m
+                            JOIN product_product p ON p.id=m.product_id
+                            JOIN product_template t ON t.id=p.product_tmpl_id
+                            JOIN product_category c ON c.id=t.categ_id
+                            JOIN mrp_unbuild mrp ON mrp.id=m.unbuild_id AND mrp.state='done'
+                            JOIN product_product pp ON pp.id=mrp.product_id
+                            JOIN product_template pt ON pt.id=pp.product_tmpl_id
+                            JOIN account_cost_center acc ON acc.id=pt.cost_center_id
+                        """ + where_clause + """ 
+                        GROUP BY 
+                            m.product_id,t.name)) AS tbl
+                    GROUP BY
+                        product_id,name
+                    ORDER BY
+                        name
+        """
+
+        return sql_str
+
+    @staticmethod
     def calc_group_total(item_dict):
-        income = direct_material = labour_charge = utility_bill = manufacturing_cost = total_cost = 0.0
+        income = direct_material = labour_charge = utility_bill = manufacturing_cost = direct_cost_and_depreciation = total_cost = 0.0
 
         for key, item_list in item_dict.items():
             if key == 'labour_charge':
@@ -617,7 +695,8 @@ class CostSheetXLSX(ReportXlsx):
             else:
                 total_cost += float(sum(item['amount'] for item in item_list)) or 0.0
 
-        total_cost += labour_charge + utility_bill + manufacturing_cost
+        direct_cost_and_depreciation += labour_charge + utility_bill + manufacturing_cost
+        total_cost += direct_cost_and_depreciation
         direct_material += utility_bill
         prime_cost = direct_material + labour_charge
         manufacturing_cost += prime_cost
@@ -626,6 +705,7 @@ class CostSheetXLSX(ReportXlsx):
         return {'direct_material': direct_material,
                 'prime_cost': prime_cost,
                 'manufacturing_cost': manufacturing_cost,
+                'direct_cost_and_depreciation': direct_cost_and_depreciation,
                 'total_cost': total_cost,
                 'profit_loss': profit_loss}
 
