@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from . import event_type
-from . import res_partner
+from . import event_organizer
 from . import event_event
 from . import event_room
 from . import event_room_book

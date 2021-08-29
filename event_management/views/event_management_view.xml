@@ -180,6 +180,7 @@
             </field>
         </record>
 
+
         <menuitem id="event_management_main_menu" name="Event Management"/>
         <menuitem id="event_management_sub_menu1" name="Event Management" parent="event.event_main_menu"
                   sequence="5"/>

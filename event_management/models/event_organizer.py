@@ -1,19 +1,21 @@
 import logging
 
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
 
-class EventManagementType(models.Model):
+class EventManagementOrganizer(models.Model):
     _inherit = 'res.partner'
 
-    is_organizer = fields.Boolean(default=False)
+    is_organizer = fields.Boolean(default=False, track_visibility='onchange', )
     event_count = fields.Integer("Events", compute='_compute_event_count',
                                  help="Number of events the partner has participated.")
-    firstname = fields.Char("First Name", index=True, )
-    middlename = fields.Char("Middle Name", index=True)
-    lastname = fields.Char("Last Name", index=True)
+    firstname = fields.Char("First Name", index=True, track_visibility='onchange')
+    middlename = fields.Char("Middle Name", index=True, track_visibility='onchange')
+    lastname = fields.Char("Last Name", index=True, track_visibility='onchange')
+    status = fields.Boolean(default=True, string='Status', track_visibility='onchange')
 
     def _compute_event_count(self):
         for partner in self:
@@ -55,3 +57,12 @@ class EventManagementType(models.Model):
             _logger.info("Email sending status of user.")
         except:
             _logger.info("Email doesn't send properly.")
+
+    @api.multi
+    def unlink(self):
+        for org in self:
+            if org.event_count > 0:
+                raise ValidationError(_('You cannot delete a record which has existing event!'))
+            if org.user_ids:
+                raise ValidationError(_('You cannot delete system user whom has login access!'))
+        return super(EventManagementOrganizer, self).unlink()
