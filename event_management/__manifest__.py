@@ -35,7 +35,7 @@
         'views/event_registration_view.xml',
         'views/event_task_list_view.xml',
         'views/event_close_view.xml',
-        'views/event_organizer_view.xml',
+        'views/event_organizer_views.xml',
         'views/event_reservation_view.xml',
         'views/event_organization_type_view.xml',
         'report/report_event_completion_form.xml',
