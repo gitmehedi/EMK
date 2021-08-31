@@ -5,8 +5,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
 
-class MemberPayment(models.Model):
-    _name = 'invoice.payment'
+class EventRefundPayment(models.Model):
+    _name = 'event.refund.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
     _rec_name = 'payment_partner_id'
@@ -26,9 +26,7 @@ class MemberPayment(models.Model):
         if len(journal) > 0:
             return journal
 
-    invoice_type = fields.Selection([('membership_payment', 'Membership Payment'), ('event_payment', 'Event Payment')],
-                                    string="Invoice Type", required=True, readonly=True,
-                                    states={'open': [('readonly', False)]}, track_visibility='onchange')
+    event_id = fields.Many2one('event.event', string="Event", requried=True, track_visibility='onchange')
     due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True)
     paid_amount = fields.Float(string='Paid Amount', required=True,
                                readonly=True, states={'open': [('readonly', False)]})
@@ -37,7 +35,6 @@ class MemberPayment(models.Model):
     date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True,
                        states={'open': [('readonly', False)]}, track_visibility='onchange')
     payment_partner_id = fields.Many2one('res.partner', string='Payment Authority', required=True,
-                                         domain=['&', ('is_applicant', '=', True), ('credit', '>', 0)],
                                          readonly=True, states={'open': [('readonly', False)]},
                                          track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
@@ -48,36 +45,13 @@ class MemberPayment(models.Model):
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State',
                              track_visibility='onchange')
 
-    @api.onchange('invoice_type')
-    def onchange_invoice_type(self):
-        res = {}
-        condition = [('credit', '>', 0)]
-
-        if self.invoice_type == 'membership_payment':
-            condition.append(('is_applicant', '=', True))
-        if self.invoice_type == 'event_payment':
-            condition.append(('is_organizer', '=', True))
-
-        self.payment_partner_id = None
-        payment_users = self.env['res.partner'].search(condition)
-
-        res['domain'] = {
-            'payment_partner_id': [('id', 'in', payment_users.ids)],
-        }
-        return res
-
-    @api.onchange('payment_partner_id')
-    def onchange_membership(self):
-        if self.payment_partner_id:
-            self.due_amount = self.payment_partner_id.credit
-            self.paid_amount = self.payment_partner_id.credit
+    @api.onchange('event_id')
+    def onchange_event(self):
+        if self.event_id:
+            self.due_amount = self.event_id.refundable_amount
+            self.paid_amount = self.event_id.refundable_amount
         else:
             self.paid_amount = None
-
-    @api.depends('payment_partner_id')
-    def _compute_due_amount(self):
-        if self.payment_partner_id:
-            self.due_amount = self.payment_partner_id.credit
 
     def _compute_session(self):
         for rec in self:

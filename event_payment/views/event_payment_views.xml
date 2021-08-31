@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
-    <record id="view_service_payment_form" model="ir.ui.view">
-        <field name="name">service.payment.form</field>
-        <field name="model">service.payment</field>
+    <record id="view_event_payment_form" model="ir.ui.view">
+        <field name="name">event.payment.form</field>
+        <field name="model">event.payment</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Service Payment">
+            <form string="event Payment">
                 <header>
                     <button string='Paymemt Register' name="act_payment_register" type='object' class="oe_highlight"
                             states="open"/>
@@ -54,12 +54,12 @@
         </field>
     </record>
 
-    <record id="view_service_payment_tree" model="ir.ui.view">
-        <field name="name">service.payment.tree</field>
-        <field name="model">service.payment</field>
+    <record id="view_event_payment_tree" model="ir.ui.view">
+        <field name="name">event.payment.tree</field>
+        <field name="model">event.payment</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Service Payment" decoration-bf="state in ['open','paid']"
+            <tree string="event Payment" decoration-bf="state in ['open','paid']"
                   decoration-success="state == 'open'" decoration-muted="state in ['paid','cancel']">
                 <field name="session_id"/>
                 <field name="payment_type_id"/>
@@ -73,17 +73,17 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_service_payment">
-        <field name="name">Service Payments</field>
-        <field name="res_model">service.payment</field>
+    <record model="ir.actions.act_window" id="action_event_payment">
+        <field name="name">Event Payments</field>
+        <field name="res_model">event.payment</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to add a new Service Payments
+                Click to add a new event Payments
             </p>
         </field>
     </record>
 
-    <menuitem id="menu_service_payment" parent="menu_event_payment"
-              action="action_service_payment" sequence="10"
-              groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
+    <menuitem id="menu_event_payment" parent="sub_event_payment"
+              action="action_event_payment" sequence="10"
+              groups="membership_user.group_mem_user_officer,event_user.group_event_officer"/>
 </odoo>

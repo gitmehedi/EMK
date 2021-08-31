@@ -1,46 +1,60 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-acc_mem_payment_mang,mem_payment_mang,model_invoice_payment,membership_extension.group_membership_manager,1,1,1,0
-acc_mem_payment_off,mem_payment_off,model_invoice_payment,membership_user.group_mem_user_officer,1,1,1,0
+evt_pay_sess_adm,evt_pay_sess_adm,emk_payment.model_payment_session,event_user.group_event_officer,1,1,1,1
+evt_pay_sess_mng,evt_pay_sess_mng,emk_payment.model_payment_session,event.group_event_manager,1,1,1,1
 
-acc_mem_payment_session_mang,mem_payment_session_mang,model_payment_session,membership_extension.group_membership_manager,1,1,1,0
-acc_mem_payment_session_off,mem_payment_session_off,model_payment_session,membership_user.group_mem_user_officer,1,1,1,0
+evt_inv_pay_usr,evt_inv_pay_usr,model_invoice_payment,event.group_event_user,1,0,0,0
+evt_inv_pay_adm,evt_inv_pay_adm,model_invoice_payment,event_user.group_event_officer,1,1,1,1
+evt_inv_pay_mng,evt_inv_pay_mng,model_invoice_payment,event.group_event_manager,1,1,1,1
 
-acc_mem_service_payment_mang,mem_service_payment_mang,model_service_payment,membership_extension.group_membership_manager,1,1,1,0
-acc_mem_service_payment_off,mem_service_payment_off,model_service_payment,membership_user.group_mem_user_officer,1,1,1,0
+evt_ser_pay_adm,evt_ser_pay_adm,emk_payment.model_service_payment,event_user.group_event_officer,1,1,1,1
+evt_ser_pay_mng,evt_ser_pay_mng,emk_payment.model_service_payment,event.group_event_manager,1,1,1,1
 
-account_journal_adm,account_journal_adm,account.model_account_journal,event_user.group_event_administration,1,1,1,0
+evt_acc_jour_adm,evt_acc_jour_adm,account.model_account_journal,event_user.group_event_officer,1,1,1,1
+evt_acc_jour_mng,evt_acc_jour_mng,account.model_account_journal,event.group_event_manager,1,1,1,1
 
-account_invoice_adm,account_invoice_adm,account.model_account_invoice,event_user.group_event_administration,1,1,1,0
+evt_acc_inv_adm,evt_acc_inv_adm,account.model_account_invoice,event_user.group_event_officer,1,1,1,1
+evt_acc_inv_mng,evt_acc_inv_mng,account.model_account_invoice,event.group_event_manager,1,1,1,1
 
-account_invoice_line_adm,account_invoice_line_adm,account.model_account_invoice_line,event_user.group_event_administration,1,1,1,0
+evt_acc_inv_line_adm,evt_type_adm,account.model_account_invoice_line,event_user.group_event_officer,1,1,1,1
+evt_acc_inv_line_mng,evt_type_mng,account.model_account_invoice_line,event.group_event_manager,1,1,1,1
 
-account_invoice_tax_adm,account_invoice_tax_adm,account.model_account_invoice_tax,event_user.group_event_administration,1,1,1,0
+evt_acc_inv_tax_adm,evt_acc_inv_tax_adm,account.model_account_invoice_tax,event_user.group_event_officer,1,1,1,1
+evt_acc_inv_tax_mng,evt_acc_inv_tax_mng,account.model_account_invoice_tax,event.group_event_manager,1,1,1,1
 
-account_move_adm,account_move_tax_adm,account.model_account_move,event_user.group_event_administration,1,1,1,0
+evt_acc_mv_adm,evt_acc_mv_adm,account.model_account_move,event_user.group_event_officer,1,1,1,1
+evt_acc_mv_mng,evt_acc_mv_mng,account.model_account_move,event.group_event_manager,1,1,1,1
 
-account_move_line_adm,account_move_line_adm,account.model_account_move_line,event_user.group_event_administration,1,1,1,0
+evt_acc_mv_line_adm,evt_acc_mv_line_adm,account.model_account_move_line,event_user.group_event_officer,1,1,1,1
+evt_acc_mv_line_mng,evt_acc_mv_line_mng,account.model_account_move_line,event.group_event_manager,1,1,1,1
 
-account_partial_reconcile_adm,account_partial_reconcile_adm,account.model_account_partial_reconcile,event_user.group_event_administration,1,1,1,0
+evt_acc_par_rec_adm,evt_acc_par_rec_adm,account.model_account_partial_reconcile,event_user.group_event_officer,1,1,1,1
+evt_acc_par_rec_mng,evt_acc_par_rec_mng,account.model_account_partial_reconcile,event.group_event_manager,1,1,1,1
 
-account_account_type_adm,account_account_type_adm,account.model_account_account_type,event_user.group_event_administration,1,1,1,0
+evt_acc_acc_type_adm,evt_acc_acc_type_adm,account.model_account_account_type,event_user.group_event_officer,1,1,1,1
+evt_acc_acc_type_mng,evt_acc_acc_type_mng,account.model_account_account_type,event.group_event_manager,1,1,1,1
 
-account_analytic_line_adm,account_analytic_line_adm,account.model_account_analytic_line,event_user.group_event_administration,1,1,1,0
+evt_acc_ana_line_adm,evt_acc_ana_line_adm,account.model_account_analytic_line,event_user.group_event_officer,1,1,1,1
+evt_acc_ana_line_mng,evt_acc_ana_line_mng,account.model_account_analytic_line,event.group_event_manager,1,1,1,1
 
-invoice_payment_adm,invoice_payment_adm,model_invoice_payment,event_user.group_event_administration,1,1,1,0
+evt_inv_pay_adm,evt_inv_pay_adm,model_invoice_payment,event_user.group_event_officer,1,1,1,1
+evt_inv_pay_mng,evt_inv_pay_mng,model_invoice_payment,event.group_event_manager,1,1,1,1
 
-service_payment_adm,service_payment_adm,model_service_payment,event_user.group_event_administration,1,1,1,0
-
-payment_session_adm,payment_session_adm,model_payment_session,event_user.group_event_administration,1,1,1,0
-
-account_payment_method_adm,account_payment_method_adm,account.model_account_payment_method,event_user.group_event_administration,1,1,1,0
-
-account_payment_adm,account_payment_adm,account.model_account_payment,event_user.group_event_administration,1,1,1,0
-
-account_full_reconcile_adm,account_full_reconcile_adm,account.model_account_full_reconcile,event_user.group_event_administration,1,1,1,0
-
-
-
-
+evt_acc_pay_met_adm,evt_acc_pay_met_adm,account.model_account_payment_method,event_user.group_event_officer,1,1,1,1
+evt_acc_pay_met_mng,evt_acc_pay_met_mng,account.model_account_payment_method,event.group_event_manager,1,1,1,1
 
 
+evt_acc_acc_type_adm,evt_acc_acc_type_adm,account.model_account_account_type,event_user.group_event_officer,1,1,1,1
+evt_acc_acc_type_mng,evt_acc_acc_type_mng,account.model_account_account_type,event.group_event_manager,1,1,1,1
+
+evt_acc_pay_adm,evt_acc_pay_adm,account.model_account_payment,event_user.group_event_officer,1,1,1,1
+evt_acc_pay_mng,evt_acc_pay_mng,account.model_account_payment,event.group_event_manager,1,1,1,1
+
+evt_acc_full_recon_adm,evt_acc_full_recon_adm,account.model_account_full_reconcile,event_user.group_event_officer,1,1,1,1
+evt_acc_full_recon_mng,evt_acc_full_recon_mng,account.model_account_full_reconcile,event.group_event_manager,1,1,1,1
+
+evt_pro_tmpl_adm,evt_pro_tmpl_adm,account.model_product_template,event_user.group_event_officer,1,1,1,1
+evt_pro_tmpl_mng,evt_pro_tmpl_mng,account.model_product_template,event.group_event_manager,1,1,1,1
+
+evt_res_part_adm,evt_res_part_adm,base.model_res_partner,event_user.group_event_officer,1,1,1,1
+evt_res_part_mng,evt_res_part_mng,base.model_res_partner,event.group_event_manager,1,1,1,1
