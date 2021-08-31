@@ -2,14 +2,14 @@
 <odoo>
     <data noupdate="0">
         <record id="event.group_event_user" model="res.groups">
-            <field name="name">Event Int Officer</field>
+            <field name="name">Event Internal User</field>
             <field name="sequence">1</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="base.module_category_event_management"/>
         </record>
 
-        <record id="group_event_administration" model="res.groups">
-            <field name="name">Event Int Manager</field>
+        <record id="group_event_officer" model="res.groups">
+            <field name="name">Event Internal Officer</field>
             <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_event_management"/>
             <field name="comment">Administration Department will have an access application form which shows only
@@ -18,23 +18,15 @@
         </record>
 
         <record id="event.group_event_manager" model="res.groups">
-            <field name="name">Event Int Admin</field>
+            <field name="name">Event Internal Manager</field>
             <field name="sequence">15</field>
             <field name="category_id" ref="base.module_category_event_management"/>
-            <field name="implied_ids" eval="[(4, ref('group_event_administration'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_event_officer'))]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
-        <record id="group_event_participant" model="res.groups">
-            <field name="name">Event Ext Participant</field>
-            <field name="sequence">20</field>
-            <field name="category_id" ref="base.module_category_event_management"/>
-            <field name="comment">Event Participant will have an access application form which shows only readonly mode.
-            </field>
-        </record>
-
         <record id="group_event_organizer" model="res.groups">
-            <field name="name">Event Ext Organizer</field>
+            <field name="name">Event Organizer</field>
             <field name="sequence">25</field>
             <field name="category_id" ref="base.module_category_event_management"/>
             <field name="comment">Organizer will have an access event form which shows only readonly mode.</field>
