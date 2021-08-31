@@ -4,7 +4,7 @@
               groups="member_user.group_mem_user_officer" sequence="1"/>
     <record id="emk_payment.service_fee" model="ir.ui.menu">
         <field name="groups_id"
-               eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+               eval="[(4, ref('member_user.group_mem_user_officer')),(4, ref('event.group_event_manager'))]"/>
     </record>
     <record id="emk_payment.sub_menu_config" model="ir.ui.menu">
         <field name="groups_id"

@@ -85,5 +85,5 @@
 
     <menuitem id="menu_event_payment" parent="sub_event_payment"
               action="action_event_payment" sequence="10"
-              groups="member_user.group_mem_user_officer,event_user.group_event_officer"/>
+              groups="event_user.group_event_officer,event.group_event_manager"/>
 </odoo>

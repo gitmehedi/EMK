@@ -14,8 +14,7 @@
         'membership_remaining_days',
     ],
     'data': [
-        'security/ir_rule.xml',
+        'security/users.xml',
     ],
     'installable': True,
 }
-# -*- coding: utf-8 -*-

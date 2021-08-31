@@ -21,7 +21,6 @@
     'data': [
         'security/ir.model.access.csv',
         'data/sequence.xml',
-        'data/ir_actions_server.xml',
         'data/default_data.xml',
         'views/menu_views.xml',
         'views/invoice_payment_views.xml',
