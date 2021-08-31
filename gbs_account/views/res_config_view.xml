@@ -39,7 +39,9 @@
             <field name="target">inline</field>
         </record>
 
+
+
         <menuitem id="menu_account_settings" name="Account Settings" parent="account.menu_finance_configuration"
-            sequence="1" action="action_account_settings" groups="gbs_application_group.group_head_account"/>
+            sequence="1" action="action_account_settings" groups="gbs_application_group.group_account_closing"/>
     </data>
 </odoo>
