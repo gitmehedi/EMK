@@ -9,7 +9,7 @@
     'depends': [
         'mail',
         'account',
-        'membership_user',
+        'member_user',
         'member_signup',
         'server_action_permission',
     ],

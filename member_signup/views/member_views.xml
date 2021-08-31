@@ -8,7 +8,7 @@
             <xpath expr="//form/header" position="inside">
                 <button string="Set Membership" name="%(action_set_membership)d" type="action"
                         attrs="{'invisible':[('member_sequence','!=',False)]}"
-                        groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+                        groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
             </xpath>
             <xpath expr="//form" position="attributes">
                 <attribute name="create">false</attribute>
@@ -40,7 +40,7 @@
             </xpath>
             <xpath expr="//form/sheet/div/button[@name='toggle_active']" position="before">
                 <button name="toggle_auto_renew" type="object" class="oe_stat_button" icon="fa-check-square"
-                        groups="membership_user.group_user_member,membership_user.group_mem_user_officer">
+                        groups="member_user.group_user_member,member_user.group_mem_user_officer">
                     <field name="auto_renew" widget="boolean_button"
                            options='{"terminology": {
                                             "string_true": "Active Renew",
@@ -228,6 +228,6 @@
 
     <record id="membership.menu_membership" model="ir.ui.menu">
         <field name="parent_id" eval="ref('menu_member_general')"/>
-        <field name="groups_id" eval="[(4, ref('membership_user.group_user_member'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_user_member'))]"/>
     </record>
 </odoo>

@@ -17,7 +17,7 @@
         'opa_utility',
         'membership',
         'membership_extension',
-        'membership_user',
+        'member_user',
         'membership_withdrawal',
         'partner_fullname',
     ],

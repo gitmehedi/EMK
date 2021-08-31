@@ -1,32 +1,32 @@
 <?xml version="1.0"?>
 <odoo>
     <record id="account.act_account_partner_ledger_payable" model="ir.actions.act_window">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
     <record id="account.act_account_partner_ledger_payable_no_partner" model="ir.actions.act_window">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
     <record id="account.act_account_partner_ledger_receivable" model="ir.actions.act_window">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
     <record id="account.act_account_partner_ledger_receivable_no_partner" model="ir.actions.act_window">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
     <record id="account.act_account_acount_move_line_open_unreconciled" model="ir.actions.act_window">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
     <record id="account.action_move_line_select_by_partner" model="ir.actions.act_window">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
 
     <menuitem name="Members" id="menu_member_general" sequence="0" parent="membership.menu_association"
-              groups="membership_user.group_user_member,membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <menuitem name="Applications" id="menu_member_app" sequence="0" parent="membership.menu_association"
-              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <menuitem name="Application" id="menu_main_applicant" sequence="0"
-              groups="membership_user.group_mem_user_applicant"/>
+              groups="member_user.group_mem_user_applicant"/>
 
     <record id="membership_withdrawal.membership_withdrawal_reason_action" model="ir.actions.act_window">
         <field name="name">Membership Withdrawal Reasons</field>
@@ -37,20 +37,20 @@
     </record>
 
     <record id="membership.menu_association" model="ir.ui.menu">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer')),
-               (4, ref('membership_user.group_user_member'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer')),
+               (4, ref('member_user.group_user_member'))]"/>
     </record>
     <record id="membership.menu_marketing_config_association" model="ir.ui.menu">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
     <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
-        <field name="groups_id" eval="[(3, ref('membership_user.group_mem_user_applicant'))]"/>
+        <field name="groups_id" eval="[(3, ref('member_user.group_mem_user_applicant'))]"/>
     </record>
     <record id="membership_card.membership_card_report" model="ir.actions.report.xml">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_user_member'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_user_member'))]"/>
     </record>
     <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_applicant')),(4, ref('membership_user.group_user_member'))]"/>
+        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_applicant')),(4, ref('member_user.group_user_member'))]"/>
     </record>
 
 </odoo>

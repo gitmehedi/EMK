@@ -72,7 +72,7 @@
 
     <menuitem id="menu_event_refund_payment" parent="sub_event_payment"
               action="action_event_refund_payment" sequence="15"
-              groups="membership_user.group_mem_user_officer,event_user.group_event_officer"/>
+              groups="member_user.group_mem_user_officer,event_user.group_event_officer"/>
 
 
 </odoo>

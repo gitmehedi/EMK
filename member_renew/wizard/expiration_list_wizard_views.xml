@@ -31,8 +31,8 @@
     </record>
 
     <menuitem name="Expiration" id="menu_expiration_list" parent="membership.menu_association"
-              groups="membership_user.group_mem_user_officer"/>
+              groups="member_user.group_mem_user_officer"/>
     <menuitem id="sub_expiration_list" parent="menu_expiration_list"
               action="action_expiration_list"
-              groups="membership_user.group_mem_user_officer"/>
+              groups="member_user.group_mem_user_officer"/>
 </odoo>

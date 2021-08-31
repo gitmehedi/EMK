@@ -12,7 +12,7 @@
     'website': "",
     'category': 'base',
     'version': '0.1',
-    'depends': ['base', 'membership_user'],
+    'depends': ['base', 'member_user'],
     'data': [
         'wizard/user_view.xml',
         'views/partner_views.xml',

@@ -6,7 +6,7 @@
             name="member_signup.rfid_gen_tmpl"
             file="member_signup.rfid_gen_tmpl"
             report_type="qweb-html"
-            groups="membership_user.group_user_member"/>
+            groups="member_user.group_user_member"/>
 
     <template id="rfid_gen_tmpl">
         <t t-call="report.html_container">

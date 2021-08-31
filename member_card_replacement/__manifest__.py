@@ -8,7 +8,7 @@
     'depends': [
         'opa_utility',
         'member_renew',
-        'membership_user',
+        'member_user',
     ],
     'data': [
         'security/ir.model.access.csv',

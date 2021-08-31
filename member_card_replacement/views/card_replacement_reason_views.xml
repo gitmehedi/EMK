@@ -47,7 +47,7 @@
         <menuitem id="menu_card_replacement_reason" sequence="150"
                   parent="membership.menu_marketing_config_association"
                   action="action_card_replacement_reason"
-                  groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+                  groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     </data>
 </odoo>
