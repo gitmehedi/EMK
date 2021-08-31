@@ -7,7 +7,8 @@
             <field name="arch" type="xml">
                 <form string="Configure Accounting" class="oe_form_configuration">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"
+                        context="{'active_model': 'account.config.settings'}"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group string="Fiscal Year" groups="account.group_account_user">
@@ -38,8 +39,6 @@
             <field name="view_id" ref="view_account_settings_form"/>
             <field name="target">inline</field>
         </record>
-
-
 
         <menuitem id="menu_account_settings" name="Account Settings" parent="account.menu_finance_configuration"
             sequence="1" action="action_account_settings" groups="gbs_application_group.group_account_closing"/>
