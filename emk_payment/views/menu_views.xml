@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-    <menuitem name="Payments" id="main_menu_payment" sequence="20"
-              groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
-    <menuitem name="Payments" id="sub_menu_payment" sequence="1" parent="main_menu_payment"
-              groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
-    <menuitem name="Configuration" id="sub_menu_config" sequence="50" parent="main_menu_payment"
-              groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
+    <menuitem name="Payments" id="main_menu_payment" sequence="20"/>
+    <menuitem name="Payments" id="sub_menu_payment" sequence="1" parent="main_menu_payment"/>
+    <menuitem name="Configuration" id="sub_menu_config" sequence="50" parent="main_menu_payment"/>
 </odoo>

@@ -48,6 +48,5 @@
     </record>
 
     <menuitem name="Service Types" id="service_fee" action="action_service_fee_product" sequence="1"
-              parent="sub_menu_config"
-              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+              parent="sub_menu_config"/>
 </odoo>

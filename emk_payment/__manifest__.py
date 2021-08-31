@@ -9,11 +9,9 @@
     'category': 'Payments',
     'depends': [
         'account',
-        'account_accountant',
-        'membership_user',
+        'account_accountant'
     ],
     'data': [
-        # 'security/ir.model.access.csv',
         # 'data/sequence.xml',
         'data/email_template.xml',
         'data/ir_actions_server.xml',

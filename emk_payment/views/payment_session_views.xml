@@ -71,8 +71,6 @@
         </field>
     </record>
 
-    <menuitem id="menu_payment_session" parent="sub_menu_payment"
-              action="action_payment_session" sequence="5"
-              groups="membership_user.group_mem_user_officer,event_user.group_event_administration"/>
+    <menuitem id="menu_payment_session" parent="sub_menu_payment" action="action_payment_session" sequence="5"/>
 
 </odoo>

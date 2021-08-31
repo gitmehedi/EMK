@@ -34,7 +34,7 @@ class MemberPayment(models.Model):
     paid_amount = fields.Float(string='Paid Amount', required=True,
                                readonly=True, states={'open': [('readonly', False)]})
     payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'open': [('readonly', False)]})
-    date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True,
+    date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True, required=True,
                        states={'open': [('readonly', False)]})
     payment_partner_id = fields.Many2one('res.partner', string='Payment Authority', required=True,
                                          domain=['&', ('is_applicant', '=', True), ('credit', '>', 0)],

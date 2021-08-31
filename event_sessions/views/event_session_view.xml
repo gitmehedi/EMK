@@ -9,7 +9,7 @@
                     <button name="act_confirmed" string="Confirmed" type="object" states="unconfirmed"
                             class="oe_highlight" groups="event.group_event_user"/>
                     <button name="act_done" string="Done" type="object" states="confirmed" class="oe_highlight"
-                            groups="event_user.group_event_administration"/>
+                            groups="event_user.group_event_officer"/>
                     <button name="act_unconfirmed" string="Set to Unconfirmed" type="object" states="confirmed"/>
                     <field name="state" widget="statusbar" statusbar_visible="unconfirmed,confirmed,done"/>
                 </header>
@@ -216,5 +216,5 @@
 
     <menuitem id="event_session_menu" name="Sessions" sequence="10"
               parent="event_management.menu_event_general" action="act_event_session_form"
-              groups="event_user.group_event_administration,event.group_event_manager"/>
+              groups="event_user.group_event_officer,event.group_event_manager"/>
 </odoo>

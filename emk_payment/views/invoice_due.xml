@@ -34,7 +34,7 @@
                     <field name="type" invisible="1"/>
                     <group>
                         <group>
-                            <field string="Member Name" name="partner_id"
+                            <field string="Name" name="partner_id"
                                    context="{'search_default_customer':1, 'show_address': 1}"
                                    options="{&quot;always_reload&quot;: True}" domain="[('customer', '=', True)]"/>
                             <field name="payment_term_id"/>
@@ -42,7 +42,7 @@
                         <group>
                             <field name="date_invoice"/>
                             <field name="move_name" invisible="1"/>
-                            <field name="user_id" groups="base.group_user"/>
+                            <field name="user_id" groups="base.group_user" string="Responsible"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
                                 <field name="currency_id" options="{'no_create': True, 'no_open': True}"
@@ -189,7 +189,7 @@
                 <field name="name" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                <field name="user_id"/>
+                <field name="user_id" string="Responsible"/>
                 <field name="date_due"/>
                 <field name="origin"/>
                 <field name="amount_total_signed" string="Total" sum="Total"/>
@@ -226,8 +226,5 @@
         <field name="act_window_id" ref="act_invoice_due"/>
     </record>
 
-    <menuitem id="sub_due_invoice" parent="sub_menu_payment" sequence="10"
-              action="act_invoice_due" groups="membership_user.group_mem_user_officer"/>
-
-
+    <menuitem id="sub_due_invoice" parent="sub_menu_payment" sequence="10" action="act_invoice_due"/>
 </odoo>
