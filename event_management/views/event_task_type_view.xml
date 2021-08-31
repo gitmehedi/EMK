@@ -50,7 +50,7 @@
         </record>
 
         <menuitem id="menu_event_task_type" action="action_event_task_type"
-                  groups="event_user.group_event_administration" parent="event.menu_event_configuration"/>
+                  groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
 
 
         <record model="ir.ui.view" id="view_event_service_type_form">
@@ -101,6 +101,6 @@
         </record>
 
         <menuitem id="menu_event_service_type" action="action_event_service_type"
-                  groups="event_user.group_event_administration" parent="event.menu_event_configuration"/>
+                  groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
     </data>
 </odoo>

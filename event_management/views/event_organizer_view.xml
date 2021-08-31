@@ -74,7 +74,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Email Schedule" groups="event_user.group_event_administration">
+                            <page string="Email Schedule" groups="event_user.group_event_officer">
                                 <group>
                                     <field name="reply_to"/>
                                 </group>

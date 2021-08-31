@@ -6,23 +6,23 @@
             <field name="inherit_id" ref="event.view_event_registration_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form/header/button[@name='action_send_badge_email']" position="attributes">
-                    <attribute name="groups">event_user.group_event_administration</attribute>
+                    <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
                 <xpath expr="//form/header/button[@name='confirm_registration']" position="attributes">
-                    <attribute name="groups">event_user.group_event_administration</attribute>
+                    <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
                 <xpath expr="//form/header/button[@name='button_reg_close']" position="attributes">
-                    <attribute name="groups">event_user.group_event_administration</attribute>
+                    <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
                 <xpath expr="//form/header/button[@name='do_draft']" position="attributes">
-                    <attribute name="groups">event_user.group_event_administration</attribute>
+                    <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
                 <xpath expr="//form/header/button[@name='button_reg_cancel']" position="attributes">
-                    <attribute name="groups">event_user.group_event_administration</attribute>
+                    <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">True</attribute>
-                    <attribute name="groups">event_user.group_event_administration</attribute>
+                    <attribute name="groups">event_user.group_event_officer</attribute>
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="attributes">
@@ -168,6 +168,6 @@
         </record>
 
         <menuitem id="menu_attendee_profession" action="action_attendee_profession"
-                  groups="event_user.group_event_administration" parent="event.menu_event_configuration"/>
+                  groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
     </data>
 </odoo>

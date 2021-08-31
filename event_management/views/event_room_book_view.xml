@@ -55,6 +55,6 @@
 
         <menuitem name="Event Room Booking" id="menu_meeting_room_reservation"
                   action="action_meeting_room_reservation"
-                  parent="menu_event_operations" groups="event_user.group_event_administration" sequence="30"/>
+                  parent="menu_event_operations" groups="event_user.group_event_officer" sequence="30"/>
     </data>
 </odoo>

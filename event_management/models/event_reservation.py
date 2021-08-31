@@ -186,9 +186,9 @@ class EventReservation(models.Model):
     @api.model
     def _create_invoice(self):
         serv_name = ['Event Organization Fee', 'Event Refund Fee']
-        serivces = self.env['product.product'].search([('name', 'in', serv_name), ('active', 'in', serv_name)],
+        services = self.env['product.product'].search([('name', 'in', serv_name), ('active', 'in', serv_name)],
                                                       order='id desc')
-        if len(serivces) != 2:
+        if len(services) != 2:
             raise ValidationError(_('Please configure your event services.'))
 
         def create_invoice(service, vals):
@@ -202,6 +202,7 @@ class EventReservation(models.Model):
                 'date_invoice': fields.datetime.now(),
                 'date_due': datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') - timedelta(days=1),
                 'user_id': self.env.user.id,
+                'origin': self.name,
                 'account_id': account_id.id,
                 'state': 'draft',
                 'invoice_line_ids': [
@@ -238,7 +239,7 @@ class EventReservation(models.Model):
                 }
                 # self.env['mail.mail'].mailsend(vals)
 
-        for ser in serivces:
+        for ser in services:
             if ser.name == 'Event Organization Fee':
                 if self.payment_type == 'paid':
                     if self.paid_amount == 0:
@@ -247,6 +248,7 @@ class EventReservation(models.Model):
                         'amount': self.paid_amount,
                         'subject': 'Event Fee',
                     }
+                    create_invoice(ser, vals)
 
             if ser.name == 'Event Refund Fee':
                 if self.refundable_amount == 0:
@@ -256,7 +258,7 @@ class EventReservation(models.Model):
                     'subject': 'Refundable Amount',
                 }
 
-            create_invoice(ser, vals)
+                create_invoice(ser, vals)
 
     @api.model
     def _needaction_domain_get(self):

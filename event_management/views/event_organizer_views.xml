@@ -105,6 +105,7 @@
                                 <field name="user_ids" invisible="1"/>
                                 <field name="email" widget="email" required="1"/>
                                 <field name="lang" invisible="1"/>
+                                <field name="customer" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
@@ -185,7 +186,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain">[('is_organizer','=',True)]</field>
             <field name="context">{'default_is_organizer': 1,'default_supplier': 0,
-                'default_customer':0,'default_supplier': 0}
+                'default_customer':1,'default_supplier': 0}
             </field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
@@ -217,6 +218,6 @@
         </record>
 
         <menuitem id="menu_partner_organizer" action="action_event_organizer"
-                  groups="event_user.group_event_administration" parent="event.menu_event_configuration"/>
+                  groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
     </data>
 </odoo>

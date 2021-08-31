@@ -10,7 +10,7 @@
 			name="event_management.report_event_completion"
 			file="event_management.report_event_completion"
             paperformat="report_layout.paperformat_backend_portrait"
-            groups="event_user.group_event_administration"
+            groups="event_user.group_event_officer"
 		/>
 
 		<template id="report_event_completion">

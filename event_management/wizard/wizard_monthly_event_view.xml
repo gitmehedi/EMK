@@ -34,7 +34,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="monthly_event_report_form_view_menu" groups="event_user.group_event_administration"
+        <menuitem id="monthly_event_report_form_view_menu" groups="event_user.group_event_officer"
                   parent="event.menu_reporting_events" sequence="10" action="action_monthly_event_report_view"/>
     </data>
 </odoo>
