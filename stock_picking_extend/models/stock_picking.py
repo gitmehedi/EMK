@@ -108,7 +108,9 @@ class Picking(models.Model):
         for pick in self:
             # Check whether The value of 'Date Of Transfer' field of a Delivery Order is set or not
             # If not, then pop up a wizard to set the 'Date Of Transfer'
-            if pick.picking_type_id.code == 'outgoing' and not self.env.context.get('set_date_of_transfer', False):
+            if pick.picking_type_id.code in ['outgoing', 'incoming', 'internal'] \
+                    and pick.location_dest_id.usage in ['customer', 'internal'] \
+                    and not self.env.context.get('set_date_of_transfer', False):
                 view = self.env.ref('stock_picking_extend.view_stock_date_of_transfer_form')
                 wiz = self.env['stock.date.transfer'].create({'pick_id': pick.id})
 
