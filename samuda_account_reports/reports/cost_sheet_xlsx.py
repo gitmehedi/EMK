@@ -93,8 +93,8 @@ class CostSheetXLSX(ReportXlsx):
         sql_str = """SELECT
                         cost_center_id,
                         name,
-                        SUM(quantity) AS quantity,
-                        SUM(amount) AS amount
+                        COALESCE(SUM(quantity), 0) AS quantity,
+                        COALESCE(SUM(amount), 0) AS amount
                     FROM
                         ((SELECT
                             aml.cost_center_id,
@@ -321,7 +321,7 @@ class CostSheetXLSX(ReportXlsx):
         sql_str = """SELECT
                         aml.account_id,
                         aa.name,
-                        COALESCE(SUM(aml.quantity), 0) AS quantity,
+                        0 AS quantity,
                         (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
@@ -354,7 +354,7 @@ class CostSheetXLSX(ReportXlsx):
         sql_str = """SELECT
                         aml.account_id,
                         aa.name,
-                        COALESCE(SUM(aml.quantity), 0) AS quantity,
+                        0 AS quantity,
                         (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
@@ -387,7 +387,7 @@ class CostSheetXLSX(ReportXlsx):
         sql_str = """SELECT
                         aml.account_id,
                         aa.name,
-                        COALESCE(SUM(aml.quantity), 0) AS quantity,
+                        0 AS quantity,
                         (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
@@ -414,7 +414,7 @@ class CostSheetXLSX(ReportXlsx):
         sql_str = """SELECT
                         aml.cost_center_id,
                         acc.name,
-                        COALESCE(SUM(aml.quantity), 0) AS quantity,
+                        0 AS quantity,
                         (SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
                         account_move_line aml
@@ -603,7 +603,7 @@ class CostSheetXLSX(ReportXlsx):
     @staticmethod
     def _prepare_query_of_production_quantity(where_clause):
         sql_str = """SELECT
-                        SUM(quantity) AS quantity
+                        COALESCE(SUM(quantity), 0) AS quantity
                     FROM
                         ((SELECT
                             SUM(m.quantity_done_store) AS quantity
