@@ -14,4 +14,12 @@
         <field name="groups_id"
                eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
     </record>
+    <record id="emk_payment.menu_invoice_payment" model="ir.ui.menu">
+        <field name="groups_id"
+               eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+    </record>
+    <record id="emk_payment.menu_service_payment" model="ir.ui.menu">
+        <field name="groups_id"
+               eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+    </record>
 </odoo>

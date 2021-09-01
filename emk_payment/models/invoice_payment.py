@@ -9,7 +9,7 @@ class MemberPayment(models.Model):
     _name = 'invoice.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
-    _rec_name='payment_partner_id'
+    _rec_name = 'payment_partner_id'
     _description = 'Invoice Payment'
 
     @api.model
@@ -27,56 +27,68 @@ class MemberPayment(models.Model):
             return journal
 
     invoice_type = fields.Selection([('membership_payment', 'Membership Payment'), ('event_payment', 'Event Payment')],
-                                    string="Invoice Type", required=True, readonly=True,
+                                    string="Invoice Type", required=True, readonly=True, track_visibility='onchange',
                                     states={'open': [('readonly', False)]})
-
-    due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True)
-    paid_amount = fields.Float(string='Paid Amount', required=True,
+    due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True,
+                              track_visibility='onchange')
+    paid_amount = fields.Float(string='Paid Amount', required=True, track_visibility='onchange',
                                readonly=True, states={'open': [('readonly', False)]})
-    payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'open': [('readonly', False)]})
+    payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'open': [('readonly', False)]},
+                              track_visibility='onchange')
     date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True, required=True,
-                       states={'open': [('readonly', False)]})
+                       states={'open': [('readonly', False)]}, track_visibility='onchange', )
     payment_partner_id = fields.Many2one('res.partner', string='Payment Authority', required=True,
-                                         domain=['&', ('is_applicant', '=', True), ('credit', '>', 0)],
+                                         track_visibility='onchange',
                                          readonly=True, states={'open': [('readonly', False)]})
-    journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
+    invoice_id = fields.Many2one('account.invoice', string='Invoice', required=True, track_visibility='onchange',
+                                 readonly=True, states={'open': [('readonly', False)]})
+    journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, track_visibility='onchange',
                                  domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
                                  readonly=True, states={'open': [('readonly', False)]})
-
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,
-                                 required=True, default=_get_session)
-    state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State')
+                                 required=True, default=_get_session, track_visibility='onchange')
+    state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State',
+                             track_visibility='onchange')
 
     @api.onchange('invoice_type')
     def onchange_invoice_type(self):
         res = {}
-        condition = [('credit', '>', 0)]
-
+        users = []
+        self.payment_partner_id = None
         if self.invoice_type == 'membership_payment':
+            condition = []
             condition.append(('is_applicant', '=', True))
         if self.invoice_type == 'event_payment':
-            condition.append(('is_organizer', '=', True))
-
-        self.payment_partner_id = None
-        payment_users = self.env['res.partner'].search(condition)
+            payment_users = self.env['account.invoice'].search(
+                [('state', '=', 'open'), ('partner_id.is_organizer', '=', True)])
+            users = list(set([val.partner_id.id for val in payment_users]))
 
         res['domain'] = {
-            'payment_partner_id': [('id', 'in', payment_users.ids)],
+            'payment_partner_id': [('id', 'in', users)],
         }
         return res
 
     @api.onchange('payment_partner_id')
-    def onchange_membership(self):
+    def onchange_partner(self):
         if self.payment_partner_id:
-            self.due_amount = self.payment_partner_id.credit
-            self.paid_amount = self.payment_partner_id.credit
-        else:
-            self.paid_amount = None
+            res = {}
+            invoice = self.env['account.invoice'].search(
+                [('state', '=', 'open'), ('partner_id', '=', self.payment_partner_id.id)])
+            res['domain'] = {
+                'invoice_id': [('id', 'in', invoice.ids)],
+            }
+            return res
+
+    @api.onchange('invoice_id')
+    def onchange_invoice(self):
+        if self.invoice_id:
+            self.due_amount = self.invoice_id.residual
+            self.paid_amount = self.invoice_id.residual
 
     @api.depends('payment_partner_id')
     def _compute_due_amount(self):
         if self.payment_partner_id:
-            self.due_amount = self.payment_partner_id.credit
+            self.due_amount = self.invoice_id.residual
 
     def _compute_session(self):
         for rec in self:
@@ -86,96 +98,110 @@ class MemberPayment(models.Model):
     def invoice_payment(self):
         if self.state != 'open':
             raise UserError(_('You are not in valid state.'))
+        vals = {}
 
         invoice = self.env['account.invoice'].search(
             [('partner_id', '=', self.payment_partner_id.id), ('state', '=', 'open')],
             order='create_date desc')
-        pay_text = 'Payment against Invoice'
-        rem_amount = self.paid_amount
-        payment_method_id = self.env['account.payment.method'].search(
-            [('code', '=', 'manual'), ('payment_type', '=', 'inbound')])
-        payment_ref = ''
+        invoice = self.invoice_id
+        if self.invoice_type == 'event_payment':
+            vals['communication'] = 'Payment against Invoice'
+            vals['rem_amount'] = self.paid_amount
+            vals['invoice'] = self.invoice_id
+            payment = self.create_payment(vals)
+            if payment:
+                self.state = 'paid'
 
-        for rec in invoice:
-            if rem_amount > rec.residual:
-                rem_amount = rem_amount - rec.residual
-                inv_amount = rec.residual
-            else:
-                inv_amount = rem_amount
+        if self.invoice_type == 'membership_payment':
+            vals['communication'] = 'Payment against Invoice'
+            vals['rem_amount'] = self.paid_amount
+            vals['invoice'] = self.invoice_id
+            rem_amount = self.paid_amount
+
+            payment_ref = ''
+
+            for rec in invoice:
+                if rem_amount > rec.residual:
+                    rem_amount = rem_amount - rec.residual
+                    inv_amount = rec.residual
+                else:
+                    inv_amount = rem_amount
+                    rem_amount = 0
+
+                if not inv_amount:
+                    raise UserError(_('Paid amount should have a value.'))
+
+                if inv_amount > 0:
+                    payment = self.create_payment(vals)
+                    # payment = rec.payment_ids.create({
+                    #     'payment_type': 'inbound',
+                    #     'payment_method_id': payment_method_id.id,
+                    #     'partner_type': 'customer',
+                    #     'invoice_ids': [(6, 0, [rec.id])],
+                    #     'partner_id': self.payment_partner_id.id,
+                    #     'amount': inv_amount,
+                    #     'journal_id': self.journal_id.id,
+                    #     'payment_date': self.date,
+                    #     'communication': pay_text,
+                    # })
+                    # payment.post()
+
+                    if payment and len(payment_ref) > 0:
+                        self.payment_ref = payment_ref + ', ' + str(rec.display_name)
+                    else:
+                        self.payment_ref = str(rec.display_name)
+
+                    if rec.state == 'paid' and self.payment_partner_id.state == 'invoice':
+                        seq = self.env['ir.sequence'].next_by_code('res.partner.member')
+                        self.payment_partner_id.write({'state': 'member',
+                                                       'member_sequence': seq,
+                                                       'application_ref': self.payment_partner_id.member_sequence,
+                                                       'free_member': self.payment_partner_id.member_sequence,
+                                                       'membership_state': 'free'
+                                                       })
+                        for inv_line in invoice.invoice_line_ids:
+                            mem_inv = self.env['membership.membership_line'].search([
+                                ('account_invoice_line', '=', inv_line.id)])
+                            if len(mem_inv) > 0:
+                                mem_inv.write({
+                                    'date': self.date,
+                                    'date_from': self.date,
+                                    'date_to': inv_line.product_id.product_tmpl_id._get_next_date(self.date)
+                                })
+
+                        rm_grp = self.env['res.groups'].sudo().search(
+                            [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
+                        rm_grp.write({'users': [(3, self.payment_partner_id.user_ids.id)]})
+                        add_grp = self.env['res.groups'].sudo().search(
+                            [('name', '=', 'Membership User'), ('category_id.name', '=', 'Membership')])
+                        add_grp.write({'users': [(6, 0, [self.payment_partner_id.user_ids.id])]})
+
+                        vals = {
+                            'template': 'member_payment.member_payment_confirmation_tmpl',
+                            'email_to': self.payment_partner_id.email,
+                            'context': {'name': self.payment_partner_id.name},
+                        }
+
+                        self.env['res.partner'].mailsend(vals)
+                        self.env['rfid.generation'].create({'membership_id': self.payment_partner_id.id})
+
+            if rem_amount > 0:
+                # payment = self.env['account.payment'].create({
+                #     'payment_type': 'inbound',
+                #     'payment_method_id': payment_method_id.id,
+                #     'partner_type': 'customer',
+                #     'partner_id': self.payment_partner_id.id,
+                #     'amount': rem_amount,
+                #     'journal_id': self.journal_id.id,
+                #     'payment_date': self.date,
+                #     'communication': pay_text,
+                # })
+                # payment.post()
+                self.create_payment(vals)
                 rem_amount = 0
 
-            if not inv_amount:
-                raise UserError(_('Paid amount should have a value.'))
-
-            if inv_amount > 0:
-                payment = rec.payment_ids.create({
-                    'payment_type': 'inbound',
-                    'payment_method_id': payment_method_id.id,
-                    'partner_type': 'customer',
-                    'invoice_ids': [(6, 0, [rec.id])],
-                    'partner_id': self.payment_partner_id.id,
-                    'amount': inv_amount,
-                    'journal_id': self.journal_id.id,
-                    'payment_date': self.date,
-                    'communication': pay_text,
-                })
-                payment.post()
-
-                if payment and len(payment_ref) > 0:
-                    self.payment_ref = payment_ref + ', ' + str(rec.display_name)
-                else:
-                    self.payment_ref = str(rec.display_name)
-
-                if rec.state == 'paid' and self.payment_partner_id.state == 'invoice':
-                    seq = self.env['ir.sequence'].next_by_code('res.partner.member')
-                    self.payment_partner_id.write({'state': 'member',
-                                                   'member_sequence': seq,
-                                                   'application_ref': self.payment_partner_id.member_sequence,
-                                                   'free_member': self.payment_partner_id.member_sequence,
-                                                   'membership_state': 'free'
-                                                   })
-                    for inv_line in invoice.invoice_line_ids:
-                        mem_inv = self.env['membership.membership_line'].search([
-                            ('account_invoice_line', '=', inv_line.id)])
-                        if len(mem_inv) > 0:
-                            mem_inv.write({
-                                'date': self.date,
-                                'date_from': self.date,
-                                'date_to': inv_line.product_id.product_tmpl_id._get_next_date(self.date)
-                            })
-
-                    rm_grp = self.env['res.groups'].sudo().search(
-                        [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
-                    rm_grp.write({'users': [(3, self.payment_partner_id.user_ids.id)]})
-                    add_grp = self.env['res.groups'].sudo().search(
-                        [('name', '=', 'Membership User'), ('category_id.name', '=', 'Membership')])
-                    add_grp.write({'users': [(6, 0, [self.payment_partner_id.user_ids.id])]})
-
-                    vals = {
-                        'template': 'member_payment.member_payment_confirmation_tmpl',
-                        'email_to': self.payment_partner_id.email,
-                        'context': {'name': self.payment_partner_id.name},
-                    }
-
-                    self.env['res.partner'].mailsend(vals)
-                    self.env['rfid.generation'].create({'membership_id': self.payment_partner_id.id})
-
-        if rem_amount > 0:
-            payment = self.env['account.payment'].create({
-                'payment_type': 'inbound',
-                'payment_method_id': payment_method_id.id,
-                'partner_type': 'customer',
-                'partner_id': self.payment_partner_id.id,
-                'amount': rem_amount,
-                'journal_id': self.journal_id.id,
-                'payment_date': self.date,
-                'communication': pay_text,
-            })
-            payment.post()
-            rem_amount = 0
-
-        if not rem_amount:
-            self.state = 'paid'
+            if not rem_amount:
+                self.state = 'paid'
 
     @api.model
     def _needaction_domain_get(self):
@@ -187,3 +213,24 @@ class MemberPayment(models.Model):
         if self.payment_partner_id:
             name = '[%s] %s' % (self.payment_partner_id.member_sequence, self.payment_partner_id.name)
         return (self.id, name)
+
+    def create_payment(self, vals):
+        payment_method = self.env['account.payment.method'].search(
+            [('code', '=', 'manual'), ('payment_type', '=', 'inbound')])
+        invoice = vals['invoice']
+        payment = {
+            'payment_type': 'inbound',
+            'payment_method_id': payment_method.id,
+            'partner_type': 'customer',
+            'partner_id': self.payment_partner_id.id,
+            'amount': self.paid_amount,
+            'journal_id': self.journal_id.id,
+            'payment_date': self.date,
+            'communication': vals['communication'],
+            'invoice_ids': [(6, 0, [invoice.id])],
+        }
+
+        payment = self.env['account.payment'].create(payment)
+
+        payment.post()
+        return payment

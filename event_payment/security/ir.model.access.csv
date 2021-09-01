@@ -3,9 +3,9 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 evt_pay_sess_adm,evt_pay_sess_adm,emk_payment.model_payment_session,event_user.group_event_officer,1,1,1,1
 evt_pay_sess_mng,evt_pay_sess_mng,emk_payment.model_payment_session,event.group_event_manager,1,1,1,1
 
-evt_inv_pay_usr,evt_inv_pay_usr,model_invoice_payment,event.group_event_user,1,0,0,0
-evt_inv_pay_adm,evt_inv_pay_adm,model_invoice_payment,event_user.group_event_officer,1,1,1,1
-evt_inv_pay_mng,evt_inv_pay_mng,model_invoice_payment,event.group_event_manager,1,1,1,1
+evt_inv_pay_usr,evt_inv_pay_usr,emk_payment.model_invoice_payment,event.group_event_user,1,0,0,0
+evt_inv_pay_adm,evt_inv_pay_adm,emk_payment.model_invoice_payment,event_user.group_event_officer,1,1,1,1
+evt_inv_pay_mng,evt_inv_pay_mng,emk_payment.model_invoice_payment,event.group_event_manager,1,1,1,1
 
 evt_ser_pay_adm,evt_ser_pay_adm,emk_payment.model_service_payment,event_user.group_event_officer,1,1,1,1
 evt_ser_pay_mng,evt_ser_pay_mng,emk_payment.model_service_payment,event.group_event_manager,1,1,1,1
@@ -37,12 +37,8 @@ evt_acc_acc_type_mng,evt_acc_acc_type_mng,account.model_account_account_type,eve
 evt_acc_ana_line_adm,evt_acc_ana_line_adm,account.model_account_analytic_line,event_user.group_event_officer,1,1,1,1
 evt_acc_ana_line_mng,evt_acc_ana_line_mng,account.model_account_analytic_line,event.group_event_manager,1,1,1,1
 
-evt_inv_pay_adm,evt_inv_pay_adm,model_invoice_payment,event_user.group_event_officer,1,1,1,1
-evt_inv_pay_mng,evt_inv_pay_mng,model_invoice_payment,event.group_event_manager,1,1,1,1
-
 evt_acc_pay_met_adm,evt_acc_pay_met_adm,account.model_account_payment_method,event_user.group_event_officer,1,1,1,1
 evt_acc_pay_met_mng,evt_acc_pay_met_mng,account.model_account_payment_method,event.group_event_manager,1,1,1,1
-
 
 evt_acc_acc_type_adm,evt_acc_acc_type_adm,account.model_account_account_type,event_user.group_event_officer,1,1,1,1
 evt_acc_acc_type_mng,evt_acc_acc_type_mng,account.model_account_account_type,event.group_event_manager,1,1,1,1

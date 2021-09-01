@@ -62,7 +62,7 @@
 
     <record model="ir.actions.act_window" id="action_event_refund_payment">
         <field name="name">Event Refund Payments</field>
-        <field name="res_model">invoice.payment</field>
+        <field name="res_model">event.refund.payment</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Invoice Payments
@@ -73,6 +73,4 @@
     <menuitem id="menu_event_refund_payment" parent="sub_event_payment"
               action="action_event_refund_payment" sequence="15"
               groups="event_user.group_event_officer,event.group_event_manager"/>
-
-
 </odoo>

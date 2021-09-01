@@ -18,6 +18,8 @@
         'data/default_data.xml',
         'views/menu_views.xml',
         'views/payment_session_views.xml',
+        'views/invoice_payment_views.xml',
+        'views/service_payment_views.xml',
         'views/service_types_views.xml',
         'views/invoice_due.xml',
         # 'report/print_receipt_views.xml',

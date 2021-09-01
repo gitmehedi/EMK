@@ -23,7 +23,6 @@
         'data/sequence.xml',
         'data/default_data.xml',
         'views/menu_views.xml',
-        'views/invoice_payment_views.xml',
         'views/event_refund_payment_views.xml',
     ],
     'installable': True,

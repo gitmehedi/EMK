@@ -2,11 +2,25 @@
 <odoo>
     <data noupdate="1">
         <record id="product_event_participation_fee" model="product.template">
-            <field name="name">Event Participation Fee2</field>
+            <field name="name">Event Participation Fee</field>
             <field name="type">service</field>
             <field name="sale_ok">False</field>
             <field name="purchase_ok">False</field>
             <field name="service_type">event_fee</field>
+        </record>
+        <record id="product_eve_organization_fee" model="product.product">
+            <field name="name">Event Organization Fee</field>
+            <field name="type">service</field>
+            <field name="code">1200</field>
+            <field name="sale_ok">False</field>
+            <field name="purchase_ok">False</field>
+        </record>
+        <record id="product_eve_refund_fee" model="product.product">
+            <field name="name">Event Refund Fee</field>
+            <field name="type">service</field>
+            <field name="code">1250</field>
+            <field name="sale_ok">False</field>
+            <field name="purchase_ok">False</field>
         </record>
     </data>
 </odoo>

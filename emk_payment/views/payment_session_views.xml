@@ -32,7 +32,33 @@
                         </group>
                     </group>
                     <notebook>
-
+                        <page string="Invoice Payments">
+                            <field name="invoice_payment_ids">
+                                <tree string="Invoice Payment" decoration-bf="state == 'draft'"
+                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
+                                    <field name="invoice_type"/>
+                                    <field name="payment_partner_id"/>
+                                    <field name="payment_ref"/>
+                                    <field name="journal_id"/>
+                                    <field name="date"/>
+                                    <field name="state"/>
+                                    <field name="paid_amount" sum="paid_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Service Payments">
+                            <field name="service_fee_ids">
+                                <tree string="Service Payment" decoration-bf="state == 'draft'"
+                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
+                                    <field name="payment_type_id"/>
+                                    <field name="authority_id"/>
+                                    <field name="journal_id"/>
+                                    <field name="collection_date"/>
+                                    <field name="state"/>
+                                    <field name="paid_amount" sum="paid_amount"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
