@@ -56,8 +56,8 @@ class MemberPayment(models.Model):
         users = []
         self.payment_partner_id = None
         if self.invoice_type == 'membership_payment':
-            condition = []
-            condition.append(('is_applicant', '=', True))
+            applicant = self.env['res.partner'].search([('is_applicant', '=', True), ('state', '=', 'invoice')])
+            users = applicant.ids
         if self.invoice_type == 'event_payment':
             payment_users = self.env['account.invoice'].search(
                 [('state', '=', 'open'), ('partner_id.is_organizer', '=', True)])
@@ -99,13 +99,10 @@ class MemberPayment(models.Model):
         if self.state != 'open':
             raise UserError(_('You are not in valid state.'))
         vals = {}
-
-        invoice = self.env['account.invoice'].search(
-            [('partner_id', '=', self.payment_partner_id.id), ('state', '=', 'open')],
-            order='create_date desc')
         invoice = self.invoice_id
+
         if self.invoice_type == 'event_payment':
-            vals['communication'] = 'Payment against Invoice'
+            vals['communication'] = 'Event payment against invoice'
             vals['rem_amount'] = self.paid_amount
             vals['invoice'] = self.invoice_id
             payment = self.create_payment(vals)
@@ -113,7 +110,10 @@ class MemberPayment(models.Model):
                 self.state = 'paid'
 
         if self.invoice_type == 'membership_payment':
-            vals['communication'] = 'Payment against Invoice'
+            # invoice = self.env['account.invoice'].search(
+            #     [('partner_id', '=', self.payment_partner_id.id), ('state', '=', 'open')],
+            #     order='create_date desc')
+            vals['communication'] = 'Membership fee payment against invoice'
             vals['rem_amount'] = self.paid_amount
             vals['invoice'] = self.invoice_id
             rem_amount = self.paid_amount
@@ -132,36 +132,26 @@ class MemberPayment(models.Model):
                     raise UserError(_('Paid amount should have a value.'))
 
                 if inv_amount > 0:
+                    member = self.payment_partner_id
+                    vals['paid_amount'] = inv_amount
                     payment = self.create_payment(vals)
-                    # payment = rec.payment_ids.create({
-                    #     'payment_type': 'inbound',
-                    #     'payment_method_id': payment_method_id.id,
-                    #     'partner_type': 'customer',
-                    #     'invoice_ids': [(6, 0, [rec.id])],
-                    #     'partner_id': self.payment_partner_id.id,
-                    #     'amount': inv_amount,
-                    #     'journal_id': self.journal_id.id,
-                    #     'payment_date': self.date,
-                    #     'communication': pay_text,
-                    # })
-                    # payment.post()
 
                     if payment and len(payment_ref) > 0:
                         self.payment_ref = payment_ref + ', ' + str(rec.display_name)
                     else:
                         self.payment_ref = str(rec.display_name)
 
-                    if rec.state == 'paid' and self.payment_partner_id.state == 'invoice':
-                        seq = self.env['ir.sequence'].next_by_code('res.partner.member')
-                        self.payment_partner_id.write({'state': 'member',
-                                                       'member_sequence': seq,
-                                                       'application_ref': self.payment_partner_id.member_sequence,
-                                                       'free_member': self.payment_partner_id.member_sequence,
-                                                       'membership_state': 'free'
-                                                       })
+                    if rec.state == 'paid' and member.state == 'invoice':
+                        membership_state = 'paid' if inv_amount > 0 else 'free'
+                        member.write({'state': 'member',
+                                      'member_sequence': '',
+                                      'application_ref': member.member_sequence,
+                                      'free_member': True,
+                                      'membership_status': 'active',
+                                      'membership_state': membership_state
+                                      })
                         for inv_line in invoice.invoice_line_ids:
-                            mem_inv = self.env['membership.membership_line'].search([
-                                ('account_invoice_line', '=', inv_line.id)])
+                            mem_inv = self.env['membership.membership_line'].search([('account_invoice_line', '=', inv_line.id)])
                             if len(mem_inv) > 0:
                                 mem_inv.write({
                                     'date': self.date,
@@ -171,32 +161,27 @@ class MemberPayment(models.Model):
 
                         rm_grp = self.env['res.groups'].sudo().search(
                             [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
-                        rm_grp.write({'users': [(3, self.payment_partner_id.user_ids.id)]})
+                        rm_grp.write({'users': [(3, member.user_ids.id)]})
                         add_grp = self.env['res.groups'].sudo().search(
                             [('name', '=', 'Membership User'), ('category_id.name', '=', 'Membership')])
-                        add_grp.write({'users': [(6, 0, [self.payment_partner_id.user_ids.id])]})
+                        add_grp.write({'users': [(4, member.user_ids.id)]})
 
                         vals = {
-                            'template': 'member_payment.member_payment_confirmation_tmpl',
-                            'email_to': self.payment_partner_id.email,
-                            'context': {'name': self.payment_partner_id.name},
+                            'template': 'emk_payment.member_payment_confirmation_tmpl',
+                            'email_to': member.email,
+                            'context': {'name': member.name},
                         }
-
+                        renew_req = self.env['renew.request'].search([('invoice_id', '=', invoice.id)])
+                        if renew_req:
+                            renew_req.write({'state': 'done'})
+                        else:
+                            self.env['rfid.generation'].create({'membership_id': member.id})
                         self.env['res.partner'].mailsend(vals)
-                        self.env['rfid.generation'].create({'membership_id': self.payment_partner_id.id})
 
             if rem_amount > 0:
-                # payment = self.env['account.payment'].create({
-                #     'payment_type': 'inbound',
-                #     'payment_method_id': payment_method_id.id,
-                #     'partner_type': 'customer',
-                #     'partner_id': self.payment_partner_id.id,
-                #     'amount': rem_amount,
-                #     'journal_id': self.journal_id.id,
-                #     'payment_date': self.date,
-                #     'communication': pay_text,
-                # })
-                # payment.post()
+                vals['paid_amount'] = rem_amount
+                vals['communication'] = 'Membership fee payment against invoice'
+                vals['rem_amount'] = self.paid_amount
                 self.create_payment(vals)
                 rem_amount = 0
 
@@ -217,20 +202,18 @@ class MemberPayment(models.Model):
     def create_payment(self, vals):
         payment_method = self.env['account.payment.method'].search(
             [('code', '=', 'manual'), ('payment_type', '=', 'inbound')])
-        invoice = vals['invoice']
         payment = {
             'payment_type': 'inbound',
             'payment_method_id': payment_method.id,
             'partner_type': 'customer',
             'partner_id': self.payment_partner_id.id,
-            'amount': self.paid_amount,
+            'amount': vals['paid_amount'],
             'journal_id': self.journal_id.id,
             'payment_date': self.date,
             'communication': vals['communication'],
-            'invoice_ids': [(6, 0, [invoice.id])],
+            'invoice_ids': [(6, 0, [vals['invoice'].id])] if 'invoice' in vals else [],
         }
 
         payment = self.env['account.payment'].create(payment)
-
         payment.post()
         return payment
