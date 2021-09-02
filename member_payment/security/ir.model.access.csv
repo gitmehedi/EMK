@@ -1,15 +1,61 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-acc_mem_payment_mang,mem_payment_mang,model_member_payment,membership_extension.group_membership_manager,1,1,1,0
-acc_mem_payment_off,mem_payment_off,model_member_payment,member_user.group_mem_user_officer,1,1,1,0
+mem_payment_off,mem_payment_off,model_member_payment,member_user.group_mem_user_officer,1,1,1,0
+mem_payment_mng,mem_payment_mng,model_member_payment,membership_extension.group_membership_manager,1,1,1,0
 
-acc_mem_payment_session_mang,mem_payment_session_mang,model_payment_session,membership_extension.group_membership_manager,1,1,1,0
-acc_mem_payment_session_off,mem_payment_session_off,model_payment_session,member_user.group_mem_user_officer,1,1,1,0
+mem_ser_pay_off,mem_ser_pay_off,model_service_payment,member_user.group_mem_user_officer,1,1,1,0
+mem_ser_pay_mng,mem_ser_pay_mng,model_service_payment,membership_extension.group_membership_manager,1,1,1,0
 
-acc_mem_service_payment_mang,mem_service_payment_mang,model_service_payment,membership_extension.group_membership_manager,1,1,1,0
-acc_mem_service_payment_off,mem_service_payment_off,model_service_payment,member_user.group_mem_user_officer,1,1,1,0
+mem_pay_sess_adm,mem_pay_sess_adm,emk_payment.model_payment_session,member_user.group_mem_user_officer,1,1,1,1
+mem_pay_sess_mng,mem_pay_sess_mng,emk_payment.model_payment_session,membership_extension.group_membership_manager,1,1,1,1
 
+mem_inv_pay_adm,mem_inv_pay_adm,emk_payment.model_invoice_payment,member_user.group_mem_user_officer,1,1,1,1
+mem_inv_pay_mng,mem_inv_pay_mng,emk_payment.model_invoice_payment,membership_extension.group_membership_manager,1,1,1,1
 
+mem_ser_pay_adm,mem_ser_pay_adm,emk_payment.model_service_payment,member_user.group_mem_user_officer,1,1,1,1
+mem_ser_pay_mng,mem_ser_pay_mng,emk_payment.model_service_payment,membership_extension.group_membership_manager,1,1,1,1
 
+mem_acc_jour_adm,mem_acc_jour_adm,account.model_account_journal,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_jour_mng,mem_acc_jour_mng,account.model_account_journal,membership_extension.group_membership_manager,1,1,1,1
 
+mem_acc_inv_adm,mem_acc_inv_adm,account.model_account_invoice,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_inv_mng,mem_acc_inv_mng,account.model_account_invoice,membership_extension.group_membership_manager,1,1,1,1
 
+mem_acc_inv_line_adm,mem_type_adm,account.model_account_invoice_line,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_inv_line_mng,mem_type_mng,account.model_account_invoice_line,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_inv_tax_adm,mem_acc_inv_tax_adm,account.model_account_invoice_tax,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_inv_tax_mng,mem_acc_inv_tax_mng,account.model_account_invoice_tax,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_mv_adm,mem_acc_mv_adm,account.model_account_move,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_mv_mng,mem_acc_mv_mng,account.model_account_move,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_mv_line_adm,mem_acc_mv_line_adm,account.model_account_move_line,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_mv_line_mng,mem_acc_mv_line_mng,account.model_account_move_line,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_par_rec_adm,mem_acc_par_rec_adm,account.model_account_partial_reconcile,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_par_rec_mng,mem_acc_par_rec_mng,account.model_account_partial_reconcile,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_acc_type_adm,mem_acc_acc_type_adm,account.model_account_account_type,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_acc_type_mng,mem_acc_acc_type_mng,account.model_account_account_type,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_ana_line_adm,mem_acc_ana_line_adm,account.model_account_analytic_line,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_ana_line_mng,mem_acc_ana_line_mng,account.model_account_analytic_line,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_pay_met_adm,mem_acc_pay_met_adm,account.model_account_payment_method,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_pay_met_mng,mem_acc_pay_met_mng,account.model_account_payment_method,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_acc_type_adm,mem_acc_acc_type_adm,account.model_account_account_type,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_acc_type_mng,mem_acc_acc_type_mng,account.model_account_account_type,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_pay_adm,mem_acc_pay_adm,account.model_account_payment,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_pay_mng,mem_acc_pay_mng,account.model_account_payment,membership_extension.group_membership_manager,1,1,1,1
+
+mem_acc_full_recon_adm,mem_acc_full_recon_adm,account.model_account_full_reconcile,member_user.group_mem_user_officer,1,1,1,1
+mem_acc_full_recon_mng,mem_acc_full_recon_mng,account.model_account_full_reconcile,membership_extension.group_membership_manager,1,1,1,1
+
+mem_pro_tmpl_adm,mem_pro_tmpl_adm,account.model_product_template,member_user.group_mem_user_officer,1,1,1,1
+mem_pro_tmpl_mng,mem_pro_tmpl_mng,account.model_product_template,membership_extension.group_membership_manager,1,1,1,1
+
+mem_res_part_adm,mem_res_part_adm,base.model_res_partner,member_user.group_mem_user_officer,1,1,1,1
+mem_res_part_mng,mem_res_part_mng,base.model_res_partner,membership_extension.group_membership_manager,1,1,1,1

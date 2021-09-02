@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Member Payment Process',
+    'name': 'Member Payments',
     'description': """ All kinds of payment of member which includes membership registration fees, card replacement fees, service,charge, photocopy fees""",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
@@ -10,6 +10,7 @@
         'account',
         'account_accountant',
         'emk_payment',
+        'member_user',
         'member_signup',
         'member_card_replacement',
     ],
@@ -18,11 +19,7 @@
         'data/sequence.xml',
         'data/email_template.xml',
         'data/default_data.xml',
-        'data/ir_actions_server.xml',
         'views/menu_views.xml',
-        # 'views/payment_session_views.xml',
-        # 'views/membership_fee_views.xml',
-        # 'views/service_payment_views.xml',
     ],
     'installable': True,
     'application': False,
