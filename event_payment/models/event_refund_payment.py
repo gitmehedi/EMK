@@ -28,9 +28,9 @@ class EventRefundPayment(models.Model):
 
     event_id = fields.Many2one('event.event', string="Event", required=True, readonly=True,
                                states={'open': [('readonly', False)]}, track_visibility='onchange')
-    invoice_id = fields.Many2one('account.invoice', string="Refund Invoice", required=True, store=True,
+    ref_invoice_id  = fields.Many2one('account.invoice', string="Refund Invoice", required=True, store=True,
                                  track_visibility='onchange')
-    ref_invoice_id = fields.Many2one('account.invoice', string="Invoice", track_visibility='onchange')
+    invoice_id = fields.Many2one('account.invoice', string="Invoice", track_visibility='onchange')
     paid_amount = fields.Float(string='Paid Amount', digits=(11, 2), required=True)
     payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'open': [('readonly', False)]},
                               track_visibility='onchange')
@@ -49,14 +49,14 @@ class EventRefundPayment(models.Model):
     @api.onchange('event_id')
     def onchange_event(self):
         self.paid_amount = None
-        self.invoice_id = None
+        self.ref_invoice_id = None
         self.payment_partner_id = None
         if self.event_id:
             reserv = self.env['event.reservation'].search([('event_id', '=', self.event_id.id)])
             inv = self.env['account.invoice'].search([('origin', '=', reserv.name), ('state', '=', 'paid'),
                                                       ('amount_total', '=', self.event_id.refundable_amount)])
             if inv:
-                self.invoice_id = inv.id
+                self.ref_invoice_id = inv.id
                 self.payment_partner_id = self.event_id.organizer_id.id
                 self.paid_amount = self.event_id.refundable_amount
 
@@ -70,33 +70,30 @@ class EventRefundPayment(models.Model):
             raise UserError(_('You are not in valid state.'))
 
         ref_inv = self.env['account.invoice.refund'].with_context(
-            active_ids=[self.invoice_id.id]).create({'filter_refund': 'refund',
+            active_ids=[self.ref_invoice_id.id]).create({'filter_refund': 'refund',
                                                      'description': 'Refund created',
                                                      }).invoice_refund()
-        inv = self.invoice_id.search(ref_inv['domain'])
+        inv = self.ref_invoice_id.search(ref_inv['domain'])
         if inv:
             inv.action_invoice_open()
-            # inv.write({'reconciled': 'False'})
-            # self.ref_invoice_id = inv.id
-            #
-            # payment_method = self.env['account.payment.method'].search(
-            #     [('code', '=', 'manual'), ('payment_type', '=', 'inbound')])
-            #
-            # payment = self.env['account.payment'].create({
-            #     'payment_type': 'inbound',
-            #     'payment_method_id': payment_method.id,
-            #     'partner_type': 'customer',
-            #     'partner_id': inv.partner_id.id,
-            #     'amount': inv.amount_total,
-            #     'journal_id': inv.journal_id.id,
-            #     'payment_date': inv.date_invoice,
-            #     'communication': inv.name,
-            #     'invoice_ids': [(6, 0, [inv.id])],
-            # })
-            # payment.post()
-            #
-            # if payment:
-            #     self.state = 'paid'
+            payment_method = self.env['account.payment.method'].search(
+                [('code', '=', 'manual'), ('payment_type', '=', 'inbound')])
+
+            payment = self.env['account.payment'].create({
+                'payment_type': 'outbound',
+                'payment_method_id': payment_method.id,
+                'partner_type': 'customer',
+                'partner_id': inv.partner_id.id,
+                'amount': inv.amount_total,
+                'journal_id': self.journal_id.id,
+                'payment_date': inv.date_invoice,
+                'communication': inv.name,
+                'invoice_ids': [(6, 0, [inv.id])],
+            })
+            payment.post()
+            if payment:
+                self.state = 'paid'
+                self.invoice_id = inv.id
 
     @api.model
     def _needaction_domain_get(self):
