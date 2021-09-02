@@ -51,7 +51,7 @@ class ServicePayment(models.Model):
                                               ('sale_ok', '=', False), ('service_type', '!=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
     payment_id = fields.Many2one('account.payment', readonly=True, states={'open': [('readonly', False)]},
-                                 track_visibility='onchange')
+                                 string="Payment", track_visibility='onchange')
     check_type = fields.Char()
     company_id = fields.Many2one('res.company', string='Company Name', default=lambda self: self.env.user.company_id.id)
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open', string='State',
