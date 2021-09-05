@@ -15,15 +15,24 @@
                     <field name="state" widget="statusbar" statusbar_visible="request,invoice,done"/>
                 </header>
                 <sheet>
-                    <group>
+                    <label for="membership_id"/>
+                    <h1>
+                        <field name="membership_id"
+                               options="{'no_create':True,'no_create_edit':True,}"/>
+                    </h1>
+                    <group string="Membership Duration">
                         <group>
-                            <field name="membership_id"
-                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
-                            <field name="approve_date"/>
+                            <field name="membership_state_date"/>
+                            <field name="membership_end_date"/>
                         </group>
                         <group>
+                            <field name="payment_ids" widget="many2many_tags"/>
+                            <field name="payment_amount"/>
+                            <field name="renew_amount"/>
                             <field name="request_date"/>
-                            <field name="invoice_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="approve_date" states="invoice"/>
+                            <field name="invoice_id" states="invoice"
+                                   options="{'no_create':True,'no_create_edit':True}"/>
                         </group>
                     </group>
                 </sheet>
@@ -44,6 +53,8 @@
                   colors="green:state=='request'; gray:state=='done';blue:state=='invoice';red:state=='done';">
                 <field name="name"/>
                 <field name="membership_id"/>
+                <field name="membership_state_date"/>
+                <field name="membership_end_date"/>
                 <field name="request_date"/>
                 <field name="approve_date"/>
                 <field name="state"/>
@@ -63,9 +74,8 @@
 
     <menuitem name="General" id="menu_general" sequence="3" parent="membership.menu_association"
               groups="member_user.group_mem_user_officer,member_user.group_user_member,membership_extension.group_membership_manager"/>
-    />
+
     <menuitem id="sub_renew_request" parent="menu_general"
               action="action_renew_request"
               groups="member_user.group_mem_user_officer,member_user.group_user_member,membership_extension.group_membership_manager"/>
-    />
 </odoo>

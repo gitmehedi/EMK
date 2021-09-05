@@ -3,8 +3,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 mem_payment_off,mem_payment_off,model_member_payment,member_user.group_mem_user_officer,1,1,1,0
 mem_payment_mng,mem_payment_mng,model_member_payment,membership_extension.group_membership_manager,1,1,1,0
 
-mem_ser_pay_off,mem_ser_pay_off,model_service_payment,member_user.group_mem_user_officer,1,1,1,0
-mem_ser_pay_mng,mem_ser_pay_mng,model_service_payment,membership_extension.group_membership_manager,1,1,1,0
+mem_ser_pay_off,mem_ser_pay_off,emk_payment.model_service_payment,member_user.group_mem_user_officer,1,1,1,0
+mem_ser_pay_mng,mem_ser_pay_mng,emk_payment.model_service_payment,membership_extension.group_membership_manager,1,1,1,0
 
 mem_pay_sess_adm,mem_pay_sess_adm,emk_payment.model_payment_session,member_user.group_mem_user_officer,1,1,1,1
 mem_pay_sess_mng,mem_pay_sess_mng,emk_payment.model_payment_session,membership_extension.group_membership_manager,1,1,1,1

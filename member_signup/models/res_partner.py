@@ -47,9 +47,8 @@ class ResPartner(models.Model):
     last_place_of_study = fields.Char(string='Last or Current Place of Study', track_visibility="onchange")
     place_of_study = fields.Char(string='Place of Study', track_visibility="onchange")
     field_of_study = fields.Char(string='Field of Study', track_visibility="onchange")
-    alumni_institute = fields.Char(
-        string='If you are an alumni of an American institution, which school did you attend?',
-        track_visibility="onchange")
+    alumni_institute = fields.Char(track_visibility="onchange",
+                                   string='If you are an alumni of an American institution, which school did you attend?')
     current_employee = fields.Char(string='Current Employer', track_visibility="onchange")
     work_title = fields.Char(string='Work Title', track_visibility="onchange")
     work_phone = fields.Char(string='Work Phone', track_visibility="onchange")
@@ -117,7 +116,6 @@ class ResPartner(models.Model):
     def _membership_member_states(self):
         state = super(ResPartner, self)._membership_member_states()
         return state
-        return state.remove('invoiced')
 
     @api.multi
     def _compute_signup_valid(self):
@@ -186,15 +184,14 @@ class ResPartner(models.Model):
 
     @api.model
     def _create_invoice(self):
-        product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
-                                                        limit=1)
+        product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc', limit=1)
         if not product_id:
             raise UserError(_('Please configure your default Membership.'))
 
         ins_inv = self.env['account.invoice']
         journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
-        account_id = self.env['account.account'].search(
-            [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
+        account_id = self.env['account.account'].search([('internal_type', '=', 'receivable'),
+                                                         ('deprecated', '=', False)])
 
         acc_invoice = {
             'partner_id': self.id,
