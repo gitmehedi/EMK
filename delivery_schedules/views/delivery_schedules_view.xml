@@ -184,7 +184,7 @@
         </record>
 
         <record id="action_delivery_schedules_line" model="ir.actions.act_window">
-            <field name="name">Delivery Instruction</field>
+            <field name="name">Delivery Instructions</field>
             <field name="res_model">delivery.schedules.line</field>
             <field name="context">{ 'search_default_today':1, 'search_default_pending':1}</field>
             <field name="view_mode">tree</field>
@@ -199,7 +199,7 @@
                   sequence="2"/>
 
         <menuitem id="menu_delivery_instruction"
-                  name="Delivery Instruction"
+                  name="Delivery Instructions"
                   parent="delivery_menu_root"
                   groups="stock.delivery_user"
                   action="action_delivery_schedules_line"
