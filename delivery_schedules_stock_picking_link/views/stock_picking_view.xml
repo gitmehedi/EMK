@@ -5,7 +5,11 @@
             <field name="name">stock.picking.form.inherit.link</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="priority" eval="100"/>
             <field name="arch" type="xml">
+                <xpath expr="//button[@name='do_unreserve']" position="attributes">
+                    <attribute name="invisible">context.get('active_model', False)=='delivery.schedules.line'</attribute>
+                </xpath>
                 <xpath expr="//form/sheet/notebook/page/field[@name='pack_operation_product_ids']/tree/field[@name='qty_done']" position="attributes">
                     <attribute name="readonly">1</attribute>
                 </xpath>
@@ -16,6 +20,7 @@
             <field name="name">stock.picking.form.inherit.link</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="priority" eval="101"/>
             <field name="groups_id" eval="[(6, 0, [ref('stock.group_stock_user')])]"/>
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet/notebook/page/field[@name='pack_operation_product_ids']/tree/field[@name='qty_done']" position="attributes">

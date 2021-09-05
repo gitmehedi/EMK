@@ -23,6 +23,8 @@ class DeliverySchedulesLine(models.Model):
             }
 
         picking = self.sale_order_id.mapped('picking_ids').filtered(lambda i: i.state not in ['done', 'cancel'] and i.picking_type_id.code == 'outgoing')
+        if not picking:
+            raise UserError(_('No remaining qty for delivery.'))
 
         # check qty availability
         if picking.state != 'assigned':
@@ -72,5 +74,10 @@ class DeliverySchedulesLine(models.Model):
     def action_delivery_detail(self):
         action = self.env.ref('stock.action_picking_form').read()[0]
         action['res_id'] = self.stock_picking_id.id
+        action['context'] = {
+            'search_default_picking_type_id': [self.stock_picking_id.picking_type_id.id],
+            'default_picking_type_id': self.stock_picking_id.picking_type_id.id,
+            'contact_display': 'partner_address'
+        }
 
         return action
