@@ -43,10 +43,9 @@
 
 					</style>
                     <header>
-                        <button name="action_confirm" type="object" states="draft,revision" string="Confirm" class="oe_highlight"
-                                groups="delivery_schedules.group_delivery_schedule_manager"/>
+                        <button name="action_confirm" type="object" states="draft,revision"
+                                string="Confirm" class="oe_highlight"/>
                         <button string="Revised" name="action_revise"
-                                groups="delivery_schedules.group_delivery_schedule_manager"
                                 states="approve" type="object"/>
                         <field name="state" statusbar_visible="draft,approve" widget="statusbar"/>
 
@@ -61,6 +60,7 @@
                             </group>
                             <group>
                                 <field name="operating_unit_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="region_type"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Customers">
@@ -138,13 +138,30 @@
             <field name="name">Delivery Schedules</field>
             <field name="res_model">delivery.schedules</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'default_region_type': 'local'}</field>
+            <field name="domain">[('region_type','=','local')]</field>
+        </record>
+
+        <record id="action_delivery_schedules_foreign" model="ir.actions.act_window">
+            <field name="name">Delivery Schedules</field>
+            <field name="res_model">delivery.schedules</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_region_type': 'foreign'}</field>
+            <field name="domain">[('region_type','=','foreign')]</field>
         </record>
 
         <menuitem id="menu_delivery_schedules"
-                  name="Delivery Schedules"
+                  name="Delivery Schedules (Local)"
                   parent="delivery_order.delivery_menu"
                   groups="delivery_schedules.group_delivery_schedule_manager"
                   action="action_delivery_schedules"
+                  sequence="5"/>
+
+        <menuitem id="menu_delivery_schedules_foreign"
+                  name="Delivery Schedules (Foreign)"
+                  parent="delivery_order.delivery_menu"
+                  groups="delivery_schedules.group_delivery_schedule_manager_foreign"
+                  action="action_delivery_schedules_foreign"
                   sequence="5"/>
 
         <!-- Delivery Schedules Line-->
@@ -192,6 +209,26 @@
             <field name="search_view_id" ref="view_delivery_schedules_line_search"/>
         </record>
 
+        <record id="action_delivery_schedules_line_local" model="ir.actions.act_window">
+            <field name="name">Delivery Details</field>
+            <field name="res_model">delivery.schedules.line</field>
+            <field name="context">{ 'search_default_today':1, 'search_default_pending':1}</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_delivery_schedules_line_tree"/>
+            <field name="search_view_id" ref="view_delivery_schedules_line_search"/>
+            <field name="domain">[('schedule_id.region_type','=','local')]</field>
+        </record>
+
+        <record id="action_delivery_schedules_line_foreign" model="ir.actions.act_window">
+            <field name="name">Delivery Details</field>
+            <field name="res_model">delivery.schedules.line</field>
+            <field name="context">{ 'search_default_today':1, 'search_default_pending':1}</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_delivery_schedules_line_tree"/>
+            <field name="search_view_id" ref="view_delivery_schedules_line_search"/>
+            <field name="domain">[('schedule_id.region_type','=','foreign')]</field>
+        </record>
+
         <menuitem id="delivery_menu_root"
                   name="Delivery"
                   parent="stock.menu_stock_root"
@@ -205,11 +242,18 @@
                   action="action_delivery_schedules_line"
                   sequence="1"/>
 
-        <menuitem id="menu_delivery_instruction_details"
-                  name="Delivery Details"
+        <menuitem id="menu_delivery_instruction_details_local"
+                  name="Delivery Details (Local)"
                   parent="delivery_order.delivery_menu"
                   groups="delivery_schedules.group_delivery_schedule_manager"
-                  action="action_delivery_schedules_line"
+                  action="action_delivery_schedules_line_local"
+                  sequence="5"/>
+
+        <menuitem id="menu_delivery_instruction_details_foreign"
+                  name="Delivery Details (Foreign)"
+                  parent="delivery_order.delivery_menu"
+                  groups="delivery_schedules.group_delivery_schedule_manager_foreign"
+                  action="action_delivery_schedules_line_foreign"
                   sequence="5"/>
     </data>
 </odoo>

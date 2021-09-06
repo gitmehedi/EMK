@@ -24,6 +24,8 @@ class DeliverySchedules(models.Model):
                                         states={'draft': [('readonly', False)]}, track_visibility='onchange')
     scheduled_qty = fields.Float(string='Total Scheduled Qty.', compute='_compute_scheduled_qty', store=True,
                                  track_visibility='onchange')
+    region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="Region Type", required=True,
+                                   readonly=True, default=lambda self: self.env.context.get('region_type'))
     state = fields.Selection([
         ('draft', "Draft"),
         ('revision', "Revised"),
