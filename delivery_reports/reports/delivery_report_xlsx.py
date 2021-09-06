@@ -182,12 +182,23 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.merge_range(3, 0, 3, 11, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
         sheet.merge_range(4, 0, 4, 11, "Delivery Report", name_format)
 
+        # Currency rate block
         row = 5
         for key, val in conversion_rate_dict.items():
             if key != self.env.user.company_id.currency_id.name:
                 sheet.merge_range(row, 9, row, 11, key + ": " + str(val), bold)
                 row += 1
 
+        # Filter Block
+        partner = obj.partner_id.name or 'All'
+        product = obj.product_tmpl_id.display_name or 'All'
+        product_variant = obj.product_id.display_name or 'All'
+
+        sheet.merge_range(row, 0, row, 2, "Product: " + product, bold)
+        row += 1
+        sheet.merge_range(row, 0, row, 2, "Product Variant: " + product_variant, bold)
+        sheet.merge_range(row, 9, row, 11, "Customer: " + partner, bold)
+        row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
         sheet.merge_range(row, 9, row, 11, "Date: " + self.get_formatted_date(obj.date_from, "%d-%m-%Y") + " To " + self.get_formatted_date(obj.date_to, "%d-%m-%Y"), bold)
         row += 1
