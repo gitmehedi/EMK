@@ -605,7 +605,10 @@ class CostSheetXLSX(ReportXlsx):
                         COALESCE(SUM(quantity), 0) AS quantity
                     FROM
                         ((SELECT
-                            SUM(m.quantity_done_store) AS quantity
+                            SUM(CASE 
+                                WHEN COALESCE(pp.ratio_in_percentage, 0)=0 THEN COALESCE(m.quantity_done_store, 0)
+                                ELSE (pp.ratio_in_percentage * COALESCE(m.quantity_done_store, 0) / 100) 
+                            END) AS quantity
                         FROM
                             stock_move m
                             JOIN mrp_production mrp ON mrp.id=m.production_id AND mrp.state='done'
@@ -615,7 +618,10 @@ class CostSheetXLSX(ReportXlsx):
                         """ + where_clause + """)
                         UNION
                         (SELECT
-                            -SUM(m.quantity_done_store) AS quantity
+                            -SUM(CASE 
+                                WHEN COALESCE(pp.ratio_in_percentage, 0)=0 THEN COALESCE(m.quantity_done_store, 0)
+                                ELSE (pp.ratio_in_percentage * COALESCE(m.quantity_done_store, 0) / 100) 
+                            END) AS quantity
                         FROM
                             stock_move m
                             JOIN mrp_unbuild mrp ON mrp.id=m.consume_unbuild_id AND mrp.state='done'
