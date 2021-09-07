@@ -584,10 +584,10 @@ class CostSheetXLSX(ReportXlsx):
     @staticmethod
     def _prepare_query_of_sales_quantity(where_clause):
         sql_str = """SELECT
-                        SUM(CASE 
-                                WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(aml.quantity, 0)
-                                ELSE (p.ratio_in_percentage * COALESCE(aml.quantity, 0) / 100) 
-                            END) AS quantity
+                        COALESCE(SUM(CASE 
+                                        WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(aml.quantity, 0)
+                                        ELSE (p.ratio_in_percentage * COALESCE(aml.quantity, 0) / 100) 
+                                    END), 0) AS quantity
                     FROM
                         account_move_line aml
                         JOIN account_move mv ON mv.id=aml.move_id
