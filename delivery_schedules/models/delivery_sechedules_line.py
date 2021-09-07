@@ -90,7 +90,8 @@ class DeliveryScheduleLine(models.Model):
 
         sale_order_lines = delivery_authorizations.mapped('sale_order_id').mapped('order_line').filtered(
             lambda x: x.product_uom_qty > x.qty_delivered)
-        sale_order_ids = sale_order_lines.mapped('order_id')
+        sale_order_ids = sale_order_lines.mapped('order_id').filtered(
+            lambda o: o.region_type == self.schedule_id.region_type)
 
         if len(sale_order_ids) == 1:
             self.sale_order_id = self.env['sale.order'].sudo().search([('id', '=', sale_order_ids.id)])
