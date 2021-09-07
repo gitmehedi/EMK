@@ -83,55 +83,36 @@ class CostSheetXLSX(ReportXlsx):
 
         # prepare where clause
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
+
+        # Sales qty
+        sql_str_of_sales_qty = self._prepare_query_of_sales_quantity(where_clause)
+        # execute the query
+        self.env.cr.execute(sql_str_of_sales_qty)
+        sales_qty = sum(row['quantity'] for row in self.env.cr.dictfetchall()) or 0.0
+
+        # Net revenue
         account_ids = self.env['account.account'].search([('user_type_id', '=', INCOME_USER_TYPE_ID)]).ids
         if account_ids:
             param = (tuple(account_ids),)
             where_clause += " AND aml.account_id IN %s" % param
-        # end
 
-        # get sales qty
         sql_str = """SELECT
-                        cost_center_id,
-                        name,
-                        COALESCE(SUM(quantity), 0) AS quantity,
-                        COALESCE(SUM(amount), 0) AS amount
+                        aml.cost_center_id,
+                        acc.name,
+                        0 AS quantity,
+                        -(SUM(aml.debit)-SUM(aml.credit)) AS amount
                     FROM
-                        ((SELECT
-                            aml.cost_center_id,
-                            acc.name,
-                            CASE 
-                                WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(SUM(aml.quantity), 0)
-                                ELSE (p.ratio_in_percentage * COALESCE(SUM(aml.quantity), 0) / 100) 
-                            END AS quantity,
-                            0 AS amount
-                        FROM
-                            account_move_line aml
-                            JOIN account_move mv ON mv.id=aml.move_id
-                            JOIN account_invoice i ON i.move_id=mv.id AND i.type='out_invoice'
-                            JOIN account_invoice_line l ON l.invoice_id=i.id
-                            JOIN product_product p ON p.id=l.product_id
-                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
-                        """ + where_clause + """
-                        GROUP BY aml.cost_center_id,acc.name,p.ratio_in_percentage 
-                        ORDER BY aml.cost_center_id)
-                        UNION
-                        (SELECT
-                            aml.cost_center_id,
-                            acc.name,
-                            COALESCE(SUM(aml.quantity), 0) AS quantity,
-                            -(SUM(aml.debit)-SUM(aml.credit)) AS amount
-                        FROM
-                            account_move_line aml
-                            JOIN account_move mv ON mv.id=aml.move_id
-                            JOIN account_cost_center acc ON acc.id=aml.cost_center_id
-                        """ + where_clause + """ 
-                        GROUP BY aml.cost_center_id,acc.name 
-                        ORDER BY aml.cost_center_id)) AS tbl
-                    GROUP BY cost_center_id,name
+                        account_move_line aml
+                        JOIN account_move mv ON mv.id=aml.move_id
+                        JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                    """ + where_clause + """ 
+                    GROUP BY aml.cost_center_id,acc.name 
+                    ORDER BY aml.cost_center_id
         """
 
         self.env.cr.execute(sql_str)
         for row in self.env.cr.dictfetchall():
+            row['quantity'] = sales_qty
             item_list.append(row)
 
         return item_list
@@ -599,6 +580,24 @@ class CostSheetXLSX(ReportXlsx):
                     item[IE_ORDER[n]] = sorted(temp_list, key=lambda l: (l[attr_name], l['name']))
 
         return data_list
+
+    @staticmethod
+    def _prepare_query_of_sales_quantity(where_clause):
+        sql_str = """SELECT
+                        SUM(CASE 
+                                WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(aml.quantity, 0)
+                                ELSE (p.ratio_in_percentage * COALESCE(aml.quantity, 0) / 100) 
+                            END) AS quantity
+                    FROM
+                        account_move_line aml
+                        JOIN account_move mv ON mv.id=aml.move_id
+                        JOIN account_invoice i ON i.move_id=mv.id AND i.type='out_invoice'
+                        JOIN account_invoice_line l ON l.invoice_id=i.id
+                        JOIN product_product p ON p.id=l.product_id
+                        JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                    """ + where_clause
+
+        return sql_str
 
     @staticmethod
     def _prepare_query_of_production_quantity(where_clause):
