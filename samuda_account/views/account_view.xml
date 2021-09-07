@@ -13,6 +13,18 @@
             </field>
         </record>
 
+        <record id="view_move_tree2" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit.samuda.account</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="delete">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <!-- Form View -->
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">account.move.form.inherit.samuda.account</field>
@@ -21,6 +33,18 @@
             <field name="arch" type="xml">
                 <xpath expr="//form" position="attributes">
                     <attribute name="delete">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_form2" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.samuda.account</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="delete">1</attribute>
                 </xpath>
             </field>
         </record>

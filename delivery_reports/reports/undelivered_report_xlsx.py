@@ -148,6 +148,16 @@ class UndeliveredReportXLSX(ReportXlsx):
                 sheet.merge_range(row, 8, row, 10, key + ": " + str(val), bold)
                 row += 1
 
+        # Filter Block
+        partner = obj.partner_id.name or 'All'
+        product = obj.product_tmpl_id.display_name or 'All'
+        product_variant = obj.product_id.display_name or 'All'
+
+        sheet.merge_range(row, 0, row, 2, "Product: " + product, bold)
+        row += 1
+        sheet.merge_range(row, 0, row, 2, "Product Variant: " + product_variant, bold)
+        sheet.merge_range(row, 8, row, 10, "Customer: " + partner, bold)
+        row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
         sheet.merge_range(row, 8, row, 10, "Date: " + self.get_formatted_date(obj.date_today, "%d-%m-%Y"), bold)
         row += 1

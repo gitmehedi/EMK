@@ -74,7 +74,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                             JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                             JOIN account_cost_center acc ON acc.id=aml.cost_center_id
                         """ + where_clause + """
-                            AND aat.name IN ('Refund','Vat')
+                            AND aat.name IN ('Refund','Vat', 'Rental-Inc')
                         GROUP BY aml.cost_center_id,acc.name 
                         ORDER BY aml.cost_center_id)
                         UNION
@@ -90,7 +90,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                         FROM
                             account_move_line aml
                             JOIN account_move mv ON mv.id=aml.move_id
-                            JOIN account_invoice i ON i.move_id=mv.id
+                            JOIN account_invoice i ON i.move_id=mv.id AND i.type='out_invoice'
                             JOIN account_invoice_line l ON l.invoice_id=i.id
                             JOIN product_product p ON p.id=l.product_id
                             JOIN account_cost_center acc ON acc.id=aml.cost_center_id

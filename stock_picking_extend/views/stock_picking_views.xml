@@ -4,17 +4,20 @@
         <field name="name">stock.picking.form1</field>
         <field name="model">stock.picking</field>
         <field name="arch" type="xml">
-            <form string="Receive Transfers">
+            <form string="Receive Transfers" create="0" delete="0" duplicate="0">
                 <header>
                     <button name="action_assign" states="confirmed,waiting" string="Reserve" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                     <button name="action_assign" states="partially_available" string="Recheck Availability" type="object" groups="stock.group_stock_user"/>
                     <button name="do_new_transfer" states="draft,partially_available,assigned" string="Receive" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="%(stock.act_stock_return_picking)d" string="Return" states="done" type="action" groups="stock.group_stock_user"/>
-                    <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting" string="Cancel" groups="stock.group_stock_user" type="object"/>
+<!--                    <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting" string="Cancel" groups="stock.group_stock_user" type="object"/>-->
                     <button name="do_prepare_partial" attrs="{'invisible': ['|', ('launch_pack_operations', '=', True), '|', ('state', 'not in', ('assigned', 'partially_available')), ('pack_operation_ids', '!=', [])]}"
                             string="Reset Operations" type="object"/>
                     <field name="launch_pack_operations" invisible="1"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                    <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting"
+                            confirm="Are you sure you want to cancel?"
+                            string="Cancel" groups="base.group_system" type="object" class="btn-primary btn-danger mr24 pull-right oe_read_only"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -55,7 +58,7 @@
                             <field name="recompute_pack_op" invisible="1"/>
                             <field name="pack_operation_ids" invisible="1"/>
                             <field name="pack_operation_product_ids" options="{'reload_on_button': True}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}" mode="tree,kanban">
-                                <tree editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_qty" decoration-success="qty_done==product_qty and state!='done' and not result_package_id">
+                                <tree create="0" editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_qty" decoration-success="qty_done==product_qty and state!='done' and not result_package_id">
                                     <field name="package_id" groups="stock.group_tracking_lot" invisible="1"/>
                                     <field name="product_id" required="1" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
                                     <field name="fresh_record" invisible="1"/>
@@ -197,7 +200,7 @@
         <field name="name">view.picking.tree1</field>
         <field name="model">stock.picking</field>
         <field name="arch" type="xml">
-            <tree string="Receive Transfers">
+            <tree string="Receive Transfers" create="0" delete="0">
                 <field name="name"/>
                 <field name="location_dest_id"/>
                 <field name="partner_id"/>
@@ -213,12 +216,11 @@
         </field>
     </record>
 
-
     <record id="view_stock_picking_tree2" model="ir.ui.view">
         <field name="name">view.picking.tree2</field>
         <field name="model">stock.picking</field>
         <field name="arch" type="xml">
-            <tree string="Receive Transfers" create="false" edit="false">
+            <tree string="Receive Transfers" create="0" delete="0">
                 <field name="name"/>
                 <field name="location_dest_id"/>
                 <field name="date" invisible="1"/>
@@ -374,16 +376,28 @@
               parent="menu_receive_picking_acc_approver"
               action="action_stock_picking_receive_acc_approver" groups="account.group_account_user"/>
 
-    <record model="ir.ui.view" id="view_picking_form_inherit">
+    <record id="view_picking_form_inherit" model="ir.ui.view">
         <field name="name">stock.picking.inherit.form</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="delete">0</attribute>
+                <attribute name="duplicate">0</attribute>
+            </xpath>
+            <xpath expr="//sheet/notebook/page/field[@name='pack_operation_product_ids']/tree" position="attributes">
+                <attribute name="create">0</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_cancel']" position="replace">
             </xpath>
             <xpath expr="//field[@name='state']" position="after">
+<!--                <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting"-->
+<!--                        string="Cancel" groups="base.group_user" type="object" class="btn-primary btn-danger mr24 pull-right oe_read_only"/>-->
                 <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting"
-                        string="Cancel" groups="base.group_user" type="object" class="btn-primary btn-danger mr24 pull-right oe_read_only"/>
+                        confirm="Are you sure you want to cancel?"
+                        string="Cancel" groups="stock.delivery_user" type="object"
+                        class="btn-primary btn-danger mr24 pull-right oe_read_only"/>
             </xpath>
             <xpath expr="//button[@name='action_see_move_scrap']" position="before">
                 <button class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
@@ -526,5 +540,91 @@
             </field>
         </field>
     </record>
+
+    <!-- GIVE Create, Delete, Duplicate PERMISSION to ADMIN user -->
+    <record id="view_stock_picking_form200" model="ir.ui.view">
+        <field name="name">stock.picking.form200</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="priority" eval="200"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">1</attribute>
+                <attribute name="delete">1</attribute>
+                <attribute name="duplicate">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.tree.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="delete">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree200" model="ir.ui.view">
+        <field name="name">stock.picking.tree200</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="priority" eval="200"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">1</attribute>
+                <attribute name="delete">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_form100" model="ir.ui.view">
+        <field name="name">stock.picking.form100</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="view_stock_picking_form1"/>
+        <field name="priority" eval="100"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">1</attribute>
+                <attribute name="delete">1</attribute>
+                <attribute name="duplicate">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_tree100" model="ir.ui.view">
+        <field name="name">view.picking.tree100</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="view_stock_picking_tree1"/>
+        <field name="priority" eval="100"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">1</attribute>
+                <attribute name="delete">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_tree200" model="ir.ui.view">
+        <field name="name">view.picking.tree200</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="view_stock_picking_tree2"/>
+        <field name="priority" eval="200"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">1</attribute>
+                <attribute name="delete">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!-- END -->
 
 </odoo>

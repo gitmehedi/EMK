@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_message_box_wizard_form" model="ir.ui.view">
+            <field name="name">message.box.wizard.form</field>
+            <field name="model">message.box.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Warning Message">
+                    <script>
+                        $(document).ready(function(){
+                            $('.modal-dialog').css({'width': '50%'});
+                        });
+                    </script>
+                    <separator/>
+                    <field name="text" nolabel="1" readonly="1" widget="html"/>
+                    <newline/>
+                    <separator/>
+                    <footer>
+                        <button string="OK" special="cancel" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

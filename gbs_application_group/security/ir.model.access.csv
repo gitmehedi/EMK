@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_res_company_account_closing,res.company.account.closing,base.model_res_company,gbs_application_group.group_account_closing,1,1,0,0
