@@ -47,11 +47,11 @@
 						<button name="indent_confirm" string="Confirm" states="draft"
 								class="oe_highlight" type="object"/>
 						<button name="approve_indent" string="Approve" states="waiting_approval" type="object"
-								class="oe_highlight" groups="stock_indent.group_stock_indent_approver"/>
+								class="oe_highlight" groups="inventory_user.grp_inv_supervisor"/>
 						<button name="reject_indent" string="Reject" states="waiting_approval"
-								groups="stock_indent.group_stock_indent_approver" type="object"/>
+								groups="inventory_user.grp_inv_supervisor" type="object"/>
 						<button name="action_view_picking" string="Issue Product(s)" type="object"
-								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
+								states="inprogress" class="oe_highlight" groups="inventory_user.grp_inv_department_executive"/>
 						<button name="action_close_indent" string="Close" type="object"
 								states="inprogress" groups="stock.group_stock_user"/>
 						<field name="state" widget="statusbar"
@@ -170,7 +170,7 @@
 
 		<menuitem action="action_indent_waiting_for_approval" name="Indents Waiting For Approval"
 				  parent="menu_indent_indent_main" id="menu_indent_waiting_for_approval" sequence="2"
-				  groups="stock_indent.group_stock_indent_approver"/>
+				  groups="inventory_user.grp_inv_supervisor"/>
 
 	</data>
 </odoo>
