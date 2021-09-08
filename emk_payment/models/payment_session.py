@@ -61,7 +61,7 @@ class PaymentSession(models.Model):
         if self.state == 'opened':
             mstates, sstates = 0, 0
 
-            for rec in self.member_fee_ids:
+            for rec in self.invoice_payment_ids:
                 if rec.state == 'open':
                     mstates = mstates + 1
             for rec in self.service_fee_ids:

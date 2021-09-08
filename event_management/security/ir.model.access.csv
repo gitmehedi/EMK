@@ -32,7 +32,7 @@ evt_reg_usr,evt_reg_usr,event.model_event_registration,event.group_event_user,1,
 evt_reg_adm,evt_reg_adm,event.model_event_registration,event_user.group_event_officer,1,1,1,1
 evt_reg_mng,evt_reg_mng,event.model_event_registration,event.group_event_manager,1,1,1,1
 
-evt_task_list_usr,evt_task_list_usr,model_event_task_list,event.group_event_user,1,0,0,0
+evt_task_list_usr,evt_task_list_usr,model_event_task_list,event.group_event_user,1,1,1,0
 evt_task_list_adm,evt_task_list_adm,model_event_task_list,event_user.group_event_officer,1,1,1,1
 evt_task_list_mng,evt_task_list_mng,model_event_task_list,event.group_event_manager,1,1,1,1
 

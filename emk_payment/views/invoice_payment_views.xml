@@ -53,7 +53,7 @@
                 <field name="session_id"/>
                 <field name="invoice_type"/>
                 <field name="payment_partner_id"/>
-                <field name="payment_ref"/>
+                <field name="invoice_id"/>
                 <field name="journal_id"/>
                 <field name="date"/>
                 <field name="state"/>

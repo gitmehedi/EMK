@@ -21,7 +21,7 @@
     'data': [
         'data/email_template.xml',
         'security/ir.model.access.csv',
-        # 'security/ir_rule.xml',
+        'security/ir_rule.xml',
         'data/ir_sequence.xml',
         'wizard/wizard_monthly_event_view.xml',
         'wizard/data_import_wizard_view.xml',

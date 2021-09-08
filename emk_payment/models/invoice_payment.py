@@ -9,7 +9,7 @@ class MemberPayment(models.Model):
     _name = 'invoice.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
-    _rec_name = 'payment_partner_id'
+    _rec_name = 'invoice_id'
     _description = 'Invoice Payment'
 
     @api.model
@@ -103,7 +103,7 @@ class MemberPayment(models.Model):
 
         if self.invoice_type == 'event_payment':
             vals['communication'] = 'Event payment against invoice'
-            vals['rem_amount'] = self.paid_amount
+            vals['paid_amount'] = self.paid_amount
             vals['invoice'] = self.invoice_id
             payment = self.create_payment(vals)
             if payment:
@@ -114,7 +114,7 @@ class MemberPayment(models.Model):
             #     [('partner_id', '=', self.payment_partner_id.id), ('state', '=', 'open')],
             #     order='create_date desc')
             vals['communication'] = 'Membership fee payment against invoice'
-            vals['rem_amount'] = self.paid_amount
+            vals['paid_amount'] = self.paid_amount
             vals['invoice'] = self.invoice_id
             rem_amount = self.paid_amount
 

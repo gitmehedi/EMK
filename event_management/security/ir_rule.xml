@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="rule_res_partner_event_organizer" model="ir.rule">
-            <field name="name">Rule Partner Event Organizer</field>
-            <field name="model_id" ref="event.model_event_event"></field>
-            <field name="groups" eval="[(4,ref('event_user.group_event_organizer'))]"></field>
-            <field name="domain_force">[('organizer_id','=',user.partner_id.id)]</field>
-            <field eval="1" name="perm_read"></field>
-            <field eval="1" name="perm_write"></field>
-            <field eval="1" name="perm_unlink"></field>
-            <field eval="1" name="perm_create"></field>
+        <record id="website_event.event_event_public" model="ir.rule">
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal')]),(6, 0, [ref('base.group_public')])]"/>
+            <field name="global" eval="False"/>
+            <field name="active" eval="False"/>
         </record>
-        <record id="rule_report_event_registration_organizer" model="ir.rule">
-            <field name="name">Rule Report Event Registration Event Organizer</field>
-            <field name="model_id" ref="event.model_report_event_registration"></field>
-            <field name="groups" eval="[(4,ref('event_user.group_event_organizer'))]"></field>
-            <field name="domain_force">[('event_id.organizer_id','=',user.partner_id.id)]</field>
-            <field eval="1" name="perm_read"></field>
-            <field eval="0" name="perm_write"></field>
-            <field eval="0" name="perm_unlink"></field>
-            <field eval="0" name="perm_create"></field>
+        <record id="event.event_registration_company_rule" model="ir.rule">
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal')]),(6, 0, [ref('base.group_public')])]"/>
+            <field name="active" eval="False"/>
+            <field name="global" eval="False"/>
         </record>
-        <record id="rule_event_task_list" model="ir.rule">
-            <field name="name">Rule Event Task for assign user</field>
+        <record id="event.event_registration_company_rule" model="ir.rule">
+            <field name="active" eval="False"/>
+            <field name="global" eval="False"/>
+            <field name="domain_force">[]</field>
+        </record>
+
+        <record id="rule_res_partner_event_internal_user" model="ir.rule">
+            <field name="name">Event: Task List</field>
             <field name="model_id" ref="model_event_task_list"></field>
             <field name="groups" eval="[(4,ref('event.group_event_user'))]"></field>
-            <field name="domain_force">[('assign_emp_id','=',user.partner_id.id),('state','!=','draft')]</field>
+            <field name="domain_force">['|', ('create_uid', '=', user.id),('assign_emp_id', '=', user.partner_id.id)]
+            </field>
+            <field eval="False" name="global"></field>
             <field eval="1" name="perm_read"></field>
-            <field eval="0" name="perm_write"></field>
+            <field eval="1" name="perm_write"></field>
             <field eval="0" name="perm_unlink"></field>
-            <field eval="0" name="perm_create"></field>
+            <field eval="1" name="perm_create"></field>
         </record>
+        <!--        <record id="rule_report_event_registration_organizer" model="ir.rule">-->
+        <!--            <field name="name">Rule Report Event Registration Event Organizer</field>-->
+        <!--            <field name="model_id" ref="event.model_report_event_registration"></field>-->
+        <!--            <field name="groups" eval="[(4,ref('event_user.group_event_organizer'))]"></field>-->
+        <!--            <field name="domain_force">[('event_id.organizer_id','=',user.partner_id.id)]</field>-->
+        <!--            <field eval="1" name="perm_read"></field>-->
+        <!--            <field eval="0" name="perm_write"></field>-->
+        <!--            <field eval="0" name="perm_unlink"></field>-->
+        <!--            <field eval="0" name="perm_create"></field>-->
+        <!--        </record>-->
+        <!--        <record id="rule_event_task_list" model="ir.rule">-->
+        <!--            <field name="name">Rule Event Task for assign user</field>-->
+        <!--            <field name="model_id" ref="model_event_task_list"></field>-->
+        <!--            <field name="groups" eval="[(4,ref('event.group_event_user'))]"></field>-->
+        <!--            <field name="domain_force">[('assign_emp_id','=',user.partner_id.id),('state','!=','draft')]</field>-->
+        <!--            <field eval="1" name="perm_read"></field>-->
+        <!--            <field eval="0" name="perm_write"></field>-->
+        <!--            <field eval="0" name="perm_unlink"></field>-->
+        <!--            <field eval="0" name="perm_create"></field>-->
+        <!--        </record>-->
     </data>
 </odoo>
