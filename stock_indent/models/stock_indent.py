@@ -68,7 +68,7 @@ class IndentIndent(models.Model):
                                    help="Default Warehouse.Source location.",
                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type',string='Picking Type',compute = '_compute_default_picking_type',
-                                      readonly=True, store = True)
+                                      readonly=True, store = True,)
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
                                  readonly=True, required=True, default='direct',
                                  states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
@@ -316,9 +316,9 @@ class IndentProductLines(models.Model):
 
     indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True)
-    product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
+    product_uom_qty = fields.Float('Indent Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
-    received_qty = fields.Float('Received', digits=dp.get_precision('Product UoS'),help="Receive Quantity which Update by done quntity.")
+    received_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),help="Receive Quantity which Update by done quntity.")
     issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),help="Issued Quantity which Update by avilable quantity.")
     product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='Unit of Measure', required=True,store=True)
     price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),store=True,
@@ -327,7 +327,7 @@ class IndentProductLines(models.Model):
                                   store=True)
     qty_available = fields.Float(string='In Stock',compute = '_compute_product_qty')
     name = fields.Char(related='product_id.name',string='Specification',store=True)
-    remarks = fields.Text('Remarks')
+    remarks = fields.Text('Narration')
     sequence = fields.Integer('Sequence')
 
     ####################################################

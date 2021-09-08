@@ -46,6 +46,7 @@ A purchase order is generated for the service taken for the supplier who repairs
         'data/stock_indent_sequence.xml',
         'views/stock_location_view.xml',
         'views/stock_indent_view.xml',
+        'views/stock_picking_type.xml',
         ],
     'installable': True,
     'application': False,
