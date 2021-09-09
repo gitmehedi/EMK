@@ -10,7 +10,7 @@
         # 'report/absence_report_pdf.xml',
         'report/employee_absence_view.xml',
     ],
-    'depends': ['calendar'],
+    'depends': ['calendar', 'mail'],
     'summary': 'Customizable calendar for organizations',
     'description':
         """Organization Summary

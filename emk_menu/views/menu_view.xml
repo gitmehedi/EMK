@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="name">Employees</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="hr_holidays.menu_hr_holidays_root" model="ir.ui.menu">
+            <field name="name">Leaves</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="hr_payroll.menu_hr_payroll_root" model="ir.ui.menu">
+            <field name="name">Payroll</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record id="hr_recruitment.menu_hr_recruitment_root" model="ir.ui.menu">
+            <field name="name">Recruitment</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="hr_attendance.menu_hr_attendance_root" model="ir.ui.menu">
+            <field name="name">Attendances</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <record id="stock.menu_stock_root" model="ir.ui.menu">
+            <field name="name">Inventory</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="calendar.mail_menu_calendar" model="ir.ui.menu">
+            <field name="name">Calendar</field>
+            <field name="sequence">70</field>
+        </record>
+
+        <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
+            <field name="name">Discuss</field>
+            <field name="sequence">75</field>
+        </record>
+
+        <record id="utm.menu_link_tracker_root" model="ir.ui.menu">
+            <field name="name">Link Tracker</field>
+            <field name="sequence">90</field>
+        </record>
+
+        <record id="survey.menu_surveys" model="ir.ui.menu">
+            <field name="name">Surveys</field>
+            <field name="sequence">91</field>
+        </record>
+    </data>
+</odoo>

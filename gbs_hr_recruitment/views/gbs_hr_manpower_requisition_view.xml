@@ -129,7 +129,7 @@
 				name="Recruitment"
 				id="hr_recruitment.menu_hr_recruitment_root"
 				web_icon="hr_recruitment,static/description/icon.png"
-				sequence="80"
+				sequence="20"
 				groups="gbs_application_group.group_dept_manager,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
 		<menuitem

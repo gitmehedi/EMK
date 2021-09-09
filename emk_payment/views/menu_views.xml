@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-    <menuitem name="Payments" id="main_menu_payment" sequence="20"/>
+    <menuitem name="Payments" id="main_menu_payment" sequence="50"/>
     <menuitem name="Payments" id="sub_menu_payment" sequence="1" parent="main_menu_payment"/>
     <menuitem name="Payment Operations" id="sub_payment_operation" sequence="5" parent="main_menu_payment"/>
     <menuitem name="Configuration" id="sub_menu_config" sequence="50" parent="main_menu_payment"/>

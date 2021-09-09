@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
+    <data>
+        <record id="hr_hodidays.menu_hr_holidays_root" model="ir.ui.menu">
+            <field name="name">Leaves</field>
+            <field name="sequence">10</field>
+        </record>
 
-		<menuitem
+        <menuitem
                 id="hr_holidays.menu_hr_holidays_approvals"
                 name="Leaves to Approve"
                 parent="hr_holidays.menu_hr_holidays_root"
@@ -46,24 +50,34 @@
 
                 <xpath expr="//field[@name='department_id']" position="replace">
                     <field name="first_approval" invisible="1"/>
-                    <field name="department_id"  groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager" attrs="{'invisible':[('holiday_type','=','category')]}"/>
+                    <field name="department_id"
+                           groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"
+                           attrs="{'invisible':[('holiday_type','=','category')]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='employee_id']" position="replace">
-                   <field name="employee_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
+                    <field name="employee_id"
+                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                           attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}"
+                           groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
                 </xpath>
 
-                <xpath expr="//field[@name='employee_id']" position="replace" >
-                    <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
+                <xpath expr="//field[@name='employee_id']" position="replace">
+                    <field name="employee_id"
+                           attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}"
+                           groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
                 </xpath>
 
-                <xpath expr="//field[@name='payslip_status']" position="replace" >
-                    <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager,gbs_application_group.group_dept_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
+                <xpath expr="//field[@name='payslip_status']" position="replace">
+                    <field name="payslip_status"
+                           groups="hr_holidays.group_hr_holidays_manager,gbs_application_group.group_dept_manager"
+                           attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
                 </xpath>
 
-				<xpath expr="//button[@name='action_validate']" position="replace">
+                <xpath expr="//button[@name='action_validate']" position="replace">
                     <button string="Validate" name="action_validate" states="validate1" type="object"
-                            groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
+                            groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+                            class="oe_highlight"/>
                 </xpath>
             </field>
         </record>
@@ -76,12 +90,12 @@
                 <filter name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" position="replace"/>
                 <search string="Search Leave">
                     <!--<xpath expr="//filter[@name='department']"  position="attributes">-->
-                        <!--<attribute name='invisible'>1</attribute>-->
+                    <!--<attribute name='invisible'>1</attribute>-->
                     <!--</xpath>-->
                 </search>
             </field>
         </record>
 
 
-	</data>
+    </data>
 </odoo>
