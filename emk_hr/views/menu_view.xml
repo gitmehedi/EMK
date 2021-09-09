@@ -2,16 +2,6 @@
 
 <odoo>
     <data>
-        <record id="hr.menu_hr_root" model="ir.ui.menu">
-            <field name="name">Employees</field>
-            <field name="sequence">5</field>
-        </record>
-
-        <record id="hr_payroll.menu_hr_payroll_root" model="ir.ui.menu">
-            <field name="name">Payroll</field>
-            <field name="sequence">15</field>
-        </record>
-
         <menuitem
                 id="hr.menu_view_employee_category_form"
                 action="hr.open_view_categ_form"

@@ -8,7 +8,6 @@
     'data': [
         # 'report/absence_report_view.xml',
         # 'report/absence_report_pdf.xml',
-        'views/menu_view.xml',
         'report/employee_absence_view.xml',
     ],
     'depends': ['calendar', 'mail'],
