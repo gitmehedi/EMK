@@ -18,6 +18,8 @@
         'stock',
         'calendar',
         'mail',
+        'utm',
+        'survey',
     ],
     'data': [
         'views/menu_view.xml',

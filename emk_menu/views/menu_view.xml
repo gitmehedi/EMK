@@ -42,5 +42,14 @@
             <field name="sequence">75</field>
         </record>
 
+        <record id="utm.menu_link_tracker_root" model="ir.ui.menu">
+            <field name="name">Link Tracker</field>
+            <field name="sequence">90</field>
+        </record>
+
+        <record id="survey.menu_surveys" model="ir.ui.menu">
+            <field name="name">Surveys</field>
+            <field name="sequence">91</field>
+        </record>
     </data>
 </odoo>
