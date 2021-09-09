@@ -2,7 +2,7 @@
 <odoo>
 	<data>
 
-		<menuitem id="hr_attendance.menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr.group_hr_attendance,base.group_user" web_icon="hr_attendance,static/description/icon.png"/>
+		<menuitem id="hr_attendance.menu_hr_attendance_root" name="Attendances" sequence="25" groups="hr.group_hr_attendance,base.group_user" web_icon="hr_attendance,static/description/icon.png"/>
 
 		<menuitem id="hr_attendance.menu_hr_attendance_manage_attendances" name="Manage Attendances" parent="hr_attendance.menu_hr_attendance_root" sequence="2" groups="hr.group_hr_manager"/>
 
