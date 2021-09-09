@@ -6,12 +6,9 @@
     'website': 'www.genweb2.com',
     'category': 'EMK HR Employee',
     'version': '10.0.1.0.0',
-    'data': [
-        'security/hr_security.xml',
-        'security/ir.model.access.csv',
-        'views/inherit_hr_employee.xml',
-        'views/inherit_hr_contract.xml',
-    ],
+    'category': 'HR',
+    'summary': '',
+    'description': '',
     'depends': [
         'hr',
         'hr_contract',
@@ -21,9 +18,13 @@
         'date_range',
         'survey',
     ],
-    'category': 'HR',
-    'summary': '',
-    'description': '',
+    'data': [
+        'security/hr_security.xml',
+        'security/ir.model.access.csv',
+        'views/menu_view.xml',
+        'views/inherit_hr_employee_view.xml',
+        'views/inherit_hr_contract_view.xml',
+    ],
     'installable': True,
     'application': True,
 }
