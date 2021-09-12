@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="after">
                     <field name="stock_picking_id" invisible="1"/>
+                    <button name="action_reset" string="Reset" class="oe_stat_button"
+                            type="object" groups="stock.delivery_user" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
                     <button name="action_delivery_detail" string="Delivery Details" class="oe_stat_button" icon="fa-eye"
                             type="object" groups="stock.delivery_user" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('stock_picking_id', '=', False)]}"/>
                     <button name="action_delivery" string="Delivery" class="oe_stat_button" icon="fa-truck"
