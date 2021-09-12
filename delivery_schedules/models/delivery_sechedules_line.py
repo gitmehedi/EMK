@@ -26,6 +26,7 @@ class DeliveryScheduleLine(models.Model):
         ('revision', "Revision"),
         ('approve', "Confirm"),
         ('done', "Done"),
+        ('cancel', "Cancelled")
     ], default='draft', track_visibility='onchange')
 
     product_id = fields.Many2one('product.product', string='Product', readonly=True, track_visibility='onchange')
