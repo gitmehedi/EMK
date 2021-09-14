@@ -22,6 +22,12 @@
         'survey',
         'hr_contract',
         'hr_employee_iou',
+        'hr_payroll_arrear',
+        'hr_employee_mobile_bills',
+        'hr_employee_meal_bills',
+        'hr_employee_iou',
+        'hr_other_allowance',
+        'hr_experience',
     ],
     'data': [
         'views/main_menu_view.xml',

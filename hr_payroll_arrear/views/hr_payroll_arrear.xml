@@ -61,6 +61,6 @@
 
         <menuitem id="hr_arrear_menu" name="Arrear" parent="hr.menu_hr_root" groups="hr.group_hr_user" sequence="96"/>
         <menuitem id="hr_arrear_submenu" name="Arrear" parent="hr_arrear_menu" groups="hr.group_hr_user"
-                  action="hr_arrear_action"/>
+                  action="hr_arrear_action" sequence="1"/>
     </data>
 </odoo>
