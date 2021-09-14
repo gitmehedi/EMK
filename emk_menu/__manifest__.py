@@ -20,9 +20,12 @@
         'mail',
         'utm',
         'survey',
+        'hr_contract',
+        'hr_employee_iou',
     ],
     'data': [
-        'views/menu_view.xml',
+        'views/main_menu_view.xml',
+        'views/hr_menu_view.xml',
     ],
     'installable': True,
     'application': True,

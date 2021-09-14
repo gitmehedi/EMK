@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <menuitem id="menu_employee_employee" parent="hr.menu_hr_root" name="Employees" sequence="1"
+                  groups=""/>
+        <menuitem id="menu_employee_operations" parent="hr.menu_hr_root" name="Employee Operations" sequence="5"
+                  groups=""/>
+
+        <record id="hr.menu_open_view_employee_list_my" model="ir.ui.menu">
+            <field name="name">Employees</field>
+            <field name="parent_id" eval="ref('menu_employee_employee')"/>
+            <field name="sequence">5</field>
+        </record>
+        <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
+            <field name="name">Contracts</field>
+            <field name="parent_id" eval="ref('menu_employee_employee')"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="hr.menu_hr_department_tree" model="ir.ui.menu">
+            <field name="name">Departments</field>
+            <field name="parent_id" eval="ref('hr.menu_human_resources_configuration')"/>
+            <field name="sequence">3</field>
+        </record>
+
+
+    </data>
+</odoo>
