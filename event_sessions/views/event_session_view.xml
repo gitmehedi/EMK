@@ -7,7 +7,7 @@
             <form string="Event Sessions" create="0" delete="0">
                 <header>
                     <button name="act_confirmed" string="Confirmed" type="object" states="unconfirmed"
-                            class="oe_highlight" groups="event.group_event_user"/>
+                            class="oe_highlight" groups="event.group_event_user,event_user.group_event_officer"/>
                     <button name="act_done" string="Done" type="object" states="confirmed" class="oe_highlight"
                             groups="event_user.group_event_officer"/>
                     <button name="act_unconfirmed" string="Set to Unconfirmed" type="object" states="confirmed"/>
