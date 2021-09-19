@@ -234,9 +234,22 @@ class EventSession(models.Model):
     def act_done(self):
         if self.state == 'confirmed':
             self.state = 'done'
+
     @api.one
     def button_assign(self):
         self.write({'state': 'assign'})
+
+    @api.one
+    def add_attendee(self):
+        if self.state == 'unconfirmed':
+            attendee = set(self.event_id.registration_ids.ids) - set([val.attendee_id.id for val in self.registration_ids])
+            for rec in list(attendee):
+                ses_reg = {
+                    'session_id': self.id,
+                    'event_id': self.event_id.id,
+                    'attendee_id': rec,
+                }
+                self.registration_ids.create(ses_reg)
 
     @api.model
     def _needaction_domain_get(self):

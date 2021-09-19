@@ -11,7 +11,7 @@
                                 states="assign" />
                         <button name="act_cancel" string="Cancel" type="object"
                                 states="assign"/>
-                        <field name="state" widget="statusbar" statusbar_visible="assign,done,cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="assign,done"/>
                     </header>
                     <sheet>
                         <group>
