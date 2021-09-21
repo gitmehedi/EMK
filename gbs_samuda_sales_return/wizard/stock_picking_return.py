@@ -36,7 +36,29 @@ class ReturnPicking(models.TransientModel):
         res = super(ReturnPicking, self).default_get(fields)
 
         if 'product_return_moves' in res:
+
+            picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+            picking_returns = self.env['stock.picking'].search([
+                ('origin', '=', picking.name),
+                ('picking_type_id.code', '=', picking.picking_type_id.return_picking_type_id.code)])
+
             for move in res['product_return_moves']:
+                # delivered qty
+                qty_delivered = sum(picking.pack_operation_product_ids.filtered(
+                    lambda operation: operation.product_id.id == move[2]['product_id']
+                ).mapped('qty_done'))
+
+                # returned qty of this DC
+                qty_returned = sum(picking_returns.mapped('pack_operation_product_ids').filtered(
+                    lambda operation: operation.product_id.id == move[2]['product_id']
+                ).mapped('qty_done')) or 0.0
+
+                # available qty for returning
+                qty_available = qty_delivered - qty_returned
+
+                if qty_available < move[2]['quantity']:
+                    move[2]['quantity'] = qty_available
+
                 move[2]['to_refund_so'] = True
                 move[2]['available_qty'] = move[2]['quantity']
 
