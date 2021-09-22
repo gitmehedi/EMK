@@ -14,6 +14,7 @@
         'ir_sequence_operating_unit',
         'product_sales_pricelist',
         'samuda_so_type',
+        'gbs_samuda_sales_access',
     ],
 
     'data': [
