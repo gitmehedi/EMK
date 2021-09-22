@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_product_packaging_form" model="ir.ui.view">
+            <field name="name">product.package.form.inherit.sales.deprecated</field>
+			<field name="model">product.packaging.mode</field>
+            <field name="inherit_id" ref="product_sales_pricelist.product_packaging_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_jar_bill_included']" position="after">
+                    <field name="is_deprecated"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

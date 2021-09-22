@@ -1,0 +1,5 @@
+import res_partner
+import product
+import product_packaging_mode
+import sale
+import proforma_invoice
