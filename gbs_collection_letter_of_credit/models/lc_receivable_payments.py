@@ -275,7 +275,8 @@ class LCReceivablePayment(models.Model):
 
             debit_aml_dict = self._generate_debit_move_line(move.id, account_id, debit, amount_currency, name,
                                                             currency_id)
-            debit_aml_dict.update({'analytic_account_id': self.analytic_account_id.id})
+            debit_aml_dict.update({'analytic_account_id': self.analytic_account_id.id,
+                                   'cost_center_id': self.lc_id.product_lines[0].product_id.cost_center_id.id})
             aml_obj.create(debit_aml_dict)
 
         # post journal entries
