@@ -111,7 +111,7 @@ class DeliveryScheduleLine(models.Model):
             self.delivery_order_id = self.env['delivery.order'].sudo().search([
                 ('sale_order_id', '=', self.sale_order_id.id),
                 ('state', '=', 'approved')
-            ])
+            ], limit=1)
             if self.delivery_order_id.line_ids:
                 line = self.delivery_order_id.line_ids[0]
                 self.product_id = line.product_id
