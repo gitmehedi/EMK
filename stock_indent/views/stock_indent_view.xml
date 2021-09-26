@@ -11,13 +11,13 @@
 				action="stock.stock_picking_type_action"
 				id="stock.stock_picking_type_menu"
 				parent="stock.menu_stock_root" sequence="0"
-				groups="stock.group_stock_manager,stock.group_stock_user"
+				groups=""
 				name="Dashboard"/>
 		<!-- Inventory Control Menu-->
 		<menuitem id="stock.menu_stock_inventory_control"
 				  name="Inventory Control"
 				  parent="stock.menu_stock_root"
-				  groups="stock.group_stock_manager,stock.group_stock_user"
+				  groups=""
 				  sequence="4"/>
 		<!-- Indent Tree View -->
 		<record id='view_indent_indent_tree' model='ir.ui.view'>
@@ -79,18 +79,19 @@
 						<!--</group>-->
 						<notebook>
 							<page string="Products">
+
 								<field name="product_lines">
-									<tree string="Products" editable="bottom">
+									<tree string="Products" editable="1">
 										<field name="sequence" widget="handle"/>
 										<field name="product_id" domain="[('type','!=','service')]"/>
 										<field name="remarks"/>
 <!--										<field name="name" readonly="1" />-->
-										<field name="qty_available" readonly="1" groups="stock.group_stock_user" />
+										<field name="qty_available" readonly="0" groups="" />
 										<field name="product_uom" string="UOM"/>
 										<field name="product_uom_qty" sum="Total Qty"/>
-										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+										<field name="received_qty" sum="Total Receive Qty" />
 										<field name="issue_qty" invisible="1"/>
-
+<!--										<button name="show_details" string="Modify" icon="fa-pencil" groups="stock.group_stock_multi_locations"/>-->
 										<!--groups="stock.group_stock_user"-->
 										<!--<field name="price_unit" sum="Total Price"/>-->
 										<!--<field name="price_subtotal" sum="Total Price"/>-->
@@ -135,6 +136,7 @@
 				</form>
 			</field>
 		</record>
+
 		<!-- Indent Window Action -->
 		<record id='action_indent_indent' model='ir.actions.act_window'>
 			<field name="name">Indents</field>
@@ -147,6 +149,7 @@
 				</p>
 			</field>
 		</record>
+
 		<!-- Indent Approval Window Action -->
 		<record id='action_indent_waiting_for_approval' model='ir.actions.act_window'>
 			<field name="name">Indents Waiting For Approval</field>

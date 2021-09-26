@@ -12,6 +12,7 @@
         'commercial',
         'gbs_application_group',
         'report_layout',
+        'inventory_user',
     ],
     'data': [
         'data/pr_sequence.xml',

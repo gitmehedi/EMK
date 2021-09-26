@@ -11,7 +11,9 @@
                 'ir_sequence_operating_unit',
                 'indent_type',
                 'stock_operating_unit_user',
-                'inventory_user'
+                'inventory_user',
+
+
                 ],
     'data': [
         'security/ir.model.access.csv',
