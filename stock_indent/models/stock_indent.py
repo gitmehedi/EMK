@@ -30,63 +30,73 @@ class IndentIndent(models.Model):
         emp_ins = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         if not emp_ins.department_id:
             raise ValidationError(
-                _("Please configure department name for employee [{0}] \n from employee directory.".format(
+                _("Please configure employee for user [{0}] from employee directory.".format(
                     self.env.user.display_name)))
         return emp_ins.department_id
 
-    name = fields.Char('Indent #', size=30, readonly=True,track_visibility="onchange")
-    approve_date = fields.Datetime('Approve Date', readonly=True,track_visibility="onchange")
+    name = fields.Char('Indent #', size=30, readonly=True, track_visibility="onchange")
+    approve_date = fields.Datetime('Approve Date', readonly=True, track_visibility="onchange")
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
-                                  default=fields.Datetime.now,track_visibility="onchange")
+                                  default=fields.Datetime.now, track_visibility="onchange")
     required_date = fields.Date('Required Date', required=True, readonly=True, states={'draft': [('readonly', False)]},
-                                default=lambda self: self._get_required_date(),track_visibility="onchange")
+                                default=lambda self: self._get_required_date(), track_visibility="onchange")
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True,
                                   default=lambda self: self.env.user,
-                                  states={'draft': [('readonly', False)]},track_visibility="onchange")
-    department_id = fields.Many2one('hr.department', string='Department', readonly=True, default=_default_department, track_visibility="onchange")
+                                  states={'draft': [('readonly', False)]}, track_visibility="onchange")
+    department_id = fields.Many2one('hr.department', string='Department', readonly=True, default=_default_department,
+                                    track_visibility="onchange")
     stock_location_id = fields.Many2one('stock.location', string='Stock Location', readonly=True, required=True,
                                         states={'draft': [('readonly', False)]},
                                         help="Default User Location.Destination location.",
-                                        default=lambda self: self.env.user.default_location_id,track_visibility="onchange")
+                                        default=lambda self: self.env.user.default_location_id,
+                                        track_visibility="onchange")
     # manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",
-                                          readonly=True, states={'draft': [('readonly', False)]},track_visibility="onchange")
+                                          readonly=True, states={'draft': [('readonly', False)]},
+                                          track_visibility="onchange")
     requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Priority', readonly=True,
-                                   default="1", required=True, states={'draft': [('readonly', False)]},track_visibility="onchange")
+                                   default="1", required=True, states={'draft': [('readonly', False)]},
+                                   track_visibility="onchange")
     indent_type = fields.Many2one('indent.type', string='Type', readonly=True, required=True,
-                                  states={'draft': [('readonly', False)]},track_visibility="onchange")
+                                  states={'draft': [('readonly', False)]}, track_visibility="onchange")
     product_lines = fields.One2many('indent.product.lines', 'indent_id', 'Products', readonly=True, required=True,
                                     states={'draft': [('readonly', False)],
-                                            'waiting_approval': [('readonly', False)],'inprogress': [('readonly', False)]},track_visibility="onchange")
-    picking_id = fields.Many2one('stock.picking', 'Picking',track_visibility="onchange")
-    in_picking_id = fields.Many2one('stock.picking', 'Picking',track_visibility="onchange")
-    description = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]},track_visibility="onchange")
-    material_required_for = fields.Text('Required For', readonly=True, states={'draft': [('readonly', False)]}, track_visibility="onchange")
+                                            'waiting_approval': [('readonly', False)],
+                                            'inprogress': [('readonly', False)]}, track_visibility="onchange")
+    picking_id = fields.Many2one('stock.picking', 'Picking', track_visibility="onchange")
+    in_picking_id = fields.Many2one('stock.picking', 'Picking', track_visibility="onchange")
+    description = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]},
+                              track_visibility="onchange")
+    material_required_for = fields.Text('Required For', readonly=True, states={'draft': [('readonly', False)]},
+                                        track_visibility="onchange")
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
-                                 default=lambda self: self.env.user.company_id, required=True,track_visibility="onchange")
-    active = fields.Boolean('Active', default=True,track_visibility="onchange")
+                                 default=lambda self: self.env.user.company_id, required=True,
+                                 track_visibility="onchange")
+    active = fields.Boolean('Active', default=True, track_visibility="onchange")
     # amount_total = fields.Float(string='Total', compute=_compute_amount, store=True)
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
-                                  help="who have approve or reject indent.",track_visibility="onchange")
+                                  help="who have approve or reject indent.", track_visibility="onchange")
     closer_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have close indent.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True, required=True,
                                    default=lambda self: self._get_default_warehouse(),
                                    help="Default Warehouse.Source location.",
-                                   states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility="onchange")
+                                   states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+                                   track_visibility="onchange")
     picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type',
                                       compute='_compute_default_picking_type',
-                                      readonly=True, store=True,track_visibility="onchange" )
+                                      readonly=True, store=True, track_visibility="onchange")
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
                                  readonly=True, required=True, default='direct',
                                  states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
-                                 help="It specifies goods to be deliver partially or all at once",track_visibility="onchange")
+                                 help="It specifies goods to be deliver partially or all at once",
+                                 track_visibility="onchange")
 
-    pr_indent_check = fields.Boolean(string='Indent List Check', default=True,track_visibility="onchange")
+    pr_indent_check = fields.Boolean(string='Indent List Check', default=True, track_visibility="onchange")
 
     product_id = fields.Many2one(
         'product.product', 'Products',
         readonly="False", related='product_lines.product_id',
-        help="This comes from the product form.",track_visibility="onchange")
+        help="This comes from the product form.", track_visibility="onchange")
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -296,7 +306,7 @@ class IndentIndent(models.Model):
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = pick_ids and pick_ids[0] or False
 
-        #self.picking_id.do_transfer()
+        # self.picking_id.do_transfer()
 
         return result
 
@@ -319,41 +329,41 @@ class IndentProductLines(models.Model):
     _name = 'indent.product.lines'
     _description = 'Indent Product Lines'
 
-    indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',track_visibility='onchange')
-    product_id = fields.Many2one('product.product', string='Product', required=True,track_visibility='onchange')
-    product_uom_qty = fields.Float('Indent Quantity', digits=dp.get_precision('Product UoS'),
-                                   required=True, default=1,track_visibility='onchange')
-    received_qty = fields.Float('Receive Quantity', digits=dp.get_precision('Product UoS'),
-                                help="Receive Quantity which Update by done quantity.",track_visibility='onchange')
-    issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),
-                             help="Issued Quantity which Update by available quantity.",track_visibility='onchange')
+    indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',
+                                track_visibility='onchange')
+    product_id = fields.Many2one('product.product', string='Product', required=True, track_visibility='onchange')
+    indent_qty = fields.Float('Indent Qty', digits=dp.get_precision('Product UoS'),
+                                   required=True, default=1.00, track_visibility='onchange')
+    issue_qty = fields.Float('Issue Qty', digits=dp.get_precision('Product UoS'), track_visibility='onchange')
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
-                                  required=True, store=True,track_visibility='onchange')
+                                  required=True, store=True, track_visibility='onchange')
     price_unit = fields.Float(related='product_id.standard_price', string='Price',
                               digits=dp.get_precision('Product Price'), store=True,
-                              help="Price computed based on the last purchase order approved.", track_visibility='onchange')
+                              help="Price computed based on the last purchase order approved.",
+                              track_visibility='onchange')
     price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal',
                                   digits=dp.get_precision('Account'),
                                   store=True, track_visibility='onchange')
     qty_available = fields.Float(string='In Stock', compute='_compute_product_qty', track_visibility='onchange')
     name = fields.Char(related='product_id.name', string='Specification', store=True, track_visibility='onchange')
-    remarks = fields.Char(related='product_id.name',string='Narration', store=True, track_visibility='onchange')
+    remarks = fields.Char(related='product_id.name', string='Narration', store=True, track_visibility='onchange')
     sequence = fields.Integer('Sequence')
+    state = fields.Selection([('indent', 'Indent'), ('issue', 'issue')], default='indent')
 
     ####################################################
     # Business methods
     ####################################################
 
     @api.one
-    @api.constrains('product_uom_qty')
-    def _check_product_uom_qty(self):
-        if self.product_uom_qty < 0:
+    @api.constrains('indent_qty')
+    def _check_indent_qty(self):
+        if self.indent_qty < 0:
             raise UserError('You can\'t give negative value!!!')
 
-    @api.depends('product_uom_qty', 'price_unit')
+    @api.depends('indent_qty', 'price_unit')
     def _compute_amount_subtotal(self):
         for line in self:
-            line.price_subtotal = (line.product_uom_qty * line.price_unit)
+            line.price_subtotal = (line.indent_qty * line.price_unit)
 
     @api.depends('product_id')
     @api.multi
@@ -361,25 +371,7 @@ class IndentProductLines(models.Model):
         for product in self:
             location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
             product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id)])
-            #,('location_id', '=', location_id)
+            # ,('location_id', '=', location_id)
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity
-
-
-    # @api.multi
-    # def show_details(self):
-    #     # TDE FIXME: does not seem to be used
-    #     view_id = self.env.ref('stock.view_pack_operation_details_form_save').id
-    #
-    #     return {
-    #         'name': _('Operation Details'),
-    #         'type': 'ir.actions.act_window',
-    #         'view_type': 'form',
-    #         'view_mode': 'form',
-    #         'res_model': 'indent.product.lines',
-    #         'views': [(view_id, 'form')],
-    #         'view_id': view_id,
-    #         'target': 'new',
-    #         'res_id': self.ids,
-    #         'context': self.env.context}
 
