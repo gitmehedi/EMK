@@ -17,7 +17,8 @@ class StockPicking(models.Model):
                     if picking.backorder_id:
                         product_line.write({'received_qty': product_line.received_qty + move.product_qty})
                     else:
-                        product_line.write({'received_qty': move.product_qty})
+                        product_line.write({'received_qty': product_line.received_qty})
+
                 picking_ids = self.search([('origin', '=', picking.origin)])
                 flag = True
                 # for picking in self.browse(self.ids):
@@ -26,5 +27,6 @@ class StockPicking(models.Model):
                         flag = False
                 if flag:
                     indent_ids.write({'state': 'received'})
+
 
         return res

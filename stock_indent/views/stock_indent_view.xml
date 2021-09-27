@@ -11,13 +11,13 @@
 				action="stock.stock_picking_type_action"
 				id="stock.stock_picking_type_menu"
 				parent="stock.menu_stock_root" sequence="0"
-				groups="stock.group_stock_manager,stock.group_stock_user"
+				groups=""
 				name="Dashboard"/>
 		<!-- Inventory Control Menu-->
 		<menuitem id="stock.menu_stock_inventory_control"
 				  name="Inventory Control"
 				  parent="stock.menu_stock_root"
-				  groups="stock.group_stock_manager,stock.group_stock_user"
+				  groups=""
 				  sequence="4"/>
 		<!-- Indent Tree View -->
 		<record id='view_indent_indent_tree' model='ir.ui.view'>
@@ -47,11 +47,11 @@
 						<button name="indent_confirm" string="Confirm" states="draft"
 								class="oe_highlight" type="object"/>
 						<button name="approve_indent" string="Approve" states="waiting_approval" type="object"
-								class="oe_highlight" groups="stock_indent.group_stock_indent_approver"/>
+								class="oe_highlight" groups="inventory_user.grp_inv_supervisor"/>
 						<button name="reject_indent" string="Reject" states="waiting_approval"
-								groups="stock_indent.group_stock_indent_approver" type="object"/>
+								groups="inventory_user.grp_inv_supervisor" type="object"/>
 						<button name="action_view_picking" string="Issue Product(s)" type="object"
-								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
+								states="inprogress" class="oe_highlight" groups="inventory_user.grp_inv_department_executive"/>
 						<button name="action_close_indent" string="Close" type="object"
 								states="inprogress" groups="stock.group_stock_user"/>
 						<field name="state" widget="statusbar"
@@ -64,6 +64,7 @@
 								<field name="indentor_id" readonly="1" />
 								<field name="requirement"/>
 								<field name="department_id"/>
+
 							</group>
 							<group>
 								<field name="indent_date" />
@@ -78,17 +79,19 @@
 						<!--</group>-->
 						<notebook>
 							<page string="Products">
+
 								<field name="product_lines">
-									<tree string="Products" editable="bottom">
+									<tree string="Products" editable="1">
 										<field name="sequence" widget="handle"/>
 										<field name="product_id" domain="[('type','!=','service')]"/>
-										<field name="name" readonly="1" />
-										<field name="qty_available" readonly="1" groups="stock.group_stock_user" />
+										<field name="remarks"/>
+<!--										<field name="name" readonly="1" />-->
+										<field name="qty_available" readonly="0" groups="" />
 										<field name="product_uom" string="UOM"/>
 										<field name="product_uom_qty" sum="Total Qty"/>
-										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+										<field name="received_qty" sum="Total Receive Qty" />
 										<field name="issue_qty" invisible="1"/>
-										<field name="remarks"/>
+<!--										<button name="show_details" string="Modify" icon="fa-pencil" groups="stock.group_stock_multi_locations"/>-->
 										<!--groups="stock.group_stock_user"-->
 										<!--<field name="price_unit" sum="Total Price"/>-->
 										<!--<field name="price_subtotal" sum="Total Price"/>-->
@@ -101,7 +104,7 @@
 								<div class="oe_clear">
 									<label for="material_required_for" />
 								</div>
-								<field name="material_required_for" class="oe_inline" placeholder="The material is required for..." />
+								<field name="material_required_for" class="oe_inline" invisible="1" placeholder="The material is required for..." />
 
 							</page>
 							<page string="Others">
@@ -117,9 +120,10 @@
 									<group>
 										<!--<field name="manager_id" readonly="1" />-->
 										<field name="warehouse_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
-										<field name="stock_location_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
+										<field name="stock_location_id" options="{'no_create': True,'no_open':True}" groups="stock.group_stock_multi_locations"/>
 										<field name="picking_type_id"/>
 										<!--groups="stock.group_stock_manager"-->
+<!--										 -->
 									</group>
 								</group>
 							</page>
@@ -132,6 +136,7 @@
 				</form>
 			</field>
 		</record>
+
 		<!-- Indent Window Action -->
 		<record id='action_indent_indent' model='ir.actions.act_window'>
 			<field name="name">Indents</field>
@@ -144,6 +149,7 @@
 				</p>
 			</field>
 		</record>
+
 		<!-- Indent Approval Window Action -->
 		<record id='action_indent_waiting_for_approval' model='ir.actions.act_window'>
 			<field name="name">Indents Waiting For Approval</field>
@@ -167,7 +173,7 @@
 
 		<menuitem action="action_indent_waiting_for_approval" name="Indents Waiting For Approval"
 				  parent="menu_indent_indent_main" id="menu_indent_waiting_for_approval" sequence="2"
-				  groups="stock_indent.group_stock_indent_approver"/>
+				  groups="inventory_user.grp_inv_supervisor"/>
 
 	</data>
 </odoo>

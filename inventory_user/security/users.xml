@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_inventory" model="ir.module.category">
+            <field name="name">Inventory</field>
+            <field name="description">
+                Inventory category manages all indent,inventory and stock related access.
+            </field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="grp_inv_store_executive" model="res.groups">
+            <field name="name">Inventory: Store Executive</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="module_category_inventory"/>
+            <field name="comment">Store Executive maintain all store related stock.</field>
+        </record>
+        <record id="grp_inv_department_executive" model="res.groups">
+            <field name="name">Inventory: Department Executive</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="module_category_inventory"/>
+            <field name="comment">Department Executive maintain all department related stock.</field>
+        </record>
+        <record id="grp_inv_supervisor" model="res.groups">
+            <field name="name">Inventory: Supervisor</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="module_category_inventory"/>
+            <field name="comment">Supervisor maintain all stock and department related stock.</field>
+        </record>
+    </data>
+</odoo>
