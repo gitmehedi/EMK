@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 class HrEmployee(models.Model):
 
@@ -19,4 +20,12 @@ class HrEmployee(models.Model):
                 name = "%s [%s]" % (name,record.job_id.name_get()[0][1])
             result.append((record.id, name))
         return result
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError('You can not delete record which is not in Draft state')
+            rec.unlink()
+        return super(HrEmployee, self).unlink()
 
