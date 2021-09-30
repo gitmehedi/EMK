@@ -307,7 +307,6 @@ class DeliveryAuthorization(models.Model):
             action['res_id'] = do_pool.id
         return action
 
-
     @api.multi
     def action_validate(self):
         if self.so_type == 'cash' or self.so_type == 'tt_sales':
@@ -327,66 +326,45 @@ class DeliveryAuthorization(models.Model):
                     self.write({'state': 'approve'})  # Second approval
 
             elif self.pi_id and not self.lc_id:
-                res = {}
-                list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
                 for line in self.line_ids:
-                    list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.delivery_qty
+                    ordered_qty = self.env['ordered.qty'].search(
+                        [('lc_id', '=', False),
+                         ('company_id', '=', self.company_id.id),
+                         ('product_id', '=', line.product_id.product_tmpl_id.id)]
+                    )
 
-                for rec in list:
-                    ordered_qty_pool = self.env['ordered.qty'].search([('lc_id', '=', False),
-                                                                       ('company_id', '=', self.company_id.id),
-                                                                       ('product_id', '=', rec)])
+                    if not ordered_qty:
+                        ordered_qty = self.env['ordered.qty'].create({
+                            'product_id': line.product_id.product_tmpl_id.id,
+                            'ordered_qty': line.delivery_qty,
+                            'available_qty': 100,
+                            'delivery_auth_no': self.id
+                        })
 
-                    res['product_id'] = rec
-                    res['ordered_qty'] = list[rec]
-                    res['delivery_auth_no'] = self.id
+                    if line.delivery_qty > ordered_qty.available_qty:
+                        # get the confirm wizard for max ordering
+                        wizard = self.env.ref('delivery_order.max_do_without_lc_view', False)
 
-                    if not ordered_qty_pool:
-                        res['available_qty'] = 100 - list[rec]
-                        if list[rec] > 100:
-                            res['available_qty'] = 0
+                        return {
+                            'name': _('Max Ordering Confirm'),
+                            'type': 'ir.actions.act_window',
+                            'res_model': 'max.delivery.without.lc.wizard',
+                            'view_id': wizard.id,
+                            'view_type': 'form',
+                            'view_mode': 'form',
+                            'target': 'new',
+                            'context': {
+                                'delivery_authorization_id': self.id,
+                                'ordered_qty_id': ordered_qty.id,
+                                'product_name': line.product_id.display_name
+                            }
+                        }
 
-                        self.env['ordered.qty'].create(res)
+                    ordered_qty.write({'available_qty': max(ordered_qty.available_qty - line.delivery_qty, 0)})
+                    self._create_delivery_authorization_back_order()
+                    self._automatic_delivery_order_creation()
+                    self.write({'state': 'close'})  # Final Approval
 
-                        self._create_delivery_authorization_back_order()
-                        self._automatic_delivery_order_creation()
-                        self.write({'state': 'close'})  # Final Approval
-                    # else:
-                    #     avail_qty_sum = 0
-                    #
-                    #     for orders in ordered_qty_pool:
-                    #         avail_qty_sum += orders.available_qty
-                    #
-                    #     if list[rec] > avail_qty_sum:
-                    #         res['available_qty'] = 0
-                    #         self.env['ordered.qty'].create(res)
-                    #         # self.write({'state': 'close'})  # Final Approval
-                    #     else:
-                    #         res['available_qty'] = avail_qty_sum - list[rec]
-                    #         if res['available_qty'] > 100:
-                    #             res['available_qty'] = 0
-                    #
-                    #     self._create_delivery_authorization_back_order()
-                    #     self._automatic_delivery_order_creation()
-                    #     self.write({'state': 'close'})  # Final Approval
-                    #     self.env['ordered.qty'].create(res)
-                    #
-                    # if list[rec] > 100 or res['available_qty'] == 0:
-                        # product_pool = self.env['product.template'].search([('id', '=', rec)])
-                    wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
-                    view_id = self.env['max.delivery.without.lc.wizard']
-
-                    return {
-                        'name': _('Max Ordering Confirm'),
-                        'type': 'ir.actions.act_window',
-                        'res_model': 'max.delivery.without.lc.wizard',
-                        'res_id': view_id.id,
-                        'view_id': wizard_form.id,
-                        'view_type': 'form',
-                        'view_mode': 'form',
-                        'target': 'new',
-                        'context': {'delivery_order_id': self.id, 'product_name': line.product_id.display_name}
-                    }
             else:
                 self.state = 'approve'  # second
 
