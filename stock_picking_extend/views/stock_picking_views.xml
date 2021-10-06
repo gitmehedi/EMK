@@ -412,6 +412,13 @@
             <!--<xpath expr="//header/button[@name='force_assign']" position="attributes">-->
                 <!--<attribute name="groups">base_technical_features.group_technical_features</attribute>-->
             <!--</xpath>-->
+
+            <xpath expr="//button[@name='do_unreserve']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('quant_reserved_exist', '=', False),
+                                                        '&amp;', ('picking_type_code', '=', 'internal'),
+                                                        ('group_id', '!=', False)]}</attribute>
+            </xpath>
+
             <xpath expr="//header/button[@name='action_confirm']" position="attributes">
                 <attribute name="groups">base_technical_features.group_technical_features</attribute>
             </xpath>

@@ -41,6 +41,6 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu_items.xml',
-
+        'views/pi_view.xml'
     ],
 }

@@ -85,10 +85,10 @@ class StockPicking(models.Model):
                     if loan_lending_ids:
                         for product_line in loan_lending_ids[0].item_lines:
                             move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
-                        if picking.backorder_id:
-                            product_line.write({'given_qty': product_line.given_qty + move.product_qty})
-                        else:
-                            product_line.write({'given_qty': move.product_qty})
+                            if picking.backorder_id:
+                                product_line.write({'given_qty': product_line.given_qty + move.product_qty})
+                            else:
+                                product_line.write({'given_qty': move.product_qty})
 
                 if picking.location_dest_id.name == 'Lenders':
                     loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.id)])

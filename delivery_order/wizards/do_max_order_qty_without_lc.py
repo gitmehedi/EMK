@@ -9,6 +9,9 @@ class DOMaxOrderQtyWithoutLc(models.TransientModel):
 
     @api.one
     def update_state(self, context=None):
-        if context['delivery_order_id']:
-            delivery_order_pool = self.env['delivery.authorization'].search([('id', '=', context['delivery_order_id'])])
-            delivery_order_pool.write({'state': 'validate'})
+        if context['delivery_authorization_id']:
+            delivery_authorization = self.env['delivery.authorization'].browse(context.get('delivery_authorization_id'))
+            delivery_authorization.write({'state': 'validate'})
+            ordered_qty = self.env['ordered_qty'].browse(context.get('ordered_qty_id'))
+            if ordered_qty.available_qty > 0:
+                ordered_qty.write({'available_qty': 0})

@@ -24,7 +24,18 @@ class DeliverySchedulesLine(models.Model):
 
         picking = self.sale_order_id.mapped('picking_ids').filtered(lambda i: i.state not in ['done', 'cancel'] and i.picking_type_id.code == 'outgoing')
         if not picking:
-            raise UserError(_('No remaining qty for delivery.'))
+            self.write({'state': 'cancel'})
+            text = 'No remaining qty for delivery.'
+            wizard = self.env['message.box.wizard'].create({'text': text})
+            return {
+                'name': _('Warning Message'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'message.box.wizard',
+                'target': 'new',
+                'res_id': wizard.id,
+            }
 
         # check qty availability
         if picking.state != 'assigned':
@@ -81,3 +92,7 @@ class DeliverySchedulesLine(models.Model):
         }
 
         return action
+
+    @api.multi
+    def action_reset(self):
+        self.write({'state': 'approve'})
