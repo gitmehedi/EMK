@@ -26,12 +26,14 @@
                         </div>
                         <group>
                             <group>
-                                <field name="poc_id" tabindex="1"
+                                <field name="org_id"
+                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                <field name="poc_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="event_id" attrs="{'invisible':[('state','in',['draft','on_process'])]}"/>
                                 <field name="contact_number"/>
                                 <field name="work_email"/>
-                                <field name="org_type_id"
+                                <field name="poc_type_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="event_type_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
@@ -58,8 +60,22 @@
                                 <field name="date_of_payment" attrs="{'required':[('payment_type','=','paid')]}"/>
                             </group>
                             <group>
+                                <field name="proposed_budget"/>
+                                <field name="approved_budget"/>
                                 <field name="paid_attendee" widget="radio"/>
                                 <field name="participating_amount" attrs="{'required':[('paid_attendee','=','yes')]}"/>
+                            </group>
+                        </group>
+                        <group string="General Information">
+                            <group>
+                                <field name="target_audience_group"/>
+                                <field name="target_age"/>
+
+                            </group>
+                            <group>
+                                <field name="outreach_plan"/>
+                                <field name="outreach_plan_other"/>
+                                <field name="snacks_required"/>
                             </group>
                         </group>
                         <notebook>
@@ -70,6 +86,8 @@
                                 <field name="rules_regulation" nolabel="1"/>
                                 <separator string="Comments/Notes"/>
                                 <field name="notes" nolabel="1"/>
+                                <separator string="Purpose of Events"/>
+                                <field name="purpose_of_event" nolabel="1"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -91,8 +109,9 @@
                     <field name="event_name"/>
                     <field name="event_id"/>
                     <field name="poc_id"/>
+                    <field name="org_id"/>
                     <field name="contact_number"/>
-                    <field name="org_type_id"/>
+                    <field name="poc_type_id"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <field name="state"/>
