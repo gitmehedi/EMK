@@ -6,15 +6,16 @@ from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 
-class EventManagementOrganizer(models.Model):
+class EventManagementPOC(models.Model):
     _inherit = 'res.partner'
 
-    is_organizer = fields.Boolean(default=False, track_visibility='onchange', )
+    is_poc = fields.Boolean(default=False, track_visibility='onchange')
     event_count = fields.Integer("Events", compute='_compute_event_count',
                                  help="Number of events the partner has participated.")
     firstname = fields.Char("First Name", index=True, track_visibility='onchange')
     middlename = fields.Char("Middle Name", index=True, track_visibility='onchange')
     lastname = fields.Char("Last Name", index=True, track_visibility='onchange')
+    company_name = fields.Char("Company Name", index=True, track_visibility='onchange')
     status = fields.Boolean(default=True, string='Status', track_visibility='onchange')
 
     def _compute_event_count(self):
@@ -65,4 +66,4 @@ class EventManagementOrganizer(models.Model):
                 raise ValidationError(_('You cannot delete a record which has existing event!'))
             if org.user_ids:
                 raise ValidationError(_('You cannot delete system user whom has login access!'))
-        return super(EventManagementOrganizer, self).unlink()
+        return super(EventManagementPOC, self).unlink()

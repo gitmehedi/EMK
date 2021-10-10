@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="view_event_organization_type_form">
-            <field name="name">event.organization.type.form</field>
-            <field name="model">event.organization.type</field>
+        <record model="ir.ui.view" id="view_event_poc_type_form">
+            <field name="name">event.poc.type.form</field>
+            <field name="model">event.poc.type</field>
             <field name="arch" type="xml">
-                <form string="Event Task Type">
+                <form string="Event PoC Type">
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="toggle_status" type="object"
@@ -29,11 +29,11 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_event_organization_type_tree">
-            <field name="name">event.organization.type.tree</field>
-            <field name="model">event.organization.type</field>
+        <record model="ir.ui.view" id="view_event_poc_type_tree">
+            <field name="name">event.poc.type.tree</field>
+            <field name="model">event.poc.type</field>
             <field name="arch" type="xml">
-                <tree string="Event Task Type"
+                <tree string="Event PoC Type"
                       decoration-bf="status==True" decoration-muted="status==False"
                       decoration-success="status==True">
                     <field name="name"/>
@@ -42,13 +42,13 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_event_organization_type">
-            <field name="name">Organization Types</field>
-            <field name="res_model">event.organization.type</field>
+        <record model="ir.actions.act_window" id="action_event_poc_type">
+            <field name="name">PoC Types</field>
+            <field name="res_model">event.poc.type</field>
             <field name="view_type">form</field>
         </record>
 
-        <menuitem id="menu_event_organization_type" action="action_event_organization_type"
+        <menuitem id="menu_event_poc_type" action="action_event_poc_type"
                   groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
     </data>
 </odoo>
