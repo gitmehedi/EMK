@@ -16,13 +16,13 @@ class EventReservation(models.Model):
     name = fields.Char(string='Name', readonly=True, states={'draft': [('readonly', False)]})
     event_name = fields.Char(string='Event Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
 
-    organizer_id = fields.Many2one('res.partner', string='Organizer Name', domain=[('is_organizer', '=', True)],
+    poc_id = fields.Many2one('res.partner', string='PoC Name', domain=[('is_organizer', '=', True)],
                                    default=False, required=True, track_visibility='onchange',
                                    readonly=True, states={'draft': [('readonly', False)]})
     event_type_id = fields.Many2one('event.type', string='Event Type', required=True, track_visibility='onchange',
                                     readonly=True, states={'draft': [('readonly', False)]})
     event_id = fields.Many2one('event.event', string='Event', track_visibility='onchange', readonly=True)
-    org_type_id = fields.Many2one('event.organization.type', string="Organization Type", required=True,
+    org_type_id = fields.Many2one('event.organization.type', string="PoC Type", required=True,
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
     facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',

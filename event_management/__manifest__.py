@@ -17,6 +17,7 @@
         'event_user',
         'website_event_filter_selector',
         'create_partner_user',
+        'gbs_gender',
     ],
     'data': [
         'data/email_template.xml',
