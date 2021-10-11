@@ -61,7 +61,7 @@ ACCOUNT_TAG = {
 }
 
 GROUP_TOTAL_NAMES = ['direct_material', 'prime_cost', 'manufacturing_cost', 'direct_cost_and_depreciation', 'total_cost', 'profit_loss']
-INCOME_USER_TYPE_ID = 14
+INCOME_USER_TYPE_IDS = [14]
 RM_CATEGORY_ID = 69
 PM_CATEGORY_ID = 70
 
@@ -73,8 +73,9 @@ class CostSheetXLSX(ReportXlsx):
         where_clause += " AND aml.cost_center_id=%s AND aml.company_id=%s" % (obj.cost_center_id.id, self.env.user.company_id.id)
         if not obj.all_entries:
             where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
+        if obj.operating_unit_ids:
+            params = ','.join(str(i) for i in obj.operating_unit_ids.ids)
+            where_clause += " AND aml.operating_unit_id IN (%s)" % params
 
         return where_clause
 
@@ -91,7 +92,7 @@ class CostSheetXLSX(ReportXlsx):
         sales_qty = sum(row['quantity'] for row in self.env.cr.dictfetchall()) or 0.0
 
         # Net revenue
-        account_ids = self.env['account.account'].search([('user_type_id', '=', INCOME_USER_TYPE_ID)]).ids
+        account_ids = self.env['account.account'].search([('user_type_id', 'in', INCOME_USER_TYPE_IDS)]).ids
         if account_ids:
             param = (tuple(account_ids),)
             where_clause += " AND aml.account_id IN %s" % param
@@ -163,8 +164,9 @@ class CostSheetXLSX(ReportXlsx):
                             AND m.state='done'
                 """ % (date_from, date_to, obj.cost_center_id.id, self.env.user.company_id.id)
 
-        if obj.operating_unit_id:
-            where_clause += " AND mrp.operating_unit_id=%s" % obj.operating_unit_id.id
+        if obj.operating_unit_ids:
+            params = ','.join(str(i) for i in obj.operating_unit_ids.ids)
+            where_clause += " AND mrp.operating_unit_id IN (%s)" % params
 
         # PRODUCTION QTY
         sql_str_of_production_qty = self._prepare_query_of_production_quantity(where_clause)
@@ -198,8 +200,9 @@ class CostSheetXLSX(ReportXlsx):
                             AND m.state='done'
                 """ % (date_from, date_to, obj.cost_center_id.id, self.env.user.company_id.id)
 
-        if obj.operating_unit_id:
-            where_clause += " AND mrp.operating_unit_id=%s" % obj.operating_unit_id.id
+        if obj.operating_unit_ids:
+            params = ','.join(str(i) for i in obj.operating_unit_ids.ids)
+            where_clause += " AND mrp.operating_unit_id IN (%s)" % params
 
         # PRODUCTION QTY
         sql_str_of_production_qty = self._prepare_query_of_production_quantity(where_clause)
@@ -611,7 +614,7 @@ class CostSheetXLSX(ReportXlsx):
                             END) AS quantity
                         FROM
                             stock_move m
-                            JOIN mrp_production mrp ON mrp.id=m.production_id AND mrp.state='done'
+                            JOIN mrp_production mrp ON mrp.id=m.production_id AND mrp.state='done' AND mrp.mrp_type='production'
                             JOIN product_product pp ON pp.id=m.product_id
                             JOIN product_template pt ON pt.id=pp.product_tmpl_id
                             JOIN account_cost_center acc ON acc.id=pt.cost_center_id
@@ -624,7 +627,7 @@ class CostSheetXLSX(ReportXlsx):
                             END) AS quantity
                         FROM
                             stock_move m
-                            JOIN mrp_unbuild mrp ON mrp.id=m.consume_unbuild_id AND mrp.state='done'
+                            JOIN mrp_unbuild mrp ON mrp.id=m.consume_unbuild_id AND mrp.state='done' AND mrp.mrp_type='production'
                             JOIN product_product pp ON pp.id=m.product_id
                             JOIN product_template pt ON pt.id=pp.product_tmpl_id
                             JOIN account_cost_center acc ON acc.id=pt.cost_center_id
@@ -717,7 +720,7 @@ class CostSheetXLSX(ReportXlsx):
     @staticmethod
     def calc_rate(amount, sale_qty, production_qty, name):
         rate = 0.0
-        if name in ['revenue', 'indirect_income', 'administrative', 'finance', 'marketing', 'distribution', 'total_cost', 'profit_loss']:
+        if name in ['revenue', 'indirect_income', 'cogs', 'administrative', 'finance', 'marketing', 'distribution', 'total_cost', 'profit_loss']:
             if sale_qty > 0:
                 rate = amount / sale_qty
         else:
@@ -803,8 +806,9 @@ class CostSheetXLSX(ReportXlsx):
 
         sheet.write(6, 0, "Cost Center: " + obj.cost_center_id.name, bold)
 
-        if obj.operating_unit_id:
-            sheet.merge_range(6, 1, 6, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
+        if obj.operating_unit_ids:
+            operating_unit_names_str = ', '.join(ou.name for ou in obj.operating_unit_ids)
+            sheet.merge_range(6, 1, 6, 2, "Operating Unit: " + operating_unit_names_str, bold)
         else:
             sheet.merge_range(6, 1, 6, 2, "Operating Unit: All", bold)
 

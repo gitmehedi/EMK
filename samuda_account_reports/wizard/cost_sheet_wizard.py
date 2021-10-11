@@ -25,7 +25,7 @@ class CostSheetWizard(models.TransientModel):
     periods_number = fields.Integer('Number of periods', default=1)
 
     all_entries = fields.Boolean(string='Include Unposted Entries', default=False)
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+    operating_unit_ids = fields.Many2many('operating.unit', string='Operating Unit')
     cost_center_id = fields.Many2one('account.cost.center', string='Cost Center', required=True)
 
     @api.constrains('date_from', 'date_to')
