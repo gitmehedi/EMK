@@ -9,8 +9,9 @@ class EventEvent(models.Model):
     _inherit = 'event.event'
     _order = 'id desc'
 
-    organizer_id = fields.Many2one('res.partner', string='Organizer Name', domain=[('is_organizer', '=', True)],
+    organizer_id = fields.Many2one('res.partner', string='PoC Name', domain=[('is_poc', '=', True)],
                                    default=False, required=True, readonly=False, states={'done': [('readonly', True)]})
+    user_id = fields.Many2one(string="Organizer Name")
     total_seat_available = fields.Integer(string="Total Seat Available", compute='compute_total_seat')
     event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=False,
                                      states={'done': [('readonly', True)]})

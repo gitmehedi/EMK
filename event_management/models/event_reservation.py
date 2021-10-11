@@ -17,7 +17,7 @@ class EventReservation(models.Model):
         employee = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
         return employee
 
-    name = fields.Char(string='Name', readonly=True, states={'draft': [('readonly', False)]})
+    name = fields.Char(string='ID', readonly=True, states={'draft': [('readonly', False)]})
     event_name = fields.Char(string='Event Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
     poc_id = fields.Many2one('res.partner', required=True, string='PoC Name', domain=[('is_poc', '=', True)],
                              readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
@@ -30,6 +30,10 @@ class EventReservation(models.Model):
     poc_type_id = fields.Many2one('event.poc.type', string="PoC Type", required=True,
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
+    pillar_id = fields.Many2one('event.pillar', string='Event Pillar', track_visibility='onchange', required=True,
+                                readonly=True, states={'draft': [('readonly', False)]})
+    theme_id = fields.Many2one('event.theme', string='Event Theme', track_visibility='onchange', required=True,
+                                readonly=True, states={'draft': [('readonly', False)]})
     facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
                                       required=True, readonly=True, states={'draft': [('readonly', False)]})
     contact_number = fields.Char(string="Contact Number", readonly=True, related='poc_id.mobile')
@@ -51,9 +55,10 @@ class EventReservation(models.Model):
     description = fields.Html('Description', track_visibility='onchange', required=True, sanitize=False,
                               readonly=True, states={'draft': [('readonly', False)]})
 
-    payment_type = fields.Selection([('paid', 'Paid'),('free', 'Free')], required=True, default='paid', string='Type',
+    payment_type = fields.Selection([('paid', 'Paid'), ('free', 'Free')], required=True, default='paid', string='Type',
                                     readonly=True, states={'draft': [('readonly', False)]}, )
-    mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')], required=True, default='cash',
+    mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')], required=True,
+                                       default='cash',
                                        string='Mode of Payment', track_visibility='onchange',
                                        readonly=True, states={'draft': [('readonly', False)]})
     paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange',
@@ -167,7 +172,7 @@ class EventReservation(models.Model):
         if self.state == 'on_process':
             vals = {
                 'name': self.event_name,
-                'organizer_id': self.organizer_id.id,
+                'organizer_id': self.org_id.id,
                 'event_type_id': self.event_type_id.id,
                 'expected_session': self.total_session,
                 'date_begin': self.start_date,

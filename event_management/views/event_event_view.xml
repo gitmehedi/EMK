@@ -5,6 +5,11 @@
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="duplicate">0</attribute>
+                    <attribute name="create">0</attribute>
+                    <attribute name="delete">0</attribute>
+                </xpath>
                 <xpath expr="//page[@name='registrations']" position="replace">
                     <page name="registrations" string="Registrations" invisible="1">
                         <group>
@@ -14,6 +19,7 @@
                         </group>
                     </page>
                 </xpath>
+
                 <xpath expr="//form/header/button[@name='button_confirm']" position="attributes">
                     <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
@@ -26,15 +32,7 @@
                 <xpath expr="//form/header/button[@name='button_cancel']" position="attributes">
                     <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
-                <xpath expr="//button[@name='toggle_active']" position="attributes">
-                    <attribute name="groups">event_user.group_event_officer</attribute>
-                </xpath>
-                <xpath expr="//form/header/button[@name='button_cancel']" position="after">
-                    <button name="event_management.data_import_wizard_action_view" class="oe_highlight"
-                            groups="event_user.group_event_officer" states="draft,confirm" type="action"
-                            string="Import"/>
-                </xpath>
-
+                <xpath expr="//button[@name='toggle_active']" position="replace"></xpath>
                 <xpath expr="//field[@name='address_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                     <attribute name="invisible">True</attribute>
