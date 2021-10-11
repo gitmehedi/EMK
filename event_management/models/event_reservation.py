@@ -31,7 +31,7 @@ class EventReservation(models.Model):
                                   track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)]})
     facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
-                                      readonly=True, states={'draft': [('readonly', False)]})
+                                      required=True, readonly=True, states={'draft': [('readonly', False)]})
     contact_number = fields.Char(string="Contact Number", readonly=True, related='poc_id.mobile')
     work_email = fields.Char(string="Email", readonly=True, related='poc_id.email')
 
@@ -43,15 +43,17 @@ class EventReservation(models.Model):
                                  readonly=True, states={'draft': [('readonly', False)]})
     end_date = fields.Datetime(string='End Date', required=True, track_visibility='onchange',
                                readonly=True, states={'draft': [('readonly', False)]})
+    last_date_reg = fields.Datetime(string='Last Date of Registration', required=True, track_visibility='onchange',
+                                    readonly=True, states={'draft': [('readonly', False)]})
     request_date = fields.Datetime(string='Requested Date', required=True, track_visibility='onchange',
                                    default=fields.Datetime.now,
                                    readonly=True, states={'draft': [('readonly', False)]})
     description = fields.Html('Description', track_visibility='onchange', required=True, sanitize=False,
                               readonly=True, states={'draft': [('readonly', False)]})
 
-    payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type',
+    payment_type = fields.Selection([('paid', 'Paid'),('free', 'Free')], required=True, default='paid', string='Type',
                                     readonly=True, states={'draft': [('readonly', False)]}, )
-    mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')], required=True, default='cash',
+    mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')], required=True, default='cash',
                                        string='Mode of Payment', track_visibility='onchange',
                                        readonly=True, states={'draft': [('readonly', False)]})
     paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange',
@@ -64,7 +66,7 @@ class EventReservation(models.Model):
                                    required=True, readonly=True, states={'draft': [('readonly', False)]})
     rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange', sanitize=True,
                                    readonly=True, states={'draft': [('readonly', False)]})
-    date_of_payment = fields.Date(string="Expected Date for Payment", track_visibility='onchange',
+    date_of_payment = fields.Date(string="Date for Payment", track_visibility='onchange', required=True,
                                   readonly=True, states={'draft': [('readonly', False)]})
     notes = fields.Html(string="Comments/Notes", track_visibility='onchange', sanitize=False,
                         readonly=True, states={'draft': [('readonly', False)]})
@@ -83,16 +85,16 @@ class EventReservation(models.Model):
                                      states={'draft': [('readonly', False)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True,
                                       states={'draft': [('readonly', False)]})
-    snacks_required = fields.Selection([('yes', 'Yes'), ('no', 'No')],
-                                       string="Requirement for Food/Beverage/Snacks?", readonly=True,
+    snacks_required = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
+                                       string="Food/Beverage/Snacks?", readonly=True,
                                        states={'draft': [('readonly', False)]})
     paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
-                                     string="Participation Charge", readonly=True,
+                                     string="Participation Charge", readonly=True, required=True,
                                      states={'draft': [('readonly', False)]})
     participating_amount = fields.Float(string="Participation Amount", readonly=True,
                                         states={'draft': [('readonly', False)]})
-    space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Do you need EMK Space?",
-                                readonly=True, states={'draft': [('readonly', False)]})
+    space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Need EMK Space?",
+                                readonly=True, required=True, states={'draft': [('readonly', False)]})
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], required=True,
                                           readonly=True, string='Available Seat', default="limited",
                                           states={'draft': [('readonly', False)]})
