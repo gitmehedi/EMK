@@ -21,6 +21,8 @@ class EventReservation(models.Model):
     event_name = fields.Char(string='Event Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
     poc_id = fields.Many2one('res.partner', required=True, string='PoC Name', domain=[('is_poc', '=', True)],
                              readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
+    contact_number = fields.Char(string="Contact Number", readonly=True, related='poc_id.mobile')
+    work_email = fields.Char(string="Email", readonly=True, related='poc_id.email')
     org_id = fields.Many2one('hr.employee', string='Organizer Name', default=get_employee,
                              required=True, track_visibility='onchange',
                              readonly=True, states={'draft': [('readonly', False)]})
@@ -36,9 +38,6 @@ class EventReservation(models.Model):
                                 readonly=True, states={'draft': [('readonly', False)]})
     facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
                                       required=True, readonly=True, states={'draft': [('readonly', False)]})
-    contact_number = fields.Char(string="Contact Number", readonly=True, related='poc_id.mobile')
-    work_email = fields.Char(string="Email", readonly=True, related='poc_id.email')
-
     attendee_number = fields.Integer('No. of Attendees', required=True, track_visibility='onchange',
                                      readonly=True, states={'draft': [('readonly', False)]})
     total_session = fields.Integer('No. of Sessions', required=True, track_visibility='onchange',
@@ -58,8 +57,7 @@ class EventReservation(models.Model):
     payment_type = fields.Selection([('paid', 'Paid'), ('free', 'Free')], required=True, default='paid', string='Type',
                                     readonly=True, states={'draft': [('readonly', False)]}, )
     mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')], required=True,
-                                       default='cash',
-                                       string='Mode of Payment', track_visibility='onchange',
+                                       default='cash', string='Mode of Payment', track_visibility='onchange',
                                        readonly=True, states={'draft': [('readonly', False)]})
     paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange',
                                readonly=True, states={'draft': [('readonly', False)]})
@@ -101,7 +99,7 @@ class EventReservation(models.Model):
     space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Need EMK Space?",
                                 readonly=True, required=True, states={'draft': [('readonly', False)]})
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], required=True,
-                                          readonly=True, string='Available Seat', default="limited",
+                                          readonly=True, string='Available Seats', default="limited",
                                           states={'draft': [('readonly', False)]})
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
                                  states={'draft': [('readonly', False)]})
