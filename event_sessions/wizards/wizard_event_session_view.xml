@@ -63,7 +63,7 @@
             <field name="state" position="before">
                 <button string="Generate Sessions"
                         name="%(act_wizard_event_session)d"
-                        states="draft,confirm"
+                        states="confirm"
                         groups="event_user.group_event_officer"
                         type="action"/>
             </field>

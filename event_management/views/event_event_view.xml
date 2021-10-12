@@ -19,7 +19,12 @@
                         </group>
                     </page>
                 </xpath>
-
+                <xpath expr="//form/header/button[@name='button_confirm']" position="before">
+                    <button string="Approve Event" name="button_approve" states="draft" type="object" class="oe_highlight" groups="event_user.group_event_officer"/>
+                </xpath>
+                <xpath expr="//form/header/button[@name='button_confirm']" position="attributes">
+                    <attribute name="groups">event_user.group_event_officer</attribute>
+                </xpath>
                 <xpath expr="//form/header/button[@name='button_confirm']" position="attributes">
                     <attribute name="groups">event_user.group_event_officer</attribute>
                 </xpath>
@@ -39,10 +44,6 @@
                 </xpath>
                 <xpath expr="//field[@name='organizer_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='user_id']" position="attributes">
-                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
-                    <attribute name="readonly">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='organizer_id']" position="after">
                     <field name="contact_number"/>
@@ -82,7 +83,7 @@
                 </xpath>
                 <xpath expr="//group[@name='main_field_group']/group[2]" position="replace">
                     <group>
-                        <field name="user_id"/>
+                        <field name="user_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         <field name="event_type_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         <field name="pillar_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         <field name="theme_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
@@ -183,14 +184,20 @@
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="colors">
-                        orange:state=='draft';green:state=='confirm';grey:state=='done';red:state=='cancel';
-                    </attribute>
-                    <attribute name="decoration-bf">state in ('draft','confirm')</attribute>
-                </xpath>
-                <xpath expr="//field[@name='name']" position="after">
-                    <field name="organizer_id"/>
+                <xpath expr="//tree" position="replace">
+                    <tree string="Events" duplicate="0" create="0" delete="0"
+                          colors="orange:state=='draft';green:state=='confirm';grey:state=='done';red:state=='cancel';">
+                        <field name="name"/>
+                        <field name="organizer_id"/>
+                        <field name="user_id"/>
+                        <field name="expected_session"/>
+                        <field name="paid_amount"/>
+                        <field name="participating_amount"/>
+                        <field name="last_date_reg"/>
+                        <field name="date_begin"/>
+                        <field name="date_end"/>
+                        <field name="state"/>
+                    </tree>
                 </xpath>
             </field>
         </record>

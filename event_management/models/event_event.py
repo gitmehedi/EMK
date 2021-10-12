@@ -81,6 +81,10 @@ class EventEvent(models.Model):
     seats_min = fields.Integer(string='Min Attendees', readonly=True, states={'draft': [('readonly', False)]})
     seats_max = fields.Integer(string='Max Attendees', readonly=True, states={'draft': [('readonly', False)]})
     date_end = fields.Datetime(readonly=True, states={'draft': [('readonly', False)]})
+    state = fields.Selection([
+        ('draft', 'Draft'), ('cancel', 'Cancelled'),
+        ('approve', 'Approved'),
+        ('confirm', 'Confirmed'), ('done', 'Done')])
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):

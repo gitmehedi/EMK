@@ -40,19 +40,19 @@
                     </group>
                     <group string="Seats Information">
                         <group>
-                            <field name="seats_min"/>
                             <field name="seats_availability"/>
+                            <field name="seats_available"
+                                   attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
                             <field name="seats_max"
                                    attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                            <field name="seats_min"/>
                             <field name="seats_reserved"/>
                         </group>
                         <group>
-                            <field name="seats_available"
-                                   attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
-                            <field name="seats_unconfirmed"/>
-                            <field name="seats_used"/>
                             <field name="seats_available_expected"
                                    attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                            <field name="seats_used"/>
+                            <field name="seats_unconfirmed"/>
                         </group>
                     </group>
                     <notebook>
