@@ -74,6 +74,9 @@
                 <xpath expr="//field[@name='twitter_hashtag']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='date_tz']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath>
@@ -89,10 +92,9 @@
                 <xpath expr="//group[@name='main_field_group']" position="after">
                     <group string="Event Information">
                         <group>
-                            <field name="seats_availability" required="False"
-                                   attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="seats_availability"/>
                             <field name="seats_max"/>
-                            <field name="seats_min" attrs="{'readonly' : [('state','=','done')]}"/>
+                            <field name="seats_min"/>
                             <field name="total_seat_available"/>
                             <field name="seats_available" string="Current Available Seats"/>
                             <field name="seats_used" string="Current Participant"/>

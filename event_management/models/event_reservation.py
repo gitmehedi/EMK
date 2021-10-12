@@ -35,7 +35,7 @@ class EventReservation(models.Model):
     pillar_id = fields.Many2one('event.pillar', string='Event Pillar', track_visibility='onchange', required=True,
                                 readonly=True, states={'draft': [('readonly', False)]})
     theme_id = fields.Many2one('event.theme', string='Event Theme', track_visibility='onchange', required=True,
-                                readonly=True, states={'draft': [('readonly', False)]})
+                               readonly=True, states={'draft': [('readonly', False)]})
     facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
                                       required=True, readonly=True, states={'draft': [('readonly', False)]})
     attendee_number = fields.Integer('No. of Attendees', required=True, track_visibility='onchange',
@@ -170,21 +170,39 @@ class EventReservation(models.Model):
         if self.state == 'on_process':
             vals = {
                 'name': self.event_name,
-                'organizer_id': self.org_id.id,
+                'organizer_id': self.poc_id.id,
+                'poc_type_id': self.poc_type_id.id,
+                'facilities_ids': [(4,rec.id) for rec in self.facilities_ids],
+                'user_id': self.org_id.id,
                 'event_type_id': self.event_type_id.id,
+                'pillar_id': self.pillar_id.id,
+                'theme_id': self.theme_id.id,
+                'space_id': self.space_id,
                 'expected_session': self.total_session,
+                'request_date': self.request_date,
                 'date_begin': self.start_date,
                 'date_end': self.end_date,
-                'payment_type': self.payment_type,
-                'mode_of_payment': self.mode_of_payment,
-                'paid_amount': self.paid_amount,
-                'participating_amount': self.participating_amount,
-                'refundable_amount': self.refundable_amount,
-                'date_of_payment': self.date_of_payment,
-                'seats_max': self.attendee_number,
+                'last_date_reg': self.last_date_reg,
                 'seats_availability': self.seats_availability,
+                'seats_max': self.attendee_number,
+                'mode_of_payment': self.mode_of_payment,
+                'payment_type': self.payment_type,
+                'date_of_payment': self.date_of_payment,
+                'proposed_budget': self.proposed_budget,
+                'approved_budget': self.approved_budget,
+                'paid_amount': self.paid_amount,
+                'refundable_amount': self.refundable_amount,
+                'paid_attendee': self.paid_attendee,
+                'participating_amount': self.participating_amount,
+                'target_audience_group': self.target_audience_group,
+                'target_age': self.target_age,
+                'outreach_plan': self.outreach_plan,
+                'outreach_plan_other': self.outreach_plan_other,
+                'snacks_required': self.snacks_required,
                 'description': self.description,
                 'rules_regulation': self.rules_regulation,
+                'notes': self.notes,
+                'purpose_of_event': self.purpose_of_event,
                 'ref_reservation': self.name,
                 'event_mail_ids': [
                     (0, 0, {
@@ -202,6 +220,7 @@ class EventReservation(models.Model):
                     'event_id': event.id
                 })
                 self._create_invoice()
+                event.write({'state': 'draft'})
             self.state = 'confirm'
 
     @api.one
@@ -229,7 +248,7 @@ class EventReservation(models.Model):
                 [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
 
             acc_invoice = {
-                'partner_id': self.organizer_id.id,
+                'partner_id': self.poc_id.id,
                 'date_invoice': fields.datetime.now(),
                 'date_due': datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') - timedelta(days=1),
                 'user_id': self.env.user.id,
@@ -261,10 +280,10 @@ class EventReservation(models.Model):
                 })
                 vals = {
                     'template': 'mail_send.emk_inv_email_tmpl',
-                    'email_to': self.organizer_id.email,
+                    'email_to': self.poc_id.email,
                     'attachment_ids': [(6, 0, attachment.ids)],
                     'context': {
-                        'name': self.organizer_id.name,
+                        'name': self.poc_id.name,
                         'subject': vals['subject']
                     },
                 }
