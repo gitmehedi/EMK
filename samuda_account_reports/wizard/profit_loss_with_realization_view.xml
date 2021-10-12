@@ -22,8 +22,8 @@
                             <field name="date_to" attrs="{'invisible': [('date_filter' , '!=', 'custom')]}"/>
                         </group>
                         <group>
-                            <field name="operating_unit_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
-                            <field name="cost_center_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                            <field name="operating_unit_ids" placeholder="All" widget="many2many_tags" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                            <field name="cost_center_ids" placeholder="All" widget="many2many_tags" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                             <field name="date_filter_cmp" string="Comparison"/>
                             <field name="periods_number" attrs="{'invisible': ['|', ('date_filter_cmp' , '=', 'no_comparison'), ('date_filter_cmp' , '=', 'custom')]}"/>
                             <field name="date_from_cmp" attrs="{'invisible': [('date_filter_cmp' , '!=', 'custom')]}"/>

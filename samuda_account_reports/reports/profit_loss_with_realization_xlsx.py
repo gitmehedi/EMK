@@ -90,7 +90,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                         FROM
                             account_move_line aml
                             JOIN account_move mv ON mv.id=aml.move_id
-                            JOIN account_invoice i ON i.move_id=mv.id AND i.type='out_invoice'
+                            JOIN account_invoice i ON i.move_id=mv.id AND i.type IN ('out_invoice','out_refund')
                             JOIN account_invoice_line l ON l.invoice_id=i.id
                             JOIN product_product p ON p.id=l.product_id
                             JOIN account_cost_center acc ON acc.id=aml.cost_center_id
@@ -110,9 +110,10 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         item_list = []
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
-        if obj.cost_center_id:
-            where_clause += """ AND aml.account_id IN ((SELECT raw_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id=%s) UNION
-                                            (SELECT packing_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id=%s))""" % (obj.cost_center_id.id, obj.cost_center_id.id)
+        if obj.cost_center_ids:
+            cc_ids_str = ','.join(str(i) for i in obj.cost_center_ids.ids)
+            where_clause += """ AND aml.account_id IN ((SELECT raw_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id IN (%s)) UNION
+                                            (SELECT packing_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id IN (%s)))""" % (cc_ids_str, cc_ids_str)
         else:
             where_clause += """ AND aml.account_id IN ((SELECT raw_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id IS NOT NULL) UNION
                                                         (SELECT packing_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id IS NOT NULL))"""
@@ -432,10 +433,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
         if not obj.all_entries:
             where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
-        if obj.cost_center_id:
-            where_clause += " AND aml.cost_center_id=%s" % obj.cost_center_id.id
+        if obj.operating_unit_ids:
+            ou_params = ','.join(str(i) for i in obj.operating_unit_ids.ids)
+            where_clause += " AND aml.operating_unit_id IN (%s)" % ou_params
+        if obj.cost_center_ids:
+            cc_params = ','.join(str(i) for i in obj.cost_center_ids.ids)
+            where_clause += " AND aml.cost_center_id IN (%s)" % cc_params
         where_clause += " AND aml.company_id=%s" % self.env.user.company_id.id
 
         return where_clause
@@ -549,13 +552,15 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         sheet.merge_range(3, 0, 3, 4, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
         sheet.merge_range(4, 0, 4, 4, "Statement of Comprehensive Income", name_format)
 
-        if obj.cost_center_id:
-            sheet.merge_range(6, 0, 6, 1, "Cost Center: " + obj.cost_center_id.name, bold)
+        if obj.cost_center_ids:
+            cost_center_names_str = ', '.join(cc.name for cc in obj.cost_center_ids)
+            sheet.merge_range(6, 0, 6, 1, "Cost Center: " + cost_center_names_str, bold)
         else:
             sheet.merge_range(6, 0, 6, 1, "Cost Center: All", bold)
 
-        if obj.operating_unit_id:
-            sheet.merge_range(6, 3, 6, 4, "Operating Unit: " + obj.operating_unit_id.name, bold)
+        if obj.operating_unit_ids:
+            operating_unit_names_str = ', '.join(ou.name for ou in obj.operating_unit_ids)
+            sheet.merge_range(6, 3, 6, 4, "Operating Unit: " + operating_unit_names_str, bold)
         else:
             sheet.merge_range(6, 3, 6, 4, "Operating Unit: All", bold)
 
