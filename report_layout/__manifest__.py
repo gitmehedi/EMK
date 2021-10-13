@@ -6,6 +6,7 @@
     'website': 'genweb2.com',
     'depends': ['web','report'],
     'data': [
+        'data/lib_data.xml',
         'data/paperformat.xml',
         'views/inherite_layout.xml',
         'views/templates.xml',
