@@ -16,7 +16,7 @@
                 groups="hr.group_hr_user"/>
 
         <menuitem id="menu_date_ranges"
-                  name="Date ranges"
+                  name="Date Ranges"
                   parent="hr_holidays.menu_hr_holidays_configuration"
                   sequence="4"
                   groups="hr.group_hr_user"/>
@@ -35,16 +35,16 @@
 
         <menuitem action="base.action_res_partner_bank_account_form"
                   id="menu_action_res_partner_bank1"
-                  parent="hr.menu_hr_root"
+                  parent="hr.menu_human_resources_configuration"
                   name="Bank Accounts"
                   groups="emk_hr.group_acc_creator"
-                  sequence="5"/>
+                  sequence="8"/>
         <menuitem action="base.action_res_bank_form"
                   id="menu_action_res_bank_form"
-                  parent="hr.menu_hr_root"
+                  parent="hr.menu_human_resources_configuration"
                   name="Bank"
                   groups="emk_hr.group_acc_creator"
-                  sequence="4"/>
+                  sequence="9"/>
 
         <menuitem
                 name="Yearly Salary by Head"

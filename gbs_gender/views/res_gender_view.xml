@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_res_gender_form">
+            <field name="name">res.gender.form</field>
+            <field name="model">res.gender</field>
+            <field name="arch" type="xml">
+                <form string="Res Gender">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="status"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_res_gender_tree">
+            <field name="name">res.gender.tree</field>
+            <field name="model">res.gender</field>
+            <field name="arch" type="xml">
+                <tree string="event Pillar"
+                      decoration-bf="status==True" decoration-muted="status==False"
+                      decoration-success="status==True">
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_res_gender">
+            <field name="name">Gender</field>
+            <field name="res_model">res.gender</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem id="menu_res_gender" action="action_res_gender"
+                  groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
+    </data>
+</odoo>

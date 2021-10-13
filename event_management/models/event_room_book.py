@@ -45,6 +45,16 @@ class EventRoomBook(models.Model):
             raise UserError(
                 _('[{0}] room already book for another event, please choose another.'.format(self.room_id.name)))
 
+    @api.one
+    def act_done(self):
+        if self.state == 'assign':
+            self.state = 'done'
+
+    @api.one
+    def act_cancel(self):
+        if self.state == 'assign':
+            self.state = 'cancel'
+
     @api.model
     def _needaction_domain_get(self):
         return [('status', 'in', ['assign'])]

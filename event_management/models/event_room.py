@@ -22,6 +22,12 @@ class EventRoom(models.Model):
             events = self.env['event.event'].search([('state', '=', 'done')])
             records.event_count = len(events)
 
+    @api.constrains('min_seat', 'max_seat')
+    def _check_max_min(self):
+        for rec in self:
+            if rec.min_seat > rec.max_seat:
+                raise ValidationError(_("Min Seat should not be greater than Max Seat."))
+
     @api.constrains('name')
     def _check_name(self):
         name = self.search([('name', '=ilike', self.name)])

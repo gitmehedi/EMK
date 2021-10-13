@@ -9,34 +9,82 @@ class EventEvent(models.Model):
     _inherit = 'event.event'
     _order = 'id desc'
 
-    organizer_id = fields.Many2one('res.partner', string='Organizer Name', domain=[('is_organizer', '=', True)],
-                                   default=False, required=True, readonly=False, states={'done': [('readonly', True)]})
+    name = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
+    organizer_id = fields.Many2one('res.partner', string='PoC Name', domain=[('is_poc', '=', True)],
+                                   default=False, required=True, readonly=True, states={'draft': [('readonly', False)]})
+    contact_number = fields.Char(string="Contact Number", readonly=True, related='organizer_id.mobile')
+    work_email = fields.Char(string="Email", readonly=True, related='organizer_id.email')
+    event_type_id = fields.Many2one(string="Event Type", required=True, readonly=True, states={'draft': [('readonly', False)]})
+    poc_type_id = fields.Many2one('event.poc.type', string="PoC Type", required=True,
+                                  track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    user_id = fields.Many2one(string="Organizer Name", required=True, readonly=True, states={'draft': [('readonly', False)]})
+    pillar_id = fields.Many2one('event.pillar', string='Event Pillar', track_visibility='onchange', required=True,
+                                readonly=True, states={'draft': [('readonly', False)]})
+    theme_id = fields.Many2one('event.theme', string='Event Theme', track_visibility='onchange', required=True,
+                               readonly=True, states={'draft': [('readonly', False)]})
+    last_date_reg = fields.Datetime(string='Last Date of Registration', required=True, track_visibility='onchange',
+                                    readonly=True, states={'draft': [('readonly', False)]})
+    request_date = fields.Datetime(string='Request Date', required=True, track_visibility='onchange',
+                                   readonly=True, states={'draft': [('readonly', False)]})
+    facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
+                                      required=True, readonly=True, states={'draft': [('readonly', False)]})
     total_seat_available = fields.Integer(string="Total Seat Available", compute='compute_total_seat')
     event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=False,
                                      states={'done': [('readonly', True)]})
     event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks', readonly=False,
                                      states={'done': [('readonly', True)]})
-    date_begin = fields.Datetime(string='Start Date', required=True,
-                                 track_visibility='onchange',
+    date_begin = fields.Datetime(string='Start Date', required=True, track_visibility='onchange',
                                  states={'confirm': [('readonly', True)], 'done': [('readonly', True)]})
-    payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type',
-                                    readonly=False, states={'done': [('readonly', True)]})
+    payment_type = fields.Selection([('paid', 'Paid'), ('free', 'Free')], required=True,
+                                    default='free', string='Type',
+                                    readonly=True, states={'draft': [('readonly', False)]})
     mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')], required=True, default='cash',
-                                       readonly=False, states={'done': [('readonly', True)]},
-                                       string='Mode Of Payment')
-    paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), readonly=False,
-                               states={'done': [('readonly', True)]})
-    refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), readonly=False,
-                                     states={'done': [('readonly', True)]})
-    rules_regulation = fields.Html(string='Rules and Regulation', readonly=False, states={'done': [('readonly', True)]})
-    date_of_payment = fields.Date(string="Expected Date for Payment", readonly=False,
-                                  states={'done': [('readonly', True)]})
-    notes = fields.Html(string="Comments/Notes", readonly=False, states={'done': [('readonly', True)]})
-    ref_reservation = fields.Char(string="Reservation Reference", readonly=False, states={'done': [('readonly', True)]})
-    image_medium = fields.Binary(string='Medium-sized photo', attachment=True)
-    participating_amount = fields.Integer(string="Participation Amount", readonly=True,
-                                          states={'confirm': [('readonly', False)]})
-    expected_session = fields.Integer(string="No. of Sessions", readonly=True)
+                                       readonly=True, states={'draft': [('readonly', False)]},
+                                       string='Mode of Payment')
+    approved_budget = fields.Float(string='Approved Budget', digits=(12, 2), track_visibility='onchange',
+                                   required=True, readonly=True, states={'draft': [('readonly', False)]})
+    proposed_budget = fields.Float(string='Proposed Budget', digits=(12, 2), track_visibility='onchange',
+                                   required=True, readonly=True, states={'draft': [('readonly', False)]})
+    paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), readonly=True,
+                               states={'done': [('readonly', False)]})
+    paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
+                                     string="Participation Charge", readonly=True, required=True,
+                                     states={'draft': [('readonly', False)]})
+    refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), readonly=True,
+                                     states={'done': [('readonly', False)]})
+    rules_regulation = fields.Html(string='Rules and Regulation',readonly=True, states={'draft': [('readonly', False)]})
+    description = fields.Html(readonly=True, states={'draft': [('readonly', False)]})
+    date_of_payment = fields.Date(string="Expected Date for Payment", readonly=True, states={'draft': [('readonly', False)]})
+    notes = fields.Html(string="Comments/Notes", readonly=True, states={'draft': [('readonly', False)]})
+    ref_reservation = fields.Char(string="Reservation Reference", readonly=True, states={'draft': [('readonly', False)]})
+    image_medium = fields.Binary(string='Medium-sized photo', attachment=True,readonly=True, states={'draft': [('readonly', False)]})
+    participating_amount = fields.Integer(string="Participation Amount", readonly=True, states={'draft': [('readonly', False)]})
+    expected_session = fields.Integer(string="No. of Sessions", readonly=True, states={'draft': [('readonly', False)]})
+    purpose_of_event = fields.Html(string="Purpose of Event", track_visibility='onchange', sanitize=False,
+                                   readonly=True, states={'draft': [('readonly', False)]})
+    target_audience_group = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', required=True,
+                                             string="Target Audience Group", readonly=True, states={'draft': [('readonly', False)]})
+    target_age = fields.Integer(string="Target Age", required=True, readonly=True, states={'draft': [('readonly', False)]})
+    outreach_plan = fields.Selection([('social_media', 'Social Media Promotions'),
+                                      ('press_coverage', 'Press Coverage'),
+                                      ('designing', 'Designing'),
+                                      ('others', 'Others'),
+                                      ], string="Outreach Plan", required=True, readonly=True, states={'draft': [('readonly', False)]})
+    outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True, states={'draft': [('readonly', False)]})
+    snacks_required = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
+                                       string="Food/Beverage/Snacks?", readonly=True, states={'draft': [('readonly', False)]})
+    space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Need EMK Space?",
+                                required=True, readonly=True, states={'draft': [('readonly', False)]})
+    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], required=True,
+                                          string='Available Seats', default="limited",
+                                          readonly=True, states={'draft': [('readonly', False)]})
+    seats_min = fields.Integer(string='Min Attendees', readonly=True, states={'draft': [('readonly', False)]})
+    seats_max = fields.Integer(string='Max Attendees', readonly=True, states={'draft': [('readonly', False)]})
+    date_end = fields.Datetime(readonly=True, states={'draft': [('readonly', False)]})
+    state = fields.Selection([
+        ('draft', 'Draft'), ('cancel', 'Cancelled'),
+        ('approve', 'Approved'),
+        ('confirm', 'Confirmed'), ('done', 'Done')])
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):

@@ -42,19 +42,17 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group form-field">
-                            <label for="lastname" class="control-label">Middle Name</label>
-                            <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
-                                   placeholder="Middle Name"
-                                   class="form-control input-sm"/>
+                            <label for="middlename" class="control-label">Middle Name</label>
+                            <input type="text" name="middlename" t-att-value="middlename" id="middlename"
+                                   maxlength="100" placeholder="Middle Name" class="form-control input-sm"/>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group form-field">
-                            <label for="middlename" class="control-label">Last Name</label>
-                            <input type="text" name="middlename" t-att-value="middlename" id="middlename"
-                                   maxlength="100"
-                                   placeholder="Last Name"
-                                   class="form-control input-sm reqfield" required="required"/>
+                            <label for="lastname" class="control-label">Last Name</label>
+                            <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
+                                   placeholder="Last Name" class="form-control input-sm reqfield"
+                                   required="required"/>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -153,7 +151,7 @@
                             <div class="col-md-6">
                                 <div class="form-group form-field">
                                     <input type="text" name="zipcode" t-att-value="zipcode" id="zipcode" minlength="2"
-                                           maxlength="30"  placeholder="Zip"
+                                           maxlength="30" placeholder="Zip"
                                            class="form-control input-sm reqfield" required="required"/>
                                 </div>
                             </div>
@@ -198,11 +196,11 @@
                             <div class="mar-btm required">
                                 <t t-foreach="subject_of_interest_ids" t-as='label'>
 
-                                        <input type="checkbox" required="required"
-                                               name="subject_of_interest"
-                                               t-att-value="label_value[0]"
-                                               t-att-checked="'checked' if label_value[0] in subject_of_interest else None"/>
-                                        <t t-esc="label_value[1]"/>
+                                    <input type="checkbox" required="required"
+                                           name="subject_of_interest"
+                                           t-att-value="label_value[0]"
+                                           t-att-checked="'checked' if label_value[0] in subject_of_interest else None"/>
+                                    <t t-esc="label_value[1]"/>
 
                                 </t>
                             </div>
@@ -239,9 +237,10 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group form-field">
-                            <label for="highest_certification"  class="control-label">Highest Certification Achieved
+                            <label for="highest_certification" class="control-label">Highest Certification Achieved
                             </label>
-                            <select class="form-control input-sm reqfield" name="highest_certification" id="highest_certification" required="required">
+                            <select class="form-control input-sm reqfield" name="highest_certification"
+                                    id="highest_certification" required="required">
                                 <option value="">--Please Select--</option>
                                 <t t-foreach="highest_certification_ids" t-as='label'>
                                     <option t-att-value="label_value[0]"
@@ -284,7 +283,8 @@
                                 <t t-foreach="usa_work_or_study_ids" t-as='label'>
                                     <label class="radio-inline">
                                         <input type="radio" name="usa_work_or_study" t-att-value="label"
-                                               t-att-checked="'checked' if label==usa_work_or_study else None" required="required"/>
+                                               t-att-checked="'checked' if label==usa_work_or_study else None"
+                                               required="required"/>
                                         <t t-esc="label_value"/>
                                     </label>
                                 </t>
@@ -383,7 +383,8 @@
 
                         <div class="col-md-6">
                             <div class="img__wrap  pull-right" id="img_wrap">
-                                <input id="member-image-upload" class="hidden reqfield" type="file" name="image" required="required">
+                                <input id="member-image-upload" class="hidden reqfield" type="file" name="image"
+                                       required="required">
                                     <img id="member_image"/>
                                 </input>
                                 <div class="member_image_layer">

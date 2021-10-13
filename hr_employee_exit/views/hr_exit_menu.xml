@@ -4,8 +4,7 @@
                   parent="hr.menu_human_resources_configuration" sequence="30"/>
 
         <!-- Employee Checklist Menu -->
-        <menuitem id="menu_exit_management" name="Employee Exit" parent="hr.menu_hr_root"
-                  sequence="98"/>
+        <menuitem id="menu_exit_management" name="Employee Exit" parent="hr.menu_hr_root" sequence="25"/>
 
     </data>
 </odoo>

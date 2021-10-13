@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <menuitem id="menu_employee_employee" parent="hr.menu_hr_root" name="Employees" sequence="5"
+                  groups=""/>
+        <menuitem id="menu_employee_operations" parent="hr.menu_hr_root" name="Employee Operations" sequence="10"
+                  groups=""/>
+        <menuitem id="menu_employee_allowance" parent="hr.menu_hr_root" name="Employee Allowance" sequence="15"
+                  groups=""/>
+
+        <record id="hr.menu_open_view_employee_list_my" model="ir.ui.menu">
+            <field name="name">Employees</field>
+            <field name="parent_id" eval="ref('menu_employee_employee')"/>
+            <field name="sequence">5</field>
+        </record>
+        <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
+            <field name="name">Contracts</field>
+            <field name="parent_id" eval="ref('menu_employee_employee')"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="hr.menu_hr_department_tree" model="ir.ui.menu">
+            <field name="name">Departments</field>
+            <field name="parent_id" eval="ref('hr.menu_human_resources_configuration')"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="hr_payroll_arrear.hr_arrear_submenu" model="ir.ui.menu">
+            <field name="name">Arrears</field>
+            <field name="parent_id" eval="ref('menu_employee_allowance')"/>
+            <field name="sequence">1</field>
+        </record>
+        <record id="hr_employee_mobile_bills.hr_mobile_bill_menu" model="ir.ui.menu">
+            <field name="name">Employee Mobile Bills</field>
+            <field name="parent_id" eval="ref('menu_employee_allowance')"/>
+            <field name="sequence">5</field>
+        </record>
+        <record id="hr_employee_mobile_bills.hr_mobile_bills_menu" model="ir.ui.menu">
+            <field name="name">Mobile Bills</field>
+            <field name="parent_id" eval="ref('menu_employee_allowance')"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="hr_employee_mobile_bills.hr_mobile_bill_limits_menu" model="ir.ui.menu">
+            <field name="name">Mobile Bill Limits</field>
+            <field name="parent_id" eval="ref('menu_employee_allowance')"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="hr_employee_meal_bills.hr_meal_bill" model="ir.ui.menu">
+            <field name="name">Meal Bills</field>
+            <field name="parent_id" eval="ref('menu_employee_allowance')"/>
+            <field name="sequence">15</field>
+        </record>
+        <record id="hr_other_allowance.hr_other_allowance_submenu" model="ir.ui.menu">
+            <field name="name">Other Allowance</field>
+            <field name="parent_id" eval="ref('menu_employee_allowance')"/>
+            <field name="sequence">20</field>
+        </record>
+        <record id="hr_experience.menu_hr_experience" model="ir.ui.menu">
+            <field name="name">Employee Experiences</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="hr_employee_iou.hr_emp_iou_menu_item" model="ir.ui.menu">
+            <field name="name">Employee IOU</field>
+            <field name="sequence">35</field>
+        </record>
+    </data>
+</odoo>

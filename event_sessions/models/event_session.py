@@ -14,21 +14,21 @@ class EventSession(models.Model):
     _order = 'event_id desc'
     _description = 'Event session'
 
-    seats_min = fields.Integer(string="Minimum seats")
-    seats_max = fields.Integer(string="Maximum seats")
+    seats_min = fields.Integer(string="Min Seats")
+    seats_max = fields.Integer(string="Max Seats")
     active = fields.Boolean(default=True)
     company_id = fields.Many2one(comodel_name='res.company', related='event_id.company_id', store=True, )
     event_id = fields.Many2one(comodel_name='event.event', string='Event', ondelete="cascade")
-    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], 'Maximum Attendees',
+    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], 'Max Attendees',
                                           required=True, default='unlimited', )
     date_tz = fields.Selection(string='Timezone', related="event_id.date_tz", )
     date_begin = fields.Datetime(string="Session Start Date", required=True,
                                  default=lambda self: self.event_id.date_begin, )
     date_end = fields.Datetime(string="Session Date End", required=True, default=lambda self: self.event_id.date_end, )
+    date_end = fields.Datetime(string="Last da Date End", required=True, default=lambda self: self.event_id.date_end, )
 
     registration_ids = fields.One2many(comodel_name='event.session.attend', inverse_name='session_id',
-                                       string='Attendees',
-                                       state={'done': [('readonly', True)]}, )
+                                       string='Attendees', state={'done': [('readonly', True)]}, )
     event_mail_ids = fields.One2many(comodel_name='event.mail', inverse_name='session_id', string='Mail Schedule',
                                      copy=True)
     name = fields.Char(string='Session', required=True, compute="_compute_name", store=True, default='/', )
@@ -39,9 +39,9 @@ class EventSession(models.Model):
                                      compute='_compute_seats')
     seats_unconfirmed = fields.Integer(oldname='register_prospect', string='Unconfirmed Seat Reservations', store=True,
                                        readonly=True, compute='_compute_seats')
-    seats_used = fields.Integer(oldname='register_attended', string='Number of Participants', store=True, readonly=True,
+    seats_used = fields.Integer(oldname='register_attended', string='No of Participants', store=True, readonly=True,
                                 compute='_compute_seats')
-    seats_expected = fields.Integer(string='Number of Expected Attendees', readonly=True, compute='_compute_seats',
+    seats_expected = fields.Integer(string='No of Expected Attendees', readonly=True, compute='_compute_seats',
                                     store=True)
     seats_available_expected = fields.Integer(string='Available Expected Seats', readonly=True,
                                               compute='_compute_seats', store=True)
@@ -234,9 +234,22 @@ class EventSession(models.Model):
     def act_done(self):
         if self.state == 'confirmed':
             self.state = 'done'
+
     @api.one
     def button_assign(self):
         self.write({'state': 'assign'})
+
+    @api.one
+    def add_attendee(self):
+        if self.state == 'unconfirmed':
+            attendee = set(self.event_id.registration_ids.ids) - set([val.attendee_id.id for val in self.registration_ids])
+            for rec in list(attendee):
+                ses_reg = {
+                    'session_id': self.id,
+                    'event_id': self.event_id.id,
+                    'attendee_id': rec,
+                }
+                self.registration_ids.create(ses_reg)
 
     @api.model
     def _needaction_domain_get(self):

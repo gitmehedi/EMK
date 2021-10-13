@@ -6,11 +6,12 @@
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Organizer" decoration-bf="status==True"
+                <tree string="PoC" decoration-bf="status==True"
                       colors="green:status==True;silver:status==False;">
                     <field name="display_name" string="Name"/>
                     <field name="phone"/>
                     <field name="mobile"/>
+                    <field name="company_name"/>
                     <field name="email"/>
                     <field name="function"/>
                     <field name="event_count" sum="event_count"/>
@@ -39,7 +40,7 @@
                                     name="action_event_view" attrs="{'invisible': [('event_count','=', 0)]}">
                                 <field string="Events" name="event_count" widget="statinfo"/>
                             </button>
-                            <field name="is_organizer" invisible="True"/>
+                            <field name="is_poc" invisible="True"/>
                         </div>
                         <field name="image" widget='image' class="oe_avatar"
                                options='{"preview_image": "image_medium", "size": [90, 90]}'/>
@@ -94,6 +95,7 @@
                                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 </div>
                                 <field name="website" widget="url" placeholder="e.g. www.emk.com"/>
+                                <field name="company_name"/>
                                 <field name="status"/>
                             </group>
                             <group>
@@ -179,13 +181,13 @@
         </record>
 
         <record id="action_event_organizer" model="ir.actions.act_window">
-            <field name="name">Organizers</field>
+            <field name="name">PoC</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="domain">[('is_organizer','=',True)]</field>
-            <field name="context">{'default_is_organizer': 1,'default_supplier': 0,
+            <field name="domain">[('is_poc','=',True)]</field>
+            <field name="context">{'default_is_poc': 1,'default_supplier': 0,
                 'default_customer':1,'default_supplier': 0}
             </field>
             <field name="filter" eval="True"/>
@@ -217,7 +219,7 @@
             <field name="act_window_id" ref="action_event_organizer"/>
         </record>
 
-        <menuitem id="menu_partner_organizer" action="action_event_organizer"
+        <menuitem id="menu_partner_organizer" action="action_event_organizer" name="PoC"
                   groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
     </data>
 </odoo>

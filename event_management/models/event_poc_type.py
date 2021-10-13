@@ -4,10 +4,10 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class EventOrganizationType(models.Model):
-    _name = 'event.organization.type'
+class EventPoCType(models.Model):
+    _name = 'event.poc.type'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Event Organization Type'
+    _description = 'Event POC Type'
 
     name = fields.Char('Name', required=True, translate=True, track_visibility='onchange')
     status = fields.Boolean(default=True, track_visibility='onchange')

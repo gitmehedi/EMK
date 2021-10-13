@@ -19,22 +19,24 @@
                                 states="applied"/>
                         <button name="action_draft" type="object"
                                 string="Reset to draft" states="applied,approved" groups="hr.group_hr_manager"
-                                />
+                        />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Bills">
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
-                                            <field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                            <field name="employee_id"
+                                                   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                             <field name="bill_amount"/>
-                                            <field  name="state" invisible="1"/>
+                                            <field name="state" invisible="1"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -66,8 +68,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95" groups="hr.group_hr_user"
-                  action="hr_meal_bill_action"/>
+        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95"
+                  groups="hr.group_hr_user"/>
         <menuitem id="hr_meal_bill" name="Meal Bills" parent="hr_meal_bill_menu" groups="hr.group_hr_user"
                   action="hr_meal_bill_action"/>
     </data>

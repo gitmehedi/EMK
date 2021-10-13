@@ -7,14 +7,18 @@
             <field name="model">indent.type</field>
             <field name="arch" type="xml">
                 <form string="Leave Request">
-                <sheet>
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="status"/>
+                            </group>
                         </group>
-                        <group></group>
-                    </group>
-                </sheet>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -25,6 +29,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="status"/>
                 </tree>
             </field>
         </record>

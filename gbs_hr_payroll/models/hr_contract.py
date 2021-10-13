@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError
 
 class HrContract(models.Model):
     _name = 'hr.contract'
@@ -47,4 +48,14 @@ class HrContract(models.Model):
                                                        digits=dp.get_precision('Payroll'),track_visibility='onchange',
                                                        help='HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses for metro city it is 50% and for non metro 40%. \nHRA computed as percentage(%)')
     supplementary_allowance = fields.Float(string='Supplementary Allowance',track_visibility='onchange', digits=dp.get_precision('Payroll'))
+
+
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError('You can not delete record which is not in Draft state')
+            rec.unlink()
+        return super(HrContract, self).unlink()
 
