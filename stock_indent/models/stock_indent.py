@@ -505,12 +505,6 @@ class IndentIndent(models.Model):
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = pick_ids and pick_ids[0] or False
 
-<<<<<<< HEAD
-
-=======
-        # self.picking_id.do_transfer()
->>>>>>> 603e22e666b635e86281bd5fa770112694f41b3e
-
         return result
 
     def action_scrap_product(self):
@@ -547,7 +541,6 @@ class IndentProductLines(models.Model):
     _name = 'indent.product.lines'
     _description = 'Indent Product Lines'
 
-<<<<<<< HEAD
     indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',track_visibility='onchange')
     product_id = fields.Many2one('product.product', string='Product', required=True,track_visibility='onchange')
     product_uom_qty = fields.Float('Indent Quantity', digits=dp.get_precision('Product UoS'),
@@ -556,14 +549,7 @@ class IndentProductLines(models.Model):
                                 help="Receive Quantity which Update by done quantity.",track_visibility='onchange')
     issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),
                              help="Issued Quantity which Update by available quantity.",track_visibility='onchange')
-=======
-    indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',
-                                track_visibility='onchange')
-    product_id = fields.Many2one('product.product', string='Product', required=True, track_visibility='onchange')
-    indent_qty = fields.Float('Indent Qty', digits=dp.get_precision('Product UoS'),
-                                   required=True, default=1.00, track_visibility='onchange')
-    issue_qty = fields.Float('Issue Qty', digits=dp.get_precision('Product UoS'), track_visibility='onchange')
->>>>>>> 603e22e666b635e86281bd5fa770112694f41b3e
+
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
                                   required=True, store=True, track_visibility='onchange')
     price_unit = fields.Float(related='product_id.standard_price', string='Price',
@@ -577,7 +563,7 @@ class IndentProductLines(models.Model):
     name = fields.Char(related='product_id.name', string='Specification', store=True, track_visibility='onchange')
     remarks = fields.Char(related='product_id.name', string='Narration', store=True, track_visibility='onchange')
     sequence = fields.Integer('Sequence')
-<<<<<<< HEAD
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Confirm'),
@@ -587,9 +573,8 @@ class IndentProductLines(models.Model):
         ('reject', 'Rejected'),
     ], string='State', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
-=======
-    state = fields.Selection([('indent', 'Indent'), ('issue', 'issue')], default='indent')
->>>>>>> 603e22e666b635e86281bd5fa770112694f41b3e
+    # state = fields.Selection([('indent', 'Indent'), ('issue', 'issue')], default='indent')
+
 
     ####################################################
     # Business methods
@@ -611,13 +596,8 @@ class IndentProductLines(models.Model):
     def _compute_product_qty(self):
         for product in self:
             location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
-<<<<<<< HEAD
             product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),('location_id', '=', location_id)])
-            #,('location_id', '=', location_id)
-=======
-            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id)])
-            # ,('location_id', '=', location_id)
->>>>>>> 603e22e666b635e86281bd5fa770112694f41b3e
+
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity
 
