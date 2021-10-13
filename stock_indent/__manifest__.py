@@ -24,6 +24,7 @@
         'views/stock_location_view.xml',
         'views/stock_indent_view.xml',
         'views/stock_picking_type.xml',
+        'views/receive_products.xml',
     ],
     'installable': True,
     'application': False,

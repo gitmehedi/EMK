@@ -47,13 +47,17 @@
 						<button name="indent_confirm" string="Confirm" states="draft"
 								class="oe_highlight" type="object"/>
 						<button name="approve_indent" string="Approve" states="waiting_approval" type="object"
-								class="oe_highlight" groups="inventory_user.grp_inv_supervisor"/>
+								class="oe_highlight" /><!--groups="inventory_user.grp_inv_supervisor"-->
 						<button name="reject_indent" string="Reject" states="waiting_approval"
 								groups="inventory_user.grp_inv_supervisor" type="object"/>
-						<button name="action_view_picking" string="Issue Product(s)" type="object"
-								states="inprogress" class="oe_highlight" groups="inventory_user.grp_inv_department_executive"/>
+						<button name="action_view_picking" string="Issue Product(s)" type="object" invisible="1"
+								states="inprogress" class="oe_highlight" /><!--groups="inventory_user.grp_inv_department_executive"-->
 						<button name="action_close_indent" string="Close" type="object"
 								states="inprogress" groups="stock.group_stock_user"/>
+						<button name="action_issue_product" string="Issue Products" type="object" class="oe_highlight"
+								states="inprogress"/>
+						<button name="action_scrap_product" string="Scrap Products" type="object" class="oe_highlight"
+								states="received" invisible="1"/>
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
 							   statusbar_colors='{"reject":"red"}' />
@@ -81,16 +85,18 @@
 							<page string="Products">
 
 								<field name="product_lines">
-									<tree string="Products" editable="1">
+									<tree string="Products" editable="bottom" decoration-success="received_qty==product_uom_qty and state=='inprogress'" decoration-bf="received_qty==product_uom_qty and state=='inprogress'" decoration-danger="received_qty!=product_uom_qty and state=='inprogress'">
 										<field name="sequence" widget="handle"/>
-										<field name="product_id" domain="[('type','!=','service')]"/>
-										<field name="remarks"/>
-<!--										<field name="name" readonly="1" />-->
-										<field name="qty_available" readonly="0" groups="" />
-										<field name="product_uom" string="UOM"/>
-										<field name="product_uom_qty" sum="Total Qty"/>
-										<field name="received_qty" sum="Total Receive Qty" />
-										<field name="issue_qty" invisible="1"/>
+										<field name="product_id" domain="[('type','!=','service')]" options="{'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="remarks" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="state" invisible="1"/>
+<!--										<field name="name" readonly="1" />attrs="{'readonly': [('indent_id','!=','draft')]}"-->
+										<field name="qty_available" readonly="0" groups="" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"  />
+										<field name="product_uom" string="UOM" options="{'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="product_uom_qty" sum="Total Qty"  attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"/>
+										<field name="received_qty" sum="Total Receive Qty" attrs="{'readonly':[('state','in',('draft','waiting_approval'))]}"/>
+										<field name="issue_qty" invisible="1" attrs="{'readonly':[('state','in',('draft','waiting_approval'))]}"/>
+
 <!--										<button name="show_details" string="Modify" icon="fa-pencil" groups="stock.group_stock_multi_locations"/>-->
 										<!--groups="stock.group_stock_user"-->
 										<!--<field name="price_unit" sum="Total Price"/>-->
@@ -101,11 +107,13 @@
 								<!--<field name="amount_total" widget="monetary"-->
 								<!--class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}" />-->
 								<!--</group>-->
-								<div class="oe_clear">
-									<label for="material_required_for" />
-								</div>
-								<field name="material_required_for" class="oe_inline" invisible="1" placeholder="The material is required for..." />
-
+<!--								<div class="oe_clear">-->
+<!--									<label for="material_required_for" />-->
+<!--								</div>-->
+<!--								<field name="material_required_for" class="oe_inline"  placeholder="The material is required for..." />-->
+								<group>
+									<field name="material_required_for" placeholder="The material is required for..." />
+								</group>
 							</page>
 							<page string="Others">
 								<group>
