@@ -83,8 +83,12 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                             acc.name,
                             l.product_id,
                             CASE 
-                                WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(SUM(aml.quantity), 0)
-                                ELSE (p.ratio_in_percentage * COALESCE(SUM(aml.quantity), 0) / 100) 
+                                WHEN i.type='out_invoice' THEN
+                                    CASE 
+                                        WHEN COALESCE(p.ratio_in_percentage, 0)=0 THEN COALESCE(SUM(aml.quantity), 0)
+                                        ELSE (p.ratio_in_percentage * COALESCE(SUM(aml.quantity), 0) / 100) 
+                                    END
+                                ELSE 0
                             END as quantity,
                             -(SUM(aml.debit)-SUM(aml.credit)) AS amount
                         FROM
@@ -95,7 +99,7 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                             JOIN product_product p ON p.id=l.product_id
                             JOIN account_cost_center acc ON acc.id=aml.cost_center_id
                         """ + where_clause + """
-                        GROUP BY aml.cost_center_id,acc.name,l.product_id,p.ratio_in_percentage 
+                        GROUP BY aml.cost_center_id,acc.name,l.product_id,p.ratio_in_percentage,i.type 
                         ORDER BY aml.cost_center_id)) AS tbl
                     GROUP BY cost_center_id,name
         """
