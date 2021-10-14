@@ -6,6 +6,8 @@
     'category': 'Accounting',
     'depends': [
         'account',
+        'account_operating_unit',
+        'account_department_dimension',
         'account_cost_center'
     ],
     'data': [

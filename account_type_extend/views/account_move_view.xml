@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_move_form" model="ir.ui.view">
+    <record id="view_move_form_ou" model="ir.ui.view">
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_operating_unit.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='credit']" position="after">
+                <field name="partner_required" invisible="1"/>
+                <field name="analytic_account_required" invisible="1"/>
+                <field name="operating_unit_required" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="attrs">{'required': [('partner_required', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="attributes">
+                <attribute name="attrs">{'required': [('analytic_account_required', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='operating_unit_id']" position="attributes">
+                <attribute name="attrs">{'required': [('operating_unit_required', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_dd" model="ir.ui.view">
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_department_dimension.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='credit']" position="after">
+                <field name="department_required" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='department_id']" position="attributes">
+                <attribute name="attrs">{'required': [('department_required', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_cc" model="ir.ui.view">
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account_cost_center.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='cost_center_id']" position="replace">
-                <field name="cost_center_required_on_journal" invisible="1"/>
-                <field name="cost_center_id" attrs="{'required': [('cost_center_required_on_journal', '=', True)]}"/>
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='credit']" position="after">
+                <field name="cost_center_required" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='cost_center_id']" position="attributes">
+                <attribute name="attrs">{'required': [('cost_center_required', '=', True)]}</attribute>
             </xpath>
         </field>
     </record>
