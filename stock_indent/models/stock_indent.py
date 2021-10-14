@@ -597,7 +597,6 @@ class IndentProductLines(models.Model):
         for product in self:
             location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
             product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),('location_id', '=', location_id)])
-
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity
 
