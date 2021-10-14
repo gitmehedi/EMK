@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="account_parent.action_open_account" model="ir.values">
+            <field eval="'account.move.line'" name="model"/>
+        </record>
+
+        <record id="view_inherit_account_withparent_form" model="ir.ui.view">
+            <field name="name">inherit.account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account_parent.view_account_withparent_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="groups"></attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_tree_inherit" model="ir.ui.view">
+            <field name="name">account.account.tree</field>
+            <field name="model">account.account</field>
+            <field name="field_parent">child_ids</field>
+            <field name="inherit_id" ref="account_parent.view_account_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='debit']" position="replace">
+                    <field name="debit" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='credit']" position="replace">
+                    <field name="credit" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='balance']" position="replace">
+                    <field name="balance" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

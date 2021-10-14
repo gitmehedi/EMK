@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_security_deposit_ou_account_config" model="ir.ui.view">
+        <field name="name">view.security.deposit.ou.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="vendor_security_deposit.view_tds_vat_account_config"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='security_deposit_account']" position="after">
+                <label for="security_deposit_operating_unit_id" string="Security Deposit Branch"
+                       groups="account.group_account_user"/>
+                <div name="security_deposit_branch">
+                    <div>
+                        <field name="security_deposit_operating_unit_id"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                               class="oe_inline"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

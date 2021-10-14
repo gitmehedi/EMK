@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="fiscal_year_closing_journal" model="account.journal">
+        <field name="name">Fiscal Year Closing</field>
+        <field name="code">FYC</field>
+        <field name="type">general</field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tds_vat_account_config" model="ir.ui.view">
+        <field name="name">view.tds.vat.account.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="TDS/VAT Challan" name="grp_tds_vat_challan">
+                    <label for="tds_vat_transfer_journal_id" string="Transfer Journal"
+                           groups="account.group_account_user"/>
+                    <div name="tds_vat_challan">
+                        <div>
+                            <field name="tds_vat_transfer_journal_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

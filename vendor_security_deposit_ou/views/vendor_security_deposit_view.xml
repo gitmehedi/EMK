@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_vendor_security_deposit_form_view" model="ir.ui.view">
+        <field name="name">inherit.vendor.security.deposit.form.view</field>
+        <field name="model">vendor.security.deposit</field>
+        <field name="inherit_id" ref="vendor_security_deposit.vendor_security_deposit_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="before">
+                <field name="operating_unit_id" string="Branch" required="True"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

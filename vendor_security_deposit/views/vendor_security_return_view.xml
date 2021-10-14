@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--form view-->
+        <record id="vendor_security_return_form" model="ir.ui.view">
+            <field name="name">vendor.security.return.form</field>
+            <field name="model">vendor.security.return</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Vendor Security Return">
+                    <header>
+	                    <button string="Confirm" name="action_confirm" states="draft"
+                                type="object" class="oe_highlight"/>
+						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
+								attrs="{'invisible': [('state', '!=', 'confirm')]}" groups="base.vendor_advance_approver"/>
+                     	<button string="Cancel" name="action_cancel" states="confirmed" type="object" groups="base.vendor_advance_approver"
+                                attrs="{'invisible': [('state', '!=', 'confirm')]}" confirm="Are you sure you want to Cancel this?"/>
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
+                	</header>
+                    <sheet>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="filtered_partner_ids" invisible="1"/>
+                                <field name="partner_id"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"
+                                       domain="[('id', 'in', filtered_partner_ids and filtered_partner_ids[0] and filtered_partner_ids[0][2] or False), ('parent_id', '=', False), ('supplier', '=', True)]"/>
+                                <field name="input_vsd_ids" widget="many2many_tags"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"
+                                       domain="[('partner_id', 'in', [partner_id]), ('state', '=', 'approve'), ('outstanding_amount', '&gt;', 0)]"
+                                       attrs="{'invisible': [('state', '=', 'approve')]}"/>
+                                <field name="vsd_ids" widget="many2many_tags"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"
+                                       attrs="{'invisible': [('state', 'in', ('draft','confirm','cancel'))]}"/>
+                                <field name="amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <group>
+                                <field name="date" required="1" readonly="1"/>
+                                <field name="description" string="Narration" required="1"/>
+                                <field name="move_id"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Details" attrs="{'invisible': [('state', 'in', ('draft', 'confirm'))]}">
+                                <field name="line_ids" nolabel="1" readonly="True" mode="tree">
+                                    <tree string="Return Line" create="0" edit="0" editable="bottom" options="{'no_open': True}">
+                                        <field name="vsd_id" readonly="1"/>
+                                        <field name="date" readonly="1"/>
+                                        <field name="amount" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--tree view-->
+        <record id="vendor_security_return_tree" model="ir.ui.view">
+            <field name="name">vendor.security.return.tree</field>
+            <field name="model">vendor.security.return</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Vendor Security Return"
+                      decoration-primary="state=='draft'" decoration-info="state=='confirm'"
+                      decoration-success="state=='approve'"
+                      decoration-bf="state in ('confirm', 'approve')" decoration-muted="state=='cancel'">
+                    <field name="name"/>
+					<field name="partner_id"/>
+                    <field name="amount"/>
+					<field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <!--search view-->
+        <record id="vendor_security_return_search" model="ir.ui.view">
+            <field name="name">vendor.security.return.filter</field>
+            <field name="model">vendor.security.return</field>
+            <field name="arch" type="xml">
+                <search string="Search Vendor Security Return">
+                    <filter name="draft_sd" string="Pending" domain="[('state','=','confirm')]"/>
+                	<separator/>
+                    <filter name="confirm_sd" string="Confirmed" domain="[('state','=','confirm')]"/>
+                	<separator/>
+                    <filter name="approved_sd" string="Approved" domain="[('state','=','approve')]"/>
+                    <group name="groupby">
+                        <filter string="By Vendor" name="partner_groupby" domain=""
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+				</search>
+            </field>
+        </record>
+
+        <!--action view-->
+        <record id="action_vendor_security_return_view" model="ir.actions.act_window">
+            <field name="name">Vendor Security Return</field>
+            <field name="res_model">vendor.security.return</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="vendor_security_return_search"/>
+            <field name="context">{'search_default_state':0}</field>
+        </record>
+
+        <menuitem id="menu_vendor_security_return" name="Vendor Security Returns"
+                  parent="account.menu_finance_payables" action="action_vendor_security_return_view"
+                  sequence="120" groups="base.group_vendor_advance_user"/>
+
+    </data>
+</odoo>

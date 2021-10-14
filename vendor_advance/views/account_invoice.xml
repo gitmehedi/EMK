@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_account_invoice_form" model="ir.ui.view">
+        <field name="name">inherit.view.account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reference']" position="after">
+                <field name="advance_ids"
+                       domain="[('state', '=', 'approve'), ('partner_id', 'in', [partner_id]), ('active', '=', True), ('outstanding_amount', '&gt;', 0)]"
+                       widget="many2many_tags" attrs="{'invisible': [('partner_id', '=', False)]}"
+                       options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                <field name="adjusted_advance" attrs="{'invisible': ['|', ('advance_ids', '=', []), ('partner_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//div[@class='oe_inline']" position="after">
+                <group>
+                <field name="adjusted_vat" string="Adjusted VAT Amount"
+                       attrs="{'invisible': [('advance_ids', '=', [])]}"/>
+                <field name="adjusted_tds" string="Adjusted TDS Amount"
+                       attrs="{'invisible': [('advance_ids', '=', [])]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
