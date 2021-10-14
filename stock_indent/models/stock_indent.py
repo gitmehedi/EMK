@@ -580,16 +580,16 @@ class IndentProductLines(models.Model):
     # Business methods
     ####################################################
 
-    @api.one
-    @api.constrains('indent_qty')
-    def _check_indent_qty(self):
-        if self.indent_qty < 0:
-            raise UserError('You can\'t give negative value!!!')
-
-    @api.depends('indent_qty', 'price_unit')
-    def _compute_amount_subtotal(self):
-        for line in self:
-            line.price_subtotal = (line.indent_qty * line.price_unit)
+    # @api.one
+    # @api.constrains('indent_qty')
+    # def _check_indent_qty(self):
+    #     if self.indent_qty < 0:
+    #         raise UserError('You can\'t give negative value!!!')
+    #
+    # @api.depends('indent_qty', 'price_unit')
+    # def _compute_amount_subtotal(self):
+    #     for line in self:
+    #         line.price_subtotal = (line.indent_qty * line.price_unit)
 
     @api.depends('product_id')
     @api.multi
