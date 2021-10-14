@@ -12,6 +12,6 @@ class DOMaxOrderQtyWithoutLc(models.TransientModel):
         if context['delivery_authorization_id']:
             delivery_authorization = self.env['delivery.authorization'].browse(context.get('delivery_authorization_id'))
             delivery_authorization.write({'state': 'validate'})
-            ordered_qty = self.env['ordered_qty'].browse(context.get('ordered_qty_id'))
+            ordered_qty = self.env['ordered.qty'].browse(context.get('ordered_qty_id'))
             if ordered_qty.available_qty > 0:
                 ordered_qty.write({'available_qty': 0})
