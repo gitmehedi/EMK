@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="update_delivery_schedules_state_scheduler" model="ir.cron">
+            <field name="name">Auto Update Delivery Schedules State</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d 00:00:00')" />
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'delivery.schedules'"/>
+            <field name="function" eval="'action_process_delivery_schedules'"/>
+            <field name="args" eval="False" />
+        </record>
+    </data>
+</odoo>
