@@ -1,6 +1,9 @@
 from odoo import api, fields, models, _, sql_db
 from odoo.service import db
 import subprocess, os, base64
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class DBOperationManage(models.Model):
@@ -61,7 +64,33 @@ class DBOperationManage(models.Model):
 
             os.system(src_cmd)
             if os.path.isfile(filepath):
-                dest_cmd = "PGPASSWORD=\"{0}\" pg_restore -h {1} -p {2} -d {3} -c {4} -U {5} -w".format(
+                term_query = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=\'MTBL_REPORT\';"
+                term_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5} >/dev/null 2>&1".format(
+                    self.dest_db_pass,
+                    self.dest_ip,
+                    self.dest_port,
+                    'postgres',
+                    term_query,
+                    'postgres', )
+                try:
+                    os.system(term_str)
+                except os as e:
+                    _logger.info("Exception raise in terminate", exc_info=True)
+
+                drop_query = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=\'MTBL_REPORT\';"
+                drop_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5} >/dev/null 2>&1".format(
+                    self.dest_db_pass,
+                    self.dest_ip,
+                    self.dest_port,
+                    self.destination_db,
+                    drop_query,
+                    self.dest_db_user)
+                try:
+                    os.system(drop_str)
+                except os as e:
+                    _logger.info("Exception raise in drop database", exc_info=True)
+
+                dest_cmd = "PGPASSWORD=\"{0}\" pg_restore -h {1} -p {2} -d {3} -c {4} -U {5} -w >/dev/null 2>&1".format(
                     self.dest_db_pass,
                     self.dest_ip,
                     self.dest_port,
@@ -70,6 +99,10 @@ class DBOperationManage(models.Model):
                     self.dest_db_user)
 
                 os.system(dest_cmd)
+                try:
+                    os.system(dest_cmd)
+                except os as e:
+                    _logger.info("Exception raise in restore", exc_info=True)
 
                 query_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5}".format(self.dest_db_pass,
                                                                                                     self.dest_ip,
@@ -77,15 +110,16 @@ class DBOperationManage(models.Model):
                                                                                                     self.destination_db,
                                                                                                     self.query,
                                                                                                     self.dest_db_user)
-
-                output = subprocess.check_output(query_str, shell=True)
-
-                self.line_ids.create({
-                    'name': "GLIF_DATE_{0}.txt".format(self.env.user.company_id.batch_date),
-                    'date': self.env.user.company_id.batch_date,
-                    'query_result': base64.b64encode(output),
-                    'line_id': self.id,
-                })
+                try:
+                    output = subprocess.check_output(query_str, shell=True)
+                    self.line_ids.create({
+                        'name': "GLIF_DATE_{0}.txt".format(self.env.user.company_id.batch_date),
+                        'date': self.env.user.company_id.batch_date,
+                        'query_result': base64.b64encode(output),
+                        'line_id': self.id,
+                    })
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError("command '{}' with error (code {}): {}".format(e.cmd, e.returncode, e.output))
 
 
 class DBOperationManageLine(models.Model):

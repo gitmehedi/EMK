@@ -11,6 +11,7 @@
     """,
     'depends': [
         'mtbl_access',
+        'gbs_ogl_cbs_interface',
     ],
     'data': [
         'views/menu_view.xml',
