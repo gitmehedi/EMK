@@ -24,7 +24,7 @@
 			<field name="name">indent.indent.tree</field>
 			<field name="model">indent.indent</field>
 			<field name="arch" type="xml">
-				<tree string="Indents" ecoration-bf="message_needaction == True"
+				<tree string="Indents" decoration-bf="message_needaction == True"
 					  colors="gray:state=='received';green:state=='waiting_approval';blue:state=='inprogress';red:state=='reject';">
 					<field name="name" />
 					<field name="indentor_id" />
@@ -56,8 +56,8 @@
 								states="inprogress" groups="stock.group_stock_user"/>
 						<button name="action_issue_product" string="Issue Products" type="object" class="oe_highlight"
 								states="inprogress"/>
-						<button name="action_scrap_product" string="Scrap Products" type="object" class="oe_highlight"
-								states="received" invisible="1"/>
+<!--						<button name="action_scrap_product" string="Scrap Products" type="object" class="oe_highlight"-->
+<!--								states="received" invisible="0"/>-->
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
 							   statusbar_colors='{"reject":"red"}' />

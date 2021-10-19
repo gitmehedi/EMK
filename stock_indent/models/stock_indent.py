@@ -25,9 +25,14 @@ class IndentIndent(models.Model):
     def _get_required_date(self):
         return datetime.strftime(datetime.today() + timedelta(days=7), DEFAULT_SERVER_DATETIME_FORMAT)
 
+    @api.model
+    def _default_operating_unit(self):
+        return self.env.user.default_operating_unit_id
+
     @api.multi
     def _default_department(self):
         emp_ins = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
         if not emp_ins.department_id:
             raise ValidationError(
                 _("Please configure employee for user [{0}] from employee directory.".format(
@@ -92,6 +97,7 @@ class IndentIndent(models.Model):
                                  track_visibility="onchange")
 
     pr_indent_check = fields.Boolean(string='Indent List Check', default=True, track_visibility="onchange")
+    # operating_unit = fields.Many2one('operating.unit', string='Operating unit', default=_default_operating_unit, store=False)
 
     product_id = fields.Many2one(
         'product.product', 'Products',
@@ -134,6 +140,8 @@ class IndentIndent(models.Model):
             indent.picking_type_id = picking_type_id
             if picking_type_id:
                 indent.picking_type_id = picking_type_id
+        # print indent.warehouse_id.sudo().lot_stock_id.id
+        # print indent.stock_location_id.id
 
     @api.onchange('requirement')
     def onchange_requirement(self):
@@ -209,9 +217,6 @@ class IndentIndent(models.Model):
             res = {
                 'state': 'waiting_approval'
             }
-            res_products = {
-                'state': 'waiting_approval'
-            }
 
             requested_date = self.required_date
             new_seq = self.env['ir.sequence'].next_by_code_new('stock.indent', requested_date)
@@ -219,7 +224,7 @@ class IndentIndent(models.Model):
                 res['name'] = new_seq
 
             indent.write(res)
-            indent.product_lines.write(res_products)
+            indent.product_lines.write({'state': 'waiting_approval'})
         # -------------------------------------------------------------------------------
         #     for rec in self:
         #         # orm search without condition
@@ -353,14 +358,11 @@ class IndentIndent(models.Model):
         for line in self.product_lines:
             date_planned = datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT)
 
-            print line.name
-            print "Count loop: "+str(count)
-            count = count+1
-
             if line.product_id:
                 if not picking_id:
                     pick_name = self.env['stock.picking.type'].browse(self.picking_type_id.id).sequence_id.next_by_id()
                     location_id = self.warehouse_id.sudo().lot_stock_id.id
+
                     vals = {
                         'invoice_state': 'none',
                         'picking_type_id': self.picking_type_id.id,
@@ -377,6 +379,7 @@ class IndentIndent(models.Model):
                         'operating_unit_id': 1
                     }
                     picking = picking_obj.create(vals)
+                    picking.action_done()
 
                     if picking:
                         picking_id = picking.id
@@ -399,28 +402,29 @@ class IndentIndent(models.Model):
                     'company_id': self.company_id.id
                 }
                 move_id = move_obj.create(moves)
+                move_id.action_done()
 
-                pack_obj = self.env['stock.pack.operation']
-                packs = {
-                    'name': line.name,
-                    'product_qty': line.product_uom_qty,
-                    'order_qty': line.product_uom_qty,
-                    'qty_done': line.received_qty,
-                    'product_id': line.product_id.id,
-                    'picking_id': picking_id,
-                    'product_uom_id': line.product_uom.id,
-                    'location_id': location_id,
-                    'location_dest_id': self.stock_location_id.id
-                }
-                pack_operation_id = pack_obj.create(packs)
-
-                operation_obj = self.env['stock.move.operation.link']
-                operation = {
-                    'qty': line.received_qty,
-                    'operation_id': pack_operation_id.id,
-                    'move_id': move_id.id
-                }
-                pack_move = operation_obj.create(operation)
+                # pack_obj = self.env['stock.pack.operation']
+                # packs = {
+                #     'name': line.name,
+                #     'product_qty': line.product_uom_qty,
+                #     'order_qty': line.product_uom_qty,
+                #     'qty_done': line.received_qty,
+                #     'product_id': line.product_id.id,
+                #     'picking_id': picking_id,
+                #     'product_uom_id': line.product_uom.id,
+                #     'location_id': location_id,
+                #     'location_dest_id': self.stock_location_id.id
+                # }
+                # pack_operation_id = pack_obj.create(packs)
+                #
+                # operation_obj = self.env['stock.move.operation.link']
+                # operation = {
+                #     'qty': line.received_qty,
+                #     'operation_id': pack_operation_id.id,
+                #     'move_id': move_id.id
+                # }
+                # pack_move = operation_obj.create(operation)
 
                 # self.picking_id.action_confirm()
                 # self.picking_id.force_assign()
@@ -508,6 +512,19 @@ class IndentIndent(models.Model):
         return result
 
     def action_scrap_product(self):
+
+        self.ensure_one()
+        return {
+            'name': _('Scrap'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.scrap',
+            'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
+            'type': 'ir.actions.act_window',
+            'context': {'default_picking_id': self.id,
+                        'product_ids': self.pack_operation_product_ids.mapped('product_id').ids},
+            'target': 'new',
+        }
         for product in self.product_lines:
             if product.qty_available <= 0:
                 raise UserError('Stock not available!!!')
@@ -522,6 +539,26 @@ class IndentIndent(models.Model):
         # for product in self.product_lines:
         #     if product.received_qty != product.product_uom_qty:
         #         raise UserError('Issue Quantity and Indent Quantity Must Be Same')
+
+        scarp_obj = self.env['stock.scrap']
+        move_obj = self.env['stock.move']
+        picking_obj = self.env['stock.picking']
+        picking_id = False
+
+        for line in self.product_lines:
+            if line.product_id:
+                location_id = self.warehouse_id.sudo().lot_stock_id.id
+                scraps = {
+                    'scrap_location_id': location_id,
+                    'scrap_qty': line.issue_qty,
+                    'state': 'done',
+                    'product_id': line.product_id.id,
+                    'product_uom_id': line.product_uom.id,
+                    'picking_id': picking_id
+                }
+                scrap_id = scarp_obj.create(scraps)
+                print scrap_id
+
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -596,7 +633,7 @@ class IndentProductLines(models.Model):
     def _compute_product_qty(self):
         for product in self:
             location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
-            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),('location_id', '=', location_id)])
+            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id), ('location_id', '=', location_id)])
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity
 
