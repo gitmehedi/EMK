@@ -62,7 +62,11 @@ class DBOperationManage(models.Model):
                                                                                                   self.source_db,
                                                                                                   filepath)
 
-            os.system(src_cmd)
+            try:
+                os.system(src_cmd)
+            except OSError as e:
+                _logger.info("Exception raise in backend", exc_info=True)
+
             if os.path.isfile(filepath):
                 term_query = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=\'MTBL_REPORT\';"
                 term_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5} >/dev/null 2>&1".format(
@@ -74,7 +78,7 @@ class DBOperationManage(models.Model):
                     'postgres', )
                 try:
                     os.system(term_str)
-                except os as e:
+                except OSError as e:
                     _logger.info("Exception raise in terminate", exc_info=True)
 
                 drop_query = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=\'MTBL_REPORT\';"
@@ -87,7 +91,7 @@ class DBOperationManage(models.Model):
                     self.dest_db_user)
                 try:
                     os.system(drop_str)
-                except os as e:
+                except OSError as e:
                     _logger.info("Exception raise in drop database", exc_info=True)
 
                 dest_cmd = "PGPASSWORD=\"{0}\" pg_restore -h {1} -p {2} -d {3} -c {4} -U {5} -w >/dev/null 2>&1".format(
@@ -101,16 +105,17 @@ class DBOperationManage(models.Model):
                 os.system(dest_cmd)
                 try:
                     os.system(dest_cmd)
-                except os as e:
+                except OSError as e:
                     _logger.info("Exception raise in restore", exc_info=True)
 
-                query_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5}".format(self.dest_db_pass,
-                                                                                                    self.dest_ip,
-                                                                                                    self.dest_port,
-                                                                                                    self.destination_db,
-                                                                                                    self.query,
-                                                                                                    self.dest_db_user)
                 try:
+                    query_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5}".format(
+                        self.dest_db_pass,
+                        self.dest_ip,
+                        self.dest_port,
+                        self.destination_db,
+                        self.query,
+                        self.dest_db_user)
                     output = subprocess.check_output(query_str, shell=True)
                     self.line_ids.create({
                         'name': "GLIF_DATE_{0}.txt".format(self.env.user.company_id.batch_date),
@@ -118,8 +123,8 @@ class DBOperationManage(models.Model):
                         'query_result': base64.b64encode(output),
                         'line_id': self.id,
                     })
-                except subprocess.CalledProcessError as e:
-                    raise RuntimeError("command '{}' with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+                except OSError as e:
+                    _logger.info("Exception raise in restore", exc_info=True)
 
 
 class DBOperationManageLine(models.Model):
