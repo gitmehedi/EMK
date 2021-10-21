@@ -12,17 +12,17 @@ _logger = logging.getLogger(__name__)
 class AccountFxRevaluation(models.Model):
     _name = 'account.fx.revaluation'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Account FX Revaluation'
-    _order = 'name desc'
+    _description = 'FX Revaluation'
+    _order = 'id desc'
 
-    name = fields.Char(string='Name', default='/', copy=False, track_visibility='onchange', )
+    name = fields.Char(string='Name', copy=False, track_visibility='onchange')
     date = fields.Date(string='Date ', required=True, default=fields.Date.today(), readonly=True,
                        states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    total_revaluation_amount = fields.Float(string='Revaluation Amount', readonly=True,
+    total_revaluation_amount = fields.Float(string='Profit/Loss Amount', readonly=True,
                                             states={'draft': [('readonly', False)]}, track_visibility='onchange')
     description = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('revaluate', 'Revaluated'), ('confirmed', 'Confirmed')],
-                             default='draft',string="Status", copy=False, track_visibility='onchange')
+                             default='draft', string="Status", copy=False, track_visibility='onchange')
 
     # relational field
     account_fx_revaluation_line_ids = fields.One2many('account.fx.revaluation.line', 'account_fx_revaluation_id',
@@ -94,16 +94,18 @@ class AccountFxRevaluation(models.Model):
 
     @api.multi
     def action_revaluate(self):
-        for fxr in self:
-            sequence = self.env['ir.sequence'].next_by_code('account.fx.revaluation') or ''
-            fxr.revaluation_process(sequence)
+        if self.state == 'draft':
+            for fxr in self:
+                sequence = self.env['ir.sequence'].next_by_code('account.fx.revaluation') or ''
+                fxr.revaluation_process(sequence)
 
     @api.multi
     def action_re_revaluate(self):
-        for fxr in self:
-            # delete existing line records
-            fxr.account_fx_revaluation_line_ids.unlink()
-            fxr.revaluation_process(fxr.name)
+        if self.state == 'revaluate':
+            for fxr in self:
+                # delete existing line records
+                fxr.account_fx_revaluation_line_ids.unlink()
+                fxr.revaluation_process(fxr.name)
 
     @api.model
     def action_revaluation_details(self):
@@ -112,7 +114,8 @@ class AccountFxRevaluation(models.Model):
             {'account_fx_revaluation_id': self.id,
              'company_id': self.env.user.company_id.id}).init()
 
-        view_ref = self.env['ir.model.data'].get_object_reference('account_fx_revaluation', 'view_account_fx_revaluation_details_report_pivot')
+        view_ref = self.env['ir.model.data'].get_object_reference('account_fx_revaluation',
+                                                                  'view_account_fx_revaluation_details_report_pivot')
         view_id = view_ref and view_ref[1] or False,
 
         return {
@@ -123,28 +126,36 @@ class AccountFxRevaluation(models.Model):
             "view_type": "pivot",
             "res_id": self.id,
             "view_id": view_id,
-            "context": {'search_default_current':1, 'group_by':[], 'group_by_no_leaf':1}
+            "context": {'search_default_current': 1, 'group_by': [], 'group_by_no_leaf': 1}
         }
 
     @api.multi
     def action_confirm(self):
+        if self.state != 'revaluate':
+            raise ValidationError(_("[STATE] Operation has done already."))
+
         if not self.env.user.company_id.fx_revaluation_journal_id.id:
             raise ValidationError(_("[Validation Error] Configure the FX Revaluation Journal!!"))
 
         if not self.env.user.company_id.fx_revaluation_account_id.id:
             raise ValidationError(_("[Validation Error] Configure the FX Revaluation Account!!"))
 
-        move_vals = {}
-        move_vals['journal_id'] = self.env.user.company_id.fx_revaluation_journal_id.id
-        move_vals['date'] = self.date
-        move_vals['state'] = 'draft'
-        move_vals['is_cbs'] = True
-        move_vals['name'] = self.name
-        move_vals['company_id'] = self.env.user.company_id.id
+        fxr_check = self.env['account.move'].search([('ref', '=', self.name)])
+        if fxr_check:
+            raise ValidationError(_("[Validation Error] Fx Revaluation already processing."))
+
+        move_vals = {
+            'journal_id': self.env.user.company_id.fx_revaluation_journal_id.id,
+            'date': self.date,
+            'state': 'draft',
+            'is_cbs': True,
+            'name': self.name,
+            'ref': self.name,
+            'company_id': self.env.user.company_id.id,
+        }
 
         move_lines = []
 
-        start_time = time.time()
         for line in self.account_fx_revaluation_line_ids:
             for detail in line.account_fx_revaluation_line_details_ids:
                 # branch details wise debit or credit line
@@ -192,25 +203,15 @@ class AccountFxRevaluation(models.Model):
                 'company_id': self.env.user.company_id.id
             }
             move_lines.append((0, 0, move_line_vals2))
-        end_time = time.time()
-        time_diff = end_time - start_time
-        _logger.info("Execution Time-1 : " + str(time_diff))
 
         move_vals['line_ids'] = move_lines
 
-        start_time = time.time()
         move = self.env['account.move'].create(move_vals)
-        end_time = time.time()
-        time_diff = end_time - start_time
-        _logger.info("Execution Time-2 : " + str(time_diff))
-
-        start_time = time.time()
-        move.sudo().post()
-        end_time = time.time()
-        time_diff = end_time - start_time
-        _logger.info("Execution Time-2 : " + str(time_diff))
-
-        self.write({'state': 'confirmed', 'move_id': move.id})
+        if move:
+            move.sudo().post()
+            self.write({'state': 'confirmed',
+                        'move_id': move.id,
+                        })
 
     @api.multi
     def get_currency_current_rate(self, currency_ids, date):
@@ -246,7 +247,8 @@ class AccountFxRevaluation(models.Model):
         return lines
 
     @api.multi
-    def get_account_fx_revaluation_line_details_ids(self, fy_start_date, account_ids, currency_ids, currency_rates, branch_ids):
+    def get_account_fx_revaluation_line_details_ids(self, fy_start_date, account_ids, currency_ids, currency_rates,
+                                                    branch_ids):
         # query to fetch data
         sql_str = """SELECT
                         aml.operating_unit_id,
@@ -307,6 +309,10 @@ class AccountFxRevaluation(models.Model):
                 raise UserError(
                     _('You cannot delete a FX Revaluation which is not draft.'))
         return super(AccountFxRevaluation, self).unlink()
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'confirmed')]
 
 
 class AccountFxRevaluationLine(models.Model):

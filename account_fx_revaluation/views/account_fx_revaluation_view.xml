@@ -7,9 +7,15 @@
             <field name="model">account.fx.revaluation</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="FX Revaluation" duplicate="0">
-                    <field name="name" string="REF #"/>
+                <tree string="FX Revaluation" duplicate="0" decoration-info="state=='draft'"
+                      decoration-success="state=='revaluate'"
+                      decoration-muted="state=='confirmed'"
+                      decoration-bf="state in ('revaluate',)">
+                    <field name="name" string="Fx No"/>
                     <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="total_lcy_amount" sum="total_lcy_amount"/>
+                    <field name="total_fcy_amount" sum="total_fcy_amount"/>
                     <field name="total_revaluation_amount" sum="total_revaluation_amount"/>
                     <field name="state"/>
                 </tree>
