@@ -8,7 +8,8 @@
                 <tree string="Agreements" duplicate="0"
                       decoration-primary="state=='draft'" decoration-info="state=='confirm'"
                       decoration-success="state=='approve'" decoration-danger="state=='expired'"
-                      decoration-bf="state in ('confirm','approve')" decoration-muted="state in ('cancel', 'inactive', 'reject')">
+                      decoration-bf="state in ('confirm','approve')"
+                      decoration-muted="state in ('cancel', 'inactive', 'reject')">
                     <field name="name" string="REF#"/>
                     <field name="description" string="Premises"/>
                     <field name="partner_id" string="Vendor"/>
@@ -47,15 +48,20 @@
                         <button string="Approve Amendment" name="action_approve_amendment"
                                 type="object" class="oe_highlight" groups="base.vendor_advance_approver"
                                 attrs="{'invisible': ['|', ('is_amendment', '=', False), ('state', 'in', ('draft','confirm','cancel', 'done', 'reject', 'expired'))]}"/>
-                        <button string="Reject Amendment" name="action_reject_amendment" type="object" groups="base.vendor_advance_approver"
+                        <button string="Reject Amendment" name="action_reject_amendment" type="object"
+                                groups="base.vendor_advance_approver"
                                 attrs="{'invisible': ['|', ('is_amendment', '=', False), ('state', 'in', ('draft','confirm','cancel', 'done', 'reject', 'expired'))]}"/>
-                        <button string="Rejection / Cancellation" name="action_reject_agreement" type="object" groups="base.vendor_advance_approver"
+                        <button string="Rejection / Cancellation" name="action_reject_agreement" type="object"
+                                groups="base.vendor_advance_approver"
                                 attrs="{'invisible': ['|', '|', '|', ('is_rejection', '=', True), ('active', '=', False), ('is_amendment', '=', True), ('state', 'in', ('draft','confirm','cancel','reject', 'expired'))]}"/>
                         <button string="Approve Rejection" name="action_approve_rejection"
                                 type="object" class="oe_highlight" groups="base.vendor_advance_approver"
                                 attrs="{'invisible': ['|', ('is_rejection', '=', False), ('state', 'in', ('draft','confirm','cancel','reject', 'expired'))]}"/>
-                        <button string="Cancel" name="action_cancel_rejection" type="object" groups="base.vendor_advance_approver"
+                        <button string="Cancel" name="action_cancel_rejection" type="object"
+                                groups="base.vendor_advance_approver"
                                 attrs="{'invisible': ['|', ('is_rejection', '=', False), ('state', 'in', ('draft','confirm','cancel','reject', 'expired'))]}"/>
+                        <button name="action_active" type="object"
+                                string="Set to Active" states="expired" groups="base.vendor_advance_approver"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
                     </header>
                     <sheet>
@@ -113,7 +119,7 @@
                                 <field name="additional_service_value" widget="monetary"
                                        options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_service_value" widget="monetary"
-                                           options="{'currency_field': 'currency_id'}"/>
+                                       options="{'currency_field': 'currency_id'}"/>
                                 <field name="adjustment_value" widget="monetary"
                                        options="{'currency_field': 'currency_id'}"/>
 
@@ -230,7 +236,8 @@
                     <filter name="pending_va" string="Draft"
                             domain="[('state','=', 'draft')]"/>
                     <separator/>
-                    <filter name="confirm_va" string="Pending" domain="['|', '|', ('state','=', 'confirm'), ('is_amendment', '=', True), ('is_rejection', '=', True)]"/>
+                    <filter name="confirm_va" string="Pending"
+                            domain="['|', '|', ('state','=', 'confirm'), ('is_amendment', '=', True), ('is_rejection', '=', True)]"/>
                     <separator/>
                     <filter name="approve_va" string="Active" domain="[('state','=', 'approve')]"/>
                     <separator/>

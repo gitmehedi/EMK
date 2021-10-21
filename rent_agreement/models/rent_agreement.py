@@ -109,7 +109,8 @@ class VendorAdvance(models.Model):
 
     # overwrite _compute_payable_to_supplier to calculate  payable if there is any amendment
     @api.one
-    @api.depends('total_advance_amount', 'total_deduction', 'vat_id', 'tds_id', 'type', 'initial_outstanding_amount', 'security_deposit')
+    @api.depends('total_advance_amount', 'total_deduction', 'vat_id', 'tds_id', 'type', 'initial_outstanding_amount',
+                 'security_deposit')
     def _compute_payable_to_supplier(self):
         for record in self:
             if record.type == 'single':
@@ -261,7 +262,8 @@ class VendorAdvance(models.Model):
     @api.multi
     def action_reject_agreement(self):
         res = self.env.ref('rent_agreement.agreement_warning_wizard_view')
-        warning = "The current Outstanding Advance Amount of this Agreement is {}.\n\nAre you sure to reject the agreement?".format(self.outstanding_amount)
+        warning = "The current Outstanding Advance Amount of this Agreement is {}.\n\nAre you sure to reject the agreement?".format(
+            self.outstanding_amount)
         return {
             'name': _('Warning'),
             'view_type': 'form',
@@ -300,7 +302,13 @@ class VendorAdvance(models.Model):
                 self.write({'is_rejection': False, 'approver_id': self.env.user.id})
                 requested.write({'state': 'reject'})
 
-    @api.constrains('adjustment_value', 'service_value', 'advance_amount', 'additional_service_value', 'type', 'area', 'rate')
+    @api.multi
+    def action_active(self):
+        if self.state in ('expired',):
+            self.state = 'approve'
+
+    @api.constrains('adjustment_value', 'service_value', 'advance_amount', 'additional_service_value', 'type', 'area',
+                    'rate')
     def check_amount(self):
         if self.type == 'multi':
             if self.adjustment_value < 0:
