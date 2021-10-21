@@ -65,10 +65,17 @@ class TDSVATPayment(models.Model):
             account_move_obj = self.env['account.move']
             account_move_line_obj = self.env['account.move.line'].with_context(check_move_validity=False)
             move_obj = rec.suspend_security()._generate_move(acc_journal_objs, account_move_obj, date)
+
+            journal = []
             for line in rec.account_move_line_ids:
-                self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
-            self._generate_credit_move_line(date, move_obj.id, account_move_line_obj)
-            move_obj.write({'operating_unit_id': self.operating_unit_id.id, })
+                debit = self._generate_debit_move_line(line, date, move_obj.id, account_move_line_obj)
+                journal.append(debit)
+
+            credit = self._generate_credit_move_line(date, move_obj.id, account_move_line_obj)
+            journal.append(credit)
+
+            move_obj.write({'operating_unit_id': self.operating_unit_id.id,
+                            'line_ids': journal})
             move_obj.sudo().post()
         return move_obj
 

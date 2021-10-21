@@ -63,7 +63,7 @@ class AccountMoveLine(models.Model):
 
         res = self.env.ref('account_tax_challan.tds_vat_move_payment_wizard')
 
-        total_amount = sum([x.credit for x in records])
+        total_amount = sum([round(x.credit, 2) for x in records])
         result = {
             'name': _('Payment Instruction'),
             'view_type': 'form',
