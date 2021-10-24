@@ -126,6 +126,10 @@ class DBOperationManage(models.Model):
                 except OSError as e:
                     _logger.info("Exception raise in restore", exc_info=True)
 
+    @api.multi
+    def _delete_db_result_line(self):
+        self.line_ids.search([]).unlink()
+
 
 class DBOperationManageLine(models.Model):
     _name = 'db.operation.manage.line'

@@ -14,6 +14,7 @@
         'gbs_ogl_cbs_interface',
     ],
     'data': [
+        'data/ir_cron.xml',
         'views/menu_view.xml',
         'views/db_operations_view.xml',
     ],
