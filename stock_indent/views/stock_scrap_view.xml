@@ -75,7 +75,7 @@
 									</group>
 									<group>
 										<field name="warehouse_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
-										<field name="scrap_location_id" options="{'no_create': True,'no_open':True}" groups="stock.group_stock_multi_locations"/>
+										<field name="scrap_location_id" options="{'no_create': True,'no_open':True}" /><!--groups="stock.group_stock_multi_locations"-->
 										<field name="picking_type_id" invisible="1"/>
 									</group>
 								</group>
@@ -117,15 +117,17 @@
 		</record>
 
 		<!-- Scrap Menu -->
-		<menuitem name="Indents" parent="stock.menu_stock_root" id="menu_stock_indent_scrap_main"
-				  sequence="4" groups="base.group_user"/>
+
+<!--		-->
+<!--		<menuitem name="Indents" parent="stock.menu_stock_root" id="menu_stock_indent_scrap_main"-->
+<!--				  sequence="4" groups="base.group_user"/>-->
 
 		<menuitem action="action_stock_indent_scrap" name="Scraps"
-				  parent="menu_stock_indent_scrap_main" id="menu_stock_indent_scrap" sequence="5"
+				  parent="menu_indent_indent_main" id="menu_stock_indent_scrap" sequence="5"
 				  groups="base.group_user"/>
 
 		<menuitem action="action_stock_indent_scrap_waiting_for_approval" name="Scraps (Pending)"
-				  parent="menu_stock_indent_scrap_main" id="menu_scrap_waiting_for_approval" sequence="6"/>
+				  parent="menu_indent_indent_main" id="menu_scrap_waiting_for_approval" sequence="6"/>
 
 
     </data>

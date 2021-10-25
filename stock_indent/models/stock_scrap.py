@@ -103,10 +103,16 @@ class StockIndentScrap(models.Model):
         for scrap in self:
             if not scrap.product_lines:
                 raise UserError(_('Unable to confirm scrap without product. Please add product(s).'))
+        for scrap_product in self.product_lines:
+            if scrap_product.qty_available <=0:
+                raise UserError('Stock not available!!!')
+            if scrap_product.qty_available < scrap_product.scrap_qty:
+                raise UserError('The requested quantity is not available!!! ')
+            if scrap_product.scrap_qty <= 0:
+                raise UserError('The requested quantity is not valid!!! ')
             res = {
                 'state': 'waiting_approval'
             }
-
             new_seq = self.env['ir.sequence'].next_by_code('stock.indent.scrap') or _('New')
             if new_seq:
                 res['name'] = new_seq
