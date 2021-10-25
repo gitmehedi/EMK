@@ -520,6 +520,8 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
         bold = workbook.add_format({'bold': True, 'size': 10})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
+        no_format = workbook.add_format({'num_format': '#,###0.00', 'size': 10, 'border': 1})
+        total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 10, 'border': 1})
 
         # table header cell format
         th_cell_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
@@ -607,8 +609,8 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                         sheet.write(row, col, GRP_NAME[GRP_ORDER[k]], td_cell_left_bold)
                     sheet.write(row, col + 1, '', td_cell_center)
                     sheet.write(row, col + 2, '', td_cell_center)
-                    sheet.write(row, col + 3, formatLang(self.env, float_round(grp_amount, precision_digits=2)), td_cell_right_bold)
-                    sheet.write(row, col + 4, formatLang(self.env, float_round(grp_on_sale, precision_digits=2)), td_cell_right_bold)
+                    sheet.write(row, col + 3, float_round(grp_amount, precision_digits=2), total_format)
+                    sheet.write(row, col + 4, float_round(grp_on_sale, precision_digits=2), total_format)
                     row += 1
                     continue
                 # GROUP TOTAL ROW
@@ -625,8 +627,8 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
                     sheet.write(row, col, GRP_NAME[GRP_ORDER[k]], td_cell_left_bold)
                 sheet.write(row, col + 1, '', td_cell_center)
                 sheet.write(row, col + 2, '', td_cell_center)
-                sheet.write(row, col + 3, formatLang(self.env, float_round(pr_amount, precision_digits=2)), td_cell_right_bold)
-                sheet.write(row, col + 4, formatLang(self.env, float_round(pr_on_sale, precision_digits=2)), td_cell_right_bold)
+                sheet.write(row, col + 3, float_round(pr_amount, precision_digits=2), total_format)
+                sheet.write(row, col + 4, float_round(pr_on_sale, precision_digits=2), total_format)
                 row += 1
                 # PARENT ROW
 
@@ -643,10 +645,10 @@ class ProfitLossWithRealizationXLSX(ReportXlsx):
 
                     if index == 0:
                         sheet.write(row, col, '         ' + item['name'], td_cell_left)
-                    sheet.write(row, col + 1, formatLang(self.env, float_round(ch_qty, precision_digits=2)), td_cell_right)
-                    sheet.write(row, col + 2, formatLang(self.env, float_round(ch_net_realization, precision_digits=2)), td_cell_right)
-                    sheet.write(row, col + 3, formatLang(self.env, float_round(ch_amount, precision_digits=3)), td_cell_right)
-                    sheet.write(row, col + 4, formatLang(self.env, float_round(ch_on_sale, precision_digits=2)), td_cell_right)
+                    sheet.write(row, col + 1, float_round(ch_qty, precision_digits=2), no_format)
+                    sheet.write(row, col + 2, float_round(ch_net_realization, precision_digits=2), no_format)
+                    sheet.write(row, col + 3, float_round(ch_amount, precision_digits=3), no_format)
+                    sheet.write(row, col + 4, float_round(ch_on_sale, precision_digits=2), no_format)
                     row += 1
                 # CHILD ROW
 

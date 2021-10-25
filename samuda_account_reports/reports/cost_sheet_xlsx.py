@@ -1,6 +1,5 @@
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
-from odoo.tools.misc import formatLang
 from odoo.tools import float_compare, float_round
 
 IE_ORDER = {
@@ -770,6 +769,8 @@ class CostSheetXLSX(ReportXlsx):
         bold = workbook.add_format({'bold': True, 'size': 10})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
+        no_format = workbook.add_format({'num_format': '#,###0.00', 'size': 10, 'border': 1})
+        total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 10, 'border': 1})
 
         # table header cell format
         th_cell_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
@@ -842,8 +843,11 @@ class CostSheetXLSX(ReportXlsx):
             if index == 0:
                 sheet.write(row-3, col, '', th_cell_center)
                 sheet.write(row-2, col, '', th_cell_center)
-            sheet.merge_range(row-3, col + 1, row-3, col + 2, 'Sales Quantity: ' + formatLang(self.env, float_round(sale_qty, precision_digits=2)) + ' MT', th_cell_center)
-            sheet.merge_range(row-2, col + 1, row-2, col + 2, 'Production Quantity: ' + formatLang(self.env, float_round(production_qty, precision_digits=2)) + ' MT', th_cell_center)
+
+            sheet.write(row - 3, col + 1, 'Sales Quantity (MT)', th_cell_right)
+            sheet.write(row - 3, col + 2, float_round(sale_qty, precision_digits=2), total_format)
+            sheet.write(row - 2, col + 1, 'Production Quantity (MT)', th_cell_right)
+            sheet.write(row - 2, col + 2, float_round(production_qty, precision_digits=2), total_format)
             # SALES AND PRODUCTION QUANTITY ROW
 
             for n in range(len(IE_ORDER)):
@@ -854,8 +858,8 @@ class CostSheetXLSX(ReportXlsx):
                 if IE_ORDER[n] in GROUP_TOTAL_NAMES:
                     if index == 0:
                         sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
-                    sheet.write(row, col + 1, formatLang(self.env, float_round(grp_amount, precision_digits=2)), td_cell_right_bold)
-                    sheet.write(row, col + 2, formatLang(self.env, float_round(grp_rate, precision_digits=2)), td_cell_right_bold)
+                    sheet.write(row, col + 1, float_round(grp_amount, precision_digits=2), total_format)
+                    sheet.write(row, col + 2, float_round(grp_rate, precision_digits=2), total_format)
                     row += 1
                     continue
                 # END GROUP TOTAL ROW
@@ -868,8 +872,8 @@ class CostSheetXLSX(ReportXlsx):
 
                 if index == 0:
                     sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
-                sheet.write(row, col + 1, formatLang(self.env, float_round(pr_amount, precision_digits=2)), td_cell_right_bold)
-                sheet.write(row, col + 2, formatLang(self.env, float_round(pr_rate, precision_digits=2)), td_cell_right_bold)
+                sheet.write(row, col + 1, float_round(pr_amount, precision_digits=2), total_format)
+                sheet.write(row, col + 2, float_round(pr_rate, precision_digits=2), total_format)
                 row += 1
                 # END PARENT ROW
 
@@ -879,8 +883,8 @@ class CostSheetXLSX(ReportXlsx):
 
                     if index == 0:
                         sheet.write(row, col, '         ' + item['name'], td_cell_left)
-                    sheet.write(row, col + 1, formatLang(self.env, float_round(float(item['amount']), precision_digits=2)), td_cell_right)
-                    sheet.write(row, col + 2, formatLang(self.env, float_round(ch_rate, precision_digits=2)), td_cell_right)
+                    sheet.write(row, col + 1, float_round(float(item['amount']), precision_digits=2), no_format)
+                    sheet.write(row, col + 2, float_round(ch_rate, precision_digits=2), no_format)
                     row += 1
                 # END CHILD ROWS
 
