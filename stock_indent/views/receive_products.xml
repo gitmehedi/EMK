@@ -14,11 +14,11 @@
         </record>
 
         <!-- menus -->
-         <menuitem name="Purchases"
-            id="menu_purchase_root"
-            web_icon="purchase,static/description/icon.png"
-            sequence="10"/>
-        <menuitem id="purchase_sub" name="Purchase" parent="menu_purchase_root"/>
-        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)" parent="purchase_sub" action="action_view_picking100"/>
+<!--         <menuitem name="Purchases"-->
+<!--            id="menu_purchase_root"-->
+<!--            web_icon="purchase,static/description/icon.png"-->
+<!--            sequence="10"/>-->
+<!--        <menuitem id="purchase_sub" name="Purchase" parent="menu_purchase_root"/>-->
+        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)" parent="purchase.menu_procurement_management" sequence="7" action="action_view_picking100"/>
     </data>
 </odoo>
