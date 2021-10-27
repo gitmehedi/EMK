@@ -17,3 +17,4 @@ from . import account_period_type_wizard
 from . import account_period_wizard
 from . import account_period_close
 from . import inherit_tds_vat_payment_wizard
+from . import inherit_rent_amendment_wizard

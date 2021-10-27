@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -31,7 +31,7 @@ class VendorAdvance(models.Model):
                                                readonly=True, states={'draft': [('readonly', False)]})
     credit_operating_unit_domain_ids = fields.Many2many('operating.unit', readonly=True, store=False,
                                                         compute="_compute_credit_operating_unit_domain_ids")
-    date = fields.Date(string='Date ', required=True, default=lambda self:self.env.user.company_id.batch_date,
+    date = fields.Date(string='Date ', required=True, default=lambda self: self.env.user.company_id.batch_date,
                        track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.multi
@@ -165,7 +165,80 @@ class VendorAdvance(models.Model):
 
     def _check_valid_gl_account(self):
         if self.type == 'multi' and self.account_id:
-            if self. account_id.reconcile or self.account_id.originating_type == 'credit':
+            if self.account_id.reconcile or self.account_id.originating_type == 'credit':
                 raise ValidationError("[Validation Error] Please select the appropiate GL Account")
 
+    @api.multi
+    def action_approve_amendment(self):
+        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
+            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
+        if self.is_amendment == True:
+            requested = self.history_line_ids.search([('state', '=', 'pending'),
+                                                      ('rent_id', '=', self.id)],
+                                                     order='id desc', limit=1)
+            # self.write({
+            #     'end_date': requested.end_date,
+            #     'additional_advance_amount': self.additional_advance_amount + requested.advance_amount_add,
+            #     'adjustment_value': requested.adjustment_value,
+            #     'area': requested.area,
+            #     'rate': requested.rate,
+            #     'service_value': requested.service_value,
+            #     'account_id': requested.account_id.id,
+            #     'is_amendment': False,
+            #     'active': requested.active_status,
+            #
+            #     'approver_id': self.env.user.id,
+            # })
+            if requested:
+                rec = {}
+                if requested.end_date:
+                    rec['end_date'] = requested.end_date
+                if 'additional_advance_amount' in requested:
+                    rec['additional_advance_amount'] = self.additional_advance_amount + requested.advance_amount_add
+                if requested.adjustment_value:
+                    rec['adjustment_value'] = requested.adjustment_value
+                if requested.area:
+                    rec['area'] = requested.area
+                if requested.rate:
+                    rec['rate'] = requested.rate
+                if requested.service_value:
+                    rec['service_value'] = requested.service_value
+                if requested.account_id:
+                    rec['account_id'] = requested.account_id.id
+                rec['is_amendment'] = False
+                rec['active'] = True
+                if requested.state:
+                    rec['state'] = 'inactive' if not requested.active_status else 'approve'
+                if requested.vat_id:
+                    rec['vat_id'] = requested.vat_id.id
+                if requested.tds_id:
+                    rec['tds_id'] = requested.tds_id.id
+                if requested.payment_type:
+                    rec['payment_type'] = requested.payment_type
+                if requested.vendor_bank_acc:
+                    rec['vendor_bank_acc'] = requested.vendor_bank_acc
+                if requested.credit_account_id:
+                    rec['credit_account_id'] = requested.credit_account_id.id
+                if requested.credit_sub_operating_unit_id:
+                    rec['credit_sub_operating_unit_id'] = requested.credit_sub_operating_unit_id.id
+                if requested.credit_operating_unit_id:
+                    rec['credit_operating_unit_id'] = requested.credit_operating_unit_id.id
 
+                self.write(rec)
+                amount = requested.advance_amount_add
+                if amount > 0:
+                    journal_type = self.env.ref('vendor_advance.vendor_advance_journal')
+                    self.create_journal_for_amendment(amount, journal_type)
+                requested.write({'state': 'confirm'})
+
+
+class InheritAgreementHistory(models.Model):
+    _inherit = "agreement.history"
+
+    vat_id = fields.Many2one('account.tax', string='VAT', domain=[('is_vat', '=', True)])
+    tds_id = fields.Many2one('account.tax', string='TDS', domain=[('is_tds', '=', True)])
+    payment_type = fields.Selection([('casa', 'CASA'), ('credit', 'Credit Account')], string='Payment To')
+    vendor_bank_acc = fields.Char(string='Vendor Bank Account', size=13, track_visibility='onchange')
+    credit_account_id = fields.Many2one('account.account', string='Credit Account')
+    credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence')
+    credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')

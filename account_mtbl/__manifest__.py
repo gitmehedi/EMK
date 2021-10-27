@@ -44,6 +44,7 @@
         'wizard/sevicing_channel_wizard_view.xml',
         'wizard/acquiring_channel_wizard_view.xml',
         'wizard/account_analytic_account_wizard_view.xml',
+        'wizard/inherit_rent_amendment_wizard_view.xml',
         'wizard/account_account_wizard_view.xml',
         'wizard/res_currency_rate_wizard_view.xml',
         'wizard/account_period_close_view.xml',
