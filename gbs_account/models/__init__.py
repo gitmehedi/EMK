@@ -1,2 +1,3 @@
 import inherited_res_company
 import res_config
+import account

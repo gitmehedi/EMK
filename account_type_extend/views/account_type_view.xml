@@ -6,9 +6,15 @@
             <field name="model">account.account.type</field>
             <field name="inherit_id" ref="account.view_account_type_form" />
             <field name="arch" type="xml">
-                <field name="include_initial_balance" position="after">
-                    <field name="cost_center_required_on_journal" />
-                </field>
+                <xpath expr="//form/group" position="after">
+                    <group string="Required">
+                        <field name="operating_unit_required" />
+                        <field name="partner_required" />
+                        <field name="analytic_account_required" />
+                        <field name="department_required" />
+                        <field name="cost_center_required" />
+                    </group>
+                </xpath>
             </field>
         </record>
     </data>

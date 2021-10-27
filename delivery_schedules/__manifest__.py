@@ -15,6 +15,7 @@
 
     'data': [
         'data/delivery_schedule_sequence.xml',
+        'data/scheduler_data.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',

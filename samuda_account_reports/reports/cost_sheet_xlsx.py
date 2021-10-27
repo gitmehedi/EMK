@@ -1,6 +1,5 @@
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
-from odoo.tools.misc import formatLang
 from odoo.tools import float_compare, float_round
 
 IE_ORDER = {
@@ -61,7 +60,7 @@ ACCOUNT_TAG = {
 }
 
 GROUP_TOTAL_NAMES = ['direct_material', 'prime_cost', 'manufacturing_cost', 'direct_cost_and_depreciation', 'total_cost', 'profit_loss']
-INCOME_USER_TYPE_ID = 14
+INCOME_USER_TYPE_IDS = [14]
 RM_CATEGORY_ID = 69
 PM_CATEGORY_ID = 70
 
@@ -73,8 +72,9 @@ class CostSheetXLSX(ReportXlsx):
         where_clause += " AND aml.cost_center_id=%s AND aml.company_id=%s" % (obj.cost_center_id.id, self.env.user.company_id.id)
         if not obj.all_entries:
             where_clause += " AND mv.state='posted'"
-        if obj.operating_unit_id:
-            where_clause += " AND aml.operating_unit_id=%s" % obj.operating_unit_id.id
+        if obj.operating_unit_ids:
+            params = ','.join(str(i) for i in obj.operating_unit_ids.ids)
+            where_clause += " AND aml.operating_unit_id IN (%s)" % params
 
         return where_clause
 
@@ -91,7 +91,7 @@ class CostSheetXLSX(ReportXlsx):
         sales_qty = sum(row['quantity'] for row in self.env.cr.dictfetchall()) or 0.0
 
         # Net revenue
-        account_ids = self.env['account.account'].search([('user_type_id', '=', INCOME_USER_TYPE_ID)]).ids
+        account_ids = self.env['account.account'].search([('user_type_id', 'in', INCOME_USER_TYPE_IDS)]).ids
         if account_ids:
             param = (tuple(account_ids),)
             where_clause += " AND aml.account_id IN %s" % param
@@ -163,8 +163,9 @@ class CostSheetXLSX(ReportXlsx):
                             AND m.state='done'
                 """ % (date_from, date_to, obj.cost_center_id.id, self.env.user.company_id.id)
 
-        if obj.operating_unit_id:
-            where_clause += " AND mrp.operating_unit_id=%s" % obj.operating_unit_id.id
+        if obj.operating_unit_ids:
+            params = ','.join(str(i) for i in obj.operating_unit_ids.ids)
+            where_clause += " AND mrp.operating_unit_id IN (%s)" % params
 
         # PRODUCTION QTY
         sql_str_of_production_qty = self._prepare_query_of_production_quantity(where_clause)
@@ -198,8 +199,9 @@ class CostSheetXLSX(ReportXlsx):
                             AND m.state='done'
                 """ % (date_from, date_to, obj.cost_center_id.id, self.env.user.company_id.id)
 
-        if obj.operating_unit_id:
-            where_clause += " AND mrp.operating_unit_id=%s" % obj.operating_unit_id.id
+        if obj.operating_unit_ids:
+            params = ','.join(str(i) for i in obj.operating_unit_ids.ids)
+            where_clause += " AND mrp.operating_unit_id IN (%s)" % params
 
         # PRODUCTION QTY
         sql_str_of_production_qty = self._prepare_query_of_production_quantity(where_clause)
@@ -611,7 +613,7 @@ class CostSheetXLSX(ReportXlsx):
                             END) AS quantity
                         FROM
                             stock_move m
-                            JOIN mrp_production mrp ON mrp.id=m.production_id AND mrp.state='done'
+                            JOIN mrp_production mrp ON mrp.id=m.production_id AND mrp.state='done' AND mrp.mrp_type='production'
                             JOIN product_product pp ON pp.id=m.product_id
                             JOIN product_template pt ON pt.id=pp.product_tmpl_id
                             JOIN account_cost_center acc ON acc.id=pt.cost_center_id
@@ -624,7 +626,7 @@ class CostSheetXLSX(ReportXlsx):
                             END) AS quantity
                         FROM
                             stock_move m
-                            JOIN mrp_unbuild mrp ON mrp.id=m.consume_unbuild_id AND mrp.state='done'
+                            JOIN mrp_unbuild mrp ON mrp.id=m.consume_unbuild_id AND mrp.state='done' AND mrp.mrp_type='production'
                             JOIN product_product pp ON pp.id=m.product_id
                             JOIN product_template pt ON pt.id=pp.product_tmpl_id
                             JOIN account_cost_center acc ON acc.id=pt.cost_center_id
@@ -717,7 +719,7 @@ class CostSheetXLSX(ReportXlsx):
     @staticmethod
     def calc_rate(amount, sale_qty, production_qty, name):
         rate = 0.0
-        if name in ['revenue', 'indirect_income', 'administrative', 'finance', 'marketing', 'distribution', 'total_cost', 'profit_loss']:
+        if name in ['revenue', 'indirect_income', 'cogs', 'administrative', 'finance', 'marketing', 'distribution', 'total_cost', 'profit_loss']:
             if sale_qty > 0:
                 rate = amount / sale_qty
         else:
@@ -767,6 +769,8 @@ class CostSheetXLSX(ReportXlsx):
         bold = workbook.add_format({'bold': True, 'size': 10})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
+        no_format = workbook.add_format({'num_format': '#,###0.00', 'size': 10, 'border': 1})
+        total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 10, 'border': 1})
 
         # table header cell format
         th_cell_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
@@ -803,8 +807,9 @@ class CostSheetXLSX(ReportXlsx):
 
         sheet.write(6, 0, "Cost Center: " + obj.cost_center_id.name, bold)
 
-        if obj.operating_unit_id:
-            sheet.merge_range(6, 1, 6, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
+        if obj.operating_unit_ids:
+            operating_unit_names_str = ', '.join(ou.name for ou in obj.operating_unit_ids)
+            sheet.merge_range(6, 1, 6, 2, "Operating Unit: " + operating_unit_names_str, bold)
         else:
             sheet.merge_range(6, 1, 6, 2, "Operating Unit: All", bold)
 
@@ -838,8 +843,11 @@ class CostSheetXLSX(ReportXlsx):
             if index == 0:
                 sheet.write(row-3, col, '', th_cell_center)
                 sheet.write(row-2, col, '', th_cell_center)
-            sheet.merge_range(row-3, col + 1, row-3, col + 2, 'Sales Quantity: ' + formatLang(self.env, float_round(sale_qty, precision_digits=2)) + ' MT', th_cell_center)
-            sheet.merge_range(row-2, col + 1, row-2, col + 2, 'Production Quantity: ' + formatLang(self.env, float_round(production_qty, precision_digits=2)) + ' MT', th_cell_center)
+
+            sheet.write(row - 3, col + 1, 'Sales Quantity (MT)', th_cell_right)
+            sheet.write(row - 3, col + 2, float_round(sale_qty, precision_digits=2), total_format)
+            sheet.write(row - 2, col + 1, 'Production Quantity (MT)', th_cell_right)
+            sheet.write(row - 2, col + 2, float_round(production_qty, precision_digits=2), total_format)
             # SALES AND PRODUCTION QUANTITY ROW
 
             for n in range(len(IE_ORDER)):
@@ -850,8 +858,8 @@ class CostSheetXLSX(ReportXlsx):
                 if IE_ORDER[n] in GROUP_TOTAL_NAMES:
                     if index == 0:
                         sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
-                    sheet.write(row, col + 1, formatLang(self.env, float_round(grp_amount, precision_digits=2)), td_cell_right_bold)
-                    sheet.write(row, col + 2, formatLang(self.env, float_round(grp_rate, precision_digits=2)), td_cell_right_bold)
+                    sheet.write(row, col + 1, float_round(grp_amount, precision_digits=2), total_format)
+                    sheet.write(row, col + 2, float_round(grp_rate, precision_digits=2), total_format)
                     row += 1
                     continue
                 # END GROUP TOTAL ROW
@@ -864,8 +872,8 @@ class CostSheetXLSX(ReportXlsx):
 
                 if index == 0:
                     sheet.write(row, col, IE_NAME[IE_ORDER[n]], td_cell_left_bold)
-                sheet.write(row, col + 1, formatLang(self.env, float_round(pr_amount, precision_digits=2)), td_cell_right_bold)
-                sheet.write(row, col + 2, formatLang(self.env, float_round(pr_rate, precision_digits=2)), td_cell_right_bold)
+                sheet.write(row, col + 1, float_round(pr_amount, precision_digits=2), total_format)
+                sheet.write(row, col + 2, float_round(pr_rate, precision_digits=2), total_format)
                 row += 1
                 # END PARENT ROW
 
@@ -875,8 +883,8 @@ class CostSheetXLSX(ReportXlsx):
 
                     if index == 0:
                         sheet.write(row, col, '         ' + item['name'], td_cell_left)
-                    sheet.write(row, col + 1, formatLang(self.env, float_round(float(item['amount']), precision_digits=2)), td_cell_right)
-                    sheet.write(row, col + 2, formatLang(self.env, float_round(ch_rate, precision_digits=2)), td_cell_right)
+                    sheet.write(row, col + 1, float_round(float(item['amount']), precision_digits=2), no_format)
+                    sheet.write(row, col + 2, float_round(ch_rate, precision_digits=2), no_format)
                     row += 1
                 # END CHILD ROWS
 

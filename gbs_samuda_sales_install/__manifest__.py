@@ -17,7 +17,6 @@
         'sale_order_revision',
         'samuda_so_type',
         'gbs_pi_creation',
-        'delivery_schedules',
         'gbs_application_group',
         'delivery_invoicing',
         'accounting_report',

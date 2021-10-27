@@ -30,6 +30,7 @@ class DeliverySchedules(models.Model):
         ('draft', "Draft"),
         ('revision', "Revised"),
         ('approve', "Confirm"),
+        ('done', "Done")
     ], default='draft', track_visibility='onchange')
 
     # relational field
@@ -93,3 +94,16 @@ class DeliverySchedules(models.Model):
             'state': 'revision',
             'revision': self.revision + 1,
         })
+
+    @api.multi
+    def action_process_delivery_schedules(self):
+        """Scheduler method for updating Delivery Schedules State."""
+        delivery_schedules = self.env['delivery.schedules'].search([
+            ('requested_date', '<=', fields.Datetime.now()),
+            ('state', '=', 'approve')
+        ])
+        for ds in delivery_schedules:
+            if any(line.state not in ['done', 'cancel'] for line in ds.line_ids):
+                continue
+
+            ds.write({'state': 'done'})

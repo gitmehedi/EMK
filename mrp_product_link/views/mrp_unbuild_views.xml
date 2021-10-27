@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="mrp_unbuild_form_view" model="ir.ui.view">
+            <field name="name">mrp.unbuild.form.inherit.link</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="inherit_id" ref="mrp.mrp_unbuild_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bom_id']" position="after">
+                    <field name="mrp_type" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

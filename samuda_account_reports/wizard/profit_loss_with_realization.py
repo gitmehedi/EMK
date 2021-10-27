@@ -25,8 +25,8 @@ class ProfitLossRealizationWizard(models.TransientModel):
     periods_number = fields.Integer('Number of periods', default=1)
 
     all_entries = fields.Boolean(string='Include Unposted Entries', default=False)
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
-    cost_center_id = fields.Many2one('account.cost.center', string='Cost Center')
+    operating_unit_ids = fields.Many2many('operating.unit', string='Operating Unit')
+    cost_center_ids = fields.Many2many('account.cost.center', string='Cost Center')
 
     @api.constrains('date_from', 'date_to')
     def _check_date_range(self):
@@ -240,9 +240,21 @@ class ProfitLossRealizationWizard(models.TransientModel):
             dt_from = datetime.strptime(self.date_from, "%Y-%m-%d")
             delta = dt_to - dt_from
             delta = timedelta(days=delta.days + 1)
-            for k in xrange(0, self.periods_number):
-                dt_from -= delta
-                dt_to -= delta
-                columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
+
+            # get the number of days in month from date_from
+            number_of_days_in_month = calendar.monthrange(dt_from.year, dt_from.month)[1]
+
+            if delta.days == number_of_days_in_month:
+                for k in xrange(0, self.periods_number):
+                    dt_to = dt_to.replace(day=1)
+                    dt_to -= timedelta(days=1)
+                    dt_from -= timedelta(days=1)
+                    dt_from = dt_from.replace(day=1)
+                    columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
+            else:
+                for k in xrange(0, self.periods_number):
+                    dt_from -= delta
+                    dt_to -= delta
+                    columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
 
         return columns

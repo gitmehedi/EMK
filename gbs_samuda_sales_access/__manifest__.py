@@ -32,6 +32,7 @@
         'hidden_admin',
         'lc_sales_product_local',
         'gbs_payment_term',
+        'mrp_product_link'
     ],
 
 
