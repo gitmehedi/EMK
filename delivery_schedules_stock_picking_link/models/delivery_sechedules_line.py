@@ -42,7 +42,7 @@ class DeliverySchedulesLine(models.Model):
             picking.action_assign()
 
         # if qty is not available in the stock, notify the user with a message
-        if picking.state != 'assigned':
+        if picking.state not in ['assigned', 'partially_available']:
             text = 'Unable to Deliver Goods due to qty is not available in current stock.'
             wizard = self.env['message.box.wizard'].create({'text': text})
             return {
