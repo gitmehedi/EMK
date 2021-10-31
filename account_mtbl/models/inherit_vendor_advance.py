@@ -223,6 +223,8 @@ class VendorAdvance(models.Model):
                     rec['credit_sub_operating_unit_id'] = requested.credit_sub_operating_unit_id.id
                 if requested.credit_operating_unit_id:
                     rec['credit_operating_unit_id'] = requested.credit_operating_unit_id.id
+                if requested.additional_service_value:
+                    rec['additional_service_value'] = requested.additional_service_value
 
                 self.write(rec)
                 amount = requested.advance_amount_add
@@ -242,3 +244,4 @@ class InheritAgreementHistory(models.Model):
     credit_account_id = fields.Many2one('account.account', string='Credit Account')
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence')
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')
+    additional_service_value = fields.Float(string="Ad. Service Value")

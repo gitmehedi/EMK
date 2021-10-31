@@ -14,8 +14,9 @@ class AmendmentAgreementWizard(models.TransientModel):
         return status
 
     def _def_val(self, name):
-        rent = self.env['vendor.advance'].browse(self._context['active_id'])
-        return rent[name]
+        if 'active_id' in self._context:
+            rent = self.env['vendor.advance'].browse(self._context['active_id'])
+            return rent[name]
 
     vat_id = fields.Many2one('account.tax', string='VAT', domain=[('is_vat', '=', True)],
                              default=lambda self: self._def_val('vat_id'))
@@ -34,6 +35,8 @@ class AmendmentAgreementWizard(models.TransientModel):
     credit_operating_unit_domain_ids = fields.Many2many('operating.unit', readonly=True, store=False,
                                                         compute="_compute_credit_operating_unit_domain_ids")
     date = fields.Date(string='Date')
+    additional_service_value = fields.Float(string="Ad. Service Value",
+                                            default=lambda self: self._def_val('additional_service_value'))
 
     @api.multi
     def generate(self):
@@ -78,9 +81,9 @@ class AmendmentAgreementWizard(models.TransientModel):
         if self.credit_sub_operating_unit_id != rent.credit_sub_operating_unit_id:
             message += '\n' + u'\u2022' + ' Credit Sequence: ' + str(self.credit_sub_operating_unit_id.name)
             history['credit_sub_operating_unit_id'] = self.credit_sub_operating_unit_id
-        if self.credit_operating_unit_id != rent.credit_operating_unit_id:
-            message += '\n' + u'\u2022' + ' Credit Branch: ' + str(self.credit_operating_unit_id.name)
-            history['credit_operating_unit_id'] = self.credit_operating_unit_id.id
+        if self.additional_service_value != rent.additional_service_value:
+            message += '\n' + u'\u2022' + ' Ad. Service Value: ' + str(self.additional_service_value)
+            history['additional_service_value'] = self.additional_service_value
 
         active_status = True if self.status == 'active' else False
         if rent.active != active_status:
