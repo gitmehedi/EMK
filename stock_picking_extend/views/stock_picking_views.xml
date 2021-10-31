@@ -439,6 +439,9 @@
             <xpath expr="//header/button[@name='button_scrap']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//header/button[@name='action_assign'][2]" position="replace">
+                <button name="recheck_availability" states="partially_available" string="Recheck Availability" type="object" groups="base.group_user"/>
+            </xpath>
 
             <xpath expr="//header/field[@name='state']" position="replace">
                 <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
