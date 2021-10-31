@@ -40,9 +40,9 @@ class VendorAdvance(models.Model):
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange',
                                copy=False)
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange', copy=False)
-    vat_id = fields.Many2one('account.tax', string='VAT', readonly=True, domain=[('is_vat', '=', True)],
+    vat_id = fields.Many2one('account.tax', string='VAT', readonly=True, domain=[('is_vat', '=', True)],track_visibility='onchange',
                              states={'draft': [('readonly', False)]})
-    tds_id = fields.Many2one('account.tax', string='TDS', readonly=True, domain=[('is_tds', '=', True)],
+    tds_id = fields.Many2one('account.tax', string='TDS', readonly=True, domain=[('is_tds', '=', True)],track_visibility='onchange',
                              states={'draft': [('readonly', False)]})
     security_deposit = fields.Float(string="Security Deposit", readonly=True, default=0.0,
                                     track_visibility='onchange', states={'draft': [('readonly', False)]},
@@ -50,20 +50,20 @@ class VendorAdvance(models.Model):
     payable_to_supplier = fields.Float('Vendor Payable', readonly=True, store=True, copy=False,
                                        compute="_compute_payable_to_supplier", digits=(16, 2),
                                        help="This is the advance amount after deducting security deposit, Vat and Tax")
-    tds_amount = fields.Float('TDS Amount', readonly=True, compute='_compute_amount', copy=False,
+    tds_amount = fields.Float('TDS Amount', readonly=True, compute='_compute_amount', copy=False,track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
-    vat_amount = fields.Float('VAT Amount', compute='_compute_amount', readonly=True, copy=False,
+    vat_amount = fields.Float('VAT Amount', compute='_compute_amount', readonly=True, copy=False,track_visibility='onchange',
                               states={'draft': [('readonly', False)]})
-    total_deduction = fields.Float('Total Deduction', readonly=True, store=True,
+    total_deduction = fields.Float('Total Deduction', readonly=True, store=True,track_visibility='onchange',
                                    compute='_compute_total_deduction', copy=False,
                                    help='This amount is the summation of Security Deposit, VAT and TDS value')
-    adjustable_amount = fields.Float('Adjustable Amount', readonly=True, copy=False,
+    adjustable_amount = fields.Float('Adjustable Amount', readonly=True, copy=False,track_visibility='onchange',
                                      compute='_compute_adjustable_amount',
                                      help='This is the adjustable amount in vendor bills')
     in_invoice_ids = fields.One2many('vendor.bill.line', 'advance_id', string='Supplier Invoices',
                                      readonly=True, copy=False)
-    journal_id = fields.Many2one('account.move', string='Journal', readonly=True, copy=False)
-    type = fields.Selection([('single', 'Single'), ('multi', 'Multi')])
+    journal_id = fields.Many2one('account.move', string='Journal', readonly=True, copy=False,track_visibility='onchange')
+    type = fields.Selection([('single', 'Single'), ('multi', 'Multi')],track_visibility='onchange')
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Waiting for Approval"),
