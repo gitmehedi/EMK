@@ -33,7 +33,7 @@ class AmendmentAgreementWizard(models.TransientModel):
                                                default=lambda self: self._def_val('credit_operating_unit_id'))
     credit_operating_unit_domain_ids = fields.Many2many('operating.unit', readonly=True, store=False,
                                                         compute="_compute_credit_operating_unit_domain_ids")
-    date = fields.Date(string='Date', required=True)
+    date = fields.Date(string='Date')
 
     @api.multi
     def generate(self):
