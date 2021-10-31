@@ -37,6 +37,7 @@ class AmendmentAgreementWizard(models.TransientModel):
     date = fields.Date(string='Date')
     additional_service_value = fields.Float(string="Ad. Service Value",
                                             default=lambda self: self._def_val('additional_service_value'))
+    service_value = fields.Float(default=lambda self: self._def_val('service_value'))
 
     @api.multi
     def generate(self):
@@ -148,10 +149,12 @@ class AmendmentAgreementWizard(models.TransientModel):
             self.area = self.env.context.get('area')
             self.rate = self.env.context.get('rate')
             self.service_value = self.env.context.get('service_value')
+        else:
+            self.service_value = self.env.context.get('service_value')
 
     @api.onchange('area', 'rate')
     def _onchange_service_value(self):
-        if self.area and self.rate:
+        if self.change_service_value:
             self.service_value = self.area * self.rate
 
     @api.constrains('end_date', 'advance_amount_add', 'adjustment_value', 'service_value', 'status')
