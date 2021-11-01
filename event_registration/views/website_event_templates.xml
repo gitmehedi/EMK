@@ -151,19 +151,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-field">
                                         <label for="gender" class="control-label">Gender</label>
-                                        <div class="mar-btm">
-                                            <t t-foreach="vals['gender_ids']" t-as='label'>
-                                                <label class="radio-inline">
-                                                    <input type="radio" t-attf-name="#{counter}-gender"
-                                                           t-att-value="label"
-                                                           t-att-checked="'checked' if label=='male' else None"/>
-                                                    <t t-esc="label_value"/>
-                                                </label>
+                                        <select class="form-control input-sm reqfield"
+                                                t-attf-name="#{counter}-gender" name="gender"
+                                                id="gender"
+                                                required="required">
+                                            <option value="">--Please Select--</option>
+                                            <t t-foreach="vals['gender_ids']" t-as='gen'>
+                                                <option t-att-value="gen.id">
+                                                    <t t-esc="gen.name"/>
+                                                </option>
                                             </t>
-                                        </div>
+                                        </select>
                                     </div>
                                 </div>
-
                                 <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id"
                                        t-attf-value="#{ticket['id']}"/>
                             </div>

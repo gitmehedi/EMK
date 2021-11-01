@@ -51,7 +51,7 @@
                         </group>
                         <group string="Seats Information">
                             <group>
-                                <field name="seats_availability"/>
+                                <field name="seats_availability" widget="radio" options="{'horizontal': true}"/>
                                 <field name="attendee_number"/>
                                 <field name="total_session"/>
                             </group>

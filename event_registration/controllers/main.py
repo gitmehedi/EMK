@@ -32,10 +32,11 @@ class WebsiteRegistration(WebsiteEventController):
 
         vals = {
             'professions': http.request.env['attendee.profession'].sudo().search([('status', '=', True)]),
-            'gender_ids': {'male': 'Male', 'female': 'Female'},
+            'gender_ids': http.request.env['res.gender'].sudo().search([('status', '=', True)], order='id asc'),
         }
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details",
                                                          {'tickets': tickets, 'event': event, 'vals': vals})
+
 
     # @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public",
     #             methods=['POST'], website=True)

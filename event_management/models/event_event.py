@@ -166,8 +166,7 @@ class EventRegistration(models.Model):
     _order = 'id desc'
 
     date_of_birth = fields.Date(string='Date of Birth')
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], required=True,
-                              default='male', string='Gender')
+    gender = fields.Many2one('res.gender', required=True, string='Gender')
     profession_id = fields.Many2one('attendee.profession', string='Profession', default=False)
     card_number = fields.Char(string='Card Number')
 
