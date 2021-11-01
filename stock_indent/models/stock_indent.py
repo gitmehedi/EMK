@@ -153,7 +153,12 @@ class IndentIndent(models.Model):
             'approver_id': self.env.user.id,
             'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
+        resproducts={
+            'state':'inprogress'
+        }
         self.write(res)
+        for indent in self:
+            indent.product_lines.write(resproducts)
 
     @api.multi
     def reject_indent(self):
@@ -162,7 +167,12 @@ class IndentIndent(models.Model):
             'approver_id': self.env.user.id,
             'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
+        resproducts = {
+            'state': 'reject'
+        }
         self.write(res)
+        for indent in self:
+            indent.product_lines.write(resproducts)
 
     @api.multi
     def action_close_indent(self):
@@ -171,6 +181,13 @@ class IndentIndent(models.Model):
             'closer_id': self.env.user.id,
         }
         self.write(res)
+
+    # @api.multi
+    # def name_get(self):
+    #     res= []
+    #     for rec in self:
+    #         res.append((rec.id, '%s -%s' % (rec.name, rec.requirement)))
+    #     return res
 
     @api.multi
     def indent_confirm(self):
@@ -192,12 +209,61 @@ class IndentIndent(models.Model):
             res = {
                 'state': 'waiting_approval'
             }
+            res_products = {
+                'state': 'waiting_approval'
+            }
+
             requested_date = self.required_date
             new_seq = self.env['ir.sequence'].next_by_code_new('stock.indent', requested_date)
             if new_seq:
                 res['name'] = new_seq
 
             indent.write(res)
+            indent.product_lines.write(res_products)
+        # -------------------------------------------------------------------------------
+        #     for rec in self:
+        #         # orm search without condition
+        #         indents = self.env['indent.indent'].search([])
+        #         print("Indents search without condition...", indents)
+        #         # orm search with condition
+        #         indentsingle = self.env['indent.indent'].search([('state', '=', 'waiting_approval')])
+        #         print("Indents search with condition...", indentsingle)
+        #         # orm search with "AND" condition
+        #         indentand = self.env['indent.indent'].search([('state', '=', 'waiting_approval'),
+        #                                                       ('requirement', '=', '1')])
+        #         print("Indents search with AND condition...", indentand)
+        #
+        #         # orm search with "OR" condition
+        #         indentor = self.env['indent.indent'].search(
+        #             ['|', ('state', '=', 'waiting_approval'), ('requirement', '=', '1')])
+        #         print("Indents search with OR condition...", indentor)
+        #
+        #         # orm search_count without condition
+        #         indentcount = self.env['indent.indent'].search_count([])
+        #         print("Indents search_count without condition...", indentcount)
+        #
+        #         # orm search_count without condition
+        #         indent_count = self.env['indent.indent'].search_count([('state', '=', 'waiting_approval')])
+        #         print("Indents search_count with condition...", indent_count)
+        #
+        #         # orm search_count "AND" condition
+        #         indent_count_and = self.env['indent.indent'].search_count([('state', '=', 'waiting_approval'),
+        #                                                                    ('requirement', '=', '1')])
+        #         print("Indents search_count with AND condition...", indent_count_and)
+        #
+        #         # orm search_count "OR" condition
+        #         indent_count_or = self.env['indent.indent'].search_count(
+        #             ['|', ('state', '=', 'waiting_approval'), ('requirement', '=', '1')])
+        #         print("Indents search_count with OR condition...", indent_count_or)
+        #
+        #         # orm search
+        #         indents = self.env['indent.indent'].search([('id','=','15')])
+        #         print("Indents Requirement", indents.requirement)
+        #         print("Indents Name", indents.name)
+        #         print("Indents Display Name", indents.display_name)
+        #
+
+    # -------------------------------------------------------------------------------
 
     @api.model
     def _create_picking_and_moves(self):
@@ -272,6 +338,139 @@ class IndentIndent(models.Model):
         return False
 
     @api.multi
+    def action_issue_product(self):
+
+        '''
+                This function returns an action that display existing picking orders of given purchase order ids.
+                When only one found, show the picking immediately.
+                '''
+        self.product_validate()
+
+        move_obj = self.env['stock.move']
+        picking_obj = self.env['stock.picking']
+        picking_id = False
+        count = 0
+        for line in self.product_lines:
+            date_planned = datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT)
+
+            print line.name
+            print "Count loop: "+str(count)
+            count = count+1
+
+            if line.product_id:
+                if not picking_id:
+                    pick_name = self.env['stock.picking.type'].browse(self.picking_type_id.id).sequence_id.next_by_id()
+                    location_id = self.warehouse_id.sudo().lot_stock_id.id
+                    vals = {
+                        'invoice_state': 'none',
+                        'picking_type_id': self.picking_type_id.id,
+                        'priority': self.requirement,
+                        'name': pick_name,
+                        'origin': self.name,
+                        'date': self.indent_date,
+                        'state': 'draft',
+                        'move_type': self.move_type,
+                        'partner_id': self.indentor_id.partner_id.id or False,
+                        'location_id': location_id,
+                        'location_dest_id': self.stock_location_id.id,
+                        'company_id': self.company_id.id,
+                        'operating_unit_id': 1
+                    }
+                    picking = picking_obj.create(vals)
+
+                    if picking:
+                        picking_id = picking.id
+
+                moves = {
+                    'name': line.name,
+                    'indent_id': self.id,
+                    'picking_id': picking_id,
+                    'picking_type_id': self.picking_type_id.id or False,
+                    'product_id': line.product_id.id,
+                    'date': date_planned,
+                    'date_expected': date_planned,
+                    'product_uom_qty': line.received_qty,
+                    'product_uom': line.product_uom.id,
+                    'location_id': location_id,
+                    'location_dest_id': self.stock_location_id.id,
+                    'origin': self.name,
+                    'state': 'draft',
+                    'price_unit': line.product_id.standard_price or 0.0,
+                    'company_id': self.company_id.id
+                }
+                move_id = move_obj.create(moves)
+
+                pack_obj = self.env['stock.pack.operation']
+                packs = {
+                    'name': line.name,
+                    'product_qty': line.product_uom_qty,
+                    'order_qty': line.product_uom_qty,
+                    'qty_done': line.received_qty,
+                    'product_id': line.product_id.id,
+                    'picking_id': picking_id,
+                    'product_uom_id': line.product_uom.id,
+                    'location_id': location_id,
+                    'location_dest_id': self.stock_location_id.id
+                }
+                pack_operation_id = pack_obj.create(packs)
+
+                operation_obj = self.env['stock.move.operation.link']
+                operation = {
+                    'qty': line.received_qty,
+                    'operation_id': pack_operation_id.id,
+                    'move_id': move_id.id
+                }
+                pack_move = operation_obj.create(operation)
+
+                # self.picking_id.action_confirm()
+                # self.picking_id.force_assign()
+
+                self.ensure_one()
+                # If still in draft => confirm and assign
+                if picking.state == 'draft':
+                    picking.action_confirm()
+                    if picking.state != 'assigned':
+                        picking.action_assign()
+                        if picking.state != 'assigned':
+                               raise UserError(
+                                   _("Could not reserve all requested products. Please use the \'Mark as Todo\' button to handle the reservation manually."))
+                for pack in picking.pack_operation_ids:
+                    if pack.product_qty > 0:
+                        pack.write({'qty_done': pack.product_qty})
+                    else:
+                        pack.unlink()
+                picking.do_transfer()
+
+                res = {
+                    'state': 'received',
+                    'picking_id': picking_id
+                }
+
+                self.write(res)
+                line.write({'state': 'received'})
+
+                picking.write({'state': 'done'})
+                move_id.write({'state': 'done'})
+                # for indent in self:
+                #     indent.product_lines.write(res_products)
+
+    def product_validate(self):
+        for product in self.product_lines:
+            if product.qty_available <= 0:
+                raise UserError('Stock not available!!!')
+            elif product.qty_available < product.product_uom_qty:
+                product.issue_qty = product.qty_available
+            else:
+                product.issue_qty = product.product_uom_qty
+
+        for product in self.product_lines:
+            if product.received_qty <= 0:
+                raise UserError('Issue Quantity can not 0')
+        for product in self.product_lines:
+            if product.received_qty != product.product_uom_qty:
+                raise UserError('Issue Quantity and Indent Quantity Must Be Same')
+
+    @api.multi
     def action_view_picking(self):
         '''
         This function returns an action that display existing picking orders of given purchase order ids.
@@ -306,10 +505,23 @@ class IndentIndent(models.Model):
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = pick_ids and pick_ids[0] or False
 
-        # self.picking_id.do_transfer()
-
         return result
 
+    def action_scrap_product(self):
+        for product in self.product_lines:
+            if product.qty_available <= 0:
+                raise UserError('Stock not available!!!')
+            elif product.qty_available < product.product_uom_qty:
+                product.issue_qty = product.qty_available
+            else:
+                product.issue_qty = product.product_uom_qty
+
+        for product in self.product_lines:
+            if product.received_qty <= 0:
+                raise UserError('Scrap Quantity can not 0')
+        # for product in self.product_lines:
+        #     if product.received_qty != product.product_uom_qty:
+        #         raise UserError('Issue Quantity and Indent Quantity Must Be Same')
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -329,12 +541,15 @@ class IndentProductLines(models.Model):
     _name = 'indent.product.lines'
     _description = 'Indent Product Lines'
 
-    indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',
-                                track_visibility='onchange')
-    product_id = fields.Many2one('product.product', string='Product', required=True, track_visibility='onchange')
-    indent_qty = fields.Float('Indent Qty', digits=dp.get_precision('Product UoS'),
-                                   required=True, default=1.00, track_visibility='onchange')
-    issue_qty = fields.Float('Issue Qty', digits=dp.get_precision('Product UoS'), track_visibility='onchange')
+    indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',track_visibility='onchange')
+    product_id = fields.Many2one('product.product', string='Product', required=True,track_visibility='onchange')
+    product_uom_qty = fields.Float('Indent Quantity', digits=dp.get_precision('Product UoS'),
+                                   required=True, default=1,track_visibility='onchange')
+    received_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),
+                                help="Receive Quantity which Update by done quantity.",track_visibility='onchange')
+    issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),
+                             help="Issued Quantity which Update by available quantity.",track_visibility='onchange')
+
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
                                   required=True, store=True, track_visibility='onchange')
     price_unit = fields.Float(related='product_id.standard_price', string='Price',
@@ -348,7 +563,18 @@ class IndentProductLines(models.Model):
     name = fields.Char(related='product_id.name', string='Specification', store=True, track_visibility='onchange')
     remarks = fields.Char(related='product_id.name', string='Narration', store=True, track_visibility='onchange')
     sequence = fields.Integer('Sequence')
-    state = fields.Selection([('indent', 'Indent'), ('issue', 'issue')], default='indent')
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirm', 'Confirm'),
+        ('waiting_approval', 'Waiting for Approval'),
+        ('inprogress', 'In Progress'),
+        ('received', 'Received'),
+        ('reject', 'Rejected'),
+    ], string='State', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+
+    # state = fields.Selection([('indent', 'Indent'), ('issue', 'issue')], default='indent')
+
 
     ####################################################
     # Business methods
@@ -370,8 +596,8 @@ class IndentProductLines(models.Model):
     def _compute_product_qty(self):
         for product in self:
             location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
-            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id)])
-            # ,('location_id', '=', location_id)
+            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),('location_id', '=', location_id)])
+
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <!-- actions -->
+        <record id="action_view_picking100" model="ir.actions.act_window">
+            <field name="name">Receive Products</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','assigned')]</field>
+
+        </record>
+
+        <!-- menus -->
+         <menuitem name="Purchases"
+            id="menu_purchase_root"
+            web_icon="purchase,static/description/icon.png"
+            sequence="25"/>
+        <menuitem id="purchase_sub" name="Purchase" parent="menu_purchase_root"/>
+        <menuitem id="purchase_orders_receive" name="Purchase Orders(Receive)" parent="purchase_sub" action="action_view_picking100"/>
+    </data>
+</odoo>

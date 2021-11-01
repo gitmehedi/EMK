@@ -10,7 +10,7 @@
                 <data>
                     <xpath expr="//button[@name='action_view_picking']" position="after">
                         <field name="check_pr_issued" invisible="1"/>
-                        <button name="action_view_purchase_requisition" string="Issue PR" type="object"
+                        <button name="action_view_purchase_requisition" string="Issue PR" type="object" invisible="1"
                             groups="inventory_user.grp_inv_department_executive"
                             attrs="{'invisible': ['|',('state','!=','inprogress'),('check_pr_issued','!=', True)]}"/>
                     </xpath>
