@@ -64,7 +64,7 @@
                             </group>
                             <notebook colspan="4">
                                 <page string="Customers">
-                                    <field name="line_ids">
+                                    <field name="line_ids" attrs="{'readonly': [('state', '=', 'approve')]}">
                                         <tree string="List" editable="bottom" decoration-success="state == 'done'">
                                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="sale_order_id" options="{'no_open': True, 'no_create': True}"/>
