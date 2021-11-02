@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_event_reservation" name="Website Event Reservation" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/event_registration/static/src/js/utils.js"></script>
+            <script type="text/javascript" src="/event_registration/static/src/js/custom.js"></script>
+            <link rel="stylesheet" href="/event_registration/static/src/css/style.css"/>
+        </xpath>
+    </template>
+
+    <template id="event_reservation" name="Event Reservation">
+        <t t-call="web.login_layout">
+            <div class="container">
+                <div class="row">
+                    <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
+                          method="post" t-if="not message" data-toggle="validator2" id="memberapp">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <!--                        <script type="text/javascript">-->
+                        <!--                            var config = {-->
+                        <!--                            baseurl: "<t t-esc="baseurl"/>",-->
+                        <!--                            };-->
+                        <!--                        </script>-->
+                        <input type="hidden" name="redirect" t-att-value="redirect"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <h2 class="panel-title text-center">Event Reservation</h2>
+
+                        <div class="col-md-12 margin-top-15">
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-left">Basic Information</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-12">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="event_name" class="control-label">Event Name</label>
+                                                <input type="text" name="event_name" t-att-value="event_name"
+                                                       id="event_name"
+                                                       maxlength="100"
+                                                       placeholder="Event Name"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="poc_id" class="control-label">PoC</label>
+                                                <input type="text" name="poc_id" t-att-value="poc_id" id="poc_id"
+                                                       maxlength="100"
+                                                       placeholder="PoC"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="poc_type_id" class="control-label">PoC Type</label>
+                                                <input type="text" name="poc_type_id" t-att-value="poc_type_id"
+                                                       id="poc_type_id"
+                                                       maxlength="100"
+                                                       placeholder="PoC Type"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="facilities_ids" class="control-label">Facilities Requested
+                                                </label>
+                                                <input type="text" name="facilities_ids" t-att-value="facilities_ids"
+                                                       id="facilities_ids"
+                                                       maxlength="100" placeholder="Facilities"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="event_type_id" class="control-label">Event Type</label>
+                                                <input type="text" name="event_type_id" t-att-value="event_type_id"
+                                                       id="event_type_id"
+                                                       maxlength="100" placeholder="Event Type"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="space_id" class="control-label">Need EMK Space?</label>
+                                                <input type="text" name="space_id" t-att-value="space_id" id="space_id"
+                                                       maxlength="100" placeholder="Need EMK Space"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-left">Seats Information</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="seats_available" class="control-label">Available Seats
+                                                </label>
+                                                <input type="text" name="seats_available" t-att-value="seats_available"
+                                                       id="seats_available"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="attendee_number" class="control-label">No. of Attendees
+                                                </label>
+                                                <input type="text" name="attendee_number" t-att-value="attendee_number"
+                                                       id="attendee_number"
+                                                       maxlength="10"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="total_session" class="control-label">No. of Sessions</label>
+                                                <input type="text" name="total_session" t-att-value="total_session"
+                                                       id="total_session" maxlength="2"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="request_date" class="control-label">Requested Date
+                                                </label>
+                                                <input type="text" name="request_date" t-att-value="request_date"
+                                                       id="request_date"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="start_date" class="control-label">Start Date</label>
+                                                <input type="text" name="start_date" t-att-value="start_date"
+                                                       id="start_date"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="end_date" class="control-label">End Date</label>
+                                                <input type="text" name="end_date" t-att-value="end_date" id="end_date"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="last_date_reg" class="control-label">Last Date of
+                                                    Registration
+                                                </label>
+                                                <input type="text" name="last_date_reg" t-att-value="last_date_reg"
+                                                       id="last_date_reg"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-left">Payments Information</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="mode_of_payment" class="control-label">Mode of Payment
+                                                </label>
+                                                <input type="text" name="mode_of_payment" t-att-value="mode_of_payment"
+                                                       id="mode_of_payment"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="payment_type" class="control-label">Type</label>
+                                                <input type="text" name="payment_type" t-att-value="payment_type"
+                                                       id="payment_type"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="date_of_payment" class="control-label">Date for Payment
+                                                </label>
+                                                <input type="text" name="date_of_payment" t-att-value="date_of_payment"
+                                                       id="date_of_payment" maxlength="2"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="proposed_budget" class="control-label">Proposed Budget
+                                                </label>
+                                                <input type="text" name="proposed_budget" t-att-value="proposed_budget"
+                                                       id="proposed_budget"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="paid_attendee" class="control-label">Participation Charge
+                                                </label>
+                                                <input type="text" name="paid_attendee" t-att-value="paid_attendee"
+                                                       id="paid_attendee"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="participating_amount" class="control-label">Participation
+                                                    Amount
+                                                </label>
+                                                <input type="text" name="participating_amount"
+                                                       t-att-value="participating_amount" id="participating_amount"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-left">Additional Information</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="target_audience_group" class="control-label">Target Audience
+                                                    Group
+                                                </label>
+                                                <input type="text" name="target_audience_group"
+                                                       t-att-value="target_audience_group"
+                                                       id="target_audience_group"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="target_age" class="control-label">Target Age</label>
+                                                <input type="text" name="target_age" t-att-value="target_age"
+                                                       id="target_age"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="outreach_plan" class="control-label">Outreach Plan</label>
+                                                <input type="text" name="outreach_plan" t-att-value="outreach_plan"
+                                                       id="outreach_plan"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="outreach_plan_other" class="control-label">Outreach Plan
+                                                    Other
+                                                </label>
+                                                <input type="text" name="outreach_plan_other"
+                                                       t-att-value="outreach_plan_other"
+                                                       id="outreach_plan_other"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="snakes_required" class="control-label">
+                                                    Food/Beverage/Snacks?
+                                                </label>
+                                                <input type="text" name="snakes_required" t-att-value="snakes_required"
+                                                       id="snakes_required"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-left">Details &amp; Rules Regulations</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-12">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="description" class="control-label">Event Description
+                                                </label>
+                                                <textarea type="textarea" name="description" id="description" rows="4"
+                                                          class="form-control input-sm reqfield" required="required">
+<!--                                                    t-att-value="description"-->
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="rules_regulation" class="control-label">Rules and
+                                                    Regulations
+                                                </label>
+                                                <textarea type="textarea" name="rules_regulation"
+                                                       t-att-value="rules_regulation" id="rules_regulation" rows="4"
+                                                       class="form-control input-sm reqfield" required="required">
+                                                        </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="notes" class="control-label">Comments/Notes</label>
+                                                <textarea type="textarea" name="notes" t-att-value="notes"
+                                                       id="notes" rows="4"
+                                                       class="form-control input-sm reqfield" required="required">
+                                                        </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="purpose_of_event" class="control-label">Purpose of Events
+                                                </label>
+                                                <textarea type="textarea" name="purpose_of_event" rows="4"
+                                                       t-att-value="purpose_of_event" id="purpose_of_event"
+                                                       class="form-control input-sm reqfield" required="required">
+                                                        </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="member_signup.success" name="Sign up Success">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Thank you!</h1>
+                        <div>
+                            <strong>
+                                <t t-esc="name"/>
+                            </strong>
+                            , your request has been submitted successfully. Check email for
+                            further processing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="member_signup.signup" name="Sign up login">
+        <t t-call="web.login_layout">
+            <div class="container">
+                <div class="row">
+                    <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
+                          method="post"
+                          t-if="not message" data-toggle="validator2" id="memberapp">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <script type="text/javascript">
+                            var config = {
+                            baseurl: "<t t-esc="baseurl"/>",
+                            };
+                        </script>
+                        <input type="hidden" name="redirect" t-att-value="redirect"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
+
+                        <div class="col-md-12">
+                            <p class="alert alert-danger" t-if="error">
+                                <t t-esc="error"/>
+                            </p>
+                        </div>
+                        <t t-call="member_signup.fields">
+                            <t t-set="only_passwords" t-value="bool(token)"/>
+                        </t>
+                        <div class="col-md-4 col-md-offset-5">
+                            <div class="clearfix oe_login_buttons">
+                                <button type="submit" class="btn btn-success">Sign up</button>
+                                <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-default">
+                                    <i class="fa fa-angle-double-left"></i>
+                                    Back to
+                                    Login
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

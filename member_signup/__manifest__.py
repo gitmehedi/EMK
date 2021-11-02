@@ -37,7 +37,7 @@
         'views/membership_withdrawl_reason_views.xml',
         'views/membership_categories_views.xml',
         'views/res_users_views.xml',
-        'views/application_templates.xml',
+        'views/member_signup_templates.xml',
         'views/member_config_views.xml',
         'views/rfid_generation_views.xml',
         'views/member_config_settings_view.xml',

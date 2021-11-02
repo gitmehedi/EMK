@@ -37,6 +37,16 @@ class WebsiteRegistration(WebsiteEventController):
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details",
                                                          {'tickets': tickets, 'event': event, 'vals': vals})
 
+    @http.route(['/event/event-reservation/register'], type='http', auth="public", website=True)
+    def event_reservation(self, **post):
+        # values = {
+        #     'event': event,
+        #     'main_object': event,
+        #     'range': range,
+        #     'registrable': event.sudo()._is_event_registrable()
+        # }
+        values = {}
+        return request.render("event_registration.event_reservation",values)
 
     # @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public",
     #             methods=['POST'], website=True)
