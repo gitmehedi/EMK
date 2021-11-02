@@ -63,7 +63,7 @@ class DeliverySchedules(models.Model):
             total_ordered_qty = float_round(delivery_order.line_ids[0].quantity, precision_digits=4)
             total_delivered_qty = float_round(delivery_order.line_ids[0].qty_delivered, precision_digits=4)
 
-            if total_ordered_qty < (total_delivered_qty + total_scheduled_qty):
+            if total_ordered_qty < float_round((total_delivered_qty + total_scheduled_qty), precision_digits=4):
                 message += _('\nSale Order: %s\nUndelivered Qty: %s\nScheduled Qty: %s\n') % (line.sale_order_id.name, line.undelivered_qty, total_scheduled_qty)
 
         if message:
