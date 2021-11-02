@@ -2,6 +2,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_round
 
 
 class DeliverySchedules(models.Model):
@@ -47,6 +48,26 @@ class DeliverySchedules(models.Model):
             raise ValidationError(_("Requested date can't be back date entry"))
         if self.requested_date > fields.Date.to_string(datetime.date.today() + relativedelta(days=7)):
             raise ValidationError(_("Requested date can't bigger then 7 days"))
+
+    @api.constrains('line_ids')
+    def _check_line_ids(self):
+        message = ''
+        delivery_orders = self.line_ids.mapped('delivery_order_id')
+        for delivery_order in delivery_orders:
+            line = self.line_ids.search([('delivery_order_id', '=', delivery_order.id)], limit=1)
+            delivery_schedules_lines = self.env['delivery.schedules.line'].search([
+                ('delivery_order_id', '=', delivery_order.id),
+                ('state', '!=', 'done')
+            ])
+            total_scheduled_qty = float_round(sum(line.scheduled_qty for line in delivery_schedules_lines), precision_digits=4)
+            total_ordered_qty = float_round(delivery_order.line_ids[0].quantity, precision_digits=4)
+            total_delivered_qty = float_round(delivery_order.line_ids[0].qty_delivered, precision_digits=4)
+
+            if total_ordered_qty < (total_delivered_qty + total_scheduled_qty):
+                message += _('\nSale Order: %s\nUndelivered Qty: %s\nScheduled Qty: %s\n') % (line.sale_order_id.name, line.undelivered_qty, total_scheduled_qty)
+
+        if message:
+            raise ValidationError(_('Scheduled qty cannot be greater than Undelivered Qty.\n') + message)
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):

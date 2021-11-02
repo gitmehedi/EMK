@@ -73,7 +73,6 @@
                                             <field name="ordered_qty"/>
                                             <field name="undelivered_qty"/>
                                             <field name="scheduled_qty"/>
-                                            <field name="unscheduled_qty" invisible="1"/>
                                             <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="remarks"/>
                                             <field name="state" readonly="1"/>
@@ -192,7 +191,6 @@
                     <field name="ordered_qty"/>
                     <field name="undelivered_qty"/>
                     <field name="scheduled_qty" readonly="True"/>
-                    <field name="unscheduled_qty" invisible="1"/>
                     <field name="remarks" readonly="True"/>
                     <field name="state" readonly="True"/>
                 </tree>

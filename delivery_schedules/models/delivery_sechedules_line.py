@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+import odoo.addons.decimal_precision as dp
 
 
 class DeliveryScheduleLine(models.Model):
@@ -14,10 +15,13 @@ class DeliveryScheduleLine(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', required=True, readonly=True,
                                     states={'draft': [('readonly', False)]}, track_visibility='onchange')
     delivery_order_id = fields.Many2one('delivery.order', string='Pending Delivery Order', readonly=True, track_visibility='onchange')
-    ordered_qty = fields.Float(string='Ordered Qty', readonly=True, store=True, compute='_compute_ordered_qty')
-    undelivered_qty = fields.Float(string='Undelivered Qty', compute='_compute_undelivered_qty')
+    ordered_qty = fields.Float(string='Ordered Qty', readonly=True, store=True, compute='_compute_ordered_qty',
+                               digits=dp.get_precision('Product Unit of Measure'))
+    undelivered_qty = fields.Float(string='Undelivered Qty', compute='_compute_undelivered_qty',
+                                   digits=dp.get_precision('Product Unit of Measure'))
     scheduled_qty = fields.Float(string='Scheduled Qty.', readonly=True, track_visibility='onchange',
-                                 states={'draft': [('readonly', False)], 'revision': [('readonly', False)]})
+                                 states={'draft': [('readonly', False)], 'revision': [('readonly', False)]},
+                                 digits=dp.get_precision('Product Unit of Measure'))
     requested_date = fields.Date('Date', default=fields.Datetime.now)
     remarks = fields.Text('Special Instructions', readonly=True, track_visibility='onchange',
                           states={'draft': [('readonly', False)], 'revision': [('readonly', False)]})
@@ -37,8 +41,6 @@ class DeliveryScheduleLine(models.Model):
     # create date.................
     schedule_line_date = fields.Date('Date', default=fields.Datetime.now)
 
-    unscheduled_qty = fields.Float(string='Unscheduled Qty', compute='_compute_unscheduled_qty')
-
     @api.depends('delivery_order_id')
     def _compute_undelivered_qty(self):
         for rec in self:
@@ -53,15 +55,6 @@ class DeliveryScheduleLine(models.Model):
             if lines:
                 rec.ordered_qty = lines[0].quantity
 
-    @api.depends('scheduled_qty')
-    def _compute_unscheduled_qty(self):
-        for rec in self:
-            if rec.delivery_order_id:
-                delivery_order_lines = self.env['delivery.order.line'].search([('parent_id', '=', rec.delivery_order_id.id), ('product_id', '=', rec.product_id.id)])
-                delivery_schedules_lines = self.env['delivery.schedules.line'].search([('delivery_order_id', '=', rec.delivery_order_id.id), ('state', '!=', 'done')])
-                total_scheduled_qty = sum(line.scheduled_qty for line in delivery_schedules_lines)
-                rec.unscheduled_qty = delivery_order_lines[0].quantity - delivery_order_lines[0].qty_delivered - total_scheduled_qty
-
     @api.constrains('scheduled_qty')
     def _check_scheduled_qty(self):
         if self.scheduled_qty > self.undelivered_qty:
@@ -69,15 +62,6 @@ class DeliveryScheduleLine(models.Model):
 
         if self.scheduled_qty <= 0:
             raise ValidationError(_('Schedule quantity has to be strictly positive.'))
-
-        if self.unscheduled_qty < 0:
-            delivery_schedules_lines = self.env['delivery.schedules.line'].search(
-                [('delivery_order_id', '=', self.delivery_order_id.id), ('state', '!=', 'done')])
-            total_scheduled_qty = sum(line.scheduled_qty for line in delivery_schedules_lines)
-
-            raise ValidationError(_('Scheduled qty cannot be greater than Undelivered Qty.\n'
-                                    '\nSale Order: %s\nUndelivered Qty: %s\nScheduled Qty: %s\n') %
-                                  (self.sale_order_id.name, self.undelivered_qty, total_scheduled_qty))
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
