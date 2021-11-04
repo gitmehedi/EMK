@@ -138,8 +138,8 @@ class GBSAccountInvoiceReport(models.Model):
                     account_invoice_line ail
                     JOIN account_invoice ai ON ai.id = ail.invoice_id AND ai.type = 'out_invoice'
                     JOIN res_partner partner ON ai.commercial_partner_id = partner.id
-                    LEFT JOIN product_product pr ON pr.id = ail.product_id
-                    LEFT JOIN product_template pt ON pt.id = pr.product_tmpl_id
+                    LEFT JOIN product_product pr ON pr.id = ail.product_id AND pr.invisible_on_sales_analysis=false
+                    LEFT JOIN product_template pt ON pt.id = pr.product_tmpl_id AND pt.type!='service'
                     LEFT JOIN product_uom u ON u.id = ail.uom_id
                     LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
                     JOIN res_partner_category rpc ON partner.sector_id = rpc.id
