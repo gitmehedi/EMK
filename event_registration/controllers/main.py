@@ -10,6 +10,7 @@ from odoo import fields, http, _
 from odoo.addons.website.models.website import slug
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.addons.opa_utility.models.utility import Utility as utility
 
 
 class WebsiteRegistration(WebsiteEventController):
@@ -39,33 +40,182 @@ class WebsiteRegistration(WebsiteEventController):
 
     @http.route(['/event/event-reservation/register'], type='http', auth="public", website=True)
     def event_reservation(self, **post):
-        # values = {
-        #     'event': event,
-        #     'main_object': event,
-        #     'range': range,
-        #     'registrable': event.sudo()._is_event_registrable()
-        # }
-        values = {}
-        return request.render("event_registration.event_reservation",values)
+        qctx = self.get_signup_context()
 
-    # @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public",
-    #             methods=['POST'], website=True)
-    # def registration_confirm(self, event, **post):
-    #     Attendees = request.env['event.registration']
-    #     registrations = self._process_registration_details(post)
-    #
-    #     for registration in registrations:
-    #         registration['event_id'] = event
-    #         Attendees += Attendees.sudo().create(
-    #             Attendees._prepare_attendee_values(registration))
-    #         if Attendees:
-    #             mail_ins = request.env['event.registration'].sudo()
-    #
-    #             event_reg = {
-    #                 'template': 'event_management.event_confirmation_registration',
-    #                 'email_to': Attendees['email']
-    #             }
-    #
-    #             mail_ins.mailsend(event_reg)
-    #
-    #     return request.render("website_event.registration_complete", {'attendees': Attendees.sudo(), 'event': event})
+        if request.httprequest.method == 'POST' and ('error' not in qctx):
+            try:
+                auth_data = self.post_events(qctx)
+                if auth_data:
+                    try:
+                        return request.render('event_registration.event_reservation_success', {'name': auth_data['event_name']})
+                    except:
+                        return request.render('event_registration.event_reservation_success', {'name': auth_data['event_name']})
+            except (WebsiteRegistration, AssertionError), e:
+                qctx['error'] = _("Could not create a new account.")
+
+        qctx['event_name'] = None if 'event_name' not in qctx else qctx['event_name']
+        qctx['poc_id'] = None if 'poc_id' not in qctx else int(qctx['poc_id'])
+        qctx['poc_type_id'] = None if 'poc_type_id' not in qctx else int(qctx['poc_type_id'])
+        qctx['facilities_ids'] = None if 'facilities_ids' not in qctx else int(qctx['facilities_ids'])
+        qctx['event_type_id'] = None if 'event_type_id' not in qctx else int(qctx['event_type_id'])
+        qctx['space_id'] = 'yes' if 'space_id' not in qctx else qctx['space_id']
+        qctx['seats_available'] = 'limited' if 'seats_available' not in qctx else qctx['seats_available']
+        qctx['total_session'] = None if 'total_session' not in qctx else qctx['total_session']
+        qctx['request_date'] = None if 'request_date' not in qctx else qctx['request_date']
+        qctx['start_date'] = None if 'start_date' not in qctx else qctx['start_date']
+        qctx['end_date'] = None if 'end_date' not in qctx else qctx['end_date']
+        qctx['last_date_reg'] = None if 'last_date_reg' not in qctx else qctx['last_date_reg']
+        qctx['mode_of_payment'] = 'cash' if 'mode_of_payment' not in qctx else qctx['mode_of_payment']
+        qctx['payment_type'] = 'paid' if 'payment_type' not in qctx else qctx['payment_type']
+        qctx['date_of_payment'] = None if 'date_of_payment' not in qctx else qctx['date_of_payment']
+        qctx['proposed_budget'] = None if 'proposed_budget' not in qctx else qctx['proposed_budget']
+        qctx['paid_attendee'] = 'yes' if 'paid_attendee' not in qctx else qctx['paid_attendee']
+        qctx['attendee_number'] = None if 'attendee_number' not in qctx else qctx['attendee_number']
+        qctx['participating_amount'] = None if 'participating_amount' not in qctx else qctx['participating_amount']
+        qctx['target_audience_group'] = 'paid' if 'target_audience_group' not in qctx else qctx['target_audience_group']
+        qctx['target_age'] = None if 'target_age' not in qctx else qctx['target_age']
+        qctx['outreach_plan'] = None if 'outreach_plan' not in qctx else qctx['outreach_plan']
+        qctx['outreach_plan_other'] = None if 'outreach_plan_other' not in qctx else qctx['outreach_plan_other']
+        qctx['snakes_required'] = 'yes' if 'snakes_required' not in qctx else qctx['snakes_required']
+        qctx['description'] = None if 'description' not in qctx else qctx['description'].strip()
+        qctx['rules_regulation'] = None if 'rules_regulation' not in qctx else qctx['rules_regulation'].strip()
+        qctx['notes'] = None if 'notes' not in qctx else qctx['notes'].strip()
+        qctx['purpose_of_event'] = None if 'purpose_of_event' not in qctx else qctx['purpose_of_event'].strip()
+
+        if 'poc_ids' not in qctx:
+            qctx['poc_ids'] = self.generateDropdown('res.partner')
+
+        if 'poc_type_ids' not in qctx:
+            qctx['poc_type_ids'] = self.generateDropdown('event.poc.type')
+
+        if 'facilities' not in qctx:
+            qctx['facilities'] = self.generateDropdown('event.task.type')
+
+        if 'event_type_ids' not in qctx:
+            qctx['event_type_ids'] = self.generateDropdown('event.type')
+
+        if 'space_ids' not in qctx:
+            qctx['space_ids'] = [('yes', 'Yes'), ('no', 'No')]
+
+        if 'seats_available_ids' not in qctx:
+            qctx['seats_available_ids'] = [('limited','Limited'),('unlimited','Unlimited')]
+
+        if 'payment_ids' not in qctx:
+            qctx['payment_ids'] = [('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')]
+
+        if 'payment_type_ids' not in qctx:
+            qctx['payment_type_ids'] = [('paid', 'Paid'), ('free', 'Free')]
+
+        if 'snakes_ids' not in qctx:
+            qctx['snakes_ids'] = [('yes', 'Yes'), ('no', 'No')]
+
+        if 'target_audience_group_ids' not in qctx:
+            qctx['target_audience_group_ids'] = [('yes', 'Yes'), ('no', 'No')]
+
+        if 'paid_attendee_ids' not in qctx:
+            qctx['paid_attendee_ids'] = [('yes', 'Yes'), ('no', 'No')]
+
+        if 'outreach_plan_ids' not in qctx:
+            qctx['outreach_plan_ids'] = [('social_media', 'Social Media Promotions'),
+                                             ('press_coverage', 'Press Coverage'),
+                                             ('designing', 'Designing'),
+                                             ('others', 'Others')]
+
+        return request.render("event_registration.event_reservation", qctx)
+
+    def get_signup_context(self):
+        qctx = request.params.copy()
+        # qcontext.update(self.get_signup_config())
+        qctx['baseurl'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        if qctx.get('token'):
+            try:
+                token_infos = request.env['res.partner'].sudo().signup_retrieve_info(qctx.get('token'))
+                for k, v in token_infos.items():
+                    qctx.setdefault(k, v)
+            except:
+                qctx['error'] = _("Invalid signup token")
+                qctx['invalid_token'] = True
+        return qctx
+
+    def generateDropdown(self, model, status=False):
+        data = []
+        status = [('status', '=', True)] if status else []
+        record = request.env[model].sudo().search(status, order='id ASC')
+        for rec in record:
+            if status:
+                val = '_'.join((rec.name).strip().lower().split())
+                data.append((val, rec.name))
+            else:
+                data.append((rec.id, rec.name))
+        return data
+
+    def post_events(self, values):
+        data, error_fields = {}, []
+        authorized_fields = self.authorized_fields()
+
+        """ Shared helper that creates a res.partner out of a token """
+        for field_name, field_value in values.items():
+            if hasattr(field_value, 'filename'):
+                field_name = field_name.rsplit('[', 1)[0]
+                field_value.field_name = field_name
+            elif field_name in authorized_fields:
+                try:
+                    data[field_name] = field_value
+                except ValueError:
+                    error_fields.append(field_name)
+
+        if len(data) > 0:
+            data['state'] = 'draft'
+
+        assert values.values(), "The form was not properly filled in."
+        # supported_langs = [lang['code'] for lang in request.env['res.lang'].sudo().search_read([], ['code'])]
+        # if request.lang in supported_langs:
+        #     values['lang'] = request.lang
+
+        reserv = request.env['event.reservation'].sudo().post_event_reservation(data, values.get('token'))
+        # if reserv:
+        #     res_id = request.env['res.users'].sudo().search([('email', '=', login)])
+        #     groups = request.env['res.groups'].sudo().search(
+        #         [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
+        #     groups.write({'users': [(6, 0, [res_id.id])]})
+        #     files = request.httprequest.files.getlist('attachment')
+        #     self.upload_attachment(files, res_id.partner_id.id)
+        #
+        # request.env.cr.commit()
+        # return {'name': fullname,
+        #         'email': login,
+        #         'password': password,
+        #         'res_id': res_id.id,
+        #         'member_seq': res_id.partner_id.member_sequence}
+
+    def authorized_fields(self):
+        return (
+            'event_name',
+            'poc_id',
+            'poc_type_id',
+            'facilities_ids',
+            'event_type_id',
+            'space_id',
+            'seats_available',
+            'total_session',
+            'request_date',
+            'start_date',
+            'end_date',
+            'last_date_reg',
+            'mode_of_payment',
+            'payment_type',
+            'date_of_payment',
+            'proposed_budget',
+            'paid_attendee',
+            'attendee_number',
+            'participating_amount',
+            'target_audience_group',
+            'target_age',
+            'outreach_plan',
+            'outreach_plan_other',
+            'snakes_required',
+            'description',
+            'rules_regulation',
+            'notes',
+            'purpose_of_event',
+        )

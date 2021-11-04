@@ -7,14 +7,17 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="act_on_process" string="On Process" type="object" class="oe_highlight"
+                        <button name="send_reservation" string="Send Reservation" type="object" class="oe_highlight"
                                 states="draft"/>
+                        <button name="act_reservation" string="Reserved" type="object" class="oe_highlight"
+                                states="draft"/>
+                        <button name="act_on_process" string="On Process" type="object" class="oe_highlight"
+                                states="reservation"/>
                         <button name="act_confirm" string="Confirm" type="object" class="oe_highlight"
                                 states="on_process"/>
                         <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
-                        <button name="act_cancel" string="Cancel" type="object"
-                                states="draft"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm"/>
+                        <button name="act_cancel" string="Cancel" type="object" states="draft"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,reservation,on_process,confirm"/>
                     </header>
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar"/>

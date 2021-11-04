@@ -1,14 +1,15 @@
 $(function () {
     var dateformat = 'yy-mm-dd'
 
-    $("#birth_date").datepicker({
-        minDate: new Date(1900,1-1,1), maxDate: '-16Y',
+    $("#request_date,#start_date,#end_date,#last_date_reg,#date_of_payment").datepicker({
+        minDate: new Date(1900,1-1,1),
         changeMonth: true,
         changeYear: true,
         yearRange: "-100:-15",
         dateFormat: dateformat
     });
-    $('#birth_date').datepicker("option", "dateFormat", dateformat);
+    $('#request_date,#start_date,#end_date,#last_date_reg,#date_of_payment').datepicker("option", "dateFormat", dateformat);
+
 
     $('#birth_date').change(function(){
      var currDate = $(this).val();
