@@ -21,6 +21,7 @@ class ProductProduct(models.Model):
 
     standard_price = fields.Float(track_visibility='onchange')
     ratio_in_percentage = fields.Float(string='Ratio In Percentage', default=0.0, track_visibility='onchange')
+    invisible_on_sales_analysis = fields.Boolean(string='Invisible On Sales Analysis', default=False)
 
     # @api.constrains('ratio_in_percentage')
     # def _check_ratio_in_percentage(self):
