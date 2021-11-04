@@ -160,17 +160,22 @@ class GBSAccountInvoiceReport(models.Model):
 
     def _where(self):
         date_now = fields.Date.today()
-        date_from = self.subtract_date(date_now, month=2)
+        # date_from = self.subtract_date(date_now, month=2)
         # From date string
-        date_from_str = str(date_from.year) + '-' + str(date_from.month) + '-01'
+        # date_from_str = str(date_from.year) + '-' + str(date_from.month) + '-01'
         date_to = fields.Date.from_string(date_now)
         _, last_day = calendar.monthrange(date_to.year, date_to.month)
         # To date string
         date_to_str = str(date_to.year) + '-' + str(date_to.month) + '-' + str(last_day)
 
+        # where_str = """
+        #        WHERE ai.state in ('open','paid') AND pt.active = true AND ai.date_invoice BETWEEN '%s' and '%s'
+        # """ % (date_from_str, date_to_str)
+
         where_str = """
-               WHERE ai.state in ('open','paid') AND pt.active = true AND ai.date_invoice BETWEEN '%s' and '%s'
-        """ % (date_from_str, date_to_str)
+                       WHERE ai.state in ('open','paid') AND pt.active = true AND ai.date_invoice<='%s'
+                """ % (date_to_str)
+
         return where_str
 
     def _group_by(self):
