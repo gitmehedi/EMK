@@ -106,7 +106,7 @@ class DeliveryScheduleLine(models.Model):
     def create(self, vals):
         if 'delivery_order_id' not in vals:
             delivery_order = self.env['delivery.order'].sudo().search([('sale_order_id', '=', vals['sale_order_id']),
-                                                                       ('state', '=', 'approved')])
+                                                                       ('state', '=', 'approved')], limit=1)
             if not delivery_order:
                 raise Warning(_('There is no pending delivery order.'))
             if not delivery_order.line_ids:
@@ -125,7 +125,7 @@ class DeliveryScheduleLine(models.Model):
     def write(self, vals):
         if 'sale_order_id' in vals:
             delivery_order = self.env['delivery.order'].sudo().search([('sale_order_id', '=', vals['sale_order_id']),
-                                                                       ('state', '=', 'approved')])
+                                                                       ('state', '=', 'approved')], limit=1)
 
             if not delivery_order:
                 raise Warning(_('There is no pending delivery order.'))
