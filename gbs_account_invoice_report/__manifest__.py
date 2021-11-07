@@ -11,7 +11,7 @@ The specific and easy-to-view report of account invoice.This is custom analytic 
     'category': 'Accounting',
     'website': 'www.genweb2.com',
     'author': 'Genweb2 Limited',
-    'depends' : ['account','sale'],
+    'depends' : ['account','sale', 'gbs_product'],
     'data': [
         'security/ir.model.access.csv',
         'report/account_invoice_report_view.xml',
