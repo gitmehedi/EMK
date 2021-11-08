@@ -31,6 +31,15 @@
             <field name="res_model">undelivered.report.wizard</field>
             <field name="view_type">form</field>
 			<field name="view_mode">form</field>
+			<field name="context">{'report_factory': True}</field>
+            <field name="target">new</field>
+        </record>
+
+		<record id="action_undelivered_report_wizard_sale" model="ir.actions.act_window">
+            <field name="name">Undelivered Report</field>
+            <field name="res_model">undelivered.report.wizard</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
@@ -44,7 +53,7 @@
 		<menuitem id="menu_sales_undelivered_report_submenu"
 				  name="Undelivered Report"
 				  parent="delivery_order.delivery_menu"
-				  action="action_undelivered_report_wizard" sequence="7"/>
+				  action="action_undelivered_report_wizard_sale" sequence="7"/>
 
     </data>
 </odoo>
