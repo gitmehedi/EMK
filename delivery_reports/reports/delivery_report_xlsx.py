@@ -134,6 +134,11 @@ class DeliveryReportXLSX(ReportXlsx):
     def generate_xlsx_report(self, workbook, data, obj):
         result_data = self._get_delivery_done(obj)
 
+        # for displaying column dynamically
+        report_for_factory = self.env.context.get('report_factory')
+        delivery_report_factory = self.env.user.company_id.delivery_report_factory
+        show_all_column = False if report_for_factory and delivery_report_factory else True
+
         """XLSX REPORT"""
         # FORMAT
         bold = workbook.add_format({'bold': True, 'size': 10})
@@ -173,7 +178,7 @@ class DeliveryReportXLSX(ReportXlsx):
 
         last_col = 8
 
-        if not self.env.user.company_id.delivery_report_factory:
+        if show_all_column:
             sheet.set_column(9, 9, 10)
             sheet.set_column(10, 10, 10)
             sheet.set_column(11, 11, 18)
@@ -189,7 +194,7 @@ class DeliveryReportXLSX(ReportXlsx):
 
         # Currency rate block
         row = 5
-        if not self.env.user.company_id.delivery_report_factory:
+        if show_all_column:
             for key, val in conversion_rate_dict.items():
                 if key != self.env.user.company_id.currency_id.name:
                     sheet.merge_range(row, 9, row, 11, key + ": " + str(val), bold)
@@ -221,7 +226,7 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.write(row, col + 7, 'Packing Mode', th_cell_center)
         sheet.write(row, col + 8, 'Delivery Qty (MT)', th_cell_center)
 
-        if not self.env.user.company_id.delivery_report_factory:
+        if show_all_column:
             sheet.write(row, col + 9, 'Unit Price', th_cell_center)
             sheet.write(row, col + 10, 'Currency', th_cell_center)
             sheet.write(row, col + 11, 'Amount (BDT)', th_cell_center)
@@ -245,7 +250,7 @@ class DeliveryReportXLSX(ReportXlsx):
                     sheet.write(row, col + 7, rec['packing_mode'], td_cell_center)
                     sheet.write(row, col + 8, rec['delivered_qty'], no_format)
 
-                    if not self.env.user.company_id.delivery_report_factory:
+                    if show_all_column:
                         sheet.write(row, col + 9, rec['price_unit'], no_format)
                         sheet.write(row, col + 10, rec['currency_name'], td_cell_center)
                         sheet.write(row, col + 11, rec['amount'], no_format)
@@ -260,7 +265,7 @@ class DeliveryReportXLSX(ReportXlsx):
             sheet.merge_range(row, col, row, col + 7, 'Sub Total', td_cell_left_bold)
             sheet.write(row, col + 8, sub_total_delivered_qty, total_format)
 
-            if not self.env.user.company_id.delivery_report_factory:
+            if show_all_column:
                 sheet.write(row, col + 9, '', total_format)
                 sheet.write(row, col + 10, '', total_format)
                 sheet.write(row, col + 11, sub_total_amount, total_format)
@@ -269,7 +274,7 @@ class DeliveryReportXLSX(ReportXlsx):
             # END
 
         # GRAND TOTAL
-        if not self.env.user.company_id.delivery_report_factory:
+        if show_all_column:
             sheet.merge_range(row, col, row, col + 10, 'Grand Total', td_cell_left_bold)
             sheet.write(row, col + 11, grand_total_amount, total_format)
         # END

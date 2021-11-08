@@ -95,6 +95,11 @@ class UndeliveredReportXLSX(ReportXlsx):
     def generate_xlsx_report(self, workbook, data, obj):
         result_data = self._get_undelivered_data(obj)
 
+        # for displaying column dynamically
+        report_for_factory = self.env.context.get('report_factory')
+        undelivered_report_factory = self.env.user.company_id.undelivered_report_factory
+        show_all_column = False if report_for_factory and undelivered_report_factory else True
+
         """XLSX REPORT"""
         # FORMAT
         bold = workbook.add_format({'bold': True, 'size': 10})
@@ -133,7 +138,7 @@ class UndeliveredReportXLSX(ReportXlsx):
 
         last_col = 7
 
-        if not self.env.user.company_id.undelivered_report_factory:
+        if show_all_column:
             sheet.set_column(8, 8, 16)
             sheet.set_column(9, 9, 10)
             sheet.set_column(10, 10, 18)
@@ -148,7 +153,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.merge_range(4, 0, 4, last_col, "Undelivered Report", name_format)
 
         row = 5
-        if not self.env.user.company_id.undelivered_report_factory:
+        if show_all_column:
             for key, val in conversion_rate_dict.items():
                 if key != self.env.user.company_id.currency_id.name:
                     sheet.merge_range(row, 8, row, 10, key + ": " + str(val), bold)
@@ -179,7 +184,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.write(row, col + 6, 'Undelivered Qty (MT)', th_cell_center)
         sheet.write(row, col + 7, 'Packing Mode', th_cell_center)
 
-        if not self.env.user.company_id.undelivered_report_factory:
+        if show_all_column:
             sheet.write(row, col + 8, 'Unit Price', th_cell_center)
             sheet.write(row, col + 9, 'Currency', th_cell_center)
             sheet.write(row, col + 10, 'Amount (BDT)', th_cell_center)
@@ -201,7 +206,7 @@ class UndeliveredReportXLSX(ReportXlsx):
                 sheet.write(row, col + 6, rec['undelivered_qty'], no_format)
                 sheet.write(row, col + 7, rec['packing_mode'], td_cell_center)
 
-                if not self.env.user.company_id.undelivered_report_factory:
+                if show_all_column:
                     sheet.write(row, col + 8, rec['price_unit'], no_format)
                     sheet.write(row, col + 9, rec['currency_name'], td_cell_center)
                     sheet.write(row, col + 10, rec['amount'], no_format)
@@ -217,7 +222,7 @@ class UndeliveredReportXLSX(ReportXlsx):
             sheet.write(row, col + 6, sub_total_undelivered_qty, total_format)
             sheet.write(row, col + 7, '', total_format)
 
-            if not self.env.user.company_id.undelivered_report_factory:
+            if show_all_column:
                 sheet.write(row, col + 8, '', total_format)
                 sheet.write(row, col + 9, '', total_format)
                 sheet.write(row, col + 10, sub_total_amount, total_format)
@@ -226,7 +231,7 @@ class UndeliveredReportXLSX(ReportXlsx):
             # END
 
         # GRAND TOTAL
-        if not self.env.user.company_id.undelivered_report_factory:
+        if show_all_column:
             sheet.merge_range(row, col, row, col + 9, 'Grand Total', td_cell_left_bold)
             sheet.write(row, col + 10, grand_total_amount, total_format)
         # END
