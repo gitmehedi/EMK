@@ -170,24 +170,30 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.set_column(6, 6, 18)
         sheet.set_column(7, 7, 18)
         sheet.set_column(8, 8, 16)
-        sheet.set_column(9, 9, 10)
-        sheet.set_column(10, 10, 10)
-        sheet.set_column(11, 11, 18)
+
+        last_col = 8
+
+        if not self.env.user.company_id.delivery_report_factory:
+            sheet.set_column(9, 9, 10)
+            sheet.set_column(10, 10, 10)
+            sheet.set_column(11, 11, 18)
+            last_col = 11
 
         # SHEET HEADER
         conversion_rate_dict = self._get_conversion_rate()
-        sheet.merge_range(0, 0, 0, 11, self.env.user.company_id.name, name_format)
-        sheet.merge_range(1, 0, 1, 11, self.env.user.company_id.street, address_format)
-        sheet.merge_range(2, 0, 2, 11, self.env.user.company_id.street2, address_format)
-        sheet.merge_range(3, 0, 3, 11, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
-        sheet.merge_range(4, 0, 4, 11, "Delivery Report", name_format)
+        sheet.merge_range(0, 0, 0, last_col, self.env.user.company_id.name, name_format)
+        sheet.merge_range(1, 0, 1, last_col, self.env.user.company_id.street, address_format)
+        sheet.merge_range(2, 0, 2, last_col, self.env.user.company_id.street2, address_format)
+        sheet.merge_range(3, 0, 3, last_col, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
+        sheet.merge_range(4, 0, 4, last_col, "Delivery Report", name_format)
 
         # Currency rate block
         row = 5
-        for key, val in conversion_rate_dict.items():
-            if key != self.env.user.company_id.currency_id.name:
-                sheet.merge_range(row, 9, row, 11, key + ": " + str(val), bold)
-                row += 1
+        if not self.env.user.company_id.delivery_report_factory:
+            for key, val in conversion_rate_dict.items():
+                if key != self.env.user.company_id.currency_id.name:
+                    sheet.merge_range(row, 9, row, 11, key + ": " + str(val), bold)
+                    row += 1
 
         # Filter Block
         partner = obj.partner_id.name or 'All'
@@ -197,10 +203,10 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.merge_range(row, 0, row, 2, "Product: " + product, bold)
         row += 1
         sheet.merge_range(row, 0, row, 2, "Product Variant: " + product_variant, bold)
-        sheet.merge_range(row, 9, row, 11, "Customer: " + partner, bold)
+        sheet.merge_range(row, last_col - 2, row, last_col, "Customer: " + partner, bold)
         row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, 9, row, 11, "Date: " + self.get_formatted_date(obj.date_from, "%d-%m-%Y") + " To " + self.get_formatted_date(obj.date_to, "%d-%m-%Y"), bold)
+        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + self.get_formatted_date(obj.date_from, "%d-%m-%Y") + " To " + self.get_formatted_date(obj.date_to, "%d-%m-%Y"), bold)
         row += 1
 
         # TABLE HEADER
@@ -214,15 +220,17 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.write(row, col + 6, 'LC/TT/Sales Contract', th_cell_center)
         sheet.write(row, col + 7, 'Packing Mode', th_cell_center)
         sheet.write(row, col + 8, 'Delivery Qty (MT)', th_cell_center)
-        sheet.write(row, col + 9, 'Unit Price', th_cell_center)
-        sheet.write(row, col + 10, 'Currency', th_cell_center)
-        sheet.write(row, col + 11, 'Amount (BDT)', th_cell_center)
+
+        if not self.env.user.company_id.delivery_report_factory:
+            sheet.write(row, col + 9, 'Unit Price', th_cell_center)
+            sheet.write(row, col + 10, 'Currency', th_cell_center)
+            sheet.write(row, col + 11, 'Amount (BDT)', th_cell_center)
 
         # TABLE BODY
         grand_total_amount = 0.0
         row += 1
         for index, value in result_data.items():
-            sheet.merge_range(row, col, row, col + 11, value['product_name'], td_cell_left_bold)
+            sheet.merge_range(row, col, row, col + last_col, value['product_name'], td_cell_left_bold)
             row += 1
 
             for rec in value['deliveries']:
@@ -236,9 +244,12 @@ class DeliveryReportXLSX(ReportXlsx):
                     sheet.write(row, col + 6, rec['contract_no'], td_cell_left)
                     sheet.write(row, col + 7, rec['packing_mode'], td_cell_center)
                     sheet.write(row, col + 8, rec['delivered_qty'], no_format)
-                    sheet.write(row, col + 9, rec['price_unit'], no_format)
-                    sheet.write(row, col + 10, rec['currency_name'], td_cell_center)
-                    sheet.write(row, col + 11, rec['amount'], no_format)
+
+                    if not self.env.user.company_id.delivery_report_factory:
+                        sheet.write(row, col + 9, rec['price_unit'], no_format)
+                        sheet.write(row, col + 10, rec['currency_name'], td_cell_center)
+                        sheet.write(row, col + 11, rec['amount'], no_format)
+
                     row += 1
 
             # SUB TOTAL
@@ -248,15 +259,19 @@ class DeliveryReportXLSX(ReportXlsx):
 
             sheet.merge_range(row, col, row, col + 7, 'Sub Total', td_cell_left_bold)
             sheet.write(row, col + 8, sub_total_delivered_qty, total_format)
-            sheet.write(row, col + 9, '', total_format)
-            sheet.write(row, col + 10, '', total_format)
-            sheet.write(row, col + 11, sub_total_amount, total_format)
+
+            if not self.env.user.company_id.delivery_report_factory:
+                sheet.write(row, col + 9, '', total_format)
+                sheet.write(row, col + 10, '', total_format)
+                sheet.write(row, col + 11, sub_total_amount, total_format)
+
             row += 1
             # END
 
         # GRAND TOTAL
-        sheet.merge_range(row, col, row, col + 10, 'Grand Total', td_cell_left_bold)
-        sheet.write(row, col + 11, grand_total_amount, total_format)
+        if not self.env.user.company_id.delivery_report_factory:
+            sheet.merge_range(row, col, row, col + 10, 'Grand Total', td_cell_left_bold)
+            sheet.write(row, col + 11, grand_total_amount, total_format)
         # END
 
 
