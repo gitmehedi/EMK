@@ -9,6 +9,18 @@
                 <group string="Delivery Order">
                     <field name="delivery_order_auto_generate" class="oe_inline" widget="radio"/>
                 </group>
+                <group string="Reports">
+                    <label string="Delivery Report For Factory"/>
+                    <div>
+                        <field name="delivery_report_factory" class="oe_inline" />
+                        <label for="delivery_report_factory"/>
+                    </div>
+                    <label string="Undelivered Report For Factory"/>
+                    <div>
+                        <field name="undelivered_report_factory" class="oe_inline" />
+                        <label for="undelivered_report_factory"/>
+                    </div>
+                </group>
             </xpath>
         </field>
     </record>
