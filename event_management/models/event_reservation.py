@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
-import base64
+import base64, random
 from datetime import datetime, timedelta
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+
+
+def random_token():
+    # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
+    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
 
 
 class EventReservation(models.Model):
@@ -18,93 +24,134 @@ class EventReservation(models.Model):
         return employee
 
     name = fields.Char(string='ID', readonly=True, states={'draft': [('readonly', False)]})
-    event_name = fields.Char(string='Event Name',   readonly=True, states={'draft': [('readonly', False)]})
-    poc_id = fields.Many2one('res.partner',   string='PoC Name', domain=[('is_poc', '=', True)],
+    event_name = fields.Char(string='Event Name', readonly=True, states={'draft': [('readonly', False)]})
+    poc_id = fields.Many2one('res.partner', string='PoC Name', domain=[('is_poc', '=', True)],
                              readonly=True, track_visibility='onchange',
-                             states={'draft': [('readonly', False), ('required', False)]})
+                             states={'draft': [('readonly', False)],
+                                     'reservation': [('readonly', False), ('required', True)]})
     contact_number = fields.Char(string="Contact Number", readonly=True, related='poc_id.mobile')
     work_email = fields.Char(string="Email", readonly=True, related='poc_id.email')
     org_id = fields.Many2one('hr.employee', string='Organizer Name', default=get_employee,
-                               track_visibility='onchange', readonly=True,
-                             states={'draft': [('readonly', False), ('required', False)]})
-    event_type_id = fields.Many2one('event.type', string='Event Type',   track_visibility='onchange',
-                                    readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+                             track_visibility='onchange', readonly=True,
+                             states={'draft': [('readonly', False)],
+                                     'reservation': [('readonly', False), ('required', True)]})
+    event_type_id = fields.Many2one('event.type', string='Event Type', track_visibility='onchange', readonly=True,
+                                    states={'draft': [('readonly', False)],
+                                            'reservation': [('readonly', False), ('required', True)]})
     event_id = fields.Many2one('event.event', string='Event', track_visibility='onchange', readonly=True)
-    poc_type_id = fields.Many2one('event.poc.type', string="PoC Type",
-                                  track_visibility='onchange',
-                                  readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+    poc_type_id = fields.Many2one('event.poc.type', string="PoC Type", track_visibility='onchange', readonly=True,
+                                  states={'draft': [('readonly', False)],
+                                          'reservation': [('readonly', False), ('required', True)]})
     pillar_id = fields.Many2one('event.pillar', string='Event Pillar', track_visibility='onchange', readonly=True,
-                                states={'draft': [('readonly', False), ('required', False)]})
-    theme_id = fields.Many2one('event.theme', string='Event Theme', track_visibility='onchange',
-                               readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+                                states={'draft': [('readonly', False)],
+                                        'reservation': [('readonly', False), ('required', True)]})
+    theme_id = fields.Many2one('event.theme', string='Event Theme', track_visibility='onchange', readonly=True,
+                               states={'draft': [('readonly', False)],
+                                       'reservation': [('readonly', False), ('required', True)]})
     facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
-                                        readonly=True,
-                                      states={'draft': [('readonly', False), ('required', False)]})
-    attendee_number = fields.Integer('No. of Attendees',   track_visibility='onchange',
-                                     readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    total_session = fields.Integer('No. of Sessions',   track_visibility='onchange',
-                                   readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    start_date = fields.Datetime(string='Start Date',   track_visibility='onchange',
-                                 readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    end_date = fields.Datetime(string='End Date',   track_visibility='onchange',
-                               readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    last_date_reg = fields.Datetime(string='Last Date of Registration',   track_visibility='onchange',
-                                    readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    request_date = fields.Datetime(string='Requested Date',   track_visibility='onchange',
-                                   default=fields.Datetime.now,
-                                   readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    description = fields.Html('Description', track_visibility='onchange',   sanitize=False,
-                              readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-
-    payment_type = fields.Selection([('paid', 'Paid'), ('free', 'Free')],   default='paid', string='Type',
-                                    readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+                                      readonly=True,
+                                      states={'draft': [('readonly', False)],
+                                              'reservation': [('readonly', False), ('required', True)]})
+    attendee_number = fields.Integer('No. of Attendees', track_visibility='onchange', readonly=True,
+                                     states={'draft': [('readonly', False)],
+                                             'reservation': [('readonly', False), ('required', True)]})
+    total_session = fields.Integer('No. of Sessions', track_visibility='onchange', readonly=True,
+                                   states={'draft': [('readonly', False)],
+                                           'reservation': [('readonly', False), ('required', True)]})
+    start_date = fields.Datetime(string='Start Date', track_visibility='onchange',
+                                 readonly=True,
+                                 states={'draft': [('readonly', False)],
+                                         'reservation': [('readonly', False), ('required', True)]})
+    end_date = fields.Datetime(string='End Date', track_visibility='onchange', readonly=True,
+                               states={'draft': [('readonly', False)],
+                                       'reservation': [('readonly', False), ('required', True)]})
+    last_date_reg = fields.Datetime(string='Last Date of Registration', track_visibility='onchange', readonly=True,
+                                    states={'draft': [('readonly', False)],
+                                            'reservation': [('readonly', False), ('required', True)]})
+    request_date = fields.Datetime(string='Requested Date', track_visibility='onchange',
+                                   default=fields.Datetime.now, readonly=True,
+                                   states={'draft': [('readonly', False)],
+                                           'reservation': [('readonly', False), ('required', True)]})
+    description = fields.Html('Description', track_visibility='onchange', sanitize=False, readonly=True,
+                              states={'draft': [('readonly', False)],
+                                      'reservation': [('readonly', False), ('required', True)]})
+    payment_type = fields.Selection([('paid', 'Paid'), ('free', 'Free')], default='paid', string='Type', readonly=True,
+                                    states={'draft': [('readonly', False)],
+                                            'reservation': [('readonly', False), ('required', True)]})
     mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')],
                                        default='cash', string='Mode of Payment', track_visibility='onchange',
-                                       readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange',
-                               states={'draft': [('readonly', False), ('required', False)]})
+                                       readonly=True,
+                                       states={'draft': [('readonly', False)],
+                                               'reservation': [('readonly', False), ('required', True)]})
+    paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange', readonly=True,
+                               states={'draft': [('readonly', False)],
+                                       'reservation': [('readonly', False), ('required', True)]})
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), track_visibility='onchange',
-                                     readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    approved_budget = fields.Float(string='Approved Budget', digits=(12, 2), track_visibility='onchange',
-                                   readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    proposed_budget = fields.Float(string='Proposed Budget', digits=(12, 2), track_visibility='onchange',
-                                   readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+                                     readonly=True,
+                                     states={'draft': [('readonly', False)],
+                                             'reservation': [('readonly', False), ('required', True)]})
+    approved_budget = fields.Float(string='Approved Budget', digits=(12, 2), track_visibility='onchange', readonly=True,
+                                   states={'draft': [('readonly', False)],
+                                           'reservation': [('readonly', False), ('required', True)]})
+    proposed_budget = fields.Float(string='Proposed Budget', digits=(12, 2), track_visibility='onchange', readonly=True,
+                                   states={'draft': [('readonly', False)],
+                                           'reservation': [('readonly', False), ('required', True)]})
     rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange', sanitize=True,
-                                   readonly=True, states={'draft': [('readonly', False), ('required', False)]})
-    date_of_payment = fields.Date(string="Date for Payment", track_visibility='onchange',
-                                  readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+                                   readonly=True,
+                                   states={'draft': [('readonly', False)],
+                                           'reservation': [('readonly', False), ('required', True)]})
+    date_of_payment = fields.Date(string="Date for Payment", track_visibility='onchange', readonly=True,
+                                  states={'draft': [('readonly', False)],
+                                          'reservation': [('readonly', False), ('required', True)]})
     notes = fields.Html(string="Comments/Notes", track_visibility='onchange', sanitize=False,
-                        readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+                        readonly=True, states={'draft': [('readonly', False)],
+                                               'reservation': [('readonly', False), ('required', True)]})
     purpose_of_event = fields.Html(string="Purpose of Event", track_visibility='onchange', sanitize=False,
-                                   readonly=True, states={'draft': [('readonly', False), ('required', False)]})
+                                   readonly=True,
+                                   states={'draft': [('readonly', False)],
+                                           'reservation': [('readonly', False), ('required', True)]})
     target_audience_group = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
                                              string="Target Audience Group", readonly=True,
-                                             states={'draft': [('readonly', False), ('required', False)]})
-    target_age = fields.Integer(string="Target Age",   readonly=True,
-                                states={'draft': [('readonly', False), ('required', False)]})
+                                             states={'draft': [('readonly', False)],
+                                                     'reservation': [('readonly', False), ('required', True)]})
+    target_age = fields.Integer(string="Target Age", readonly=True, track_visibility='onchange',
+                                states={'draft': [('readonly', False)],
+                                        'reservation': [('readonly', False), ('required', True)]})
     outreach_plan = fields.Selection([('social_media', 'Social Media Promotions'),
                                       ('press_coverage', 'Press Coverage'),
                                       ('designing', 'Designing'),
                                       ('others', 'Others'),
-                                      ], string="Outreach Plan",  readonly=True,
-                                     states={'draft': [('readonly', False), ('required', False)]})
-    outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True,
-                                      states={'draft': [('readonly', False), ('required', False)]})
-    snacks_required = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
+                                      ], track_visibility='onchange', string="Outreach Plan", readonly=True,
+                                     states={'draft': [('readonly', False)],
+                                             'reservation': [('readonly', False), ('required', True)]})
+    outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True, track_visibility='onchange',
+                                      states={'draft': [('readonly', False)],
+                                              'reservation': [('readonly', False), ('required', True)]})
+    snacks_required = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', track_visibility='onchange',
                                        string="Food/Beverage/Snacks?", readonly=True,
-                                       states={'draft': [('readonly', False), ('required', False)]})
-    paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
+                                       states={'draft': [('readonly', False)],
+                                               'reservation': [('readonly', False), ('required', True)]})
+    paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', track_visibility='onchange',
                                      string="Participation Charge", readonly=True,
-                                     states={'draft': [('readonly', False), ('required', False)]})
-    participating_amount = fields.Float(string="Participation Amount", readonly=True,
-                                        states={'draft': [('readonly', False), ('required', False)]})
+                                     states={'draft': [('readonly', False)],
+                                             'reservation': [('readonly', False), ('required', True)]})
+    participating_amount = fields.Float(string="Participation Amount", readonly=True, track_visibility='onchange',
+                                        states={'draft': [('readonly', False)],
+                                                'reservation': [('readonly', False), ('required', True)]})
     space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Need EMK Space?",
-                                readonly=True,  states={'draft': [('readonly', False), ('required', False)]})
-    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
-                                          readonly=True, string='Available Seats', default="limited",
-                                          states={'draft': [('readonly', False), ('required', False)]})
+                                track_visibility='onchange', readonly=True,
+                                states={'draft': [('readonly', False)],
+                                        'reservation': [('readonly', False), ('required', True)]})
+    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], default="limited",
+                                          track_visibility='onchange', readonly=True, string='Available Seats',
+                                          states={'draft': [('readonly', False)],
+                                                  'reservation': [('readonly', False), ('required', True)]})
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
-                                 states={'draft': [('readonly', False), ('required', False)]})
+                                 states={'draft': [('readonly', False)],
+                                         'reservation': [('readonly', False), ('required', True)]})
+
+    reserv_token = fields.Char(copy=False)
+    reserv_url = fields.Char(string='Reservation URL', track_visibility='onchange', )
 
     state = fields.Selection(
         [('draft', 'Draft'), ('reservation', 'Reservation'), ('on_process', 'On Process'),
@@ -161,43 +208,31 @@ class EventReservation(models.Model):
 
     @api.one
     def send_reservation(self):
-        if self.state == 'reservation':
+        if self.state == 'draft':
             """ create signup token for each user, and send their signup url by email """
-            # prepare reset password signup
-            create_mode = bool(self.env.context.get('create_user'))
+            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+            url = "/event/event-reservation/register"
+            token = random_token()
+            reserv_url = '{0}{1}?token={2}'.format(base_url, url, token)
 
-            # no time limit for initial invitation, only for reset password
-            expiration = False if create_mode else now(days=+1)
+            # if reserv_url:
+            #     data = {'reserv_url': reserv_url,'name': self.poc_id.name}
+            #
+            #     send_mail = {
+            #         'template': 'event_registration.event_reservation_email',
+            #         'email_to': self.poc_id.email,
+            #         'context': data,
+            #     }
+            #
+            #     try:
+            #         self.env['res.partner'].sudo().mailsend(send_mail)
+            #     except:
+            #         pass
 
-            self.mapped('partner_id').signup_prepare(signup_type="reset", expiration=expiration)
-
-            # send email to users with their signup url
-            template = False
-            if create_mode:
-                try:
-                    template = self.env.ref('auth_signup.set_password_email', raise_if_not_found=False)
-                except ValueError:
-                    pass
-            if not template:
-                template = self.env.ref('auth_signup.reset_password_email')
-            assert template._name == 'mail.template'
-
-            template_values = {
-                'email_to': '${object.email|safe}',
-                'email_cc': False,
-                'auto_delete': True,
-                'partner_to': False,
-                'scheduled_date': False,
-            }
-            template.write(template_values)
-
-            for user in self:
-                if not user.email:
-                    raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
-                with self.env.cr.savepoint():
-                    template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
-                _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
-            self.state = 'draft'
+            self.write({
+                'reserv_token': token,
+                'reserv_url': reserv_url,
+            })
 
     @api.one
     def act_draft(self):
@@ -360,8 +395,11 @@ class EventReservation(models.Model):
                 create_invoice(ser, vals)
 
     @api.model
-    def post_event_reservation(self, values, token=None):
-        self.env['event.reservation'].create(values)
+    def post_event_reservation(self, vals, token=None):
+        reserv = self.search([('id', '=', vals['id']), ('reserv_token', '=', vals['token'])])
+        if reserv:
+            reserv.write(vals)
+            return True
 
         # if token:
         #     # signup with a token: find the corresponding partner id

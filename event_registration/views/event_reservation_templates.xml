@@ -5,6 +5,7 @@
             <script type="text/javascript" src="/event_registration/static/src/js/utils.js"></script>
             <script type="text/javascript" src="/event_registration/static/src/js/custom.js"></script>
             <link rel="stylesheet" href="/event_registration/static/src/css/style.css"/>
+
         </xpath>
     </template>
 
@@ -15,11 +16,11 @@
                     <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
                           method="post" t-if="not message" data-toggle="validator2" id="event-reservation">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <!--                        <script type="text/javascript">-->
-                        <!--                            var config = {-->
-                        <!--                            baseurl: "<t t-esc="baseurl"/>",-->
-                        <!--                            };-->
-                        <!--                        </script>-->
+                        <script type="text/javascript">
+                            var config = {
+                            baseurl: "<t t-esc="baseurl"/>",
+                            };
+                        </script>
                         <input type="hidden" name="redirect" t-att-value="redirect"/>
                         <input type="hidden" name="token" t-att-value="token"/>
                         <h2 class="panel-title text-center">Event Reservation</h2>
@@ -43,21 +44,6 @@
                                     <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
-                                                <label for="poc_id" class="control-label">PoC Name</label>
-                                                <select class="form-control input-sm reqfield" name="poc_id" id="poc_id"
-                                                        required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="poc_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if poc_id==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
                                                 <label for="poc_type_id" class="control-label">PoC Type</label>
                                                 <select class="form-control input-sm reqfield" name="poc_type_id"
                                                         id="poc_type_id" required="required">
@@ -75,18 +61,19 @@
                                             <div class="form-group form-field">
                                                 <label for="facilities_ids" class="control-label">Facilities Requested
                                                 </label>
-                                                <select class="form-control input-sm reqfield" name="facilities_ids"
-                                                        id="facilities_ids" required="required">
-                                                    <option value="">--Please Select--</option>
+                                                <div class="mar-btm required">
                                                     <t t-foreach="facilities" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if facilities_ids==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
+                                                        <input type="checkbox"
+                                                               name="facilities_ids"
+                                                               t-att-value="label_value[0]"
+                                                               t-att-checked="'checked' if label_value[0] in facilities_ids else None"/>
+                                                        <t t-esc="label_value[1]"/>
+
                                                     </t>
-                                                </select>
+                                                </div>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-12">
@@ -393,7 +380,9 @@
                                                 </label>
                                                 <textarea type="textarea" name="description" id="description" rows="4"
                                                           class="form-control input-sm reqfield"
-                                                          required="required"><t t-esc="description"/></textarea>
+                                                          required="required">
+                                                    <t t-esc="description"/>
+                                                </textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -404,7 +393,9 @@
                                                 <textarea type="textarea" name="rules_regulation"
                                                           t-att-value="rules_regulation" id="rules_regulation" rows="4"
                                                           class="form-control input-sm reqfield"
-                                                          required="required"><t t-esc="rules_regulation"/></textarea>
+                                                          required="required">
+                                                    <t t-esc="rules_regulation"/>
+                                                </textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -413,7 +404,9 @@
                                                 <textarea type="textarea" name="notes" t-att-value="notes"
                                                           id="notes" rows="4"
                                                           class="form-control input-sm reqfield"
-                                                          required="required"><t t-esc="notes"/></textarea>
+                                                          required="required">
+                                                    <t t-esc="notes"/>
+                                                </textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -422,7 +415,9 @@
                                                 </label>
                                                 <textarea type="textarea" name="purpose_of_event" rows="4"
                                                           required="required" id="purpose_of_event"
-                                                          class="form-control input-sm reqfield"><t t-esc="purpose_of_event"/></textarea>
+                                                          class="form-control input-sm reqfield">
+                                                    <t t-esc="purpose_of_event"/>
+                                                </textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -447,11 +442,22 @@
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
                         <div>
-                            <strong>
-                                <t t-esc="name"/>
-                            </strong>
-                            , your request has been submitted successfully. Check email for
+                            Your request has been submitted successfully. Check email for
                             further processing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="event_reservation_expire" name="Event Reservation Success">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Thank you!</h1>
+                        <div>
+                            Session has expire, please contact with administrator
                         </div>
                     </div>
                 </div>

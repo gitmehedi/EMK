@@ -41,20 +41,33 @@ class WebsiteRegistration(WebsiteEventController):
     @http.route(['/event/event-reservation/register'], type='http', auth="public", website=True)
     def event_reservation(self, **post):
         qctx = self.get_signup_context()
+        token = request.params.get('token')
+        if token:
+            event = request.env['event.reservation'].sudo().search(
+                [('reserv_token', '=', token), ('state', '=', 'draft')])
+            if event:
+                qctx['id'] = event.id
+                qctx['event_name'] = event.event_name
+                qctx['poc_id'] = event.poc_id.id
+                qctx['org_id'] = event.org_id.id
+                qctx['token'] = token
+            if not event:
+                return request.render('event_registration.event_reservation_expire')
+        else:
+            return request.render('event_registration.event_reservation_expire')
 
         if request.httprequest.method == 'POST' and ('error' not in qctx):
             try:
                 auth_data = self.post_events(qctx)
                 if auth_data:
                     try:
-                        return request.render('event_registration.event_reservation_success', {'name': auth_data['event_name']})
+                        return request.render('event_registration.event_reservation_success')
                     except:
-                        return request.render('event_registration.event_reservation_success', {'name': auth_data['event_name']})
+                        return request.render('event_registration.event_reservation_success')
             except (WebsiteRegistration, AssertionError), e:
                 qctx['error'] = _("Could not create a new account.")
 
         qctx['event_name'] = None if 'event_name' not in qctx else qctx['event_name']
-        qctx['poc_id'] = None if 'poc_id' not in qctx else int(qctx['poc_id'])
         qctx['poc_type_id'] = None if 'poc_type_id' not in qctx else int(qctx['poc_type_id'])
         qctx['facilities_ids'] = None if 'facilities_ids' not in qctx else int(qctx['facilities_ids'])
         qctx['event_type_id'] = None if 'event_type_id' not in qctx else int(qctx['event_type_id'])
@@ -82,6 +95,12 @@ class WebsiteRegistration(WebsiteEventController):
         qctx['notes'] = None if 'notes' not in qctx else qctx['notes'].strip()
         qctx['purpose_of_event'] = None if 'purpose_of_event' not in qctx else qctx['purpose_of_event'].strip()
 
+        if 'facilities_ids' not in qctx:
+            qctx['facilities_ids'] = []
+        else:
+            qctx['facilities_ids'] = [int(val) for val in
+                                               request.httprequest.form.getlist('facilities_ids')]
+
         if 'poc_ids' not in qctx:
             qctx['poc_ids'] = self.generateDropdown('res.partner')
 
@@ -98,7 +117,7 @@ class WebsiteRegistration(WebsiteEventController):
             qctx['space_ids'] = [('yes', 'Yes'), ('no', 'No')]
 
         if 'seats_available_ids' not in qctx:
-            qctx['seats_available_ids'] = [('limited','Limited'),('unlimited','Unlimited')]
+            qctx['seats_available_ids'] = [('limited', 'Limited'), ('unlimited', 'Unlimited')]
 
         if 'payment_ids' not in qctx:
             qctx['payment_ids'] = [('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')]
@@ -117,24 +136,15 @@ class WebsiteRegistration(WebsiteEventController):
 
         if 'outreach_plan_ids' not in qctx:
             qctx['outreach_plan_ids'] = [('social_media', 'Social Media Promotions'),
-                                             ('press_coverage', 'Press Coverage'),
-                                             ('designing', 'Designing'),
-                                             ('others', 'Others')]
+                                         ('press_coverage', 'Press Coverage'),
+                                         ('designing', 'Designing'),
+                                         ('others', 'Others')]
 
         return request.render("event_registration.event_reservation", qctx)
 
     def get_signup_context(self):
         qctx = request.params.copy()
-        # qcontext.update(self.get_signup_config())
         qctx['baseurl'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        if qctx.get('token'):
-            try:
-                token_infos = request.env['res.partner'].sudo().signup_retrieve_info(qctx.get('token'))
-                for k, v in token_infos.items():
-                    qctx.setdefault(k, v)
-            except:
-                qctx['error'] = _("Invalid signup token")
-                qctx['invalid_token'] = True
         return qctx
 
     def generateDropdown(self, model, status=False):
@@ -165,31 +175,20 @@ class WebsiteRegistration(WebsiteEventController):
                     error_fields.append(field_name)
 
         if len(data) > 0:
-            data['state'] = 'draft'
+            data['state'] = 'reservation'
+            vals = [int(val) for val in request.httprequest.form.getlist('facilities_ids')]
+            data['facilities_ids'] = [(6, 0, vals)]
 
         assert values.values(), "The form was not properly filled in."
-        # supported_langs = [lang['code'] for lang in request.env['res.lang'].sudo().search_read([], ['code'])]
-        # if request.lang in supported_langs:
-        #     values['lang'] = request.lang
 
-        reserv = request.env['event.reservation'].sudo().post_event_reservation(data, values.get('token'))
-        # if reserv:
-        #     res_id = request.env['res.users'].sudo().search([('email', '=', login)])
-        #     groups = request.env['res.groups'].sudo().search(
-        #         [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
-        #     groups.write({'users': [(6, 0, [res_id.id])]})
-        #     files = request.httprequest.files.getlist('attachment')
-        #     self.upload_attachment(files, res_id.partner_id.id)
-        #
-        # request.env.cr.commit()
-        # return {'name': fullname,
-        #         'email': login,
-        #         'password': password,
-        #         'res_id': res_id.id,
-        #         'member_seq': res_id.partner_id.member_sequence}
+        return request.env['event.reservation'].sudo().post_event_reservation(data, values.get('token'))
 
     def authorized_fields(self):
         return (
+            'id',
+            'token',
+            'org_id',
+            'event_name',
             'event_name',
             'poc_id',
             'poc_type_id',

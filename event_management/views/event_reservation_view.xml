@@ -120,7 +120,7 @@
             <field name="model">event.reservation</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="state in ['draft','on_process','confirm']"
-                      colors="orange:state=='draft';green:state=='on_process';grey:state=='confirm';salmon:state=='cancel';silver:state=='done';">
+                      colors="orange:state=='draft';green:state=='reservation';blue:state=='on_process';grey:state=='confirm';salmon:state=='cancel';silver:state=='done';">
                     <field name="name"/>
                     <field name="event_name"/>
                     <field name="poc_id"/>
