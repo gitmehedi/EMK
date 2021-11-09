@@ -82,6 +82,9 @@ class AmendmentAgreementWizard(models.TransientModel):
         if self.credit_sub_operating_unit_id != rent.credit_sub_operating_unit_id:
             message += '\n' + u'\u2022' + ' Credit Sequence: ' + str(self.credit_sub_operating_unit_id.name)
             history['credit_sub_operating_unit_id'] = self.credit_sub_operating_unit_id.id
+        if self.credit_operating_unit_id != rent.credit_operating_unit_id:
+            message += '\n' + u'\u2022' + ' Credit Branch: ' + str(self.credit_operating_unit_id.name)
+            history['credit_operating_unit_id'] = self.credit_operating_unit_id.id
         if self.additional_service_value != rent.additional_service_value:
             message += '\n' + u'\u2022' + ' Ad. Service Value: ' + str(self.additional_service_value)
             history['additional_service_value'] = self.additional_service_value
