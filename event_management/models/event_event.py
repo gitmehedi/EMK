@@ -26,7 +26,7 @@ class EventEvent(models.Model):
                                     readonly=True, states={'draft': [('readonly', False)]})
     request_date = fields.Datetime(string='Request Date', required=True, track_visibility='onchange',
                                    readonly=True, states={'draft': [('readonly', False)]})
-    facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
+    facilities_ids = fields.Many2many('event.service.type', string="Facilities Requested", track_visibility='onchange',
                                       required=True, readonly=True, states={'draft': [('readonly', False)]})
     total_seat_available = fields.Integer(string="Total Seat Available", compute='compute_total_seat')
     event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=False,

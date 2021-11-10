@@ -48,7 +48,7 @@ class EventReservation(models.Model):
     theme_id = fields.Many2one('event.theme', string='Event Theme', track_visibility='onchange', readonly=True,
                                states={'draft': [('readonly', False)],
                                        'reservation': [('readonly', False), ('required', True)]})
-    facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
+    facilities_ids = fields.Many2many('event.service.type', string="Facilities Requested", track_visibility='onchange',
                                       readonly=True,
                                       states={'draft': [('readonly', False)],
                                               'reservation': [('readonly', False), ('required', True)]})

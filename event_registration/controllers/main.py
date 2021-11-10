@@ -108,7 +108,7 @@ class WebsiteRegistration(WebsiteEventController):
             qctx['poc_type_ids'] = self.generateDropdown('event.poc.type')
 
         if 'facilities' not in qctx:
-            qctx['facilities'] = self.generateDropdown('event.task.type')
+            qctx['facilities'] = self.generateDropdown('event.service.type')
 
         if 'event_type_ids' not in qctx:
             qctx['event_type_ids'] = self.generateDropdown('event.type')
