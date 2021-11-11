@@ -15,7 +15,7 @@
                     <field name="partner_id" string="Vendor"/>
                     <field name="area"/>
                     <field name="rate"/>
-                    <field name="service_value"/>
+                    <field name="service_value" sum="service_value"/>
                     <field name="total_advance_amount" sum="total_advance_amount" string="T. Apprvd. Advance"/>
                     <field name="adjusted_amount" sum="adjusted_amount" string="Adj. Amount"/>
                     <field name="outstanding_amount" sum="outstanding_amount" string="Outstnd. Amount"/>
@@ -140,8 +140,6 @@
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="operating_unit_id"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-
-
                             </group>
                             <group name="right" string="Current Status">
                                 <field name="adjusted_amount" readonly="1" widget="monetary"

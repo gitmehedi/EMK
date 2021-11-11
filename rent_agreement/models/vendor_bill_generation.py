@@ -15,7 +15,7 @@ class VendorBillGeneration(models.Model):
         ('yearly', "Yearly")], string="Billing Period", required=True,
         track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     billing_date = fields.Date('Billing Date', readonly=True, states={'draft': [('readonly', False)]},
-                               default=lambda self:self.env.user.company_id.batch_date)
+                               default=lambda self: self.env.user.company_id.batch_date)
     period_id = fields.Many2one('date.range', string='Period', track_visibility='onchange', required=True,
                                 readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([
@@ -33,6 +33,16 @@ class VendorBillGeneration(models.Model):
     bill_validate_button_visible = fields.Boolean('Bill Validation Button Visible', default=False)
     period_id_domain_ids = fields.Many2many('date.range', compute="compute_period_id_domain_ids", readonly=True,
                                             store=False)
+    amount_total = fields.Float(string="Total Amount", compute="computer_rent_bill_values")
+    amount_tds = fields.Float(string="TDS Payable", compute="computer_rent_bill_values")
+    amount_vat_payable = fields.Float(string="VAT Payable", compute="computer_rent_bill_values")
+
+    def computer_rent_bill_values(self):
+        for rec in self:
+            rec.amount_total = sum([line.invoice_id.amount_total for line in rec.line_ids if line.invoice_id])
+            rec.amount_tds = sum([line.invoice_id.amount_tds for line in rec.line_ids if line.invoice_id])
+            rec.amount_vat_payable = sum(
+                [line.invoice_id.amount_vat_payable for line in rec.line_ids if line.invoice_id])
 
     @api.onchange('billing_period')
     def _onchange_billing_period(self):
