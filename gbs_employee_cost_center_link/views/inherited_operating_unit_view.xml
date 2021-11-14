@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="operating_unit_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.operating.unit.form</field>
+            <field name="model">operating.unit</field>
+            <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+
+                    <field name="cost_center_required"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="operating_unit_tree_inherit" model="ir.ui.view">
+            <field name="name">inherited.operating.unit.tree</field>
+            <field name="model">operating.unit</field>
+            <field name="inherit_id" ref="operating_unit.view_operating_unit_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="cost_center_required"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

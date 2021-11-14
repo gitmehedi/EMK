@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _
 
-class HrContract(models.Model):
 
+class HrContract(models.Model):
     _inherit = 'hr.employee'
 
     mob_bill_unlimited = fields.Boolean('Unlimited')
@@ -9,7 +9,7 @@ class HrContract(models.Model):
                                       help='The rate of the currency to the currency of rate 1.')
 
     """ All relations fields """
-    mobile_bill_line_ids =fields.One2many('hr.employee.mobile.bill.line','employee_id',"Limits")
+    mobile_bill_line_ids = fields.One2many('hr.employee.mobile.bill.line', 'employee_id', "Limits")
 
     @api.multi
     def _compute_current_limit(self):

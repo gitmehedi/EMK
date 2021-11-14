@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//group[@name='active_group']" position="after">
-                        <group string="Attendance Configuration">
+                        <group string="Attendance Configuration" name="attendance_configuration">
+
                             <field name="device_employee_acc"/>
                             <field name="is_monitor_attendance"/>
                             <field name="is_executive"/>
@@ -17,6 +18,6 @@
                 </data>
             </field>
         </record>
-        
+
     </data>
 </openerp>

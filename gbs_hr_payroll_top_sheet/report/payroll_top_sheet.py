@@ -46,7 +46,6 @@ class PayrollReportPivotal(models.AbstractModel):
 
         bnet = 0
         net = 0
-
         for slip in top_sheet.slip_ids:
             rec = record[slip.employee_id.department_id.name]
             rec['count'] = rec['count'] + 1
@@ -70,24 +69,29 @@ class PayrollReportPivotal(models.AbstractModel):
         }
 
         bank_list = []
-        payroll_advice = self.env['hr.payroll.advice'].search([('name','=', top_sheet.name)])
+        payroll_advice = self.env['hr.payroll.advice'].search([('name', '=', top_sheet.name)])
         for i in payroll_advice:
             vals = {}
             vals['bank_name'] = i.bank_id.name
             vals['bank_acc_id'] = i.bank_acc_id.acc_number
             bysal = 0.0
             for line in i.line_ids:
-                bysal = bysal+line.bysal
-            vals['bysal'] =  formatLang(self.env,(math.ceil(bysal)))
+                bysal = bysal + line.bysal
+            vals['bysal'] = formatLang(self.env, (math.ceil(bysal)))
             bank_list.append(vals)
 
+        employee_total = 0
+        for key, value in record.items():
+            employee_total = employee_total + value['count']
 
+        print('total', total)
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'formatLang': self.formatDigits,
             'header': header,
             'data': data,
+            'employee_total': employee_total,
             'record': record,
             'total': total,
             'rules': rule_list,

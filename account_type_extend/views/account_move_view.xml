@@ -19,6 +19,10 @@
             <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='operating_unit_id']" position="attributes">
                 <attribute name="attrs">{'required': [('operating_unit_required', '=', True)]}</attribute>
             </xpath>
+            <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='cost_center_id']" position="replace">
+                <field name="cost_center_required_on_journal" invisible="1"/>
+                <field name="cost_center_id" attrs="{'required': [('cost_center_required_on_journal', '=', True)]}"/>
+            </xpath>
         </field>
     </record>
 

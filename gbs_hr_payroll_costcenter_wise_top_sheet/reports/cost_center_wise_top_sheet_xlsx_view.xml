@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_cost_center_wise_top_sheet_xlsx" model="ir.actions.report.xml">
+            <field name="name">Cost Center Wise Top Sheet</field>
+            <field name="model">cost.center.top.sheet.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">gbs_hr_payroll_costcenter_wise_top_sheet.cost_center_wise_top_sheet_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>

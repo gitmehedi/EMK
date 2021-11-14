@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_employee_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='attendance_configuration']" position="after">
+                    <group string="Accounts Information">
+                        <field name="cost_center_required" groups="base.group_no_one"/>
+                        <field name="cost_center_id" attrs="{'required': [('cost_center_required','=', True)]}"
+                               domain="[('company_id', '=', company_id)]"
+                               options="{'no_create': True, 'no_create_edit':True}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -16,6 +16,9 @@
 					<group>
 						<button string="Monthly Cash Salary" name="process_cash_salary_print" type="object" class="oe_highlight"/>
 					</group>
+						<group>
+						<button string="Cost Center Wise Top Sheet" name="process_cost_center_wise_top_sheet" type="object" class="oe_highlight"/>
+					</group>
 					<group>
 						<button string="Monthly Loan Deduction" name="process_loan_deduction_print" type="object" class="oe_highlight"/>
 					</group>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_department_account_map,access.department.account.map,model_department_account_map,,1,0,0,0
+access_hr_payslip_run_create_provision,access.hr.payslip.run.create.provision,model_hr_payslip_run_create_provision,,1,0,0,0

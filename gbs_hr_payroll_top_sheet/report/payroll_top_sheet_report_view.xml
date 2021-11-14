@@ -46,8 +46,11 @@
                                         </tr>
                                     </t>
                                     <tr style="page-break-inside: avoid">
-                                        <td colspan="2">
+                                        <td>
                                             <strong class="text-nowrap">Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong t-esc="employee_total"></strong>
                                         </td>
                                         <t t-foreach="total" t-as="t">
                                             <td class="text-right">
@@ -63,7 +66,8 @@
                             <span t-esc="inword['bnet']"></span>
                             (<span t-esc="inword['bnet_word']"/>)
                             <t t-foreach="bank_list" t-as="bank">
-                                <p style="margin-left:80px;"><b><span t-esc="bank['bank_name']"/></b>(<span t-esc="bank['bank_acc_id']"/>) : <span t-esc="bank['bysal']"/></p>
+                                <p style="margin-left:80px;"><b><span t-esc="bank['bank_name']"/></b>(<span
+                                        t-esc="bank['bank_acc_id']"/>) : <span t-esc="bank['bysal']"/></p>
                             </t>
                         </h5>
                         <h5>
@@ -98,7 +102,7 @@
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll_top_sheet.report_top_sheet"
                 name="gbs_hr_payroll_top_sheet.report_top_sheet"
-                menu = "False"
+                menu="False"
                 paperformat="report_layout.paperformat_backend_landscape"/>
 
     </data>

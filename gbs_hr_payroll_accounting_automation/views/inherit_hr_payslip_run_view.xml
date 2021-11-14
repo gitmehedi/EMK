@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_payslip_run_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.hr_payslip_run.form</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+                <!--                <xpath expr="//sheet/h1" position="after">-->
+
+                <!--                </xpath>-->
+
+                <xpath expr="//label[@for='name']" position="after">
+
+                    <div class="oe_button_box" name="button_box">
+
+                        <button class="oe_stat_button" type="object" name="get_journal_entry"
+                                icon="fa-book">
+                            <field string="Journal Entry" name="journal_entry" widget="statinfo"/>
+                        </button>
+                    </div>
+
+
+                </xpath>
+
+
+                <xpath expr="//header/button[@name='draft_payslip_run']" position="after">
+                    <!--                    <button string="GL Automapper" type="action" attrs="{'invisible':[('state','=','draft')]}"-->
+                    <!--                            groups="gbs_hr_payroll_accounting_automation.group_payroll_accounting"-->
+                    <!--                            name="%(gbs_hr_payroll_accounting_automation.action_payroll_provision_wizard)d"/>-->
+
+                    <button name="create_provision" string="Create Provision"
+                            attrs="{'invisible':['|',('state','=','draft'),('journal_entry','>',0)]}"
+                            groups="gbs_hr_payroll_accounting_automation.group_payroll_accounting"
+                            type="object" style="background-color: #5892D7;color:white;"/>
+
+
+                </xpath>
+
+                <!--                <xpath expr="//label[@string='Period']" position="before">-->
+                <!--                    <field name="operating_unit_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>-->
+
+                <!--                </xpath>-->
+
+                <xpath expr="//field[@name='send_email']" position="before">
+                    <field name="operating_unit_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                </xpath>
+
+
+            </field>
+        </record>
+    </data>
+</odoo>
