@@ -38,6 +38,8 @@ class AmendmentAgreementWizard(models.TransientModel):
     additional_service_value = fields.Float(string="Ad. Service Value",
                                             default=lambda self: self._def_val('additional_service_value'))
     service_value = fields.Float(default=lambda self: self._def_val('service_value'))
+    billing_period = fields.Selection([('monthly', "Monthly"), ('yearly', "Yearly")],
+                                      string="Billing Period", default=lambda self: self._def_val('billing_period'))
 
     @api.multi
     def generate(self):
@@ -61,9 +63,12 @@ class AmendmentAgreementWizard(models.TransientModel):
         if self.advance_amount_add > 0:
             message += '\n' + u'\u2022' + ' Advance Amount Addition: ' + str(self.advance_amount_add)
             history['advance_amount_add'] = self.advance_amount_add
-        if self.service_value != rent.service_value:
-            message += '\n' + u'\u2022' + ' Service Value: ' + str(self.service_value)
-            history['service_value'] = self.service_value
+        if self.area != rent.area:
+            message += '\n' + u'\u2022' + ' Area (ft): ' + str(self.area)
+            history['area'] = self.area
+        if self.rate != rent.rate:
+            message += '\n' + u'\u2022' + ' Rate: ' + str(self.rate)
+            history['rate'] = self.rate
         if self.vat_id != rent.vat_id:
             message += '\n' + u'\u2022' + ' VAT: ' + str(self.vat_id.name)
             history['vat_id'] = self.vat_id.id
@@ -88,6 +93,9 @@ class AmendmentAgreementWizard(models.TransientModel):
         if self.additional_service_value != rent.additional_service_value:
             message += '\n' + u'\u2022' + ' Ad. Service Value: ' + str(self.additional_service_value)
             history['additional_service_value'] = self.additional_service_value
+        if self.billing_period != rent.billing_period:
+            message += '\n' + u'\u2022' + ' Billing Period: ' + str(self.billing_period)
+            history['billing_period'] = self.billing_period
 
         active_status = True if self.status == 'active' else False
         if rent.active != active_status:
@@ -95,12 +103,14 @@ class AmendmentAgreementWizard(models.TransientModel):
                 message += '\n' + u'\u2022' + ' Status: Inactive' + u'\u2192' + 'Active'
             else:
                 message += '\n' + u'\u2022' + ' Status: Active' + u'\u2192' + 'Inactive'
+
         rent.message_post(body=message)
+        rent_history = super(AmendmentAgreementWizard, self).generate()
         history['rent_id'] = self._context['active_id']
         history['narration'] = message
         history['active_status'] = active_status
-        self.env['agreement.history'].create(history)
-        rent.write({'is_amendment': True, 'maker_id': self.env.user.id})
+
+        return rent_history.write(history)
 
     @api.multi
     @api.depends('credit_sub_operating_unit_id')

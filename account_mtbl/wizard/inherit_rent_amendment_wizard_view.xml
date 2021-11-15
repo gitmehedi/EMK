@@ -16,6 +16,7 @@
                 </xpath>
                 <xpath expr="//field[@name='advance_amount_add']" position="before">
                     <field name="additional_service_value"/>
+                    <field name="billing_period"/>
                 </xpath>
 
                 <xpath expr="//form/group" position="after">
