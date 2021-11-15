@@ -54,7 +54,7 @@ class AmendmentAgreementWizard(models.TransientModel):
             else:
                 message += '\n' + u'\u2022' + ' Status: Active' + u'\u2192' + 'Inactive'
         rent.message_post(body=message)
-        self.env['agreement.history'].create({
+        history = self.env['agreement.history'].create({
             'end_date': self.end_date,
             'advance_amount_add': self.advance_amount_add,
             'adjustment_value': self.adjustment_value,
@@ -67,6 +67,7 @@ class AmendmentAgreementWizard(models.TransientModel):
             'active_status': active_status
         })
         rent.write({'is_amendment': True, 'maker_id': self.env.user.id})
+        return history
 
     @api.constrains('end_date')
     def check_end_date(self):
