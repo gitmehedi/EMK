@@ -1,12 +1,16 @@
 # Genweb2 Business Solution [GBS]
 Table of Contents
 =================
-* [Application Architecture](#application-architecture)
-   * [Three Tier Server Installation](#three-tier-server-installation)
-      * [Client/Web Server](#client/web-server)
-      * [Application Server](#application-server)
-      * [Database Server](#database-server)
-* [Database Clean Query](#database-clean-query)
+
+- [Genweb2 Business Solution [GBS]](#genweb2-business-solution-gbs)
+- [Table of Contents](#table-of-contents)
+  - [Application Architecture](#application-architecture)
+    - [Three Tier Server Installation:](#three-tier-server-installation)
+      - [1. Client/Web Server:](#1-clientweb-server)
+      - [2. Application Server:](#2-application-server)
+      - [3. Database Server:](#3-database-server)
+  - [Database Clean Query](#database-clean-query)
+
 
 ## Application Architecture
 
@@ -122,7 +126,7 @@ $ systemctl restart restart
 
 **Note:** Check firewall if connection is not available.
 
-### 2. Application Server:
+#### 2. Application Server:
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -146,7 +150,7 @@ $ python2.7 get-pip.py
 ```
 
 
-### 3. Database Server:  
+#### 3. Database Server:  
 
 **Step 1:** Update OS and Install nginx web server
 
@@ -175,7 +179,7 @@ $ sudo systemctl start postgresql-10.service
 $ sudo su - postgres -c "createuser -s odoo" 2> /dev/null || true
 ```
 
-# Database Clean Query
+## Database Clean Query
 ```sql
 -- Delete all Vendor Bills
 delete from account_invoice_line;
