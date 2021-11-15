@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="provision_account_journal" model="account.journal">
-            <field name="name">Salary Provision Journal</field>
+            <field name="name">Salary</field>
             <field name="type">general</field>
             <field name="code">SPJNL</field>
             <field name="sequence">10</field>

@@ -4,7 +4,7 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
 
-    'category': 'payroll',
+    'category': 'Payroll',
     'version': '10.0.1.0.0',
 
     # any module necessary for this one to work correctly

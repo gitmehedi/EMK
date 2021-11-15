@@ -9,4 +9,3 @@ class AccountAccountType(models.Model):
     analytic_account_required = fields.Boolean(string='Analytic Account')
     department_required = fields.Boolean(string='Department')
     cost_center_required = fields.Boolean(string='Cost Center')
-    cost_center_required_on_journal = fields.Boolean(string='Cost Center Is Required On Journal Entry')
