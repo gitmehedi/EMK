@@ -9,6 +9,10 @@ Table of Contents
       - [1. Client/Web Server:](#1-clientweb-server)
       - [2. Application Server:](#2-application-server)
       - [3. Database Server:](#3-database-server)
+  - [Source Repository](#source-repository)
+      - [Base Odoo Source](#base-odoo-source)
+      - [Community Source](#community-source)
+      - [Application Source](#application-source)
   - [Database Clean Query](#database-clean-query)
 
 
@@ -177,6 +181,29 @@ _Configure Postgresql 10 in RedHat 7 and Create user odoo_
 $ sudo systemctl enable postgresql-10.service
 $ sudo systemctl start postgresql-10.service
 $ sudo su - postgres -c "createuser -s odoo" 2> /dev/null || true
+```
+## Source Repository
+
+Source repository divided into 3 categeory depending on source used
+#### Base Odoo Source
+```
+$ git clone -b 10.0 --single-branch https://github.com/odoo/odoo.git 10.0
+```
+#### Community Source
+```
+$ git clone -b oca --single-branch https://github.com/genweb2/gbs.git oca
+$ git clone -b 10.0 --single-branch https://github.com/OCA/account-financial-tools.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/account-invoicing.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/operating-unit.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/partner-contact.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/web.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/reporting-engine.git
+$ git clone -b 10.0 --single-branch https://github.com/OCA/server-tools.git
+
+```
+#### Application Source
+```
+$ git clone -b mtb_live --single-branch https://github.com/genweb2/gbs.git bank
 ```
 
 ## Database Clean Query
