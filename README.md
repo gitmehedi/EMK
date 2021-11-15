@@ -204,6 +204,7 @@ $ git clone -b 10.0 --single-branch https://github.com/OCA/server-tools.git
 #### Application Source
 ```
 $ git clone -b mtb_live --single-branch https://github.com/genweb2/gbs.git bank
+$ git clone -b mtb_gbs_account --single-branch https://github.com/genweb2/gbs.git mtb_gbs_account
 ```
 
 ## Database Clean Query
