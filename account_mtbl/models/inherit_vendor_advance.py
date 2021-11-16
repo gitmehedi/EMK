@@ -176,19 +176,6 @@ class VendorAdvance(models.Model):
             requested = self.history_line_ids.search([('state', '=', 'pending'),
                                                       ('rent_id', '=', self.id)],
                                                      order='id desc', limit=1)
-            # self.write({
-            #     'end_date': requested.end_date,
-            #     'additional_advance_amount': self.additional_advance_amount + requested.advance_amount_add,
-            #     'adjustment_value': requested.adjustment_value,
-            #     'area': requested.area,
-            #     'rate': requested.rate,
-            #     'service_value': requested.service_value,
-            #     'account_id': requested.account_id.id,
-            #     'is_amendment': False,
-            #     'active': requested.active_status,
-            #
-            #     'approver_id': self.env.user.id,
-            # })
             if requested:
                 rec = {}
                 if requested.end_date:
@@ -225,6 +212,8 @@ class VendorAdvance(models.Model):
                     rec['credit_operating_unit_id'] = requested.credit_operating_unit_id.id
                 if requested.additional_service_value:
                     rec['additional_service_value'] = requested.additional_service_value
+                if requested.billing_period:
+                    rec['billing_period'] = requested.billing_period
 
                 self.write(rec)
                 amount = requested.advance_amount_add
@@ -245,3 +234,4 @@ class InheritAgreementHistory(models.Model):
     credit_sub_operating_unit_id = fields.Many2one('sub.operating.unit', string='Credit Sequence')
     credit_operating_unit_id = fields.Many2one('operating.unit', string='Credit Branch')
     additional_service_value = fields.Float(string="Ad. Service Value")
+    billing_period = fields.Selection([('monthly', "Monthly"), ('yearly', "Yearly")])
