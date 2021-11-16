@@ -14,8 +14,8 @@ class HrMobileBill(models.Model):
                                                                        'applied': [('readonly', True)],
                                                                        'approved': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', index=True,
-                                 default=lambda self: self.env.user.company_id)
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+                                 default=lambda self: self.env.user.company_id, required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
     # default=lambda self: self.env['res.users'].operating_unit_default_get(self._uid)
 
     """ All relations fields """

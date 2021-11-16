@@ -17,10 +17,10 @@
         'data/account_journal_data.xml',
         'data/sequence.xml',
         'views/operating_units_new_views.xml',
-        'wizard/hr_payroll_gl_mapper_views.xml',
         'views/inherit_hr_payslip_run_view.xml',
         'views/create_provision_views.xml',
         'wizard/confirmation_wizard.xml',
+        'wizard/success_wizard.xml',
 
 
     ],

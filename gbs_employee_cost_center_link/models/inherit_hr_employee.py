@@ -18,7 +18,7 @@ class InheritedHrEmployee(models.Model):
             else:
                 rec.cost_center_required = False
 
-    cost_center_required = fields.Boolean(compute='compute_cost_center_required', store=True)
+    cost_center_required = fields.Boolean(compute='compute_cost_center_required')
 
     # depends on operating_unit and company
     # cost_center load depending on company

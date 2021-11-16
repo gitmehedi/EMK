@@ -61,11 +61,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
         total_employee_count = 0
         if obj.cost_center_ids:
-
-            # get all rule list for these cost_centers
-
             for cost_center in obj.cost_center_ids:
-                print('*** cost center ***')
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
                 if not payslip_list:
                     continue
@@ -89,9 +85,11 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                             for val in diff:
                                 final_rule_list.append(val)
 
-                final_rule_list = sorted(final_rule_list, key=lambda k: k[0])
+            final_rule_list = list(dict.fromkeys(final_rule_list))
+            final_rule_list = sorted(final_rule_list, key=lambda k: k[0])
+            final_rule_list = self.get_final_rule_list(all_rule_list, final_rule_list)
 
-                final_rule_list = self.get_final_rule_list(all_rule_list, final_rule_list)
+            print('final_rule_list')
 
             for cost_center in obj.cost_center_ids:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
@@ -99,7 +97,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     continue
 
                 header = OrderedDict()
-                # if header_created == 0:
                 header[0] = 'Cost Center'
                 header[1] = 'Department'
                 header[2] = 'Employee'
@@ -107,7 +104,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     print('rec', rec)
                     header[len(header)] = rec[1]
                 for key, value in header.items():
-                    # sheet.set_column(0, 12, 16)
                     sheet.write(0, key, value, header_bold)
                 header_created = header_created + 1
 
@@ -165,9 +161,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                 for name in shared_items:
                     if name in grand_total:
                         del grand_total[name]
-
-                # print('shared items', shared_items)
-                print('total dict', total)
                 total_col = 3
                 for key, value in total.items():
                     sheet.write(row, total_col, value, bg_normal_bordered)
@@ -201,16 +194,15 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                             for val in diff:
                                 final_rule_list.append(val)
 
-                final_rule_list = sorted(final_rule_list, key=lambda k: k[0])
-
-                final_rule_list = self.get_final_rule_list(all_rule_list, final_rule_list)
+            final_rule_list = list(dict.fromkeys(final_rule_list))
+            final_rule_list = sorted(final_rule_list, key=lambda k: k[0])
+            final_rule_list = self.get_final_rule_list(all_rule_list, final_rule_list)
 
             for cost_center in cost_centers:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
                 if not payslip_list:
                     continue
                 header = OrderedDict()
-                # if header_created == 0:
                 header[0] = 'Cost Center'
                 header[1] = 'Department'
                 header[2] = 'Employee'
@@ -285,9 +277,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
-###
-
-
         sheet.write(last_row + 1, 0, 'Total', bg_normal_bordered)
         sheet.write(last_row + 1, 1, ' ', bg_normal_bordered)
         sheet.write(last_row + 1, 2, total_employee_count, bg_normal_bordered)

@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='attendance_configuration']" position="after">
                     <group string="Accounts Information">
-                        <field name="cost_center_required" groups="base.group_no_one"/>
+                        <field name="cost_center_required" groups="base.group_no_one" invisible="True"/>
                         <field name="cost_center_id" attrs="{'required': [('cost_center_required','=', True)]}"
                                domain="[('company_id', '=', company_id)]"
                                options="{'no_create': True, 'no_create_edit':True}"/>

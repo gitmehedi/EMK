@@ -11,13 +11,13 @@
 						<button string="Payslip Summary" name="process_payslip_summary_print" type="object" class="oe_highlight"/>
 					</group>
 					<group>
-						<button string="Top Sheet" name="process_top_sheet_print" type="object" class="oe_highlight"/>
+						<button string="Top Sheet(Department)" name="process_top_sheet_print" type="object" class="oe_highlight"/>
 					</group>
 					<group>
 						<button string="Monthly Cash Salary" name="process_cash_salary_print" type="object" class="oe_highlight"/>
 					</group>
 						<group>
-						<button string="Cost Center Wise Top Sheet" name="process_cost_center_wise_top_sheet" type="object" class="oe_highlight"/>
+						<button string="Top Sheet(Cost Center)" name="process_cost_center_wise_top_sheet" type="object" class="oe_highlight"/>
 					</group>
 					<group>
 						<button string="Monthly Loan Deduction" name="process_loan_deduction_print" type="object" class="oe_highlight"/>

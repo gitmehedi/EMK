@@ -8,9 +8,8 @@
             <field name="arch" type="xml">
                 <form create="false">
                     <header>
-                        <button name="create_provision" class="btn btn-primary" string="Create Provision" type="object"/>
-<!--                        <button name="load_values" class="btn btn-primary" string="Load Values" type="object"/>-->
-
+                        <button name="create_provision" class="btn btn-primary" string="Create Provision"
+                                type="object"/>
                     </header>
                     <sheet>
                         <group>
@@ -47,14 +46,16 @@
                             </group>
                             <group string="Debit Account">
 
-                                <field name="default_debit_account" readonly="True" attrs="{'required': [('debit_account_ids','=', False)]}"
+                                <field name="default_debit_account" readonly="True"
+                                       attrs="{'required': [('debit_account_ids','=', False)]}"
                                        options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                             </group>
 
                         </group>
                         <notebook>
                             <page string="Debit Accounts">
-                                <field name="debit_account_ids" attrs="{'required': [('default_debit_account','=', False)]}" readonly="True">
+                                <field name="debit_account_ids"
+                                       attrs="{'required': [('default_debit_account','=', False)]}" readonly="True">
                                     <tree>
                                         <field name="department_id"
                                                options="{'no_quick_create': True, 'no_create_edit' : True}"/>
@@ -94,8 +95,5 @@
                 </p>
             </field>
         </record>
-
-        <!--        <menuitem name="ModelTitle" id="create_provision_menu" parent="your_root_menu" action="create_provision_act_window"/>-->
-
     </data>
 </odoo>

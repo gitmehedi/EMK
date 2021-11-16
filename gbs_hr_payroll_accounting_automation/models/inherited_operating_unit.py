@@ -15,4 +15,3 @@ class InheritedOperatingUnit(models.Model):
 
     debit_account_ids = fields.One2many('department.account.map', 'operating_unit_id',
                                         string="""Debit GL's""")
-

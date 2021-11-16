@@ -1,4 +1,4 @@
-from odoo import fields, models, api
+from odoo import api, fields, models, _
 
 
 class ConfirmationMessageWizard(models.TransientModel):
@@ -22,8 +22,6 @@ class ConfirmationMessageWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def action_yes(self):
-        print('line_ids', self._context['line_ids'])
-
         vals = {
 
             'name': self._context['name'],
@@ -40,5 +38,21 @@ class ConfirmationMessageWizard(models.TransientModel):
             # Provision above amount against Salary month of July - 2021
         }
         move = self.env['account.move'].create(vals)
+
+        if move:
+            payslip_run_obj = self.env['hr.payslip.run'].browse(self._context['payslip_run_id'])
+            payslip_run_obj.write({'account_move_id': move.id})
+            message_id = self.env['success.wizard'].create({'message': _(
+                "Journal Entry Created Successfully!")
+            })
+            return {
+                'name': _('Success'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'success.wizard',
+                'context': vals,
+                'res_id': message_id.id,
+                'target': 'new'
+            }
 
         return {'type': 'ir.actions.act_window_close'}

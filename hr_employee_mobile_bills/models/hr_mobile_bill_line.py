@@ -10,26 +10,21 @@ class HrEmpMobileBillLine(models.Model):
     bill_amount = fields.Float(string="Bill Amount", required=True,
                                readonly=True, states={'draft': [('readonly', False)]})
     amount = fields.Float(string="Exceed Amount", required=True, readonly=True, states={'draft': [('readonly', False)]})
-    emp_mobile_phone = fields.Char('Mobile Number', required=True, readonly=True,
-                                   states={'draft': [('readonly', False)]})
 
-    """ Relational Fields """
-
+    emp_mobile_phone = fields.Char('Mobile Number', store=True, ondelete='cascade', compute='onchange_employee_mobile',
+                                   required=True, readonly=True)
     parent_id = fields.Many2one(comodel_name='hr.mobile.bill', ondelete='cascade')
 
-    employee_id = fields.Many2one('hr.employee', string="Employee")
+    employee_mobile = fields.Many2one('hr.employee', string="Employee")
 
-    # employee_id = fields.Many2one('hr.employee', string="Employee", store=True, ondelete='cascade',
-    #                               compute='onchange_emp_mobile_phone', readonly=True,
-    #                               states={'draft': [('readonly', False)]})
+    employee_id = fields.Many2one('hr.employee', string="Employee", store=True, ondelete='cascade',
+                                  compute='onchange_emp_mobile_phone',
+                                  states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
     company_id = fields.Many2one('res.company', string='Company')
 
-    device_employee_acc = fields.Char(string="AC No", store=False,readonly=True,
-        compute='_compute_device_employee_acc')
-
-
-    """ All Selection fields """
+    device_employee_acc = fields.Char(string="AC No", store=False, readonly=True,
+                                      compute='_compute_device_employee_acc')
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -43,13 +38,19 @@ class HrEmpMobileBillLine(models.Model):
          'Mobile Number must be unique per bill!'),
     ]
 
-
-    """All function which process data and operation"""
-
     @api.depends('employee_id')
     def _compute_device_employee_acc(self):
         for rec in self:
             rec.device_employee_acc = rec.employee_id.device_employee_acc
+
+    @api.depends('employee_mobile')
+    @api.onchange('employee_mobile')
+    def onchange_employee_mobile(self):
+        for record in self:
+            if record.employee_mobile:
+                record.emp_mobile_phone = record.employee_mobile.mobile_phone
+            else:
+                record.emp_mobile_phone = ''
 
     @api.depends('emp_mobile_phone')
     @api.onchange('emp_mobile_phone', 'bill_amount')

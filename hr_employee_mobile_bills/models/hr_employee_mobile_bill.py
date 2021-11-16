@@ -25,3 +25,34 @@ class HrContract(models.Model):
         limits = dict(self._cr.fetchall())
         for emp in self:
             emp.current_bill_limit = limits.get(emp.id) or 0.0
+
+    @api.multi
+    def name_get(self):
+        display_mobile_dropdown = self.env.context.get('mobile_phone_dropdown')
+        result = []
+        if display_mobile_dropdown:
+            for rec in self:
+                if rec.mobile_phone:
+                    name = rec.mobile_phone
+                    result.append((rec.id, name))
+                else:
+                    result.append((rec.id, ''))
+        else:
+            for rec in self:
+                name = rec.name + ' [' + rec.job_id.name + ']'
+                result.append((rec.id, name))
+        return result
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100):
+        if args is None:
+            args = []
+        display_mobile_dropdown = self.env.context.get('mobile_phone_dropdown')
+        operating_unit_id = self.env.context.get('operating_unit_id')
+        company_id = self.env.context.get('company_id')
+        if display_mobile_dropdown:
+            domain = args + [('mobile_phone', operator, name), ('operating_unit_id', '=', operating_unit_id),
+                             ('company_id', '=', company_id)]
+        else:
+            domain = args + [('name', operator, name)]
+        return super(HrContract, self).search(domain, limit=limit).name_get()

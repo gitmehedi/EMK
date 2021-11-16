@@ -24,25 +24,25 @@
 	                 		<group >
 	                 			<group>
 	                            	<field name="name" />
+	                            </group>
+								<group>
+	                            </group>
+								<group>
 									<field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-
 	                            </group>
 								<group>
 									<field name="operating_unit_id" domain="[('company_id','=',company_id)]" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-
 	                            </group>
 		                        <notebook colspan="4">
 									<page string="Mobile Bills">
 										<field name="line_ids" context="{'default_operating_unit_id': operating_unit_id,'default_company_id': company_id}">
 											<tree string="List" editable="bottom">
+												<field name="employee_mobile" context="{'mobile_phone_dropdown': True,'operating_unit_id': operating_unit_id,'company_id': company_id}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,'always_reload':True}"/>
 												<field  name="emp_mobile_phone" />
-<!--												<field name="employee_id"/>-->
-<!--												<field name="employee_id" domain="[('operating_unit_id','=',operating_unit_id)]"  />-->
-												<field name="employee_id" domain="[('operating_unit_id', '=', operating_unit_id), ('company_id', '=', company_id)]"/>
+												<field name="employee_id" invisible="1"/>
+												<field  name="device_employee_acc" />
 												<field  name="bill_amount" />
 												<field  name="amount" />
-												<field  name="device_employee_acc" />
-
 												<field  name="state" invisible="1"/>
 												<field  name="company_id" invisible="1"/>
 												<field  name="operating_unit_id" invisible="1"/>

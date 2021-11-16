@@ -5,7 +5,7 @@ import operator, math, locale
 from odoo.exceptions import UserError
 
 
-class CreateProvision(models.Model):
+class CreateProvision(models.TransientModel):
     _name = 'hr.payslip.run.create.provision'
     _description = 'Description'
     _rec_name = 'payslip_run_id'
@@ -177,43 +177,29 @@ class CreateProvision(models.Model):
                     rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
 
         department_net = OrderedDict()
-        # cost_centers = self.env['account.cost.center'].sudo().search([])
-
         cost_center_list = []
         for key, value in record.items():
             # check which cost center available under this department
             for slip in top_sheet.slip_ids:
+                department_id = slip.employee_id.department_id.id
                 if slip.employee_id.department_id.name == key:
                     if slip.employee_id.cost_center_id:
                         cost_center_list.append(slip.employee_id.cost_center_id)
 
                     # then add cost center of that employee
-
             cost_center_list = list(dict.fromkeys(cost_center_list))
-            # print('department, cost centers', key, cost_center_list)
-            # get cost center net values under department
+
             department_net[key] = {}
 
-            # department_net[key]['net'] = 0
             for cost_center in cost_center_list:
                 department_net[key][cost_center] = 0
 
-            # sum = 0
-            # for rule_key, rule_value in value['vals'].items():
-            #     sum = sum + rule_value
-            # department_net[key]['net'] = sum
-
-        # (u'H2O2 (E & I)', {'net': 246232.0})
-
         for key, value in department_net.items():
             # a cost center and a department total net value
-
             # get_total_net_value_of_this_cost_center_department
             for cost_center in value:
                 sum = 0
                 for slip in top_sheet.slip_ids:
-                    # print('cost center id 1 ', slip.employee_id.cost_center_id)
-                    # print('cost center id 2 ', cost_center.id)
                     if slip.employee_id.department_id.name == key and slip.employee_id.cost_center_id.id == cost_center.id:
 
                         for line in slip.line_ids:
@@ -223,6 +209,57 @@ class CreateProvision(models.Model):
                 department_net[key][cost_center] = sum
 
         return department_net
+
+    def get_departments(self, top_sheet):
+        departments = []
+        for slip in top_sheet.slip_ids:
+            departments.append(slip.employee_id.department_id)
+        departments = list(dict.fromkeys(departments))
+        return departments
+
+    def get_department_id(self, payslip_departments, key):
+        for department in payslip_departments:
+            if department.name == key:
+                return department
+
+    def populate_record_dict(self, record, top_sheet, rule_list):
+        for slip in top_sheet.slip_ids:
+            for line in slip.line_ids:
+                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
+                    rule_list.append((line.sequence, line.name))
+
+        rule_list = sorted(rule_list, key=lambda k: k[0])
+        for rec in top_sheet.slip_ids:
+            rules = OrderedDict()
+            for rule in rule_list:
+                rules[rule[1]] = 0
+            record[rec.employee_id.department_id.name] = {}
+            record[rec.employee_id.department_id.name]['count'] = 0
+            record[rec.employee_id.department_id.name]['vals'] = rules
+
+    def get_sum_value(self, top_sheet, record, code, code_value):
+        for slip in top_sheet.slip_ids:
+            rec = record[slip.employee_id.department_id.name]
+            rec['count'] = rec['count'] + 1
+            for line in slip.line_ids:
+                if line.code == code:
+                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
+
+        department_net = OrderedDict()
+
+        for key, value in record.items():
+            department_net[key] = {}
+            department_net[key][code_value] = 0
+            sum = 0
+            for rule_key, rule_value in value['vals'].items():
+                sum = sum + rule_value
+            department_net[key][code_value] = sum
+
+        sum_value = 0
+        for key, value in department_net.items():
+            sum_value = sum_value + value[code_value]
+
+        return sum_value
 
     def get_top_sheet_total_net_value(self, top_sheet):
         rule_list = []
@@ -243,7 +280,6 @@ class CreateProvision(models.Model):
         total = OrderedDict()
         for rule in rule_list:
             total[rule[1]] = 0
-
         bnet = 0
         net = 0
         for slip in top_sheet.slip_ids:
@@ -265,140 +301,59 @@ class CreateProvision(models.Model):
     def get_total_tds_value(self, top_sheet):
 
         rule_list = []
-        for slip in top_sheet.slip_ids:
-            for line in slip.line_ids:
-                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
-                    rule_list.append((line.sequence, line.name))
-
-        rule_list = sorted(rule_list, key=lambda k: k[0])
-
         record = OrderedDict()
-        for rec in top_sheet.slip_ids:
-            rules = OrderedDict()
-            for rule in rule_list:
-                rules[rule[1]] = 0
-            record[rec.employee_id.department_id.name] = {}
-            record[rec.employee_id.department_id.name]['count'] = 0
-            record[rec.employee_id.department_id.name]['vals'] = rules
-
-        for slip in top_sheet.slip_ids:
-            rec = record[slip.employee_id.department_id.name]
-            rec['count'] = rec['count'] + 1
-            for line in slip.line_ids:
-                if line.code == 'TDS':
-                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
-
-        department_net = OrderedDict()
-
-        for key, value in record.items():
-            department_net[key] = {}
-            department_net[key]['tds'] = 0
-            sum = 0
-            for rule_key, rule_value in value['vals'].items():
-                sum = sum + rule_value
-            department_net[key]['tds'] = sum
-
-        sum_tds = 0
-        for key, value in department_net.items():
-            sum_tds = sum_tds + value['tds']
+        self.populate_record_dict(record, top_sheet, rule_list)
+        sum_tds = self.get_sum_value(top_sheet, record, 'TDS', 'tds')
 
         return sum_tds
 
     def get_employee_pf_contribution(self, top_sheet):
         rule_list = []
-        for slip in top_sheet.slip_ids:
-            for line in slip.line_ids:
-                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
-                    rule_list.append((line.sequence, line.name))
-
-        rule_list = sorted(rule_list, key=lambda k: k[0])
-
         record = OrderedDict()
-        for rec in top_sheet.slip_ids:
-            rules = OrderedDict()
-            for rule in rule_list:
-                rules[rule[1]] = 0
-            record[rec.employee_id.department_id.name] = {}
-            record[rec.employee_id.department_id.name]['count'] = 0
-            record[rec.employee_id.department_id.name]['vals'] = rules
+        self.populate_record_dict(record, top_sheet, rule_list)
+        sum_emp_pf_cont = self.get_sum_value(top_sheet, record, 'EPMF', 'empf')
 
-        for slip in top_sheet.slip_ids:
-            rec = record[slip.employee_id.department_id.name]
-            rec['count'] = rec['count'] + 1
-            for line in slip.line_ids:
-                if line.code == 'EPMF':
-                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
-
-        department_net = OrderedDict()
-
-        for key, value in record.items():
-            department_net[key] = {}
-            department_net[key]['empf'] = 0
-            sum = 0
-            for rule_key, rule_value in value['vals'].items():
-                sum = sum + rule_value
-            department_net[key]['empf'] = sum
-
-        sum_tds = 0
-        for key, value in department_net.items():
-            sum_tds = sum_tds + value['empf']
-
-        return sum_tds
+        return sum_emp_pf_cont
 
     def get_telephone_mobile_bill(self, top_sheet):
         rule_list = []
-        for slip in top_sheet.slip_ids:
-            for line in slip.line_ids:
-                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
-                    rule_list.append((line.sequence, line.name))
-
-        rule_list = sorted(rule_list, key=lambda k: k[0])
-
         record = OrderedDict()
-        for rec in top_sheet.slip_ids:
-            rules = OrderedDict()
-            for rule in rule_list:
-                rules[rule[1]] = 0
-            record[rec.employee_id.department_id.name] = {}
-            record[rec.employee_id.department_id.name]['count'] = 0
-            record[rec.employee_id.department_id.name]['vals'] = rules
+        self.populate_record_dict(record, top_sheet, rule_list)
+        sum_telephone_bill = self.get_sum_value(top_sheet, record, 'MOBILE', 'mobile')
 
-        for slip in top_sheet.slip_ids:
-            rec = record[slip.employee_id.department_id.name]
-            rec['count'] = rec['count'] + 1
-            for line in slip.line_ids:
-                if line.code == 'MOBILE':
-                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
+        return sum_telephone_bill
 
-        department_net = OrderedDict()
-
-        for key, value in record.items():
-            department_net[key] = {}
-            department_net[key]['mobile'] = 0
-            sum = 0
-            for rule_key, rule_value in value['vals'].items():
-                sum = sum + rule_value
-            department_net[key]['mobile'] = sum
-
-        sum_tds = 0
-        for key, value in department_net.items():
-            sum_tds = sum_tds + value['mobile']
-
-        return sum_tds
+    def get_move_line_vals(self, name, date, journal_id, account_id, operating_unit_id, department_id, cost_center_id,
+                           debit, credit,
+                           company_id):
+        return {
+            'name': name,
+            'date': date,
+            'journal_id': journal_id,
+            'account_id': account_id,
+            'operating_unit_id': operating_unit_id,
+            'department_id': department_id,
+            'cost_center_id': cost_center_id,
+            'debit': debit,
+            'credit': credit,
+            'company_id': company_id,
+        }
 
     def create_provision(self):
 
         if self.payslip_run_id:
             # check if journal entry created for this payslip run
-            entry_exist = self.env['account.move'].sudo().search([('payslip_run_id', '=', self.payslip_run_id.id)])
-
-            if entry_exist:
+            if self.payslip_run_id.journal_entry > 0:
                 raise UserError(_('Journal Entry already created for this payslip batch.'))
-            payslip_list = self.get_payslip_list(self.payslip_run_id)
+
             department_net_values = self.get_department_net_values(self.payslip_run_id)
+
+            payslip_departments = self.get_departments(self.payslip_run_id)
+
             top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
 
             total_tax_deducted_source = self.get_total_tds_value(self.payslip_run_id)
+
             if total_tax_deducted_source < 0:
                 total_tax_deducted_source = total_tax_deducted_source * (-1)
 
@@ -409,360 +364,195 @@ class CreateProvision(models.Model):
             company_pf_contribution = employee_pf_contribution
             if company_pf_contribution < 0:
                 company_pf_contribution = company_pf_contribution * (-1)
+
             telephone_mobile_bill = self.get_telephone_mobile_bill(self.payslip_run_id)
             if telephone_mobile_bill < 0:
                 telephone_mobile_bill = telephone_mobile_bill * (-1)
 
             journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
-            # here
+
             if self.payslip_run_id.operating_unit_id:
+                month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
+                datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
+                move_lines = []
+                sum_debit = 0
+                sum_credit = 0
+                tds_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                          self.payslip_run_id.operating_unit_id.tds_payable_account.id,
+                                                          self.payslip_run_id.operating_unit_id.id, False, False, 0,
+                                                          total_tax_deducted_source,
+                                                          self.operating_unit_id.company_id.id)
+
+                sum_credit = sum_credit + total_tax_deducted_source
+
+                pf_com_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                             self.payslip_run_id.operating_unit_id.company_pf_contribution_account.id,
+                                                             self.payslip_run_id.operating_unit_id.id, 0, False, False,
+                                                             company_pf_contribution,
+                                                             self.operating_unit_id.company_id.id)
+
+                sum_credit = sum_credit + company_pf_contribution
+
+                pf_emp_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                             self.payslip_run_id.operating_unit_id.employee_pf_contribution_account.id,
+                                                             self.payslip_run_id.operating_unit_id.id, 0, False, False,
+                                                             employee_pf_contribution,
+                                                             self.operating_unit_id.company_id.id)
+
+                sum_credit = sum_credit + employee_pf_contribution
+
+                telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
+                                                                self.payslip_run_id.operating_unit_id.id, 0, False,
+                                                                False,
+                                                                telephone_mobile_bill,
+                                                                self.operating_unit_id.company_id.id)
+
+                sum_credit = sum_credit + telephone_mobile_bill
+
                 if self.payslip_run_id.operating_unit_id.debit_account_ids:
                     # operating unit has department wise debit account
-
-                    datem = datetime.strptime(self.date, '%Y-%m-%d').strftime('%m')
-                    month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
-                    datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
-                    move_lines = []
-                    sum_debit = 0
-                    sum_credit = 0
-
                     for key, value in department_net_values.items():
                         for cost_center_value in value:
-                            department = self.env['hr.department'].sudo().search([('name', '=', key)])
+                            department = self.get_department_id(payslip_departments, key)
+
                             debit_account_obj = self.env['department.account.map'].sudo().search(
                                 [('department_id', '=', department.id),
                                  ('operating_unit_id', '=', self.payslip_run_id.operating_unit_id.id)])
                             if debit_account_obj:
-                                debit_vals = {
-                                    'name': '0',
-                                    'date': self.date,
-                                    'journal_id': journal_id.id,
-                                    'account_id': debit_account_obj.account_id.id,
-                                    'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                                    'department_id': department.id,
-                                    'cost_center_id': cost_center_value.id,
-                                    'debit': department_net_values[key][cost_center_value],
-                                    'credit': 0,
-                                    'company_id': self.operating_unit_id.company_id.id,
-                                }
+                                debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                     debit_account_obj.account_id.id,
+                                                                     self.payslip_run_id.operating_unit_id.id,
+                                                                     department.id, cost_center_value.id,
+                                                                     department_net_values[key][
+                                                                         cost_center_value], 0,
+                                                                     self.operating_unit_id.company_id.id)
+
                             else:
-                                debit_vals = {
-                                    'name': '0',
-                                    'date': self.date,
-                                    'journal_id': journal_id.id,
-                                    'account_id': self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                    'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                                    'department_id': department.id,
-                                    'cost_center_id': cost_center_value.id,
-                                    'debit': department_net_values[key][cost_center_value],
-                                    'credit': 0,
-                                    'company_id': self.operating_unit_id.company_id.id,
-                                }
+                                debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                     self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                     self.payslip_run_id.operating_unit_id.id,
+                                                                     department.id, cost_center_value.id,
+                                                                     department_net_values[key][
+                                                                         cost_center_value], 0,
+                                                                     self.operating_unit_id.company_id.id)
 
                             sum_debit = sum_debit + department_net_values[key][cost_center_value]
 
-                            move_lines.append((0, 0, debit_vals))
-                    print('sum debit', sum_debit)
-                    tds_credit_vals = {
-                        'name': '0',
-                        'date': self.date,
-                        'journal_id': journal_id.id,
-                        'account_id': self.payslip_run_id.operating_unit_id.tds_payable_account.id,
-                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                        'department_id': department.id,
-                        'debit': 0,
-                        'credit': total_tax_deducted_source,
-                        'company_id': self.operating_unit_id.company_id.id,
-                    }
-                    move_lines.append((0, 0, tds_credit_vals))
-                    sum_credit = sum_credit + total_tax_deducted_source
-                    pf_com_credit_vals = {
-                        'name': '0',
-                        'date': self.date,
-                        'journal_id': journal_id.id,
-                        'account_id': self.payslip_run_id.operating_unit_id.company_pf_contribution_account.id,
-                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                        'department_id': department.id,
-                        'debit': 0,
-                        'credit': company_pf_contribution,
-                        'company_id': self.operating_unit_id.company_id.id,
-                    }
-                    move_lines.append((0, 0, pf_com_credit_vals))
-                    sum_credit = sum_credit + company_pf_contribution
-                    pf_emp_credit_vals = {
-                        'name': '0',
-                        'date': self.date,
-                        'journal_id': journal_id.id,
-                        'account_id': self.payslip_run_id.operating_unit_id.employee_pf_contribution_account.id,
-                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                        'department_id': department.id,
-                        'debit': 0,
-                        'credit': employee_pf_contribution,
-                        'company_id': self.operating_unit_id.company_id.id,
-                    }
-                    move_lines.append((0, 0, pf_emp_credit_vals))
-                    sum_credit = sum_credit + employee_pf_contribution
+                            if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
+                                move_lines.append((0, 0, debit_vals))
 
-                    telephone_credit_vals = {
-                        'name': '0',
-                        'date': self.date,
-                        'journal_id': journal_id.id,
-                        'account_id': self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
-                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                        'department_id': department.id,
-                        'debit': 0,
-                        'credit': telephone_mobile_bill,
-                        'company_id': self.operating_unit_id.company_id.id,
-                    }
+                    main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                               self.payslip_run_id.operating_unit_id.payable_account.id,
+                                                               self.payslip_run_id.operating_unit_id.id, False, False,
+                                                               0, sum_debit - (
+                                                                       total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
+                                                               self.operating_unit_id.company_id.id)
+
                     move_lines.append((0, 0, telephone_credit_vals))
-                    sum_credit = sum_credit + telephone_mobile_bill
-
-                    main_credit_vals = {
-                        'name': '0',
-                        'date': self.date,
-                        'journal_id': journal_id.id,
-                        'account_id': self.payslip_run_id.operating_unit_id.payable_account.id,
-                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                        'department_id': department.id,
-                        'debit': 0,
-                        'credit': sum_debit - (
-                                total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
-
-                        'company_id': self.operating_unit_id.company_id.id,
-                    }
+                    move_lines.append((0, 0, tds_credit_vals))
+                    move_lines.append((0, 0, pf_com_credit_vals))
+                    move_lines.append((0, 0, pf_emp_credit_vals))
                     move_lines.append((0, 0, main_credit_vals))
                     sum_credit = sum_credit + sum_debit - (
                             total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
+                else:
+                    if self.payslip_run_id.operating_unit_id.default_debit_account:
+                        for key, value in department_net_values.items():
+                            for cost_center_value in value:
+                                department = self.get_department_id(payslip_departments, key)
 
-                    print('sum credit', sum_credit)
+                                debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                     self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                     self.payslip_run_id.operating_unit_id.id,
+                                                                     department.id, cost_center_value.id,
+                                                                     department_net_values[key][
+                                                                         cost_center_value], 0,
+                                                                     self.operating_unit_id.company_id.id)
 
-                    name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
+                                sum_debit = sum_debit + department_net_values[key][cost_center_value]
 
-                    difference = 0
+                                if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
+                                    move_lines.append((0, 0, debit_vals))
+
+                        main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                   self.payslip_run_id.operating_unit_id.payable_account.id,
+                                                                   self.payslip_run_id.operating_unit_id.id, False,
+                                                                   False,
+                                                                   0, sum_debit - (
+                                                                           total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
+                                                                   self.operating_unit_id.company_id.id)
+                        move_lines.append((0, 0, telephone_credit_vals))
+                        move_lines.append((0, 0, tds_credit_vals))
+                        move_lines.append((0, 0, pf_com_credit_vals))
+                        move_lines.append((0, 0, pf_emp_credit_vals))
+                        move_lines.append((0, 0, main_credit_vals))
+                        sum_credit = sum_credit + sum_debit - (
+                                total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
+
+                name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
+                difference = 0
+                if sum_credit == sum_debit:
                     if sum_credit > top_sheet_total_net_value:
                         difference = sum_credit - top_sheet_total_net_value
                     elif sum_credit < top_sheet_total_net_value:
                         difference = top_sheet_total_net_value - sum_credit
                     else:
                         difference = 0
-
-                    if difference == 0:
-                        # return wizard to confirm
-                        vals = {
-                            'name': name_seq,
-                            'journal_id': journal_id.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'date': self.date,
-                            'company_id': self.company_id.id,
-                            'state': 'draft',
-                            'line_ids': move_lines,
-                            'payslip_run_id': self.payslip_run_id.id,
-                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                            'ref': '',
-                            # Provision above amount against Salary month of July - 2021
-                        }
-
-                        move = self.env['account.move'].create(vals)
-
-                    else:
-                        # return wizard to confirm
-                        vals = {
-                            'name': name_seq,
-                            'journal_id': journal_id.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'date': self.date,
-                            'company_id': self.company_id.id,
-                            'state': 'draft',
-                            'line_ids': move_lines,
-                            'payslip_run_id': self.payslip_run_id.id,
-                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                            'ref': 'Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. ' % difference,
-                            # Provision above amount against Salary month of July - 2021
-                        }
-
-                        message_id = self.env['confirmation.wizard'].create({'message': _(
-                            "Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. Are you sure to create journal entry?" % difference)
+                else:
+                    raise UserError(_('Total debit value and total credit value mismatched.'))
+                if difference == 0:
+                    vals = {
+                        'name': name_seq,
+                        'journal_id': journal_id.id,
+                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                        'date': self.date,
+                        'company_id': self.company_id.id,
+                        'state': 'draft',
+                        'line_ids': move_lines,
+                        'payslip_run_id': self.payslip_run_id.id,
+                        'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                        'ref': 'Total net value : ' + str(top_sheet_total_net_value)
+                    }
+                    move = self.env['account.move'].create(vals)
+                    if move:
+                        self.payslip_run_id.write({'account_move_id': move.id})
+                        message_id = self.env['success.wizard'].create({'message': _(
+                            "Journal Entry Created Successfully!")
                         })
                         return {
-                            'name': _('Confirmation'),
+                            'name': _('Success'),
                             'type': 'ir.actions.act_window',
                             'view_mode': 'form',
-                            'res_model': 'confirmation.wizard',
+                            'res_model': 'success.wizard',
                             'context': vals,
                             'res_id': message_id.id,
                             'target': 'new'
                         }
-
-
                 else:
-                    if self.payslip_run_id.operating_unit_id.default_debit_account:
-                        # operating unit has default debit account
+                    # return wizard to confirm
+                    vals = {
+                        'name': name_seq,
+                        'journal_id': journal_id.id,
+                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                        'date': self.date,
+                        'company_id': self.company_id.id,
+                        'state': 'draft',
+                        'line_ids': move_lines,
+                        'payslip_run_id': self.payslip_run_id.id,
+                        'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                        'ref': 'Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. ' % difference
 
-                        datem = datetime.strptime(self.date, '%Y-%m-%d').strftime('%m')
-                        month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
-                        datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
-                        move_lines = []
-                        sum_debit = 0
-                        sum_credit = 0
-
-                        for key, value in department_net_values.items():
-                            for cost_center_value in value:
-                                department = self.env['hr.department'].sudo().search([('name', '=', key)])
-                                debit_vals = {
-                                    'name': '0',
-                                    'date': self.date,
-                                    'journal_id': journal_id.id,
-                                    'account_id': self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                    'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                                    'department_id': department.id,
-                                    'cost_center_id': cost_center_value.id,
-                                    'debit': department_net_values[key][cost_center_value],
-                                    'credit': 0,
-                                    'company_id': self.operating_unit_id.company_id.id,
-                                }
-
-                                sum_debit = sum_debit + department_net_values[key][cost_center_value]
-
-                                move_lines.append((0, 0, debit_vals))
-                        print('sum debit', sum_debit)
-
-                        tds_credit_vals = {
-                            'name': '0',
-                            'date': self.date,
-                            'journal_id': journal_id.id,
-                            'account_id': self.payslip_run_id.operating_unit_id.tds_payable_account.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'department_id': department.id,
-                            'debit': 0,
-                            'credit': total_tax_deducted_source,
-                            'company_id': self.operating_unit_id.company_id.id,
-                        }
-                        move_lines.append((0, 0, tds_credit_vals))
-                        sum_credit = sum_credit + total_tax_deducted_source
-                        pf_com_credit_vals = {
-                            'name': '0',
-                            'date': self.date,
-                            'journal_id': journal_id.id,
-                            'account_id': self.payslip_run_id.operating_unit_id.company_pf_contribution_account.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'department_id': department.id,
-                            'debit': 0,
-                            'credit': company_pf_contribution,
-                            'company_id': self.operating_unit_id.company_id.id,
-                        }
-                        move_lines.append((0, 0, pf_com_credit_vals))
-                        sum_credit = sum_credit + company_pf_contribution
-                        pf_emp_credit_vals = {
-                            'name': '0',
-                            'date': self.date,
-                            'journal_id': journal_id.id,
-                            'account_id': self.payslip_run_id.operating_unit_id.employee_pf_contribution_account.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'department_id': department.id,
-                            'debit': 0,
-                            'credit': employee_pf_contribution,
-                            'company_id': self.operating_unit_id.company_id.id,
-                        }
-                        move_lines.append((0, 0, pf_emp_credit_vals))
-                        sum_credit = sum_credit + employee_pf_contribution
-                        telephone_credit_vals = {
-                            'name': '0',
-                            'date': self.date,
-                            'journal_id': journal_id.id,
-                            'account_id': self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'department_id': department.id,
-                            'debit': 0,
-                            'credit': telephone_mobile_bill,
-                            'company_id': self.operating_unit_id.company_id.id,
-                        }
-                        move_lines.append((0, 0, telephone_credit_vals))
-                        sum_credit = sum_credit + telephone_mobile_bill
-                        main_credit_vals = {
-                            'name': '0',
-                            'date': self.date,
-                            'journal_id': journal_id.id,
-                            'account_id': self.payslip_run_id.operating_unit_id.payable_account.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'department_id': department.id,
-                            'debit': 0,
-                            'credit': sum_debit - (
-                                    total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
-                            'company_id': self.operating_unit_id.company_id.id,
-                        }
-                        move_lines.append((0, 0, main_credit_vals))
-                        sum_credit = sum_credit + sum_debit - (
-                                total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
-
-                        print('sum credit', sum_credit)
-                        name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
-
-                        difference = 0
-                        if sum_credit > top_sheet_total_net_value:
-                            difference = sum_credit - top_sheet_total_net_value
-                        elif sum_credit < top_sheet_total_net_value:
-                            difference = top_sheet_total_net_value - sum_credit
-                        else:
-                            difference = 0
-
-                        if difference == 0:
-                            # return wizard to confirm
-                            vals = {
-                                'name': name_seq,
-                                'journal_id': journal_id.id,
-                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                                'date': self.date,
-                                'company_id': self.company_id.id,
-                                'state': 'draft',
-                                'line_ids': move_lines,
-                                'payslip_run_id': self.payslip_run_id.id,
-                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                                'ref': '',
-                                # Provision above amount against Salary month of July - 2021
-                            }
-
-                            move = self.env['account.move'].create(vals)
-
-                        else:
-                            # return wizard to confirm
-                            vals = {
-                                'name': name_seq,
-                                'journal_id': journal_id.id,
-                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                                'date': self.date,
-                                'company_id': self.company_id.id,
-                                'state': 'draft',
-                                'line_ids': move_lines,
-                                'payslip_run_id': self.payslip_run_id.id,
-                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                                'ref': 'Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. ' % difference,
-                                # Provision above amount against Salary month of July - 2021
-                            }
-
-                            message_id = self.env['confirmation.wizard'].create({'message': _(
-                                "Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. Are you sure to create journal entry?" % difference)
-                            })
-                            return {
-                                'name': _('Confirmation'),
-                                'type': 'ir.actions.act_window',
-                                'view_mode': 'form',
-                                'res_model': 'confirmation.wizard',
-                                'context': vals,
-                                'res_id': message_id.id,
-                                'target': 'new'
-                            }
-
-    def load_values(self):
-        if self.payslip_run_id:
-            debit_account_lines = []
-            # if self.payslip_run_id.operating_unit_id.debit_account_ids:
-            #     for debit_account in self.payslip_run_id.operating_unit_id.debit_account_ids:
-            #         line = (0, 0, {
-            #             'department_id': debit_account.department_id.id,
-            #             'account_id': debit_account.account_id.id,
-            #             'operating_unit_id': debit_account.operating_unit_id.id
-            #         })
-            #         debit_account_lines.append(line)
-            provision_obj = self.env['hr.payslip.run.create.provision'].browse(self.id)
-            provision_obj.write({'debit_account_ids': self.payslip_run_id.operating_unit_id.debit_account_ids})
-            # self.debit_account_ids = debit_account_lines
+                    }
+                    message_id = self.env['confirmation.wizard'].create({'message': _(
+                        "Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. Are you sure to create journal entry?" % difference)
+                    })
+                    return {
+                        'name': _('Confirmation'),
+                        'type': 'ir.actions.act_window',
+                        'view_mode': 'form',
+                        'res_model': 'confirmation.wizard',
+                        'context': vals,
+                        'res_id': message_id.id,
+                        'target': 'new'
+                    }

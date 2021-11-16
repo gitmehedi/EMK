@@ -1,7 +1,7 @@
 from odoo import fields, models, api
 
 
-class TempDepartmentAccount(models.Model):
+class TempDepartmentAccount(models.TransientModel):
     _name = 'temp.department.account.map'
     _description = 'Description'
 

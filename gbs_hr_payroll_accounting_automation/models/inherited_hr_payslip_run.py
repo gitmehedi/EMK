@@ -6,14 +6,18 @@ class InheritedPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
     _description = 'Description'
 
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
+    account_move_id = fields.Many2one('account.move', readonly=True, string='Journal Entry')
 
     journal_entry = fields.Integer(compute='compute_journal_entry')
 
     def compute_journal_entry(self):
         for record in self:
-            record.journal_entry = self.env['account.move'].search_count(
-                [('payslip_run_id', '=', self.id)])
+            if record.account_move_id:
+                record.journal_entry = self.env['hr.payslip.run'].search_count(
+                    [('account_move_id', '=', self.account_move_id.id)])
+            else:
+                record.journal_entry = 0
 
     def get_journal_entry(self):
         self.ensure_one()
@@ -22,14 +26,16 @@ class InheritedPayslipRun(models.Model):
             'name': 'Journal Entries',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
-            'domain': [('payslip_run_id', '=', self.id)],
+            'domain': [('id', '=', self.account_move_id.id)],
             'context': "{'create': False}"
         }
 
     @api.multi
     def create_provision(self):
-        entry_exist = self.env['account.move'].sudo().search([('payslip_run_id', '=', self.id)])
-        if entry_exist:
+        payslip_run = self.env['hr.payslip.run'].sudo().browse(self.id)
+        entry_exist = payslip_run.search([('account_move_id', '!=', False)])
+
+        if self.journal_entry > 0:
             raise UserError(_('Journal Entry already created for this payslip batch.'))
 
         for slip in self.slip_ids:
