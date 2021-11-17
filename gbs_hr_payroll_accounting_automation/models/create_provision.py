@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class CreateProvision(models.TransientModel):
     _name = 'hr.payslip.run.create.provision'
-    _description = 'Description'
+    _description = 'Create Provision'
     _rec_name = 'payslip_run_id'
 
     def _default_payslip_run(self):

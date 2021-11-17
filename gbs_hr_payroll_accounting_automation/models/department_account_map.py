@@ -3,7 +3,7 @@ from odoo import fields, models, api
 
 class DepartmentAccount(models.Model):
     _name = 'department.account.map'
-    _description = 'Description'
+    _description = 'Department Account Map'
 
     company_id = fields.Many2one('res.company', string='Company', store=True)
 
