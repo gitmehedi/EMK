@@ -19,22 +19,35 @@
                                 states="applied"/>
                         <button name="action_draft" type="object"
                                 string="Reset to draft" states="applied,approved" groups="hr.group_hr_manager"
-                                />
+                        />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-                            </group>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                                <group></group>
+                                <group>
+                                    <field name="company_id" groups="base.group_multi_company"
+                                           options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                </group>
+                                <group>
+                                    <field name="operating_unit_id" domain="[('company_id','=',company_id)]"
+                                           options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                </group>
                             <notebook colspan="4">
                                 <page string="Bills">
-                                    <field name="line_ids">
+                                    <field name="line_ids"
+                                           context="{'default_operating_unit_id': operating_unit_id,'default_company_id': company_id}">
                                         <tree string="List" editable="bottom">
-                                            <field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="employee_id" domain="[('operating_unit_id','=',operating_unit_id),('company_id','=',company_id)]"
+                                                   options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="device_employee_acc"/>
                                             <field name="bill_amount"/>
-                                            <field  name="state" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                            <field name="company_id" invisible="1"/>
+                                            <field name="operating_unit_id" invisible="1"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -66,7 +79,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95" action="hr_meal_bill_action" groups="gbs_hr_security.group_payroll_user"/>
-        <menuitem id="hr_meal_bill" name="Meal Bills" parent="hr_meal_bill_menu" action="hr_meal_bill_action" groups="gbs_hr_security.group_payroll_user"/>
+        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95"
+                  action="hr_meal_bill_action" groups="gbs_hr_security.group_payroll_user"/>
+        <menuitem id="hr_meal_bill" name="Meal Bills" parent="hr_meal_bill_menu" action="hr_meal_bill_action"
+                  groups="gbs_hr_security.group_payroll_user"/>
     </data>
 </odoo>

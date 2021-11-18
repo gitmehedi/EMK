@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 import datetime
 
+
 class HrBankSelectionWizard(models.TransientModel):
     _name = 'hr.bank.selection.wizard'
 
@@ -9,11 +10,10 @@ class HrBankSelectionWizard(models.TransientModel):
 
     @api.multi
     def process_print(self):
-
         payslip_run_pool = self.env['hr.payslip.run']
         docs = payslip_run_pool.browse([self._context['active_id']])
         now = datetime.datetime.now()
- 
+
         data = {}
         data['bank_id'] = self.bank_names.bank_id.id
         data['bank_name'] = self.bank_names.bank_id.name
@@ -28,5 +28,5 @@ class HrBankSelectionWizard(models.TransientModel):
         data['cur_month'] = now.strftime("%B")
         data['cur_day'] = now.day
         data['mother_bank_ac'] = self.bank_names.acc_number
- 
+
         return self.env['report'].get_action(self, 'gbs_hr_payroll_bank_letter.report_individual_payslip1', data=data)

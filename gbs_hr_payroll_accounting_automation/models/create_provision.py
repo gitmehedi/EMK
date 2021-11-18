@@ -21,13 +21,6 @@ class CreateProvision(models.TransientModel):
         required=True
     )
 
-    def _default_journal_entry(self):
-        run = self.env['hr.payslip.run'].browse(self.env.context.get(
-            'active_id'))
-        return run.journal_entry
-
-    journal_entry = fields.Integer(default=lambda self: self._default_journal_entry())
-
     def _default_operating_unit(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
@@ -217,6 +210,17 @@ class CreateProvision(models.TransientModel):
         departments = list(dict.fromkeys(departments))
         return departments
 
+    def get_cost_centers(self, top_sheet):
+        cost_centers = []
+        for slip in top_sheet.slip_ids:
+            if slip.employee_id.cost_center_id:
+                cost_centers.append(slip.employee_id.cost_center_id)
+            else:
+                raise UserError(_('Cannot create journal entry because employee does not have cost center '
+                                  'configured.'))
+        cost_centers = list(dict.fromkeys(cost_centers))
+        return cost_centers
+
     def get_department_id(self, payslip_departments, key):
         for department in payslip_departments:
             if department.name == key:
@@ -323,6 +327,29 @@ class CreateProvision(models.TransientModel):
 
         return sum_telephone_bill
 
+    def get_a_cost_center_telephone_bill(self, cost_center, top_sheet):
+        employee_list = []
+        sum = 0
+        for rec in top_sheet.slip_ids:
+            if rec.employee_id.cost_center_id.id == cost_center.id:
+                employee_list.append(rec.employee_id)
+                for line in rec.line_ids:
+                    if line.code == 'MOBILE':
+                        sum = sum + math.ceil(line.total)
+        return sum
+
+    def get_cost_center_wise_telephone_bill(self, payslip_cost_centers, top_sheet):
+        cost_center_telephone_dict = OrderedDict()
+        for cost_center in payslip_cost_centers:
+            cost_center_telephone_dict[cost_center.id] = {}
+            cost_center_telephone_dict[cost_center.id]['vals'] = 0
+
+        for cost_center in payslip_cost_centers:
+            cost_center_telephone_bill = self.get_a_cost_center_telephone_bill(cost_center, top_sheet)
+            cost_center_telephone_dict[cost_center.id]['vals'] = cost_center_telephone_bill
+
+        return cost_center_telephone_dict
+
     def get_move_line_vals(self, name, date, journal_id, account_id, operating_unit_id, department_id, cost_center_id,
                            debit, credit,
                            company_id):
@@ -340,16 +367,14 @@ class CreateProvision(models.TransientModel):
         }
 
     def create_provision(self):
-
         if self.payslip_run_id:
             # check if journal entry created for this payslip run
-            if self.payslip_run_id.journal_entry > 0:
+            if self.payslip_run_id.account_move_id:
                 raise UserError(_('Journal Entry already created for this payslip batch.'))
 
             department_net_values = self.get_department_net_values(self.payslip_run_id)
-
             payslip_departments = self.get_departments(self.payslip_run_id)
-
+            payslip_cost_centers = self.get_cost_centers(self.payslip_run_id)
             top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
 
             total_tax_deducted_source = self.get_total_tds_value(self.payslip_run_id)
@@ -368,6 +393,9 @@ class CreateProvision(models.TransientModel):
             telephone_mobile_bill = self.get_telephone_mobile_bill(self.payslip_run_id)
             if telephone_mobile_bill < 0:
                 telephone_mobile_bill = telephone_mobile_bill * (-1)
+
+            cost_center_wise_telephone_bill = self.get_cost_center_wise_telephone_bill(payslip_cost_centers,
+                                                                                       self.payslip_run_id)
 
             journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
 
@@ -401,21 +429,10 @@ class CreateProvision(models.TransientModel):
 
                 sum_credit = sum_credit + employee_pf_contribution
 
-                telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
-                                                                self.payslip_run_id.operating_unit_id.id, 0, False,
-                                                                False,
-                                                                telephone_mobile_bill,
-                                                                self.operating_unit_id.company_id.id)
-
-                sum_credit = sum_credit + telephone_mobile_bill
-
                 if self.payslip_run_id.operating_unit_id.debit_account_ids:
-                    # operating unit has department wise debit account
                     for key, value in department_net_values.items():
                         for cost_center_value in value:
                             department = self.get_department_id(payslip_departments, key)
-
                             debit_account_obj = self.env['department.account.map'].sudo().search(
                                 [('department_id', '=', department.id),
                                  ('operating_unit_id', '=', self.payslip_run_id.operating_unit_id.id)])
@@ -424,8 +441,7 @@ class CreateProvision(models.TransientModel):
                                                                      debit_account_obj.account_id.id,
                                                                      self.payslip_run_id.operating_unit_id.id,
                                                                      department.id, cost_center_value.id,
-                                                                     department_net_values[key][
-                                                                         cost_center_value], 0,
+                                                                     department_net_values[key][cost_center_value], 0,
                                                                      self.operating_unit_id.company_id.id)
 
                             else:
@@ -433,14 +449,31 @@ class CreateProvision(models.TransientModel):
                                                                      self.payslip_run_id.operating_unit_id.default_debit_account.id,
                                                                      self.payslip_run_id.operating_unit_id.id,
                                                                      department.id, cost_center_value.id,
-                                                                     department_net_values[key][
-                                                                         cost_center_value], 0,
+                                                                     department_net_values[key][cost_center_value], 0,
                                                                      self.operating_unit_id.company_id.id)
 
                             sum_debit = sum_debit + department_net_values[key][cost_center_value]
 
                             if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
                                 move_lines.append((0, 0, debit_vals))
+
+                    total_telephone_credit_vals = 0
+                    for key, value in cost_center_wise_telephone_bill.items():
+                        if value['vals'] < 0:
+                            value['vals'] = value['vals'] * (-1)
+                        if not value['vals'] == 0:
+                            telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                            self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
+                                                                            self.payslip_run_id.operating_unit_id.id,
+                                                                            False,
+                                                                            key,
+                                                                            0,
+                                                                            value['vals'],
+                                                                            self.operating_unit_id.company_id.id)
+
+                            move_lines.append((0, 0, telephone_credit_vals))
+                            total_telephone_credit_vals = total_telephone_credit_vals + value['vals']
+                    sum_credit = sum_credit + telephone_mobile_bill
 
                     main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
                                                                self.payslip_run_id.operating_unit_id.payable_account.id,
@@ -449,7 +482,6 @@ class CreateProvision(models.TransientModel):
                                                                        total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
                                                                self.operating_unit_id.company_id.id)
 
-                    move_lines.append((0, 0, telephone_credit_vals))
                     move_lines.append((0, 0, tds_credit_vals))
                     move_lines.append((0, 0, pf_com_credit_vals))
                     move_lines.append((0, 0, pf_emp_credit_vals))
@@ -475,20 +507,38 @@ class CreateProvision(models.TransientModel):
                                 if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
                                     move_lines.append((0, 0, debit_vals))
 
+                        total_telephone_credit_vals = 0
+                        for key, value in cost_center_wise_telephone_bill.items():
+                            if value['vals'] < 0:
+                                value['vals'] = value['vals'] * (-1)
+                            if not value['vals'] == 0:
+                                telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                                self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
+                                                                                self.payslip_run_id.operating_unit_id.id,
+                                                                                False,
+                                                                                key,
+                                                                                0,
+                                                                                value['vals'],
+                                                                                self.operating_unit_id.company_id.id)
+
+                                move_lines.append((0, 0, telephone_credit_vals))
+                                total_telephone_credit_vals = total_telephone_credit_vals + value['vals']
+                        sum_credit = sum_credit + telephone_mobile_bill
+
                         main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
                                                                    self.payslip_run_id.operating_unit_id.payable_account.id,
                                                                    self.payslip_run_id.operating_unit_id.id, False,
                                                                    False,
                                                                    0, sum_debit - (
-                                                                           total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
+                                                                               total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
                                                                    self.operating_unit_id.company_id.id)
-                        move_lines.append((0, 0, telephone_credit_vals))
+
                         move_lines.append((0, 0, tds_credit_vals))
                         move_lines.append((0, 0, pf_com_credit_vals))
                         move_lines.append((0, 0, pf_emp_credit_vals))
                         move_lines.append((0, 0, main_credit_vals))
                         sum_credit = sum_credit + sum_debit - (
-                                total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
+                                    total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
 
                 name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
                 difference = 0
@@ -556,3 +606,5 @@ class CreateProvision(models.TransientModel):
                         'res_id': message_id.id,
                         'target': 'new'
                     }
+        else:
+            raise UserError(_('Payslip Batch not found!'))

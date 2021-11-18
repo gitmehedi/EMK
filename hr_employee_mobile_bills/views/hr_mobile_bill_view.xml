@@ -21,7 +21,7 @@
                          <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
-	                 		<group >
+	                 		<group>
 	                 			<group>
 	                            	<field name="name" />
 	                            </group>

@@ -9,16 +9,6 @@ class InheritedPayslipRun(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
     account_move_id = fields.Many2one('account.move', readonly=True, string='Journal Entry')
 
-    journal_entry = fields.Integer(compute='compute_journal_entry')
-
-    def compute_journal_entry(self):
-        for record in self:
-            if record.account_move_id:
-                record.journal_entry = self.env['hr.payslip.run'].search_count(
-                    [('account_move_id', '=', self.account_move_id.id)])
-            else:
-                record.journal_entry = 0
-
     def get_journal_entry(self):
         self.ensure_one()
         return {
@@ -35,7 +25,7 @@ class InheritedPayslipRun(models.Model):
         payslip_run = self.env['hr.payslip.run'].sudo().browse(self.id)
         entry_exist = payslip_run.search([('account_move_id', '!=', False)])
 
-        if self.journal_entry > 0:
+        if self.account_move_id:
             raise UserError(_('Journal Entry already created for this payslip batch.'))
 
         for slip in self.slip_ids:

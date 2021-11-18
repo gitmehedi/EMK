@@ -11,6 +11,19 @@ class PayrollReportPivotal(models.AbstractModel):
     def formatDigits(self, digits):
         return formatLang(self.env, digits)
 
+    def get_payroll_bank_amount_dict(self, top_sheet, payroll_bank_list, payroll_bank_amount_dict):
+
+        for payroll_bank in payroll_bank_list:
+            slip_ids = self.env['hr.payslip'].search([('payslip_run_id', '=', top_sheet.id),
+                                                      ('employee_id.bank_account_id.bank_id', '=', payroll_bank.id)])
+            bank_net_sum = 0
+            for rec in slip_ids:
+                for line in rec.line_ids:
+                    if line.code == 'BNET':
+                        bank_net_sum = bank_net_sum + math.ceil(line.total)
+            payroll_bank_amount_dict[payroll_bank]['vals'] = bank_net_sum
+        return payroll_bank_amount_dict
+
     @api.model
     def render_html(self, docids, data=None):
         top_sheet = self.env['hr.payslip.run'].browse(data.get('active_id'))
@@ -18,10 +31,23 @@ class PayrollReportPivotal(models.AbstractModel):
         data['name'] = top_sheet.name
 
         rule_list = []
+        payroll_bank_list = []
         for slip in top_sheet.slip_ids:
+            if slip.employee_id.bank_account_id.bank_id not in payroll_bank_list:
+                if slip.employee_id.bank_account_id.bank_id:
+                    payroll_bank_list.append(slip.employee_id.bank_account_id.bank_id)
+
             for line in slip.line_ids:
                 if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
                     rule_list.append((line.sequence, line.name))
+
+        payroll_bank_amount_dict = OrderedDict()
+        for payroll_bank in payroll_bank_list:
+            payroll_bank_amount_dict[payroll_bank] = {}
+            payroll_bank_amount_dict[payroll_bank]['vals'] = 0
+
+        self.get_payroll_bank_amount_dict(top_sheet, payroll_bank_list, payroll_bank_amount_dict)
+        print('payroll bank amount dict :', payroll_bank_amount_dict)
 
         rule_list = sorted(rule_list, key=lambda k: k[0])
 
@@ -84,7 +110,6 @@ class PayrollReportPivotal(models.AbstractModel):
         for key, value in record.items():
             employee_total = employee_total + value['count']
 
-        print('total', total)
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
