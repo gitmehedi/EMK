@@ -3,7 +3,6 @@ from odoo import fields, models, api
 
 class InheritedHrEmployee(models.Model):
     _inherit = 'hr.employee'
-    _description = 'Cost Center Dropdown in Employee'
 
     # cost_center required if operating unit cost center configured required true
     @api.multi

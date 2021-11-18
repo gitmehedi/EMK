@@ -3,7 +3,7 @@ from odoo import fields, models, api
 
 class TempDepartmentAccount(models.TransientModel):
     _name = 'temp.department.account.map'
-    _description = 'Description'
+    _description = 'Temp Department Account Map'
 
     department_id = fields.Many2one('hr.department', string='Department')
 

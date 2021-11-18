@@ -3,7 +3,6 @@ from odoo import fields, models, api
 
 class InheritedOperatingUnit(models.Model):
     _inherit = 'operating.unit'
-    _description = 'Description'
 
     payable_account = fields.Many2one('account.account', string='Payable GL')
     tds_payable_account = fields.Many2one('account.account', string='TDS Payable GL')
