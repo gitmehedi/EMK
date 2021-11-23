@@ -42,7 +42,8 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
         normal = workbook.add_format({'font_size': 8})
         bg_normal_bordered = workbook.add_format({'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
         no_format = workbook.add_format({'num_format': '#,###0.00', 'font_size': 8})
-        no_format_bold_bg = workbook.add_format({'num_format': '#,###0.00', 'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
+        no_format_bold_bg = workbook.add_format(
+            {'num_format': '#,###0.00', 'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
         top_sheet = obj.hr_payslip_run_id
         header_created = 0
         last_row = 0
@@ -162,6 +163,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
+
         else:
             cost_centers = self.env['account.cost.center'].search([])
 
