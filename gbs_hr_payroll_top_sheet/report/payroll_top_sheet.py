@@ -21,7 +21,9 @@ class PayrollReportPivotal(models.AbstractModel):
                 for line in rec.line_ids:
                     if line.code == 'BNET':
                         bank_net_sum = bank_net_sum + math.ceil(line.total)
-            payroll_bank_amount_dict[payroll_bank]['vals'] = bank_net_sum
+            payroll_bank_amount_dict[payroll_bank]['bank'] = payroll_bank.name
+            payroll_bank_amount_dict[payroll_bank]['amount'] = bank_net_sum
+            payroll_bank_amount_dict[payroll_bank]['amount_in_word'] = self.env['res.currency'].amount_to_word(float(bank_net_sum))
         return payroll_bank_amount_dict
 
     @api.model
@@ -44,11 +46,11 @@ class PayrollReportPivotal(models.AbstractModel):
         payroll_bank_amount_dict = OrderedDict()
         for payroll_bank in payroll_bank_list:
             payroll_bank_amount_dict[payroll_bank] = {}
-            payroll_bank_amount_dict[payroll_bank]['vals'] = 0
+            payroll_bank_amount_dict[payroll_bank]['bank'] = None
+            payroll_bank_amount_dict[payroll_bank]['amount'] = 0
+            payroll_bank_amount_dict[payroll_bank]['amount_in_word'] = None
 
         self.get_payroll_bank_amount_dict(top_sheet, payroll_bank_list, payroll_bank_amount_dict)
-        print('payroll bank amount dict :', payroll_bank_amount_dict)
-
         rule_list = sorted(rule_list, key=lambda k: k[0])
 
         header = OrderedDict()
@@ -121,6 +123,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'total': total,
             'rules': rule_list,
             'bank_list': bank_list,
+            'payroll_bank_amount_dict': payroll_bank_amount_dict,
             'inword': inword
         }
 

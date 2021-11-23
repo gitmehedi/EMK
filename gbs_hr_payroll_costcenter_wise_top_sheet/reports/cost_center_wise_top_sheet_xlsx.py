@@ -41,6 +41,8 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
         header_bold = workbook.add_format({'font_size': 8, 'bold': True, 'border': 1})
         normal = workbook.add_format({'font_size': 8})
         bg_normal_bordered = workbook.add_format({'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
+        no_format = workbook.add_format({'num_format': '#,###0.00', 'font_size': 8})
+        no_format_bold_bg = workbook.add_format({'num_format': '#,###0.00', 'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
         top_sheet = obj.hr_payslip_run_id
         header_created = 0
         last_row = 0
@@ -137,7 +139,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     sheet.write(row, 2, value['count'], normal)
                     col = 3
                     for rule_key, rule_value in value['vals'].items():
-                        sheet.write(row, col, rule_value, normal)
+                        sheet.write(row, col, rule_value, no_format)
                         col = col + 1
                     row = row + 1
                     sub_employee_count = sub_employee_count + value['count']
@@ -156,7 +158,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                         del grand_total[name]
                 total_col = 3
                 for key, value in total.items():
-                    sheet.write(row, total_col, value, bg_normal_bordered)
+                    sheet.write(row, total_col, value, no_format_bold_bg)
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
@@ -202,7 +204,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                 for rec in final_rule_list:
                     header[len(header)] = rec[1]
                 for key, value in header.items():
-                    # sheet.set_column(0, 12, 16)
                     sheet.write(0, key, value, header_bold)
                 header_created = header_created + 1
 
@@ -243,7 +244,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     sheet.write(row, 2, value['count'], normal)
                     col = 3
                     for rule_key, rule_value in value['vals'].items():
-                        sheet.write(row, col, rule_value, normal)
+                        sheet.write(row, col, rule_value, no_format)
                         col = col + 1
                     row = row + 1
                     sub_employee_count = sub_employee_count + value['count']
@@ -263,7 +264,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
                 total_col = 3
                 for key, value in total.items():
-                    sheet.write(row, total_col, value, bg_normal_bordered)
+                    sheet.write(row, total_col, value, no_format_bold_bg)
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
@@ -273,7 +274,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
         grand_total_col = 3
         for key, value in grand_total.items():
-            sheet.write(last_row + 1, grand_total_col, value, bg_normal_bordered)
+            sheet.write(last_row + 1, grand_total_col, value, no_format_bold_bg)
             grand_total_col = grand_total_col + 1
 
         data['name'] = top_sheet.name

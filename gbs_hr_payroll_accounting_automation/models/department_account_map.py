@@ -5,14 +5,7 @@ class DepartmentAccount(models.Model):
     _name = 'department.account.map'
     _description = 'Department Account Map'
 
-    company_id = fields.Many2one('res.company', string='Company', store=True)
-
-    # @api.model
-    # def _default_departments(self):
-    #     if self.operating_unit_id:
-    #         print('operation obj', self.operating_unit_id)
-    #     operation_obj = self._context.get('active_id')
-    #     return self.env['hr.department'].search([('company_id', '=', operation_obj.company_id.id)])
+    company_id = fields.Many2one('res.company', string='Company')
 
     department_id = fields.Many2one('hr.department', string='Department')
 
