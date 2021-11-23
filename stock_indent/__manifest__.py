@@ -21,10 +21,12 @@
         'report/stock_indent.xml',
         'data/stock_indent_data.xml',
         'data/stock_indent_sequence.xml',
+        'data/stock_indent_scrap_sequence.xml',
         'views/stock_location_view.xml',
         'views/stock_indent_view.xml',
         'views/stock_picking_type.xml',
         'views/receive_products.xml',
+        'views/stock_scrap_view.xml'
     ],
     'installable': True,
     'application': False,
