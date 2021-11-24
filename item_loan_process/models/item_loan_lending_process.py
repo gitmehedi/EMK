@@ -3,14 +3,14 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from datetime import datetime
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
+
 
 class ItemLoanLending(models.Model):
     _name = 'item.loan.lending'
     _description = "Item Loan Lending"
     _inherit = ['mail.thread','ir.needaction_mixin']
     _order = "request_date desc"
-
 
     def _get_default_item_loan_location_id(self):
         return self.env['stock.location'].search([('usage', '=', 'customer'),('can_loan_request', '=', True)], limit=1).id
@@ -182,6 +182,12 @@ class ItemLoanLending(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    @api.model
+    def create(self, vals):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+        return super(ItemLoanLending, self).create(vals)
+
     def unlink(self):
         for indent in self:
             if indent.state != 'draft':
@@ -197,6 +203,14 @@ class ItemLoanLending(models.Model):
             return domain
         else:
             return False
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
+
 
 class ItemLoanLendingLines(models.Model):
     _name = 'item.loan.lending.line'

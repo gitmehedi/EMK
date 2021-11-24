@@ -1,5 +1,6 @@
 from odoo import api, fields, models,_
 
+
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
@@ -14,6 +15,7 @@ class PurchaseRequisition(models.Model):
             'res_model': 'rfq.wizard',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
+            'context': {'operating_unit_id': self.operating_unit_id.id},
             'target': 'new',
         }
 

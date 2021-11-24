@@ -3,7 +3,8 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
+
 
 class ItemBorrowing(models.Model):
     _name = 'item.borrowing'
@@ -179,6 +180,12 @@ class ItemBorrowing(models.Model):
     # Override methods
     ####################################################
 
+    @api.model
+    def create(self, vals):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+        return super(ItemBorrowing, self).create(vals)
+
     def unlink(self):
         for indent in self:
             if indent.state != 'draft':
@@ -194,6 +201,14 @@ class ItemBorrowing(models.Model):
             return domain
         else:
             return False
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
+
 
 class ItemBorrowingLines(models.Model):
     _name = 'item.borrowing.line'

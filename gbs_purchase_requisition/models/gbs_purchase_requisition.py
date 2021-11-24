@@ -3,6 +3,7 @@ from odoo import api, fields, models,_
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from odoo.addons import decimal_precision as dp
+from odoo.tools import frozendict
 
 
 class PurchaseRequisition(models.Model):
@@ -157,6 +158,12 @@ class PurchaseRequisition(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    @api.model
+    def create(self, vals):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+        return super(PurchaseRequisition, self).create(vals)
+
     @api.multi
     def unlink(self):
         for indent in self:
@@ -173,6 +180,13 @@ class PurchaseRequisition(models.Model):
         product_id_list = [line.product_id.id for line in self.line_ids]
         if len(product_id_list) != len(set(product_id_list)):
             raise ValidationError(_("Duplicate product found in products line."))
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
 
 
 class PurchaseRequisitionLine(models.Model):

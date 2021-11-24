@@ -2,6 +2,8 @@
 from datetime import datetime
 from odoo import models, fields, api
 from odoo.addons import decimal_precision as dp
+from odoo.tools import frozendict
+
 
 class Picking(models.Model):
     _inherit = "stock.picking"
@@ -58,14 +60,18 @@ class Picking(models.Model):
 
     @api.multi
     def button_print_mrr(self):
-        data = {}
-
-        data['origin'] = self.origin
-        data['self_picking_id'] = self.id
-        data['mrr_no'] = self.mrr_no
-        data['mrr_date'] = self.mrr_date
-
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(self.picking_type_id.operating_unit_id.id)
+        data = {'origin': self.origin, 'self_picking_id': self.id, 'mrr_no': self.mrr_no, 'mrr_date': self.mrr_date}
         return self.env['report'].get_action(self, 'stock_picking_mrr.report_mrr_doc', data=data)
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
+
 
 class PackOperation(models.Model):
     _inherit = "stock.pack.operation"
