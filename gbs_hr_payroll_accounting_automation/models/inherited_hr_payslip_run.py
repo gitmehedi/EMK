@@ -8,16 +8,6 @@ class InheritedPayslipRun(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
     account_move_id = fields.Many2one('account.move', readonly=True, string='Journal Entry')
 
-    journal_entry = fields.Integer(compute='compute_journal_entry')
-
-    def compute_journal_entry(self):
-        for record in self:
-            if record.account_move_id:
-                record.journal_entry = self.env['hr.payslip.run'].search_count(
-                    [('account_move_id', '=', self.account_move_id.id)])
-            else:
-                record.journal_entry = 0
-
     def get_journal_entry(self):
         self.ensure_one()
         return {
@@ -31,25 +21,48 @@ class InheritedPayslipRun(models.Model):
 
     @api.multi
     def create_provision(self):
-        payslip_run = self.env['hr.payslip.run'].sudo().browse(self.id)
-        entry_exist = payslip_run.search([('account_move_id', '!=', False)])
 
-        if self.journal_entry > 0:
+        if self.account_move_id:
             raise UserError(_('Journal Entry already created for this payslip batch.'))
 
+        if self.operating_unit_id:
+            if not self.operating_unit_id.payable_account:
+                raise UserError(_('GL Mapping not configured for this operating unit for payable account.'))
+            elif not self.operating_unit_id.tds_payable_account:
+                raise UserError(_('GL Mapping not configured for this operating unit for tds payable account.'))
+            elif not self.operating_unit_id.telephone_bill_account:
+                raise UserError(_('GL Mapping not configured for this operating unit for telephone bill account.'))
+            elif not self.operating_unit_id.employee_pf_contribution_account:
+                raise UserError(
+                    _('GL Mapping not configured for this operating unit for employee contribution account.'))
+            elif not self.operating_unit_id.company_pf_contribution_account:
+                raise UserError(
+                    _('GL Mapping not configured for this operating unit for company contribution account.'))
+            elif not self.operating_unit_id.default_debit_account:
+                raise UserError(_('GL Mapping not configured for this operating unit for default debit account.'))
+
+        no_cost_center_employee_list = []
+        no_department_employee_list = []
+        no_operating_unit_employee_list = []
         for slip in self.slip_ids:
             if not slip.employee_id.cost_center_id:
-                raise UserError(_('Cannot create journal entry because employee does not have cost center '
-                                  'configured.'))
+                no_cost_center_employee_list.append(slip.employee_id.name + ', ')
             if not slip.employee_id.department_id:
-                raise UserError(_('Cannot create journal entry because employee does not have department '
-                                  'configured.'))
+                no_department_employee_list.append(slip.employee_id.name + ', ')
             if not slip.employee_id.operating_unit_id:
-                raise UserError(_('Cannot create journal entry because employee does not have operating unit '
-                                  'configured.'))
+                no_operating_unit_employee_list.append(slip.employee_id.name + ', ')
+        if no_cost_center_employee_list:
+            raise UserError(_('Cannot create journal entry because these employees (%s) does not have cost center '
+                              'configured.' % no_cost_center_employee_list))
 
+        if no_department_employee_list:
+            raise UserError(_('Cannot create journal entry because these employees (%s) does not have department '
+                              'configured.' % no_department_employee_list))
+
+        if no_operating_unit_employee_list:
+            raise UserError(_('Cannot create journal entry because these employees (%s) does not have operating unit '
+                              'configured.' % no_operating_unit_employee_list))
         return {
-            # 'name': self.order_id,
             'res_model': 'hr.payslip.run.create.provision',
             'type': 'ir.actions.act_window',
             'context': {},

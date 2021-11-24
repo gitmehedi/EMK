@@ -61,7 +61,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <h5>
+                        <h5 style="margin-bottom: 10px;">
                             <b>Bank Credit(Total):</b>
                             <span t-esc="inword['bnet']"></span>
                             (<span t-esc="inword['bnet_word']"/>)
@@ -70,7 +70,24 @@
                                         t-esc="bank['bank_acc_id']"/>) : <span t-esc="bank['bysal']"/></p>
                             </t>
                         </h5>
-                        <h5>
+                        <table style="margin-left: 25px;">
+                            <t t-foreach="payroll_bank_amount_dict" t-as="rec">
+                                <h5>
+                                    <tr>
+                                        <td>
+                                            <b><span t-esc="rec_value['bank']"/> </b>
+                                        </td>
+                                        <td>
+                                            <p style="margin-left:5px;">:
+                                                <span t-esc="formatLang(rec_value['amount'])"/>
+                                                (<span t-esc="rec_value['amount_in_word']"/>)
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </h5>
+                            </t>
+                        </table>
+                        <h5 style="margin-top:20px;">
                             <b>Cash Payment :</b>
                             <span t-esc="inword['cash']"></span>
                             (<span t-esc="inword['cash_word']"/>)

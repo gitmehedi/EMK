@@ -1,23 +1,27 @@
-from odoo import models, fields,api, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+
 
 class HrMobileBillLimits(models.Model):
     _name = 'hr.mobile.bill.limit'
     _inherit = ['mail.thread']
     _order = 'effective_bill_date desc'
 
-
-    name = fields.Char('Name', required=True,states={'draft': [('invisible', False)],
-            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
-    effective_bill_date = fields.Date('Effective Date', required=True,states={'draft': [('invisible', False)],
-            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+    name = fields.Char('Name', required=True, states={'draft': [('invisible', False)],
+                                                      'applied': [('readonly', True)],
+                                                      'approved': [('readonly', True)]})
+    effective_bill_date = fields.Date('Effective Date', required=True, states={'draft': [('invisible', False)],
+                                                                               'applied': [('readonly', True)],
+                                                                               'approved': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', index=True,
                                  default=lambda self: self.env.user.company_id)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
 
     """ Relational Fields """
 
-    line_ids = fields.One2many('hr.employee.mobile.bill.line','parent_id',"Line Ids",states={'draft': [('invisible', False)],
-            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+    line_ids = fields.One2many('hr.employee.mobile.bill.line', 'parent_id', "Line Ids",
+                               states={'draft': [('invisible', False)],
+                                       'applied': [('readonly', True)], 'approved': [('readonly', True)]})
 
     """ All Selection fields """
 
@@ -26,7 +30,6 @@ class HrMobileBillLimits(models.Model):
         ('applied', "Applied"),
         ('approved', "Approved"),
     ], default='draft')
-
 
     @api.multi
     def action_draft(self):
@@ -40,8 +43,8 @@ class HrMobileBillLimits(models.Model):
     def action_done(self):
         self.state = 'approved'
 
-
     """All function which process data and operation"""
+
     @api.onchange('effective_bill_date')
     def onchange_effective_bill_date(self):
         if self.effective_bill_date:

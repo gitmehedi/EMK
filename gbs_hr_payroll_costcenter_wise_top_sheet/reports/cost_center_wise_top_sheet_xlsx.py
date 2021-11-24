@@ -38,13 +38,12 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
         report_name = 'Cost Center Wise Top Sheet'
         sheet = workbook.add_worksheet(report_name)
-        bold = workbook.add_format({'font_size': 8, 'bold': True})
         header_bold = workbook.add_format({'font_size': 8, 'bold': True, 'border': 1})
-        bg_bold = workbook.add_format({'font_size': 8, 'bold': True, 'bg_color': '#78B0DE'})
         normal = workbook.add_format({'font_size': 8})
-        bg_normal = workbook.add_format({'font_size': 8, 'bg_color': '#78B0DE'})
         bg_normal_bordered = workbook.add_format({'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
-        # .add_format({'bg_color': '#00C7CE'})
+        no_format = workbook.add_format({'num_format': '#,###0.00', 'font_size': 8})
+        no_format_bold_bg = workbook.add_format(
+            {'num_format': '#,###0.00', 'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
         top_sheet = obj.hr_payslip_run_id
         header_created = 0
         last_row = 0
@@ -89,8 +88,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
             final_rule_list = sorted(final_rule_list, key=lambda k: k[0])
             final_rule_list = self.get_final_rule_list(all_rule_list, final_rule_list)
 
-            print('final_rule_list')
-
             for cost_center in obj.cost_center_ids:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
                 if not payslip_list:
@@ -101,7 +98,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                 header[1] = 'Department'
                 header[2] = 'Employee'
                 for rec in final_rule_list:
-                    print('rec', rec)
                     header[len(header)] = rec[1]
                 for key, value in header.items():
                     sheet.write(0, key, value, header_bold)
@@ -144,7 +140,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     sheet.write(row, 2, value['count'], normal)
                     col = 3
                     for rule_key, rule_value in value['vals'].items():
-                        sheet.write(row, col, rule_value, normal)
+                        sheet.write(row, col, rule_value, no_format)
                         col = col + 1
                     row = row + 1
                     sub_employee_count = sub_employee_count + value['count']
@@ -163,10 +159,11 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                         del grand_total[name]
                 total_col = 3
                 for key, value in total.items():
-                    sheet.write(row, total_col, value, bg_normal_bordered)
+                    sheet.write(row, total_col, value, no_format_bold_bg)
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
+
         else:
             cost_centers = self.env['account.cost.center'].search([])
 
@@ -207,10 +204,8 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                 header[1] = 'Department'
                 header[2] = 'Employee'
                 for rec in final_rule_list:
-                    print('rec', rec)
                     header[len(header)] = rec[1]
                 for key, value in header.items():
-                    # sheet.set_column(0, 12, 16)
                     sheet.write(0, key, value, header_bold)
                 header_created = header_created + 1
 
@@ -251,7 +246,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     sheet.write(row, 2, value['count'], normal)
                     col = 3
                     for rule_key, rule_value in value['vals'].items():
-                        sheet.write(row, col, rule_value, normal)
+                        sheet.write(row, col, rule_value, no_format)
                         col = col + 1
                     row = row + 1
                     sub_employee_count = sub_employee_count + value['count']
@@ -269,11 +264,9 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     if name in grand_total:
                         del grand_total[name]
 
-                # print('shared items', shared_items)
-                print('total dict', total)
                 total_col = 3
                 for key, value in total.items():
-                    sheet.write(row, total_col, value, bg_normal_bordered)
+                    sheet.write(row, total_col, value, no_format_bold_bg)
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
@@ -283,7 +276,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
         grand_total_col = 3
         for key, value in grand_total.items():
-            sheet.write(last_row + 1, grand_total_col, value, bg_normal_bordered)
+            sheet.write(last_row + 1, grand_total_col, value, no_format_bold_bg)
             grand_total_col = grand_total_col + 1
 
         data['name'] = top_sheet.name

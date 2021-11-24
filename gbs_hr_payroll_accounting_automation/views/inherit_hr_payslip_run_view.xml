@@ -9,23 +9,20 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//label[@for='name']" position="after">
-
                     <div class="oe_button_box" name="button_box">
 
                         <button class="oe_stat_button" type="object" name="get_journal_entry"
-                                icon="fa-book">
-                            <field string="Journal Entry" name="journal_entry" widget="statinfo"/>
+                                attrs="{'invisible':['|',('state','=','draft'),('account_move_id','=',False)]}" string="Journal Entry" icon="fa-book">
+
                         </button>
                     </div>
-
-
                 </xpath>
 
 
                 <xpath expr="//header/button[@name='draft_payslip_run']" position="after">
 
                     <button name="create_provision" string="Create Provision"
-                            attrs="{'invisible':['|',('state','=','draft'),('journal_entry','>',0)]}"
+                            attrs="{'invisible':['|',('state','=','draft'),('account_move_id','!=',False)]}"
                             groups="gbs_hr_payroll_accounting_automation.group_payroll_accounting"
                             type="object" style="background-color: #5892D7;color:white;"/>
 
@@ -33,7 +30,13 @@
                 </xpath>
 
                 <xpath expr="//field[@name='send_email']" position="before">
+
                     <field name="operating_unit_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+
+                </xpath>
+
+                 <xpath expr="//field[@name='available_advice']" position="before">
+                    <field name="account_move_id" invisible="True"/>
                 </xpath>
 
 
