@@ -1,8 +1,9 @@
 from odoo import api, fields, models, _
-from datetime import datetime
+from datetime import datetime, date, time, timedelta
 from collections import OrderedDict
 import operator, math, locale
 from odoo.exceptions import UserError
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as OE_DFORMAT
 
 
 class CreateProvision(models.TransientModel):
@@ -114,7 +115,17 @@ class CreateProvision(models.TransientModel):
 
     journal_id = fields.Many2one('account.journal', readonly=True, required=True,
                                  string='Journal')
-    date = fields.Date(required=True, default=fields.Date.context_today)
+
+    def _default_date(self):
+        payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
+            'active_id'))
+        datetime_obj = datetime.strptime(payslip_run_obj.date_end, OE_DFORMAT)
+        next_month = datetime_obj.date().replace(day=28) + timedelta(days=4)
+
+        return next_month - timedelta(days=next_month.day)
+
+    date = fields.Date(required=True,
+                       default=lambda self: self._default_date())
 
     current_user = fields.Many2one('res.users', 'Current User', default=lambda self: self.env.user)
 
