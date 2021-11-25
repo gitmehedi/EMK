@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.tools import frozendict
 
 
 class AccountInvoice(models.Model):
@@ -82,9 +83,28 @@ class AccountInvoice(models.Model):
                     account_move_line.write({'name': name})
         return res
 
+    @api.multi
+    def action_invoice_open(self):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(self.operating_unit_id.id)
+        return super(AccountInvoice, self).action_invoice_open()
+
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'draft')]
+
+    @api.model
+    def _anglo_saxon_purchase_move_lines(self, i_line, res):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(self.operating_unit_id.id)
+        return super(AccountInvoice, self)._anglo_saxon_purchase_move_lines(i_line, res)
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
 
 
 class AccountInvoiceLine(models.Model):
@@ -144,6 +164,11 @@ class AccountInvoiceLine(models.Model):
                 price_subtotal = taxes['taxes'][0]['base']
 
         return price_subtotal
+
+    def _set_taxes(self):
+        # Add operating unit in the context
+        self.invoice_id._add_operating_unit_in_context(self.invoice_id.operating_unit_id.id)
+        super(AccountInvoiceLine, self)._set_taxes()
 
 
 class AccountInvoiceTax(models.Model):

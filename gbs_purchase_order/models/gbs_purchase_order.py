@@ -242,7 +242,8 @@ class PurchaseOrder(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'context': {'region_type': self.region_type or False,
-                        'purchase_by': self.purchase_by or False},
+                        'purchase_by': self.purchase_by or False,
+                        'operating_unit_id': self.operating_unit_id.id},
             'target': 'new',
         }
 

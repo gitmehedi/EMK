@@ -50,6 +50,7 @@
                     </xpath>
                     <xpath expr="//field[@name='line_ids']" position="attributes">
                         <attribute name="attrs">{'readonly': [('state','in',('done','cancel','close'))]}</attribute>
+                        <attribute name="context">{'operating_unit_id': operating_unit_id}</attribute>
                     </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="replace">
                         <button name="action_cancel" groups="commercial.group_commercial_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
