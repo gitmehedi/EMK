@@ -3,9 +3,11 @@ from odoo import fields, models
 class InheritHRPayslipsBatches(models.Model):
     _inherit = 'hr.payslip.run'
 
+    # Salary With Bonus type removed
     type = fields.Selection([("0", "Regular Salary"),
-                             ("1", "Festival Bonus"),
-                             ("2", "Salary With Bonus")], "Type", required=True,default="0")
+                             ("1", "Festival Bonus")], "Type", required=True, default="0")
+
+
     festival_date = fields.Date('Festival Date')
 
 
@@ -20,9 +22,9 @@ class InheritHRPayslip(models.Model):
 
         return "0"
 
+    # Salary With Bonus type removed
     type = fields.Selection([("0", "Regular Salary"),
-                             ("1", "Festival Bonus"),
-                             ("2", "Salary With Bonus")], "Type",
+                             ("1", "Festival Bonus")], "Type",
                             required=True, default=_get_default_type)
 
     festival_date = fields.Date('Festival Date', related='payslip_run_id.festival_date', store=True)

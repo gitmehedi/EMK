@@ -5,6 +5,10 @@ class DepartmentAccount(models.Model):
     _name = 'department.account.map'
     _description = 'Department Account Map'
 
+    type = fields.Selection(
+        [('regular', "Regular Salary"),
+         ('festival_bonus', "Festival Bonus")], readonly=True)
+
     company_id = fields.Many2one('res.company', string='Company')
 
     department_id = fields.Many2one('hr.department', string='Department')

@@ -33,7 +33,7 @@
                                            options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                 </group>
                                 <group>
-                                    <field name="operating_unit_id" domain="[('company_id','=',company_id)]"
+                                    <field name="operating_unit_id" attrs="{'readonly':[('line_ids', '!=', [])]}"  domain="[('company_id','=',company_id)]"
                                            options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                 </group>
                             <notebook colspan="4">

@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 class InheritedPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
 
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
     account_move_id = fields.Many2one('account.move', readonly=True, string='Journal Entry')
 
     def get_journal_entry(self):

@@ -16,7 +16,7 @@
                             <group>
                                 <field name="journal_id" options="{'no_quick_create': True, 'no_create_edit' : True}"
                                        domain="[('company_id','=',company_id),('type','=','general')]"/>
-                                <field name="date"/>
+                                <field name="date" required="1"/>
                             </group>
                             <group>
                                 <field name="payslip_run_id" invisible="1"/>
