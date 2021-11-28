@@ -51,17 +51,17 @@ class StockTransferSummaryReport(models.AbstractModel):
                                     sl1.name AS dest_location,
                                     sm.product_qty AS qty_out_tk,
                                     sm.date,
-                                    sm.product_qty * Coalesce((SELECT ph.current_price
-                                             FROM   product_cost_price_history ph
-                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
+                                    sm.product_qty * Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  to_char(ph.datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             ORDER  BY ph.datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_out_tk,
-                                    Coalesce((SELECT ph.current_price
-                                     FROM   product_cost_price_history ph
-                                     WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
+                                    Coalesce((SELECT ph.cost
+                                     FROM   product_price_history ph
+                                     WHERE  to_char(ph.datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                             AND pp.id = ph.product_id
-                                     ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                     ORDER  BY ph.datetime DESC,ph.id DESC
                                      LIMIT  1), 0)  AS cost_price,
                                     pc.id AS cetegory_id
                                            

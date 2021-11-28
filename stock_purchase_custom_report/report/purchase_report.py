@@ -55,17 +55,17 @@ class StockPurchaseReport(models.AbstractModel):
                             sp.mrr_no AS mrr,
                             sm.date + interval'6h' AS m_date,
                             sm.product_qty AS qty_in_tk, 
-                            sm.product_qty * Coalesce((SELECT ph.current_price
-                                FROM product_cost_price_history ph
-                                WHERE to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI') 
+                            sm.product_qty * Coalesce((SELECT ph.cost
+                                FROM product_price_history ph
+                                WHERE to_char(ph.datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI') 
                                     AND pp.id = ph.product_id
-                                ORDER BY ph.modified_datetime DESC,ph.id DESC
+                                ORDER BY ph.datetime DESC,ph.id DESC
                                 LIMIT 1), 0) AS val_in_tk,
-                            Coalesce((SELECT ph.current_price
-                                FROM product_cost_price_history ph
-                                WHERE to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
+                            Coalesce((SELECT ph.cost
+                                FROM product_price_history ph
+                                WHERE to_char(ph.datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                     AND pp.id = ph.product_id
-                                ORDER BY ph.modified_datetime DESC,ph.id DESC
+                                ORDER BY ph.datetime DESC,ph.id DESC
                                 LIMIT 1), 0) AS rate_in
                         FROM   
                             stock_move sm 
