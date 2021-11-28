@@ -82,17 +82,17 @@ class StockTransferDetailsReport(models.AbstractModel):
                                            sm.date + interval'6h'  AS move_date,
                                            sm.origin               AS move_origin,
                                            sm.product_qty          AS qty_out_tk,
-                                           Coalesce((SELECT ph.current_price
-                                             FROM   product_cost_price_history ph
-                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
+                                           Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  to_char(ph.datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             ORDER  BY ph.datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS cost_val,
-                                           sm.product_qty * Coalesce((SELECT ph.current_price
-                                             FROM   product_cost_price_history ph
-                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
+                                           sm.product_qty * Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  to_char(ph.datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             ORDER  BY ph.datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_out_tk
                                     FROM   stock_move sm 
                                            LEFT JOIN stock_picking sp 
