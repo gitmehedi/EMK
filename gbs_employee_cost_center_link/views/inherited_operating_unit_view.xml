@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
 
-                    <field name="cost_center_required"/>
+                    <field name="cost_center_required" require="1"/>
                 </xpath>
             </field>
         </record>

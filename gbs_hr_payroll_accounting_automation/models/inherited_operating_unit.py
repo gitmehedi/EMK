@@ -10,7 +10,9 @@ class InheritedOperatingUnit(models.Model):
     employee_pf_contribution_account = fields.Many2one('account.account', string='Employee PF Contribution GL')
     company_pf_contribution_account = fields.Many2one('account.account', string='Company PF Contribution GL')
 
-    default_debit_account = fields.Many2one('account.account', string='Default Debit GL')
-
+    default_debit_account = fields.Many2one('account.account', string='Default Salary Debit GL')
+    default_festival_debit_account = fields.Many2one('account.account', string='Default Festival Debit GL')
     debit_account_ids = fields.One2many('department.account.map', 'operating_unit_id',
-                                        string="""Debit GL's""")
+                                        string="""Salary Debit GL's""")
+    bonus_debit_account_ids = fields.One2many('department.account.map', 'operating_unit_id',
+                                              string="""Bonus Debit GL's""")

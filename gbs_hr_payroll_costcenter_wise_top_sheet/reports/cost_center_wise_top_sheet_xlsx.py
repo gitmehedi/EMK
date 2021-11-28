@@ -9,20 +9,32 @@ import operator, math, locale
 class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
     def get_payslip_list(self, cost_center, top_sheet):
-        self.env.cr.execute("""
-                            select id from hr_payslip where employee_id in 
-                            (select id from hr_employee where cost_center_id = %s) 
-                            and payslip_run_id = %s
-                        """ % (cost_center.id, top_sheet.id))
+        if not cost_center:
+            self.env.cr.execute(""" 
+                        select id from hr_payslip where employee_id in 
+                                    (select id from hr_employee where cost_center_id IS NULL) and payslip_run_id = %s
+                                            """ % top_sheet.id)
+
+        else:
+            self.env.cr.execute("""
+                                            select id from hr_payslip where employee_id in 
+                                            (select id from hr_employee where cost_center_id = %s) 
+                                            and payslip_run_id = %s
+                                        """ % (cost_center.id, top_sheet.id))
         payslip_list = []
         for id in self.env.cr.fetchall():
             payslip_list.append(self.env['hr.payslip'].browse(id))
         return payslip_list
 
-    def get_rule_list(self, payslip_list):
+    def get_rule_list(self, payslip_list, non_costcenter_payslip_list):
         rule_list = []
 
         for slip in payslip_list:
+            for line in slip.line_ids:
+                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
+                    rule_list.append((line.sequence, line.name))
+
+        for slip in non_costcenter_payslip_list:
             for line in slip.line_ids:
                 if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
                     rule_list.append((line.sequence, line.name))
@@ -38,7 +50,8 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
         report_name = 'Cost Center Wise Top Sheet'
         sheet = workbook.add_worksheet(report_name)
-        header_bold = workbook.add_format({'font_size': 8, 'bold': True, 'border': 1})
+        sheet.set_column(1, 30, 20)
+        header_bold = workbook.add_format({'font_size': 8, 'bg_color': '#78B0DE', 'bold': True, 'border': 1})
         normal = workbook.add_format({'font_size': 8})
         bg_normal_bordered = workbook.add_format({'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
         no_format = workbook.add_format({'num_format': '#,###0.00', 'font_size': 8})
@@ -62,9 +75,10 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
         if obj.cost_center_ids:
             for cost_center in obj.cost_center_ids:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
+                non_costcenter_payslip_list = self.get_payslip_list(False, top_sheet)
                 if not payslip_list:
                     continue
-                rule_list = self.get_rule_list(payslip_list)
+                rule_list = self.get_rule_list(payslip_list, non_costcenter_payslip_list)
 
                 if rule_list:
                     rule_list_created = rule_list_created + 1
@@ -169,9 +183,10 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
             for cost_center in cost_centers:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
+                non_costcenter_payslip_list = self.get_payslip_list(False, top_sheet)
                 if not payslip_list:
                     continue
-                rule_list = self.get_rule_list(payslip_list)
+                rule_list = self.get_rule_list(payslip_list, non_costcenter_payslip_list)
 
                 if rule_list:
                     rule_list_created = rule_list_created + 1
@@ -270,6 +285,66 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
+
+        non_costcenter_payslip_list = self.get_payslip_list(False, top_sheet)
+
+        bnet = 0
+        net = 0
+        record = OrderedDict()
+
+        for rec in non_costcenter_payslip_list:
+            rules = OrderedDict()
+            for rule in final_rule_list:
+                rules[rule[1]] = 0
+            record[rec.employee_id.department_id.name] = {}
+            record[rec.employee_id.department_id.name]['count'] = 0
+            record[rec.employee_id.department_id.name]['vals'] = rules
+
+        for slip in non_costcenter_payslip_list:
+            rec = record[slip.employee_id.department_id.name]
+            rec['count'] = rec['count'] + 1
+            for line in slip.line_ids:
+                if line.appears_on_payslip:
+                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
+                    total[line.name] = total[line.name] + math.ceil(line.total)
+                if line.code == 'BNET' and slip.employee_id.bank_account_id.bank_id:
+                    bnet = bnet + math.ceil(line.total)
+                if line.code == 'NET':
+                    net = net + math.ceil(line.total)
+
+        sheet.write(last_row + 1, 0, 'Undefined', normal)
+
+        row = last_row + 1 + 1
+        sub_employee_count = 0
+        for key, value in record.items():
+            sheet.write(row, 1, key, normal)
+            sheet.write(row, 2, value['count'], normal)
+            col = 3
+            for rule_key, rule_value in value['vals'].items():
+                sheet.write(row, col, rule_value, no_format)
+                col = col + 1
+            row = row + 1
+            sub_employee_count = sub_employee_count + value['count']
+
+        sheet.write(row, 0, 'Sub Total', bg_normal_bordered)
+        sheet.write(row, 1, ' ', bg_normal_bordered)
+        sheet.write(row, 2, sub_employee_count, bg_normal_bordered)
+        total_employee_count = total_employee_count + sub_employee_count
+
+        set1 = set(total)
+        set2 = set(grand_total)
+        shared_items = set2 - set1
+
+        for name in shared_items:
+            if name in grand_total:
+                del grand_total[name]
+        total_col = 3
+        for key, value in total.items():
+            sheet.write(row, total_col, value, no_format_bold_bg)
+            grand_total[key] = grand_total[key] + value
+            total_col = total_col + 1
+        last_row = row
+
         sheet.write(last_row + 1, 0, 'Total', bg_normal_bordered)
         sheet.write(last_row + 1, 1, ' ', bg_normal_bordered)
         sheet.write(last_row + 1, 2, total_employee_count, bg_normal_bordered)
