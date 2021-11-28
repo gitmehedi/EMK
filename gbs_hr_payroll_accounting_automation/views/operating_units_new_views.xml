@@ -62,7 +62,7 @@
 
                         </page>
                         <page string="Bonus Debit Accounts">
-                            <field name="bonus_debit_account_ids" context="{'default_company_id': company_id,'default_type': 'festival_bonus'}">
+                            <field name="festival_debit_account_ids" context="{'default_company_id': company_id,'default_type': 'festival_bonus'}">
                                 <tree editable="bottom">
                                     <field name="department_id" domain="[('company_id','=',company_id)]"
                                            options="{'no_quick_create': True, 'no_create_edit' : True, 'no_open' : True}"/>

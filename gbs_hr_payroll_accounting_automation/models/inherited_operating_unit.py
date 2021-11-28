@@ -14,5 +14,6 @@ class InheritedOperatingUnit(models.Model):
     default_festival_debit_account = fields.Many2one('account.account', string='Default Festival Debit GL')
     debit_account_ids = fields.One2many('department.account.map', 'operating_unit_id',
                                         string="""Salary Debit GL's""")
-    bonus_debit_account_ids = fields.One2many('department.account.map', 'operating_unit_id',
+    festival_debit_account_ids = fields.One2many('department.account.map', 'festival_operating_unit_id',
                                               string="""Bonus Debit GL's""")
+

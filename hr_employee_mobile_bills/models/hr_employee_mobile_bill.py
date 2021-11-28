@@ -39,7 +39,7 @@ class HrContract(models.Model):
                     result.append((rec.id, ''))
         else:
             for rec in self:
-                name = rec.name + ' [' + rec.job_id.name + ']'
+                name = str(rec.name) + ' [' + str(rec.job_id.name) + ']'
                 result.append((rec.id, name))
         return result
 
