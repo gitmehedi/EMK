@@ -20,7 +20,9 @@
     'depends': [
         'stock_picking_extend',
         'product_gate_in',
-        'gbs_product_cost_price_history',
+        'purchase',
+        'stock_move_backdating',
+        'stock_account',
         'gbs_application_group',
         'report_layout',
     ],
