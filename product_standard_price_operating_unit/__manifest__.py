@@ -8,7 +8,10 @@
     'category': 'Product',
     'version': '10.0.0.1',
     'depends': [
-        'product'
+        'product',
+        'stock_custom_summary_report',
+        'stock_purchase_custom_report',
+        'stock_transfer_report'
     ],
     'data': [
         'views/product_views.xml'
