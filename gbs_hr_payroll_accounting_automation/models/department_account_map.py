@@ -17,3 +17,6 @@ class DepartmentAccount(models.Model):
 
     operating_unit_id = fields.Many2one(comodel_name='operating.unit', ondelete='cascade', string='Operating Unit',
                                         store="True")
+
+    festival_operating_unit_id = fields.Many2one(comodel_name='operating.unit', ondelete='cascade', string='Operating Unit',
+                                        store="True")

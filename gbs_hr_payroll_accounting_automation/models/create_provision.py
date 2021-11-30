@@ -89,6 +89,15 @@ class CreateProvision(models.TransientModel):
                                             default=lambda self: self._default_debit_account(),
                                             string='Default Debit GL')
 
+    def _default_festival_debit_account(self):
+        payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
+            'active_id'))
+        return payslip_run_obj.operating_unit_id.default_festival_debit_account
+
+    default_festival_debit_account = fields.Many2one('account.account',
+                                                     default=lambda self: self._default_festival_debit_account(),
+                                                     string='Default Festival Debit GL')
+
     @api.model
     def default_get(self, fields):
         res = super(CreateProvision, self).default_get(fields)
@@ -108,10 +117,25 @@ class CreateProvision(models.TransientModel):
             res.update({'debit_account_ids': debit_account_lines})
         else:
             print('not debit accounts found')
+
+        if payslip_run_obj.operating_unit_id.festival_debit_account_ids:
+            bonus_debit_account_lines = [(5, 0, 0)]
+            for bonus_debit_account in payslip_run_obj.operating_unit_id.festival_debit_account_ids:
+                line = (0, 0, {
+                    'department_id': bonus_debit_account.department_id.id,
+                    'account_id': bonus_debit_account.account_id.id
+                })
+                bonus_debit_account_lines.append(line)
+            res.update({'festival_debit_account_ids': bonus_debit_account_lines})
+        else:
+            print('not bonus debit accounts found')
         return res
 
     debit_account_ids = fields.One2many('temp.department.account.map', 'provision_id',
                                         string="""Debit GL's""")
+
+    festival_debit_account_ids = fields.One2many('temp.bonus.department.account.map', 'provision_id',
+                                                 string="""Bonus Debit GL's""")
 
     journal_id = fields.Many2one('account.journal', readonly=True, required=True,
                                  string='Journal')
@@ -142,6 +166,14 @@ class CreateProvision(models.TransientModel):
         'Company',
         default=lambda self: self._default_company()
     )
+
+    def _default_salary_type(self):
+        payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
+            'active_id'))
+        return payslip_run_obj.type
+
+    salary_type = fields.Selection([("0", "Regular Salary"),
+                                    ("1", "Festival Bonus")], "Type", default=lambda self: self._default_salary_type())
 
     def get_payslip_list(self, payslip_run_id):
         self.env.cr.execute("""
@@ -357,6 +389,76 @@ class CreateProvision(models.TransientModel):
                         sum = sum + math.ceil(line.total)
         return sum
 
+    def get_festival_department_net_values(self, top_sheet):
+        rule_list = []
+        for slip in top_sheet.slip_ids:
+            if not slip.employee_id.cost_center_id:
+                raise UserError(_('Cannot create journal entry because employee does not have cost center '
+                                  'configured.'))
+            if not slip.employee_id.department_id:
+                raise UserError(_('Cannot create journal entry because employee does not have department '
+                                  'configured.'))
+            if not slip.employee_id.operating_unit_id:
+                raise UserError(_('Cannot create journal entry because employee does not have operating unit '
+                                  'configured.'))
+
+            for line in slip.line_ids:
+                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
+                    rule_list.append((line.sequence, line.name))
+
+        rule_list = sorted(rule_list, key=lambda k: k[0])
+
+        record = OrderedDict()
+        for rec in top_sheet.slip_ids:
+            rules = OrderedDict()
+            for rule in rule_list:
+                rules[rule[1]] = 0
+            record[rec.employee_id.department_id.name] = {}
+            record[rec.employee_id.department_id.name]['count'] = 0
+            record[rec.employee_id.department_id.name]['vals'] = rules
+
+        for slip in top_sheet.slip_ids:
+            rec = record[slip.employee_id.department_id.name]
+            rec['count'] = rec['count'] + 1
+            for line in slip.line_ids:
+                if line.appears_on_payslip and line.code == 'FBONUS':
+                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
+
+        department_net = OrderedDict()
+        cost_center_list = []
+        for key, value in record.items():
+            # check which cost center available under this department
+            for slip in top_sheet.slip_ids:
+                department_id = slip.employee_id.department_id.id
+                if slip.employee_id.department_id.name == key:
+                    if slip.employee_id.cost_center_id:
+                        cost_center_list.append(slip.employee_id.cost_center_id)
+
+                    # then add cost center of that employee
+            cost_center_list = list(dict.fromkeys(cost_center_list))
+
+            department_net[key] = {}
+
+            for cost_center in cost_center_list:
+                department_net[key][cost_center] = 0
+
+        for key, value in department_net.items():
+            # a cost center and a department total net value
+            # get_total_net_value_of_this_cost_center_department
+            for cost_center in value:
+                sum = 0
+                for slip in top_sheet.slip_ids:
+                    if slip.employee_id.department_id.name == key and slip.employee_id.cost_center_id.id == cost_center.id:
+
+                        for line in slip.line_ids:
+                            if line.appears_on_payslip and line.code == 'FBONUS':
+                                sum = sum + math.ceil(line.total)
+
+                department_net[key][cost_center] = sum
+
+        print('department net', department_net)
+        return department_net
+
     def get_cost_center_wise_telephone_bill(self, payslip_cost_centers, top_sheet):
         cost_center_telephone_dict = OrderedDict()
         for cost_center in payslip_cost_centers:
@@ -387,139 +489,95 @@ class CreateProvision(models.TransientModel):
 
     def create_provision(self):
         if self.payslip_run_id:
+            print('salary type', self.salary_type)
             # check if journal entry created for this payslip run
             if self.payslip_run_id.account_move_id:
                 raise UserError(_('Journal Entry already created for this payslip batch.'))
-
-            department_net_values = self.get_department_net_values(self.payslip_run_id)
             payslip_departments = self.get_departments(self.payslip_run_id)
             payslip_cost_centers = self.get_cost_centers(self.payslip_run_id)
-            top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
+            if self.salary_type == '0':
+                department_net_values = self.get_department_net_values(self.payslip_run_id)
 
-            total_tax_deducted_source = self.get_total_tds_value(self.payslip_run_id)
+                top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
 
-            if total_tax_deducted_source < 0:
-                total_tax_deducted_source = total_tax_deducted_source * (-1)
+                total_tax_deducted_source = self.get_total_tds_value(self.payslip_run_id)
 
-            employee_pf_contribution = self.get_employee_pf_contribution(self.payslip_run_id)
-            if employee_pf_contribution < 0:
-                employee_pf_contribution = employee_pf_contribution * (-1)
+                if total_tax_deducted_source < 0:
+                    total_tax_deducted_source = total_tax_deducted_source * (-1)
 
-            company_pf_contribution = employee_pf_contribution
-            if company_pf_contribution < 0:
-                company_pf_contribution = company_pf_contribution * (-1)
+                employee_pf_contribution = self.get_employee_pf_contribution(self.payslip_run_id)
+                if employee_pf_contribution < 0:
+                    employee_pf_contribution = employee_pf_contribution * (-1)
 
-            telephone_mobile_bill = self.get_telephone_mobile_bill(self.payslip_run_id)
-            if telephone_mobile_bill < 0:
-                telephone_mobile_bill = telephone_mobile_bill * (-1)
+                company_pf_contribution = employee_pf_contribution
+                if company_pf_contribution < 0:
+                    company_pf_contribution = company_pf_contribution * (-1)
 
-            cost_center_wise_telephone_bill = self.get_cost_center_wise_telephone_bill(payslip_cost_centers,
-                                                                                       self.payslip_run_id)
+                telephone_mobile_bill = self.get_telephone_mobile_bill(self.payslip_run_id)
+                if telephone_mobile_bill < 0:
+                    telephone_mobile_bill = telephone_mobile_bill * (-1)
 
-            journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
+                cost_center_wise_telephone_bill = self.get_cost_center_wise_telephone_bill(payslip_cost_centers,
+                                                                                           self.payslip_run_id)
 
-            if self.payslip_run_id.operating_unit_id:
-                month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
-                datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
-                move_lines = []
-                sum_debit = 0
-                sum_credit = 0
-                tds_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                          self.payslip_run_id.operating_unit_id.tds_payable_account.id,
-                                                          self.payslip_run_id.operating_unit_id.id, False, False, 0,
-                                                          total_tax_deducted_source,
-                                                          self.operating_unit_id.company_id.id)
+                journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
 
-                sum_credit = sum_credit + total_tax_deducted_source
+                if self.payslip_run_id.operating_unit_id:
+                    month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
+                    datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
+                    move_lines = []
+                    sum_debit = 0
+                    sum_credit = 0
+                    tds_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                              self.payslip_run_id.operating_unit_id.tds_payable_account.id,
+                                                              self.payslip_run_id.operating_unit_id.id, False, False, 0,
+                                                              total_tax_deducted_source,
+                                                              self.operating_unit_id.company_id.id)
 
-                pf_com_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                             self.payslip_run_id.operating_unit_id.company_pf_contribution_account.id,
-                                                             self.payslip_run_id.operating_unit_id.id, 0, False, False,
-                                                             company_pf_contribution,
-                                                             self.operating_unit_id.company_id.id)
+                    sum_credit = sum_credit + total_tax_deducted_source
 
-                sum_credit = sum_credit + company_pf_contribution
+                    pf_com_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                 self.payslip_run_id.operating_unit_id.company_pf_contribution_account.id,
+                                                                 self.payslip_run_id.operating_unit_id.id, 0, False,
+                                                                 False,
+                                                                 company_pf_contribution,
+                                                                 self.operating_unit_id.company_id.id)
 
-                pf_emp_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                             self.payslip_run_id.operating_unit_id.employee_pf_contribution_account.id,
-                                                             self.payslip_run_id.operating_unit_id.id, 0, False, False,
-                                                             employee_pf_contribution,
-                                                             self.operating_unit_id.company_id.id)
+                    sum_credit = sum_credit + company_pf_contribution
 
-                sum_credit = sum_credit + employee_pf_contribution
+                    pf_emp_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                 self.payslip_run_id.operating_unit_id.employee_pf_contribution_account.id,
+                                                                 self.payslip_run_id.operating_unit_id.id, 0, False,
+                                                                 False,
+                                                                 employee_pf_contribution,
+                                                                 self.operating_unit_id.company_id.id)
 
-                if self.payslip_run_id.operating_unit_id.debit_account_ids:
-                    for key, value in department_net_values.items():
-                        for cost_center_value in value:
-                            department = self.get_department_id(payslip_departments, key)
-                            debit_account_obj = self.env['department.account.map'].sudo().search(
-                                [('department_id', '=', department.id),
-                                 ('operating_unit_id', '=', self.payslip_run_id.operating_unit_id.id)])
-                            if debit_account_obj:
-                                debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                     debit_account_obj.account_id.id,
-                                                                     self.payslip_run_id.operating_unit_id.id,
-                                                                     department.id, cost_center_value.id,
-                                                                     department_net_values[key][cost_center_value], 0,
-                                                                     self.operating_unit_id.company_id.id)
+                    sum_credit = sum_credit + employee_pf_contribution
 
-                            else:
-                                debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                     self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                     self.payslip_run_id.operating_unit_id.id,
-                                                                     department.id, cost_center_value.id,
-                                                                     department_net_values[key][cost_center_value], 0,
-                                                                     self.operating_unit_id.company_id.id)
-
-                            sum_debit = sum_debit + department_net_values[key][cost_center_value]
-
-                            if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
-                                move_lines.append((0, 0, debit_vals))
-
-                    total_telephone_credit_vals = 0
-                    for key, value in cost_center_wise_telephone_bill.items():
-                        if value['vals'] < 0:
-                            value['vals'] = value['vals'] * (-1)
-                        if not value['vals'] == 0:
-                            telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                            self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
-                                                                            self.payslip_run_id.operating_unit_id.id,
-                                                                            False,
-                                                                            key,
-                                                                            0,
-                                                                            value['vals'],
-                                                                            self.operating_unit_id.company_id.id)
-
-                            move_lines.append((0, 0, telephone_credit_vals))
-                            total_telephone_credit_vals = total_telephone_credit_vals + value['vals']
-                    sum_credit = sum_credit + telephone_mobile_bill
-
-                    main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                               self.payslip_run_id.operating_unit_id.payable_account.id,
-                                                               self.payslip_run_id.operating_unit_id.id, False, False,
-                                                               0, sum_debit - (
-                                                                       total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
-                                                               self.operating_unit_id.company_id.id)
-
-                    move_lines.append((0, 0, tds_credit_vals))
-                    move_lines.append((0, 0, pf_com_credit_vals))
-                    move_lines.append((0, 0, pf_emp_credit_vals))
-                    move_lines.append((0, 0, main_credit_vals))
-                    sum_credit = sum_credit + sum_debit - (
-                            total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
-                else:
-                    if self.payslip_run_id.operating_unit_id.default_debit_account:
+                    if self.payslip_run_id.operating_unit_id.debit_account_ids:
                         for key, value in department_net_values.items():
                             for cost_center_value in value:
                                 department = self.get_department_id(payslip_departments, key)
+                                debit_account_obj = self.env['department.account.map'].sudo().search(
+                                    [('department_id', '=', department.id), ('type', '=', 'regular'),
+                                     ('operating_unit_id', '=', self.payslip_run_id.operating_unit_id.id)])
+                                if debit_account_obj:
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         debit_account_obj.account_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         department_net_values[key][cost_center_value],
+                                                                         0,
+                                                                         self.operating_unit_id.company_id.id)
 
-                                debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                     self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                     self.payslip_run_id.operating_unit_id.id,
-                                                                     department.id, cost_center_value.id,
-                                                                     department_net_values[key][
-                                                                         cost_center_value], 0,
-                                                                     self.operating_unit_id.company_id.id)
+                                else:
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         department_net_values[key][cost_center_value],
+                                                                         0,
+                                                                         self.operating_unit_id.company_id.id)
 
                                 sum_debit = sum_debit + department_net_values[key][cost_center_value]
 
@@ -558,74 +616,248 @@ class CreateProvision(models.TransientModel):
                         move_lines.append((0, 0, main_credit_vals))
                         sum_credit = sum_credit + sum_debit - (
                                 total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
-
-                name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
-                difference = 0
-                if sum_credit == sum_debit:
-                    if sum_credit > top_sheet_total_net_value:
-                        difference = sum_credit - top_sheet_total_net_value
-                    elif sum_credit < top_sheet_total_net_value:
-                        difference = top_sheet_total_net_value - sum_credit
                     else:
-                        difference = 0
-                else:
-                    raise UserError(_('Total debit value and total credit value mismatched.'))
-                if difference == 0:
-                    vals = {
-                        'name': name_seq,
-                        'journal_id': journal_id.id,
-                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                        'date': self.date,
-                        'company_id': self.company_id.id,
-                        'state': 'draft',
-                        'line_ids': move_lines,
-                        'payslip_run_id': self.payslip_run_id.id,
-                        'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                        'ref': 'Total net value : ' + str(top_sheet_total_net_value)
-                    }
+                        if self.payslip_run_id.operating_unit_id.default_debit_account:
+                            for key, value in department_net_values.items():
+                                for cost_center_value in value:
+                                    department = self.get_department_id(payslip_departments, key)
 
-                    move = self.env['account.move'].create(vals)
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         department_net_values[key][
+                                                                             cost_center_value], 0,
+                                                                         self.operating_unit_id.company_id.id)
 
-                    if move:
-                        self.payslip_run_id.write({'account_move_id': move.id})
-                        message_id = self.env['success.wizard'].create({'message': _(
-                            "Journal Entry Created Successfully!")
+                                    sum_debit = sum_debit + department_net_values[key][cost_center_value]
+
+                                    if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
+                                        move_lines.append((0, 0, debit_vals))
+
+                            total_telephone_credit_vals = 0
+                            for key, value in cost_center_wise_telephone_bill.items():
+                                if value['vals'] < 0:
+                                    value['vals'] = value['vals'] * (-1)
+                                if not value['vals'] == 0:
+                                    telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                                    self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
+                                                                                    self.payslip_run_id.operating_unit_id.id,
+                                                                                    False,
+                                                                                    key,
+                                                                                    0,
+                                                                                    value['vals'],
+                                                                                    self.operating_unit_id.company_id.id)
+
+                                    move_lines.append((0, 0, telephone_credit_vals))
+                                    total_telephone_credit_vals = total_telephone_credit_vals + value['vals']
+                            sum_credit = sum_credit + telephone_mobile_bill
+
+                            main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                       self.payslip_run_id.operating_unit_id.payable_account.id,
+                                                                       self.payslip_run_id.operating_unit_id.id, False,
+                                                                       False,
+                                                                       0, sum_debit - (
+                                                                               total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
+                                                                       self.operating_unit_id.company_id.id)
+
+                            move_lines.append((0, 0, tds_credit_vals))
+                            move_lines.append((0, 0, pf_com_credit_vals))
+                            move_lines.append((0, 0, pf_emp_credit_vals))
+                            move_lines.append((0, 0, main_credit_vals))
+                            sum_credit = sum_credit + sum_debit - (
+                                    total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
+
+                    name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
+                    difference = 0
+                    if sum_credit == sum_debit:
+                        if sum_credit > top_sheet_total_net_value:
+                            difference = sum_credit - top_sheet_total_net_value
+                        elif sum_credit < top_sheet_total_net_value:
+                            difference = top_sheet_total_net_value - sum_credit
+                        else:
+                            difference = 0
+                    else:
+                        raise UserError(_('Total debit value and total credit value mismatched.'))
+                    if difference == 0:
+                        vals = {
+                            'name': name_seq,
+                            'journal_id': journal_id.id,
+                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                            'date': self.date,
+                            'company_id': self.company_id.id,
+                            'state': 'draft',
+                            'line_ids': move_lines,
+                            'payslip_run_id': self.payslip_run_id.id,
+                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                            'ref': 'Total net value : ' + str(top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                self.payslip_run_id.name)
+                        }
+
+                        move = self.env['account.move'].create(vals)
+
+                        if move:
+                            self.payslip_run_id.write({'account_move_id': move.id})
+                            message_id = self.env['success.wizard'].create({'message': _(
+                                "Journal Entry Created Successfully!")
+                            })
+                            return {
+                                'name': _('Success'),
+                                'type': 'ir.actions.act_window',
+                                'view_mode': 'form',
+                                'res_model': 'success.wizard',
+                                'context': vals,
+                                'res_id': message_id.id,
+                                'target': 'new'
+                            }
+                    else:
+                        # return wizard to confirm
+                        vals = {
+                            'name': name_seq,
+                            'journal_id': journal_id.id,
+                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                            'date': self.date,
+                            'company_id': self.company_id.id,
+                            'state': 'draft',
+                            'line_ids': move_lines,
+                            'payslip_run_id': self.payslip_run_id.id,
+                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                            'ref': 'Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. ' % difference + '\n' + 'Batch : ' + str(
+                                self.payslip_run_id.name)
+
+                        }
+                        message_id = self.env['confirmation.wizard'].create({'message': _(
+                            "Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. Are you sure to create journal entry?" % difference)
                         })
                         return {
-                            'name': _('Success'),
+                            'name': _('Confirmation'),
                             'type': 'ir.actions.act_window',
                             'view_mode': 'form',
-                            'res_model': 'success.wizard',
+                            'res_model': 'confirmation.wizard',
                             'context': vals,
                             'res_id': message_id.id,
                             'target': 'new'
                         }
-                else:
-                    # return wizard to confirm
-                    vals = {
-                        'name': name_seq,
-                        'journal_id': journal_id.id,
-                        'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                        'date': self.date,
-                        'company_id': self.company_id.id,
-                        'state': 'draft',
-                        'line_ids': move_lines,
-                        'payslip_run_id': self.payslip_run_id.id,
-                        'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                        'ref': 'Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. ' % difference
+            elif self.salary_type == '1':
+                festival_department_net_values = self.get_festival_department_net_values(self.payslip_run_id)
+                festival_top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
 
-                    }
-                    message_id = self.env['confirmation.wizard'].create({'message': _(
-                        "Difference Between Top Sheet Net Value and Total Debit/Credit Amount is %s. Are you sure to create journal entry?" % difference)
-                    })
-                    return {
-                        'name': _('Confirmation'),
-                        'type': 'ir.actions.act_window',
-                        'view_mode': 'form',
-                        'res_model': 'confirmation.wizard',
-                        'context': vals,
-                        'res_id': message_id.id,
-                        'target': 'new'
-                    }
+                journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
+
+                if self.payslip_run_id.operating_unit_id:
+                    month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
+                    datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
+                    move_lines = []
+                    sum_debit = 0
+                    sum_credit = 0
+
+                    if self.payslip_run_id.operating_unit_id.festival_debit_account_ids:
+                        for key, value in festival_department_net_values.items():
+                            for cost_center_value in value:
+                                department = self.get_department_id(payslip_departments, key)
+                                debit_account_obj = self.env['department.account.map'].sudo().search(
+                                    [('department_id', '=', department.id), ('type', '=', 'festival_bonus'),
+                                     ('operating_unit_id', '=', self.payslip_run_id.operating_unit_id.id)])
+                                if debit_account_obj:
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         debit_account_obj.account_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         festival_department_net_values[key][
+                                                                             cost_center_value],
+                                                                         0,
+                                                                         self.operating_unit_id.company_id.id)
+
+                                else:
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         festival_department_net_values[key][
+                                                                             cost_center_value],
+                                                                         0,
+                                                                         self.operating_unit_id.company_id.id)
+
+                                sum_debit = sum_debit + festival_department_net_values[key][cost_center_value]
+
+                                if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
+                                    move_lines.append((0, 0, debit_vals))
+
+                        main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                   self.payslip_run_id.operating_unit_id.payable_account.id,
+                                                                   self.payslip_run_id.operating_unit_id.id, False,
+                                                                   False,
+                                                                   0, sum_debit,
+                                                                   self.operating_unit_id.company_id.id)
+
+                        move_lines.append((0, 0, main_credit_vals))
+                        sum_credit = sum_debit
+                    else:
+                        if self.payslip_run_id.operating_unit_id.default_festival_debit_account:
+                            for key, value in festival_department_net_values.items():
+                                for cost_center_value in value:
+                                    department = self.get_department_id(payslip_departments, key)
+
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         festival_department_net_values[key][
+                                                                             cost_center_value], 0,
+                                                                         self.operating_unit_id.company_id.id)
+
+                                    sum_debit = sum_debit + festival_department_net_values[key][cost_center_value]
+
+                                    if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
+                                        move_lines.append((0, 0, debit_vals))
+
+                            main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                       self.payslip_run_id.operating_unit_id.payable_account.id,
+                                                                       self.payslip_run_id.operating_unit_id.id, False,
+                                                                       False,
+                                                                       0, sum_debit,
+                                                                       self.operating_unit_id.company_id.id)
+
+                            move_lines.append((0, 0, main_credit_vals))
+                            sum_credit = sum_debit
+
+                    name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
+                    difference = 0
+
+                    if difference == 0:
+                        vals = {
+                            'name': name_seq,
+                            'journal_id': journal_id.id,
+                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                            'date': self.date,
+                            'company_id': self.company_id.id,
+                            'state': 'draft',
+                            'line_ids': move_lines,
+                            'payslip_run_id': self.payslip_run_id.id,
+                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                            'ref': 'Total net value : ' + str(
+                                festival_top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                self.payslip_run_id.name)
+                        }
+
+                        move = self.env['account.move'].create(vals)
+
+                        if move:
+                            self.payslip_run_id.write({'account_move_id': move.id})
+                            message_id = self.env['success.wizard'].create({'message': _(
+                                "Journal Entry Created Successfully!")
+                            })
+                            return {
+                                'name': _('Success'),
+                                'type': 'ir.actions.act_window',
+                                'view_mode': 'form',
+                                'res_model': 'success.wizard',
+                                'context': vals,
+                                'res_id': message_id.id,
+                                'target': 'new'
+                            }
+
+            else:
+                raise UserError(_('Salary type not found'))
         else:
             raise UserError(_('Payslip Batch not found!'))
