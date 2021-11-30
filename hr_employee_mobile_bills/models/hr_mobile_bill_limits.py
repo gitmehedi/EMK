@@ -15,7 +15,7 @@ class HrMobileBillLimits(models.Model):
                                                                                'approved': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', index=True,
                                  default=lambda self: self.env.user.company_id)
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
 
     """ Relational Fields """
 

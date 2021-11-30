@@ -11,7 +11,7 @@ class HrEmployeeOtherDeduction(models.Model):
     company_id = fields.Many2one('res.company', string='Company', index=True,
                                  default=lambda self: self.env.user.company_id)
 
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
     """ All relations fields """
     line_ids = fields.One2many('hr.other.deduction.line', 'parent_id', string="Other Deduction Details", readonly=True,copy= True,
                                states={'draft': [('readonly', False)]})

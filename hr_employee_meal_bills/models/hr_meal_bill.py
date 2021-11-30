@@ -14,7 +14,7 @@ class HrEmployeeMealBill(models.Model):
     company_id = fields.Many2one('res.company', string='Company', index=True, track_visibility='onchange',
                                  default=lambda self: self.env.user.company_id, required=True)
 
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
 
     """ All relations fields """
     line_ids = fields.One2many('hr.meal.bill.line', 'parent_id', string="Meal Details", readonly=True, copy=True,
