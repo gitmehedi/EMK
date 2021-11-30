@@ -184,7 +184,7 @@ class CreateProvision(models.TransientModel):
             payslip_list.append(self.env['hr.payslip'].browse(id))
         return payslip_list
 
-    def get_department_net_values(self, top_sheet):
+    def get_department_net_values(self, top_sheet, code):
 
         rule_list = []
         for slip in top_sheet.slip_ids:
@@ -217,7 +217,7 @@ class CreateProvision(models.TransientModel):
             rec = record[slip.employee_id.department_id.name]
             rec['count'] = rec['count'] + 1
             for line in slip.line_ids:
-                if line.appears_on_payslip and line.code == 'NET':
+                if line.appears_on_payslip and line.code == code:
                     rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
 
         department_net = OrderedDict()
@@ -247,7 +247,7 @@ class CreateProvision(models.TransientModel):
                     if slip.employee_id.department_id.name == key and slip.employee_id.cost_center_id.id == cost_center.id:
 
                         for line in slip.line_ids:
-                            if line.appears_on_payslip and line.code == 'NET':
+                            if line.appears_on_payslip and line.code == code:
                                 sum = sum + math.ceil(line.total)
 
                 department_net[key][cost_center] = sum
@@ -389,76 +389,6 @@ class CreateProvision(models.TransientModel):
                         sum = sum + math.ceil(line.total)
         return sum
 
-    def get_festival_department_net_values(self, top_sheet):
-        rule_list = []
-        for slip in top_sheet.slip_ids:
-            if not slip.employee_id.cost_center_id:
-                raise UserError(_('Cannot create journal entry because employee does not have cost center '
-                                  'configured.'))
-            if not slip.employee_id.department_id:
-                raise UserError(_('Cannot create journal entry because employee does not have department '
-                                  'configured.'))
-            if not slip.employee_id.operating_unit_id:
-                raise UserError(_('Cannot create journal entry because employee does not have operating unit '
-                                  'configured.'))
-
-            for line in slip.line_ids:
-                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
-                    rule_list.append((line.sequence, line.name))
-
-        rule_list = sorted(rule_list, key=lambda k: k[0])
-
-        record = OrderedDict()
-        for rec in top_sheet.slip_ids:
-            rules = OrderedDict()
-            for rule in rule_list:
-                rules[rule[1]] = 0
-            record[rec.employee_id.department_id.name] = {}
-            record[rec.employee_id.department_id.name]['count'] = 0
-            record[rec.employee_id.department_id.name]['vals'] = rules
-
-        for slip in top_sheet.slip_ids:
-            rec = record[slip.employee_id.department_id.name]
-            rec['count'] = rec['count'] + 1
-            for line in slip.line_ids:
-                if line.appears_on_payslip and line.code == 'FBONUS':
-                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
-
-        department_net = OrderedDict()
-        cost_center_list = []
-        for key, value in record.items():
-            # check which cost center available under this department
-            for slip in top_sheet.slip_ids:
-                department_id = slip.employee_id.department_id.id
-                if slip.employee_id.department_id.name == key:
-                    if slip.employee_id.cost_center_id:
-                        cost_center_list.append(slip.employee_id.cost_center_id)
-
-                    # then add cost center of that employee
-            cost_center_list = list(dict.fromkeys(cost_center_list))
-
-            department_net[key] = {}
-
-            for cost_center in cost_center_list:
-                department_net[key][cost_center] = 0
-
-        for key, value in department_net.items():
-            # a cost center and a department total net value
-            # get_total_net_value_of_this_cost_center_department
-            for cost_center in value:
-                sum = 0
-                for slip in top_sheet.slip_ids:
-                    if slip.employee_id.department_id.name == key and slip.employee_id.cost_center_id.id == cost_center.id:
-
-                        for line in slip.line_ids:
-                            if line.appears_on_payslip and line.code == 'FBONUS':
-                                sum = sum + math.ceil(line.total)
-
-                department_net[key][cost_center] = sum
-
-        print('department net', department_net)
-        return department_net
-
     def get_cost_center_wise_telephone_bill(self, payslip_cost_centers, top_sheet):
         cost_center_telephone_dict = OrderedDict()
         for cost_center in payslip_cost_centers:
@@ -489,16 +419,19 @@ class CreateProvision(models.TransientModel):
 
     def create_provision(self):
         if self.payslip_run_id:
-            print('salary type', self.salary_type)
             # check if journal entry created for this payslip run
             if self.payslip_run_id.account_move_id:
                 raise UserError(_('Journal Entry already created for this payslip batch.'))
             payslip_departments = self.get_departments(self.payslip_run_id)
             payslip_cost_centers = self.get_cost_centers(self.payslip_run_id)
-            if self.salary_type == '0':
-                department_net_values = self.get_department_net_values(self.payslip_run_id)
+            top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
 
-                top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
+            journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
+            month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
+            datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
+
+            if self.salary_type == '0':
+                department_net_values = self.get_department_net_values(self.payslip_run_id, 'NET')
 
                 total_tax_deducted_source = self.get_total_tds_value(self.payslip_run_id)
 
@@ -520,11 +453,8 @@ class CreateProvision(models.TransientModel):
                 cost_center_wise_telephone_bill = self.get_cost_center_wise_telephone_bill(payslip_cost_centers,
                                                                                            self.payslip_run_id)
 
-                journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
-
                 if self.payslip_run_id.operating_unit_id:
-                    month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
-                    datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
+
                     move_lines = []
                     sum_debit = 0
                     sum_credit = 0
@@ -739,25 +669,17 @@ class CreateProvision(models.TransientModel):
                             'target': 'new'
                         }
             elif self.salary_type == '1':
-                festival_department_net_values = self.get_festival_department_net_values(self.payslip_run_id)
-                festival_top_sheet_total_net_value = self.get_top_sheet_total_net_value(self.payslip_run_id)
-
-                journal_id = self.env['account.journal'].sudo().search([('code', '=', 'SPJNL')])
-
+                festival_department_net_values = self.get_department_net_values(self.payslip_run_id, 'FBONUS')
                 if self.payslip_run_id.operating_unit_id:
-                    month = datetime.strptime(self.date, '%Y-%m-%d').strftime("%B")
-                    datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
                     move_lines = []
                     sum_debit = 0
-                    sum_credit = 0
 
                     if self.payslip_run_id.operating_unit_id.festival_debit_account_ids:
                         for key, value in festival_department_net_values.items():
                             for cost_center_value in value:
                                 department = self.get_department_id(payslip_departments, key)
                                 debit_account_obj = self.env['department.account.map'].sudo().search(
-                                    [('department_id', '=', department.id), ('type', '=', 'festival_bonus'),
-                                     ('operating_unit_id', '=', self.payslip_run_id.operating_unit_id.id)])
+                                    [('department_id', '=', department.id), ('type', '=', 'festival_bonus')])
                                 if debit_account_obj:
                                     debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
                                                                          debit_account_obj.account_id.id,
@@ -770,7 +692,7 @@ class CreateProvision(models.TransientModel):
 
                                 else:
                                     debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_festival_debit_account.id,
                                                                          self.payslip_run_id.operating_unit_id.id,
                                                                          department.id, cost_center_value.id,
                                                                          festival_department_net_values[key][
@@ -799,7 +721,7 @@ class CreateProvision(models.TransientModel):
                                     department = self.get_department_id(payslip_departments, key)
 
                                     debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_festival_debit_account.id,
                                                                          self.payslip_run_id.operating_unit_id.id,
                                                                          department.id, cost_center_value.id,
                                                                          festival_department_net_values[key][
@@ -836,7 +758,7 @@ class CreateProvision(models.TransientModel):
                             'payslip_run_id': self.payslip_run_id.id,
                             'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
                             'ref': 'Total net value : ' + str(
-                                festival_top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
                                 self.payslip_run_id.name)
                         }
 
