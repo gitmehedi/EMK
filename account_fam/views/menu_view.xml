@@ -30,7 +30,6 @@
 
     <record id="account_asset.menu_action_account_asset_asset_list_normal_purchase" model="ir.ui.menu">
         <field name="name">Fixed Asset Types</field>
-        <field name="sequence">50</field>
     </record>
 
     <record id="account_asset.action_account_asset_asset_list_normal_purchase" model="ir.actions.act_window">
@@ -42,7 +41,7 @@
 
     <record id="account_asset.menu_action_account_asset_asset_list_normal_purchase" model="ir.ui.menu">
         <field name="parent_id" eval="ref('account_fam_menu.sub_configuration_menu')"/>
-        <field name="sequence">10</field>
+        <field name="sequence">50</field>
     </record>
     <record id="account_asset.menu_asset_depreciation_confirmation_wizard" model="ir.ui.menu">
         <field name="action" eval="False"/>

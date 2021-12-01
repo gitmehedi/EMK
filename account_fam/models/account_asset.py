@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-
 import calendar
-from datetime import datetime, timedelta
 from datetime import date as DT
-from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
-from odoo import models, fields, api, _, tools
+from dateutil.relativedelta import relativedelta
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_compare
 
 DATE_FORMAT = "%Y-%m-%d"
 
@@ -370,7 +369,7 @@ class AccountAssetAsset(models.Model):
                     date_delta = (DT(year, 12, 31) - DT(year, 01, 01)).days + 1
                     daily_depr = (asset.depr_base_value * asset.method_progress_factor) / date_delta
 
-                depr_amount = no_of_days * daily_depr
+                depr_amount = no_of_days    * daily_depr
                 if depr_amount > asset.value_residual:
                     depr_amount = asset.value_residual
 

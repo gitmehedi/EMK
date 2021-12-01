@@ -163,7 +163,7 @@
         <field name="parent_id" eval="ref('account_fam_menu.sub_configuration_menu')"/>
     </record>
 
-    <menuitem id="fixed_asset_vendors" name="Vendors" sequence="10"
+    <menuitem id="fixed_asset_vendors" name="Vendors" sequence="10" action="base.action_partner_supplier_form"
               parent="account_fam_menu.sub_configuration_menu" groups=""/>
 
     <record id="account.menu_action_analytic_lines_tree" model="ir.ui.menu">
