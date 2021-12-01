@@ -50,7 +50,8 @@ class ProductStandardPrice(models.Model):
     _name = 'product.standard.price'
 
     product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True)
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
+                                        domain=lambda self: [("id", "in", self.env.user.operating_unit_ids.ids)])
     cost = fields.Float('Cost', digits=dp.get_precision('Product Cost Price'))
 
     @api.constrains('operating_unit_id')

@@ -11,9 +11,12 @@
         'product',
         'stock_custom_summary_report',
         'stock_purchase_custom_report',
-        'stock_transfer_report'
+        'stock_transfer_report',
+        'gbs_application_group'
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/product_views.xml'
     ],
     'installable': True,
