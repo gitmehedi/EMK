@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<odoo>
+    <act_window id="action_server_confirm_asset"
+                name="Confirm Assets"
+                src_model="account.asset.asset"
+                res_model="asset.confirm.wiazrd"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                groups="grp_fixasset_manager,grp_fam_system_settings"/>
+
+    <act_window id="action_asset_multi_allocation_wizard"
+                name="Allocate Assets"
+                src_model="account.asset.asset"
+                res_model="asset.allocation.wizard"
+                view_type="form"
+                view_mode="form"
+                context="{'allocation' : True}"
+                key2="client_action_multi"
+                target="new"
+                groups="grp_fixasset_manager,grp_fam_system_settings"/>
+
+    <act_window id="action_asset_multi_transfer_wizard"
+                name="Transfer Assets"
+                src_model="account.asset.asset"
+                res_model="asset.allocation.wizard"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                context="{'allocation' : False}"
+                groups="grp_fixasset_manager,grp_fam_system_settings"/>
+
+    <act_window id="action_depreciation_flag"
+                name="Awaiting Disposal"
+                src_model="account.asset.asset"
+                res_model="asset.depreciation.flag.wizard"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                groups="grp_fixasset_manager,grp_fam_system_settings"/>
+
+    <act_window id="action_depreciation_flag"
+                name="Execute Disposal"
+                src_model="account.asset.asset"
+                res_model="asset.depreciation.flag.wizard"
+                view_type="form"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"
+                groups="grp_fixasset_manager,grp_fam_system_settings"/>
+</odoo>

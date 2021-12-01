@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="asset_depreciation_flag_wizard_form">
+        <field name="name">asset.depreciation.flag.wizard</field>
+        <field name="model">asset.depreciation.flag.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Awaiting Disposal">
+                <group>
+                    <field name="flag"/>
+                </group>
+                <footer>
+                    <button name="depreciation" string="Process" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asset_depreciation_flag_wizard" model="ir.actions.act_window">
+        <field name="name">Asset Depreciation Status</field>
+        <field name="res_model">asset.depreciation.flag.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="asset_depreciation_flag_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
