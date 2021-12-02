@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherited Tree view-->
+        <record id="inherit_purchase_order_tree_view" model="ir.ui.view">
+            <field name="name">inherit.purchase.order.view.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <data>
+<!--                    <xpath expr="//field[@name='amount_untaxed']" position="replace">-->
+<!--                        <field name="amount_untaxed" string="Untaxed" widget="monetary"/>-->
+<!--                    </xpath>-->
+<!--                    <xpath expr="//field[@name='amount_total']" position="replace">-->
+<!--                        <field name="amount_total" widget="monetary"/>-->
+<!--                    </xpath>-->
+                </data>
+            </field>
+        </record>
+        <!-- Inherited Form view-->
+        <record id="inherit_purchase_order_form" model="ir.ui.view">
+            <field name="name">inherit.purchase.order.view.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form/header/button[1]" position="replace">
+                        <button name="action_rfq_send" string="Send RFQ by Email" type="object" class="btn-primary"
+                                invisible="1"/>
+                    </xpath>
+                    <xpath expr="//form/header/button[8]" position="replace">
+                        <button name="action_rfq_send" states="purchase" invisible="1" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
+                    </xpath>
+                    <xpath expr="//form/header/button[2]" position="replace">
+                        <button name="action_rfq_send" states="sent" invisible="1" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
+                    </xpath>
+                    <xpath expr="//button[@name='button_done']" position="replace">
+                        <button name="button_done" type="object" string="Lock" states="purchase" invisible="1"/>
+                    </xpath>
+
+                    <xpath expr="//button[@name='print_quotation']" position="replace">
+                        <button name="print_quotation" string="Print RFQ" type="object" class="btn-primary"
+                                invisible= "1"/>
+                    </xpath>
+<!--                    <xpath expr="//button[@name='button_confirm']" position="replace">-->
+<!--                        <button name="button_confirm" string="Confirm Order" type="object"-->
+<!--                                attrs="{'invisible': [('check_po_action_button','=',False)]}"/>-->
+<!--                    </xpath>-->
+                    <xpath expr="//button[@name='button_approve']" position="replace">
+                        <button name="button_approve" string="Approve Order" type="object" class="oe_highlight"
+                                states='to approve' groups="purchase.group_purchase_manager"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+
+        <record id='action_purchase_order_emk' model='ir.actions.act_window'>
+			<field name="name">Purchase Order EMK</field>
+			<field name="res_model">purchase.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new Purchase Order.
+				</p>
+			</field>
+		</record>
+        <menuitem id="purchase_orders_emk" name="Purchase Orders (Draft)" parent="purchase.menu_procurement_management" sequence="7" action="action_purchase_order_emk"/>
+
+    </data>
+</odoo>
