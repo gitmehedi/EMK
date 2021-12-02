@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="inherit_asset_modify_form">
+        <field name="model">asset.modify</field>
+        <field name="inherit_id" ref="account_asset.asset_modify_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="replace">
+                <form string="Modify Assets">
+                    <group>
+                        <group>
+                            <field name="asset_method_time" invisible="1"/>
+                            <field name="method" widget="radio"/>
+                            <field name="method_progress_factor"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="depreciation_year" string="Asset Life (In Year)"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                            <field name="adjusted_depr_amount"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="modify" string="Change Method" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -60,7 +60,7 @@ class MemberPayment(models.Model):
             users = applicant.ids
         if self.invoice_type == 'event_payment':
             payment_users = self.env['account.invoice'].search(
-                [('state', '=', 'open'), ('partner_id.is_organizer', '=', True)])
+                [('state', '=', 'open'), ('partner_id.is_poc', '=', True)])
             users = list(set([val.partner_id.id for val in payment_users]))
 
         res['domain'] = {

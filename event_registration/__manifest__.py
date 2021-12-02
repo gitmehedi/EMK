@@ -18,6 +18,7 @@
         'event_management',
     ],
     'data': [
+        'views/event_reservation_templates.xml',
         'views/website_event_templates.xml',
         'data/email_template.xml',
         'report/access_barcode_views.xml',

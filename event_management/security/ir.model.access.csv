@@ -73,5 +73,18 @@ evt_res_company_usr,evt_res_company_usr,base.model_res_company,event.group_event
 evt_res_company_adm,evt_res_company_adm,base.model_res_company,event_user.group_event_officer,1,1,1,1
 evt_res_company_mng,evt_res_company_mng,base.model_res_company,event.group_event_manager,1,1,1,1
 
+evt_pillar_usr,evt_pillar_usr,model_event_pillar,event.group_event_user,1,0,0,0
+evt_pillar_adm,evt_pillar_adm,model_event_pillar,event_user.group_event_officer,1,1,1,1
+evt_pillar_mng,evt_pillar_mng,model_event_pillar,event.group_event_manager,1,1,1,1
+
+evt_poc_type_usr,evt_pillar_usr,model_event_poc_type,event.group_event_user,1,0,0,0
+evt_poc_type_adm,evt_pillar_adm,model_event_poc_type,event_user.group_event_officer,1,1,1,1
+evt_poc_type_mng,evt_pillar_mng,model_event_poc_type,event.group_event_manager,1,1,1,1
+
+evt_theme_usr,evt_theme_usr,model_event_theme,event.group_event_user,1,0,0,0
+evt_theme_adm,evt_theme_adm,model_event_theme,event_user.group_event_officer,1,1,1,1
+evt_theme_mng,evt_theme_mng,model_event_theme,event.group_event_manager,1,1,1,1
+
+
 
 

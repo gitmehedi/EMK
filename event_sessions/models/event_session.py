@@ -24,8 +24,7 @@ class EventSession(models.Model):
     date_tz = fields.Selection(string='Timezone', related="event_id.date_tz", )
     date_begin = fields.Datetime(string="Session Start Date", required=True,
                                  default=lambda self: self.event_id.date_begin, )
-    date_end = fields.Datetime(string="Session Date End", required=True, default=lambda self: self.event_id.date_end, )
-    date_end = fields.Datetime(string="Last da Date End", required=True, default=lambda self: self.event_id.date_end, )
+    date_end = fields.Datetime(string="Session Date End", required=True, default=lambda self: self.event_id.date_end)
 
     registration_ids = fields.One2many(comodel_name='event.session.attend', inverse_name='session_id',
                                        string='Attendees', state={'done': [('readonly', True)]}, )

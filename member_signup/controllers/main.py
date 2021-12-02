@@ -87,7 +87,7 @@ class MemberApplicationContoller(Home):
                 response['email'] = 1
         return json.dumps(response)
 
-    @http.route('/page/application', type='http', auth='public', methods=['POST', 'GET'], website=True)
+    @http.route('/member/signup', type='http', auth='public', methods=['POST', 'GET'], website=True)
     def signup(self, *args, **kw):
         qcontext = self.get_signup_context()
         package_price = request.env['product.product'].sudo().search([('membership_status', '=', True)],

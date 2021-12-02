@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="view_event_pillar_form">
+        <record model="ir.ui.view" id="view_event_theme_form">
             <field name="name">event.theme.form</field>
             <field name="model">event.theme</field>
             <field name="arch" type="xml">
@@ -23,7 +23,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_event_pillar_tree">
+        <record model="ir.ui.view" id="view_event_theme_tree">
             <field name="name">event.theme.tree</field>
             <field name="model">event.theme</field>
             <field name="arch" type="xml">
@@ -37,13 +37,13 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_event_pillar">
+        <record model="ir.actions.act_window" id="action_event_theme">
             <field name="name">Event Theme</field>
             <field name="res_model">event.theme</field>
             <field name="view_type">form</field>
         </record>
 
-        <menuitem id="menu_event_pillar" action="action_event_pillar"
+        <menuitem id="menu_event_theme" action="action_event_theme"
                   groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
 
     </data>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_asset_account_asset_asset" model="ir.rule">
+        <field name="model_id" ref="account_asset.model_account_asset_asset"/>
+        <field name="domain_force">[('current_branch_id','=',user.default_operating_unit_id.id)]</field>
+        <field name="name">Branch Users</field>
+        <field eval="1" name="perm_unlink"/>
+        <field eval="1" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="1" name="perm_create"/>
+    </record>
+</odoo>
+
+
+

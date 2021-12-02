@@ -7,14 +7,17 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="act_on_process" string="On Process" type="object" class="oe_highlight"
+                        <button name="send_reservation" string="Send Reservation" type="object" class="oe_highlight"
                                 states="draft"/>
+                        <button name="act_reservation" string="Reserved" type="object" class="oe_highlight"
+                                states="draft"/>
+                        <button name="act_on_process" string="On Process" type="object" class="oe_highlight"
+                                states="reservation"/>
                         <button name="act_confirm" string="Confirm" type="object" class="oe_highlight"
                                 states="on_process"/>
                         <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
-                        <button name="act_cancel" string="Cancel" type="object"
-                                states="draft"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,on_process,confirm"/>
+                        <button name="act_cancel" string="Cancel" type="object" states="draft"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,reservation,on_process,confirm"/>
                     </header>
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar"/>
@@ -51,7 +54,7 @@
                         </group>
                         <group string="Seats Information">
                             <group>
-                                <field name="seats_availability"/>
+                                <field name="seats_availability" widget="radio" options="{'horizontal': true}"/>
                                 <field name="attendee_number"/>
                                 <field name="total_session"/>
                             </group>
@@ -117,7 +120,7 @@
             <field name="model">event.reservation</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="state in ['draft','on_process','confirm']"
-                      colors="orange:state=='draft';green:state=='on_process';grey:state=='confirm';salmon:state=='cancel';silver:state=='done';">
+                      colors="orange:state=='draft';green:state=='reservation';blue:state=='on_process';grey:state=='confirm';salmon:state=='cancel';silver:state=='done';">
                     <field name="name"/>
                     <field name="event_name"/>
                     <field name="poc_id"/>

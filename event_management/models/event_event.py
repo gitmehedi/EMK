@@ -26,7 +26,7 @@ class EventEvent(models.Model):
                                     readonly=True, states={'draft': [('readonly', False)]})
     request_date = fields.Datetime(string='Request Date', required=True, track_visibility='onchange',
                                    readonly=True, states={'draft': [('readonly', False)]})
-    facilities_ids = fields.Many2many('event.task.type', string="Facilities Requested", track_visibility='onchange',
+    facilities_ids = fields.Many2many('event.service.type', string="Facilities Requested", track_visibility='onchange',
                                       required=True, readonly=True, states={'draft': [('readonly', False)]})
     total_seat_available = fields.Integer(string="Total Seat Available", compute='compute_total_seat')
     event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=False,
@@ -166,8 +166,7 @@ class EventRegistration(models.Model):
     _order = 'id desc'
 
     date_of_birth = fields.Date(string='Date of Birth')
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], required=True,
-                              default='male', string='Gender')
+    gender = fields.Many2one('res.gender', required=True, string='Gender')
     profession_id = fields.Many2one('attendee.profession', string='Profession', default=False)
     card_number = fields.Char(string='Card Number')
 
