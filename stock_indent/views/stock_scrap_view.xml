@@ -27,9 +27,9 @@
 						<button name="scrap_confirm" string="Confirm" states="draft"
 								class="oe_highlight" type="object"/>
 						<button name="approve_scrap" string="Approve" states="waiting_approval" type="object"
-								class="oe_highlight" /><!--groups="inventory_user.grp_inv_supervisor"-->
+								class="oe_highlight" groups="inventory_user.grp_inv_supervisor" /><!--groups="inventory_user.grp_inv_supervisor"-->
 						<button name="reject_scrap" string="Reject" states="waiting_approval"
-								 type="object"/><!--groups="inventory_user.grp_inv_supervisor"-->
+								 type="object" groups="inventory_user.grp_inv_supervisor"/><!--groups="inventory_user.grp_inv_supervisor"-->
 
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,done"

@@ -55,7 +55,7 @@ class IndentIndent(models.Model):
                                         help="Default User Location.Destination location.",
                                         default=lambda self: self.env.user.default_location_id,
                                         track_visibility="onchange")
-    # manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
+
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",
                                           readonly=True, states={'draft': [('readonly', False)]},
                                           track_visibility="onchange")
@@ -140,8 +140,7 @@ class IndentIndent(models.Model):
             indent.picking_type_id = picking_type_id
             if picking_type_id:
                 indent.picking_type_id = picking_type_id
-        # print indent.warehouse_id.sudo().lot_stock_id.id
-        # print indent.stock_location_id.id
+
 
     @api.onchange('requirement')
     def onchange_requirement(self):
@@ -190,12 +189,7 @@ class IndentIndent(models.Model):
         }
         self.write(res)
 
-    # @api.multi
-    # def name_get(self):
-    #     res= []
-    #     for rec in self:
-    #         res.append((rec.id, '%s -%s' % (rec.name, rec.requirement)))
-    #     return res
+
 
     @api.multi
     def indent_confirm(self):
@@ -203,16 +197,6 @@ class IndentIndent(models.Model):
             if not indent.product_lines:
                 raise UserError(_('Unable to confirm an indent without product. Please add product(s).'))
 
-            # Add all authorities of the indent as followers
-            # followers = []
-            # if indent.indentor_id and indent.indentor_id.partner_id and indent.indentor_id.partner_id.id:
-            #     followers.append(indent.indentor_id.partner_id.id)
-            # if indent.indentor_id.employee_ids[0].parent_id:
-            #     followers.append(indent.indentor_id.employee_ids[0].parent_id.user_id.partner_id.id)
-            # if indent.manager_id and indent.manager_id.partner_id and indent.manager_id.partner_id.id:
-            #    followers.append(indent.manager_id.partner_id.id)
-            # for follower in followers:
-            #    indent.write({'message_follower_ids': [(4, follower)]})
 
             res = {
                 'state': 'waiting_approval'
@@ -225,48 +209,6 @@ class IndentIndent(models.Model):
 
             indent.write(res)
             indent.product_lines.write({'state': 'waiting_approval'})
-        # -------------------------------------------------------------------------------
-        #     for rec in self:
-        #         # orm search without condition
-        #         indents = self.env['indent.indent'].search([])
-        #         print("Indents search without condition...", indents)
-        #         # orm search with condition
-        #         indentsingle = self.env['indent.indent'].search([('state', '=', 'waiting_approval')])
-        #         print("Indents search with condition...", indentsingle)
-        #         # orm search with "AND" condition
-        #         indentand = self.env['indent.indent'].search([('state', '=', 'waiting_approval'),
-        #                                                       ('requirement', '=', '1')])
-        #         print("Indents search with AND condition...", indentand)
-        #
-        #         # orm search with "OR" condition
-        #         indentor = self.env['indent.indent'].search(
-        #             ['|', ('state', '=', 'waiting_approval'), ('requirement', '=', '1')])
-        #         print("Indents search with OR condition...", indentor)
-        #
-        #         # orm search_count without condition
-        #         indentcount = self.env['indent.indent'].search_count([])
-        #         print("Indents search_count without condition...", indentcount)
-        #
-        #         # orm search_count without condition
-        #         indent_count = self.env['indent.indent'].search_count([('state', '=', 'waiting_approval')])
-        #         print("Indents search_count with condition...", indent_count)
-        #
-        #         # orm search_count "AND" condition
-        #         indent_count_and = self.env['indent.indent'].search_count([('state', '=', 'waiting_approval'),
-        #                                                                    ('requirement', '=', '1')])
-        #         print("Indents search_count with AND condition...", indent_count_and)
-        #
-        #         # orm search_count "OR" condition
-        #         indent_count_or = self.env['indent.indent'].search_count(
-        #             ['|', ('state', '=', 'waiting_approval'), ('requirement', '=', '1')])
-        #         print("Indents search_count with OR condition...", indent_count_or)
-        #
-        #         # orm search
-        #         indents = self.env['indent.indent'].search([('id','=','15')])
-        #         print("Indents Requirement", indents.requirement)
-        #         print("Indents Name", indents.name)
-        #         print("Indents Display Name", indents.display_name)
-        #
 
     # -------------------------------------------------------------------------------
 
@@ -376,7 +318,7 @@ class IndentIndent(models.Model):
                         'location_id': location_id,
                         'location_dest_id': self.stock_location_id.id,
                         'company_id': self.company_id.id,
-                        'operating_unit_id': self.operating_unit_id.id
+                        # 'operating_unit_id': self.operating_unit_id.id
                     }
                     picking = picking_obj.create(vals)
                     picking.action_done()
@@ -557,7 +499,7 @@ class IndentIndent(models.Model):
                     'picking_id': picking_id
                 }
                 scrap_id = scarp_obj.create(scraps)
-                print scrap_id
+                # print(scrap_id)
 
     ####################################################
     # ORM Overrides methods
