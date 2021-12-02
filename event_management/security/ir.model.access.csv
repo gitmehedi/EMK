@@ -24,9 +24,6 @@ evt_rs_part_usr,evt_rs_part_usr,model_res_partner,event.group_event_user,1,0,0,0
 evt_rs_part_adm,evt_rs_part_adm,model_res_partner,event_user.group_event_officer,1,1,1,1
 evt_rs_part_mng,evt_rs_part_mng,model_res_partner,event.group_event_manager,1,1,1,1
 
-evt_org_type_usr,evt_org_type_usr,model_event_organization_type,event.group_event_user,1,0,0,0
-evt_org_type_adm,evt_org_type_adm,model_event_organization_type,event_user.group_event_officer,1,1,1,1
-evt_org_type_mng,evt_org_type_mng,model_event_organization_type,event.group_event_manager,1,1,1,1
 
 evt_reg_usr,evt_reg_usr,event.model_event_registration,event.group_event_user,1,0,0,0
 evt_reg_adm,evt_reg_adm,event.model_event_registration,event_user.group_event_officer,1,1,1,1

@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'EMK HR Installation',
+    'name': 'HR Installation',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'category': 'EMK HR Installation',
-    'version': '10.0.1.0.0',
-    'data': [],
+    'category': 'Module Installation',
+    'summary': 'Install all HR related module',
+    'description': 'Install all HR related module',
+    'version': '1.0',
     'depends': [
         'emk_hr',
         'gbs_hr_payroll',
-        #'gbs_hr_payroll_bank_letter',
-        #'gbs_hr_payroll_top_sheet',
+        # 'gbs_hr_payroll_bank_letter',
+        # 'gbs_hr_payroll_top_sheet',
         'gbs_hr_attendance_report',
         'gbs_hr_leave_report',
         'gbs_employee_roster_view',
@@ -45,11 +46,7 @@
         'hr_short_leave',
         'hr_employee_number',
         'website_hr_recruitment'
-
     ],
-    'category': 'Installation Module',
-    'summary': 'Install Module of EMK',
-    'description': 'Install Module of EMK',
     'installable': True,
     'application': True,
 }

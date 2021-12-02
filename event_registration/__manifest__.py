@@ -14,7 +14,6 @@
     'depends': [
         'website',
         'website_event',
-        'assets',
         'event_management',
     ],
     'data': [
