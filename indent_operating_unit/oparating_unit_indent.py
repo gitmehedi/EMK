@@ -28,3 +28,8 @@ class OperatingUnitIndent(models.Model):
             context = dict(self.env.context)
             context.update({'operating_unit_id': operating_unit_id})
             self.env.context = frozendict(context)
+
+    @api.model
+    def create(self, vals):
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+        return super(OperatingUnitIndent, self).create(vals)
