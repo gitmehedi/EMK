@@ -18,6 +18,7 @@
         "data/data.xml",
         "data/lc_journal_data.xml",
         "views/lc_receivable_payments_view.xml",
+        "wizards/update_lc_number_confirmation.xml",
     ],
     'installable': True,
     'application': False,
