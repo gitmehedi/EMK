@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-		<!-- Inventory Root Menu-->
-		<menuitem name="Inventory" id="stock.menu_stock_root"
-				  sequence="30"
-				  groups="base.group_user"
-				  web_icon="stock,static/description/icon.png"/>
-		<!-- Inventory Root Menu-->
-		<menuitem
-				action="stock.stock_picking_type_action"
-				id="stock.stock_picking_type_menu"
-				parent="stock.menu_stock_root" sequence="0"
-				groups=""
-				name="Dashboard"/>
-		<!-- Inventory Control Menu-->
-		<menuitem id="stock.menu_stock_inventory_control"
-				  name="Inventory Control"
-				  parent="stock.menu_stock_root"
-				  groups=""
-				  sequence="4"/>
-		<!-- Indent Tree View -->
 		<record id='view_indent_indent_tree' model='ir.ui.view'>
 			<field name="name">indent.indent.tree</field>
 			<field name="model">indent.indent</field>
@@ -58,8 +39,7 @@
 								states="inprogress" groups="stock.group_stock_user"/>
 						<button name="action_issue_product" string="Issue Products" type="object" class="oe_highlight"
 								states="inprogress"/>
-<!--						<button name="action_scrap_product" string="Scrap Products" type="object" class="oe_highlight"-->
-<!--								states="received" invisible="0"/>-->
+
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
 							   statusbar_colors='{"reject":"red"}' />
@@ -80,39 +60,25 @@
 									   placeholder="Please Select"/>
 							</group>
 						</group>
-						<!--<group>-->
-							<!--<field name="material_required_for" placeholder="The material is required for..." />-->
-						<!--</group>-->
+
 						<notebook>
 							<page string="Products">
 
 								<field name="product_lines">
 									<tree string="Products" editable="bottom" decoration-success="received_qty==product_uom_qty and state=='inprogress'" decoration-bf="received_qty==product_uom_qty and state=='inprogress'" decoration-danger="received_qty!=product_uom_qty and state=='inprogress'">
 										<field name="sequence" widget="handle"/>
-										<field name="product_id" domain="[('type','!=','service')]" options="{'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="product_id" domain="[('type','!=','service')]" options="{'no_open': True,'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="remarks" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="state" invisible="1"/>
-<!--										<field name="name" readonly="1" />attrs="{'readonly': [('indent_id','!=','draft')]}"-->
-										<field name="qty_available" readonly="0" groups="" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"  />
-										<field name="product_uom" string="UOM" options="{'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="qty_available" readonly="1" groups=""  />
+										<field name="product_uom" string="UOM" options="{'no_open': True,'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="product_uom_qty" sum="Total Qty"  attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"/>
 										<field name="received_qty" sum="Total Receive Qty" attrs="{'readonly':[('state','in',('draft','waiting_approval'))]}"/>
 										<field name="issue_qty" invisible="1" attrs="{'readonly':[('state','in',('draft','waiting_approval'))]}"/>
 
-<!--										<button name="show_details" string="Modify" icon="fa-pencil" groups="stock.group_stock_multi_locations"/>-->
-										<!--groups="stock.group_stock_user"-->
-										<!--<field name="price_unit" sum="Total Price"/>-->
-										<!--<field name="price_subtotal" sum="Total Price"/>-->
 									</tree>
 								</field>
-								<!--<group class="oe_subtotal_footer oe_right">-->
-								<!--<field name="amount_total" widget="monetary"-->
-								<!--class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}" />-->
-								<!--</group>-->
-<!--								<div class="oe_clear">-->
-<!--									<label for="material_required_for" />-->
-<!--								</div>-->
-<!--								<field name="material_required_for" class="oe_inline"  placeholder="The material is required for..." />-->
+
 								<group>
 									<field name="material_required_for" placeholder="The material is required for..." />
 								</group>
@@ -153,6 +119,7 @@
 			<field name="res_model">indent.indent</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','draft')]</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create a new indent.
@@ -160,13 +127,39 @@
 			</field>
 		</record>
 
-		<!-- Indent Approval Window Action -->
-		<record id='action_indent_waiting_for_approval' model='ir.actions.act_window'>
-			<field name="name">Indents Waiting For Approval</field>
+		<record id='action_indent_confirm' model='ir.actions.act_window'>
+			<field name="name">Indents</field>
 			<field name="res_model">indent.indent</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','waiting_approval')]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					No Indent for Confirm.
+				</p>
+			</field>
+		</record>
+		<record id='action_indent_done' model='ir.actions.act_window'>
+			<field name="name">Indents</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','received')]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					No Indent for Received.
+				</p>
+			</field>
+
+		</record>
+
+		<!-- Indent Approval Window Action -->
+		<record id='action_indent_waiting_for_approval' model='ir.actions.act_window'>
+			<field name="name">Indents</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','inprogress')]</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					No Indent for approval.
@@ -175,15 +168,22 @@
 		</record>
 		<!-- Indent Menu -->
 		<menuitem name="Indents" parent="stock.menu_stock_root" id="menu_indent_indent_main"
-				  sequence="3" groups="base.group_user"/>
+				  sequence="1" groups="base.group_user"/>
 
-		<menuitem action="action_indent_indent" name="Indents"
-				  parent="menu_indent_indent_main" id="menu_indent_indent" sequence="1"
+		<menuitem action="action_indent_indent" name="Indent (Draft)"
+				  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_indent_raise" sequence="5"
 				  groups="base.group_user"/>
 
-		<menuitem action="action_indent_waiting_for_approval" name="Indents Waiting For Approval"
-				  parent="menu_indent_indent_main" id="menu_indent_waiting_for_approval" sequence="2"
+		<menuitem action="action_indent_confirm" name="Indent (Confirmed)"
+				  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_indent" sequence="10"
+				  groups="base.group_user"/>
+
+		<menuitem action="action_indent_waiting_for_approval" name="Indent (Approved)"
+				  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_waiting_for_approval" sequence="15"
 				  groups="inventory_user.grp_inv_supervisor"/>
 
+		<menuitem action="action_indent_done" name="Indent (Done)"
+				  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_done" sequence="20"
+				  groups="inventory_user.grp_inv_supervisor"/>
 	</data>
 </odoo>

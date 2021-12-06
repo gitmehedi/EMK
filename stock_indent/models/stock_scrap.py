@@ -5,10 +5,12 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+
 class StockIndentScrap(models.Model):
     _name = 'stock.indent.scrap'
     _description = "Scrap"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = "id desc"
 
     @api.model
     def _get_default_warehouse(self):
@@ -30,7 +32,8 @@ class StockIndentScrap(models.Model):
 
     def _get_default_scrap_location_id(self):
         return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in',
-                                                                                  [self.env.user.company_id.id, False])], limit=1).id
+                                                                                  [self.env.user.company_id.id,
+                                                                                   False])], limit=1).id
 
     @api.multi
     @api.depends('warehouse_id', 'stock_location_id')
@@ -45,7 +48,7 @@ class StockIndentScrap(models.Model):
             if picking_type_id:
                 indent.picking_type_id = picking_type_id
 
-    name = fields.Char('Scrap #', size=30, readonly=True, track_visibility="onchange")
+    name = fields.Char('Reference #', size=30, readonly=True, track_visibility="onchange")
     """ Approval Process User """
     requestor_id = fields.Many2one('res.users', string='Requestor', required=True, readonly=True,
                                    default=lambda self: self.env.user,
@@ -104,7 +107,7 @@ class StockIndentScrap(models.Model):
             if not scrap.product_lines:
                 raise UserError(_('Unable to confirm scrap without product. Please add product(s).'))
         for scrap_product in self.product_lines:
-            if scrap_product.qty_available <=0:
+            if scrap_product.qty_available <= 0:
                 raise UserError('Stock not available!!!')
             if scrap_product.qty_available < scrap_product.scrap_qty:
                 raise UserError('The requested quantity is not available!!! ')
@@ -118,15 +121,15 @@ class StockIndentScrap(models.Model):
                 res['name'] = new_seq
 
             scrap.write(res)
-            scrap.product_lines.write({'state':'waiting_approval'})
+            scrap.product_lines.write({'state': 'waiting_approval'})
 
     def reject_scrap(self):
         for scrap in self:
             if scrap.state == 'done':
                 raise UserError(_('Unable to reject scrap after done state'))
 
-            scrap.write({'state':'reject'})
-            scrap.product_lines.write({'state':'reject'})
+            scrap.write({'state': 'reject'})
+            scrap.product_lines.write({'state': 'reject'})
 
     def approve_scrap(self):
         if self.state != 'waiting_approval':
@@ -142,22 +145,11 @@ class StockIndentScrap(models.Model):
                     'location_id': self.stock_location_id.id,
                     'scrapped': True,
                     'location_dest_id': self.scrap_location_id.id,
-                    # 'restrict_lot_id': self.lot_id.id,
-                    # 'restrict_partner_id': self.owner_id.id,
                     'picking_id': self.picking_id.id,
-                    'state':'done'
+                    'state': 'done'
                 }
                 moves = moves_obj.create(moves_vals)
                 moves.action_done()
-                # quant_obj = self.env['stock.quant']
-                # quant_vals = {
-                #     'location_id': self.scrap_location_id.id,
-                #     'qty': line.scrap_qty,
-                #     'company_id': self.company_id.id,
-                #     'product_id': line.product_id.id,
-                #     'in_date': self.scrap_date
-                # }
-                # quant = quant_obj.create(quant_vals)
 
             res = {
                 'state': 'done',
@@ -173,12 +165,14 @@ class ScrapProductLines(models.Model):
     _name = 'scrap.product.lines'
     _description = "Scrap Product Line"
 
-    scrap_id = fields.Many2one('stock.indent.scrap', string='Scrap', required=True, ondelete='cascade',track_visibility='onchange')
-    product_id = fields.Many2one('product.product',string='Product',required=True, ondelete='cascade',track_visibility='onchange')
+    scrap_id = fields.Many2one('stock.indent.scrap', string='Scrap', required=True, ondelete='cascade',
+                               track_visibility='onchange')
+    product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='cascade',
+                                 track_visibility='onchange')
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
                                   required=True, store=True, track_visibility='onchange')
     qty_available = fields.Float(string='In Stock', compute='_compute_product_qty', track_visibility='onchange')
-    scrap_qty = fields.Float(string='Scrap Quantity',  track_visibility='onchange')
+    scrap_qty = fields.Float(string='Scrap Quantity', track_visibility='onchange')
     name = fields.Char(related='product_id.name', string='Specification', store=True, track_visibility='onchange')
     remarks = fields.Char(related='product_id.name', string='Narration', store=True, track_visibility='onchange')
     sequence = fields.Integer('Sequence')

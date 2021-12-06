@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_stock_indent" name='Indent'
+               parent="stock.menu_stock_root" sequence="10"/>
+
+    <menuitem id="menu_stock_scrap" name="Scraps" sequence="15"
+              parent="stock.menu_stock_root" groups=""/>
+</odoo>
