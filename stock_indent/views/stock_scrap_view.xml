@@ -5,7 +5,7 @@
             <field name="name">view.stock.indent.scrap.tree</field>
             <field name="model">stock.indent.scrap</field>
             <field name="arch" type="xml">
-                <tree string="Scraps" decoration-success="state=='waiting_approval'" decoration-bf= "state=='waiting_approval'" decoration-danger="state=='reject'" decoration-muted="state=='done'" >
+                <tree string="Scraps" colors="blue:state=='draft'" decoration-success="state=='waiting_approval'" decoration-bf= "state=='waiting_approval'"  decoration-danger="state=='reject'" decoration-muted="state=='done'" >
 					<field name="name" />
 					<field name="requestor_id" />
 					<field name="department_id" />
@@ -53,11 +53,11 @@
 								<field name="product_lines">
 									<tree string="Products" editable="bottom" >
 										<field name="sequence" widget="handle"/>
-										<field name="product_id" domain="[('type','!=','service')]" options="{'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="product_id" domain="[('type','!=','service')]" options="{'no_open': True,'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="remarks" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="state" invisible="1"/>
-										<field name="qty_available" readonly="0" groups="" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"  />
-										<field name="product_uom" string="UOM" options="{'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="qty_available" readonly="1" groups="" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"  />
+										<field name="product_uom" string="UOM" options="{'no_open': True,'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="scrap_qty" sum="Total Scrap Qty" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"/>
 
 									</tree>
@@ -95,6 +95,7 @@
 			<field name="res_model">stock.indent.scrap</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','draft')]</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create a new Scrap.
@@ -103,12 +104,26 @@
 		</record>
 
 		<!-- Scrap Approval Window Action -->
-		<record id='action_stock_indent_scrap_waiting_for_approval' model='ir.actions.act_window'>
-			<field name="name">Scraps Waiting For Approval</field>
+		<record id='action_stock_indent_scrap_confirmed' model='ir.actions.act_window'>
+			<field name="name">Scraps</field>
 			<field name="res_model">stock.indent.scrap</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','waiting_approval')]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					No Scrap for confirm.
+				</p>
+			</field>
+		</record>
+
+		<!-- Scrap Approval Window Action -->
+		<record id='action_stock_indent_scrap_waiting_for_approval' model='ir.actions.act_window'>
+			<field name="name">Scraps</field>
+			<field name="res_model">stock.indent.scrap</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','done')]</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					No Scrap for approval.
@@ -116,18 +131,15 @@
 			</field>
 		</record>
 
-		<!-- Scrap Menu -->
-
-<!--		-->
-<!--		<menuitem name="Indents" parent="stock.menu_stock_root" id="menu_stock_indent_scrap_main"-->
-<!--				  sequence="4" groups="base.group_user"/>-->
-
-		<menuitem action="action_stock_indent_scrap" name="Scraps"
-				  parent="menu_indent_indent_main" id="menu_stock_indent_scrap" sequence="5"
+		<menuitem action="action_stock_indent_scrap" name="Scraps (Draft)"
+				  parent="stock_indent_menu.menu_stock_scrap" id="menu_stock_indent_scrap" sequence="5"
 				  groups="base.group_user"/>
 
-		<menuitem action="action_stock_indent_scrap_waiting_for_approval" name="Scraps (Pending)"
-				  parent="menu_indent_indent_main" id="menu_scrap_waiting_for_approval" sequence="6"/>
+		<menuitem action="action_stock_indent_scrap_confirmed" name="Scraps (Confirmed)"
+				  parent="stock_indent_menu.menu_stock_scrap" id="menu_scrap_confirmed" sequence="10"/>
+
+		<menuitem action="action_stock_indent_scrap_waiting_for_approval" name="Scraps (Approved)"
+				  parent="stock_indent_menu.menu_stock_scrap" id="menu_scrap_waiting_for_approval" sequence="15"/>
 
 
     </data>

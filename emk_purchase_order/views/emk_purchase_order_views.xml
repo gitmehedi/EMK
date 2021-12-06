@@ -8,12 +8,7 @@
             <field name="inherit_id" ref="purchase.purchase_order_tree"/>
             <field name="arch" type="xml">
                 <data>
-<!--                    <xpath expr="//field[@name='amount_untaxed']" position="replace">-->
-<!--                        <field name="amount_untaxed" string="Untaxed" widget="monetary"/>-->
-<!--                    </xpath>-->
-<!--                    <xpath expr="//field[@name='amount_total']" position="replace">-->
-<!--                        <field name="amount_total" widget="monetary"/>-->
-<!--                    </xpath>-->
+
                 </data>
             </field>
         </record>
@@ -42,10 +37,7 @@
                         <button name="print_quotation" string="Print RFQ" type="object" class="btn-primary"
                                 invisible= "1"/>
                     </xpath>
-<!--                    <xpath expr="//button[@name='button_confirm']" position="replace">-->
-<!--                        <button name="button_confirm" string="Confirm Order" type="object"-->
-<!--                                attrs="{'invisible': [('check_po_action_button','=',False)]}"/>-->
-<!--                    </xpath>-->
+
                     <xpath expr="//button[@name='button_approve']" position="replace">
                         <button name="button_approve" string="Approve Order" type="object" class="oe_highlight"
                                 states='to approve' groups="purchase.group_purchase_manager"/>
@@ -56,7 +48,7 @@
 
 
         <record id='action_purchase_order_emk' model='ir.actions.act_window'>
-			<field name="name">Purchase Order EMK</field>
+			<field name="name">Purchase Order</field>
 			<field name="res_model">purchase.order</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -66,7 +58,10 @@
 				</p>
 			</field>
 		</record>
-        <menuitem id="purchase_orders_emk" name="Purchase Orders (Draft)" parent="purchase.menu_procurement_management" sequence="7" action="action_purchase_order_emk"/>
+
+
+        <menuitem id="purchase_orders_emk" name="Purchase Orders (Draft)" parent="purchase.menu_procurement_management" sequence="0" action="action_purchase_order_emk"/>
+
 
     </data>
 </odoo>

@@ -1,6 +1,7 @@
 import time
 from odoo import api, fields, models, _
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
+import dateutil.parser
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -10,7 +11,7 @@ class IndentIndent(models.Model):
     _name = 'indent.indent'
     _description = "Indent"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = "approve_date desc"
+    _order = "id desc"
 
     @api.model
     def _get_default_warehouse(self):
@@ -39,7 +40,7 @@ class IndentIndent(models.Model):
                     self.env.user.display_name)))
         return emp_ins.department_id
 
-    name = fields.Char('Indent #', size=30, readonly=True, track_visibility="onchange")
+    name = fields.Char('Reference #', size=30, readonly=True, track_visibility="onchange")
     approve_date = fields.Datetime('Approve Date', readonly=True, track_visibility="onchange")
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
                                   default=fields.Datetime.now, track_visibility="onchange")
@@ -90,14 +91,14 @@ class IndentIndent(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type',
                                       compute='_compute_default_picking_type',
                                       readonly=True, store=True, track_visibility="onchange")
-    move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
-                                 readonly=True, required=True, default='direct',
-                                 states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
+    move_type = fields.Selection([('one', 'All at once'),('direct', 'Partial')], 'Receive Method',
+                                 readonly=True, required=True, default='one',
+                                 states={'cancel': [('readonly', True)]},
                                  help="It specifies goods to be deliver partially or all at once",
                                  track_visibility="onchange")
 
     pr_indent_check = fields.Boolean(string='Indent List Check', default=True, track_visibility="onchange")
-    # operating_unit = fields.Many2one('operating.unit', string='Operating unit', default=_default_operating_unit, store=False)
+
 
     product_id = fields.Many2one(
         'product.product', 'Products',
@@ -125,8 +126,10 @@ class IndentIndent(models.Model):
     @api.one
     @api.constrains('required_date')
     def _check_required_date(self):
-        if self.required_date <= self.indent_date:
-            raise UserError('Required Date can not be less then current date!!!')
+        indent_date = dateutil.parser.parse(self.indent_date).date()
+        required_date = dateutil.parser.parse(self.required_date).date()
+        if required_date < indent_date:
+            raise UserError('Required Date can not be less then indent date!!!')
 
     @api.multi
     @api.depends('warehouse_id', 'stock_location_id')
@@ -346,31 +349,6 @@ class IndentIndent(models.Model):
                 move_id = move_obj.create(moves)
                 move_id.action_done()
 
-                # pack_obj = self.env['stock.pack.operation']
-                # packs = {
-                #     'name': line.name,
-                #     'product_qty': line.product_uom_qty,
-                #     'order_qty': line.product_uom_qty,
-                #     'qty_done': line.received_qty,
-                #     'product_id': line.product_id.id,
-                #     'picking_id': picking_id,
-                #     'product_uom_id': line.product_uom.id,
-                #     'location_id': location_id,
-                #     'location_dest_id': self.stock_location_id.id
-                # }
-                # pack_operation_id = pack_obj.create(packs)
-                #
-                # operation_obj = self.env['stock.move.operation.link']
-                # operation = {
-                #     'qty': line.received_qty,
-                #     'operation_id': pack_operation_id.id,
-                #     'move_id': move_id.id
-                # }
-                # pack_move = operation_obj.create(operation)
-
-                # self.picking_id.action_confirm()
-                # self.picking_id.force_assign()
-
                 self.ensure_one()
                 # If still in draft => confirm and assign
                 if picking.state == 'draft':
@@ -552,23 +530,10 @@ class IndentProductLines(models.Model):
         ('reject', 'Rejected'),
     ], string='State', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
-    # state = fields.Selection([('indent', 'Indent'), ('issue', 'issue')], default='indent')
-
-
     ####################################################
     # Business methods
     ####################################################
 
-    # @api.one
-    # @api.constrains('indent_qty')
-    # def _check_indent_qty(self):
-    #     if self.indent_qty < 0:
-    #         raise UserError('You can\'t give negative value!!!')
-    #
-    # @api.depends('indent_qty', 'price_unit')
-    # def _compute_amount_subtotal(self):
-    #     for line in self:
-    #         line.price_subtotal = (line.indent_qty * line.price_unit)
 
     @api.depends('product_id')
     @api.multi

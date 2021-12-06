@@ -6,15 +6,15 @@
     'website': 'www.genweb2.com',
     'license': 'AGPL-3',
     'complexity': "normal",
-    'depends': ['account',
-                'gbs_stock_product',
-                'ir_sequence_operating_unit',
-                'indent_type',
-                'stock_operating_unit_user',
-                'inventory_user',
-
-
-                ],
+    'depends': [
+        'account',
+        'gbs_stock_product',
+        'ir_sequence_operating_unit',
+        'indent_type',
+        'stock_operating_unit_user',
+        'inventory_user',
+        'stock_indent_menu',
+    ],
     'data': [
         'security/ir.model.access.csv',
         # 'security/ir_rule.xml',

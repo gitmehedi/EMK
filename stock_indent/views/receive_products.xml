@@ -13,12 +13,21 @@
 
         </record>
 
-        <!-- menus -->
-<!--         <menuitem name="Purchases"-->
-<!--            id="menu_purchase_root"-->
-<!--            web_icon="purchase,static/description/icon.png"-->
-<!--            sequence="10"/>-->
-<!--        <menuitem id="purchase_sub" name="Purchase" parent="menu_purchase_root"/>-->
-        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)" parent="purchase.menu_procurement_management" sequence="7" action="action_view_picking100"/>
+        <record id='action_purchase_order_done' model='ir.actions.act_window'>
+			<field name="name">Purchase Done</field>
+			<field name="res_model">stock.picking</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','done')]</field>
+<!--			<field name="help" type="html">-->
+<!--				<p class="oe_view_nocontent_create">-->
+<!--					Click to create a new Purchase Order.-->
+<!--				</p>-->
+<!--			</field>-->
+		</record>
+
+
+        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)" parent="purchase.menu_procurement_management" sequence="5" action="action_view_picking100"/>
+        <menuitem id="menu_purchase_orders_done" name="Purchase Orders (Done)" parent="purchase.menu_procurement_management" sequence="10" action="action_purchase_order_done"/>
     </data>
 </odoo>
