@@ -3,6 +3,7 @@ from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError,UserError
 import odoo.addons.decimal_precision as dp
+from odoo.tools import frozendict
 
 
 class PurchaseOrder(models.Model):
@@ -127,6 +128,9 @@ class PurchaseOrder(models.Model):
             self.date_order = requisition.date_end or fields.Datetime.now()
             self.picking_type_id = requisition.picking_type_id.id
             self.operating_unit_id = requisition.operating_unit_id
+
+            # Add operating unit in the context
+            self._add_operating_unit_in_context(self.operating_unit_id.id)
 
             if requisition.type_id.line_copy != 'copy':
                 return
@@ -310,6 +314,13 @@ class PurchaseOrder(models.Model):
                 for att in obj.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
 
 
 class PurchaseOrderLine(models.Model):

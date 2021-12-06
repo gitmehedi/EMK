@@ -211,6 +211,13 @@
                                 class="btn-primary "
                                 string="Validate"/>
 
+
+                          <button name="action_cancel_custom" string="Cancel"
+                            groups="gbs_sale_order_approval.group_so_cancellation"
+                                 attrs="{'invisible': [('state','=','cancel')]}"
+                            class="btn-primary btn-danger mr24 pull-right oe_read_only"
+                            type="object" />
+
                     </header>
 
                     <div class="oe_button_box" name="button_box">

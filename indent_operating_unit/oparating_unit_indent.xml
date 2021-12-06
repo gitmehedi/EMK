@@ -13,6 +13,9 @@
                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                groups="operating_unit.group_multi_operating_unit" />
                     </xpath>
+                    <xpath expr="//field[@name='product_lines']" position="attributes">
+                        <attribute name="context">{'operating_unit_id': operating_unit_id}</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>

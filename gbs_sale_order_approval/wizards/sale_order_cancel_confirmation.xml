@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sale_order_cancel_confirmation_form" model="ir.ui.view">
+            <field name="name">sale.order.cancel.confirmation.form</field>
+            <field name="model">sale.order.cancel.confirmation</field>
+            <field name="arch" type="xml">
+                <form>
+
+
+                    <field name="message" readonly="True"/>
+
+                    <footer>
+                        <button name="action_yes" string="Yes" type="object" default_focus="1" class="oe_highlight"/>
+                        <button name="action_no" string="No" type="object" default_focus="1" class="btn-danger"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
