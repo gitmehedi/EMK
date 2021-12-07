@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    <record id="account.menu_account_financial_reports_tree" model="ir.ui.menu">-->
+<!--        <field name="groups_id" eval="[(3,ref('account_fam_access.make_invisible'))]"/>-->
+<!--    </record>-->
+<!--    <record id="account.menu_account_report_tree_hierarchy" model="ir.ui.menu">-->
+<!--        <field name="groups_id" eval="[(3,ref('account_fam_access.make_invisible'))]"/>-->
+<!--    </record>-->
+</odoo>

@@ -3,6 +3,7 @@ from odoo import api, fields, models
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+    _order = "id desc"
 
     @api.multi
     def do_transfer(self):
