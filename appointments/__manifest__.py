@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Appointment and Booking Management Users',
+    'name': 'Appointment and Booking Management',
     'description': """ All types of users whom are related to activities of Appointment and Booking Management""",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
@@ -8,9 +8,11 @@
     'category': 'Appointment',
     'depends': [
         'base',
+        'appointment_user',
+        'appointment_menu',
     ],
     'data': [
-        'security/users.xml',
+
     ],
     'installable': True,
 }

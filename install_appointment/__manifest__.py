@@ -9,6 +9,9 @@
     'description': 'Install all appointment related module',
     'version': '1.0',
     'depends': [
+        'appointment_user',
+        'appointment_menu',
+        'appointments',
     ],
     'installable': True,
     'application': True,
