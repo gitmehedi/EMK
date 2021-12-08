@@ -166,6 +166,19 @@
 				</p>
 			</field>
 		</record>
+
+		<record id='action_indent_reject' model='ir.actions.act_window'>
+			<field name="name">Indents</field>
+			<field name="res_model">indent.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','reject')]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					No Indent for approval.
+				</p>
+			</field>
+		</record>
 		<!-- Indent Menu -->
 		<menuitem name="Indents" parent="stock.menu_stock_root" id="menu_indent_indent_main"
 				  sequence="1" groups="base.group_user"/>
@@ -185,5 +198,7 @@
 		<menuitem action="action_indent_done" name="Indent (Done)"
 				  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_done" sequence="20"
 				  groups="inventory_user.grp_inv_supervisor"/>
+		<menuitem action="action_indent_reject" name="Indent (Rejected)"
+				  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_reject" sequence="20" />
 	</data>
 </odoo>
