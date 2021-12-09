@@ -8,10 +8,15 @@
     'category': 'Appointment',
     'depends': [
         'base',
+        'mail',
         'appointment_user',
         'appointment_menu',
     ],
     'data': [
+        'views/appointment_type_views.xml',
+        'views/appointment_topics_views.xml',
+        'views/meeting_room_views.xml',
+        'views/appointment_contact_views.xml',
 
     ],
     'installable': True,
