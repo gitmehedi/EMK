@@ -1,7 +1,9 @@
 # import of odoo
+import logging
 import odoo.addons.decimal_precision as dp
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+_logger = logging.getLogger(__name__)
 
 
 class ProductProduct(models.Model):
@@ -23,8 +25,9 @@ class ProductProduct(models.Model):
                     'operating_unit_id': operating_unit_id
                 })
         else:
+            _logger.info("SAMUDA-CUSTOM-ERROR: [VALIDATION] operating unit not found in the context")
             # for testing purpose
-            raise ValidationError(_('Operating Unit Not Found in the context.'))
+            # raise ValidationError(_('Operating Unit Not Found in the context.'))
 
     @api.multi
     def write(self, values):
@@ -63,6 +66,11 @@ class ProductStandardPrice(models.Model):
             )
             if len(operating_units.ids) > 1:
                 raise ValidationError(_('[Unique Error] Operating Unit must be unique!'))
+
+    @api.constrains('cost')
+    def _check_cost(self):
+        if self.cost < 0:
+            raise ValidationError(_('Cost Per Unit cannot be negative!'))
 
 
 class ProductPriceHistory(models.Model):
