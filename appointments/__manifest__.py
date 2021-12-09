@@ -13,10 +13,13 @@
         'appointment_menu',
     ],
     'data': [
+        'data/sequence.xml',
         'views/appointment_type_views.xml',
         'views/appointment_topics_views.xml',
         'views/meeting_room_views.xml',
         'views/appointment_contact_views.xml',
+        'views/appointment_timeslot_views.xml',
+
 
     ],
     'installable': True,

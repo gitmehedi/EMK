@@ -37,7 +37,7 @@
             </field>
         </record>
 
-        <record id="appointment_type_search_view" model="ir.ui.view">
+        <record id="appointment_contact_search_view" model="ir.ui.view">
             <field name="name">appointment.contact.search.view</field>
             <field name="model">appointment.contact</field>
             <field name="arch" type="xml">
