@@ -21,6 +21,12 @@ class MeetingRoomConfigure(models.Model):
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
+    @api.constrains('min_seat', 'max_seat')
+    def _check_max_min(self):
+        for rec in self:
+            if rec.min_seat > rec.max_seat:
+                raise ValidationError(_("Min Seat should not be greater than Max Seat."))
+
     @api.model
     def _needaction_domain_get(self):
         return [('status', '=', 'True')]
