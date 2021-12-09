@@ -9,7 +9,13 @@ class AppointmentContact(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = "id desc"
 
-    name = fields.Char(string="Name", required=True, translate=True, track_visibility='onchange')
+    @api.depends('appointee_id')
+    def _compute_name(self):
+        for rec in self:
+            if rec.appointee_id:
+                self.name = self.appointee_id.name
+
+    name = fields.Char(string="Name", required=True, translate=True, track_visibility='onchange' )
     appointee_id = fields.Many2one('hr.employee', string="Appointee", required=True )
     # appointee_lines = fields.One2many('appointment.contact.lines', 'appointee_contact_id', string="Appointee Lines", track_visibility='onchange')
     description = fields.Text('Remarks', track_visibility="onchange")
