@@ -7,6 +7,7 @@ import odoo.addons.decimal_precision as dp
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+    _order = "id desc"
 
     @api.model
     def _default_picking_type(self):

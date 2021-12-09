@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--    <menuitem id="menu_emk_purchase_order" name='Purchase' parent="purchase.menu_procurement_management" sequence="10"/>-->
+
+</odoo>
