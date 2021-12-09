@@ -137,6 +137,7 @@ class PurchaseRequisition(models.Model):
         vals = []
         # self.required_date = self.indent_ids.required_date
         if self.indent_ids:
+            self._add_operating_unit_in_context(self.operating_unit_id.id)
             for indent_id in self.indent_ids:
                 if not self.dept_location_id:
                     self.dept_location_id = indent_id.stock_location_id.id
