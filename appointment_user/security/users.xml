@@ -6,7 +6,7 @@
             <field name="sequence">90</field>
         </record>
 
-        <record id="event.group_appoint_user" model="res.groups">
+        <record id="group_appoint_user" model="res.groups">
             <field name="name">Appointment: Internal User</field>
             <field name="sequence">1</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
@@ -14,7 +14,7 @@
             <field name="comment">Officer will have an access event form which shows only readonly mode.</field>
         </record>
 
-        <record id="event.group_appoint_officer" model="res.groups">
+        <record id="group_appoint_officer" model="res.groups">
             <field name="name">Appointment: Officer</field>
             <field name="sequence">1</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
@@ -22,7 +22,7 @@
             <field name="comment">Officer will have an access event form which shows only readonly mode.</field>
         </record>
 
-        <record id="event.group_appoint_manager" model="res.groups">
+        <record id="group_appoint_manager" model="res.groups">
             <field name="name">Appointment: Executive Manager</field>
             <field name="sequence">1</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
