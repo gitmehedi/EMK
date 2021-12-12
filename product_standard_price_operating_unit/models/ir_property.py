@@ -1,6 +1,8 @@
 # import of odoo
+import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+_logger = logging.getLogger(__name__)
 
 
 class Property(models.Model):
@@ -27,10 +29,13 @@ class Property(models.Model):
 
                     if product_standard_price:
                         res[product_id] = product_standard_price.cost
+                    else:
+                        res[product_id] = 0.0
             else:
+                _logger.info("SAMUDA-CUSTOM-ERROR: [GET] operating unit not found in the context")
                 # for testing purpose
-                if not self.env.context.get('from_menu'):
-                    raise UserError(_('[GET] GET ERROR.\nOperating Unit not found in the context.'))
+                # if not self.env.context.get('from_menu'):
+                #     raise UserError(_('[GET] GET ERROR.\nOperating Unit not found in the context.'))
 
         return res
 
@@ -66,6 +71,7 @@ class Property(models.Model):
                             'cost': cost
                         })
             else:
+                _logger.info("SAMUDA-CUSTOM-ERROR: [CREATE, UPDATE] operating unit not found in the context")
                 # for testing purpose
-                if not self.env.context.get('from_menu'):
-                    raise UserError(_('[CREATE, UPDATE] CREATE OR UPDATE ERROR.\nOperating Unit not found in the context.'))
+                # if not self.env.context.get('from_menu'):
+                #     raise UserError(_('[CREATE, UPDATE] CREATE OR UPDATE ERROR.\nOperating Unit not found in the context.'))

@@ -4,7 +4,8 @@ import time
 import datetime
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
+
 
 class GBSStockScrap(models.Model):
     _name = 'gbs.stock.scrap'
@@ -75,6 +76,7 @@ class GBSStockScrap(models.Model):
 
     @api.multi
     def scrap_approve(self):
+        self._add_operating_unit_in_context(self.operating_unit_id.id)
         picking_id = False
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
@@ -90,6 +92,13 @@ class GBSStockScrap(models.Model):
         }
 
         self.write(res)
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
 
     @api.model
     def _create_pickings_and_procurements(self):

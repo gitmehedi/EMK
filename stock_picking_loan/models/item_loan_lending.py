@@ -49,6 +49,7 @@ class LoanLending(models.Model):
                             'default_transfer_type': 'receive',
                             'default_receive_type': 'loan',
                             'default_loan_id': self.id,
+                            'operating_unit_id': self.operating_unit_id.id
                             },
             }
 
