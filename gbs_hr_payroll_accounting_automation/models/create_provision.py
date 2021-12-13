@@ -424,8 +424,6 @@ class CreateProvision(models.TransientModel):
                 cost_center_bill = self.get_one_cost_center_department_bill(cost_center, top_sheet, code, department)
                 cost_center_wise_bill_dict[cost_center.id][department.id] = cost_center_bill
 
-        print('****code', code)
-        print('cost_center_wise_bill_dict', cost_center_wise_bill_dict)
         return cost_center_wise_bill_dict
 
     def get_cost_center_wise_three_bills(self, is_ctg, payslip_cost_centers, top_sheet, code1, code2, code3,
@@ -451,7 +449,6 @@ class CreateProvision(models.TransientModel):
                     total_loan_mess_mobile_bill = total_loan_mess_mobile_bill + cost_center_bill
                 cost_center_wise_bill_dict[cost_center.id][department.id] = total_loan_mess_mobile_bill
 
-        print('***loan ', cost_center_wise_bill_dict)
         return cost_center_wise_bill_dict
 
     def get_move_line_vals(self, name, date, journal_id, account_id, operating_unit_id, department_id, cost_center_id,
@@ -508,28 +505,23 @@ class CreateProvision(models.TransientModel):
                                                                                   self.payslip_run_id, 'MOBILE',
                                                                                   payslip_departments)
 
-                print('cost center telephone bill', cost_center_wise_telephone_bill)
                 # get tds, pf, loan mess mobile bill debit values
                 cost_center_wise_tds = self.get_cost_center_wise_bills(payslip_cost_centers, self.payslip_run_id, 'TDS',
                                                                        payslip_departments)
-                print('cost center tds', cost_center_wise_tds)
                 cost_center_wise_pfs = self.get_cost_center_wise_bills(payslip_cost_centers, self.payslip_run_id,
                                                                        'EPMF', payslip_departments)
 
-                print('cost center pfs', cost_center_wise_pfs)
                 cost_center_wise_loan_mess_mobile = self.get_cost_center_wise_three_bills('', payslip_cost_centers,
                                                                                           self.payslip_run_id,
                                                                                           'LOAN', 'MESS', 'MOBILE',
                                                                                           payslip_departments)
 
-                print('cost center loan mess mobile', cost_center_wise_loan_mess_mobile)
                 cost_center_wise_loan_mess_mobile_ctg = self.get_cost_center_wise_three_bills('ctg',
                                                                                               payslip_cost_centers,
                                                                                               self.payslip_run_id,
                                                                                               'LOAN', 'MESS', 'MOBILE',
                                                                                               payslip_departments)
 
-                print('cost center loan mess mobile ctg', cost_center_wise_loan_mess_mobile_ctg)
                 if self.payslip_run_id.operating_unit_id:
 
                     move_lines = []
@@ -722,7 +714,6 @@ class CreateProvision(models.TransientModel):
 
                             # tds debit
                             for key, value in cost_center_wise_tds.items():
-                                #  print('value', value[125])
                                 for department in payslip_departments:
                                     if value[department.id] < 0:
                                         value[department.id] = value[department.id] * (-1)
