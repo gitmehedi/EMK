@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_appointment_timeslot_tree">
+            <field name="name">appointment.timeslot.tree</field>
+            <field name="model">appointment.timeslot</field>
+            <field name="arch" type="xml">
+                <tree string="Appointment Contact" decoration-bf="status==True" decoration-muted="status==False"
+                      decoration-success="status==True">
+                    <field name="name" />
+                    <field name="day"/>
+                    <field name="start_time" widget="float_time"/>
+                    <field name="end_time" widget="float_time"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_appointment_timeslot_form">
+            <field name="name">appointment.timeslot.form</field>
+            <field name="model">appointment.timeslot</field>
+            <field name="arch" type="xml">
+                <form string="Appointment Time Slot">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="day"/>
+                                <field name="start_time" widget="float_time"/>
+                                <field name="end_time" widget="float_time"/>
+                                <field name="status"/>
+                            </group>
+                            <field name="description" placeholder="Description if any"></field>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="appointment_timeslot_search_view" model="ir.ui.view">
+            <field name="name">appointment.timeslot.search.view</field>
+            <field name="model">appointment.timeslot</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="status"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" domain="[]" context="{'group_by':'status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="action_appointment_timeslot">
+            <field name="name">Appointment Time Slot</field>
+            <field name="res_model">appointment.timeslot</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_appointment_timeslot" action="action_appointment_timeslot" sequence="25"
+                  groups="" parent="appointment_menu.sub_configuration_menu"/>
+    </data>
+</odoo>

@@ -26,6 +26,16 @@
                                 <field name="status"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Appointment Person">
+                                <field name="contact_ids">
+                                    <tree string="Contacts" editable="bottom">
+										<field name="name" />
+										<field name="status" />
+									</tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

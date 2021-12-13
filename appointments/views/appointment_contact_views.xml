@@ -28,6 +28,11 @@
                                 <field name="description"></field>
                             </group>
                         </group>
+                         <notebook>
+                            <page string="Appointment Time Slot">
+                                <field name="timeslot_ids"></field>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -37,7 +42,7 @@
             </field>
         </record>
 
-        <record id="appointment_type_search_view" model="ir.ui.view">
+        <record id="appointment_contact_search_view" model="ir.ui.view">
             <field name="name">appointment.contact.search.view</field>
             <field name="model">appointment.contact</field>
             <field name="arch" type="xml">
