@@ -1,6 +1,8 @@
 import time
 import re
 from odoo import api, fields, models, _
+from datetime import datetime, date, timedelta
+import dateutil.parser
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
 
@@ -15,7 +17,7 @@ class Appointment(models.Model):
     def _get_required_date(self):
         return datetime.strftime(datetime.today(), DEFAULT_SERVER_DATETIME_FORMAT)
 
-    name = fields.Char(string="Name", required=True, translate=True, track_visibility='onchange')
+    name = fields.Char(string="Name", readonly=True, track_visibility='onchange')
     # client_id = fields.Many2one('res.partner',string="Client")
     topic_id = fields.Many2one('appointment.topics',string="Topics",required=True, track_visibility='onchange')
     contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange' )
@@ -29,12 +31,12 @@ class Appointment(models.Model):
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
     last_name = fields.Char(string="Last Name", required=True, track_visibility='onchange')
     gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
-                              string='Gender', track_visibility='onchange')
+                              string='Gender',required=True, track_visibility='onchange')
     date_of_birth = fields.Date(string="Date of Birth", required=True, track_visibility='onchange')
     phone = fields.Char(string="Phone", required=True, track_visibility='onchange')
     address = fields.Text(string="Address", required=True, track_visibility='onchange')
     city = fields.Char(string="City", required=True, track_visibility='onchange')
-    country = fields.Char(string="Country", required=True, track_visibility='onchange')
+    country = fields.Many2one('res.country',string="Country", required=True, default="20", track_visibility='onchange')
     email = fields.Char(string="Email", required=True, track_visibility='onchange')
 
     state = fields.Selection([
@@ -85,14 +87,36 @@ class Appointment(models.Model):
             }
         return res
 
-    @api.onchange('email')
+    @api.onchange('contact_id')
+    def onchange_contact_id(self):
+        res = {}
+        self.timeslot_id = 0
+        if self.contact_id:
+            res['domain'] = {
+                'timeslot_id': [('id', 'in', self.contact_id.timeslot_ids.ids)],
+            }
+        return res
+
+    @api.one
+    @api.constrains('appointment_date')
+    def onchange_appointment_date(self):
+        app_date = datetime.strptime(self.appointment_date, '%Y-%m-%d')
+        curr_date = dateutil.parser.parse(fields.Date.today())
+        if app_date < curr_date:
+            raise ValidationError(_("Appointment date cannot be past date from current date"))
+
+    @api.one
+    @api.constrains('email')
     def validate_mail(self):
         if self.email:
+            print(self.email)
             match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
+            print(match)
             if match == None:
                 raise ValidationError('Email should be input a valid')
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'True')]
+        return [('state', 'in', ['draft', 'confirm', 'done', 'reject'])]
+
 

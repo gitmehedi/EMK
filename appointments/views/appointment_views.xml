@@ -5,7 +5,8 @@
             <field name="name">appointment.appointment.tree</field>
             <field name="model">appointment.appointment</field>
             <field name="arch" type="xml">
-                <tree string="Appointment">
+                <tree string="Appointment" decoration-bf="state in ('draft','confirm')"
+					  colors="gray:state=='done';green:state=='confirm';blue:state=='draft';red:state=='reject';">
                     <field name="name"/>
                     <field name="first_name"/>
                     <field name="last_name"/>
@@ -34,6 +35,11 @@
                                statusbar_colors='{"reject":"red"}'/>
                     </header>
                     <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="topic_id" options="{'no_create_edit':True,'no_open':True}"/>
@@ -52,7 +58,7 @@
                                 <field name="date_of_birth"/>
                                 <field name="address"/>
                                 <field name="city"/>
-                                <field name="country"/>
+                                <field name="country" options="{'no_create_edit':True,'no_open':True}"/>
                             </group>
                         </group>
                         <notebook>
@@ -90,9 +96,37 @@
             <field name="res_model">appointment.appointment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_appointment_confirm">
+            <field name="name">Appointment</field>
+            <field name="res_model">appointment.appointment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirm')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_appointment_approve">
+            <field name="name">Appointment</field>
+            <field name="res_model">appointment.appointment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','done')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_appointment_reject">
+            <field name="name">Appointment</field>
+            <field name="res_model">appointment.appointment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','reject')]</field>
         </record>
 
-        <menuitem id="menu_appointment_appointment" action="action_appointment_appointment" sequence="30"
+        <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment" sequence="30"
+                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+        <menuitem id="menu_appointment_confirm" name="Appointment (Confirmed)" action="action_appointment_confirm" sequence="35"
+                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+        <menuitem id="menu_appointment_done" name="Appointment (Approved)" action="action_appointment_approve" sequence="40"
+                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+        <menuitem id="menu_appointment_reject" name="Appointment (Rejected)" action="action_appointment_reject" sequence="50"
                   groups="" parent="appointment_menu.sub_appoint_menu"/>
     </data>
 </odoo>
