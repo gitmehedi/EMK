@@ -19,6 +19,8 @@
         'views/meeting_room_views.xml',
         'views/appointment_contact_views.xml',
         'views/appointment_timeslot_views.xml',
+        'views/appointment_views.xml',
+        # 'views/appointment_test_views.xml',
 
 
     ],

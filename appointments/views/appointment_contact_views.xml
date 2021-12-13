@@ -28,6 +28,11 @@
                                 <field name="description"></field>
                             </group>
                         </group>
+                         <notebook>
+                            <page string="Appointment Time Slot">
+                                <field name="timeslot_ids"></field>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

@@ -4,8 +4,15 @@
         <record id="sequence_appointment_timeslot" model="ir.sequence">
             <field name="name">Appointment Timeslot</field>
             <field name="code">appointment.timeslot.sequence</field>
-            <field name="prefix">HP</field>
-            <field name="padding">3</field>
+            <field name="prefix">DAY%(y)s</field>
+<!--            <field name="padding">3</field>-->
+<!--            <field name="company_id" eval="False"/>-->
+        </record>
+        <record id="sequence_appointment" model="ir.sequence">
+            <field name="name">Appointment</field>
+            <field name="code">appointment.sequence</field>
+            <field name="prefix">A</field>
+            <field name="padding">6</field>
             <field name="company_id" eval="False"/>
         </record>
     </data>

@@ -1,0 +1,98 @@
+import time
+import re
+from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import UserError, ValidationError
+
+
+class Appointment(models.Model):
+    _name = 'appointment.appointment'
+    _description = "Appointment"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = "id desc"
+
+    @api.model
+    def _get_required_date(self):
+        return datetime.strftime(datetime.today(), DEFAULT_SERVER_DATETIME_FORMAT)
+
+    name = fields.Char(string="Name", required=True, translate=True, track_visibility='onchange')
+    # client_id = fields.Many2one('res.partner',string="Client")
+    topic_id = fields.Many2one('appointment.topics',string="Topics",required=True, track_visibility='onchange')
+    contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange' )
+    timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange' )
+    type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange' )
+    meeting_room_id = fields.Many2many('appointment.meeting.room',string='Room Allocation', track_visibility='onchange')
+    description = fields.Text('Remarks', track_visibility="onchange")
+    appointment_date = fields.Date('Appointment Date', required=True, states={'draft': [('readonly', False)]},
+                                   track_visibility="onchange")
+
+    first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
+    last_name = fields.Char(string="Last Name", required=True, track_visibility='onchange')
+    gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
+                              string='Gender', track_visibility='onchange')
+    date_of_birth = fields.Date(string="Date of Birth", required=True, track_visibility='onchange')
+    phone = fields.Char(string="Phone", required=True, track_visibility='onchange')
+    address = fields.Text(string="Address", required=True, track_visibility='onchange')
+    city = fields.Char(string="City", required=True, track_visibility='onchange')
+    country = fields.Char(string="Country", required=True, track_visibility='onchange')
+    email = fields.Char(string="Email", required=True, track_visibility='onchange')
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirm', 'Confirmed'),
+        ('done', 'Approved'),
+        ('reject', 'Rejected')
+    ], string='State', default='draft', readonly=True, copy=False, index=True, track_visibility='onchange')
+
+    @api.depends('topic_id')
+    def _compute_appointee(self):
+        for rec in self:
+            if rec.topic_id:
+                rec.contact_id = rec.topic_id.contact_id
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('appointment.sequence') or _('New')
+            # vals['name'] = DAY_NAME
+        result = super(Appointment, self).create(vals)
+        return result
+
+    @api.multi
+    def appointment_confirm(self):
+        for appointment in self:
+            if not appointment.meeting_room_id:
+                raise UserError(_('Unable to confirm an appointment without room. Please add room(s).'))
+            appointment.write({'state': 'confirm'})
+
+    @api.multi
+    def appointment_reject(self):
+        for appointment in self:
+            appointment.write({'state': 'reject'})
+
+    @api.multi
+    def appointment_approve(self):
+        for appointment in self:
+            appointment.write({'state': 'done'})
+
+    @api.onchange('topic_id')
+    def onchange_topic_id(self):
+        res = {}
+        self.contact_id = 0
+        if self.topic_id:
+            res['domain'] = {
+                'contact_id': [('id', 'in', self.topic_id.contact_ids.ids)],
+            }
+        return res
+
+    @api.onchange('email')
+    def validate_mail(self):
+        if self.email:
+            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
+            if match == None:
+                raise ValidationError('Email should be input a valid')
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'True')]
+
