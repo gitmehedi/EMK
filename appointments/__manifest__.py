@@ -21,6 +21,7 @@
         'views/appointment_timeslot_views.xml',
         'views/appointment_views.xml',
         # 'views/appointment_test_views.xml',
+        'wizard/appointment_wizard_views.xml',
 
 
     ],

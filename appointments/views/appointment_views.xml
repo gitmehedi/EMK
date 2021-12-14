@@ -5,8 +5,8 @@
             <field name="name">appointment.appointment.tree</field>
             <field name="model">appointment.appointment</field>
             <field name="arch" type="xml">
-                <tree string="Appointment" decoration-bf="state in ('draft','confirm')"
-					  colors="gray:state=='done';green:state=='confirm';blue:state=='draft';red:state=='reject';">
+                <tree string="Appointment" decoration-info="state == 'draft'" decoration-bf="state in ('draft','confirm')"
+					  colors="gray:state=='done';green:state=='confirm';red:state=='reject';">
                     <field name="name"/>
                     <field name="first_name"/>
                     <field name="last_name"/>
@@ -31,6 +31,8 @@
                                 class="oe_highlight"/>
                         <button name="appointment_reject" string="Reject" states="confirm"
                                 type="object"/>
+                        <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm" type="action"
+                                class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,reject"
                                statusbar_colors='{"reject":"red"}'/>
                     </header>
@@ -42,31 +44,31 @@
                         </div>
                         <group>
                             <group>
-                                <field name="topic_id" options="{'no_create_edit':True,'no_open':True}"/>
-                                <field name="contact_id" options="{'no_create_edit':True,'no_open':True}"/>
-                                <field name="timeslot_id" options="{'no_create_edit':True,'no_open':True}"/>
-                                <field name="first_name"/>
-                                <field name="last_name"/>
-                                <field name="phone"/>
-                                <field name="email"/>
+                                <field name="topic_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="contact_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="timeslot_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="first_name"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="last_name"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="phone"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="email"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
 
                             </group>
                             <group>
-                                <field name="appointment_date"/>
-                                <field name="type_id" options="{'no_create_edit':True,'no_open':True}"/>
-                                <field name="gender"/>
-                                <field name="date_of_birth"/>
-                                <field name="address"/>
-                                <field name="city"/>
-                                <field name="country" options="{'no_create_edit':True,'no_open':True}"/>
+                                <field name="appointment_date" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="type_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="gender" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="date_of_birth" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="address" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="city" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="country" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Meeting Room">
-                                <field name="meeting_room_id"/>
+                                <field name="meeting_room_id" attrs="{'readonly':[('state','in',('reject'))]}"/>
                             </page>
                         </notebook>
-                        <field name="description"/>
+                        <field name="description" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -85,6 +87,9 @@
                     <field name="state"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" domain="[]" context="{'group_by':'appointment_date'}"/>
+                        <filter string="Appointee" domain="[]" context="{'group_by':'contact_id'}"/>
+                        <filter string="Time Slot" domain="[]" context="{'group_by':'timeslot_id'}"/>
                     </group>
                 </search>
             </field>

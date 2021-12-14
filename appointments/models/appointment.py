@@ -17,26 +17,26 @@ class Appointment(models.Model):
     def _get_required_date(self):
         return datetime.strftime(datetime.today(), DEFAULT_SERVER_DATETIME_FORMAT)
 
-    name = fields.Char(string="Name", readonly=True, track_visibility='onchange')
+    name = fields.Char(string="Name", readonly=True, copy=False, track_visibility='onchange')
     # client_id = fields.Many2one('res.partner',string="Client")
     topic_id = fields.Many2one('appointment.topics',string="Topics",required=True, track_visibility='onchange')
     contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange' )
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange' )
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange' )
     meeting_room_id = fields.Many2many('appointment.meeting.room',string='Room Allocation', track_visibility='onchange')
-    description = fields.Text('Remarks', track_visibility="onchange")
-    appointment_date = fields.Date('Appointment Date', required=True, states={'draft': [('readonly', False)]},
-                                   track_visibility="onchange")
+    description = fields.Text(string='Remarks', track_visibility="onchange")
+    appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
 
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
     last_name = fields.Char(string="Last Name", required=True, track_visibility='onchange')
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
-                              string='Gender',required=True, track_visibility='onchange')
+    # gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
+    #                           string='Gender',required=True, track_visibility='onchange')
+    gender = fields.Many2one('res.gender', string='Gender', required=True, track_visibility='onchange')
     date_of_birth = fields.Date(string="Date of Birth", required=True, track_visibility='onchange')
     phone = fields.Char(string="Phone", required=True, track_visibility='onchange')
     address = fields.Text(string="Address", required=True, track_visibility='onchange')
     city = fields.Char(string="City", required=True, track_visibility='onchange')
-    country = fields.Many2one('res.country',string="Country", required=True, default="20", track_visibility='onchange')
+    country = fields.Many2one('res.country',string="Country", required=True, track_visibility='onchange')
     email = fields.Char(string="Email", required=True, track_visibility='onchange')
 
     state = fields.Selection([
@@ -97,13 +97,24 @@ class Appointment(models.Model):
             }
         return res
 
+
     @api.one
     @api.constrains('appointment_date')
-    def onchange_appointment_date(self):
-        app_date = datetime.strptime(self.appointment_date, '%Y-%m-%d')
-        curr_date = dateutil.parser.parse(fields.Date.today())
-        if app_date < curr_date:
-            raise ValidationError(_("Appointment date cannot be past date from current date"))
+    def validate_appointment_date(self):
+        if self.appointment_date:
+            app_date = datetime.strptime(self.appointment_date, '%Y-%m-%d')
+            curr_date = dateutil.parser.parse(fields.Date.today())
+            if app_date < curr_date:
+                raise ValidationError(_("Appointment date cannot be past date from current date"))
+
+    @api.one
+    @api.constrains('date_of_birth')
+    def validate_birth_date(self):
+        if self.date_of_birth:
+            birth_date = datetime.strptime(self.date_of_birth, '%Y-%m-%d')
+            curr_date = dateutil.parser.parse(fields.Date.today())
+            if birth_date > curr_date:
+                raise ValidationError(_("Birth date cannot be future date from current date"))
 
     @api.one
     @api.constrains('email')

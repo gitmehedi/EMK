@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_appointment_wizard" model="ir.ui.view">
+        <field name="name">appointment.wizard</field>
+        <field name="model">appointment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Proposed">
+                <group>
+                    <group>
+<!--                        <field name="name"/>-->
+                        <field name="appointment_date"/>
+                    </group>
+<!--                    <group>-->
+<!--                        <field name="state"/>-->
+<!--                    </group>-->
+                </group>
+
+                <footer>
+                    <button name="act_change_date" string="Change Request" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_appointment_wizard" model="ir.actions.act_window">
+        <field name="name">Request for Change</field>
+        <field name="res_model">appointment.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_appointment_wizard"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
