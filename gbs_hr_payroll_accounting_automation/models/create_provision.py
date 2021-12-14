@@ -378,18 +378,18 @@ class CreateProvision(models.TransientModel):
 
         return sum_telephone_bill
 
-    def get_a_cost_center_bill(self, cost_center, top_sheet, code):
+    def get_one_cost_center_department_bill(self, cost_center, top_sheet, code, department):
         employee_list = []
         sum = 0
         for rec in top_sheet.slip_ids:
-            if rec.employee_id.cost_center_id.id == cost_center.id:
+            if rec.employee_id.cost_center_id.id == cost_center.id and rec.employee_id.department_id.id == department.id:
                 employee_list.append(rec.employee_id)
                 for line in rec.line_ids:
                     if line.code == code:
                         sum = sum + math.ceil(line.total)
         return sum
 
-    def get_a_cost_center_three_bill(self, cost_center, top_sheet, code1, code2, code3):
+    def get_a_cost_center_three_bill(self, cost_center, top_sheet, code1, code2, code3, department):
 
         # 'LOAN', 'MESS', 'MOBILE'
         employee_list = []
@@ -397,7 +397,7 @@ class CreateProvision(models.TransientModel):
         mess_sum = 0
         mobile_sum = 0
         for rec in top_sheet.slip_ids:
-            if rec.employee_id.cost_center_id.id == cost_center.id:
+            if rec.employee_id.cost_center_id.id == cost_center.id and rec.employee_id.department_id.id == department.id:
                 employee_list.append(rec.employee_id)
                 for line in rec.line_ids:
                     if line.code == code1:
@@ -409,37 +409,47 @@ class CreateProvision(models.TransientModel):
 
         return [loan_sum, mess_sum, mobile_sum]
 
-    def get_cost_center_wise_bills(self, payslip_cost_centers, top_sheet, code):
-        cost_center_telephone_dict = OrderedDict()
+    def get_cost_center_wise_bills(self, payslip_cost_centers, top_sheet, code, payslip_departments):
+        cost_center_wise_bill_dict = OrderedDict()
         for cost_center in payslip_cost_centers:
-            cost_center_telephone_dict[cost_center.id] = {}
-            cost_center_telephone_dict[cost_center.id]['vals'] = 0
-
-        for cost_center in payslip_cost_centers:
-            cost_center_telephone_bill = self.get_a_cost_center_bill(cost_center, top_sheet, code)
-            cost_center_telephone_dict[cost_center.id]['vals'] = cost_center_telephone_bill
-
-        return cost_center_telephone_dict
-
-    def get_cost_center_wise_three_bills(self, is_ctg, payslip_cost_centers, top_sheet, code1, code2, code3):
-        cost_center_telephone_dict = OrderedDict()
-        for cost_center in payslip_cost_centers:
-            cost_center_telephone_dict[cost_center.id] = {}
-            cost_center_telephone_dict[cost_center.id]['vals'] = 0
+            cost_center_wise_bill_dict[cost_center.id] = {}
+            # cost_center_telephone_dict[cost_center.id]['vals'] = 0
+            for department in payslip_departments:
+                cost_center_wise_bill_dict[cost_center.id][department.id] = 0
 
         for cost_center in payslip_cost_centers:
-            total_loan_mess_mobile_bill = 0
-            if is_ctg == 'ctg':
-                cost_center_bills = self.get_a_cost_center_three_bill(cost_center, top_sheet, code1, '', code3)
+            # cost_center_bill = self.get_one_cost_center_department_bill(cost_center, top_sheet, code)
+            # cost_center_wise_bill_dict[cost_center.id]['vals'] = cost_center_bill
+            for department in payslip_departments:
+                cost_center_bill = self.get_one_cost_center_department_bill(cost_center, top_sheet, code, department)
+                cost_center_wise_bill_dict[cost_center.id][department.id] = cost_center_bill
 
-            else:
-                cost_center_bills = self.get_a_cost_center_three_bill(cost_center, top_sheet, code1, code2, code3)
+        return cost_center_wise_bill_dict
 
-            for cost_center_bill in cost_center_bills:
-                total_loan_mess_mobile_bill = total_loan_mess_mobile_bill + cost_center_bill
-            cost_center_telephone_dict[cost_center.id]['vals'] = total_loan_mess_mobile_bill
+    def get_cost_center_wise_three_bills(self, is_ctg, payslip_cost_centers, top_sheet, code1, code2, code3,
+                                         payslip_departments):
+        cost_center_wise_bill_dict = OrderedDict()
+        for cost_center in payslip_cost_centers:
+            cost_center_wise_bill_dict[cost_center.id] = {}
+            for department in payslip_departments:
+                cost_center_wise_bill_dict[cost_center.id][department.id] = 0
 
-        return cost_center_telephone_dict
+        for cost_center in payslip_cost_centers:
+            for department in payslip_departments:
+                if is_ctg == 'ctg':
+                    cost_center_bills = self.get_a_cost_center_three_bill(cost_center, top_sheet, code1, '', code3,
+                                                                          department)
+
+                else:
+                    cost_center_bills = self.get_a_cost_center_three_bill(cost_center, top_sheet, code1, code2, code3,
+                                                                          department)
+
+                total_loan_mess_mobile_bill = 0
+                for cost_center_bill in cost_center_bills:
+                    total_loan_mess_mobile_bill = total_loan_mess_mobile_bill + cost_center_bill
+                cost_center_wise_bill_dict[cost_center.id][department.id] = total_loan_mess_mobile_bill
+
+        return cost_center_wise_bill_dict
 
     def get_move_line_vals(self, name, date, journal_id, account_id, operating_unit_id, department_id, cost_center_id,
                            debit, credit,
@@ -471,6 +481,7 @@ class CreateProvision(models.TransientModel):
             datey = datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y')
 
             if self.salary_type == '0':
+                # regular salary
                 department_net_values = self.get_department_net_values(self.payslip_run_id, 'NET')
 
                 total_tax_deducted_source = self.get_total_tds_value(self.payslip_run_id)
@@ -491,27 +502,32 @@ class CreateProvision(models.TransientModel):
                     telephone_mobile_bill = telephone_mobile_bill * (-1)
 
                 cost_center_wise_telephone_bill = self.get_cost_center_wise_bills(payslip_cost_centers,
-                                                                                  self.payslip_run_id, 'MOBILE')
+                                                                                  self.payslip_run_id, 'MOBILE',
+                                                                                  payslip_departments)
 
                 # get tds, pf, loan mess mobile bill debit values
-                cost_center_wise_tds = self.get_cost_center_wise_bills(payslip_cost_centers, self.payslip_run_id, 'TDS')
+                cost_center_wise_tds = self.get_cost_center_wise_bills(payslip_cost_centers, self.payslip_run_id, 'TDS',
+                                                                       payslip_departments)
                 cost_center_wise_pfs = self.get_cost_center_wise_bills(payslip_cost_centers, self.payslip_run_id,
-                                                                       'EPMF')
+                                                                       'EPMF', payslip_departments)
 
                 cost_center_wise_loan_mess_mobile = self.get_cost_center_wise_three_bills('', payslip_cost_centers,
                                                                                           self.payslip_run_id,
-                                                                                          'LOAN', 'MESS', 'MOBILE')
+                                                                                          'LOAN', 'MESS', 'MOBILE',
+                                                                                          payslip_departments)
 
                 cost_center_wise_loan_mess_mobile_ctg = self.get_cost_center_wise_three_bills('ctg',
                                                                                               payslip_cost_centers,
                                                                                               self.payslip_run_id,
-                                                                                              'LOAN', 'MESS', 'MOBILE')
+                                                                                              'LOAN', 'MESS', 'MOBILE',
+                                                                                              payslip_departments)
 
                 if self.payslip_run_id.operating_unit_id:
 
                     move_lines = []
                     sum_debit = 0
                     sum_credit = 0
+
                     tds_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
                                                               self.payslip_run_id.operating_unit_id.tds_payable_account.id,
                                                               self.payslip_run_id.operating_unit_id.id, False, False, 0,
@@ -570,109 +586,113 @@ class CreateProvision(models.TransientModel):
 
                         # tds debit
                         for key, value in cost_center_wise_tds.items():
-                            if value['vals'] < 0:
-                                value['vals'] = value['vals'] * (-1)
-                            if not value['vals'] == 0:
-                                tds_debit_values = self.get_move_line_vals('TDS', self.date, journal_id.id,
-                                                                           self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                           self.payslip_run_id.operating_unit_id.id,
-                                                                           False,
-                                                                           key,
-                                                                           value['vals'],
-                                                                           0,
-                                                                           self.operating_unit_id.company_id.id)
+                            for department in payslip_departments:
+                                if value[department.id] < 0:
+                                    value[department.id] = value[department.id] * (-1)
+                                if not value[department.id] == 0:
+                                    tds_debit_values = self.get_move_line_vals('TDS', self.date, journal_id.id,
+                                                                               self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                               self.payslip_run_id.operating_unit_id.id,
+                                                                               department.id,
+                                                                               key,
+                                                                               value[department.id],
+                                                                               0,
+                                                                               self.operating_unit_id.company_id.id)
 
-                                sum_debit = sum_debit + value['vals']
-                                move_lines.append((0, 0, tds_debit_values))
+                                    sum_debit = sum_debit + value[department.id]
+                                    move_lines.append((0, 0, tds_debit_values))
 
                         # pfs debit
                         for key, value in cost_center_wise_pfs.items():
-                            if value['vals'] < 0:
-                                value['vals'] = value['vals'] * (-1)
-                            if not value['vals'] == 0:
-                                pfs_debit_values = self.get_move_line_vals('PF', self.date,
-                                                                           journal_id.id,
-                                                                           self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                           self.payslip_run_id.operating_unit_id.id,
-                                                                           False,
-                                                                           key,
-                                                                           value['vals'] * 2,
-                                                                           0,
-                                                                           self.operating_unit_id.company_id.id)
+                            for department in payslip_departments:
+                                if value[department.id] < 0:
+                                    value[department.id] = value[department.id] * (-1)
+                                if not value[department.id] == 0:
+                                    pfs_debit_values = self.get_move_line_vals('PF', self.date,
+                                                                               journal_id.id,
+                                                                               self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                               self.payslip_run_id.operating_unit_id.id,
+                                                                               department.id,
+                                                                               key,
+                                                                               value[department.id] * 2,
+                                                                               0,
+                                                                               self.operating_unit_id.company_id.id)
 
-                                sum_debit = sum_debit + value['vals'] * 2
-                                move_lines.append((0, 0, pfs_debit_values))
+                                    sum_debit = sum_debit + value[department.id] * 2
+                                    move_lines.append((0, 0, pfs_debit_values))
 
                         if not self.payslip_run_id.operating_unit_id.code == 'SCCL-CTG':
                             # loan mess mobile debit
                             for key, value in cost_center_wise_loan_mess_mobile.items():
-                                if value['vals'] < 0:
-                                    value['vals'] = value['vals'] * (-1)
-                                if not value['vals'] == 0:
-                                    loan_mess_debit_values = self.get_move_line_vals('Loan, Mess and Mobile Bill',
-                                                                                     self.date, journal_id.id,
-                                                                                     self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                                     self.payslip_run_id.operating_unit_id.id,
-                                                                                     False,
-                                                                                     key,
-                                                                                     value['vals'],
-                                                                                     0,
-                                                                                     self.operating_unit_id.company_id.id)
+                                for department in payslip_departments:
+                                    if value[department.id] < 0:
+                                        value[department.id] = value[department.id] * (-1)
+                                    if not value[department.id] == 0:
+                                        loan_mess_debit_values = self.get_move_line_vals('Loan, Mess and Mobile Bill',
+                                                                                         self.date, journal_id.id,
+                                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                                         department.id,
+                                                                                         key,
+                                                                                         value[department.id],
+                                                                                         0,
+                                                                                         self.operating_unit_id.company_id.id)
 
-                                    sum_debit = sum_debit + value['vals']
-                                    move_lines.append((0, 0, loan_mess_debit_values))
+                                        sum_debit = sum_debit + value[department.id]
+                                        move_lines.append((0, 0, loan_mess_debit_values))
 
                         else:
                             # loan mess mobile debit
                             for key, value in cost_center_wise_loan_mess_mobile_ctg.items():
-                                if value['vals'] < 0:
-                                    value['vals'] = value['vals'] * (-1)
-                                if not value['vals'] == 0:
-                                    loan_mess_debit_values = self.get_move_line_vals('Loan and Mobile Bill',
-                                                                                     self.date, journal_id.id,
-                                                                                     self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                                     self.payslip_run_id.operating_unit_id.id,
-                                                                                     False,
-                                                                                     key,
-                                                                                     value['vals'],
-                                                                                     0,
-                                                                                     self.operating_unit_id.company_id.id)
+                                for department in payslip_departments:
+                                    if value[department.id] < 0:
+                                        value[department.id] = value[department.id] * (-1)
+                                    if not value[department.id] == 0:
+                                        loan_mess_debit_values = self.get_move_line_vals('Loan and Mobile Bill',
+                                                                                         self.date, journal_id.id,
+                                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                                         department.id,
+                                                                                         key,
+                                                                                         value[department.id],
+                                                                                         0,
+                                                                                         self.operating_unit_id.company_id.id)
 
-                                    sum_debit = sum_debit + value['vals']
-                                    move_lines.append((0, 0, loan_mess_debit_values))
+                                        sum_debit = sum_debit + value[department.id]
+                                        move_lines.append((0, 0, loan_mess_debit_values))
 
                         total_telephone_credit_vals = 0
                         for key, value in cost_center_wise_telephone_bill.items():
-                            if value['vals'] < 0:
-                                value['vals'] = value['vals'] * (-1)
-                            if not value['vals'] == 0:
-                                telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                                self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
-                                                                                self.payslip_run_id.operating_unit_id.id,
-                                                                                False,
-                                                                                key,
-                                                                                0,
-                                                                                value['vals'],
-                                                                                self.operating_unit_id.company_id.id)
+                            for department in payslip_departments:
+                                if value[department.id] < 0:
+                                    value[department.id] = value[department.id] * (-1)
+                                if not value[department.id] == 0:
+                                    telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                                    self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
+                                                                                    self.payslip_run_id.operating_unit_id.id,
+                                                                                    department.id,
+                                                                                    key,
+                                                                                    0,
+                                                                                    value[department.id],
+                                                                                    self.operating_unit_id.company_id.id)
 
-                                move_lines.append((0, 0, telephone_credit_vals))
-                                total_telephone_credit_vals = total_telephone_credit_vals + value['vals']
+                                    move_lines.append((0, 0, telephone_credit_vals))
+                                    total_telephone_credit_vals = total_telephone_credit_vals + value[department.id]
+
+                        sum_credit = sum_credit + total_telephone_credit_vals
 
                         main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
                                                                    self.payslip_run_id.operating_unit_id.payable_account.id,
                                                                    self.payslip_run_id.operating_unit_id.id, False,
                                                                    False,
-                                                                   0, sum_debit - (
-                                                                           total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
+                                                                   0, sum_debit - sum_credit,
                                                                    self.operating_unit_id.company_id.id)
 
                         move_lines.append((0, 0, tds_credit_vals))
                         move_lines.append((0, 0, pf_com_credit_vals))
                         move_lines.append((0, 0, pf_emp_credit_vals))
                         move_lines.append((0, 0, main_credit_vals))
-                        sum_credit = telephone_mobile_bill + total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + sum_debit - (
-                                total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
-
+                        sum_credit = sum_credit + sum_debit - sum_credit
                     else:
                         if self.payslip_run_id.operating_unit_id.default_debit_account:
                             for key, value in department_net_values.items():
@@ -694,112 +714,113 @@ class CreateProvision(models.TransientModel):
 
                             # tds debit
                             for key, value in cost_center_wise_tds.items():
-                                if value['vals'] < 0:
-                                    value['vals'] = value['vals'] * (-1)
-                                if not value['vals'] == 0:
-                                    tds_debit_values = self.get_move_line_vals('TDS', self.date, journal_id.id,
-                                                                               self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                               self.payslip_run_id.operating_unit_id.id,
-                                                                               False,
-                                                                               key,
-                                                                               value['vals'],
-                                                                               0,
-                                                                               self.operating_unit_id.company_id.id)
+                                for department in payslip_departments:
+                                    if value[department.id] < 0:
+                                        value[department.id] = value[department.id] * (-1)
+                                    if not value[department.id] == 0:
+                                        tds_debit_values = self.get_move_line_vals('TDS', self.date, journal_id.id,
+                                                                                   self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                                   self.payslip_run_id.operating_unit_id.id,
+                                                                                   department.id,
+                                                                                   key,
+                                                                                   value[department.id],
+                                                                                   0,
+                                                                                   self.operating_unit_id.company_id.id)
 
-                                    sum_debit = sum_debit + value['vals']
-                                    move_lines.append((0, 0, tds_debit_values))
+                                        sum_debit = sum_debit + value[department.id]
+                                        move_lines.append((0, 0, tds_debit_values))
 
                             # pfs debit
                             for key, value in cost_center_wise_pfs.items():
-                                if value['vals'] < 0:
-                                    value['vals'] = value['vals'] * (-1)
-                                if not value['vals'] == 0:
-                                    pfs_debit_values = self.get_move_line_vals('PF', self.date,
-                                                                               journal_id.id,
-                                                                               self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                               self.payslip_run_id.operating_unit_id.id,
-                                                                               False,
-                                                                               key,
-                                                                               value['vals'] * 2,
-                                                                               0,
-                                                                               self.operating_unit_id.company_id.id)
+                                for department in payslip_departments:
+                                    if value[department.id] < 0:
+                                        value[department.id] = value[department.id] * (-1)
+                                    if not value[department.id] == 0:
+                                        pfs_debit_values = self.get_move_line_vals('PF', self.date,
+                                                                                   journal_id.id,
+                                                                                   self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                                   self.payslip_run_id.operating_unit_id.id,
+                                                                                   department.id,
+                                                                                   key,
+                                                                                   value[department.id] * 2,
+                                                                                   0,
+                                                                                   self.operating_unit_id.company_id.id)
 
-                                    sum_debit = sum_debit + value['vals'] * 2
-                                    move_lines.append((0, 0, pfs_debit_values))
+                                        sum_debit = sum_debit + value[department.id] * 2
+                                        move_lines.append((0, 0, pfs_debit_values))
 
                             if not self.payslip_run_id.operating_unit_id.code == 'SCCL-CTG':
                                 # loan mess mobile debit
                                 for key, value in cost_center_wise_loan_mess_mobile.items():
-                                    if value['vals'] < 0:
-                                        value['vals'] = value['vals'] * (-1)
-                                    if not value['vals'] == 0:
-                                        loan_mess_debit_values = self.get_move_line_vals('Loan, Mess and Mobile Bill',
-                                                                                         self.date, journal_id.id,
-                                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                                         self.payslip_run_id.operating_unit_id.id,
-                                                                                         False,
-                                                                                         key,
-                                                                                         value['vals'],
-                                                                                         0,
-                                                                                         self.operating_unit_id.company_id.id)
+                                    for department in payslip_departments:
+                                        if value[department.id] < 0:
+                                            value[department.id] = value[department.id] * (-1)
+                                        if not value[department.id] == 0:
+                                            loan_mess_debit_values = self.get_move_line_vals('Loan, Mess and Mobile Bill',
+                                                                                             self.date, journal_id.id,
+                                                                                             self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                                             self.payslip_run_id.operating_unit_id.id,
+                                                                                             department.id,
+                                                                                             key,
+                                                                                             value[department.id],
+                                                                                             0,
+                                                                                             self.operating_unit_id.company_id.id)
 
-                                        sum_debit = sum_debit + value['vals']
-                                        move_lines.append((0, 0, loan_mess_debit_values))
+                                            sum_debit = sum_debit + value[department.id]
+                                            move_lines.append((0, 0, loan_mess_debit_values))
 
                             else:
                                 # loan mess mobile debit
                                 for key, value in cost_center_wise_loan_mess_mobile_ctg.items():
-                                    if value['vals'] < 0:
-                                        value['vals'] = value['vals'] * (-1)
-                                    if not value['vals'] == 0:
-                                        loan_mess_debit_values = self.get_move_line_vals('Loan and Mobile Bill',
-                                                                                         self.date, journal_id.id,
-                                                                                         self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                                         self.payslip_run_id.operating_unit_id.id,
-                                                                                         False,
-                                                                                         key,
-                                                                                         value['vals'],
-                                                                                         0,
-                                                                                         self.operating_unit_id.company_id.id)
+                                    for department in payslip_departments:
+                                        if value[department.id] < 0:
+                                            value[department.id] = value[department.id] * (-1)
+                                        if not value[department.id] == 0:
+                                            loan_mess_debit_values = self.get_move_line_vals('Loan and Mobile Bill',
+                                                                                             self.date, journal_id.id,
+                                                                                             self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                                                             self.payslip_run_id.operating_unit_id.id,
+                                                                                             department.id,
+                                                                                             key,
+                                                                                             value[department.id],
+                                                                                             0,
+                                                                                             self.operating_unit_id.company_id.id)
 
-                                        sum_debit = sum_debit + value['vals']
-                                        move_lines.append((0, 0, loan_mess_debit_values))
-
-
-
+                                            sum_debit = sum_debit + value[department.id]
+                                            move_lines.append((0, 0, loan_mess_debit_values))
 
                             total_telephone_credit_vals = 0
                             for key, value in cost_center_wise_telephone_bill.items():
-                                if value['vals'] < 0:
-                                    value['vals'] = value['vals'] * (-1)
-                                if not value['vals'] == 0:
-                                    telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                                    self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
-                                                                                    self.payslip_run_id.operating_unit_id.id,
-                                                                                    False,
-                                                                                    key,
-                                                                                    0,
-                                                                                    value['vals'],
-                                                                                    self.operating_unit_id.company_id.id)
+                                for department in payslip_departments:
+                                    if value[department.id] < 0:
+                                        value[department.id] = value[department.id] * (-1)
+                                    if not value[department.id] == 0:
+                                        telephone_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                                        self.payslip_run_id.operating_unit_id.telephone_bill_account.id,
+                                                                                        self.payslip_run_id.operating_unit_id.id,
+                                                                                        department.id,
+                                                                                        key,
+                                                                                        0,
+                                                                                        value[department.id],
+                                                                                        self.operating_unit_id.company_id.id)
 
-                                    move_lines.append((0, 0, telephone_credit_vals))
-                                    total_telephone_credit_vals = total_telephone_credit_vals + value['vals']
+                                        move_lines.append((0, 0, telephone_credit_vals))
+                                        total_telephone_credit_vals = total_telephone_credit_vals + value[department.id]
+
+                            sum_credit = sum_credit + total_telephone_credit_vals
 
                             main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
                                                                        self.payslip_run_id.operating_unit_id.payable_account.id,
                                                                        self.payslip_run_id.operating_unit_id.id, False,
                                                                        False,
-                                                                       0, sum_debit - (
-                                                                               total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill),
+                                                                       0, sum_debit - sum_credit,
                                                                        self.operating_unit_id.company_id.id)
 
                             move_lines.append((0, 0, tds_credit_vals))
                             move_lines.append((0, 0, pf_com_credit_vals))
                             move_lines.append((0, 0, pf_emp_credit_vals))
                             move_lines.append((0, 0, main_credit_vals))
-
-                            sum_credit = telephone_mobile_bill + total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + sum_debit - (
-                                    total_tax_deducted_source + company_pf_contribution + employee_pf_contribution + telephone_mobile_bill)
+                            sum_credit = sum_credit + sum_debit - sum_credit
 
                     name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
                     difference = 0

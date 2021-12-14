@@ -4,6 +4,8 @@ from odoo.tools.misc import formatLang
 from odoo.tools import float_compare, float_round
 from collections import OrderedDict
 import operator, math, locale
+from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models, _
 
 
 class CostCenterWiseTopSheetXLSX(ReportXlsx):
@@ -72,12 +74,16 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
             grand_total[rule[1]] = 0
 
         total_employee_count = 0
+        cost_center_len = len(obj.cost_center_ids)
         if obj.cost_center_ids:
             for cost_center in obj.cost_center_ids:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
                 non_costcenter_payslip_list = self.get_payslip_list(False, top_sheet)
                 if not payslip_list:
-                    continue
+                    if cost_center_len == 1:
+                        raise UserError(_('No payslip generated for this cost center employee!'))
+                    else:
+                        continue
                 rule_list = self.get_rule_list(payslip_list, non_costcenter_payslip_list)
 
                 if rule_list:
