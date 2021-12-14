@@ -31,7 +31,7 @@
                                 class="oe_highlight"/>
                         <button name="appointment_reject" string="Reject" states="confirm"
                                 type="object"/>
-                        <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm" type="action"
+                        <button name="%(action_appointment_wizard)d" string="Reschedule" attrs="{'invisible':['|',('state','=','draft')]}" type="action"
                                 class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,reject"
                                statusbar_colors='{"reject":"red"}'/>
