@@ -7,12 +7,9 @@
             <form string="Proposed">
                 <group>
                     <group>
-<!--                        <field name="name"/>-->
                         <field name="appointment_date"/>
                     </group>
-<!--                    <group>-->
-<!--                        <field name="state"/>-->
-<!--                    </group>-->
+
                 </group>
 
                 <footer>

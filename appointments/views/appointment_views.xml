@@ -44,31 +44,31 @@
                         </div>
                         <group>
                             <group>
-                                <field name="topic_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="contact_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="timeslot_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="first_name"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="last_name"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="phone"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="email"  attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="topic_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="contact_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="timeslot_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="first_name"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="last_name"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="phone"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="email"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
 
                             </group>
                             <group>
-                                <field name="appointment_date" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="type_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="gender" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="date_of_birth" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="address" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="city" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
-                                <field name="country" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                                <field name="appointment_date" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="type_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="gender" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="date_of_birth" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="address" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="city" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="country" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Meeting Room">
-                                <field name="meeting_room_id" attrs="{'readonly':[('state','in',('reject'))]}"/>
+                                <field name="meeting_room_id" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                             </page>
                         </notebook>
-                        <field name="description" attrs="{'readonly':[('state','in',('reject','confirm','approve'))]}"/>
+                        <field name="description" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
