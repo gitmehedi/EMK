@@ -132,6 +132,22 @@ class Appointment(models.Model):
             if match == None:
                 raise ValidationError('Email should be input a valid')
 
+    @api.onchange('appointment_date','contact_id')
+    def onchange_appointment_date(self):
+        res = {}
+        if self.appointment_date:
+            appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
+            day = datetime.strftime(appdate, '%A')
+            timeslot_ids = self.env['appointment.timeslot'].search([('day', '=', day.lower()),('id', 'in', self.contact_id.timeslot_ids.ids)])
+            # timeslot_ids = timeslot_day_ids.search([('id', 'in', self.contact_id.timeslot_ids.ids)])
+            if timeslot_ids:
+                res['domain'] = {
+                    'timeslot_id': [('id', 'in', timeslot_ids.ids)],
+
+                }
+        return res
+
+
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft', 'confirm', 'done', 'reject'])]

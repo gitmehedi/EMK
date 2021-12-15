@@ -16,7 +16,7 @@ class AppointmentContact(models.Model):
     topics_ids = fields.Many2many('appointment.topics', 'contact_topics_relation', 'contact_id', 'topics_id',
                                   string='Appointment Topics')
     timeslot_ids = fields.Many2many('appointment.timeslot', 'contact_timeslot_relation', 'timeslot_id', 'contact_id',
-                                    string="Time Slot")
+                                    string="Time Slot", required=True)
 
 
     def name_get(self):

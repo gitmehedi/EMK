@@ -11,7 +11,7 @@ class AppointmentTopics(models.Model):
     _order = "id desc"
 
     name = fields.Char(string='Topics Name', required=True, track_visibility="onchange")
-    contact_ids = fields.Many2many('appointment.contact','contact_topics_relation','topics_id','contact_id' ,string='Appointment Person')
+    contact_ids = fields.Many2many('appointment.contact','contact_topics_relation','topics_id','contact_id' ,string='Appointment Person', required=True)
     status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
     state = fields.Selection([
         ('draft', 'Draft'),
