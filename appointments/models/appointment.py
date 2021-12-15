@@ -60,6 +60,12 @@ class Appointment(models.Model):
         result = super(Appointment, self).create(vals)
         return result
 
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError(_('You cannot delete this appointment'))
+        return super(Appointment, self).unlink()
+
     @api.multi
     def appointment_confirm(self):
         for appointment in self:
