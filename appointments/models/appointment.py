@@ -119,8 +119,8 @@ class Appointment(models.Model):
         if self.date_of_birth:
             birth_date = datetime.strptime(self.date_of_birth, '%Y-%m-%d')
             curr_date = dateutil.parser.parse(fields.Date.today())
-            if birth_date > curr_date:
-                raise ValidationError(_("Birth date cannot be future date from current date"))
+            if birth_date >= curr_date:
+                raise ValidationError(_("Birth date cannot be future date and current date"))
 
     @api.one
     @api.constrains('email')
