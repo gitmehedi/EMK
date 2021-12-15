@@ -16,9 +16,42 @@ class AppointmentContact(models.Model):
     topics_ids = fields.Many2many('appointment.topics', 'contact_topics_relation', 'contact_id', 'topics_id',
                                   string='Appointment Topics')
     timeslot_ids = fields.Many2many('appointment.timeslot', 'contact_timeslot_relation', 'timeslot_id', 'contact_id',
-                                    string="Time Slot")
+                                    string="Time Slot", required=True)
 
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            if rec.appointee_id.id:
+                name = str(rec.name)+' ['+ str(rec.appointee_id.id) + ']'
+                result.append((rec.id, str(name)))
+            else:
+                result.append((rec.id, ''))
+        return result
+
+
+    def unlink(self):
+        for rec in self:
+            contact = self.env['appointment.appointment'].search([('contact_id', '=', rec.id)])
+            if contact:
+                raise ValidationError(_('[Warning] You cannot delete this contact. you may be trying to delete a record while other records still reference it'))
+
+        return super(AppointmentContact, self).unlink()
 
     @api.model
     def _needaction_domain_get(self):
         return [('status', '=', 'True')]
+
+
+class AppointmentEmp(models.Model):
+    _inherit='hr.employee'
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            if rec.id:
+                name = str(rec.name)+' ['+ str(rec.id) + ']'
+                result.append((rec.id, str(name)))
+            else:
+                result.append((rec.id, ''))
+        return result

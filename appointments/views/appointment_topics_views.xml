@@ -19,6 +19,7 @@
             <field name="model">appointment.topics</field>
             <field name="arch" type="xml">
                 <form string="Appointment Type">
+
                     <sheet>
                         <group>
                             <group>

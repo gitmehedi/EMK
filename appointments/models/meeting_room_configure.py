@@ -27,6 +27,16 @@ class MeetingRoomConfigure(models.Model):
             if rec.min_seat > rec.max_seat:
                 raise ValidationError(_("Min Seat should not be greater than Max Seat."))
 
+    def unlink(self):
+        for rec in self:
+            contact = self.env['appointment.appointment'].search([('meeting_room_id', '=', rec.id)])
+            if contact:
+                raise ValidationError(
+                    _('[Warning] You cannot delete this meeting room. you may be trying to delete a record while other records still reference it'))
+
+        return super(MeetingRoomConfigure, self).unlink()
+
+
     @api.model
     def _needaction_domain_get(self):
         return [('status', '=', 'True')]

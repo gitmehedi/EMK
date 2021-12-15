@@ -22,7 +22,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="appointee_id" domain="[('state','!=','employment')]" options="{'no_open': True,'no_create_edit': true}"/>
+                                <field name="appointee_id" domain="[('state','=','employment')]" options="{'no_open': True,'no_create_edit': true}"/>
                                 <field name="name"/>
                                 <field name="status"/>
                                 <field name="description"></field>

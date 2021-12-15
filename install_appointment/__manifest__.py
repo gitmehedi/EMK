@@ -12,6 +12,7 @@
         'appointment_user',
         'appointment_menu',
         'appointments',
+        'gbs_gender',
     ],
     'installable': True,
     'application': True,

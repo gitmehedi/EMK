@@ -484,7 +484,8 @@ class IndentIndent(models.Model):
     ####################################################
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['waiting_approval'])]
+        return [('state', 'in', ['draft','confirm','received','waiting_approval','reject'])]
+
 
     def unlink(self):
         for indent in self:
