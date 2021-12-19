@@ -12,7 +12,7 @@ class HrEmpMobileBillLine(models.Model):
     amount = fields.Float(string="Exceed Amount", required=True, readonly=True, states={'draft': [('readonly', False)]})
 
     emp_mobile_phone = fields.Char('Mobile Number', store=True, ondelete='cascade', compute='onchange_employee_mobile',
-                                   required=True, readonly=True)
+                                    readonly=True)
     parent_id = fields.Many2one(comodel_name='hr.mobile.bill', ondelete='cascade')
 
     employee_mobile = fields.Many2one('hr.employee', string="Employee")
@@ -44,7 +44,6 @@ class HrEmpMobileBillLine(models.Model):
             rec.device_employee_acc = rec.employee_id.device_employee_acc
 
     @api.depends('employee_mobile')
-    @api.onchange('employee_mobile')
     def onchange_employee_mobile(self):
         for record in self:
             if record.employee_mobile:
