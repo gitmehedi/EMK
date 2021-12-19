@@ -196,7 +196,8 @@ class PurchaseRequisitionLine(models.Model):
     product_ordered_qty = fields.Float('Ordered Qty', digits=dp.get_precision('Product UoS'),
                                        default=1)
     name = fields.Char(related='product_id.name',string='Description',store=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Unit Price', digits=dp.get_precision('Product Price'),store = True)
+    # price_unit = fields.Float(related='product_id.standard_price', string='Unit Price', digits=dp.get_precision('Product Price'), store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Unit Price', digits=dp.get_precision('Product Price'))
     product_uom_id = fields.Many2one(related='product_id.uom_id',comodel_name='product.uom', string='Product Unit of Measure',store=True)
     last_purchase_date = fields.Date(string='Last Purchase Date',compute = '_get_last_purchase',store = True)
     last_qty = fields.Float(string='Last Purchase Qnty',compute = '_get_last_purchase',store = True)
@@ -211,6 +212,11 @@ class PurchaseRequisitionLine(models.Model):
 
     receive_qty = fields.Float(string='PO Qty')
     due_qty = fields.Float(string='Due Qty',compute='_compute_due_qty')
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('product_ordered_qty', 'receive_qty')
     def _compute_due_qty(self):

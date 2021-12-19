@@ -151,5 +151,11 @@ class RFQProductLineWizard(models.TransientModel):
     rfq_id = fields.Many2one('rfq.wizard', string='RFQ', ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='cascade')
     product_qty = fields.Float(string='Quantity')
-    price_unit = fields.Float(related='product_id.standard_price', string='Price Unit', store=True)
+    # price_unit = fields.Float(related='product_id.standard_price', string='Price Unit', store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price Unit')
     product_uom_id = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure')
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price

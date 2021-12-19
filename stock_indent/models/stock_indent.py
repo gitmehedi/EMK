@@ -361,8 +361,11 @@ class IndentProductLines(models.Model):
     received_qty = fields.Float('Received', digits=dp.get_precision('Product UoS'),help="Receive Quantity which Update by done quntity.")
     issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),help="Issued Quantity which Update by avilable quantity.")
     product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='Unit of Measure', required=True,store=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),store=True,
-                              help="Price computed based on the last purchase order approved.")
+    # price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),store=True,
+    #                           help="Price computed based on the last purchase order approved.")
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price',
+                              digits=dp.get_precision('Product Price'),
+                              help="Price computed based on the last purchase order approved.", store=True)
     price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
     qty_available = fields.Float(string='On Hand',compute = '_compute_product_qty',store=True
@@ -388,6 +391,11 @@ class IndentProductLines(models.Model):
     def _check_product_uom_qty(self):
         if self.product_uom_qty < 0:
             raise UserError('You can\'t give negative value!!!')
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('product_uom_qty', 'price_unit')
     def _compute_amount_subtotal(self):

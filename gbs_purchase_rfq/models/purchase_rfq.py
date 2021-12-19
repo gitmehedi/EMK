@@ -78,11 +78,17 @@ class RFQProductLineWizard(models.Model):
     product_qty = fields.Float(string='Required Qty')
     po_receive_qty = fields.Float(string='PO Qty')
     due_qty = fields.Float(string='Due Qty',compute='_compute_due_qty')
-    price_unit = fields.Float(related='product_id.standard_price',string='Price Unit', store=True)
+    # price_unit = fields.Float(related='product_id.standard_price',string='Price Unit', store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price Unit')
     product_uom_id = fields.Many2one(related='product_id.uom_id',comodel='product.uom',
                                      string='Unit of Measure', store=True)
 
     pr_line_ids = fields.Many2many('purchase.requisition.line', 'pr_rfq_line_rel', 'rfq_line_id', 'pr_line_id', 'PR ids')
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('product_qty', 'po_receive_qty')
     def _compute_due_qty(self):

@@ -222,7 +222,10 @@ class ItemLoanLendingLines(models.Model):
                                    required=True, default=1)
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
                                   required=True, store=True)
-    price_unit = fields.Float(related='product_id.standard_price', string='Price',
+    # price_unit = fields.Float(related='product_id.standard_price', string='Price',
+    #                           digits=dp.get_precision('Product Price'),
+    #                           help="Price computed based on the last purchase order approved.", store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price',
                               digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.", store=True)
     qty_available = fields.Float('In Stock', compute='_compute_product_quantity', store=True)
@@ -250,6 +253,11 @@ class ItemLoanLendingLines(models.Model):
     #     if self.received_qty:
     #         if self.received_qty==self.given_qty:
     #             self.write({'state': 'receive'})
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('given_qty','received_qty')
     @api.multi

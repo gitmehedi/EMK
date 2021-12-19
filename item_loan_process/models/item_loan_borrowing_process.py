@@ -220,8 +220,11 @@ class ItemBorrowingLines(models.Model):
                                    required=True, default=1)
     product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string= 'Unit of Measure',
                                   required=True,store=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
-                              help="Price computed based on the last purchase order approved.",store=True)
+    # price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
+    #                           help="Price computed based on the last purchase order approved.",store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price',
+                              digits=dp.get_precision('Product Price'),
+                              help="Price computed based on the last purchase order approved.", store=True)
     name = fields.Char(related='product_id.name',string='Specification',store=True)
     sequence = fields.Integer('Sequence')
     given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
@@ -241,6 +244,11 @@ class ItemBorrowingLines(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('given_qty', 'received_qty')
     @api.multi

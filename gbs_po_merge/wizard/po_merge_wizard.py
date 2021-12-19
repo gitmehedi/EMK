@@ -207,5 +207,14 @@ class POMergeLineWizard(models.TransientModel):
     merge_id = fields.Many2one('po.merge.wizard', string='Merge Id', ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='cascade')
     product_qty = fields.Float(string='Quantity')
-    price_unit = fields.Float(related='product_id.standard_price', string='Price Unit', store=True)
+    # price_unit = fields.Float(related='product_id.standard_price', string='Price Unit', store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', inverse='_set_price_unit', string='Price Unit', store=True)
     product_uom_id = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure')
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
+
+    def _set_price_unit(self):
+        pass
