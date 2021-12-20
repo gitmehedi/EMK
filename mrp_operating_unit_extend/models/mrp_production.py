@@ -9,6 +9,22 @@ from odoo.tools import frozendict
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+    @api.onchange('product_id', 'picking_type_id', 'company_id', 'operating_unit_id')
+    def onchange_product_id(self):
+        """ Finds UoM of changed product. """
+        if not self.product_id:
+            self.bom_id = False
+        else:
+            bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id,
+                                                company_id=self.company_id.id,
+                                                operating_unit_id=self.operating_unit_id.id)
+            if bom.type == 'normal':
+                self.bom_id = bom.id
+            else:
+                self.bom_id = False
+            self.product_uom_id = self.product_id.uom_id.id
+            return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
+
     @api.multi
     def open_produce_product(self):
         self.ensure_one()
