@@ -29,6 +29,16 @@ class HrEmployeeMealBill(models.Model):
 
     """All function which process data and operation"""
 
+    @api.constrains('line_ids')
+    def _check_null_line_ids(self):
+        if len(self.line_ids)<1:
+            raise ValidationError("Please add meal bill")
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        self.line_ids = False
+
+
     @api.multi
     def action_draft(self):
         self.state = 'draft'
