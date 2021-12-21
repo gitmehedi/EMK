@@ -33,6 +33,17 @@ class HrMobileBill(models.Model):
 
     """All function which process data and operation"""
 
+    @api.constrains('line_ids')
+    def _check_null_line_ids(self):
+        if len(self.line_ids)<1:
+            raise ValidationError("Please add mobile bill")
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        self.line_ids = False
+
+
+
     @api.onchange('company_id')
     def _onchange_company_id(self):
         return {'domain': {'operating_unit_id': [('company_id', '=', self.company_id.id)]}}

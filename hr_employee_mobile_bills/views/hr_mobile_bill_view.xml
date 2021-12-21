@@ -31,14 +31,16 @@
 									<field name="company_id" required="True" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
 	                            </group>
 								<group>
-									<field name="operating_unit_id" required="True" domain="[('company_id','=',company_id)]" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+									<field name="operating_unit_id"
+										   attrs="{'readonly': [('state', '!=', 'draft')]}"
+										   required="True" domain="[('company_id','=',company_id)]" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
 	                            </group>
 		                        <notebook colspan="4">
 									<page string="Mobile Bills">
 										<field name="line_ids" context="{'default_operating_unit_id': operating_unit_id,'default_company_id': company_id}">
 											<tree string="List" editable="bottom">
-												<field name="employee_mobile" required="True"  context="{'mobile_phone_dropdown': True,'operating_unit_id': operating_unit_id,'company_id': company_id}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,'always_reload':True}"/>
-												<field  name="emp_mobile_phone"  required="True"  />
+												<field name="employee_mobile" required="True" domain="[('operating_unit_id','=',operating_unit_id)]" context="{'mobile_phone_dropdown': True,'operating_unit_id': operating_unit_id,'company_id': company_id}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,'always_reload':True}"/>
+												<field  name="emp_mobile_phone"  required="True" domain="[('operating_unit_id','=',operating_unit_id)]" />
 												<field name="employee_id" invisible="1"/>
 												<field  name="device_employee_acc" />
 												<field  name="bill_amount" />

@@ -25,6 +25,16 @@ class HrMobileBillLimits(models.Model):
 
     """ All Selection fields """
 
+    @api.constrains('line_ids')
+    def _check_null_line_ids(self):
+        if len(self.line_ids)<1:
+            raise ValidationError("Please add mobile bill limit")
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        self.line_ids = False
+
+
     state = fields.Selection([
         ('draft', "Draft"),
         ('applied', "Applied"),
