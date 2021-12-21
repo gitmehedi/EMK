@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<template id="appointment_info">
+         <style>.report_border {
+              border: 1px solid black;
+            }
+            .none_border {
+              border: none;
+              border-top: none;
+            }
+            .report_border > thead > tr > th,
+            .report_border > tbody > tr > th,
+            .report_border > thead > tr > td,
+            .report_border > tbody > tr > td {
+              border: 1px solid black !important;
+            }</style>
+
+         <!-- "docs" contains (your.model.name) which you have defined above
+         now you can access fields from docs for example data.name, data.contact_no etc
+         -->
+         <t t-foreach="docs" t-as="data">
+            <t t-call="report.html_container">
+               <div class="page">
+<!--                  <div class="oe_structure" />-->
+<!--                  <div class="text-center">-->
+<!--                     <h3>-->
+<!--                        <b>Appointment Information</b>-->
+<!--                     </h3>-->
+<!--                  </div>-->
+<!--                  <div>-->
+                     <table class="table report_border" style="width:243pt; height:153pt; border: 1pt solid black; border-collapse:separate; margin:5pt">
+
+                         <tr>
+                           <td style="font-size:12pt;">
+                               <span>Appointment Card</span>
+                           </td>
+                        </tr>
+                        <!-- getting values from model in QWEB-->
+                          <tr>
+                           <th style="width: 25%; font-size:10pt;">Appointment ID</th>
+                           <td style="font-size:10pt;">
+                              <span t-field="data.name" />
+                           </td>
+                        </tr>
+                          <tr>
+                           <th style="width: 25%; font-size:10pt;">Name</th>
+                           <td style="font-size:10pt;">
+                              <span t-field="data.first_name" />
+                               <span t-field="data.last_name" />
+                           </td>
+                        </tr>
+                         <tr>
+                           <th style="width: 25%; font-size:10pt;">Date</th>
+                           <td style="font-size:10pt;">
+                              <span t-field="data.appointment_date" />
+                           </td>
+                        </tr>
+                         <tr>
+                           <th style="width: 25%; font-size:10pt;">Time</th>
+                           <td style="font-size:10pt;">
+                              <span t-field="data.timeslot_id.name" />
+                           </td>
+                        </tr>
+                         <tr>
+                           <th style="width: 25%; font-size:10pt;">Appointee</th>
+                           <td style="font-size:10pt;">
+                              <span t-field="data.contact_id.name" />
+                           </td>
+                        </tr>
+                         <tr> <!-- how to define barcode in QWEB -->
+                                <td>
+<!--                                    <img t-att-src="'data:image/png;base64,%s'% (get_barcode('Code128',obj.barcode))"/>-->
+                                    <img t-if="data.name" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', data.name, 600, 120)"
+                                         style="max-height:50pt;max-width:100%;" align="center"/>
+                                </td>
+                            </tr>
+                        <!-- how to define conditional statements in QWEB -->
+<!--                        <tr>-->
+<!--&lt;!&ndash;                           <th style="width: 25%; vertical-align: top; font-size:18px;">Personal</th>&ndash;&gt;-->
+<!--                           <td>-->
+<!--                              <table class="table report_border">-->
+<!--                                 <tr>-->
+<!--                                    <t t-if="data.first_name == True">-->
+<!--                                       <td style="font-size:10pt;">-->
+<!--                                          <b>First Name :</b>-->
+<!--                                          <span t-field="data.first_name" />-->
+<!--                                       </td>-->
+<!--                                    </t>-->
+<!--                                    <t t-if="data.first_name == True">-->
+<!--                                       <td style="font-size:10pt;">-->
+<!--                                          <b>First Name :</b>-->
+<!--                                          <span t-field="data.last_name" />-->
+<!--                                       </td>-->
+<!--                                    </t>-->
+<!--                                    <t t-if="data.last_name == True">-->
+<!--                                       <td style="font-size:10pt;">-->
+<!--                                          <b>First Name :</b>-->
+<!--                                          <span t-field="data.last_name" />-->
+<!--                                       </td>-->
+<!--                                    </t>-->
+<!--                                    <t t-if="data.last_name == True">-->
+<!--                                       <td style="font-size:10pt;">-->
+<!--                                          <b>Address :</b>-->
+<!--                                          <span t-field="data.last_name" />-->
+<!--                                       </td>-->
+<!--                                    </t>-->
+<!--                                 </tr>-->
+<!--                              </table>-->
+<!--                           </td>-->
+<!--                        </tr>-->
+
+
+                        <!-- getting one2many relational fields in QWEb-->
+                        <!-- how to use nested loops in QWEb-->
+<!--                        <tr>-->
+<!--                           <th style="width: 25%; vertical-align: top; font-size:18px;">Experience</th>-->
+<!--                           <td style="font-size:17px;">-->
+<!--                              <table class="table report_border">-->
+<!--                                 <th style="width: 10%;">Duration</th>-->
+<!--                                 <th style="width: 10%;">Job Title</th>-->
+<!--                                 <th style="width: 10%;">Institution</th>-->
+<!--                                 <tbody>-->
+<!--                                    <t t-foreach="data" t-as="experience">-->
+<!--                                       <t t-foreach="experience.one2many_field" t-as="duration">-->
+<!--                                          <tr>-->
+<!--                                             <td>-->
+<!--                                                <p>-->
+<!--                                                   <t t-if="duration.curr_work == False">-->
+<!--                                                      <span t-field="duration.date_from" t-field-options='{"format": "d-MMM-y"}' />-->
+<!--                                                      to-->
+<!--                                                      <span t-field="duration.date_to" t-field-options='{"format": "d-MMM-y"}' />-->
+<!--                                                      <br />-->
+<!--                                                   </t>-->
+<!--                                                   <t t-if="duration.curr_work == True">-->
+<!--                                                      <span t-field="duration.date_from" t-field-options='{"format": "d-MMM-y"}' />-->
+<!--                                                      To Present-->
+<!--                                                   </t>-->
+<!--                                                </p>-->
+<!--                                             </td>-->
+<!--                                          </tr>-->
+<!--                                       </t>-->
+<!--                                    </t>-->
+<!--                                 </tbody>-->
+<!--                              </table>-->
+<!--                           </td>-->
+<!--                        </tr>-->
+
+                        <!-- how to show data in ordered list in QWEB-->
+<!--                        <tr>-->
+<!--                           <th style="width: 25%; vertical-align: top; font-size:18px;">Ordered List</th>-->
+<!--                           <td style="font-size:17px;">-->
+<!--                              <t t-foreach="data.one2many_field" t-as="honor">-->
+<!--                                 <li style="list-style-type: none;">-->
+<!--                                    <p t-field="honor.name" />-->
+<!--                                 </li>-->
+<!--                              </t>-->
+<!--                           </td>-->
+<!--                        </tr>-->
+
+                        <!-- create table inside table row in QWEB-->
+<!--                        <tr>-->
+<!--                           <th style="width: 25%; vertical-align: top; font-size:18px;">Supervision</th>-->
+<!--                           <td style="font-size:17px;">-->
+<!--                              <table class="table report_border">-->
+<!--                                 <th style="width: 10%;">Year</th>-->
+<!--                                 <th style="width: 10%;">Degree</th>-->
+<!--                                 <th style="width: 10%;">Name</th>-->
+<!--                                 <tbody>-->
+<!--                                    <t t-foreach="data" t-as="supervision">-->
+<!--                                       <t t-foreach="supervision.one2many_field" t-as="year">-->
+<!--                                          <tr>-->
+<!--                                             <td>-->
+<!--                                                <p t-esc="year.year" />-->
+<!--                                             </td>-->
+<!--                                             <td>-->
+<!--                                                <p t-esc="year.degree" />-->
+<!--                                             </td>-->
+<!--                                             <td>-->
+<!--                                                <p t-esc="year.name" />-->
+<!--                                             </td>-->
+<!--                                          </tr>-->
+<!--                                       </t>-->
+<!--                                    </t>-->
+<!--                                 </tbody>-->
+<!--                              </table>-->
+<!--                           </td>-->
+<!--                        </tr>-->
+                     </table>
+<!--                  </div>-->
+               </div>
+            </t>
+         </t>
+      </template>
+</odoo>

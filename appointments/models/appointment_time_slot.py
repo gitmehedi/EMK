@@ -54,13 +54,6 @@ class AppointmentTimeSlot(models.Model):
                 raise ValidationError(_("It should be valid date time"))
             if rec.end_time > 23:
                 raise ValidationError(_("It should be valid date time"))
-    #
-    # @api.one
-    # def name_get(self):
-    #     name = self.name
-    #     if self.day and self.start_time and self.end_time:
-    #         name = '[%s - %s] %s' % (self.start_time, self.end_time,self.day.title())
-    #     return (self.id, name)
 
     @api.model
     def _needaction_domain_get(self):

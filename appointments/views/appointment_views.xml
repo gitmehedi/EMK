@@ -111,7 +111,7 @@
             <field name="name">Appointment</field>
             <field name="res_model">appointment.appointment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">calendar,tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','draft')]</field>
         </record>
         <record model="ir.actions.act_window" id="action_appointment_confirm">

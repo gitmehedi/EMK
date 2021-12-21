@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <report id="report_appoint_visiting_card_approve"
+            model="appointment.appointment"
+            string="Visiting Card"
+            name="appointments.appointment_info"
+            file="appointments.appointment_info"
+            report_type="qweb-pdf"
+           />
+
+
+<!--    <report id="report_appoint_visiting_card_xls"-->
+<!--            string="Visiting Card Excel"-->
+<!--            model="appointment.appointment"-->
+<!--            report_type="xlsx"-->
+<!--            name="appointments.report_appoint_visiting_xls_approve"-->
+<!--            file="appointments.report_appoint_visiting_card_xls"/>-->
+
+</odoo>

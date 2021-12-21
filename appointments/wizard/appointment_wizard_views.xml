@@ -6,8 +6,14 @@
         <field name="arch" type="xml">
             <form string="Proposed">
                 <group>
+
                     <group>
+                        <field name="topic_id" domain="[('status','=','True')]" options="{'no_create_edit':True,'no_open':True}" />
+                        <field name="contact_id" domain="[('status','=','True')]" options="{'no_create_edit':True,'no_open':True}"/>
+                    </group>
+                     <group>
                         <field name="appointment_date"/>
+                         <field name="timeslot_id" domain="[('status','=','True')]" options="{'no_create_edit':True,'no_open':True}" />
                     </group>
 
                 </group>

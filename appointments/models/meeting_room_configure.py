@@ -36,7 +36,6 @@ class MeetingRoomConfigure(models.Model):
 
         return super(MeetingRoomConfigure, self).unlink()
 
-
     @api.model
     def _needaction_domain_get(self):
         return [('status', '=', 'True')]

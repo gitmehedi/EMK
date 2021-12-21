@@ -60,8 +60,6 @@
             </field>
         </record>
 
-
-
         <record model="ir.actions.act_window" id="action_appointment_topics">
             <field name="name">Appointment Topics</field>
             <field name="res_model">appointment.topics</field>

@@ -26,11 +26,8 @@ class Appointment(models.Model):
     meeting_room_id = fields.Many2many('appointment.meeting.room',string='Room Allocation', track_visibility='onchange')
     description = fields.Text(string='Remarks', track_visibility="onchange")
     appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
-
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
     last_name = fields.Char(string="Last Name", required=True, track_visibility='onchange')
-    # gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
-    #                           string='Gender',required=True, track_visibility='onchange')
     gender = fields.Many2one('res.gender', string='Gender', required=True, track_visibility='onchange')
     date_of_birth = fields.Date(string="Date of Birth", required=True, track_visibility='onchange')
     phone = fields.Char(string="Phone", required=True, track_visibility='onchange')
@@ -56,7 +53,6 @@ class Appointment(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code('appointment.sequence') or _('New')
-            # vals['name'] = DAY_NAME
         result = super(Appointment, self).create(vals)
         return result
 
@@ -76,11 +72,26 @@ class Appointment(models.Model):
     @api.multi
     def appointment_reject(self):
         for appointment in self:
+            template_id = self.env.ref('appointments.mail_template_appointment_reject').id
+            template = self.env['mail.template'].browse(template_id)
+            template.send_mail(self.id, force_send=True)
+
+            template_emk_id = self.env.ref('appointments.mail_template_appointment_rej_emk').id
+            template_emk = self.env['mail.template'].browse(template_emk_id)
+            template_emk.send_mail(self.id, force_send=True)
             appointment.write({'state': 'reject'})
 
     @api.multi
     def appointment_approve(self):
         for appointment in self:
+            template_id = self.env.ref('appointments.mail_template_appointment_app').id
+            template = self.env['mail.template'].browse(template_id)
+            template.send_mail(self.id, force_send=True)
+
+            template_emk_id = self.env.ref('appointments.mail_template_appointment_app_emk').id
+            template_emk = self.env['mail.template'].browse(template_emk_id)
+            template_emk.send_mail(self.id, force_send=True)
+
             appointment.write({'state': 'done'})
 
     @api.onchange('topic_id')
@@ -126,9 +137,7 @@ class Appointment(models.Model):
     @api.constrains('email')
     def validate_mail(self):
         if self.email:
-            print(self.email)
             match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
-            print(match)
             if match == None:
                 raise ValidationError('Email should be input a valid')
 
@@ -139,14 +148,12 @@ class Appointment(models.Model):
             appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
             day = datetime.strftime(appdate, '%A')
             timeslot_ids = self.env['appointment.timeslot'].search([('day', '=', day.lower()),('id', 'in', self.contact_id.timeslot_ids.ids)])
-            # timeslot_ids = timeslot_day_ids.search([('id', 'in', self.contact_id.timeslot_ids.ids)])
             if timeslot_ids:
                 res['domain'] = {
                     'timeslot_id': [('id', 'in', timeslot_ids.ids)],
 
                 }
         return res
-
 
     @api.model
     def _needaction_domain_get(self):
