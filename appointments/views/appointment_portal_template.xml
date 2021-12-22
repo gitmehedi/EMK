@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    <template id="portal_layout" name="Portal layout: appointment menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">-->
+<!--        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">-->
+<!--            <li t-if="page_name == 'appointment' or appointment" t-attf-class="breadcrumb-item #{'active ' if not appointment else ''}">-->
+<!--                <a t-if="appointment" t-attf-href="/my/online-appointments?{{ keep_query() }}">Appointments</a>-->
+<!--                <t t-else="">Appointments</t>-->
+<!--            </li>-->
+<!--            <li t-if="appointment" class="breadcrumb-item active">-->
+<!--                <t t-esc="appointment.name"/>-->
+<!--            </li>-->
+<!--        </xpath>-->
+<!--    </template>-->
+
+    <template id="portal_my_home_appointment" name="Portal My Home : appointment entries" inherit_id="website_portal.portal_my_home" priority="55">
+        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+            <h3 class="page-header">
+                <a href="/my/online-appointments">Your Appointments
+                    <small class="ml8">
+                        <t t-if="appointment_count">
+                            <span class='badge'><t t-esc="appointment_count"/></span>
+                        </t>
+                        <t t-if="not appointment_count">
+                            There are currently no appointments for your account.
+                        </t>
+                    </small>
+                </a>
+            </h3>
+        </xpath>
+    </template>
+
+    <template id="portal_my_appointments" name="My Appointments">
+        <t t-call="website_portal.portal_layout">
+            <h3 class="page-header">Appointments</h3>
+            <t t-if="not appointments">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no appointments.
+                </div>
+            </t>
+            <t t-if="appointments">
+                <table class="table table-hover o_my_status_table">
+                    <tbody>
+                        <tr t-foreach="appointments" t-as="appointment">
+                            <td>
+                                <a t-attf-href="/my/online-appointment/#{appointment.id}?{{ keep_query() }}"><span t-field="appointment.name"/></a>
+                            </td>
+                            <td t-if="appointment.sudo().partner_id.id == request.env.user.partner_id.id">
+                                With: <span t-field="appointment.sudo().appointee_id.name" />
+                            </td>
+                            <td t-else="">
+                                With: <span t-field="appointment.sudo().partner_id.name" />
+                            </td>
+                            <td class="text-right">
+                                <span t-field="appointment.appointment_begin" />
+                            </td>
+                            <td class="text-right">
+                                <span t-field="appointment.appointment_end" />
+                            </td>
+                            <td t-if="appointment.state == 'cancel'">
+                                <span class="badge badge-pill badge-info">Canceled</span>
+                            </td>
+                            <td t-if="appointment.state == 'pending'">
+                                <span class="badge badge-pill badge-danger">Pending ...</span>
+                            </td>
+                            <td t-if="appointment.state == 'valid'">
+                                <span class="badge badge-pill badge-info">Confirmed</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div t-if="pager" class="o_portal_pager text-center">
+                  <t t-call="website.pager"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_appointment" name="My Appointment">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="oe_structure">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <ol class="breadcrumb mt8">
+                                    <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                    <li>
+                                      <a t-attf-href="/my/#{'online-appointments'}?{{ keep_query()}}">My Appointments</a>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                      </div>
+                    <div class="row">
+                        <div class="container">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>
+                                        <small class="text-muted">Appointment - </small><span t-field="appointment.name"/>
+                                        <span class="float-right">
+                                            <t t-if="appointment.state == 'cancel'">
+                                                <span class="badge badge-pill badge-info">Canceled</span>
+                                            </t>
+                                            <t t-if="appointment.state == 'pending'">
+                                                <span class="badge badge-pill badge-danger">Pending ...</span>
+                                            </t>
+                                            <t t-if="appointment.state == 'valid'">
+                                                <span class="badge badge-pill badge-info">Confirmed</span>
+                                            </t>
+                                        </span>
+                                    </h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <t t-if="appointment.sudo().partner_id.id == request.env.user.partner_id.id">
+                                            <div t-if="appointment.partner_id" class="col-12 col-md-6">
+                                                <h6>You</h6>
+                                                <div class="col-12">
+                                                    <img t-if="appointment.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(appointment.partner_id.image)" alt="Contact"/>
+                                                    <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
+                                                </div>
+                                                <div class="col-12">
+                                                    <address t-field="appointment.partner_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                                </div>
+                                            </div>
+                                            <div t-if="appointment.appointee_id" class="col-12 col-md-6">
+                                                <h6>With</h6>
+                                                <div class="col-12">
+                                                    <img t-if="appointment.appointee_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(appointment.appointee_id.image)" alt="Appointee"/>
+                                                    <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
+                                                </div>
+                                                <div class="col-12">
+                                                    <address t-field="appointment.appointee_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div t-if="appointment.appointee_id" class="col-12 col-md-6">
+                                                <h6>You</h6>
+                                                <div class="col-12">
+                                                    <img t-if="appointment.appointee_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(appointment.appointee_id.image)" alt="Appointee"/>
+                                                    <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
+                                                </div>
+                                                <div class="col-12">
+                                                    <address t-field="appointment.appointee_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                                </div>
+                                            </div>
+                                            <div t-if="appointment.partner_id" class="col-12 col-md-6">
+                                                <h6>With</h6>
+                                                <div class="col-12">
+                                                    <img t-if="appointment.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(appointment.partner_id.image)" alt="Contact"/>
+                                                    <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
+                                                </div>
+                                                <div class="col-12">
+                                                    <address t-field="appointment.partner_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <h6>From</h6>
+                                            <div class="col-12">
+                                                <b><span t-field="appointment.appointment_begin" /></b>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <h6>Till</h6>
+                                            <div class="col-12">
+                                                <b><span t-field="appointment.appointment_end" /></b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt8">
+                                        <div class="col-12 col-md-12">
+                                            <h6>Remarks:</h6>
+                                            <div class="col-12">
+                                                <span t-field="appointment.event_id.description" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt8" id="online_appointment_interaction">
+                        <div t-if="appointment.state in ['pending', 'valid']" class="col-md-6">
+                            <button class="btn btn-info" id="cancel_appointment_button">Cancel appointment</button>
+                        </div>
+                        <div t-if="appointment.state in ['pending'] and appointment.sudo().appointee_id.id == request.env.user.partner_id.id" class="col-md-6">
+                            <button class="btn btn-info" id="confirm_appointment_button">Confirm appointment</button>
+                        </div>
+                    </div>
+
+                    <div t-if="appointment.state in ['pending', 'valid']" role="dialog" id="cancel_appointment_dialog" class="modal" tabindex="-1" t-ignore="true">
+                        <div class="modal-dialog">
+                            <form role="form" action="/online-appointment/portal/cancel">
+                                <input type="hidden" t-att-value="str(appointment.id)" id="appointment_to_cancel" name="appointment_to_cancel" />
+                                <div class="modal-content">
+                                    <header class="modal-header">
+                                        <h4 class="modal-title">Cancel appointment</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                    </header>
+                                    <main class="modal-body">
+                                        <div class="form-group row mb0">
+                                            <label for="page-name" class="col-md-12 col-form-label">
+                                                <p>The selected appointment will be canceled.</p>
+                                            </label>
+                                        </div>
+                                    </main>
+                                    <footer class="modal-footer">
+                                        <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                                        <input type="submit" value="Confirm" class="btn btn-primary"/>
+                                    </footer>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div t-if="appointment.state == 'pending'" role="dialog" id="confirm_appointment_dialog" class="modal" tabindex="-1" t-ignore="true">
+                        <div class="modal-dialog">
+                            <form role="form" action="/online-appointment/portal/confirm">
+                                <input type="hidden" t-att-value="str(appointment.id)" id="appointment_to_confirm" name="appointment_to_confirm"/>
+                                <div class="modal-content">
+                                    <header class="modal-header">
+                                        <h4 class="modal-title">Confirm appointment</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                    </header>
+                                    <main class="modal-body">
+                                        <div class="form-group row mb0">
+                                            <label for="page-name" class="col-md-12 col-form-label">
+                                                <p>You are going to confirm this appointment.</p>
+                                            </label>
+                                        </div>
+                                    </main>
+                                    <footer class="modal-footer">
+                                        <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                                        <input type="submit" value="Confirm" class="btn btn-primary"/>
+                                    </footer>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>
