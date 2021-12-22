@@ -44,6 +44,16 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
         rule_list = sorted(rule_list, key=lambda k: k[0])
         return rule_list
 
+    def get_non_costcenter_rule_list(self, non_costcenter_payslip_list):
+        rule_list = []
+        for slip in non_costcenter_payslip_list:
+            for line in slip.line_ids:
+                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
+                    rule_list.append((line.sequence, line.name))
+
+        rule_list = sorted(rule_list, key=lambda k: k[0])
+        return rule_list
+
     def get_final_rule_list(self, all_rule_list, final_rule_list):
         lst3 = [value for value in final_rule_list if value in all_rule_list]
         return lst3
@@ -75,15 +85,18 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
         total_employee_count = 0
         cost_center_len = len(obj.cost_center_ids)
+
+        found_non_cost_center = 0
         if obj.cost_center_ids:
             for cost_center in obj.cost_center_ids:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
                 non_costcenter_payslip_list = self.get_payslip_list(False, top_sheet)
+                if non_costcenter_payslip_list:
+                    found_non_cost_center = found_non_cost_center + 1
+
                 if not payslip_list:
                     if cost_center_len == 1:
                         raise UserError(_('No payslip generated for this cost center employee!'))
-                    else:
-                        continue
                 rule_list = self.get_rule_list(payslip_list, non_costcenter_payslip_list)
 
                 if rule_list:
@@ -190,6 +203,8 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
             for cost_center in cost_centers:
                 payslip_list = self.get_payslip_list(cost_center, top_sheet)
                 non_costcenter_payslip_list = self.get_payslip_list(False, top_sheet)
+                if non_costcenter_payslip_list:
+                    found_non_cost_center = found_non_cost_center + 1
                 if not payslip_list:
                     continue
                 rule_list = self.get_rule_list(payslip_list, non_costcenter_payslip_list)
@@ -298,25 +313,64 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
         net = 0
         record = OrderedDict()
 
-        for rec in non_costcenter_payslip_list:
-            rules = OrderedDict()
-            for rule in final_rule_list:
-                rules[rule[1]] = 0
-            record[rec.employee_id.department_id.name] = {}
-            record[rec.employee_id.department_id.name]['count'] = 0
-            record[rec.employee_id.department_id.name]['vals'] = rules
+        if found_non_cost_center > 0:
 
-        for slip in non_costcenter_payslip_list:
-            rec = record[slip.employee_id.department_id.name]
-            rec['count'] = rec['count'] + 1
-            for line in slip.line_ids:
-                if line.appears_on_payslip:
-                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
-                    total[line.name] = total[line.name] + math.ceil(line.total)
-                if line.code == 'BNET' and slip.employee_id.bank_account_id.bank_id:
-                    bnet = bnet + math.ceil(line.total)
-                if line.code == 'NET':
-                    net = net + math.ceil(line.total)
+            # only undefined will be shown
+            non_cost_center_rule_list = self.get_non_costcenter_rule_list(non_costcenter_payslip_list)
+            header = OrderedDict()
+            header[0] = 'Cost Center'
+            header[1] = 'Department'
+            header[2] = 'Employee'
+            for rec in non_cost_center_rule_list:
+                header[len(header)] = rec[1]
+            for key, value in header.items():
+                sheet.write(0, key, value, header_bold)
+
+            total = OrderedDict()
+            for rule in non_cost_center_rule_list:
+                total[rule[1]] = 0
+
+            for rec in non_costcenter_payslip_list:
+                rules = OrderedDict()
+                for rule in non_cost_center_rule_list:
+                    rules[rule[1]] = 0
+                record[rec.employee_id.department_id.name] = {}
+                record[rec.employee_id.department_id.name]['count'] = 0
+                record[rec.employee_id.department_id.name]['vals'] = rules
+
+            for slip in non_costcenter_payslip_list:
+                rec = record[slip.employee_id.department_id.name]
+                rec['count'] = rec['count'] + 1
+                for line in slip.line_ids:
+                    if line.appears_on_payslip:
+                        rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
+                        total[line.name] = total[line.name] + math.ceil(line.total)
+                    if line.code == 'BNET' and slip.employee_id.bank_account_id.bank_id:
+                        bnet = bnet + math.ceil(line.total)
+                    if line.code == 'NET':
+                        net = net + math.ceil(line.total)
+
+        else:
+
+            for rec in non_costcenter_payslip_list:
+                rules = OrderedDict()
+                for rule in final_rule_list:
+                    rules[rule[1]] = 0
+                record[rec.employee_id.department_id.name] = {}
+                record[rec.employee_id.department_id.name]['count'] = 0
+                record[rec.employee_id.department_id.name]['vals'] = rules
+
+            for slip in non_costcenter_payslip_list:
+                rec = record[slip.employee_id.department_id.name]
+                rec['count'] = rec['count'] + 1
+                for line in slip.line_ids:
+                    if line.appears_on_payslip:
+                        rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
+                        total[line.name] = total[line.name] + math.ceil(line.total)
+                    if line.code == 'BNET' and slip.employee_id.bank_account_id.bank_id:
+                        bnet = bnet + math.ceil(line.total)
+                    if line.code == 'NET':
+                        net = net + math.ceil(line.total)
 
         sheet.write(last_row + 1, 0, 'Undefined', normal)
 
