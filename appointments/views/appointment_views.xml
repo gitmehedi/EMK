@@ -25,11 +25,11 @@
             <field name="arch" type="xml">
                 <form string="Appointment">
                     <header>
-                        <button name="appointment_confirm" string="Confirm" states="draft"
+                        <button name="confirm_appointment" string="Confirm" states="draft"
                                 class="oe_highlight" type="object"/>
-                        <button name="appointment_approve" string="Approve" states="confirm" type="object"
+                        <button name="approve_appointment" string="Approve" states="confirm" type="object"
                                 class="oe_highlight"/>
-                        <button name="appointment_reject" string="Reject" states="confirm"
+                        <button name="reject_appointment" string="Reject" states="confirm"
                                 type="object"/>
                         <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm,done" type="action"
                                 class="oe_highlight"/>
@@ -51,7 +51,6 @@
                                 <field name="last_name"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="phone"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="email"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
-
                             </group>
                             <group>
                                 <field name="appointment_date" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>

@@ -1,10 +1,13 @@
-import time
+import logging
 import re
-from odoo import api, fields, models, _
-from datetime import datetime, date, timedelta
+from datetime import datetime
+
 import dateutil.parser
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
+_logger = logging.getLogger(__name__)
 
 
 class Appointment(models.Model):
@@ -19,11 +22,12 @@ class Appointment(models.Model):
 
     name = fields.Char(string="Name", readonly=True, copy=False, track_visibility='onchange')
     # client_id = fields.Many2one('res.partner',string="Client")
-    topic_id = fields.Many2one('appointment.topics',string="Topics",required=True, track_visibility='onchange')
-    contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange' )
-    timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange' )
-    type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange' )
-    meeting_room_id = fields.Many2many('appointment.meeting.room',string='Room Allocation', track_visibility='onchange')
+    topic_id = fields.Many2one('appointment.topics', string="Topics", required=True, track_visibility='onchange')
+    contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange')
+    timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')
+    type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
+    meeting_room_id = fields.Many2many('appointment.meeting.room', string='Room Allocation',
+                                       track_visibility='onchange')
     description = fields.Text(string='Remarks', track_visibility="onchange")
     appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
@@ -33,7 +37,7 @@ class Appointment(models.Model):
     phone = fields.Char(string="Phone", required=True, track_visibility='onchange')
     address = fields.Text(string="Address", required=True, track_visibility='onchange')
     city = fields.Char(string="City", required=True, track_visibility='onchange')
-    country = fields.Many2one('res.country',string="Country", required=True, track_visibility='onchange')
+    country = fields.Many2one('res.country', string="Country", required=True, track_visibility='onchange')
     email = fields.Char(string="Email", required=True, track_visibility='onchange')
 
     state = fields.Selection([
@@ -49,50 +53,19 @@ class Appointment(models.Model):
             if rec.topic_id:
                 rec.contact_id = rec.topic_id.contact_id
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('appointment.sequence') or _('New')
-        result = super(Appointment, self).create(vals)
-        return result
-
-    def unlink(self):
-        for rec in self:
-            if rec.state != 'draft':
-                raise ValidationError(_('You cannot delete this appointment'))
-        return super(Appointment, self).unlink()
-
-    @api.multi
-    def appointment_confirm(self):
-        for appointment in self:
-            if not appointment.meeting_room_id:
-                raise UserError(_('Unable to confirm an appointment without room. Please add room(s).'))
-            appointment.write({'state': 'confirm'})
-
-    @api.multi
-    def appointment_reject(self):
-        for appointment in self:
-            template_id = self.env.ref('appointments.mail_template_appointment_reject').id
-            template = self.env['mail.template'].browse(template_id)
-            template.send_mail(self.id, force_send=True)
-
-            template_emk_id = self.env.ref('appointments.mail_template_appointment_rej_emk').id
-            template_emk = self.env['mail.template'].browse(template_emk_id)
-            template_emk.send_mail(self.id, force_send=True)
-            appointment.write({'state': 'reject'})
-
-    @api.multi
-    def appointment_approve(self):
-        for appointment in self:
-            template_id = self.env.ref('appointments.mail_template_appointment_app').id
-            template = self.env['mail.template'].browse(template_id)
-            template.send_mail(self.id, force_send=True)
-
-            template_emk_id = self.env.ref('appointments.mail_template_appointment_app_emk').id
-            template_emk = self.env['mail.template'].browse(template_emk_id)
-            template_emk.send_mail(self.id, force_send=True)
-
-            appointment.write({'state': 'done'})
+    @api.onchange('appointment_date', 'contact_id')
+    def onchange_appointment_date(self):
+        res = {}
+        if self.appointment_date:
+            appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
+            day = datetime.strftime(appdate, '%A')
+            timeslot_ids = self.env['appointment.timeslot'].search(
+                [('day', '=', day.lower()), ('id', 'in', self.contact_id.timeslot_ids.ids)])
+            if timeslot_ids:
+                res['domain'] = {
+                    'timeslot_id': [('id', 'in', timeslot_ids.ids)]
+                }
+        return res
 
     @api.onchange('topic_id')
     def onchange_topic_id(self):
@@ -114,7 +87,6 @@ class Appointment(models.Model):
             }
         return res
 
-
     @api.one
     @api.constrains('appointment_date')
     def validate_appointment_date(self):
@@ -133,6 +105,51 @@ class Appointment(models.Model):
             if birth_date >= curr_date:
                 raise ValidationError(_("Birth date cannot be future date and current date"))
 
+    @api.multi
+    def confirm_appointment(self):
+        if self.state == 'draft':
+            if not self.meeting_room_id:
+                raise UserError(_('Unable to confirm an appointment without room. Please add room(s).'))
+            self.state = 'confirm'
+
+    @api.multi
+    def reject_appointment(self):
+        if self.state == 'confirm':
+            reject = {}
+            reject['template'] = 'appointments.mail_template_appointment_reject'
+            self.env['mail.mail'].mail_send(self.id, reject)
+
+            rej_emk = {}
+            rej_emk['template'] = 'appointments.mail_template_appointment_rej_emk'
+            self.env['mail.mail'].mail_send(self.id, rej_emk)
+            self.state = 'reject'
+
+    @api.multi
+    def approve_appointment(self):
+        if self.state == 'confirm':
+            app = {}
+            app['template'] = 'appointments.mail_template_appointment_app'
+            self.env['mail.mail'].mail_send(self.id, app)
+
+            app_emk = {}
+            app_emk['template'] = 'appointments.mail_template_appointment_app_emk'
+            self.env['mail.mail'].mail_send(self.id, app_emk)
+
+            self.state = 'done'
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('appointment.sequence') or _('New')
+        result = super(Appointment, self).create(vals)
+        return result
+
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError(_('You cannot delete this appointment'))
+        return super(Appointment, self).unlink()
+
     @api.one
     @api.constrains('email')
     def validate_mail(self):
@@ -141,22 +158,6 @@ class Appointment(models.Model):
             if match == None:
                 raise ValidationError('Email should be input a valid')
 
-    @api.onchange('appointment_date','contact_id')
-    def onchange_appointment_date(self):
-        res = {}
-        if self.appointment_date:
-            appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
-            day = datetime.strftime(appdate, '%A')
-            timeslot_ids = self.env['appointment.timeslot'].search([('day', '=', day.lower()),('id', 'in', self.contact_id.timeslot_ids.ids)])
-            if timeslot_ids:
-                res['domain'] = {
-                    'timeslot_id': [('id', 'in', timeslot_ids.ids)],
-
-                }
-        return res
-
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft', 'confirm', 'done', 'reject'])]
-
-
