@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <report id="report_appoint_visiting_card_approve"
+    <report id="report_appoint_visiting_card_done"
             model="appointment.appointment"
             string="Visiting Card"
             name="appointments.appointment_info"
