@@ -19,16 +19,6 @@ class AppointmentContact(models.Model):
                                     string="Time Slot", required=True)
 
 
-    def name_get(self):
-        result = []
-        for rec in self:
-            if rec.appointee_id.id:
-                name = str(rec.name)+' ['+ str(rec.appointee_id.id) + ']'
-                result.append((rec.id, str(name)))
-            else:
-                result.append((rec.id, ''))
-        return result
-
 
     def unlink(self):
         for rec in self:
@@ -50,7 +40,7 @@ class AppointmentEmp(models.Model):
         result = []
         for rec in self:
             if rec.id:
-                name = str(rec.name)+' ['+ str(rec.id) + ']'
+                name = '['+ str(rec.id) + '] ' + str(rec.name)
                 result.append((rec.id, str(name)))
             else:
                 result.append((rec.id, ''))

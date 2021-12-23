@@ -68,7 +68,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_appointment_timeslot" action="action_appointment_timeslot" sequence="25"
+        <menuitem id="menu_appointment_timeslot" action="action_appointment_timeslot" sequence="10"
                   groups="" parent="appointment_menu.sub_configuration_menu"/>
     </data>
 </odoo>

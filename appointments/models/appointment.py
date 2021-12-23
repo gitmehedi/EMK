@@ -129,7 +129,10 @@ class Appointment(models.Model):
         if self.state == 'confirm':
             app = {}
             app['template'] = 'appointments.mail_template_appointment_app'
-            self.env['mail.mail'].mail_send(self.id, app)
+            res = self.env['mail.mail'].mail_send(self.id, app)
+            print(app)
+            print(app['template'])
+            print(res)
 
             app_emk = {}
             app_emk['template'] = 'appointments.mail_template_appointment_app_emk'
