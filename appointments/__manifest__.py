@@ -15,8 +15,8 @@
     ],
     'data': [
         'data/sequence.xml',
-        'data/mail_template.xml',
         'reports/reports.xml',
+        'data/mail_template.xml',
         'reports/visiting_info.xml',
         'wizards/appointment_wizard_views.xml',
         'views/appointment_type_views.xml',
