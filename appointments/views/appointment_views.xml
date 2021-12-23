@@ -44,9 +44,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="topic_id" domain="[('status','=','True')]" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
-                                <field name="contact_id" domain="[('status','=','True')]" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
-                                <field name="timeslot_id" domain="[('status','=','True')]" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="topic_id" domain="[('status','=','True')]" options="{'no_create':True,'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="contact_id" domain="[('status','=','True')]" options="{'no_create':True,'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="timeslot_id" domain="[('status','=','True')]" options="{'no_create':True,'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="first_name"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="last_name"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="phone"  attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
@@ -54,12 +54,12 @@
                             </group>
                             <group>
                                 <field name="appointment_date" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
-                                <field name="type_id" domain="[('status','=','True')]" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
-                                <field name="gender" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="type_id" domain="[('status','=','True')]" options="{'no_create':True,'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="gender" options="{'no_create':True,'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="date_of_birth" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="address" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                                 <field name="city" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
-                                <field name="country" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                <field name="country" options="{'no_create':True,'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
                             </group>
                         </group>
                         <notebook>
@@ -105,7 +105,6 @@
             </field>
         </record>
 
-
         <record model="ir.actions.act_window" id="action_appointment_appointment">
             <field name="name">Appointment</field>
             <field name="res_model">appointment.appointment</field>
@@ -113,25 +112,28 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','draft')]</field>
         </record>
+
         <record model="ir.actions.act_window" id="action_appointment_confirm">
             <field name="name">Appointment</field>
             <field name="res_model">appointment.appointment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">calendar,tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','confirm')]</field>
         </record>
+
         <record model="ir.actions.act_window" id="action_appointment_approve">
             <field name="name">Appointment</field>
             <field name="res_model">appointment.appointment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">calendar,tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','done')]</field>
         </record>
+
         <record model="ir.actions.act_window" id="action_appointment_reject">
             <field name="name">Appointment</field>
             <field name="res_model">appointment.appointment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">calendar,tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','reject')]</field>
         </record>
 
@@ -146,10 +148,13 @@
 
         <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment" sequence="30"
                   groups="" parent="appointment_menu.sub_appoint_menu"/>
+
         <menuitem id="menu_appointment_confirm" name="Appointment (Confirmed)" action="action_appointment_confirm" sequence="35"
                   groups="" parent="appointment_menu.sub_appoint_menu"/>
+
         <menuitem id="menu_appointment_done" name="Appointment (Approved)" action="action_appointment_approve" sequence="40"
                   groups="" parent="appointment_menu.sub_appoint_menu"/>
+
         <menuitem id="menu_appointment_reject" name="Appointment (Rejected)" action="action_appointment_reject" sequence="50"
                   groups="" parent="appointment_menu.sub_appoint_menu"/>
     </data>
