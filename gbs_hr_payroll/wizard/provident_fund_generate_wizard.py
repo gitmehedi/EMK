@@ -7,12 +7,15 @@ class ProvidentFundWizard(models.TransientModel):
 
     @api.multi
     def process_print(self):
+        ReportUtility = self.env['report.utility']
         data = {}
         data['employee_id'] = self.employee_id.name
         data['emp_id'] = self.employee_id.id
         data['department_id'] = self.employee_id.department_id.name
         data['job_id'] = self.employee_id.job_id.name
-        data['initial_employment_date'] = self.employee_id.initial_employment_date
+        # data['initial_employment_date'] = self.employee_id.initial_employment_date
+        data['initial_employment_date'] = ReportUtility.get_date_from_string(self.employee_id.initial_employment_date)
+
         data['device_employee_acc'] = self.employee_id.device_employee_acc
         data['total_pf'] = self.employee_id.total_pf
 

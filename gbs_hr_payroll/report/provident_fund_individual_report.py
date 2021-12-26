@@ -10,12 +10,16 @@ class PfReport(models.AbstractModel):
     def render_html(self, docids, data=None):
         payslip_line = self.env['hr.payslip'].search([('employee_id', '=', data['emp_id']), ('state', '=', 'done')])
         pf_list = []
+        # Report Utility
+        ReportUtility = self.env['report.utility']
         for rec in payslip_line:
             pf_obj = {}
             for line in rec.line_ids:
                 if line.code == 'EPMF':
                     pf_obj['name'] = rec.name
-                    pf_obj['date'] = rec.date_from
+                    pf_obj['date'] = ReportUtility.get_date_from_string(rec.date_from)
+
+
                     pf_obj['pf'] = formatLang(self.env,math.ceil(abs(line.total)))
                     pf_list.append(pf_obj)
 
