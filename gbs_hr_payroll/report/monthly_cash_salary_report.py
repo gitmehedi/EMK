@@ -14,6 +14,8 @@ class MonthlyCashSalaryReport(models.AbstractModel):
         data['name'] = docs.name
         data['type'] = docs.type
         rule_list = []
+        # Report Utility
+        ReportUtility = self.env['report.utility']
         for slip in docs.slip_ids:
             if not slip.employee_id.bank_account_id.id:
                 for line in slip.line_ids:
@@ -50,7 +52,8 @@ class MonthlyCashSalaryReport(models.AbstractModel):
                     if d.id == slip.employee_id.department_id.id:
                         payslip['emp_name'] = slip.employee_id.name
                         payslip['designation'] = slip.employee_id.job_id.name
-                        payslip['doj'] = slip.employee_id.initial_employment_date
+                        payslip['doj'] = ReportUtility.get_date_from_string(slip.employee_id.initial_employment_date)
+
                         payslip['emp_seq'] = slip.employee_id.employee_sequence
                         loan_remain = slip.remaining_loan or 0.00
                         payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
