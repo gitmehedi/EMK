@@ -34,7 +34,7 @@ class AppointmentContact(models.Model):
 
 
 class AppointmentEmp(models.Model):
-    _inherit='hr.employee'
+    _inherit = 'hr.employee'
 
     def name_get(self):
         result = []

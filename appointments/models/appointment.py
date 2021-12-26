@@ -127,16 +127,22 @@ class Appointment(models.Model):
     @api.multi
     def approve_appointment(self):
         if self.state == 'confirm':
-            app = {}
-            app['template'] = 'appointments.mail_template_appointment_app'
-            res = self.env['mail.mail'].mail_send(self.id, app)
-            print(app)
-            print(app['template'])
-            print(res)
+            # app = {}
+            # app['template'] = 'appointments.mail_template_appointment_app'
+            # res = self.env['mail.mail'].mail_send(self.id, app)
+            template_id = self.env.ref('appointments.mail_template_appointment_app').id
+            template = self.env['mail.template'].browse(template_id)
+            template.send_mail(self.id, force_send=True)
+            template_id = self.env.ref('appointments.mail_template_appointment_app_emk').id
+            template = self.env['mail.template'].browse(template_id)
+            template.send_mail(self.id, force_send=True)
+            self.state = 'done'
 
-            app_emk = {}
-            app_emk['template'] = 'appointments.mail_template_appointment_app_emk'
-            self.env['mail.mail'].mail_send(self.id, app_emk)
+
+
+            # app_emk = {}
+            # app_emk['template'] = 'appointments.mail_template_appointment_app_emk'
+            # self.env['mail.mail'].mail_send(self.id, app_emk)
 
             self.state = 'done'
 
