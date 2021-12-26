@@ -6,8 +6,8 @@ odoo.define('appointments.main', function (require) {
     var publicWidget = require('web_editor.snippets.animation');
     var _t = core._t;
 
-    publicWidget.registry.OnlineAppointment = publicWidget.Class.extend({
-        selector: '#s2u_online_appointment',
+    publicWidget.registry.Appointments = publicWidget.Class.extend({
+        selector: '#appointment_reservation',
         init: function () {
             this._super.apply(this, arguments);
 
@@ -17,23 +17,37 @@ odoo.define('appointments.main', function (require) {
         },
         start: function () {
             var self = this;
-
-            $('.datepicker').datepicker({
-                dateFormat: 'dd/mm/yy',
-                startDate: '-3d',
-                beforeShowDay: function(date) {
-                    var d = self._format_date(date);
-                    var key = date.getFullYear().toString() + ','+ (date.getMonth() + 1).toString();
-                    if (self.days_with_free_slots[key] && self.days_with_free_slots[key][d]) {
-                        return [true, 'color_green', ''];
-                    } else {
-                        return [false, '', ''];
-                    }
-                },
-                onChangeMonthYear: function(year, month, datepicker) {
-                    self._update_days_with_free_slots(year, month);
-                },
-            });
+                $("#date_of_birth").datepicker({
+                    minDate: new Date(1900,1-1,1),
+                    maxDate: '-16Y',
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:-15",
+                    dateFormat: 'yy-mm-dd',
+                });
+                $("#appointment_date").datepicker({
+                    minDate: '+1D',
+                    maxDate: new Date(2050,12,31),
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: 'yy-mm-dd',
+                });
+//            $('#date_of_birth').datepicker({
+//                dateFormat: 'dd/mm/yy',
+//                startDate: '-3d',
+//                beforeShowDay: function(date) {
+//                    var d = self._format_date(date);
+//                    var key = date.getFullYear().toString() + ','+ (date.getMonth() + 1).toString();
+//                    if (self.days_with_free_slots[key] && self.days_with_free_slots[key][d]) {
+//                        return [true, 'color_green', ''];
+//                    } else {
+//                        return [false, '', ''];
+//                    }
+//                },
+//                onChangeMonthYear: function(year, month, datepicker) {
+//                    self._update_days_with_free_slots(year, month);
+//                },
+//            });
 
             $("#appointment_option_id").on('change', function() {
                 self.days_with_free_slots = {};
@@ -126,7 +140,7 @@ odoo.define('appointments.main', function (require) {
 
     }),
 
-    publicWidget.registry.OnlineAppointmentPortal = publicWidget.Class.extend({
+    publicWidget.registry.AppointmentPortal = publicWidget.Class.extend({
         selector: '#online_appointment_interaction',
         start: function () {
             var self = this;
