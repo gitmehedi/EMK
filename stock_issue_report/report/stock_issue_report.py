@@ -12,6 +12,8 @@ class StockIssueReport(models.AbstractModel):
         op_unit_id = data['operating_unit_id']
         op_unit_obj = self.env['operating.unit'].search([('id', '=', op_unit_id)])
         data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
+        data['from_date'] = report_utility_pool.get_date_from_string(data['from_date'])
+        data['to_date'] = report_utility_pool.get_date_from_string(data['to_date'])
 
         docargs = {
             'doc_ids': self._ids,

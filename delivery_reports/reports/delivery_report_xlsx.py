@@ -127,10 +127,6 @@ class DeliveryReportXLSX(ReportXlsx):
 
         return delivery_done_dict
 
-    @staticmethod
-    def get_formatted_date(date_str, date_format):
-        return datetime.datetime.strptime(date_str, "%Y-%m-%d").strftime(date_format)
-
     def generate_xlsx_report(self, workbook, data, obj):
         result_data = self._get_delivery_done(obj)
 
@@ -138,6 +134,9 @@ class DeliveryReportXLSX(ReportXlsx):
         report_for_factory = self.env.context.get('report_factory')
         delivery_report_factory = self.env.user.company_id.delivery_report_factory
         show_all_column = False if report_for_factory and delivery_report_factory else True
+
+        # Report Utility
+        ReportUtility = self.env['report.utility']
 
         """XLSX REPORT"""
         # FORMAT
@@ -211,7 +210,7 @@ class DeliveryReportXLSX(ReportXlsx):
         sheet.merge_range(row, last_col - 2, row, last_col, "Customer: " + partner, bold)
         row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + self.get_formatted_date(obj.date_from, "%d-%m-%Y") + " To " + self.get_formatted_date(obj.date_to, "%d-%m-%Y"), bold)
+        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(obj.date_from) + " To " + ReportUtility.get_date_from_string(obj.date_to), bold)
         row += 1
 
         # TABLE HEADER
@@ -242,8 +241,8 @@ class DeliveryReportXLSX(ReportXlsx):
                 if rec['delivered_qty'] > 0:
                     sheet.write(row, col, rec['partner_name'], td_cell_left)
                     sheet.write(row, col + 1, rec['so_no'], td_cell_center)
-                    sheet.write(row, col + 2, rec['so_date'], td_cell_center)
-                    sheet.write(row, col + 3, rec['delivery_date'], td_cell_center)
+                    sheet.write(row, col + 2, ReportUtility.get_date_time_from_string(rec['so_date']), td_cell_center)
+                    sheet.write(row, col + 3, ReportUtility.get_date_time_from_string(rec['delivery_date']), td_cell_center)
                     sheet.write(row, col + 4, rec['delivery_challan_no'], td_cell_center)
                     sheet.write(row, col + 5, rec['vat_challan_no'], td_cell_left)
                     sheet.write(row, col + 6, rec['contract_no'], td_cell_left)
