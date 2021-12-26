@@ -2,12 +2,12 @@
 <odoo>
     <data>
         
-       <template id="s2u_online_appointment.make_appointment" name="Online Appointment">
+       <template id="appointments.make_appointment" name="Online Appointment">
            <t t-call="website.layout">
                <style type="text/css">
 			       .color_green a{background:green !important;}
 		      </style>
-               <div class="container mb64" id="s2u_online_appointment">
+               <div class="container mb64" id="appointments">
                    <form t-att-action="form_action"  method="post" class="form-horizontal mt32" enctype="multipart/form-data">
                        <input type="hidden" name="form_criteria" id="form_criteria" t-att-value="form_criteria"/>
                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -123,7 +123,7 @@
            </t>
        </template>
 
-        <template id="s2u_online_appointment.only_registered_users" name="Only registered users">
+        <template id="appointments.only_registered_users" name="Only registered users">
             <t t-call="website.layout">
                 <div id="wrap">
                     <div class="oe_structure">
@@ -149,7 +149,7 @@
             </t>
         </template>
     
-        <template id="s2u_online_appointment.thanks" name="Appointment Scheduled">
+        <template id="appointments.thanks" name="Appointment Scheduled">
             <t t-call="website.layout">
                 <div id="wrap">
                     <div class="oe_structure"/>
@@ -184,7 +184,7 @@
 
         <template id="assets_frontend" name="website_date_info_assets" inherit_id="website.assets_frontend">
                <xpath expr="." position="inside">
-                   <script type="text/javascript" src="/s2u_online_appointment/static/src/js/main.js"></script>
+                   <script type="text/javascript" src="/appointments/static/src/js/main.js"></script>
                </xpath>
         </template>
 

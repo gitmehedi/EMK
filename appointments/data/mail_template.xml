@@ -31,7 +31,35 @@
             </field>
         </record>
 
-        <record id="mail_template_appointment_reject" model="mail.template">
+        <record id="mail_template_appointment_app_emk" model="mail.template">
+            <field name="name">Approved Appointment Request: Send by Email</field>
+            <field name="model_id" ref="appointments.model_appointment_appointment"/>
+            <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_to">${object.contact_id.appointee_id.work_email}</field>
+            <field name="subject">Approved Appointment Request (Ref ${object.name})</field>
+            <field name="body_html" type="html">
+              <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 0px;">
+                        <p>
+                            Dear ${object.contact_id.appointee_id.name_related},
+                            <br/><br/>
+                            EMK received a request to appointment of EMK Center.
+                            This is a notification that serves as confirmation that request has been approved.
+                            <br/><br/>
+                            Appointment Date: ${object.appointment_date}
+                            Web Link:
+                        </p>
+                        If you have queries feel free to ask.<br/><br/>
+                        Additionally, I thank you for being a part of ${user.company_id.name}.
+                    </p>
+                    <p style="font-size: 11px; margin-top: 10px;">
+                    <strong>Sent by ${user.company_id.name}</strong>
+                </p>
+                </div>
+            </field>
+        </record>
+
+        <record id="mail_template_appointment_rej" model="mail.template">
             <field name="name">Rejected Appointment Request: Send by Email</field>
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
             <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
@@ -58,23 +86,21 @@
             </field>
         </record>
 
-        <record id="mail_template_appointment_app_emk" model="mail.template">
-            <field name="name">Approved Appointment Request: Send by Email</field>
+        <record id="mail_template_appointment_rej_emk" model="mail.template">
+            <field name="name">Rejected Appointment Request: Send by Email</field>
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
             <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
-            <field name="email_to">${object.contact_id.appointee_id.work_email}</field>
-            <field name="subject">Approved Appointment Request (Ref ${object.name})</field>
+            <field name="email_to">${object.email}</field>
+            <field name="subject">Rejected Appointment Request (Ref ${object.name})</field>
             <field name="body_html" type="html">
               <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 0px;">
                         <p>
-                            Dear ${object.contact_id.appointee_id.name_related},
+                            Dear ${object.first_name +' '+ object.last_name},
                             <br/><br/>
-                            EMK received a request to appointment of EMK Center.
-                            This is a notification that serves as confirmation that request has been approved.
+                            I have received your request to appointment of EMK Center.
+                            This is a notification that serves as confirmation that request has been rejected.
                             <br/><br/>
-                            Appointment Date: ${object.appointment_date}
-                            Web Link:
                         </p>
                         If you have queries feel free to ask.<br/><br/>
                         Additionally, I thank you for being a part of ${user.company_id.name}.

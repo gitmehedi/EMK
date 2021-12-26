@@ -116,7 +116,7 @@ class Appointment(models.Model):
     def reject_appointment(self):
         if self.state == 'confirm':
             reject = {}
-            reject['template'] = 'appointments.mail_template_appointment_reject'
+            reject['template'] = 'appointments.mail_template_appointment_rej'
             self.env['mail.mail'].mail_send(self.id, reject)
 
             rej_emk = {}
