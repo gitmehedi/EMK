@@ -7,6 +7,7 @@ class HrEmpLeaveReport(models.AbstractModel):
     @api.multi
     def render_html(self, docids, data=None):
         report_obj = self.env['report']
+        ReportUtility = self.env['report.utility']
         if data['operating_unit_id']:
             record = self.env['hr.holidays.status'].search([], order='id ASC')
             lists = {rec.id: {'name': rec.name, 'init_bal': 0, 'avail': 0, 'cur_bal': 0, 'detail': {}} for rec in
@@ -18,8 +19,8 @@ class HrEmpLeaveReport(models.AbstractModel):
         for record in self._cr.fetchall():
             rec = {}
             line = lists[record[7]]
-            rec['from_date'] = record[4][:10] if record[4] else record[4]
-            rec['to_date'] = record[5][:10] if record[5] else record[5]
+            rec['from_date'] = ReportUtility.get_date_from_string(record[4][:10]) if record[4] else ReportUtility.get_date_from_string(record[4])
+            rec['to_date'] = ReportUtility.get_date_from_string(record[5][:10]) if record[5] else ReportUtility.get_date_from_string(record[5])
             rec['days'] = abs(record[9])
             rec['type'] = record[8]
             if record[6] == 'add':

@@ -1,11 +1,13 @@
 from openerp import api, fields, models
 import math
 
+
 class HrAttendanceSummaryReport(models.AbstractModel):
     _name = 'report.hr_attendance_and_ot_summary.report_att_summary'
     
     @api.model
     def render_html(self, docids, data=None):
+        ReportUtility = self.env['report.utility']
         payslip_run_pool = self.env['hr.attendance.summary']
         docs = payslip_run_pool.browse(docids[0])
 
@@ -60,8 +62,8 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             'doc_model': 'hr.attendance.summary',
             'docs': dpt_att_summary_list,
             'doc_name': docs.name,
-            'period_from': pool_period.date_start,
-            'period_to': pool_period.date_end,
+            'period_from': ReportUtility.get_date_from_string(pool_period.date_start),
+            'period_to': ReportUtility.get_date_from_string(pool_period.date_end),
             'docs_len': 20,
             'state': docs.state,
         }

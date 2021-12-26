@@ -55,6 +55,7 @@ class GbsHeAttendanceReport(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
+        ReportUtility = self.env['report.utility']
         check_in_out = data['check_in_out']
         type = data['type']
         department_id = data['department_id']
@@ -109,15 +110,22 @@ class GbsHeAttendanceReport(models.AbstractModel):
             emp_sort_list = all_val_list
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
 
+        # Get formatted column list
+        new_dynamic_col_list = []
+        for col in dynamic_col_list:
+            new_dynamic_col_list.append(ReportUtility.get_date_from_string(col))
+
         docargs = {
             'all_val_list': emp_sort_list,
-            'dynamic_col_list': dynamic_col_list,
+            'dynamic_col_list': new_dynamic_col_list,
             'check_type_friendly_str': check_type_friendly_str,
         }
 
         return self.env['report'].render('gbs_hr_attendance_report.report_attendance_doc', docargs)
 
     def datetime_manipulation(self, dyc, res, result):
+        ReportUtility = self.env['report.utility']
+        dyc = ReportUtility.get_date_from_string(dyc)
         if result == '':
             res[dyc] = result
         elif result == '(None,)':
