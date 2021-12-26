@@ -31,7 +31,7 @@
                                     <strong>Product: </strong><span t-esc="record['product_temp_name']"/>
                                 </div>
                                 <div class="col-xs-6 text-right">
-                                    <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y, %H:%M %p')"/></div>
+                                    <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y, %H:%M %p')"/></div>
                                 </div>
                             </div>
                         </div>
