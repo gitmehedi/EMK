@@ -63,7 +63,7 @@ class HrAttendance(models.Model):
 class HrEmployee(models.Model):
     _inherit = ['hr.employee']
 
-    device_employee_acc = fields.Integer(string='AC No.')
+    device_employee_acc = fields.Integer(string='AC No.', required=True)
     is_monitor_attendance=fields.Boolean(string='Monitor Attendance',default=True)
     is_executive = fields.Boolean(string='Executive',default=False)
 

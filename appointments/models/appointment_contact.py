@@ -17,6 +17,7 @@ class AppointmentContact(models.Model):
     timeslot_ids = fields.Many2many('appointment.timeslot', 'contact_timeslot_relation', 'timeslot_id', 'contact_id',
                                     string="Time Slot", required=True, track_visibility='onchange')
 
+
     def unlink(self):
         for rec in self:
             contact = self.env['appointment.appointment'].search([('contact_id', '=', rec.id)])
@@ -40,3 +41,4 @@ class AppointmentEmp(models.Model):
         if self.employee_number:
             name = '[%s] %s' % (self.employee_number, self.name)
         return (self.id, name)
+

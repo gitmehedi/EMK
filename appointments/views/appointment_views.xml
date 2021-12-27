@@ -175,6 +175,7 @@
             <field name="view_id" ref="view_appointment_appointment_calendar"/>
         </record>
 
+
         <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment"
                   sequence="30"
                   groups="" parent="appointment_menu.sub_appoint_menu"/>

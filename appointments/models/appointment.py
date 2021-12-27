@@ -1,10 +1,10 @@
 import logging, re
 from datetime import datetime
-
 import dateutil.parser
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.addons.appointments.helpers import functions
 
 _logger = logging.getLogger(__name__)
 
@@ -24,7 +24,10 @@ class Appointment(models.Model):
     contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange')
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
-    meeting_room_id = fields.Many2many('appointment.meeting.room', string='Room Allocation', track_visibility='onchange')
+    meeting_room_id = fields.Many2many('appointment.meeting.room', 'appointment_meeting_room_rel', 'appointment_id',
+                                       'meeting_room_id', string='Room Allocation', track_visibility='onchange')
+    # meeting_room_id = fields.Many2many('appointment.meeting.room', string='Room Allocation', track_visibility='onchange')
+
     description = fields.Text(string='Remarks', track_visibility="onchange")
     appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
@@ -104,54 +107,52 @@ class Appointment(models.Model):
             if birth_date >= curr_date:
                 raise ValidationError(_("Birth date cannot be future date and current date"))
 
+    @api.one
+    @api.constrains('email')
+    def validate_mail(self):
+        if self.email:
+            if not functions.valid_email(self.email):
+                raise ValidationError('Email should be input a valid')
+
     @api.multi
     def confirm_appointment(self):
         if self.state == 'draft':
             if not self.meeting_room_id:
                 raise UserError(_('Unable to confirm an appointment without room. Please add room(s).'))
+
+            result = self.env['ir.sequence'].next_by_code('appointment.sequence') or _('New')
+            self.name = result
             self.state = 'confirm'
 
     @api.multi
     def reject_appointment(self):
         if self.state == 'confirm':
+
             reject = {'template': 'appointments.mail_template_appointment_rej'}
             self.env['mail.mail'].mail_send(self.id, reject)
 
             rej_emk = {'template': 'appointments.mail_template_appointment_rej_emk'}
             self.env['mail.mail'].mail_send(self.id, rej_emk)
+
             self.state = 'reject'
 
     @api.multi
     def approve_appointment(self):
         if self.state == 'confirm':
-            app = {'template': 'appointments.mail_template_appointment_app'}
-            self.env['mail.mail'].mail_send(self.id, app)
+
+            # app = {'template': 'appointments.mail_template_appointment_app'}
+            # self.env['mail.mail'].mail_send(self.id, app)
 
             app_emk = {'template': 'appointments.mail_template_appointment_app_emk'}
             self.env['mail.mail'].mail_send(self.id, app_emk)
 
             self.state = 'done'
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('appointment.sequence') or _('New')
-        result = super(Appointment, self).create(vals)
-        return result
-
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
                 raise ValidationError(_('You cannot delete this appointment'))
         return super(Appointment, self).unlink()
-
-    @api.one
-    @api.constrains('email')
-    def validate_mail(self):
-        if self.email:
-            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
-            if match is None:
-                raise ValidationError('Email should be input a valid')
 
     @api.model
     def _needaction_domain_get(self):
