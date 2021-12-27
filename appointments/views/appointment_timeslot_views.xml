@@ -33,8 +33,9 @@
                                 <field name="start_time" widget="float_time"/>
                                 <field name="end_time" widget="float_time"/>
                                 <field name="status"/>
+                                <field name="description" placeholder="Description if any"></field>
                             </group>
-                            <field name="description" placeholder="Description if any"></field>
+
                         </group>
                     </sheet>
                     <div class="oe_chatter">
