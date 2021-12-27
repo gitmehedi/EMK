@@ -8,6 +8,9 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                    </xpath>
                     <xpath expr="//field[@name='name']" position="before">
                         <style>
                             .alert { padding: 5px 30px 5px 5px; position: relative; font-size: 13px; font-weight: normal; }
@@ -446,6 +449,19 @@
                     </xpath>
 
                 </data>
+            </field>
+        </record>
+
+        <record id="view_order_form200" model="ir.ui.view">
+            <field name="name">sale.order.form200</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority" eval="200"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="duplicate">1</attribute>
+                </xpath>
             </field>
         </record>
 
