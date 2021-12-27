@@ -1,4 +1,4 @@
-import logging
+import logging, re
 from datetime import datetime
 import dateutil.parser
 from odoo import api, fields, models, _
@@ -20,24 +20,26 @@ class Appointment(models.Model):
         return datetime.strftime(datetime.today(), DEFAULT_SERVER_DATETIME_FORMAT)
 
     name = fields.Char(string="Name", readonly=True, copy=False, track_visibility='onchange')
-    # client_id = fields.Many2one('res.partner',string="Client")
     topic_id = fields.Many2one('appointment.topics', string="Topics", required=True, track_visibility='onchange')
     contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange')
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
     meeting_room_id = fields.Many2many('appointment.meeting.room', 'appointment_meeting_room_rel', 'appointment_id',
                                        'meeting_room_id', string='Room Allocation', track_visibility='onchange')
+    # meeting_room_id = fields.Many2many('appointment.meeting.room', string='Room Allocation', track_visibility='onchange')
 
     description = fields.Text(string='Remarks', track_visibility="onchange")
     appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
     last_name = fields.Char(string="Last Name", required=True, track_visibility='onchange')
-    gender = fields.Many2one('res.gender', string='Gender', required=True, track_visibility='onchange')
+    gender_id = fields.Many2one('res.gender', string='Gender', required=True, track_visibility='onchange')
     date_of_birth = fields.Date(string="Date of Birth", required=True, track_visibility='onchange')
     phone = fields.Char(string="Phone", required=True, track_visibility='onchange')
-    address = fields.Text(string="Address", required=True, track_visibility='onchange')
+    street = fields.Text(string="Street", required=True, track_visibility='onchange')
+    street2 = fields.Text(string="Street", track_visibility='onchange')
+    zipcode = fields.Char(string="Zip Code", required=True, track_visibility='onchange')
     city = fields.Char(string="City", required=True, track_visibility='onchange')
-    country = fields.Many2one('res.country', string="Country", required=True, track_visibility='onchange')
+    country_id = fields.Many2one('res.country', string="Country", required=True, track_visibility='onchange')
     email = fields.Char(string="Email", required=True, track_visibility='onchange')
 
     state = fields.Selection([
@@ -125,28 +127,26 @@ class Appointment(models.Model):
     @api.multi
     def reject_appointment(self):
         if self.state == 'confirm':
-            # reject = {}
-            # reject['template'] = 'appointments.mail_template_appointment_rej'
-            # self.env['mail.mail'].mail_send(self.id, reject)
-            #
-            # rej_emk = {}
-            # rej_emk['template'] = 'appointments.mail_template_appointment_rej_emk'
-            # self.env['mail.mail'].mail_send(self.id, rej_emk)
+
+            reject = {'template': 'appointments.mail_template_appointment_rej'}
+            self.env['mail.mail'].mail_send(self.id, reject)
+
+            rej_emk = {'template': 'appointments.mail_template_appointment_rej_emk'}
+            self.env['mail.mail'].mail_send(self.id, rej_emk)
+
             self.state = 'reject'
 
     @api.multi
     def approve_appointment(self):
         if self.state == 'confirm':
-            # app = {}
-            # app['template'] = 'appointments.mail_template_appointment_app'
-            # self.env['mail.mail'].mail_send(self.id, app)
-            #
-            # app_emk = {}
-            # app_emk['template'] = 'appointments.mail_template_appointment_app_emk'
-            # self.env['mail.mail'].mail_send(self.id, app_emk)
+
+            app = {'template': 'appointments.mail_template_appointment_app'}
+            self.env['mail.mail'].mail_send(self.id, app)
+
+            app_emk = {'template': 'appointments.mail_template_appointment_app_emk'}
+            self.env['mail.mail'].mail_send(self.id, app_emk)
 
             self.state = 'done'
-
 
     def unlink(self):
         for rec in self:
@@ -154,7 +154,11 @@ class Appointment(models.Model):
                 raise ValidationError(_('You cannot delete this appointment'))
         return super(Appointment, self).unlink()
 
-
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft', 'confirm', 'done', 'reject'])]
+
+    @api.model
+    def post_appointments(self, vals, token=None):
+        self.create(vals)
+        return True

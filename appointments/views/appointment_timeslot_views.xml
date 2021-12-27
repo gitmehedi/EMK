@@ -7,8 +7,8 @@
             <field name="arch" type="xml">
                 <tree string="Appointment Contact" decoration-bf="status==True" decoration-muted="status==False"
                       decoration-success="status==True">
-                    <field name="name" />
                     <field name="day"/>
+                    <field name="name"/>
                     <field name="start_time" widget="float_time"/>
                     <field name="end_time" widget="float_time"/>
                     <field name="status"/>
@@ -32,8 +32,10 @@
                                 <field name="day"/>
                                 <field name="start_time" widget="float_time"/>
                                 <field name="end_time" widget="float_time"/>
-                                <field name="status"/>
+                            </group>
+                            <group>
                                 <field name="description" placeholder="Description if any"></field>
+                                <field name="status"/>
                             </group>
 
                         </group>
@@ -51,7 +53,9 @@
             <field name="model">appointment.timeslot</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="name"/>
+                    <field name="day"/>
+                    <field name="start_time"/>
+                    <field name="end_time"/>
                     <field name="status"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" domain="[]" context="{'group_by':'status'}"/>
@@ -59,7 +63,6 @@
                 </search>
             </field>
         </record>
-
 
 
         <record model="ir.actions.act_window" id="action_appointment_timeslot">
