@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<!--    <template id="website_appointment_reservation" name="Website Appointment Reservation"-->
-<!--              inherit_id="website.assets_frontend">-->
-<!--        <xpath expr="." position="inside">-->
-<!--            <script type="text/javascript" src="/appointments/static/src/js/main.js"></script>-->
-<!--            &lt;!&ndash;            <script type="text/javascript" src="/event_registration/static/src/js/utils.js"></script>&ndash;&gt;-->
-<!--            &lt;!&ndash;            <script type="text/javascript" src="/event_registration/static/src/js/custom.js"></script>&ndash;&gt;-->
-<!--            &lt;!&ndash;            <link rel="stylesheet" href="/event_registration/static/src/css/style.css"/>&ndash;&gt;-->
-<!--        </xpath>-->
-<!--    </template>-->
+    <template id="web_appointments_reserv" name="web_appointments_reserv" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/appointments/static/src/js/main.js"></script>
+            <link rel="stylesheet" href="/appointments/static/src/css/style.css"/>
+        </xpath>
+    </template>
 
     <template id="appointment_reservation" name="Appointment Reservation">
         <t t-call="web.login_layout">
@@ -24,12 +21,12 @@
                         </script>
                         <input type="hidden" name="redirect" t-att-value="redirect"/>
                         <input type="hidden" name="token" t-att-value="token"/>
-                        <h2 class="panel-title text-center">Appointment Reservation</h2>
+                        <h1 class="text-center">Appointment Reservation</h1>
 
                         <div class="col-md-12 margin-top-15">
                             <div class="panel panel-success">
                                 <div class="panel-heading odoobg">
-                                    <h3 class="panel-title text-left">Appointee Information</h3>
+                                    <h3 class="panel-title text-center">Appointee Information</h3>
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-md-12">
@@ -155,10 +152,31 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-center">Appointment Information</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-12">
                                         <div class="col-md-6">
                                             <div class="form-group form-field">
-                                                <label for="topic_id" class="control-label">Appointment Type</label>
+                                                <label for="type_id" class="control-label">Appointment Types</label>
+                                                <select class="form-control input-sm reqfield" name="type_id"
+                                                        id="type_id" required="required">
+                                                    <option value="">--Please Select--</option>
+                                                    <t t-foreach="type_ids" t-as='label'>
+                                                        <option t-att-value="label_value[0]"
+                                                                t-att-selected="'selected' if type_id==label_value[0] else None">
+                                                            <t t-esc="label_value[1]"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <div class="form-group form-field">
+                                                <label for="topic_id" class="control-label">Appointment Topics</label>
                                                 <select class="form-control input-sm reqfield" name="topic_id"
                                                         id="topic_id" required="required">
                                                     <option value="">--Please Select--</option>
@@ -172,19 +190,14 @@
                                             </div>
 
                                             <div class="form-group form-field">
-                                                <label for="contact_id" class="control-label">Contacts</label>
+                                                <label for="contact_id" class="control-label">Appointee Contacts</label>
                                                 <select class="form-control input-sm reqfield" name="contact_id"
                                                         id="contact_id" required="required">
                                                     <option value="">--Please Select--</option>
-                                                    <t t-foreach="contact_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if contact_id==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
                                                 </select>
                                             </div>
-
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="form-group form-field">
                                                 <label for="appointment_date" class="control-label">Appointment Date
                                                 </label>
@@ -194,7 +207,6 @@
                                                        placeholder="1960-12-31"
                                                        minlength="10" class="form-control input-sm reqfield"
                                                        id="appointment_date" required="required"/>
-
                                             </div>
 
                                             <div class="form-group form-field">
@@ -202,25 +214,6 @@
                                                 <select class="form-control input-sm reqfield" name="timeslot_id"
                                                         id="timeslot_id" required="required">
                                                     <option value="">--Please Select--</option>
-                                                    <t t-foreach="timeslot_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if timeslot_id==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                            <div class="form-group form-field">
-                                                <label for="type_id" class="control-label">Types</label>
-                                                <select class="form-control input-sm reqfield" name="type_id"
-                                                        id="type_id" required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="type_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if type_id==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
                                                 </select>
                                             </div>
                                         </div>
@@ -230,7 +223,8 @@
                         </div>
                         <div class="col-md-4 col-md-offset-5" style="margin-bottom: 100px;">
                             <div class="clearfix oe_login_buttons">
-                                <button type="submit" class="btn btn-success">Submit Appointment</button>
+                                <button type="submit" class="btn btn-success">Place Appointment</button>
+                                <button type="button" class="btn">Cancel</button>
                             </div>
                         </div>
                     </form>
@@ -269,9 +263,5 @@
         </t>
     </template>
 
-    <template id="website_appointments_reservation" name="website_appointments_reservation" inherit_id="website.assets_frontend">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/appointments/static/src/js/main.js"></script>
-        </xpath>
-    </template>
+
 </odoo>

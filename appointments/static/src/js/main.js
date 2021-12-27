@@ -10,62 +10,47 @@ odoo.define('appointments.main', function (require) {
         selector: '#appointment_reservation',
         init: function () {
             this._super.apply(this, arguments);
-
-            this.days_with_free_slots = {};
-            this.focus_year = 0;
-            this.focus_month = 0;
         },
         start: function () {
             var self = this;
-                $("#date_of_birth").datepicker({
-                    minDate: new Date(1900,1-1,1),
-                    maxDate: '-16Y',
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: "-100:-15",
-                    dateFormat: 'yy-mm-dd',
-                });
-                $("#appointment_date").datepicker({
-                    minDate: '+1D',
-                    maxDate: new Date(2050,12,31),
-                    changeMonth: true,
-                    changeYear: true,
-                    dateFormat: 'yy-mm-dd',
-                });
-//            $('#date_of_birth').datepicker({
-//                dateFormat: 'dd/mm/yy',
-//                startDate: '-3d',
-//                beforeShowDay: function(date) {
-//                    var d = self._format_date(date);
-//                    var key = date.getFullYear().toString() + ','+ (date.getMonth() + 1).toString();
-//                    if (self.days_with_free_slots[key] && self.days_with_free_slots[key][d]) {
-//                        return [true, 'color_green', ''];
-//                    } else {
-//                        return [false, '', ''];
-//                    }
-//                },
-//                onChangeMonthYear: function(year, month, datepicker) {
-//                    self._update_days_with_free_slots(year, month);
-//                },
-//            });
-
-            $("#appointment_option_id").on('change', function() {
-                self.days_with_free_slots = {};
-                self._update_timeslot();
+            $("#date_of_birth").datepicker({
+                minDate: new Date(1900,1-1,1),
+                maxDate: '-16Y',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:-15",
+                dateFormat: 'yy-mm-dd',
+            });
+            $("#appointment_date").datepicker({
+                minDate: '+1D',
+                maxDate: new Date(2050,12,31),
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy-mm-dd',
             });
 
-            $("#appointee_id").on('change', function() {
-                self.days_with_free_slots = {};
-                self._update_timeslot();
+            $("#topic_id").on('change', function() {
+                var topic_id =  $(this).find(":selected").val();
+                if (topic_id !='' ){
+                    var data = {
+                        "topic_id": topic_id
+                    }
+                    self._update_contacts(data);
+                }
             });
 
-            $("#appointment_date").on('change', function() {
-                self._update_timeslot();
+            $("#contact_id,#appointment_date").on("change",function(){
+                var contact_id =  $("#contact_id").find(":selected").val();
+                var appointment_date =  $("#appointment_date").val();
+                if ( contact_id !='' &&  appointment_date !=''){
+                    var data = {
+                        "contact_id": contact_id,
+                        "appointment_date": appointment_date,
+                    }
+                    self._update_time_slot(data);
+                }
             });
-
-            self._update_timeslot();
         },
-
         _format_date: function (date) {
             var self = this;
 
@@ -81,11 +66,34 @@ odoo.define('appointments.main', function (require) {
 
             return [year, month, day].join('-');
         },
-
+        _update_contacts: function(data){
+            var self = this;
+            ajax.jsonRpc('/appointment/contacts','call',data).always(function(res){
+                var contact_ids = res.contacts;
+                var options = [];
+                options.push('<option value="">--Please Select--</option>');
+                for (var i=0; i < contact_ids.length ; i++ ){
+                    options.push('<option value="' + contact_ids[i].id +'">' + contact_ids[i].name + '</option>');
+                }
+                $('#contact_id').html(options.join(''));
+            });
+        },
+        _update_time_slot: function(data){
+            var self = this;
+            ajax.jsonRpc('/appointment/available-slot','call', data).always(function(res){
+                var slots = res.slots;
+                var options=[];
+                options.push('<option value="">--Please Select--</option>');
+                for (var i = 0; i < slots.length ; i++ ){
+                    options.push('<option value="' + slots[i].id +'">' + slots[i].name + '</option>');
+                }
+                $('#timeslot_id').html(options.join(''));
+            });
+        },
         _update_timeslot: function () {
             var self = this;
 
-            ajax.jsonRpc('/online-appointment/timeslots', 'call', {
+            ajax.jsonRpc('/appointment/available-slot', 'call', {
                 'appointment_option': $("#appointment_option_id").val(),
                 'appointment_with': $("#appointee_id").val(),
                 'appointment_date': $("#appointment_date").val(),
