@@ -33,7 +33,9 @@ class InheritedProductTemplate(models.Model):
                                      help='Date until which membership remains active.', track_visibility='onchange')
     membership_category_id = fields.Many2one(track_visibility='onchange')
     active = fields.Boolean(track_visibility='onchange')
-    membership_type = fields.Selection(string="Membership Type", track_visibility='onchange')
+    membership_type = fields.Selection(selection=[('fixed', 'Fixed Dates'),
+                                                  ('variable', 'Variable Periods')],
+                                       string="Membership Type", track_visibility='onchange', required=True)
     property_account_income_id = fields.Many2one(track_visibility='onchange')
 
     @api.constrains('name')
