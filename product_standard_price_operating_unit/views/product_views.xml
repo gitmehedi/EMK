@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- inherit product.template-->
+        <record id="product_temp_from_view_product_standard_price" model="ir.ui.view">
+            <field name="name">product.temp.from.view.inherit.product.standard.price</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='standard_price']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//div[@name='standard_price_uom']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- inherit product.product-->
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.product.form.inherit.product.standard.price</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook//page[4]" position="after">
+                    <page string="Cost">
+                        <separator string="Cost Price"/>
+                        <field name="product_standard_price_ids">
+                            <tree editable="bottom" string="Cost Price">
+                                <field name="operating_unit_id" required="1"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                                <field name="cost" string="Cost Per Unit"/>
+                            </tree>
+                        </field>
+                        <separator string="Cost Price History"/>
+                        <field name="product_standard_price_history_ids" readonly="1">
+                            <tree string="Cost Price History">
+                                <field name="operating_unit_id"/>
+                                <field name="datetime" string="Modified Date"/>
+                                <field name="write_uid" string="Modified By"/>
+                                <field name="cost" string="Cost Per Unit"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

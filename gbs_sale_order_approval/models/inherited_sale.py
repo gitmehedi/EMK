@@ -545,6 +545,28 @@ class SaleOrder(models.Model):
     #                 else:
     #                     return False
 
+    # Cancel Button 02/12/2021
+    @api.multi
+    def action_cancel_custom(self):
+        sale_order_obj = self.env['sale.order'].browse(self.id)
+        vals = {
+            'sale_order_id': sale_order_obj.id,
+        }
+        message_id = self.env['sale.order.cancel.confirmation'].create({'message': _(
+            "Are you sure to cancel this sale order?")
+        })
+        return {
+            'name': _('Cancel Sale Order Confirmation'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'context': vals,
+            'res_model': 'sale.order.cancel.confirmation',
+            'res_id': message_id.id,
+            'target': 'new'
+        }
+
+
+
     @api.multi
     def action_create_delivery_order(self):
         view = self.env.ref('delivery_order.delivery_order_form')

@@ -3,7 +3,8 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
+
 
 class ItemBorrowing(models.Model):
     _name = 'item.borrowing'
@@ -179,6 +180,12 @@ class ItemBorrowing(models.Model):
     # Override methods
     ####################################################
 
+    @api.model
+    def create(self, vals):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+        return super(ItemBorrowing, self).create(vals)
+
     def unlink(self):
         for indent in self:
             if indent.state != 'draft':
@@ -195,6 +202,14 @@ class ItemBorrowing(models.Model):
         else:
             return False
 
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
+
+
 class ItemBorrowingLines(models.Model):
     _name = 'item.borrowing.line'
     _description = 'Item Borrowing Line'
@@ -205,8 +220,11 @@ class ItemBorrowingLines(models.Model):
                                    required=True, default=1)
     product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string= 'Unit of Measure',
                                   required=True,store=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
-                              help="Price computed based on the last purchase order approved.",store=True)
+    # price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
+    #                           help="Price computed based on the last purchase order approved.",store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price',
+                              digits=dp.get_precision('Product Price'),
+                              help="Price computed based on the last purchase order approved.", store=True)
     name = fields.Char(related='product_id.name',string='Specification',store=True)
     sequence = fields.Integer('Sequence')
     given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
@@ -226,6 +244,11 @@ class ItemBorrowingLines(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('given_qty', 'received_qty')
     @api.multi

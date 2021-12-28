@@ -6,7 +6,8 @@
     'version':'1.0',
     'depends': ['hr',
                 'report_layout',
-                'gbs_hr_security'],
+                'gbs_hr_security',
+                'operating_unit'],
     'data': [
         'security/ir.model.access.csv',
         #'security/ir_rule.xml',

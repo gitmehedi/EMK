@@ -46,8 +46,11 @@
                                         </tr>
                                     </t>
                                     <tr style="page-break-inside: avoid">
-                                        <td colspan="2">
+                                        <td>
                                             <strong class="text-nowrap">Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong t-esc="employee_total"></strong>
                                         </td>
                                         <t t-foreach="total" t-as="t">
                                             <td class="text-right">
@@ -58,15 +61,33 @@
                                 </tbody>
                             </table>
                         </div>
-                        <h5>
+                        <h5 style="margin-bottom: 10px;">
                             <b>Bank Credit(Total):</b>
                             <span t-esc="inword['bnet']"></span>
                             (<span t-esc="inword['bnet_word']"/>)
                             <t t-foreach="bank_list" t-as="bank">
-                                <p style="margin-left:80px;"><b><span t-esc="bank['bank_name']"/></b>(<span t-esc="bank['bank_acc_id']"/>) : <span t-esc="bank['bysal']"/></p>
+                                <p style="margin-left:80px;"><b><span t-esc="bank['bank_name']"/></b>(<span
+                                        t-esc="bank['bank_acc_id']"/>) : <span t-esc="bank['bysal']"/></p>
                             </t>
                         </h5>
-                        <h5>
+                        <table style="margin-left: 25px;">
+                            <t t-foreach="payroll_bank_amount_dict" t-as="rec">
+                                <h5>
+                                    <tr>
+                                        <td>
+                                            <b><span t-esc="rec_value['bank']"/> </b>
+                                        </td>
+                                        <td>
+                                            <p style="margin-left:5px;">:
+                                                <span t-esc="formatLang(rec_value['amount'])"/>
+                                                (<span t-esc="rec_value['amount_in_word']"/>)
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </h5>
+                            </t>
+                        </table>
+                        <h5 style="margin-top:20px;">
                             <b>Cash Payment :</b>
                             <span t-esc="inword['cash']"></span>
                             (<span t-esc="inword['cash_word']"/>)
@@ -98,7 +119,7 @@
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll_top_sheet.report_top_sheet"
                 name="gbs_hr_payroll_top_sheet.report_top_sheet"
-                menu = "False"
+                menu="False"
                 paperformat="report_layout.paperformat_backend_landscape"/>
 
     </data>

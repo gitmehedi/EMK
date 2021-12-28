@@ -39,6 +39,7 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
         # current_time = curr_time_gmt + timedelta(hours=6)
 
         att_utility_pool = self.env['attendance.utility']
+        ReportUtility = self.env['report.utility']
 
         from_date = att_utility_pool.getDateFromStr(data['from_date'])
         to_date = att_utility_pool.getDateFromStr(data['to_date'])
@@ -98,6 +99,9 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
 
             data_list.append(dpt_wise_emp)
 
+        # get formatted date string
+        data['from_date'] = ReportUtility.get_date_from_string(data['from_date'])
+        data['to_date'] = ReportUtility.get_date_from_string(data['to_date'])
 
         docargs = {
             'data': data,
@@ -172,7 +176,7 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
 
 
     def buildManagementEmployee(self, emp, attendanceList):
-
+        ReportUtility = self.env['report.utility']
         emp_obj = {}
         if len(attendanceList) == 0:
             return emp_obj
@@ -184,8 +188,8 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
         emp_obj['name'] = emp.name
         emp_obj['acc_no'] = emp.device_employee_acc
         emp_obj['designation'] = emp.job_id.name
-        emp_obj['check_in'] = attendanceList[0][0]
-        emp_obj['check_out'] = attendanceList[len(attendanceList)-1][1]
+        emp_obj['check_in'] = ReportUtility.get_date_time_from_string(attendanceList[0][0])
+        emp_obj['check_out'] = ReportUtility.get_date_time_from_string(attendanceList[len(attendanceList)-1][1])
         if emp.is_executive == True:
             emp_obj['is_executive'] = "Management"
         else:
@@ -194,13 +198,13 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
 
 
     def buildNonManagementEmployee(self, emp, attendance):
-
+        ReportUtility = self.env['report.utility']
         emp_obj = {}
         emp_obj['name'] = emp.name
         emp_obj['acc_no'] = emp.device_employee_acc
         emp_obj['designation'] = emp.job_id.name
-        emp_obj['check_in'] = attendance[0]
-        emp_obj['check_out'] = attendance[1]
+        emp_obj['check_in'] = ReportUtility.get_date_time_from_string(attendance[0])
+        emp_obj['check_out'] = ReportUtility.get_date_time_from_string(attendance[1])
         if emp.is_executive == True:
             emp_obj['is_executive'] = "Management"
         else:

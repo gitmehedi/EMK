@@ -1,6 +1,6 @@
 from datetime import datetime, date
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -33,6 +33,11 @@ class RFQWizard(models.TransientModel):
     @api.onchange('pr_ids')
     def _onchange_pr_ids(self):
         if self.pr_ids:
+            # Add operating unit in the context
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': self.operating_unit_id.id})
+            self.env.context = frozendict(context)
+
             vals = []
             # form_ids = self.env.context.get('active_ids')
             line_pool = self.env['purchase.requisition.line'].search([('requisition_id', 'in', self.pr_ids.ids)])
@@ -146,5 +151,11 @@ class RFQProductLineWizard(models.TransientModel):
     rfq_id = fields.Many2one('rfq.wizard', string='RFQ', ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='cascade')
     product_qty = fields.Float(string='Quantity')
-    price_unit = fields.Float(related='product_id.standard_price',string='Price Unit')
-    product_uom_id = fields.Many2one(related='product_id.uom_id',comodel='product.uom', string='Unit of Measure')
+    # price_unit = fields.Float(related='product_id.standard_price', string='Price Unit', store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price Unit')
+    product_uom_id = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure')
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price

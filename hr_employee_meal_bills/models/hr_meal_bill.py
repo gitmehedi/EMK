@@ -9,45 +9,56 @@ class HrEmployeeMealBill(models.Model):
     _description = 'Employee Meal Bill'
     _rec_name = 'name'
 
-
-    name = fields.Char(size=100, string="Description", required=True, readonly=True,track_visibility='onchange',
+    name = fields.Char(size=100, string="Description", required=True, readonly=True, track_visibility='onchange',
                        states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', index=True, track_visibility='onchange',
-                                 default=lambda self: self.env.user.company_id)
+                                 default=lambda self: self.env.user.company_id, required=True)
+
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
 
     """ All relations fields """
-    line_ids = fields.One2many('hr.meal.bill.line', 'parent_id', string="Meal Details",readonly=True,copy=True,
+    line_ids = fields.One2many('hr.meal.bill.line', 'parent_id', string="Meal Details", readonly=True, copy=True,
                                states={'draft': [('readonly', False)]})
-    
+
     """ All Selection fields """
     state = fields.Selection([
         ('draft', "Draft"),
         ('applied', "Applied"),
         ('approved', "Approved"),
     ], default='draft')
-    
+
     """All function which process data and operation"""
-    
+
+    @api.constrains('line_ids')
+    def _check_null_line_ids(self):
+        if len(self.line_ids)<1:
+            raise ValidationError("Please add meal bill")
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        self.line_ids = False
+
+
     @api.multi
     def action_draft(self):
         self.state = 'draft'
         for line in self.line_ids:
             if line.state != 'adjusted':
-                line.write({'state':'draft'})
-    
+                line.write({'state': 'draft'})
+
     @api.multi
     def action_confirm(self):
         self.state = 'applied'
         for line in self.line_ids:
             if line.state != 'adjusted':
-                line.write({'state':'applied'})
+                line.write({'state': 'applied'})
 
     @api.multi
     def action_done(self):
         self.state = 'approved'
         for line in self.line_ids:
             if line.state != 'adjusted':
-                line.write({'state':'approved'})
+                line.write({'state': 'approved'})
 
     @api.multi
     def unlink(self):
@@ -56,5 +67,3 @@ class HrEmployeeMealBill(models.Model):
                 raise UserError(_('After Approval You can not delete this record.'))
             bill.line_ids.unlink()
         return super(HrEmployeeMealBill, self).unlink()
-
-

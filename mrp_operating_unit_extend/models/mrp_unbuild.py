@@ -3,6 +3,7 @@ import datetime
 
 # imports of odoo
 from odoo import api, fields, models, _
+from odoo.tools import frozendict
 
 
 class MrpUnbuild(models.Model):
@@ -58,4 +59,14 @@ class MrpUnbuild(models.Model):
         vals['location_id'] = picking_type.default_location_src_id.id or location.id
         vals['location_dest_id'] = picking_type.default_location_dest_id.id or location.id
 
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+
         return super(MrpUnbuild, self).create(vals)
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)

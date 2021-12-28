@@ -3,14 +3,14 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from datetime import datetime
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
+
 
 class ItemLoanLending(models.Model):
     _name = 'item.loan.lending'
     _description = "Item Loan Lending"
     _inherit = ['mail.thread','ir.needaction_mixin']
     _order = "request_date desc"
-
 
     def _get_default_item_loan_location_id(self):
         return self.env['stock.location'].search([('usage', '=', 'customer'),('can_loan_request', '=', True)], limit=1).id
@@ -182,6 +182,12 @@ class ItemLoanLending(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    @api.model
+    def create(self, vals):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+        return super(ItemLoanLending, self).create(vals)
+
     def unlink(self):
         for indent in self:
             if indent.state != 'draft':
@@ -198,6 +204,14 @@ class ItemLoanLending(models.Model):
         else:
             return False
 
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
+
+
 class ItemLoanLendingLines(models.Model):
     _name = 'item.loan.lending.line'
     _description = 'Item Loan Lending Line'
@@ -208,7 +222,10 @@ class ItemLoanLendingLines(models.Model):
                                    required=True, default=1)
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
                                   required=True, store=True)
-    price_unit = fields.Float(related='product_id.standard_price', string='Price',
+    # price_unit = fields.Float(related='product_id.standard_price', string='Price',
+    #                           digits=dp.get_precision('Product Price'),
+    #                           help="Price computed based on the last purchase order approved.", store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Price',
                               digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.", store=True)
     qty_available = fields.Float('In Stock', compute='_compute_product_quantity', store=True)
@@ -236,6 +253,11 @@ class ItemLoanLendingLines(models.Model):
     #     if self.received_qty:
     #         if self.received_qty==self.given_qty:
     #             self.write({'state': 'receive'})
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('given_qty','received_qty')
     @api.multi

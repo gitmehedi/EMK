@@ -11,7 +11,16 @@ class HrMealBillLine(models.Model):
     """ Relational Fields """
     parent_id = fields.Many2one(comodel_name='hr.meal.bill',ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade',readonly= True, states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+    company_id = fields.Many2one('res.company', string='Company')
 
+    device_employee_acc = fields.Char(string="AC No", store=False, readonly=True,
+                                      compute='_compute_device_employee_acc')
+
+    @api.depends('employee_id')
+    def _compute_device_employee_acc(self):
+        for rec in self:
+            rec.device_employee_acc = rec.employee_id.device_employee_acc
 
     _sql_constraints = [
         ('unique_employee_id', 'unique(parent_id, employee_id)',

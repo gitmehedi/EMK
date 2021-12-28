@@ -3,6 +3,7 @@ from odoo import api, fields, models,_
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from odoo.addons import decimal_precision as dp
+from odoo.tools import frozendict
 
 
 class PurchaseRequisition(models.Model):
@@ -136,6 +137,7 @@ class PurchaseRequisition(models.Model):
         vals = []
         # self.required_date = self.indent_ids.required_date
         if self.indent_ids:
+            self._add_operating_unit_in_context(self.operating_unit_id.id)
             for indent_id in self.indent_ids:
                 if not self.dept_location_id:
                     self.dept_location_id = indent_id.stock_location_id.id
@@ -157,6 +159,12 @@ class PurchaseRequisition(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    @api.model
+    def create(self, vals):
+        # Add operating unit in the context
+        self._add_operating_unit_in_context(vals.get('operating_unit_id'))
+        return super(PurchaseRequisition, self).create(vals)
+
     @api.multi
     def unlink(self):
         for indent in self:
@@ -174,6 +182,13 @@ class PurchaseRequisition(models.Model):
         if len(product_id_list) != len(set(product_id_list)):
             raise ValidationError(_("Duplicate product found in products line."))
 
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
+
 
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
@@ -181,7 +196,8 @@ class PurchaseRequisitionLine(models.Model):
     product_ordered_qty = fields.Float('Ordered Qty', digits=dp.get_precision('Product UoS'),
                                        default=1)
     name = fields.Char(related='product_id.name',string='Description',store=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Unit Price', digits=dp.get_precision('Product Price'),store = True)
+    # price_unit = fields.Float(related='product_id.standard_price', string='Unit Price', digits=dp.get_precision('Product Price'), store=True)
+    price_unit = fields.Float(compute='_compute_price_unit', string='Unit Price', digits=dp.get_precision('Product Price'))
     product_uom_id = fields.Many2one(related='product_id.uom_id',comodel_name='product.uom', string='Product Unit of Measure',store=True)
     last_purchase_date = fields.Date(string='Last Purchase Date',compute = '_get_last_purchase',store = True)
     last_qty = fields.Float(string='Last Purchase Qnty',compute = '_get_last_purchase',store = True)
@@ -196,6 +212,11 @@ class PurchaseRequisitionLine(models.Model):
 
     receive_qty = fields.Float(string='PO Qty')
     due_qty = fields.Float(string='Due Qty',compute='_compute_due_qty')
+
+    @api.depends('product_id')
+    def _compute_price_unit(self):
+        for rec in self:
+            rec.price_unit = rec.product_id.standard_price
 
     @api.depends('product_ordered_qty', 'receive_qty')
     def _compute_due_qty(self):

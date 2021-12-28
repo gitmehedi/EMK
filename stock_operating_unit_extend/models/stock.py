@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api,_
 from odoo.exceptions import ValidationError
+from odoo.tools import frozendict
 
 class Stock(models.Model):
     _inherit = 'stock.location'
@@ -55,6 +56,7 @@ class Stock(models.Model):
             ret_list.append((orig_location.id, name))
         return ret_list
 
+
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
@@ -64,7 +66,36 @@ class StockMove(models.Model):
     def _check_stock_move_operating_unit(self):
         pass
 
+
+class Quant(models.Model):
+    _inherit = 'stock.quant'
+
+    @api.multi
+    def _compute_inventory_value(self):
+        for quant in self:
+            if quant.history_ids:
+                operating_unit_id = quant.history_ids[0].operating_unit_id.id or quant.history_ids[0].operating_unit_dest_id.id
+                context = dict(quant.env.context)
+                context.update({'operating_unit_id': operating_unit_id})
+                quant.env.context = frozendict(context)
+        return super(Quant, self)._compute_inventory_value()
+
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    @api.multi
+    def do_new_transfer(self):
+        context = dict(self.env.context)
+        context.update({'operating_unit_id': self.picking_type_id.operating_unit_id.id})
+        self.env.context = frozendict(context)
+        return super(StockPicking, self).do_new_transfer()
+
+
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', related='warehouse_id.operating_unit_id')
+
+
+

@@ -1,4 +1,4 @@
-from odoo import models, fields,_
+from odoo import models, fields, _
 from odoo.exceptions import UserError, ValidationError
 from odoo import api
 
@@ -10,16 +10,19 @@ class HrMobileBill(models.Model):
     _description = 'Employee Mobile Bill'
     _rec_name = 'name'
 
-    name = fields.Char(size=100, string="Name", required=True,states={'draft': [('invisible', False)],
-            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+    name = fields.Char(size=100, string="Name", required=True, states={'draft': [('invisible', False)],
+                                                                       'applied': [('readonly', True)],
+                                                                       'approved': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', index=True,
                                  default=lambda self: self.env.user.company_id)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
+    # default=lambda self: self.env['res.users'].operating_unit_default_get(self._uid)
 
     """ All relations fields """
-    line_ids = fields.One2many(comodel_name='hr.mobile.bill.line',inverse_name='parent_id', string="Line Ids", readonly=True,copy=True,
+    line_ids = fields.One2many(comodel_name='hr.mobile.bill.line', inverse_name='parent_id', string="Line Ids",
+                               readonly=True, copy=True,
                                states={'draft': [('readonly', False)]})
-    
-    
+
     """ All Selection fields """
 
     state = fields.Selection([
@@ -27,25 +30,38 @@ class HrMobileBill(models.Model):
         ('applied', "Applied"),
         ('approved', "Approved"),
     ], default='draft')
-    
 
-    
     """All function which process data and operation"""
-    
+
+    @api.constrains('line_ids')
+    def _check_null_line_ids(self):
+        if len(self.line_ids)<1:
+            raise ValidationError("Please add mobile bill")
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        self.line_ids = False
+
+
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        return {'domain': {'operating_unit_id': [('company_id', '=', self.company_id.id)]}}
+
     @api.multi
     def action_draft(self):
         self.state = 'draft'
         for line in self.line_ids:
             if line.state != 'adjusted':
-                line.write({'state':'draft'})
-    
+                line.write({'state': 'draft'})
+
     @api.multi
     def action_confirm(self):
         self.state = 'applied'
         for line in self.line_ids:
             if line.state != 'adjusted':
                 line.write({'state': 'applied'})
-    
+
     @api.multi
     def action_done(self):
         self.state = 'approved'

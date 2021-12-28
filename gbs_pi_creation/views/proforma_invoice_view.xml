@@ -7,7 +7,7 @@
             <field name="model">proforma.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Proforma Invoice" delete="false" copy='0'>
+                <form string="Proforma Invoice" delete="false" duplicate="false">
                     <header>
                         <button name="action_confirm" type="object" states="draft"
                                 string="Confirm" class="oe_highlight"/>
@@ -103,6 +103,19 @@
             </field>
         </record>
 
+        <record id="view_proforma_invoice_form200" model="ir.ui.view">
+            <field name="name">proforma.invoice.form200</field>
+            <field name="model">proforma.invoice</field>
+            <field name="inherit_id" ref="proforma_invoice_form_view"/>
+            <field name="priority" eval="200"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="duplicate">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="pi_tree_view" model="ir.ui.view">
             <field name="name">proforma.invoice.tree</field>
             <field name="model">proforma.invoice</field>
@@ -115,19 +128,6 @@
                 </tree>
             </field>
         </record>
-
-        <!--<record id="view_proforma_invoice_form100" model="ir.ui.view">-->
-            <!--<field name="name">proforma.invoice.form100</field>-->
-            <!--<field name="model">proforma.invoice</field>-->
-            <!--<field name="inherit_id" ref="proforma_invoice_form_view"/>-->
-            <!--<field name="priority" eval="100"/>-->
-            <!--<field name="groups_id" eval="[(6, 0, [ref('gbs_samuda_sales_access.group_proforma_invoice_manager')])]"/>-->
-            <!--<field name="arch" type="xml">-->
-            <!--<xpath expr="//field[@name='invoice_date']" position="attributes">-->
-                <!--<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>-->
-            <!--</xpath>-->
-        <!--</field>-->
-        <!--</record>-->
 
         <record id="search_pi_view" model="ir.ui.view">
             <field name="name">proforma.invoice.search</field>

@@ -34,7 +34,7 @@
                                     <strong>Report Date : </strong><span t-esc="required_date"/>
                                 </div>
                                 <div class="col-xs-4">
-                                    <div><strong>Printing Time : </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></div>
+                                    <div><strong>Printing Time : </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')"/></div>
                                     <div><strong>Printed By : </strong><span t-esc="user.name"/></div>
                                 </div>
                             </div>

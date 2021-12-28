@@ -11,6 +11,21 @@ class PayrollReportPivotal(models.AbstractModel):
     def formatDigits(self, digits):
         return formatLang(self.env, digits)
 
+    def get_payroll_bank_amount_dict(self, top_sheet, payroll_bank_list, payroll_bank_amount_dict):
+
+        for payroll_bank in payroll_bank_list:
+            slip_ids = self.env['hr.payslip'].search([('payslip_run_id', '=', top_sheet.id),
+                                                      ('employee_id.bank_account_id.bank_id', '=', payroll_bank.id)])
+            bank_net_sum = 0
+            for rec in slip_ids:
+                for line in rec.line_ids:
+                    if line.code == 'BNET':
+                        bank_net_sum = bank_net_sum + math.ceil(line.total)
+            payroll_bank_amount_dict[payroll_bank]['bank'] = payroll_bank.name
+            payroll_bank_amount_dict[payroll_bank]['amount'] = bank_net_sum
+            payroll_bank_amount_dict[payroll_bank]['amount_in_word'] = self.env['res.currency'].amount_to_word(float(bank_net_sum))
+        return payroll_bank_amount_dict
+
     @api.model
     def render_html(self, docids, data=None):
         top_sheet = self.env['hr.payslip.run'].browse(data.get('active_id'))
@@ -18,11 +33,24 @@ class PayrollReportPivotal(models.AbstractModel):
         data['name'] = top_sheet.name
 
         rule_list = []
+        payroll_bank_list = []
         for slip in top_sheet.slip_ids:
+            if slip.employee_id.bank_account_id.bank_id not in payroll_bank_list:
+                if slip.employee_id.bank_account_id.bank_id:
+                    payroll_bank_list.append(slip.employee_id.bank_account_id.bank_id)
+
             for line in slip.line_ids:
                 if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
                     rule_list.append((line.sequence, line.name))
 
+        payroll_bank_amount_dict = OrderedDict()
+        for payroll_bank in payroll_bank_list:
+            payroll_bank_amount_dict[payroll_bank] = {}
+            payroll_bank_amount_dict[payroll_bank]['bank'] = None
+            payroll_bank_amount_dict[payroll_bank]['amount'] = 0
+            payroll_bank_amount_dict[payroll_bank]['amount_in_word'] = None
+
+        self.get_payroll_bank_amount_dict(top_sheet, payroll_bank_list, payroll_bank_amount_dict)
         rule_list = sorted(rule_list, key=lambda k: k[0])
 
         header = OrderedDict()
@@ -46,7 +74,6 @@ class PayrollReportPivotal(models.AbstractModel):
 
         bnet = 0
         net = 0
-
         for slip in top_sheet.slip_ids:
             rec = record[slip.employee_id.department_id.name]
             rec['count'] = rec['count'] + 1
@@ -70,17 +97,20 @@ class PayrollReportPivotal(models.AbstractModel):
         }
 
         bank_list = []
-        payroll_advice = self.env['hr.payroll.advice'].search([('name','=', top_sheet.name)])
+        payroll_advice = self.env['hr.payroll.advice'].search([('name', '=', top_sheet.name)])
         for i in payroll_advice:
             vals = {}
             vals['bank_name'] = i.bank_id.name
             vals['bank_acc_id'] = i.bank_acc_id.acc_number
             bysal = 0.0
             for line in i.line_ids:
-                bysal = bysal+line.bysal
-            vals['bysal'] =  formatLang(self.env,(math.ceil(bysal)))
+                bysal = bysal + line.bysal
+            vals['bysal'] = formatLang(self.env, (math.ceil(bysal)))
             bank_list.append(vals)
 
+        employee_total = 0
+        for key, value in record.items():
+            employee_total = employee_total + value['count']
 
         docargs = {
             'doc_ids': self.ids,
@@ -88,10 +118,12 @@ class PayrollReportPivotal(models.AbstractModel):
             'formatLang': self.formatDigits,
             'header': header,
             'data': data,
+            'employee_total': employee_total,
             'record': record,
             'total': total,
             'rules': rule_list,
             'bank_list': bank_list,
+            'payroll_bank_amount_dict': payroll_bank_amount_dict,
             'inword': inword
         }
 

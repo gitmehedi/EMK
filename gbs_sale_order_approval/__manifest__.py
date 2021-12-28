@@ -21,12 +21,13 @@
         'account',
         'ir_sequence_operating_unit',
         'report_layout',
-        'sale_stock', ## to hide delivery menu. it is inherited on this module
+        'sale_stock',  ## to hide delivery menu. it is inherited on this module
         'terms_setup',
         'account_cost_center'
     ],
 
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/inherited_sale_view.xml',
@@ -35,6 +36,7 @@
         'views/res_partner_views.xml',
         'report/inherit_sale_order_report.xml',
         'data/sale_order_sequence.xml',
+        'wizards/sale_order_cancel_confirmation.xml',
 
     ],
     'installable': True,

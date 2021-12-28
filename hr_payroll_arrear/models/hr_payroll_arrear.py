@@ -10,6 +10,7 @@ class HrEmployeeArrear(models.Model):
                        states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', index=True,
                                  default=lambda self: self.env.user.company_id)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
 
     """ All relations fields """
     line_ids = fields.One2many('hr.payroll.arrear.line', 'parent_id', string="Arrear Details", readonly=True,copy=True,
@@ -23,6 +24,15 @@ class HrEmployeeArrear(models.Model):
     ], default='draft')
 
     """All function which process data and operation"""
+
+    @api.constrains('line_ids')
+    def _check_null_line_ids(self):
+        if len(self.line_ids)<1:
+            raise ValidationError("Please add arrear")
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        self.line_ids = False
 
     @api.multi
     def action_draft(self):

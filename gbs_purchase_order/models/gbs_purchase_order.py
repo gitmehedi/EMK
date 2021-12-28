@@ -3,6 +3,7 @@ from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError,UserError
 import odoo.addons.decimal_precision as dp
+from odoo.tools import frozendict
 
 
 class PurchaseOrder(models.Model):
@@ -128,6 +129,9 @@ class PurchaseOrder(models.Model):
             self.picking_type_id = requisition.picking_type_id.id
             self.operating_unit_id = requisition.operating_unit_id
 
+            # Add operating unit in the context
+            self._add_operating_unit_in_context(self.operating_unit_id.id)
+
             if requisition.type_id.line_copy != 'copy':
                 return
 
@@ -204,12 +208,13 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
-        type_obj = self.env['stock.picking.type']
         if self.operating_unit_id:
-            types = type_obj.search([('code', '=', 'incoming'),
-                                     ('operating_unit_id', '=',self.operating_unit_id.id)])
-            if types:
-                self.picking_type_id = types[0]
+            stock_warehouse = self.env['stock.warehouse'].sudo().search(
+                [('operating_unit_id', '=', self.operating_unit_id.id)],
+                limit=1
+            )
+            if stock_warehouse and stock_warehouse.in_type_id:
+                self.picking_type_id = stock_warehouse.in_type_id.id
             else:
                 raise UserError(
                     _("No Warehouse found with the Operating Unit indicated "
@@ -242,7 +247,8 @@ class PurchaseOrder(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'context': {'region_type': self.region_type or False,
-                        'purchase_by': self.purchase_by or False},
+                        'purchase_by': self.purchase_by or False,
+                        'operating_unit_id': self.operating_unit_id.id},
             'target': 'new',
         }
 
@@ -309,6 +315,13 @@ class PurchaseOrder(models.Model):
                 for att in obj.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
+
+    def _add_operating_unit_in_context(self, operating_unit_id=False):
+        """ Adding operating unit in context. """
+        if operating_unit_id:
+            context = dict(self.env.context)
+            context.update({'operating_unit_id': operating_unit_id})
+            self.env.context = frozendict(context)
 
 
 class PurchaseOrderLine(models.Model):

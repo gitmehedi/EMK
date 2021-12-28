@@ -63,7 +63,7 @@
                         </group>
                         <notebook>
                             <page string="Items">
-                                <field name="item_lines">
+                                <field name="item_lines" context="{'operating_unit_id': operating_unit_id}">
                                     <tree string="Items" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"/>

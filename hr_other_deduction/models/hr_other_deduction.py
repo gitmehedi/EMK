@@ -11,6 +11,7 @@ class HrEmployeeOtherDeduction(models.Model):
     company_id = fields.Many2one('res.company', string='Company', index=True,
                                  default=lambda self: self.env.user.company_id)
 
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
     """ All relations fields """
     line_ids = fields.One2many('hr.other.deduction.line', 'parent_id', string="Other Deduction Details", readonly=True,copy= True,
                                states={'draft': [('readonly', False)]})
@@ -23,6 +24,16 @@ class HrEmployeeOtherDeduction(models.Model):
     ], default='draft')
 
     """All function which process data and operation"""
+
+
+    @api.constrains('line_ids')
+    def _check_null_line_ids(self):
+        if len(self.line_ids)<1:
+            raise ValidationError("Please add other deduction")
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        self.line_ids = False
 
     @api.multi
     def action_draft(self):

@@ -46,9 +46,9 @@ class GbsPurchaseOrder(models.AbstractModel):
         data['partner_tin_no'] = docs.partner_id.tin
 
         # Consignee
-        data['company_vat_no'] = docs.company_id.partner_id.vat
-        data['company_bin_no'] = docs.company_id.partner_id.bin
-        data['company_tin_no'] = docs.company_id.partner_id.tin
+        data['company_vat_no'] = docs.operating_unit_id.partner_id.vat
+        data['company_bin_no'] = docs.operating_unit_id.partner_id.bin
+        data['company_tin_no'] = docs.operating_unit_id.partner_id.tin
 
 
         if docs.partner_id.child_ids:
