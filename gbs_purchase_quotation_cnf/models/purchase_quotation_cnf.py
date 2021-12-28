@@ -29,11 +29,9 @@ class PurchaseCNFQuotation(models.Model):
 
     @api.model
     def create(self, vals):
-        # set operating unit in vals
-        shipment = self.env['purchase.shipment'].search([('id', '=', vals.get('shipment_id'))])
-        vals['operating_unit_id'] = shipment.lc_id.operating_unit_id.id
-
         if vals.get('cnf_quotation'):
+            shipment = self.env['purchase.shipment'].search([('id', '=', vals.get('shipment_id'))])
+            vals['operating_unit_id'] = shipment.lc_id.operating_unit_id.id
             vals['name'] = self.env['ir.sequence'].next_by_code_new('cnf.quotation', datetime.today(), shipment.lc_id.operating_unit_id) or '/'
 
         return super(PurchaseCNFQuotation, self).create(vals)
