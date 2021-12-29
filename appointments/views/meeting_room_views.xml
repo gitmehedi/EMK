@@ -63,7 +63,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_appointment_meeting_room" action="action_appointment_meeting_room" sequence="15"
+        <menuitem id="menu_appointment_meeting_room" action="action_appointment_meeting_room" sequence="25"
                   groups="" parent="appointment_menu.sub_configuration_menu"/>
     </data>
 </odoo>

@@ -3,7 +3,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
-
 class MeetingRoomConfigure(models.Model):
     _name = 'appointment.meeting.room'
     _description = "Meeting Room"
@@ -32,7 +31,8 @@ class MeetingRoomConfigure(models.Model):
             contact = self.env['appointment.appointment'].search([('meeting_room_id', '=', rec.id)])
             if contact:
                 raise ValidationError(
-                    _('[Warning] You cannot delete this meeting room. you may be trying to delete a record while other records still reference it'))
+                    _('[Warning] You cannot delete this meeting room. you may be trying to delete a record while'
+                      ' other records still reference it'))
 
         return super(MeetingRoomConfigure, self).unlink()
 
