@@ -18,7 +18,7 @@ class AppointmentTimeSlot(models.Model):
     _description = "Appointment Time Slot"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = "id desc"
-    _rec_name="name"
+    _rec_name = "name"
 
     name = fields.Char(string="Time Slot", readonly=True, track_visibility='onchange', compute='_compute_name')
     day = fields.Selection(DAYS, 'Day', required=True,  track_visibility="onchange")
@@ -33,7 +33,12 @@ class AppointmentTimeSlot(models.Model):
     def _compute_name(self):
         for rec in self:
             if rec.day and rec.start_time and rec.end_time:
-                rec.name = '%s [%s - %s] ' % (rec.day.title(), rec.start_time, rec.end_time, )
+                minutes = rec.start_time * 60
+                hours, minutes = divmod(minutes, 60)
+
+                minutes1 = rec.end_time * 60
+                hours1, minutes1 = divmod(minutes1, 60)
+                rec.name = '%s [%s - %s] ' % (rec.day.title(), "%02d:%02d"%(hours,minutes), "%02d:%02d"%(hours1,minutes1), )
 
     @api.constrains('name')
     def _check_name(self):
@@ -49,11 +54,10 @@ class AppointmentTimeSlot(models.Model):
 
     @api.constrains('start_time', 'end_time')
     def _check_valid_time(self):
-        for rec in self:
-            if rec.start_time > 23:
-                raise ValidationError(_("It should be valid date time"))
-            if rec.end_time > 23:
-                raise ValidationError(_("It should be valid date time"))
+        if self.start_time > 23.99:
+            raise ValidationError(_("It should be valid date time"))
+        if self.end_time > 23.99:
+            raise ValidationError(_("It should be valid date time"))
 
     @api.model
     def _needaction_domain_get(self):

@@ -65,6 +65,8 @@
                                 <field name="timeslot_id" domain="[('status','=','True')]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                <field name="meeting_room_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}" domain="[('status','=','True')]"
+                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                             </group>
                         </group>
                         <group string="Appointee Information">
@@ -93,13 +95,8 @@
                                 </div>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Meeting Room">
-                                <field name="meeting_room_id" domain="[('status','=','True')]"
-                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                            </page>
-                        </notebook>
-                        <field name="description" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+
+                        <field name="description" placeholder="Description" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

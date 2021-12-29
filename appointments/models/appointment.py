@@ -24,8 +24,9 @@ class Appointment(models.Model):
     contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange')
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
-    meeting_room_id = fields.Many2many('appointment.meeting.room', 'appointment_meeting_room_rel', 'appointment_id',
-                                       'meeting_room_id', string='Room Allocation', track_visibility='onchange')
+    # meeting_room_id = fields.Many2many('appointment.meeting.room', 'appointment_meeting_room_rel', 'appointment_id',
+    #                                    'meeting_room_id', string='Room Allocation', track_visibility='onchange')
+    meeting_room_id = fields.Many2one('appointment.meeting.room', string="Meeting Room", required=True, track_visibility='onchange')
     description = fields.Text(string='Remarks', track_visibility="onchange")
     appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
@@ -100,6 +101,26 @@ class Appointment(models.Model):
                 'timeslot_id': [('id', 'in', self.contact_id.timeslot_ids.ids)],
             }
         return res
+
+    @api.onchange('timeslot_id')
+    def onchange_timeslot_id(self):
+        res = {}
+        if self.timeslot_id:
+            appointment = self.env['appointment.appointment'].sudo().search([('timeslot_id', '=', self.timeslot_id.id),
+                                                                             ('appointment_date', '=',
+                                                                              self.appointment_date),
+                                                                             ('state', 'in', ['draft',
+                                                                                              'confirm', 'approve'])])
+
+            meeting_room = self.env['appointment.meeting.room'].sudo().search(
+                [('id', 'not in', appointment.meeting_room_id.ids
+                  ), ('status', '=', True)])
+
+            if meeting_room:
+                res['domain'] = {'meeting_room_id': [('id', 'in', meeting_room.ids)]}
+            else:
+                res['domain'] = {'meeting_room_id': [('id', '=', -1)]}
+            return res
 
     @api.one
     @api.constrains('appointment_date')
