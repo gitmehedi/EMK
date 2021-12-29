@@ -1,0 +1,53 @@
+Name,Code,Active,Sequence,Appears on Payslip,Condition Based on,Percentage based on,Python Code,Python Condition,Quantity,Category/Name,Contribution Register/Name,Amount Type,Fixed Amount,Percentage (%)
+Basic,BASIC,1,1,1,Always True,,result = contract.wage,# Available variables:,1,Basic,0,Python Code,0,0
+Gross,GROSS,1,100,1,Always True,,result = categories.BASIC + categories.ALW , # Available variables:,1,Gross,0,Python Code,0,0
+Net,NET,1,200,1,Always True,,"if payslip.type == '0': result = categories.BASIC + categories.ALW + categories.DED + categories.CALW
+elif payslip.type == '1': result = categories.FALW
+elif payslip.type == '2': result = categories.BASIC + categories.ALW + categories.DED + categories.CALW + categories.FALW", # Available variables:,1,Net,Employees,Python Code,0,0
+Festival Bonus,FBONUS,1,140,1,Python Expression,,result = ((contract.wage*2.5+contract.supplementary_allowance)/2),"if payslip.type == '0': result = False
+elif payslip.type == '1' and payslip.festival_date>= contract.trial_date_end: result = True
+elif payslip.type == '2' and payslip.festival_date>= contract.trial_date_end: result = True",1,Festival Allowance,0,Python Code,0,0
+Tax Deducted at Source,TDS,1,130,1,Python Expression,,result = -(contract.tds),"if payslip.type == '1': result = False
+else: result = bool(contract.tds)",1,Deduction,0,Python Code,0,0
+House Rent Allowance (50% of Basic),HRA50,1,10,1,Python Expression,contract.wage,"result = (payslip.company_id.dearness_allowance and 
+((contract.wage + categories.DA) * contract.house_rent_allowance_metro_nonmetro / 100)
+or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100))","if payslip.type == '0': result = True
+elif payslip.type == '1': result = False
+elif payslip.type == '2': result = True",1,Allowance,Register for House Rent Allowance,Percentage (%),0,50
+Conveyance Allowance (8% of Basic),TCA,1,20,1,Python Expression,contract.wage,# Available variables:,"if payslip.type == '0': result = True
+elif payslip.type == '1': result = False
+elif payslip.type == '2': result = True",1,Allowance,0,Percentage (%),800,8
+Medical Allowance (9% of Basic),MEDA09,1,15,1,Python Expression,contract.wage,# Available variables:,"if payslip.type == '0': result = True
+elif payslip.type == '1': result = False
+elif payslip.type == '2': result = True",1,Allowance,0,Percentage (%),1250,9
+Staff Welfare Payment  Deduction (Reserve),SWPD,1,110,1,Python Expression,contract.wage,result = -((contract.wage * 20)/100),"if payslip.type == '0': result = True
+elif payslip.type == '1': result = False
+elif payslip.type == '2': result = True",1,Deduction,Register for Other Deduction from Employer,Python Code,0,20
+Employee's PF Contribution(PF),EPMF,1,150,1,Python Expression,,result = -((contract.wage * 5)/100),"if payslip.type == '1': result = False
+else: result = bool(contract.voluntary_provident_fund)",1,Deduction,Register for Provident Fund,Python Code,0,0
+Arrears Allowance,ARS,1,30,1,Python Expression,,result = (inputs.ARS.amount),"if payslip.type == '1': result = False
+else: result = (inputs.ARS and inputs.ARS.amount) or False",1,Allowance,0,Python Code,0,0
+Other Allowance,OAS,1,40,1,Python Expression,,result = (inputs.OAS.amount),"if payslip.type == '1': result = False
+else: result = (inputs.OAS and inputs.OAS.amount) or False",1,Allowance,0,Python Code,0,0
+Salary Deduction,ABS,1,125,1,Python Expression,,result =  - (((((categories.BASIC + categories.ALW) /worked_days.LDD.days_in_period)*worked_days.LDD.number_of_days)+(((categories.BASIC + categories.ALW) /worked_days.ABS.days_in_period)*worked_days.ABS.number_of_days))-((contract.wage*10)/100)/worked_days.ABS.days_in_period),result = (worked_days.ABS and worked_days.ABS.number_of_days) or (worked_days.LDD and worked_days.LDD.number_of_days) or False,1,Deduction,0,Python Code,0,0
+Loan Deduction,LOAN,1,120,1,Python Expression,,result = - (inputs.LOAN.amount),"if payslip.type == '1': result = False
+else: result = (inputs.LOAN and inputs.LOAN.amount) or False",1,Deduction,0,Python Code,0,0
+Mobile Deduction,MOBILE,1,135,1,Python Expression,,result = - (inputs.MOBILE.amount),"if payslip.type == '1': result = False
+else: result = (inputs.MOBILE and inputs.MOBILE.amount) or False",1,Deduction,0,Python Code,0,0
+Advance Cash (IOU) Deduction,IOU,1,145,1,Python Expression,,result = - (inputs.IOU.amount),"if payslip.type == '1': result = False
+else: result = (inputs.IOU and inputs.IOU.amount) or False",1,Deduction,0,Python Code,0,0
+Other Deduction,ODS,1,140,1,Python Expression,,result = - (inputs.ODS.amount),"if payslip.type == '1': result = False
+else: result = (inputs.ODS and inputs.ODS.amount) or False",1,Deduction,0,Python Code,0,0
+Mess Deduction,MESS,1,80,1,Python Expression,,result = - (inputs.MEAL.amount),if payslip.type == '1': result = False else: result = (inputs.MEAL and inputs.MEAL.amount) or False,1,Deduction,0,Python Code,0,0
+Staff Welfare Payment Allowance (10% of Basic),SWPA,1,25,1,Python Expression,contract.wage, # Available variables:,"if payslip.type == '0': result = True
+elif payslip.type == '1': result = False
+elif payslip.type == '2': result = True",1,Allowance,0,Percentage (%),0,10
+Cafe Bill,CBD,1,115,1,Python Expression,,result = - (inputs.MEAL.amount),"if payslip.type == '1': result = False
+else: result = (inputs.MEAL and inputs.MEAL.amount) or False",1,Deduction,0,Python Code,0,0
+Claimed Allowanced,CAD,1,35,1,Python Expression,, # Available variables:, # Available variables:,1,Allowance,0,Fixed Amount,0,0
+Working Hour,WH,1,90,1,Python Expression,,result =  worked_days.WH.number_of_hours,result = (worked_days.WH and worked_days.WH.number_of_hours) or False,1,Working Hours,0,Python Code,200,0
+Bank-Net,BNET,1,210,1,Always True,,"if payslip.type == '1' and payslip.festival_date>= contract.trial_date_end: result = (contract.wage*2.5)/2
+elif payslip.type == '1' and payslip.festival_date< contract.trial_date_end: result = 0
+else: result = categories.BASIC + categories.ALW +  categories.DED",# Available variables:,1,Net,Employees,Python Code,0,0
+TOT Amount,NHA,1,95,1,Python Expression,,result =  75*worked_days.WH.number_of_hours,result = (worked_days.WH and worked_days.WH.number_of_hours) or False,1,Allowance,0,Python Code,200,0
+Salary Deduction,ABSN,1,126,1,Python Expression,,result =  - ((((categories.BASIC + categories.ALW) /worked_days.LDD.days_in_period)*worked_days.LDD.number_of_days)+(((categories.BASIC + categories.ALW) /worked_days.ABS.days_in_period)*worked_days.ABS.number_of_days)),result = (worked_days.ABS and worked_days.ABS.number_of_days) or (worked_days.LDD and worked_days.LDD.number_of_days) or False,1,Deduction,0,Python Code,0,0

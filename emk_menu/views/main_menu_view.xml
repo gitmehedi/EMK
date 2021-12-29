@@ -4,32 +4,72 @@
     <data>
         <record id="hr.menu_hr_root" model="ir.ui.menu">
             <field name="name">Employees</field>
-            <field name="sequence">5</field>
+            <field name="sequence">10</field>
         </record>
 
         <record id="hr_holidays.menu_hr_holidays_root" model="ir.ui.menu">
             <field name="name">Leaves</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
         </record>
 
         <record id="hr_payroll.menu_hr_payroll_root" model="ir.ui.menu">
             <field name="name">Payroll</field>
-            <field name="sequence">15</field>
+            <field name="sequence">14</field>
         </record>
 
         <record id="hr_recruitment.menu_hr_recruitment_root" model="ir.ui.menu">
-            <field name="name">Recruitment</field>
-            <field name="sequence">20</field>
+            <field name="name">Recruitments</field>
+            <field name="sequence">16</field>
         </record>
 
         <record id="hr_attendance.menu_hr_attendance_root" model="ir.ui.menu">
             <field name="name">Attendances</field>
-            <field name="sequence">25</field>
+            <field name="sequence">18</field>
         </record>
 
         <record id="stock.menu_stock_root" model="ir.ui.menu">
             <field name="name">Inventory</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="purchase.menu_purchase_root" model="ir.ui.menu">
+            <field name="name">Purchases</field>
+            <field name="sequence">22</field>
+        </record>
+
+        <record id="account.account_account_menu" model="ir.ui.menu">
+            <field name="name">Accounting</field>
+            <field name="sequence">24</field>
+        </record>
+
+        <record id="account_asset.menu_action_account_asset_asset_form" model="ir.ui.menu">
+            <field name="name">Fixed Assets</field>
+            <field name="sequence">26</field>
+        </record>
+
+        <record id="point_of_sale.menu_point_root" model="ir.ui.menu">
+            <field name="name">Cafeteria</field>
             <field name="sequence">30</field>
+        </record>
+
+        <record id="event.event_main_menu" model="ir.ui.menu">
+            <field name="name">Events</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="emk_payment.main_menu_payment" model="ir.ui.menu">
+            <field name="name">Payments</field>
+            <field name="sequence">45</field>
+        </record>
+
+        <record id="membership.menu_membership" model="ir.ui.menu">
+            <field name="name">Member</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <record id="appointment_menu.main_appoint_menu" model="ir.ui.menu">
+            <field name="name">Appointments</field>
+            <field name="sequence">60</field>
         </record>
 
         <record id="calendar.mail_menu_calendar" model="ir.ui.menu">

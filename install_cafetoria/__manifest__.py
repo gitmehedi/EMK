@@ -10,7 +10,9 @@
     'description': 'Install all cafetoria related module',
     'version': '1.0',
     'depends': [
-
+        'point_of_sale',
+        'pos_reprint',
+        'pos_discount',
     ],
     'installable': True,
     'application': True,

@@ -1,0 +1,36 @@
+Company/Company Name,Name,Parent/Name,Reference,Salary Rules/Name
+Edward M Kennedy Center,Base for new structures,0,BASE,Basic
+,,,,Gross
+,,,,Net
+,,,,Bank-Net
+Edward M Kennedy Center,EMK Part-Time Employee,Base for new structures,EMKP,Salary Deduction
+,,,,TOT Amount
+Edward M Kennedy Center,EMK Permanent Employee,Base for new structures,EMKPE,Tax Deducted at Source
+,,,,House Rent Allowance (50% of Basic)
+,,,,Conveyance Allowance (8% of Basic)
+,,,,Medical Allowance (9% of Basic)
+,,,,Staff Welfare Payment  Deduction (Reserve)
+,,,,Arrears Allowance
+,,,,Other Allowance
+,,,,Salary Deduction
+,,,,Loan Deduction
+,,,,Mobile Deduction
+,,,,Advance Cash (IOU) Deduction
+,,,,Other Deduction
+,,,,Staff Welfare Payment Allowance (10% of Basic)
+,,,,Cafe Bill
+,,,,Claimed Allowanced
+Edward M Kennedy Center,EMK Permanent Employee with out SWPA,Base for new structures,EMKPEN,Tax Deducted at Source
+,,,,House Rent Allowance (50% of Basic)
+,,,,Conveyance Allowance (8% of Basic)
+,,,,Medical Allowance (9% of Basic)
+,,,,Arrears Allowance
+,,,,Other Allowance
+,,,,Loan Deduction
+,,,,Mobile Deduction
+,,,,Advance Cash (IOU) Deduction
+,,,,Other Deduction
+,,,,Cafe Bill
+,,,,Claimed Allowanced
+,,,,Salary Deduction
+Edward M Kennedy Center,EMK INTERN,Base for new structures,EMKINT,Salary Deduction

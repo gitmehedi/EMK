@@ -28,6 +28,11 @@
         'hr_employee_iou',
         'hr_other_allowance',
         'hr_experience',
+        'point_of_sale',
+        'event',
+        'membership',
+        'account_asset',
+        'account',
     ],
     'data': [
         'views/main_menu_view.xml',

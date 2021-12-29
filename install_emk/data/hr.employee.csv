@@ -1,0 +1,28 @@
+name,Tags/Employee Tag,initial_employment_date,mobile_phone,work_phone,work_email,gender,birthday,tax_zone,tax_circle,bank_account_id/id,department_id/id,job_id/id,operating_unit_id/id,device_employee_acc
+Abdullah Kawser,Permanent,2017-01-11,1799646934,1933040303,kawsera@emkcenter.org,Male,1991-10-28,3,63,1506203934993000,Programming,Program Assistant,Program,101
+Asadullah Chowdhury,Permanent,2012-09-16,1926666994,1926666994,chowdhurya@emkcenter.org,Male,1969-01-01,11,236,1501202910674001,Operational Administration,Admin Assistant,Admin,102
+Ashfaqur Rahman,Permanent,2016-12-11,1675119523,1988813364,Makerlab@emkcenter.org,Male,1992-11-18,14,303,1506203635924001,Maker Lab,Maker Lab Coordinator,MakerLab,103
+Asif Uddin Ahmed,Probitionary,2019-04-25,1777230473,1916666992,director@emkcenter.org,Male,1975-09-24,14,303,1506100596559001,Center Director,Acting Director,Director,104
+Dipon Saha,Permanent,2016-10-16,1712908017,1926666997,sahad@emkcenter.org,Male,1990-04-12,14,,1506203589572001,Finance & Administration,Accounts Assitant,Accounts,105
+Gazi Muhammad Abdullah,Part-Time,2019-05-04,1625186349,,,Male,2001-12-01,,,2.05029067001474E+016,Intern,"Intern, Makerlab",Intern,106
+Khondoker Saiful Alam,Permanent,2013-06-03,1671375161,1926666996,cafe@emkcenter.org,Male,1977-06-02,14,,1501202906075001,Ted Cafe,Cafe Manager,Ted Cafe,107
+Liton Chandra,Permanent,2015-10-10,1988265172,1926666996,cafe@emkcenter.org,Male,1997-01-04,,,1547203210964001,Cleaners,Maintenance Staff,Ted Cafe,108
+Md. Ashraf Ullah Sarker Akash,Permanent,,1775848474,1926666995,Info@emkcenter.org,Male,1998-01-16,,,2102558350001,Reciption,PS & OA,,109
+Md. Habibur Rahman,Permanent,,1771339096,1926666995,Info@emkcenter.org,Male,1997-10-12,,,2231051142,Reciption,PS & OA,,110
+Md. Shakil Islam,Permanent,2015-10-07,1625730558,1926666976,islamms@emk.com.bd,Male,1994-06-06,,,1547203210965001,Cleaners,Maintenance Staff,Admin,111
+Ms. Aisha Siddiqua,Part-Time,2019-02-17,1731806164,,internprog@emk.com.bd,Female,1994-01-20,,,13000000016,Intern,Intern,Program,112
+Roni Ronald Rozario,Permanent,2014-08-03,1673314183,1926666995,rozariorr@emkcenter.org,Male,2014-03-08,14,303,1506202931488001,Reciption,Patron Services & Operations,Reception,113
+Ruhul Amin,Permanent,2017-06-23,1632986892,1988813362,aminr@emkcenter.org,Male,1993-12-30,3,63,1506203809457001,Education USA,Outreach Coordinator & Library Support,EdUSA,114
+Rumana Sharmin,Part-Time,2017-12-14,1623275909,1926666995,info@emkcenter.org,Female,1993-11-07,,,2581510077783,Reciption,PS & OA,Reception,115
+Sabbyacachi Sen,Part-Time,2018-11-01,1627856863,1926666995,info@emkcenter.org,Male,1997-11-11,,,2517218006444,Reciption,PS & OA,Reception,116
+Sathi Baroi,Permanent,2016-08-01,1791233184,1926666995,barois@emkcenter.org,Female,1990-05-13,14,303,1506203589572001,Reciption,PS & OA,Reception,117
+Shalah Uddin Patwary,Permanent,2016-03-01,1558256185,1988813359,patwarys@emkcenter.org,Male,1990-01-01,14,303,1506203447783001,Maker Lab,Technology Assistant,,118
+Sharmin Akter Shakila,Probitionary,2019-03-07,1680983772,1988813365,shakilasa@emkcenter.org,Female,1994-11-19,5,106,1501104047487001,Entrepreneur,Entrepreneurship Coordinator,Entrepreneurship,119
+Sujan Biswas,Permanent,2015-10-01,1674635835,1926666993,biswass@emkcenter.org,Male,1987-12-31,14,303,1506202843722001,Finance & Administration,"Manager, Finance & Administration",Finance&Admin,120
+Sumon Kumer Biswas,Part-Time,2017-10-14,1743569802,1926666995,info@emkcenter.org,Male,1996-01-06,,,1251059145,Reciption,PS & OA,Reception,121
+Tawfiqul Islam,Permanent,2019-02-01,1717041064,1988813360,it@emkcenter.org,Male,1987-11-20,,,1501202906075001,Information Technology,System Administrator,IT Support Eng.,122
+Md.Shamim Khan,Permanent,,1914740430,,Khanms@emk.com.bd,Male,1989-01-01,,,19315142080,Support Service,Sound Engineer,Support Service,123
+S M Jubyer Bin Maleq,Permanent,,1714234994,1958399895,maleqsmjb@emk.com.bd,Male,1982-12-09,14,303,10310055490,Support Service,Electric Engineer,Support Service,124
+Tanvir Mahmud,Part-Time,2017-10-14,,,,,,,,,Reciption,Receptionist,,125
+Naveed Akbar,Probitionary,2018-07-16,,,,,,,,,Center Director,Director ,,126
+Mehedi Hasan Robin,Probitionary,2019-01-01,,,,,,,,,Maker Lab,MakerLab Outreach Officer,,127
