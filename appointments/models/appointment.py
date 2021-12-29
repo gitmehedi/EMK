@@ -26,8 +26,6 @@ class Appointment(models.Model):
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
     meeting_room_id = fields.Many2many('appointment.meeting.room', 'appointment_meeting_room_rel', 'appointment_id',
                                        'meeting_room_id', string='Room Allocation', track_visibility='onchange')
-    # meeting_room_id = fields.Many2many('appointment.meeting.room', string='Room Allocation', track_visibility='onchange')
-
     description = fields.Text(string='Remarks', track_visibility="onchange")
     appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
@@ -45,7 +43,8 @@ class Appointment(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Confirmed'),
-        ('done', 'Approved'),
+        ('approve', 'Approved'),
+        ('done', 'Finished'),
         ('reject', 'Rejected')
     ], string='State', default='draft', readonly=True, copy=False, index=True, track_visibility='onchange')
 
@@ -58,15 +57,28 @@ class Appointment(models.Model):
     @api.onchange('appointment_date', 'contact_id')
     def onchange_appointment_date(self):
         res = {}
+        day = ''
         if self.appointment_date:
             appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
             day = datetime.strftime(appdate, '%A')
-            timeslot_ids = self.env['appointment.timeslot'].search(
-                [('day', '=', day.lower()), ('id', 'in', self.contact_id.timeslot_ids.ids)])
-            if timeslot_ids:
-                res['domain'] = {
-                    'timeslot_id': [('id', 'in', timeslot_ids.ids)]
-                }
+        appointment_slots = self.env['appointment.appointment'].sudo().search([('contact_id', '=', self.contact_id.id),
+                                                                                  ('appointment_date', '=',
+                                                                                   self.appointment_date),
+                                                                                  ('state', 'in',
+                                                                                   ['draft', 'confirm', 'approve'])])
+
+        app_slots = [val.timeslot_id.id for val in appointment_slots]
+
+        contact_slots = self.env['appointment.contact'].sudo().search(
+            [('id', '=', self.contact_id.id), ('status', '=', True)])
+        slots = []
+        for slot in contact_slots.timeslot_ids:
+            if (slot.id not in app_slots) and (slot.day == day.lower()):
+                slots.append(slot.id)
+        if slots:
+            res['domain'] = {'timeslot_id': [('id', 'in', slots)]}
+        else:
+            res['domain'] = {'timeslot_id': [('id', '=', -1)]}
         return res
 
     @api.onchange('topic_id')
@@ -146,6 +158,17 @@ class Appointment(models.Model):
             app_emk = {'template': 'appointments.mail_template_appointment_app_emk'}
             self.env['mail.mail'].mail_send(self.id, app_emk)
 
+            self.state = 'approve'
+
+    @api.multi
+    def finish_appointment(self):
+        if self.state == 'approve':
+            # app = {'template': 'appointments.mail_template_appointment_app'}
+            # self.env['mail.mail'].mail_send(self.id, app)
+
+            app_emk = {'template': 'appointments.mail_template_appointment_app_emk'}
+            self.env['mail.mail'].mail_send(self.id, app_emk)
+
             self.state = 'done'
 
     def unlink(self):
@@ -156,9 +179,10 @@ class Appointment(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['draft', 'confirm', 'done', 'reject'])]
+        return [('state', 'in', ['draft', 'confirm', 'approve', 'done', 'reject'])]
 
     @api.model
     def post_appointments(self, vals, token=None):
         self.create(vals)
         return True
+

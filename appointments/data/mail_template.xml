@@ -90,7 +90,7 @@
             <field name="name">Rejected Appointment Request: Send by Email</field>
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
             <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
-            <field name="email_to">${object.email}</field>
+            <field name="email_to">${object.contact_id.appointee_id.work_email}</field>
             <field name="subject">Rejected Appointment Request (Ref ${object.name})</field>
             <field name="body_html" type="html">
               <div style="margin: 0px; padding: 0px;">
