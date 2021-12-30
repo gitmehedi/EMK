@@ -5,6 +5,7 @@ from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 class ProductionReportXLSX(ReportXlsx):
 
     def generate_xlsx_report(self, workbook, data, obj):
+        ReportUtility = self.env['report.utility']
         # data structure
         report_data = {
             'product_name': 'calcium carbonate filler',
@@ -32,7 +33,11 @@ class ProductionReportXLSX(ReportXlsx):
         name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8})
         header_format_left = workbook.add_format({'align': 'left', 'bg_color': '#78B0DE', 'bold': True, 'size': 8})
         normal_format_left = workbook.add_format({'align': 'left', 'size': 8})
-        merged_format_center = workbook.add_format({'align': 'center', 'size': 8})
+        normal_format_left_comma_separator = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'size': 8})
+
+        merged_format_center = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'center', 'valign': 'vcenter', 'size': 8})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 7})
         no_format = workbook.add_format({'num_format': '#,###0.00', 'size': 7, 'border': 1})
         total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 7, 'border': 1})
@@ -45,8 +50,10 @@ class ProductionReportXLSX(ReportXlsx):
                           address_format)
         sheet.merge_range(4, 0, 4, 4, "Production Report", name_format)
         product_name = obj.product_id.name_get()[0][1]
+
         sheet.merge_range(5, 0, 5, 2, "Product : " + product_name, name_format_left)
-        sheet.merge_range(5, 3, 5, 4, "Date : " + obj.date_from + ' to ' + obj.date_to, name_format_left)
+        sheet.merge_range(5, 3, 5, 4, "Date : " + ReportUtility.get_date_from_string(
+            obj.date_from) + ' to ' + ReportUtility.get_date_from_string(obj.date_to), name_format_left)
         sheet.merge_range(6, 0, 6, 2, "Operating Unit : " + obj.operating_unit_id.name, name_format_left)
 
         sheet.write(8, 0, "Total Production (MT)", header_format_left)
@@ -159,7 +166,7 @@ class ProductionReportXLSX(ReportXlsx):
         for vals in self.env.cr.dictfetchall():
             if not vals['production_type'] == 'produce':
                 sheet.write(row_no, 2, vals['product_name'], normal_format_left)
-                sheet.write(row_no, 3, vals['after_total_qty'], normal_format_left)
+                sheet.write(row_no, 3, vals['after_total_qty'], normal_format_left_comma_separator)
                 sheet.write(row_no, 4, vals['name'], normal_format_left)
                 row_no = row_no + 1
             if vals['production_type'] == 'produce':
