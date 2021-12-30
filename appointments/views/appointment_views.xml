@@ -91,7 +91,7 @@
                                     <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                     <field name="zipcode" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                     <field name="country_id" placeholder="Country" class="o_address_country"
-                                           options='{"no_open": True, "no_create": True}'/>
+                                           options='{"no_open": True, "no_create": True}' attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                 </div>
                             </group>
                         </group>
@@ -161,7 +161,7 @@
             <field name="name">Appointment</field>
             <field name="res_model">appointment.appointment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,form,calendar,pivot</field>
             <field name="domain">[('state','=','done')]</field>
         </record>
 

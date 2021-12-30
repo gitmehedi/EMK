@@ -59,10 +59,11 @@ class Appointment(models.Model):
     def onchange_appointment_date(self):
         res = {}
         day = ''
+        self.timeslot_id = 0
         if self.appointment_date:
             appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
             day = datetime.strftime(appdate, '%A')
-        appointment_slots = self.env['appointment.appointment'].sudo().search([('contact_id', '=', self.contact_id.id),
+        appointment_slots = self.env['appointment.appointment'].search([('contact_id', '=', self.contact_id.id),
                                                                                   ('appointment_date', '=',
                                                                                    self.appointment_date),
                                                                                   ('state', 'in',
@@ -70,8 +71,7 @@ class Appointment(models.Model):
 
         app_slots = [val.timeslot_id.id for val in appointment_slots]
 
-        contact_slots = self.env['appointment.contact'].sudo().search(
-            [('id', '=', self.contact_id.id), ('status', '=', True)])
+        contact_slots = self.env['appointment.contact'].search([('id', '=', self.contact_id.id), ('status', '=', True)])
         slots = []
         for slot in contact_slots.timeslot_ids:
             if (slot.id not in app_slots) and (slot.day == day.lower()):
@@ -105,14 +105,15 @@ class Appointment(models.Model):
     @api.onchange('timeslot_id')
     def onchange_timeslot_id(self):
         res = {}
+        self.meeting_room_id = 0
         if self.timeslot_id:
-            appointment = self.env['appointment.appointment'].sudo().search([('timeslot_id', '=', self.timeslot_id.id),
+            appointment = self.env['appointment.appointment'].search([('timeslot_id', '=', self.timeslot_id.id),
                                                                              ('appointment_date', '=',
                                                                               self.appointment_date),
                                                                              ('state', 'in', ['draft',
                                                                                               'confirm', 'approve'])])
 
-            meeting_room = self.env['appointment.meeting.room'].sudo().search(
+            meeting_room = self.env['appointment.meeting.room'].search(
                 [('id', 'not in', appointment.meeting_room_id.ids
                   ), ('status', '=', True)])
 
@@ -146,6 +147,7 @@ class Appointment(models.Model):
         if self.email:
             if not functions.valid_email(self.email):
                 raise ValidationError('Email should be input a valid')
+
 
     @api.multi
     def confirm_appointment(self):
