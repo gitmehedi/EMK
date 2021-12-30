@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="production_report_wizard_view" model="ir.ui.view">
+            <field name="name">production.report.wizard.view</field>
+            <field name="model">production.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Production Report">
+                    <group>
+                        <group>
+                            <field name="product_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+
+                            <field name="date_from"/>
+                        </group>
+                        <group>
+                            <field name="operating_unit_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="export_excel" string="Export Excel" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="production_report_wizard_action" model="ir.actions.act_window">
+            <field name="name">Production Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">production.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="production_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem id="menu_mrp_production_report"
+                  name="Production Report"
+                  parent="mrp.menu_mrp_reporting"
+                  action="production_report_wizard_action"
+                  sequence="11"/>
+
+
+    </data>
+</odoo>
