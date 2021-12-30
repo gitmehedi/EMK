@@ -88,10 +88,6 @@ class UndeliveredReportXLSX(ReportXlsx):
 
         return undelivered_dict
 
-    @staticmethod
-    def get_formatted_date(date_str, date_format):
-        return datetime.datetime.strptime(date_str, "%Y-%m-%d").strftime(date_format)
-
     def generate_xlsx_report(self, workbook, data, obj):
         result_data = self._get_undelivered_data(obj)
 
@@ -99,6 +95,9 @@ class UndeliveredReportXLSX(ReportXlsx):
         report_for_factory = self.env.context.get('report_factory')
         undelivered_report_factory = self.env.user.company_id.undelivered_report_factory
         show_all_column = False if report_for_factory and undelivered_report_factory else True
+
+        # Report Utility
+        ReportUtility = self.env['report.utility']
 
         """XLSX REPORT"""
         # FORMAT
@@ -170,7 +169,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.merge_range(row, last_col - 2, row, last_col, "Customer: " + partner, bold)
         row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + self.get_formatted_date(obj.date_today, "%d-%m-%Y"), bold)
+        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(obj.date_today), bold)
         row += 1
 
         # TABLE HEADER
@@ -199,7 +198,7 @@ class UndeliveredReportXLSX(ReportXlsx):
             for rec in value['sale_orders']:
                 sheet.write(row, col, rec['partner_name'], td_cell_left)
                 sheet.write(row, col + 1, rec['so_no'], td_cell_center)
-                sheet.write(row, col + 2, rec['so_date'], td_cell_center)
+                sheet.write(row, col + 2, ReportUtility.get_date_time_from_string(rec['so_date']), td_cell_center)
                 sheet.write(row, col + 3, rec['ordered_qty'], no_format)
                 sheet.write(row, col + 4, rec['delivered_qty'], no_format)
                 sheet.write(row, col + 5, rec['cancel_qty'], no_format)

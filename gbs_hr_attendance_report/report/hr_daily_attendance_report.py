@@ -3,12 +3,13 @@ import datetime
 from datetime import timedelta
 from openerp.addons.gbs_hr_attendance_utility.models.utility_class import Employee
 
+
 class GetDailyAttendanceReport(models.AbstractModel):
     _name='report.gbs_hr_attendance_report.report_daily_att_doc'
 
     @api.model
     def render_html(self, docids, data=None):
-
+        ReportUtility = self.env['report.utility']
         emp_pool = self.env['hr.employee']
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
@@ -28,6 +29,11 @@ class GetDailyAttendanceReport(models.AbstractModel):
             unit = op_pool.search([('id','=',operating_unit_id)])
             companyName = unit.company_id.name
             att_summary = self.getSummaryByUnit(unit, data, graceTime,  emp_pool, att_utility_pool, current_time)
+
+            # Formatted check_in date time
+            for item in att_summary['late']:
+                item.check_in = item.check_in.strftime("%d-%m-%Y %H:%M:%S")
+
             att_summary_list.append(att_summary)
         else:
 
@@ -38,14 +44,19 @@ class GetDailyAttendanceReport(models.AbstractModel):
             for unit in unitList:
                 att_summary = self.getSummaryByUnit(unit, data, graceTime, emp_pool,
                                                 att_utility_pool, current_time)
+
+                # Formatted check_in date time
+                for item in att_summary['late']:
+                    item.check_in = item.check_in.strftime("%d-%m-%Y %H:%M:%S")
+
                 att_summary_list.append(att_summary)
 
         docargs = {
-            'required_date': data['required_date'],
+            'required_date': ReportUtility.get_date_from_string(data['required_date']),
             'created_on': curr_time_gmt,
             'company_name': companyName,
             'att_summary_list': att_summary_list,
-            'operating_unit':data['operating_unit_id']
+            'operating_unit': data['operating_unit_id']
         }
 
         return self.env['report'].render('gbs_hr_attendance_report.report_daily_att_doc', docargs)

@@ -19,11 +19,21 @@ class PurchaseCNFQuotation(models.Model):
     def onchange_shipment_id(self):
         if self.shipment_id:
             self.partner_id = self.shipment_id.cnf_id.id
+            self.operating_unit_id = self.shipment_id.lc_id.operating_unit_id.id
+            stock_warehouse = self.env['stock.warehouse'].sudo().search(
+                [('operating_unit_id', '=', self.operating_unit_id.id)],
+                limit=1
+            )
+            if stock_warehouse and stock_warehouse.in_type_id:
+                self.picking_type_id = stock_warehouse.in_type_id.id
 
     @api.model
     def create(self, vals):
         if vals.get('cnf_quotation'):
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('cnf.quotation', datetime.today()) or '/'
+            shipment = self.env['purchase.shipment'].search([('id', '=', vals.get('shipment_id'))])
+            vals['operating_unit_id'] = shipment.lc_id.operating_unit_id.id
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('cnf.quotation', datetime.today(), shipment.lc_id.operating_unit_id) or '/'
+
         return super(PurchaseCNFQuotation, self).create(vals)
 
     @api.multi

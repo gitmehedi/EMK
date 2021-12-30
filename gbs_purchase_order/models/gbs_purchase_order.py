@@ -208,12 +208,13 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
-        type_obj = self.env['stock.picking.type']
         if self.operating_unit_id:
-            types = type_obj.search([('code', '=', 'incoming'),
-                                     ('operating_unit_id', '=',self.operating_unit_id.id)])
-            if types:
-                self.picking_type_id = types[0]
+            stock_warehouse = self.env['stock.warehouse'].sudo().search(
+                [('operating_unit_id', '=', self.operating_unit_id.id)],
+                limit=1
+            )
+            if stock_warehouse and stock_warehouse.in_type_id:
+                self.picking_type_id = stock_warehouse.in_type_id.id
             else:
                 raise UserError(
                     _("No Warehouse found with the Operating Unit indicated "

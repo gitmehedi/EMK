@@ -339,6 +339,9 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
 
         result_data = self.get_data(obj)
 
+        # Report Utility
+        ReportUtility = self.env['report.utility']
+
         # FORMAT
         bold = workbook.add_format({'bold': True, 'size': 10})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
@@ -382,7 +385,7 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
             sheet.merge_range(6, 0, 6, 2, "Req. No: " + obj.pr_no, bold)
             row_inc = 1
         if obj.date_from and obj.date_to:
-            sheet.merge_range(6, 8, 6, 10, "Date: " + obj.date_from + " To " + obj.date_to, bold)
+            sheet.merge_range(6, 8, 6, 10, "Date: " + ReportUtility.get_date_from_string(obj.date_from) + " To " + ReportUtility.get_date_from_string(obj.date_to), bold)
             row_inc = 1
 
         sheet.merge_range(6 + row_inc, 0, 6 + row_inc, 2, "Region Type: " + obj.type.capitalize(), bold)
@@ -406,16 +409,16 @@ class PurchaseRequisitionInfoXLSX(ReportXlsx):
         row += 1
         for rec in result_data:
             sheet.write(row, col, rec['pr_name'], td_cell_left)
-            sheet.write(row, col + 1, rec['pr_validate_date'], td_cell_center)
-            sheet.write(row, col + 2, rec['pr_approve_date'], td_cell_center)
+            sheet.write(row, col + 1, ReportUtility.get_date_time_from_string(rec['pr_validate_date']), td_cell_center)
+            sheet.write(row, col + 2, ReportUtility.get_date_time_from_string(rec['pr_approve_date']), td_cell_center)
             sheet.write(row, col + 3, rec['po_name'], td_cell_left)
-            sheet.write(row, col + 4, rec['po_approve_date'], td_cell_center)
+            sheet.write(row, col + 4, ReportUtility.get_date_time_from_string(rec['po_approve_date']), td_cell_center)
             sheet.write(row, col + 5, rec['challan_no'], td_cell_left)
-            sheet.write(row, col + 6, rec['challan_date'], td_cell_center)
-            sheet.write(row, col + 7, rec['qc_approve_date'], td_cell_center)
-            sheet.write(row, col + 8, rec['ss_validate_date'], td_cell_center)
+            sheet.write(row, col + 6, ReportUtility.get_date_from_string(rec['challan_date']), td_cell_center)
+            sheet.write(row, col + 7, ReportUtility.get_date_time_from_string(rec['qc_approve_date']), td_cell_center)
+            sheet.write(row, col + 8, ReportUtility.get_date_time_from_string(rec['ss_validate_date']), td_cell_center)
             sheet.write(row, col + 9, rec['mrr_no'], td_cell_center)
-            sheet.write(row, col + 10, rec['ss_approve_date'], td_cell_center)
+            sheet.write(row, col + 10, ReportUtility.get_date_time_from_string(rec['ss_approve_date']), td_cell_center)
             row += 1
 
 

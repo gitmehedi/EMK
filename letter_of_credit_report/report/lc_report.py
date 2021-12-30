@@ -16,6 +16,7 @@ class HrEmpLeaveReport(models.AbstractModel):
     def render_html(self, docids, data=None):
 
         report_type = data['report_type']
+        ReportUtility = self.env['report.utility']
 
         if report_type == 'Active':
             self.lc_query += "AND lc.state NOT IN ('done', 'cancel')"
@@ -33,9 +34,9 @@ class HrEmpLeaveReport(models.AbstractModel):
             lc_obj = {}
             lc_obj['lc_number'] = row[1]
             lc_obj['amount'] = formatLang(self.env,row[2])
-            lc_obj['lc_date'] = row[3]
-            lc_obj['exp_date'] = row[4]
-            lc_obj['ship_date'] = row[5]
+            lc_obj['lc_date'] = ReportUtility.get_date_from_string(row[3])
+            lc_obj['exp_date'] = ReportUtility.get_date_from_string(row[4])
+            lc_obj['ship_date'] = ReportUtility.get_date_from_string(row[5])
             lc_obj['discharging_port'] = row[6]
             lc_obj['party_name'] = row[7]
             lc_obj['state'] = self.getLCState(row[8])
@@ -48,7 +49,7 @@ class HrEmpLeaveReport(models.AbstractModel):
             for po in lc.po_ids:
                 if po.requisition_id:
                     prName += po.requisition_id.name + " "
-                    prDate += po.requisition_id.requisition_date + " "
+                    prDate += ReportUtility.get_date_from_string(po.requisition_id.requisition_date) + " "
 
             lc_obj['pr_no'] = prName
             lc_obj['pr_date'] = prDate
@@ -60,7 +61,7 @@ class HrEmpLeaveReport(models.AbstractModel):
                 for shipment in lc.shipment_ids:
                     sh_obj = {}
                     sh_obj['shipment_number'] = shipment.name
-                    sh_obj['etd'] = shipment.etd_date
+                    sh_obj['etd'] = ReportUtility.get_date_from_string(shipment.etd_date)
                     sh_obj['state'] = self.getShipmentStateMsg(shipment.state)
 
                     product_list = []

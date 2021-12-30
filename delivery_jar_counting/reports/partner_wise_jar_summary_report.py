@@ -22,26 +22,25 @@ class JarSummaryReportByDate(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         data_list = []
+        ReportUtility = self.env['report.utility']
 
         date_given = data['date']
         self._cr.execute(self.sql, (date_given,))  # Never remove the comma after the parameter
+        results = self._cr.fetchall()
 
-        vals = self._cr.fetchall()
+        for line in results:
+            jar_dict = dict()
+            jar_dict['date'] = line[0]
+            jar_dict['qty1'] = line[1]
+            jar_dict['jar_type'] = line[2]
+            jar_dict['qty2'] = line[3]
+            jar_dict['name'] = line[5]
 
-        jar_val  = {}
+            data_list.append(jar_dict)
 
-        jar_val['date'] = vals[0][0]
-        jar_val['qty1'] = vals[0][1]
-        jar_val['jar_type'] = vals[0][2]
-        jar_val['qty2'] = vals[0][3]
-        jar_val['name'] = vals[0][5]
-
-        data_list.append(jar_val)
-
-        docargs = \
-            {
-                'data_list': data_list,
-                'date':  vals[0][0],
-            }
+        docargs = {
+            'data_list': data_list,
+            'date': ReportUtility.get_date_from_string(data['date']),
+        }
 
         return self.env['report'].render('delivery_jar_counting.report_jar_summary', docargs)

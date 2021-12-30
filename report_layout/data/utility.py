@@ -5,6 +5,18 @@ import datetime
 class ReportUtility(models.TransientModel):
     _name = "report.utility"
 
+    def get_date_from_string(self, date_str, format_str="%d-%m-%Y"):
+        if date_str:
+            return datetime.datetime.strptime(date_str, "%Y-%m-%d").strftime(format_str)
+        else:
+            return date_str
+
+    def get_date_time_from_string(self, date_time_str, format_str="%d-%m-%Y %H:%M:%S"):
+        if date_time_str:
+            return datetime.datetime.strptime(date_time_str, "%Y-%m-%d %H:%M:%S").strftime(format_str)
+        else:
+            return date_time_str
+
     def getERPDateFormat(self, date):
         try:
             if date:
